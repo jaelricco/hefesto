@@ -26,7 +26,7 @@ linters-settings:
     errorf: true
   wrapcheck:
     ignorePackageGlobs:
-      - github.com/jaelricco/lodestar/*
+      - github.com/jaelricco/hefesto/*
   revive:
     rules:
       - name: package-comments

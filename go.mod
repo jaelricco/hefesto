@@ -1,3 +1,3 @@
-module github.com/jaelricco/lodestar
+module github.com/jaelricco/hefesto
 
 go 1.24

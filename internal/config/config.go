@@ -44,50 +44,50 @@ type Config struct {
 // startup with a precise message rather than at the first request.
 func Load() (Config, error) {
 	c := Config{
-		Env:           Env(str("LODESTAR_ENV", "dev")),
-		HTTPAddr:      str("LODESTAR_HTTP_ADDR", ":8080"),
-		LogLevel:      str("LODESTAR_LOG_LEVEL", "info"),
-		LogFormat:     str("LODESTAR_LOG_FORMAT", "json"),
+		Env:           Env(str("HEFESTO_ENV", "dev")),
+		HTTPAddr:      str("HEFESTO_HTTP_ADDR", ":8080"),
+		LogLevel:      str("HEFESTO_LOG_LEVEL", "info"),
+		LogFormat:     str("HEFESTO_LOG_FORMAT", "json"),
 		DatabaseURL:   str("DATABASE_URL", ""),
-		JWTSigningKey: str("LODESTAR_JWT_SIGNING_KEY", ""),
-		JWTIssuer:     str("LODESTAR_JWT_ISSUER", "lodestar"),
-		ContentDir:    str("LODESTAR_CONTENT_DIR", "./content"),
+		JWTSigningKey: str("HEFESTO_JWT_SIGNING_KEY", ""),
+		JWTIssuer:     str("HEFESTO_JWT_ISSUER", "hefesto"),
+		ContentDir:    str("HEFESTO_CONTENT_DIR", "./content"),
 	}
 
 	var errs []error
 	var err error
 
-	if c.ShutdownGrace, err = dur("LODESTAR_SHUTDOWN_GRACE", 15*time.Second); err != nil {
+	if c.ShutdownGrace, err = dur("HEFESTO_SHUTDOWN_GRACE", 15*time.Second); err != nil {
 		errs = append(errs, err)
 	}
-	if c.AccessTokenTTL, err = dur("LODESTAR_ACCESS_TOKEN_TTL", 15*time.Minute); err != nil {
+	if c.AccessTokenTTL, err = dur("HEFESTO_ACCESS_TOKEN_TTL", 15*time.Minute); err != nil {
 		errs = append(errs, err)
 	}
-	if c.DBMaxConns, err = i32("LODESTAR_DB_MAX_CONNS", 10); err != nil {
+	if c.DBMaxConns, err = i32("HEFESTO_DB_MAX_CONNS", 10); err != nil {
 		errs = append(errs, err)
 	}
-	if c.DBMinConns, err = i32("LODESTAR_DB_MIN_CONNS", 2); err != nil {
+	if c.DBMinConns, err = i32("HEFESTO_DB_MIN_CONNS", 2); err != nil {
 		errs = append(errs, err)
 	}
 
 	switch c.Env {
 	case EnvDev, EnvStaging, EnvProd:
 	default:
-		errs = append(errs, fmt.Errorf("LODESTAR_ENV: %q is not one of dev|staging|prod", c.Env))
+		errs = append(errs, fmt.Errorf("HEFESTO_ENV: %q is not one of dev|staging|prod", c.Env))
 	}
 
 	// Outside dev these are hard requirements; there is no built-in fallback
 	// secret anywhere in this codebase.
 	if c.Env != EnvDev {
 		if c.JWTSigningKey == "" {
-			errs = append(errs, errors.New("LODESTAR_JWT_SIGNING_KEY: required outside dev"))
+			errs = append(errs, errors.New("HEFESTO_JWT_SIGNING_KEY: required outside dev"))
 		}
 		if c.LogFormat != "json" {
-			errs = append(errs, errors.New("LODESTAR_LOG_FORMAT: must be json outside dev"))
+			errs = append(errs, errors.New("HEFESTO_LOG_FORMAT: must be json outside dev"))
 		}
 	}
 	if c.DBMinConns > c.DBMaxConns {
-		errs = append(errs, errors.New("LODESTAR_DB_MIN_CONNS must be <= LODESTAR_DB_MAX_CONNS"))
+		errs = append(errs, errors.New("HEFESTO_DB_MIN_CONNS must be <= HEFESTO_DB_MAX_CONNS"))
 	}
 
 	if len(errs) > 0 {

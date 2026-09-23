@@ -1,4 +1,4 @@
-# Project Brief — Lodestar (Calisthenics Trainer & Skill Tree)
+# Project Brief — Hefesto (Calisthenics Trainer & Skill Tree)
 
 > Authored by Jaelricco. This is the canonical spec; ADRs record where
 > implementation has since diverged, and `docs/DDL_PROPOSAL.md` is the
@@ -441,7 +441,7 @@ At the end of each phase, summarise what was built, list open questions, and
 
 ## 13. Open decisions — settled in ADR 0002
 
-1. App name and bundle identifier → **Lodestar**, `ch.riske.lodestar`.
+1. App name and bundle identifier → **Hefesto**, `fit.hefesto.ios`.
 2. Hosting target for prod → **Hetzner Cloud**.
 3. Single-user v1, or coach↔athlete in the schema → **single-user, no schema debt**.
 4. User-uploaded form-check videos in v1 → **generic media schema, images-only UI**.

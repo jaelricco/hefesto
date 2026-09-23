@@ -64,4 +64,4 @@ Ship the motivating parts and refuse the coercive ones.
 - Injury content in the app is educational and carries
   `disclaimer: educational_only` in the API payload itself, not merely in a
   footer, so that no client can render it without the disclaimer available.
-  Lodestar makes no medical claims and is not a substitute for a clinician.
+  Hefesto makes no medical claims and is not a substitute for a clinician.

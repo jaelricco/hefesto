@@ -67,11 +67,11 @@ jobs:
       postgres:
         image: postgres:16-alpine
         env:
-          POSTGRES_USER: lodestar
+          POSTGRES_USER: hefesto
           POSTGRES_PASSWORD: ci
-          POSTGRES_DB: lodestar
+          POSTGRES_DB: hefesto
         options: >-
-          --health-cmd "pg_isready -U lodestar"
+          --health-cmd "pg_isready -U hefesto"
           --health-interval 5s --health-timeout 5s --health-retries 10
         ports: ["5432:5432"]
     steps:
@@ -85,7 +85,7 @@ jobs:
       - name: up, down one, up again
         env:
           GOOSE_DRIVER: postgres
-          GOOSE_DBSTRING: postgres://lodestar:ci@localhost:5432/lodestar?sslmode=disable
+          GOOSE_DBSTRING: postgres://hefesto:ci@localhost:5432/hefesto?sslmode=disable
           GOOSE_MIGRATION_DIR: db/migrations
         run: |
           shopt -s nullglob
@@ -121,6 +121,25 @@ jobs:
         run: |
           git show origin/${{ github.base_ref }}:api/openapi.yaml > /tmp/base-openapi.yaml 2>/dev/null || exit 0
           npx --yes @useoptic/openapi-cli@latest diff /tmp/base-openapi.yaml api/openapi.yaml --check
+
+  scripts:
+    name: shell scripts and workflows lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: shellcheck
+        # SC1091: bootstrap sources /etc/os-release, which exists on the target
+        # host and not on the runner.
+        run: shellcheck -e SC1091 scripts/*.sh
+      - name: actionlint
+        run: |
+          bash <(curl -fsSL https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
+          ./actionlint -color
+      - name: production compose is valid
+        run: |
+          sed -E 's/^([A-Z_]+)=$/\1=placeholder/' .env.prod.example > /tmp/check.env
+          echo 'HEFESTO_TAG=v0.0.0-ci' >> /tmp/check.env
+          docker compose -f docker-compose.prod.yml --env-file /tmp/check.env config --quiet
 
   docker:
     name: docker image builds

@@ -14,19 +14,30 @@ determines whether a column exists in the first migration.
 
 ### 1. Name and identifiers
 
-**Lodestar.** A lodestar is the star you navigate by — it matches the
-constellation map, which is the product's signature screen.
+**Hefesto** — Hephaestus, the smith of the gods, who made things by working
+them. Both domains were already owned, which settled it.
+
+`hefesto.fit` is the canonical product domain; `hefesto.ch` is registered and
+redirects to it. The split is deliberate: `.fit` says what the product is to
+anyone, anywhere, while `.ch` protects the name in the market where the author
+and the data actually sit. Certificates are issued for both so the redirect
+never trips a browser warning.
 
 | | |
 |---|---|
-| Go module | `github.com/jaelricco/lodestar` |
-| iOS bundle id | `ch.riske.lodestar` |
-| Database / role | `lodestar` |
-| S3 bucket | `lodestar-media` |
-| Problem type URIs | `https://lodestar.app/problems/{slug}` |
+| Go module | `github.com/jaelricco/hefesto` |
+| Container image | `ghcr.io/jaelricco/hefesto` |
+| iOS bundle id | `fit.hefesto.ios` |
+| Marketing site | `https://hefesto.fit` (`hefesto.ch` → 308 redirect) |
+| API | `https://api.hefesto.fit` |
+| Database / role | `hefesto` |
+| Object storage bucket | `hefesto-media` |
+| Problem type URIs | `https://hefesto.fit/problems/{slug}` |
 
 The App Store display name is not fixed by this ADR and can change without
-touching the bundle id.
+touching the bundle id. Problem type URIs are identifiers, not URLs that must
+resolve — but they should resolve, so `hefesto.fit/problems/{slug}` gets a
+static page per error type once the marketing site exists.
 
 ### 2. Production hosting: Hetzner Cloud
 

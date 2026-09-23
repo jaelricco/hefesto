@@ -1,0 +1,89 @@
+# Caddy is the only process bound to a public port. It terminates TLS with
+# certificates it obtains and renews itself, and reverse-proxies the API.
+#
+# Environment (from .env.prod):
+#   HEFESTO_API_DOMAIN       api.hefesto.fit
+#   HEFESTO_SITE_DOMAIN      hefesto.fit
+#   HEFESTO_SITE_DOMAIN_ALT  hefesto.ch
+#   HEFESTO_ACME_EMAIL       address Let's Encrypt notifies about expiry
+
+{
+	email {$HEFESTO_ACME_EMAIL}
+	servers {
+		# Trust nothing about client-supplied forwarding headers; Caddy sets them.
+		trusted_proxies static private_ranges
+	}
+}
+
+(security_headers) {
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options    "nosniff"
+		X-Frame-Options           "DENY"
+		Referrer-Policy           "strict-origin-when-cross-origin"
+		-Server
+	}
+}
+
+# --- API ---------------------------------------------------------------------
+{$HEFESTO_API_DOMAIN} {
+	import security_headers
+
+	encode zstd gzip
+
+	# Liveness must never be rate limited or logged.
+	handle /healthz {
+		reverse_proxy api:8080
+	}
+
+	handle {
+		reverse_proxy api:8080 {
+			health_uri      /healthz
+			health_interval 10s
+			health_timeout  3s
+
+			# Uploads go straight to object storage via presigned URLs, so no
+			# request body should ever be large. Fail fast if one is.
+			transport http {
+				dial_timeout      5s
+				response_header_timeout 30s
+			}
+		}
+	}
+
+	request_body {
+		max_size 2MB
+	}
+
+	log {
+		output stdout
+		format json
+		# Health checks would otherwise dominate the log volume.
+		exclude /healthz
+	}
+}
+
+# --- marketing site ----------------------------------------------------------
+# Serves the static site once it exists; until then it answers with a holding
+# page so the domain is never a dead TLS handshake. Problem type URIs live
+# here (https://hefesto.fit/problems/{slug}).
+{$HEFESTO_SITE_DOMAIN} {
+	import security_headers
+	encode zstd gzip
+	root * /srv/site
+	file_server
+	handle_errors {
+		respond "Hefesto" 200
+	}
+	log {
+		output stdout
+		format json
+	}
+}
+
+# --- alternate domain --------------------------------------------------------
+# hefesto.ch is registered to protect the name; it redirects permanently.
+{$HEFESTO_SITE_DOMAIN_ALT} {
+	import security_headers
+	redir https://{$HEFESTO_SITE_DOMAIN}{uri} permanent
+}

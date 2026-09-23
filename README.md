@@ -1,4 +1,4 @@
-# Lodestar
+# Hefesto
 
 A calisthenics training app in two tightly coupled halves:
 
@@ -37,9 +37,26 @@ make up                  # postgres, api, minio, mailpit, pgweb — and seed
 
 `make help` lists every target.
 
+## Deploying
+
+Production is a single Hetzner instance behind Caddy, deployed from a version
+tag through GitHub Actions. Full runbook in [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
+
+```sh
+make release version=v0.2.0   # tag, push, build, migrate, deploy, verify
+make deploy tag=v0.1.9        # redeploy an existing tag — this is also rollback
+make prod-version             # what is live
+make prod-logs
+```
+
+The deploy runs migrations before the new API starts and rolls the API back if
+readiness never arrives. Secrets live only in `/srv/hefesto/.env.prod` on the
+server — never in the repo, never in CI.
+
 ## Layout
 
 ```
+CLAUDE.md     conventions and guardrails for agent sessions in this repo
 cmd/          api server, content seeder, content linter
 internal/
   domain/     pure types and rules — no I/O, enforced by arch_test.go
@@ -50,6 +67,8 @@ content/      authored skills, exercises, bands and injury notes (YAML + JSON Sc
 api/          openapi.yaml — the source of truth for the generated Swift client
 ios/          Xcode project (Phase 5)
 docs/adr/     one ADR per significant decision
+docker/       Dockerfiles and the production Caddyfile
+scripts/      server bootstrap, deploy with rollback, backup sidecar
 ```
 
 ## Stack
@@ -68,7 +87,7 @@ there is no leaderboard, and no notification implies you are falling behind.
 [ADR 0003](docs/adr/0003-gamification-guardrails.md) makes those binding.
 
 Injury content in the app is educational and carries a disclaimer in the API
-payload itself. Lodestar makes no medical claims.
+payload itself. Hefesto makes no medical claims.
 
 ## Development notes
 

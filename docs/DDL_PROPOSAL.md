@@ -1,4 +1,4 @@
-# Lodestar — proposed schema (Phase 0 deliverable, for review)
+# Hefesto — proposed schema (Phase 0 deliverable, for review)
 
 **Nothing in this file has been written as a migration.** It is the proposal the
 brief asks for in §12 Phase 0. Once you approve or amend it, Phase 1 turns it

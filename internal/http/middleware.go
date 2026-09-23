@@ -88,7 +88,7 @@ func Recoverer(next http.Handler) http.Handler {
 					"request_id", RequestIDFrom(r.Context()),
 				)
 				WriteProblem(w, r, Problem{
-					Type:    "https://lodestar.app/problems/internal",
+					Type:    "https://hefesto.fit/problems/internal",
 					Title:   "Internal server error",
 					Status:  http.StatusInternalServerError,
 					TraceID: RequestIDFrom(r.Context()),

@@ -41,7 +41,7 @@ func NewRouter(deps RouterDeps) http.Handler {
 	mux.HandleFunc("GET /readyz", func(w http.ResponseWriter, r *http.Request) {
 		if deps.DB == nil {
 			WriteProblem(w, r, Problem{
-				Type:   "https://lodestar.app/problems/not-ready",
+				Type:   "https://hefesto.fit/problems/not-ready",
 				Title:  "Not ready",
 				Status: http.StatusServiceUnavailable,
 				Detail: "database is not configured",
@@ -53,7 +53,7 @@ func NewRouter(deps RouterDeps) http.Handler {
 		if err := deps.DB.Ping(ctx); err != nil {
 			slog.ErrorContext(ctx, "readiness check failed", "error", err)
 			WriteProblem(w, r, Problem{
-				Type:   "https://lodestar.app/problems/not-ready",
+				Type:   "https://hefesto.fit/problems/not-ready",
 				Title:  "Not ready",
 				Status: http.StatusServiceUnavailable,
 				Detail: "database is unreachable",
@@ -65,7 +65,7 @@ func NewRouter(deps RouterDeps) http.Handler {
 
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		WriteProblem(w, r, Problem{
-			Type:   "https://lodestar.app/problems/not-found",
+			Type:   "https://hefesto.fit/problems/not-found",
 			Title:  "Not found",
 			Status: http.StatusNotFound,
 			Detail: "no route matches " + r.Method + " " + r.URL.Path,

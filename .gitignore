@@ -26,3 +26,6 @@ ios/**/DerivedData/
 .idea/
 .vscode/
 *.swp
+
+# production secrets — never commit
+.env.prod

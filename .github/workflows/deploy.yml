@@ -1,0 +1,195 @@
+name: deploy
+
+# Production deploys happen on a version tag, or on demand.
+#
+#   git tag -a v0.2.0 -m "..." && git push origin v0.2.0     # normal release
+#   gh workflow run deploy.yml -f tag=v0.1.9                 # redeploy / rollback
+#
+# main stays continuously deployable but nothing reaches production by
+# accident. Rolling back is deploying an older tag, which is a path that gets
+# exercised by the same workflow as every other deploy rather than a
+# special-case script nobody has run in six months.
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+      - "v[0-9]+.[0-9]+.[0-9]+-*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing git tag to build and deploy (e.g. v0.1.9)"
+        required: true
+        type: string
+      skip_tests:
+        description: "Deploy without re-running the test suite (emergencies only)"
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  GO_VERSION: "1.24"
+
+jobs:
+  # A tag that fails its own tests must not reach production just because it
+  # was tagged. This repeats CI deliberately: CI runs against the PR merge
+  # commit, this runs against the exact tree being shipped.
+  verify:
+    name: verify the tagged tree
+    runs-on: ubuntu-latest
+    if: ${{ !inputs.skip_tests }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+      - run: go vet ./...
+      - run: go test -race -short ./...
+      - run: go run ./cmd/contentlint -dir ./content -strict
+
+  build:
+    name: build and push image
+    runs-on: ubuntu-latest
+    needs: [verify]
+    # `always()` so that skip_tests can bypass verify without skipping build.
+    if: ${{ always() && (needs.verify.result == 'success' || inputs.skip_tests) }}
+    outputs:
+      tag: ${{ steps.meta.outputs.version }}
+      digest: ${{ steps.push.outputs.digest }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: log in to ghcr
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: derive tags and labels
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=tag
+            type=raw,value=${{ inputs.tag }},enable=${{ inputs.tag != '' }}
+            type=sha,format=long
+
+      - name: build and push
+        id: push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            VERSION=${{ steps.meta.outputs.version }}
+            COMMIT=${{ github.sha }}
+            BUILD_DATE=${{ github.event.repository.updated_at }}
+
+  deploy:
+    name: deploy to production
+    runs-on: ubuntu-latest
+    needs: [build]
+    # Create a "production" environment in repo settings to require an approval
+    # here, or add a deployment branch/tag rule. Without one this runs straight
+    # through, which is fine while there are no users.
+    environment:
+      name: production
+      url: https://api.hefesto.fit/healthz
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+
+      - name: set up ssh
+        run: |
+          install -d -m 700 ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -p "${DEPLOY_PORT:-22}" -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+
+      # Ship the files the compose stack reads from disk. .env.prod is NOT here:
+      # it lives only on the server and is never in the repo or in CI.
+      - name: sync deploy files
+        run: |
+          rsync -az --delete-after \
+            -e "ssh -p ${DEPLOY_PORT:-22} -i ~/.ssh/id_ed25519" \
+            --include='docker-compose.prod.yml' \
+            --include='docker/' --include='docker/Caddyfile' \
+            --include='scripts/' --include='scripts/*.sh' \
+            --exclude='*' \
+            ./ "${DEPLOY_USER}@${DEPLOY_HOST}:/srv/hefesto/"
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+
+      - name: deploy
+        run: |
+          ssh -p "${DEPLOY_PORT:-22}" -i ~/.ssh/id_ed25519 \
+            "${DEPLOY_USER}@${DEPLOY_HOST}" \
+            "set -e
+             echo '${{ secrets.GHCR_PULL_TOKEN }}' | docker login ghcr.io -u '${{ github.actor }}' --password-stdin
+             cd /srv/hefesto
+             chmod +x scripts/*.sh
+             HEFESTO_IMAGE='${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}' ./scripts/deploy.sh '${{ needs.build.outputs.tag }}'"
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+
+      # The deploy script already gates on readiness from inside the network.
+      # This checks the same thing from outside, which also proves TLS and
+      # Caddy's routing survived the release.
+      - name: public smoke test
+        run: |
+          for i in $(seq 1 20); do
+            if curl -fsS --max-time 10 https://api.hefesto.fit/healthz | tee /dev/stderr | grep -q '"status":"ok"'; then
+              echo "public endpoint healthy"
+              exit 0
+            fi
+            echo "attempt $i failed, retrying"
+            sleep 5
+          done
+          echo "::error::public endpoint never returned healthy after deploy"
+          exit 1
+
+      - name: summary
+        if: always()
+        run: |
+          {
+            echo "### Deploy ${{ needs.build.outputs.tag }}"
+            echo ""
+            echo "- image: \`${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.build.outputs.tag }}\`"
+            echo "- digest: \`${{ needs.build.outputs.digest }}\`"
+            echo "- commit: \`${{ github.sha }}\`"
+            echo "- result: ${{ job.status }}"
+            echo ""
+            echo "Roll back with: \`gh workflow run deploy.yml -f tag=<previous-tag>\`"
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -6,7 +6,7 @@
 
 ## Context
 
-Lodestar is a training logger plus a skill-graph engine, served to an offline-first
+Hefesto is a training logger plus a skill-graph engine, served to an offline-first
 iOS client. The workload is:
 
 - almost entirely I/O-bound CRUD with a sync protocol on top;

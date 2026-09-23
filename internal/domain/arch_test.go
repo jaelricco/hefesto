@@ -16,11 +16,11 @@ import (
 // business rules with zero I/O. It may not reach into persistence or
 // transport. This test is the enforcement, so the rule cannot rot silently.
 var forbidden = []string{
-	"github.com/jaelricco/lodestar/internal/store",
-	"github.com/jaelricco/lodestar/internal/http",
-	"github.com/jaelricco/lodestar/internal/auth",
-	"github.com/jaelricco/lodestar/internal/media",
-	"github.com/jaelricco/lodestar/internal/sync",
+	"github.com/jaelricco/hefesto/internal/store",
+	"github.com/jaelricco/hefesto/internal/http",
+	"github.com/jaelricco/hefesto/internal/auth",
+	"github.com/jaelricco/hefesto/internal/media",
+	"github.com/jaelricco/hefesto/internal/sync",
 	"database/sql",
 	"net/http",
 	"os",

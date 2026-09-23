@@ -1,0 +1,140 @@
+# Production topology, deliberately the same shape as the development stack.
+#
+# Differences from docker-compose.yml:
+#   - api runs a published image, never a build context
+#   - Caddy terminates TLS and is the only thing bound to a public port
+#   - Postgres is NOT published; it is reachable only on the internal network
+#   - no mailpit, no pgweb, no minio (Hetzner Object Storage replaces MinIO)
+#   - a backup sidecar dumps the database to object storage nightly
+#
+# Used on the server as:
+#   docker compose -f docker-compose.prod.yml --env-file .env.prod <cmd>
+
+name: hefesto
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "5"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?}
+      POSTGRES_DB: ${POSTGRES_DB:?}
+      POSTGRES_INITDB_ARGS: "--locale-provider=icu --icu-locale=en-US --encoding=UTF8"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    # No ports: — the database is not reachable from outside the compose network.
+    command:
+      - "postgres"
+      - "-c"
+      - "shared_buffers=512MB"
+      - "-c"
+      - "effective_cache_size=1536MB"
+      - "-c"
+      - "max_connections=60"
+      - "-c"
+      - "log_min_duration_statement=500"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    logging: *default-logging
+
+  # One-shot. scripts/deploy.sh runs this to completion before touching the API.
+  migrate:
+    image: ${HEFESTO_IMAGE:?}:${HEFESTO_TAG:?}
+    entrypoint: ["/usr/local/bin/goose"]
+    command: ["up"]
+    environment:
+      GOOSE_DRIVER: postgres
+      GOOSE_DBSTRING: ${DATABASE_URL:?}
+      GOOSE_MIGRATION_DIR: /srv/migrations
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+    logging: *default-logging
+
+  api:
+    image: ${HEFESTO_IMAGE:?}:${HEFESTO_TAG:?}
+    restart: unless-stopped
+    # required:false so that `make deploy-check` can validate this file on a
+    # machine that has no production secrets. Presence is enforced where it
+    # matters instead: scripts/deploy.sh refuses to run without .env.prod, and
+    # internal/config rejects a prod process with no signing key.
+    env_file:
+      - path: .env.prod
+        required: false
+    environment:
+      HEFESTO_ENV: prod
+      HEFESTO_HTTP_ADDR: ":8080"
+      HEFESTO_LOG_FORMAT: json
+    expose:
+      - "8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/api", "-healthcheck"]
+      interval: 15s
+      timeout: 3s
+      retries: 4
+      start_period: 20s
+    stop_grace_period: 30s
+    logging: *default-logging
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      HEFESTO_API_DOMAIN: ${HEFESTO_API_DOMAIN:?}
+      HEFESTO_SITE_DOMAIN: ${HEFESTO_SITE_DOMAIN:?}
+      HEFESTO_SITE_DOMAIN_ALT: ${HEFESTO_SITE_DOMAIN_ALT:?}
+      HEFESTO_ACME_EMAIL: ${HEFESTO_ACME_EMAIL:?}
+    volumes:
+      - ./docker/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - api
+    logging: *default-logging
+
+  backup:
+    image: ${HEFESTO_IMAGE:?}:${HEFESTO_TAG:?}
+    restart: unless-stopped
+    user: root
+    entrypoint: ["/bin/sh", "/srv/backup.sh"]
+    environment:
+      PGHOST: postgres
+      PGUSER: ${POSTGRES_USER:?}
+      PGPASSWORD: ${POSTGRES_PASSWORD:?}
+      PGDATABASE: ${POSTGRES_DB:?}
+      HEFESTO_BACKUP_BUCKET: ${HEFESTO_BACKUP_BUCKET:?}
+      HEFESTO_BACKUP_ENDPOINT: ${HEFESTO_BACKUP_ENDPOINT:?}
+      HEFESTO_BACKUP_ACCESS_KEY: ${HEFESTO_BACKUP_ACCESS_KEY:?}
+      HEFESTO_BACKUP_SECRET_KEY: ${HEFESTO_BACKUP_SECRET_KEY:?}
+      HEFESTO_BACKUP_INTERVAL_S: ${HEFESTO_BACKUP_INTERVAL_S:-86400}
+      HEFESTO_BACKUP_RETAIN_DAYS: ${HEFESTO_BACKUP_RETAIN_DAYS:-30}
+    volumes:
+      - ./scripts/backup.sh:/srv/backup.sh:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    logging: *default-logging
+
+volumes:
+  pgdata:
+  caddy_data:
+  caddy_config:

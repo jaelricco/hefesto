@@ -1,4 +1,4 @@
-// Command api is the Lodestar HTTP server.
+// Command api is the Hefesto HTTP server.
 package main
 
 import (
@@ -13,8 +13,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/jaelricco/lodestar/internal/config"
-	lhttp "github.com/jaelricco/lodestar/internal/http"
+	"github.com/jaelricco/hefesto/internal/config"
+	lhttp "github.com/jaelricco/hefesto/internal/http"
 )
 
 // Set via -ldflags at build time.
@@ -45,7 +45,7 @@ func run() error {
 	}
 	slog.SetDefault(newLogger(cfg))
 
-	slog.Info("starting lodestar api",
+	slog.Info("starting hefesto api",
 		"version", version, "commit", commit, "env", cfg.Env, "addr", cfg.HTTPAddr)
 
 	// Phase 1 replaces nil with the pgx pool; /readyz reports 503 until then.
@@ -103,12 +103,12 @@ func newLogger(cfg config.Config) *slog.Logger {
 	} else {
 		h = slog.NewJSONHandler(os.Stdout, opts)
 	}
-	return slog.New(h).With("service", "lodestar-api")
+	return slog.New(h).With("service", "hefesto-api")
 }
 
 // probe implements `api -healthcheck` so the container image needs no curl.
 func probe() int {
-	addr := os.Getenv("LODESTAR_HTTP_ADDR")
+	addr := os.Getenv("HEFESTO_HTTP_ADDR")
 	if addr == "" {
 		addr = ":8080"
 	}
