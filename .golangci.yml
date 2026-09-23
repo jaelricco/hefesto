@@ -1,14 +1,11 @@
+# golangci-lint v2 configuration. CI pins the version in ci.yml.
+version: "2"
 run:
-  timeout: 5m
   tests: true
-
+  build-tags:
+    - integration
 linters:
   enable:
-    - errcheck
-    - govet
-    - ineffassign
-    - staticcheck
-    - unused
     - bodyclose
     - errorlint
     - gocritic
@@ -20,28 +17,41 @@ linters:
     - sqlclosecheck
     - unconvert
     - wrapcheck
-
-linters-settings:
-  errorlint:
-    errorf: true
-  wrapcheck:
-    ignorePackageGlobs:
-      - github.com/jaelricco/hefesto/*
-  revive:
+  settings:
+    errorlint:
+      errorf: true
+    gosec:
+      excludes:
+        - G404
+    revive:
+      rules:
+        - name: package-comments
+          disabled: true
+    wrapcheck:
+      ignore-package-globs:
+        - github.com/jaelricco/hefesto/*
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
     rules:
-      - name: package-comments
-        disabled: true
-  gosec:
-    excludes:
-      - G404 # math/rand is only used in tests
-
-issues:
-  exclude-rules:
-    - path: _test\.go
-      linters:
-        - gosec
-        - wrapcheck
-    # sqlc-generated code is not ours to lint
-    - path: internal/store/dbgen/
-      linters:
-        - all
+      - linters:
+          - gosec
+          - wrapcheck
+        path: _test\.go
+    paths:
+      # sqlc-generated code is not ours to lint
+      - internal/store/dbgen/
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
