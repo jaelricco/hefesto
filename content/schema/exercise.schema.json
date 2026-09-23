@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hefesto.fit/schema/exercise.schema.json",
+  "title": "Exercise (content/exercises/<slug>.yaml)",
+  "description": "Something an athlete performs and logs. Not a skill.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["slug", "name", "family", "default_measure"],
+  "properties": {
+    "slug": { "$ref": "common.schema.json#/$defs/slug" },
+    "status": { "$ref": "common.schema.json#/$defs/status" },
+    "name": { "type": "string", "minLength": 1 },
+    "aka": { "$ref": "common.schema.json#/$defs/text_list" },
+    "family": { "$ref": "common.schema.json#/$defs/slug" },
+    "default_measure": { "type": "string", "enum": ["reps", "hold_seconds", "distance_m", "none"] },
+    "load_semantics": { "type": "string", "enum": ["added", "external", "none"], "default": "added" },
+    "is_bodyweight": { "type": "boolean", "default": true },
+    "unilateral": { "type": "boolean", "default": false },
+    "tempo_applicable": { "type": "boolean", "default": true },
+    "equipment": { "$ref": "common.schema.json#/$defs/text_list" },
+    "summary": { "type": "string" },
+    "cues": { "$ref": "common.schema.json#/$defs/text_list" },
+    "common_faults": { "$ref": "common.schema.json#/$defs/text_list" }
+  }
+}

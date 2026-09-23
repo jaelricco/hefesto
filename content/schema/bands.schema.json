@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hefesto.fit/schema/bands.schema.json",
+  "title": "Band catalogue (content/bands/<brand>.yaml)",
+  "description": "Global resistance-band catalogue entries. Users add their own bands through the API, not here.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["bands"],
+  "properties": {
+    "bands": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["brand", "colour_label", "resistance_min_kg", "resistance_max_kg"],
+        "properties": {
+          "brand": { "type": "string", "minLength": 1 },
+          "colour_label": { "type": "string", "minLength": 1 },
+          "resistance_min_kg": { "type": "number", "minimum": 0, "maximum": 999 },
+          "resistance_max_kg": { "type": "number", "minimum": 0, "maximum": 999 },
+          "length_cm": { "type": "number", "exclusiveMinimum": 0 },
+          "thickness_mm": { "type": "number", "exclusiveMinimum": 0 }
+        }
+      }
+    }
+  }
+}

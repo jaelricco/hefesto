@@ -1,0 +1,260 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hefesto.fit/schema/skill.schema.json",
+  "title": "Skill (content/skills/<slug>.yaml)",
+  "description": "A node on the skill map, with its ordered levels, the exercises that train and test each level, prerequisite edges, and injury notes.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "slug",
+    "name",
+    "family",
+    "difficulty_tier",
+    "levels"
+  ],
+  "properties": {
+    "slug": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "status": {
+      "$ref": "common.schema.json#/$defs/status"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "family": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "difficulty_tier": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 10
+    },
+    "is_milestone": {
+      "type": "boolean",
+      "default": false
+    },
+    "aka": {
+      "$ref": "common.schema.json#/$defs/text_list"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "primary_muscles": {
+      "$ref": "common.schema.json#/$defs/text_list"
+    },
+    "common_faults": {
+      "$ref": "common.schema.json#/$defs/text_list"
+    },
+    "map": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "constellation",
+        "x",
+        "y"
+      ],
+      "properties": {
+        "constellation": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+([_-][a-z0-9]+)*$",
+          "maxLength": 80
+        },
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        }
+      }
+    },
+    "levels": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/level"
+      }
+    },
+    "injuries": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/injury"
+      }
+    }
+  },
+  "if": {
+    "properties": {
+      "is_milestone": {
+        "const": true
+      }
+    },
+    "required": [
+      "is_milestone"
+    ]
+  },
+  "then": {
+    "required": [
+      "map"
+    ]
+  },
+  "$defs": {
+    "level_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "skill",
+        "level"
+      ],
+      "properties": {
+        "skill": {
+          "$ref": "common.schema.json#/$defs/slug"
+        },
+        "level": {
+          "$ref": "common.schema.json#/$defs/slug"
+        },
+        "weight": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 99
+        }
+      }
+    },
+    "level": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slug",
+        "name",
+        "order",
+        "exercises"
+      ],
+      "properties": {
+        "slug": {
+          "$ref": "common.schema.json#/$defs/slug"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "est_weeks_from_prev": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "exercises": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "slug",
+              "role"
+            ],
+            "properties": {
+              "slug": {
+                "$ref": "common.schema.json#/$defs/slug"
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "primary_test",
+                  "progression",
+                  "accessory",
+                  "prehab"
+                ]
+              }
+            }
+          }
+        },
+        "unlock_criteria": {
+          "$ref": "criteria.schema.json"
+        },
+        "prerequisites": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/level_ref"
+          }
+        },
+        "links": {
+          "description": "Non-prerequisite edges into this level.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "skill",
+              "level",
+              "relation"
+            ],
+            "properties": {
+              "skill": {
+                "$ref": "common.schema.json#/$defs/slug"
+              },
+              "level": {
+                "$ref": "common.schema.json#/$defs/slug"
+              },
+              "weight": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "maximum": 99
+              },
+              "relation": {
+                "type": "string",
+                "enum": [
+                  "recommended",
+                  "alternative",
+                  "antagonist"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "injury": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "region",
+        "name",
+        "disclaimer"
+      ],
+      "properties": {
+        "region": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "risk_factors": {
+          "$ref": "common.schema.json#/$defs/text_list"
+        },
+        "early_signs": {
+          "$ref": "common.schema.json#/$defs/text_list"
+        },
+        "prehab_exercises": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/exercise_ref"
+          }
+        },
+        "disclaimer": {
+          "const": "educational_only"
+        }
+      }
+    }
+  }
+}

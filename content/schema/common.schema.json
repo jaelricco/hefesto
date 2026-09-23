@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hefesto.fit/schema/common.schema.json",
+  "title": "Shared definitions",
+  "$defs": {
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "maxLength": 80
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "draft_placeholder", "retired"],
+      "default": "active"
+    },
+    "measure": {
+      "type": "string",
+      "enum": ["reps", "hold_seconds", "distance_m"]
+    },
+    "text_list": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "exercise_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["slug"],
+      "properties": { "slug": { "$ref": "#/$defs/slug" } }
+    }
+  }
+}

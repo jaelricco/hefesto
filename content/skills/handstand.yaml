@@ -1,0 +1,17 @@
+# PLACEHOLDER — proves the pipeline's shape. Replace with researched content.
+# A second root skill in another family, with no unlock criteria: it shows the
+# self-attest-only path.
+slug: handstand
+status: draft_placeholder
+name: Handstand
+family: handstand
+difficulty_tier: 3
+is_milestone: true
+summary: Placeholder entry; not coaching content.
+map: { constellation: balance_west, x: 80, y: 240 }
+levels:
+  - slug: wall
+    name: Wall Handstand
+    order: 1
+    exercises:
+      - { slug: wall-handstand-hold, role: primary_test }
