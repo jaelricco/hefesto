@@ -15,7 +15,7 @@ type Health interface {
 
 // RouterDeps is everything the transport layer needs from the outside world.
 //
-// Phase 0 wires only health. Phase 2 adds the stores and the auth service.
+// Only health is wired so far. Phase 2 adds the stores and the auth service.
 type RouterDeps struct {
 	DB      Health
 	Version string
@@ -24,9 +24,9 @@ type RouterDeps struct {
 
 // NewRouter builds the HTTP handler.
 //
-// Phase 0 uses net/http's pattern router. Phase 1 replaces this with chi so
-// that subrouters, middleware groups and URL parameters stay readable; the
-// handler signatures do not change when it does.
+// Health endpoints use net/http's pattern router. Phase 2 moves to chi as the
+// first real routes arrive, so that subrouters, middleware groups and URL
+// parameters stay readable; the handler signatures do not change when it does.
 func NewRouter(deps RouterDeps) http.Handler {
 	mux := http.NewServeMux()
 

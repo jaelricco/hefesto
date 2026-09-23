@@ -71,6 +71,11 @@ migrate-new: ## Create a new migration: make migrate-new name=add_foo
 sqlc: ## Regenerate typed query code from db/queries
 	sqlc generate
 
+.PHONY: sqlc-check
+sqlc-check: ## Fail if generated query code is stale
+	sqlc generate
+	@test -z "$$(git status --porcelain -- internal/store/dbgen)" || (git status --short -- internal/store/dbgen; echo "generated code is stale: run make sqlc"; exit 1)
+
 .PHONY: gen-openapi
 gen-openapi: ## Validate and bundle the OpenAPI spec
 	npx --yes @redocly/cli@latest lint api/openapi.yaml
@@ -113,7 +118,7 @@ test: ## Unit tests (no database)
 	go test -race -short $(PKG)
 
 .PHONY: test-integration
-test-integration: ## Integration tests against a real Postgres via testcontainers
+test-integration: ## Integration tests against a real Postgres via testcontainers (or HEFESTO_TEST_DATABASE_URL)
 	go test -race -tags=integration -count=1 $(PKG)
 
 .PHONY: cover
