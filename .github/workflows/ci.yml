@@ -123,9 +123,18 @@ jobs:
         run: npx --yes @redocly/cli@latest lint api/openapi.yaml
       - name: breaking-change diff against base
         if: github.event_name == 'pull_request'
+        env:
+          # Pinned and checksum-verified. @useoptic/openapi-cli, used before,
+          # is unmaintained and every published version fails to start.
+          OASDIFF_VERSION: 1.32.1
+          OASDIFF_SHA256: 7c8939fc49b75ee11fec66a5b83b37a2fca6aee109fed85013b1ba2ac2a1ee7f
         run: |
-          git show origin/${{ github.base_ref }}:api/openapi.yaml > /tmp/base-openapi.yaml 2>/dev/null || exit 0
-          npx --yes @useoptic/openapi-cli@latest diff /tmp/base-openapi.yaml api/openapi.yaml --check
+          git show "origin/${GITHUB_BASE_REF}:api/openapi.yaml" > /tmp/base-openapi.yaml 2>/dev/null || exit 0
+          curl -fsSL -o /tmp/oasdiff.tgz \
+            "https://github.com/oasdiff/oasdiff/releases/download/v${OASDIFF_VERSION}/oasdiff_${OASDIFF_VERSION}_linux_amd64.tar.gz"
+          echo "${OASDIFF_SHA256}  /tmp/oasdiff.tgz" | sha256sum -c -
+          tar -xzf /tmp/oasdiff.tgz -C /tmp oasdiff
+          /tmp/oasdiff breaking /tmp/base-openapi.yaml api/openapi.yaml --fail-on ERR
 
   scripts:
     name: shell scripts and workflows lint
