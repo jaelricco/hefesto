@@ -1,5 +1,5 @@
 # Development image: hot reload via air, source bind-mounted from the host.
-FROM golang:1.24-alpine
+FROM golang:1.25-alpine
 WORKDIR /app
 RUN apk add --no-cache git ca-certificates curl && \
     go install github.com/air-verse/air@latest
