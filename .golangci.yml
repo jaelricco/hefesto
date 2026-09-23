@@ -1,0 +1,47 @@
+run:
+  timeout: 5m
+  tests: true
+
+linters:
+  enable:
+    - errcheck
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+    - bodyclose
+    - errorlint
+    - gocritic
+    - gosec
+    - misspell
+    - nilerr
+    - revive
+    - rowserrcheck
+    - sqlclosecheck
+    - unconvert
+    - wrapcheck
+
+linters-settings:
+  errorlint:
+    errorf: true
+  wrapcheck:
+    ignorePackageGlobs:
+      - github.com/jaelricco/lodestar/*
+  revive:
+    rules:
+      - name: package-comments
+        disabled: true
+  gosec:
+    excludes:
+      - G404 # math/rand is only used in tests
+
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - gosec
+        - wrapcheck
+    # sqlc-generated code is not ours to lint
+    - path: internal/store/dbgen/
+      linters:
+        - all

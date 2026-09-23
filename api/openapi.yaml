@@ -1,0 +1,120 @@
+openapi: 3.1.0
+info:
+  title: Lodestar API
+  version: 0.1.0
+  summary: Calisthenics training logger and skill map
+  description: |
+    Phase 0 skeleton. The full surface described in the project brief §4 is
+    written in Phase 2 (auth, exercises, sessions) and Phase 3 (skill map,
+    unlocks), and this file is the source of truth for the generated Swift
+    client — DTOs are never hand-written.
+
+    All errors use `application/problem+json` (RFC 9457).
+  license:
+    name: Proprietary
+servers:
+  - url: http://localhost:8080
+    description: local development
+  - url: https://api.lodestar.app
+    description: production
+
+tags:
+  - name: system
+    description: Liveness and readiness probes.
+
+paths:
+  /healthz:
+    get:
+      tags: [system]
+      operationId: getHealth
+      summary: Liveness probe
+      description: Returns 200 as long as the process is running. Never touches the database.
+      security: []
+      responses:
+        "200":
+          description: The process is alive.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /readyz:
+    get:
+      tags: [system]
+      operationId: getReadiness
+      summary: Readiness probe
+      description: Returns 200 when every dependency needed to serve traffic is reachable.
+      security: []
+      responses:
+        "200":
+          description: Ready to serve traffic.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReadyStatus"
+        "503":
+          $ref: "#/components/responses/Problem"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    HealthStatus:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [ok]
+        version:
+          type: string
+        commit:
+          type: string
+
+    ReadyStatus:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [ready]
+
+    Problem:
+      type: object
+      description: RFC 9457 problem detail.
+      required: [type, title, status]
+      properties:
+        type:
+          type: string
+          format: uri-reference
+        title:
+          type: string
+        status:
+          type: integer
+          format: int32
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri-reference
+        trace_id:
+          type: string
+        errors:
+          type: object
+          additionalProperties:
+            type: string
+
+  responses:
+    Problem:
+      description: An error occurred.
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+
+security:
+  - bearerAuth: []

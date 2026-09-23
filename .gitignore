@@ -1,0 +1,28 @@
+# binaries / build output
+/bin/
+/tmp/
+*.exe
+
+# env & secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# go
+vendor/
+coverage.out
+coverage.html
+
+# ios
+ios/**/xcuserdata/
+ios/**/*.xcworkspace/xcuserdata/
+ios/**/DerivedData/
+*.xcuserstate
+
+# editors / os
+.DS_Store
+.idea/
+.vscode/
+*.swp
