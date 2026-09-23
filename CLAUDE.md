@@ -6,8 +6,9 @@ it. Those two halves are the product — never build one without the other in
 mind.
 
 Read `docs/PROJECT_BRIEF.md` for the full spec and `docs/adr/` for decisions
-already taken. `docs/DDL_PROPOSAL.md` is the schema; it is under review and
-**no migrations exist yet**.
+already taken. The schema is `db/migrations/`; `docs/DDL_PROPOSAL.md` explains
+the reasoning behind it and ADR 0005 records where it changed on review.
+Content is authored per `docs/CONTENT_AUTHORING.md`.
 
 ## Phase discipline
 
@@ -22,6 +23,7 @@ make up               # full stack, seeded
 make down / make reset
 make test             # unit, no database
 make test-integration # testcontainers against real Postgres
+                      # (no Docker? HEFESTO_TEST_DATABASE_URL=<server url>)
 make lint
 make check            # what CI runs
 make content-validate
