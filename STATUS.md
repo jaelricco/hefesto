@@ -9,69 +9,92 @@ that stands.
 - **Phase 0** — scaffold, Compose, CI, deploy pipeline, ADRs 0001–0004, DDL proposal.
 - **Phase 1** — migrations, content pipeline, seed (ADRs 0005–0006). Merged in #4.
 
-## Current phase: 2 — auth and the core API (complete, awaiting review)
+- **Phase 2** — auth, catalogue and the logging API (ADR 0007). Merged in #5.
+
+## Current phase: 3 — unlock engine, XP and streaks (complete, awaiting review)
 
 Built:
 
-- **OpenAPI** `api/openapi.yaml` v0.2.0 covers auth, me, exercises, bands and
-  sessions/blocks/sets. It is embedded in the binary and **enforced**: every
-  request body is validated against its schema, integration tests validate
-  every response against its schema, and a unit test fails if routes and spec
-  drift apart (ADR 0007).
-- **Auth** (`internal/auth`): email/password with argon2id; Sign in with Apple
-  (identity token checked against Apple's keys, nonce, audience; verified
-  emails link to existing accounts); 15-minute HS256 access tokens; rotating
-  refresh tokens with family-wide revocation on reuse; per-device sign-out;
-  per-address rate limiting on credential endpoints.
-- **Account deletion**: `DELETE /v1/me` starts the 30-day grace period and
-  signs out everywhere; signing in cancels it; an hourly, advisory-locked job
-  hard-deletes accounts past it.
-- **Logging API**: create/list/get/patch/delete sessions; `PUT`/`DELETE`
-  blocks; `PUT`/`DELETE` sets — the one write path, a set with its complete
-  ordered `elements`, one for a plain set, N for a combo; assistance and
-  derived `assistance_class`; a reorder endpoint; "repeat last set".
-  Client-generated UUIDv7 ids throughout, as the Phase 4 sync contract needs.
-- **Catalogue**: exercise search (fuzzy name, family, equipment) with an
-  `ETag` keyed on the content version; bands (catalogue + my own).
-- **Domain** (`internal/domain/training`): set/element/block/session rules and
-  the assistance-class derivation, pure and unit-tested.
-- **Tests**: unit tests for the domain, tokens, passwords, Apple verification
-  and the route/spec contract; 23 HTTP integration tests against real Postgres
-  covering the auth flows, reuse detection, deletion and reaping, the
-  catalogue, bands, combos, element replacement, assistance, validation,
-  ordering, tombstones, pagination, last-set and cross-user isolation.
+- **Unlock engine** (`internal/domain/progress`). All of it is pure and has
+  100 % statement coverage.
+  - `Evaluate` checks criteria against the athlete's completed sets.
+  - `Advance` moves levels through `locked → available → in_progress →
+    unlocked`, in graph order and gated on prerequisites.
+  - `SessionXP`, `UnlockXP` and `StreakXP` award XP.
+  - `ComputeStreak` computes streaks with freezes.
+  - The rules are in ADR 0008.
+- **Golden tests**: 26 cases in `testdata/criteria/`, one per rule. They
+  cover the brief's example, combos, windows, assistance and load, form
+  quality, excluded elements, defaults, evidence choice, and seven
+  invalid-criteria cases.
+- **API** (`api/openapi.yaml` v0.3.0):
+  - `POST /v1/sessions/{id}/complete` returns the levels unlocked, the levels
+    newly available, the XP awarded and total, and the streak. Completing
+    twice is idempotent.
+  - `GET /v1/skills` returns the graph, with an `ETag` on the content version.
+  - `GET /v1/skills/{slug}` returns a skill with its injury notes. The
+    educational-only disclaimer is in the payload.
+  - `GET /v1/me/skill-map` returns the graph and the athlete's state on every
+    level in one payload.
+  - `POST /v1/me/skills/{levelId}/attest` records a self-attested unlock.
+  - `GET /v1/me/progress` returns XP and the streak.
+- **Completion** runs in one transaction under a per-user advisory lock. It
+  marks the session completed, records the training day, evaluates, writes
+  the states and append-only unlock events, awards XP (unique per source and
+  reference, so it cannot be double-awarded), and recomputes the streak.
+- **Tests**: 8 new HTTP integration tests against real Postgres.
+  - A partial unlock, then an unlock.
+  - Assisted and draft sets do not count.
+  - Evidence, newly available levels and the XP amounts.
+  - An idempotent repeat.
+  - The first session of the day.
+  - Unlocks survive deleting their evidence.
+  - A prerequisite chain unlocking in one completion.
+  - Self-attest, and the 409.
+  - Rest days and freezes keep a streak.
+  - The 7-day milestone.
+  - Completion errors.
+  - The graph with its `ETag`/304, edges, and the injury disclaimer.
 
 ### Verification
 
-Run in the development container against PostgreSQL 16.13: `golangci-lint`
-clean; `go test -race -short ./...` and `go test -race -tags integration ./...`
-green; `redocly lint` clean apart from four warnings carried over from Phase 0;
-`oasdiff` reports no breaking change against `main`; the API was exercised by
-hand with curl against the dev database.
+Run in the development container against PostgreSQL 16:
+- `golangci-lint` is clean.
+- `go test -race -short ./...` and `go test -race -tags integration ./...` are
+  green.
+- `sqlc` output is current.
+- `redocly lint` is clean apart from the four warnings from Phase 0.
+- `oasdiff` reports no breaking change against `main`.
 
-As in Phase 1, Docker image pulls are blocked here, so the integration tests
-ran through `HEFESTO_TEST_DATABASE_URL`; CI runs them on testcontainers.
+Writing the integration tests caught a real bug, now fixed. Postgres checks a
+`CHECK` constraint against the proposed `INSERT` row before `ON CONFLICT`
+applies. Re-saving an unlocked level therefore has to send its
+`first_achieved_at`.
 
 ### Deliberately not in this phase
 
-- **Email verification and password reset.** Not in the brief's §4 list; the
-  `email_verifications` table is ready. Worth doing before a public release.
-- **`POST /v1/sessions/{id}/complete`** arrives with the unlock engine in
-  Phase 3, so a session cannot be completed yet (only drafted or abandoned).
-- **Templates** have tables but no endpoints yet.
+- **`user_exercise_bests` and `make rebuild-bests`.** Nothing reads them yet.
+  Evaluation reads the history directly, which is fast enough for years of
+  logs. They arrive when a screen needs personal bests.
+- **Badges.** The tables exist, but there is no badge content to award.
+- **Plan adherence and deload XP.** Both need plans, which have no endpoints
+  yet. Deload days already count for streaks once something records them.
 
 ### Open questions for review
 
-1. **Registration reveals a taken email** (409). Acceptable, or should
-   registration go through email verification so it cannot be probed?
-2. **Rate limits** are in memory, per API process: 10 credential attempts per
-   minute per address. Fine for one instance; revisit if we scale out.
-3. **Device ids are per account.** A phone switching accounts must mint a new
-   device id. The iOS client needs to know this in Phase 5.
-4. Phase 1's questions still stand: the implicit level ladder, permanent
-   levels, criteria `assistance: none | any`, and user bands in Phase 4 sync.
+1. **Prerequisite gating.** Should evidence for an advanced level unlock the
+   levels before it too? At the moment a met level stays locked until its
+   prerequisites unlock, although one completion can unlock a whole chain.
+2. **Self-attested unlocks earn no XP.** Is that too strict for athletes who
+   arrive already strong?
+3. **Daily streaks.** A three-times-a-week athlete needs to log rest days or
+   spend freezes. Would a weekly streak ("trained N times this week") suit the
+   brief better?
+4. **Occurrences count set entries**, so two qualifying sets in one session
+   satisfy `occurrences: 2`. Should it be two separate sessions instead?
+5. Phase 2's questions still stand (registration revealing a taken email,
+   in-memory rate limits, per-account device ids).
 
-## Next: Phase 3
+## Next: Phase 4
 
-Unlock rules engine with golden tests, `/v1/me/skill-map`, `/complete`
-returning unlocks, XP and streaks.
+Sync endpoints, idempotency, and media uploads through MinIO presigned URLs.

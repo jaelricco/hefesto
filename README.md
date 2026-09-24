@@ -13,9 +13,10 @@ The logger feeds the map. That coupling is the product.
 
 ## Status
 
-**Phase 2 — auth and the core API**, awaiting review. Accounts (email and
-Sign in with Apple), the exercise catalogue, bands, and the session logger —
-sets and combos through one write path — are live against the migrated schema.
+**Phase 3 — the unlock engine**, awaiting review. Completing a session
+evaluates every skill level against what was logged and returns the unlocks,
+XP and streak; the skill map, skill detail (with injury notes and their
+disclaimer), self-attest and progress endpoints are live.
 Current state and open questions: [`STATUS.md`](STATUS.md).
 
 See [`docs/PROJECT_BRIEF.md`](docs/PROJECT_BRIEF.md) for the full plan,
