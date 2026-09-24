@@ -22,8 +22,9 @@ being asked. Current state is in the project's `STATUS.md`.
 make up               # full stack, seeded
 make down / make reset
 make test             # unit, no database
-make test-integration # testcontainers against real Postgres
-                      # (no Docker? HEFESTO_TEST_DATABASE_URL=<server url>)
+make test-integration # testcontainers against real Postgres and MinIO
+                      # (no Docker? HEFESTO_TEST_DATABASE_URL=<server url>,
+                      #  HEFESTO_TEST_S3_ENDPOINT=<s3 url> + _ACCESS_KEY/_SECRET_KEY)
 make lint
 make check            # what CI runs
 make content-validate

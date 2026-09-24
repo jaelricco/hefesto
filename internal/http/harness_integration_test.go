@@ -29,6 +29,7 @@ import (
 	lhttp "github.com/jaelricco/hefesto/internal/http"
 	"github.com/jaelricco/hefesto/internal/store"
 	"github.com/jaelricco/hefesto/internal/testutil/pgtest"
+	"github.com/jaelricco/hefesto/internal/testutil/s3test"
 )
 
 func TestMain(m *testing.M) { os.Exit(pgtest.Run(m)) }
@@ -44,6 +45,19 @@ type api struct {
 	store    *store.Store
 	schemas  *lhttp.Schemas
 	appleKey *rsa.PrivateKey
+	bucket   *s3test.Bucket // set by withMedia
+}
+
+// option adjusts a test server before it starts.
+type option func(t *testing.T, a *api, deps *lhttp.RouterDeps)
+
+// withMedia gives the server object storage: a fresh bucket of its own.
+func withMedia() option {
+	return func(t *testing.T, a *api, deps *lhttp.RouterDeps) {
+		b := s3test.New(t)
+		a.bucket = &b
+		deps.Media, deps.PresignTTL = b.Store, 5*time.Minute
+	}
 }
 
 type staticKeys map[string]*rsa.PublicKey
@@ -55,7 +69,7 @@ func (s staticKeys) Key(_ context.Context, kid string) (*rsa.PublicKey, error) {
 	return nil, errors.New("unknown kid")
 }
 
-func newAPI(t *testing.T) *api {
+func newAPI(t *testing.T, opts ...option) *api {
 	t.Helper()
 	pool := pgtest.New(t)
 	st := store.New(pool)
@@ -88,12 +102,17 @@ func newAPI(t *testing.T) *api {
 	if err != nil {
 		t.Fatal(err)
 	}
-	srv := httptest.NewServer(lhttp.NewRouter(lhttp.RouterDeps{
+	a := &api{t: t, pool: pool, store: st, schemas: schemas, appleKey: appleKey}
+	deps := lhttp.RouterDeps{
 		DB: pool, Auth: svc, Store: st, Schemas: schemas,
 		DeletionGrace: 30 * 24 * time.Hour, AuthPerMinute: 10000,
-	}))
-	t.Cleanup(srv.Close)
-	return &api{t: t, srv: srv, pool: pool, store: st, schemas: schemas, appleKey: appleKey}
+	}
+	for _, o := range opts {
+		o(t, a, &deps)
+	}
+	a.srv = httptest.NewServer(lhttp.NewRouter(deps))
+	t.Cleanup(a.srv.Close)
+	return a
 }
 
 // res is a response, already read.
@@ -112,10 +131,14 @@ func (a *api) call(method, path, token string, body any) res {
 	return a.do(method, path, token, body, nil)
 }
 
-// callWith sends a bodiless request with extra headers.
-func (a *api) callWith(method, path, token string, headers map[string]string) res {
+// callWith sends a request with extra headers.
+func (a *api) callWith(method, path, token string, headers map[string]string, body ...any) res {
 	a.t.Helper()
-	return a.do(method, path, token, nil, headers)
+	var b any
+	if len(body) > 0 {
+		b = body[0]
+	}
+	return a.do(method, path, token, b, headers)
 }
 
 func (a *api) do(method, path, token string, body any, headers map[string]string) res {

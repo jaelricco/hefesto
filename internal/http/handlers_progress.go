@@ -5,8 +5,6 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
-
-	"github.com/jaelricco/hefesto/internal/store"
 )
 
 func (h *handlers) completeSession(w http.ResponseWriter, r *http.Request) error {
@@ -18,26 +16,11 @@ func (h *handlers) completeSession(w http.ResponseWriter, r *http.Request) error
 	if err := h.body(w, r, "SessionComplete", &in); err != nil {
 		return err
 	}
-	c, err := h.Store.CompleteSession(r.Context(), writer(r, in.UpdatedAt), id, store.CompleteInput{
-		CompletedAt: in.CompletedAt, EndedAt: in.EndedAt, PerceivedFatigue: in.PerceivedFatigue, BodyweightKg: in.BodyweightKg,
-	})
+	c, err := h.Store.CompleteSession(r.Context(), writer(r, in.UpdatedAt), id, in.toStore())
 	if err != nil {
 		return err
 	}
-	out := completionOut{
-		Session: sessionFrom(c.Session), AlreadyCompleted: c.AlreadyCompleted,
-		Unlocked: make([]unlockOut, len(c.Unlocked)), NewlyAvailable: c.NewlyAvailable,
-		XPAwarded: make([]xpAwardOut, len(c.XPAwarded)), XPTotal: c.XPTotal, Streak: streakFrom(c.Streak),
-	}
-	if out.NewlyAvailable == nil {
-		out.NewlyAvailable = []uuid.UUID{}
-	}
-	for i, u := range c.Unlocked {
-		out.Unlocked[i] = unlockFrom(u)
-	}
-	for i, a := range c.XPAwarded {
-		out.XPAwarded[i] = xpAwardOut{Source: a.Source, Amount: a.Amount}
-	}
+	out := completionFrom(c)
 	WriteJSON(w, r, http.StatusOK, out)
 	return nil
 }

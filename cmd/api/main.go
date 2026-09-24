@@ -15,9 +15,12 @@ import (
 	"time"
 	_ "time/tzdata" // IANA zones even on an image without tzdata
 
+	"github.com/google/uuid"
+
 	"github.com/jaelricco/hefesto/internal/auth"
 	"github.com/jaelricco/hefesto/internal/config"
 	lhttp "github.com/jaelricco/hefesto/internal/http"
+	"github.com/jaelricco/hefesto/internal/media"
 	"github.com/jaelricco/hefesto/internal/store"
 )
 
@@ -179,24 +182,69 @@ func wireAPI(ctx context.Context, cfg config.Config, deps *lhttp.RouterDeps, st 
 	deps.Auth, deps.Store, deps.Schemas = svc, st, schemas
 	deps.TrustProxy, deps.DeletionGrace = cfg.TrustProxyHeaders, cfg.AccountDeletionGrace
 
-	go reapDeletedAccounts(ctx, st, cfg.AccountDeletionGrace)
+	var objects media.Store
+	if cfg.MediaEnabled() {
+		s3, err := media.NewS3(media.Config{
+			Endpoint: cfg.S3Endpoint, PublicEndpoint: cfg.S3PublicEndpoint, Region: cfg.S3Region,
+			Bucket: cfg.S3Bucket, AccessKey: cfg.S3AccessKey, SecretKey: cfg.S3SecretKey, PathStyle: cfg.S3PathStyle,
+		})
+		if err != nil {
+			return err
+		}
+		pingCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+		if err := s3.Ping(pingCtx); err != nil {
+			// Not fatal: logging works without media, and storage may come back.
+			slog.Warn("object storage is not reachable; media endpoints will fail until it is", "error", err)
+		}
+		cancel()
+		objects = s3
+		deps.Media, deps.PresignTTL = s3, cfg.S3PresignTTL
+	} else {
+		slog.Warn("HEFESTO_S3_ENDPOINT is not set; media endpoints will answer 503")
+	}
+
+	go housekeeping(ctx, st, objects, cfg.AccountDeletionGrace)
 	return nil
 }
 
-// reapDeletedAccounts hard-deletes accounts past their grace period, hourly.
-// It is idempotent and advisory-locked, so running it in every API process
-// is safe.
-func reapDeletedAccounts(ctx context.Context, st *store.Store, grace time.Duration) {
+// housekeeping runs the hourly jobs: it hard-deletes accounts past their
+// grace period (and their media objects), fails uploads never completed, and
+// drops expired idempotency keys. Every job is idempotent and the reaper is
+// advisory-locked, so running it in every API process is safe.
+func housekeeping(ctx context.Context, st *store.Store, objects media.Store, grace time.Duration) {
 	tick := time.NewTicker(time.Hour)
 	defer tick.Stop()
 	for {
-		n, err := st.ReapDeletedUsers(ctx, grace, nil)
+		var purge func(context.Context, uuid.UUID) error
+		if objects != nil {
+			purge = func(ctx context.Context, userID uuid.UUID) error {
+				return objects.RemovePrefix(ctx, store.MediaPrefix(userID))
+			}
+		}
+		n, err := st.ReapDeletedUsers(ctx, grace, purge)
 		switch {
 		case err != nil && ctx.Err() == nil:
 			slog.Error("reaping deleted accounts failed", "error", err)
 		case n > 0:
 			slog.Info("reaped deleted accounts", "count", n)
 		}
+
+		if objects != nil {
+			keys, err := st.ExpirePendingMedia(ctx, time.Now().Add(-24*time.Hour))
+			if err != nil && ctx.Err() == nil {
+				slog.Error("expiring pending uploads failed", "error", err)
+			}
+			for _, k := range keys {
+				if err := objects.Remove(ctx, k); err != nil && ctx.Err() == nil {
+					slog.Error("removing an abandoned upload failed", "key", k, "error", err)
+				}
+			}
+		}
+
+		if _, err := st.PurgeExpiredIdempotencyKeys(ctx); err != nil && ctx.Err() == nil {
+			slog.Error("purging idempotency keys failed", "error", err)
+		}
+
 		select {
 		case <-ctx.Done():
 			return

@@ -11,6 +11,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/jaelricco/hefesto/internal/auth"
+	"github.com/jaelricco/hefesto/internal/media"
 	"github.com/jaelricco/hefesto/internal/store"
 )
 
@@ -37,6 +38,11 @@ type RouterDeps struct {
 	DeletionGrace time.Duration
 	// AuthPerMinute limits credential attempts per client address.
 	AuthPerMinute float64
+
+	// Media is object storage; nil makes the media endpoints answer 503.
+	Media media.Store
+	// PresignTTL is how long upload and download URLs stay valid.
+	PresignTTL time.Duration
 }
 
 // NewRouter builds the HTTP handler.
@@ -115,6 +121,14 @@ func NewRouter(deps RouterDeps) http.Handler {
 				r.Get("/me/skill-map", h.wrap(h.getMySkillMap))
 				r.Post("/me/skills/{levelId}/attest", h.wrap(h.attestLevel))
 				r.Get("/me/progress", h.wrap(h.getMyProgress))
+
+				r.Get("/sync", h.wrap(h.pullChanges))
+				r.Post("/sync", h.wrap(h.pushChanges))
+
+				r.Post("/media/uploads", h.wrap(h.createUpload))
+				r.Post("/media/{mediaId}/complete", h.wrap(h.completeUpload))
+				r.Get("/media/{mediaId}", h.wrap(h.getMedia))
+				r.Delete("/media/{mediaId}", h.wrap(h.deleteMedia))
 			})
 		})
 	}

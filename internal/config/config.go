@@ -44,7 +44,21 @@ type Config struct {
 	AppleClientIDs       []string // accepted `aud` values for Sign in with Apple
 	AccountDeletionGrace time.Duration
 	TrustProxyHeaders    bool // take the client IP from X-Forwarded-For (behind Caddy)
+
+	// Object storage for media. Media is off when S3Endpoint is empty, which
+	// only dev allows.
+	S3Endpoint       string
+	S3PublicEndpoint string // the address clients reach, if it differs
+	S3Region         string
+	S3Bucket         string
+	S3AccessKey      string
+	S3SecretKey      string
+	S3PathStyle      bool
+	S3PresignTTL     time.Duration
 }
+
+// MediaEnabled reports whether object storage is configured.
+func (c Config) MediaEnabled() bool { return c.S3Endpoint != "" }
 
 // Load reads configuration from the environment and validates it.
 //
@@ -103,6 +117,21 @@ func Load() (Config, error) {
 		}
 	}
 	c.TrustProxyHeaders = str("HEFESTO_TRUST_PROXY_HEADERS", "false") == "true"
+	c.S3Endpoint = str("HEFESTO_S3_ENDPOINT", "")
+	c.S3PublicEndpoint = str("HEFESTO_S3_PUBLIC_ENDPOINT", "")
+	c.S3Region = str("HEFESTO_S3_REGION", "us-east-1")
+	c.S3Bucket = str("HEFESTO_S3_BUCKET", "hefesto-media")
+	c.S3AccessKey = str("HEFESTO_S3_ACCESS_KEY", "")
+	c.S3SecretKey = str("HEFESTO_S3_SECRET_KEY", "")
+	c.S3PathStyle = str("HEFESTO_S3_USE_PATH_STYLE", "false") == "true"
+	if c.S3PresignTTL, err = dur("HEFESTO_S3_PRESIGN_TTL", 15*time.Minute); err != nil {
+		errs = append(errs, err)
+	} else if c.S3PresignTTL < time.Minute || c.S3PresignTTL > 7*24*time.Hour {
+		errs = append(errs, errors.New("HEFESTO_S3_PRESIGN_TTL: between 1m and 168h"))
+	}
+	if c.MediaEnabled() && (c.S3AccessKey == "" || c.S3SecretKey == "") {
+		errs = append(errs, errors.New("HEFESTO_S3_ACCESS_KEY and HEFESTO_S3_SECRET_KEY: required with HEFESTO_S3_ENDPOINT"))
+	}
 	if c.DBMaxConns, err = i32("HEFESTO_DB_MAX_CONNS", 10); err != nil {
 		errs = append(errs, err)
 	}
@@ -124,6 +153,9 @@ func Load() (Config, error) {
 		}
 		if c.LogFormat != "json" {
 			errs = append(errs, errors.New("HEFESTO_LOG_FORMAT: must be json outside dev"))
+		}
+		if !c.MediaEnabled() {
+			errs = append(errs, errors.New("HEFESTO_S3_ENDPOINT: required outside dev"))
 		}
 	}
 	if c.DBMinConns > c.DBMaxConns {

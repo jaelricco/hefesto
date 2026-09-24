@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Hefesto API
-  version: 0.3.0
+  version: 0.4.0
   summary: Calisthenics training logger and skill map
   description: |
     The source of truth for the Hefesto API and for the generated Swift client.
@@ -42,6 +42,9 @@ info:
     | `email-taken` | 409 | An account already uses this email. |
     | `order-conflict` | 409 | Another live sibling already has this `order_index`; use the reorder endpoint. |
     | `prerequisites-unmet` | 409 | A level cannot be attested before its prerequisites are unlocked. |
+    | `stale-write` | 409 | The server's copy of this set is newer, by the athlete's clock, than the write. |
+    | `idempotency-in-progress` | 409 | A request with this `Idempotency-Key` is still being processed. |
+    | `idempotency-key-reuse` | 422 | This `Idempotency-Key` was used with a different request. |
     | `validation` | 422 | The body is well-formed but breaks a rule; see `errors`. |
     | `rate-limited` | 429 | Too many attempts; retry after `Retry-After`. |
     | `internal` | 500 | A server bug. Quote `trace_id` when reporting it. |
@@ -69,6 +72,10 @@ tags:
     description: Logged workouts — sessions, blocks, set entries and their ordered elements.
   - name: skills
     description: The skill graph and the athlete's progress through it.
+  - name: sync
+    description: Delta pull and batched offline push for the athlete's own rows.
+  - name: media
+    description: Images uploaded straight to object storage through presigned URLs.
 
 security:
   - bearerAuth: []
@@ -909,6 +916,198 @@ paths:
         "401":
           $ref: "#/components/responses/Problem"
 
+  # ------------------------------------------------------------------ sync
+
+  /v1/sync:
+    get:
+      tags: [sync]
+      operationId: pullChanges
+      summary: Everything that changed since a cursor
+      description: |
+        Returns every row of the athlete's that changed after `cursor`, deletions
+        included (a deleted row carries `deleted_at`), and the cursor to send
+        next. Start from `0`; repeat while `has_more` is true.
+
+        The cursor is a per-user total order over writes (`server_seq`), so a
+        page is never missing a change that committed before a later one.
+        A row appears at its latest change, with its current state; a set comes
+        whole, with its current elements. Parents are included whenever a page
+        holds a row whose parent the client has not seen yet, so a page can be
+        applied on its own in the order sessions, blocks, sets. A row can
+        therefore appear in more than one page; applying it again is harmless.
+
+        The request also records `cursor` as acknowledged by this device.
+      parameters:
+        - name: cursor
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1000
+            default: 200
+      responses:
+        "200":
+          description: A page of changes.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SyncPage"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+    post:
+      tags: [sync]
+      operationId: pushChanges
+      summary: Apply a batch of offline writes
+      description: |
+        Applies `ops` in order. Each op runs the same code path as its REST
+        endpoint (a set is always written whole, with its ordered elements),
+        in its own transaction, and gets its own result: one bad op does not
+        hold back the rest of the queue.
+
+        Conflicts (ADR 0009): the last write the server receives wins, except
+        for sets, where the athlete's own clock decides — a set whose
+        `updated_at` is older than the server's copy is not applied
+        (`superseded`). Deletions are final: a write to a deleted row is
+        `superseded`.
+
+        `Idempotency-Key` is required. Repeating a request with the same key
+        and body returns the first response (`Idempotent-Replayed: true`);
+        the same key with a different body is `422 idempotency-key-reuse`.
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SyncPush"
+      responses:
+        "200":
+          description: One result per op, in order.
+          headers:
+            Idempotent-Replayed:
+              description: Present, and `true`, when this is a stored response to a repeated request.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SyncPushResult"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/Problem"
+
+  # ----------------------------------------------------------------- media
+
+  /v1/media/uploads:
+    post:
+      tags: [media]
+      operationId: createUpload
+      summary: Reserve a media asset and get a presigned upload URL
+      description: |
+        Creates a `pending` asset and returns a short-lived presigned `PUT`
+        URL. Upload the bytes directly to object storage with exactly the
+        returned headers, then call `POST /v1/media/{mediaId}/complete`.
+        Images only for now (ADR 0002 §4); the schema is ready for video.
+        Repeating the call for a pending asset returns a fresh URL.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MediaUploadRequest"
+      responses:
+        "201":
+          description: Reserved.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MediaUpload"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/Problem"
+        "503":
+          $ref: "#/components/responses/Problem"
+
+  /v1/media/{mediaId}/complete:
+    parameters:
+      - $ref: "#/components/parameters/MediaId"
+    post:
+      tags: [media]
+      operationId: completeUpload
+      summary: Confirm an upload
+      description: |
+        Checks the uploaded object against what was reserved (size and
+        content type) and marks the asset `ready`. An object that does not
+        match is removed and the asset marked `failed`. Idempotent.
+      responses:
+        "200":
+          description: Ready.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Media"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "404":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/Problem"
+        "503":
+          $ref: "#/components/responses/Problem"
+
+  /v1/media/{mediaId}:
+    parameters:
+      - $ref: "#/components/parameters/MediaId"
+    get:
+      tags: [media]
+      operationId: getMedia
+      summary: A media asset, with a short-lived download URL when ready
+      responses:
+        "200":
+          description: The asset.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Media"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "404":
+          $ref: "#/components/responses/Problem"
+        "503":
+          $ref: "#/components/responses/Problem"
+    delete:
+      tags: [media]
+      operationId: deleteMedia
+      summary: Delete a media asset and its stored object
+      description: The asset is detached from any set element it was attached to.
+      responses:
+        "204":
+          description: Deleted.
+        "401":
+          $ref: "#/components/responses/Problem"
+        "404":
+          $ref: "#/components/responses/Problem"
+
 components:
   securitySchemes:
     bearerAuth:
@@ -947,6 +1146,22 @@ components:
       required: true
       schema:
         $ref: "#/components/schemas/Id"
+    MediaId:
+      name: mediaId
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/Id"
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      description: A client-chosen key, unique per logical request, kept for 24 hours. A UUID is a good choice.
+      schema:
+        type: string
+        minLength: 8
+        maxLength: 255
+        pattern: "^[\\x21-\\x7E]+$"
 
   responses:
     Problem:
@@ -1655,6 +1870,13 @@ components:
           oneOf:
             - $ref: "#/components/schemas/AssistanceWrite"
             - type: "null"
+        media_ids:
+          description: Ready images of the athlete's own to attach (a form check). The complete list; omit for none.
+          type: array
+          maxItems: 4
+          uniqueItems: true
+          items:
+            $ref: "#/components/schemas/Id"
 
     AssistanceType:
       type: string
@@ -1727,7 +1949,7 @@ components:
 
     SetElement:
       type: object
-      required: [id, order_index, exercise_id, measure, reps, hold_seconds, distance_m, tempo, load_kg, is_eccentric_only, is_partial_rom, rom_note, form_quality, failed, assistance_class, assistance]
+      required: [id, order_index, exercise_id, measure, reps, hold_seconds, distance_m, tempo, load_kg, is_eccentric_only, is_partial_rom, rom_note, form_quality, failed, assistance_class, assistance, media_ids]
       properties:
         id:
           $ref: "#/components/schemas/Id"
@@ -1765,6 +1987,10 @@ components:
           oneOf:
             - $ref: "#/components/schemas/Assistance"
             - type: "null"
+        media_ids:
+          type: array
+          items:
+            $ref: "#/components/schemas/Id"
 
     Assistance:
       type: object
@@ -2212,3 +2438,395 @@ components:
           type: integer
         streak:
           $ref: "#/components/schemas/Streak"
+
+    # ----------------------------------------------------------------- sync
+    SyncSession:
+      description: A session row as sync carries it, without its blocks.
+      type: object
+      required: [id, started_at, ended_at, timezone, local_date, title, notes, perceived_fatigue, bodyweight_kg, status, is_rest_day, template_id, completed_at, updated_at, server_updated_at, server_seq, deleted_at]
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        started_at:
+          $ref: "#/components/schemas/Timestamp"
+        ended_at:
+          $ref: "#/components/schemas/NullableTimestamp"
+        timezone:
+          $ref: "#/components/schemas/TimeZone"
+        local_date:
+          type: string
+          format: date
+        title:
+          type: string
+        notes:
+          type: string
+        perceived_fatigue:
+          type: [integer, "null"]
+        bodyweight_kg:
+          type: [number, "null"]
+        status:
+          $ref: "#/components/schemas/SessionStatus"
+        is_rest_day:
+          type: boolean
+        template_id:
+          type: [string, "null"]
+          format: uuid
+        completed_at:
+          $ref: "#/components/schemas/NullableTimestamp"
+        updated_at:
+          $ref: "#/components/schemas/Timestamp"
+        server_updated_at:
+          $ref: "#/components/schemas/Timestamp"
+        server_seq:
+          type: integer
+          format: int64
+        deleted_at:
+          $ref: "#/components/schemas/NullableTimestamp"
+
+    SyncBlock:
+      description: A block row as sync carries it, without its sets.
+      type: object
+      required: [id, session_id, order_index, kind, rounds_planned, rounds_done, interval_s, notes, updated_at, server_seq, deleted_at]
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        session_id:
+          $ref: "#/components/schemas/Id"
+        order_index:
+          type: integer
+        kind:
+          $ref: "#/components/schemas/BlockKind"
+        rounds_planned:
+          type: [integer, "null"]
+        rounds_done:
+          type: [integer, "null"]
+        interval_s:
+          type: [integer, "null"]
+        notes:
+          type: string
+        updated_at:
+          $ref: "#/components/schemas/Timestamp"
+        server_seq:
+          type: integer
+          format: int64
+        deleted_at:
+          $ref: "#/components/schemas/NullableTimestamp"
+
+    SyncSet:
+      description: |
+        A set entry with its current, ordered elements. `server_seq` is the
+        latest change to the set or any of its elements. A deleted set has no
+        elements.
+      type: object
+      required: [id, session_id, block_id, order_index, round_index, kind, is_planned, rest_after_planned_s, rest_after_actual_s, rpe, rir, completed_at, notes, updated_at, server_seq, deleted_at, elements]
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        session_id:
+          $ref: "#/components/schemas/Id"
+        block_id:
+          $ref: "#/components/schemas/Id"
+        order_index:
+          type: integer
+        round_index:
+          type: [integer, "null"]
+        kind:
+          $ref: "#/components/schemas/SetKind"
+        is_planned:
+          type: boolean
+        rest_after_planned_s:
+          type: [integer, "null"]
+        rest_after_actual_s:
+          type: [integer, "null"]
+        rpe:
+          type: [number, "null"]
+        rir:
+          type: [integer, "null"]
+        completed_at:
+          $ref: "#/components/schemas/NullableTimestamp"
+        notes:
+          type: string
+        updated_at:
+          $ref: "#/components/schemas/Timestamp"
+        server_seq:
+          type: integer
+          format: int64
+        deleted_at:
+          $ref: "#/components/schemas/NullableTimestamp"
+        elements:
+          type: array
+          items:
+            $ref: "#/components/schemas/SetElement"
+
+    SyncBodyweight:
+      type: object
+      required: [id, measured_at, local_date, bodyweight_kg, note, updated_at, server_seq, deleted_at]
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        measured_at:
+          $ref: "#/components/schemas/Timestamp"
+        local_date:
+          type: string
+          format: date
+        bodyweight_kg:
+          type: number
+        note:
+          type: string
+        updated_at:
+          $ref: "#/components/schemas/Timestamp"
+        server_seq:
+          type: integer
+          format: int64
+        deleted_at:
+          $ref: "#/components/schemas/NullableTimestamp"
+
+    SyncPage:
+      type: object
+      required: [cursor, has_more, sessions, blocks, sets, bodyweight]
+      properties:
+        cursor:
+          description: Send this as `cursor` next time.
+          type: integer
+          format: int64
+        has_more:
+          type: boolean
+        sessions:
+          type: array
+          items:
+            $ref: "#/components/schemas/SyncSession"
+        blocks:
+          type: array
+          items:
+            $ref: "#/components/schemas/SyncBlock"
+        sets:
+          type: array
+          items:
+            $ref: "#/components/schemas/SyncSet"
+        bodyweight:
+          type: array
+          items:
+            $ref: "#/components/schemas/SyncBodyweight"
+
+    SessionPut:
+      description: |
+        A session's full client-side state. Creates the session, or updates
+        every field present. `status` may move a session between draft and
+        abandoned; completion is the `complete` op.
+      type: object
+      additionalProperties: false
+      required: [started_at, timezone]
+      properties:
+        started_at:
+          $ref: "#/components/schemas/Timestamp"
+        ended_at:
+          $ref: "#/components/schemas/NullableTimestamp"
+        timezone:
+          $ref: "#/components/schemas/TimeZone"
+        title:
+          type: string
+          maxLength: 200
+        notes:
+          type: string
+          maxLength: 10000
+        perceived_fatigue:
+          type: [integer, "null"]
+          minimum: 1
+          maximum: 10
+        bodyweight_kg:
+          type: [number, "null"]
+          exclusiveMinimum: 0
+          maximum: 500
+        is_rest_day:
+          type: boolean
+        template_id:
+          $ref: "#/components/schemas/Id"
+        status:
+          type: string
+          enum: [draft, abandoned]
+        updated_at:
+          $ref: "#/components/schemas/Timestamp"
+
+    BodyweightWrite:
+      type: object
+      additionalProperties: false
+      required: [measured_at, timezone, bodyweight_kg]
+      properties:
+        measured_at:
+          $ref: "#/components/schemas/Timestamp"
+        timezone:
+          description: Where the athlete was; it fixes `local_date`.
+          $ref: "#/components/schemas/TimeZone"
+        bodyweight_kg:
+          type: number
+          exclusiveMinimum: 0
+          maximum: 500
+        note:
+          type: string
+          maxLength: 500
+        updated_at:
+          $ref: "#/components/schemas/Timestamp"
+
+    SyncOp:
+      description: |
+        One write. `data` is validated against the schema for the op:
+
+        | `entity` | `op` | `data` | `session_id` |
+        |---|---|---|---|
+        | `session` | `put` | `SessionPut` | — |
+        | `session` | `complete` | `SessionComplete` | — |
+        | `session` | `delete` | — | — |
+        | `block` | `put` | `BlockWrite` | required |
+        | `block` | `delete` | — | required |
+        | `set` | `put` | `SetEntryWrite` | required |
+        | `set` | `delete` | — | required |
+        | `bodyweight` | `put` | `BodyweightWrite` | — |
+        | `bodyweight` | `delete` | — | — |
+      type: object
+      additionalProperties: false
+      required: [op, entity, id]
+      properties:
+        op:
+          type: string
+          enum: [put, delete, complete]
+        entity:
+          type: string
+          enum: [session, block, set, bodyweight]
+        id:
+          $ref: "#/components/schemas/Id"
+        session_id:
+          $ref: "#/components/schemas/Id"
+        data:
+          anyOf:
+            - $ref: "#/components/schemas/SessionPut"
+            - $ref: "#/components/schemas/SessionComplete"
+            - $ref: "#/components/schemas/BlockWrite"
+            - $ref: "#/components/schemas/SetEntryWrite"
+            - $ref: "#/components/schemas/BodyweightWrite"
+
+    SyncPush:
+      type: object
+      additionalProperties: false
+      required: [ops]
+      properties:
+        ops:
+          type: array
+          minItems: 1
+          maxItems: 200
+          items:
+            $ref: "#/components/schemas/SyncOp"
+
+    SyncOpResult:
+      type: object
+      required: [index, status]
+      properties:
+        index:
+          description: The op's position in `ops`.
+          type: integer
+        status:
+          description: |
+            `applied`; `superseded` — the server's copy wins (a deleted row,
+            or a set older than the server's), so drop the op and take the
+            server's copy at the next pull; `rejected` — the op is invalid
+            (see `problem`) and will never apply as sent.
+          type: string
+          enum: [applied, superseded, rejected]
+        problem:
+          $ref: "#/components/schemas/Problem"
+        completion:
+          description: For a `complete` op that applied, what completing the session did.
+          $ref: "#/components/schemas/CompletionResult"
+
+    SyncPushResult:
+      type: object
+      required: [results]
+      properties:
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/SyncOpResult"
+
+    # ---------------------------------------------------------------- media
+    MediaUploadRequest:
+      type: object
+      additionalProperties: false
+      required: [id, kind, mime, bytes]
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        kind:
+          type: string
+          enum: [image]
+        mime:
+          type: string
+          enum: [image/jpeg, image/png, image/heic, image/webp]
+        bytes:
+          description: The exact size of the file to upload.
+          type: integer
+          format: int64
+          minimum: 1
+          maximum: 15728640
+        width:
+          type: integer
+          minimum: 1
+          maximum: 20000
+        height:
+          type: integer
+          minimum: 1
+          maximum: 20000
+
+    Media:
+      type: object
+      required: [id, kind, mime, bytes, width, height, status, created_at, ready_at, url, url_expires_at]
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        kind:
+          type: string
+          enum: [image, video]
+        mime:
+          type: string
+        bytes:
+          type: integer
+          format: int64
+        width:
+          type: [integer, "null"]
+        height:
+          type: [integer, "null"]
+        status:
+          type: string
+          enum: [pending, ready, failed, quarantined]
+        created_at:
+          $ref: "#/components/schemas/Timestamp"
+        ready_at:
+          $ref: "#/components/schemas/NullableTimestamp"
+        url:
+          description: A short-lived download URL, when the asset is ready.
+          type: [string, "null"]
+          format: uri
+        url_expires_at:
+          $ref: "#/components/schemas/NullableTimestamp"
+
+    MediaUpload:
+      type: object
+      required: [media, upload]
+      properties:
+        media:
+          $ref: "#/components/schemas/Media"
+        upload:
+          type: object
+          required: [method, url, headers, expires_at]
+          properties:
+            method:
+              type: string
+              enum: [PUT]
+            url:
+              type: string
+              format: uri
+            headers:
+              description: Send exactly these headers with the upload; they are part of the signature.
+              type: object
+              additionalProperties:
+                type: string
+            expires_at:
+              $ref: "#/components/schemas/Timestamp"

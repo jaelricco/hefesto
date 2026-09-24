@@ -118,7 +118,7 @@ test: ## Unit tests (no database)
 	go test -race -short $(PKG)
 
 .PHONY: test-integration
-test-integration: ## Integration tests against a real Postgres via testcontainers (or HEFESTO_TEST_DATABASE_URL)
+test-integration: ## Integration tests against real Postgres and MinIO via testcontainers (or HEFESTO_TEST_DATABASE_URL / HEFESTO_TEST_S3_ENDPOINT)
 	go test -race -tags=integration -count=1 $(PKG)
 
 .PHONY: cover

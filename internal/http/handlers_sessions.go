@@ -1,6 +1,7 @@
 package http
 
 import (
+	"context"
 	"encoding/base64"
 	"fmt"
 	"net/http"
@@ -19,9 +20,20 @@ func (h *handlers) createSession(w http.ResponseWriter, r *http.Request) error {
 	if err := h.body(w, r, "SessionCreate", &in); err != nil {
 		return err
 	}
+	out, err := h.applyCreateSession(r.Context(), writer(r, in.UpdatedAt), in)
+	if err != nil {
+		return err
+	}
+	w.Header().Set("Location", "/v1/sessions/"+out.ID.String())
+	WriteJSON(w, r, http.StatusCreated, sessionFrom(out))
+	return nil
+}
+
+// applyCreateSession is the one path that creates a session, for REST and sync.
+func (h *handlers) applyCreateSession(ctx context.Context, wr store.Writer, in sessionCreateIn) (training.Session, error) {
 	loc, err := time.LoadLocation(in.Timezone)
 	if err != nil || in.Timezone == "Local" {
-		return training.FieldErrors{"/timezone": "not a known IANA time zone"}.Err()
+		return training.Session{}, training.FieldErrors{"/timezone": "not a known IANA time zone"}.Err()
 	}
 	s := training.Session{
 		ID: in.ID, StartedAt: in.StartedAt, Timezone: in.Timezone, LocalDate: training.LocalDate(in.StartedAt, loc),
@@ -29,15 +41,9 @@ func (h *handlers) createSession(w http.ResponseWriter, r *http.Request) error {
 		TemplateID: in.TemplateID, Status: training.StatusDraft,
 	}
 	if err := training.ValidateSession(s); err != nil {
-		return err
+		return training.Session{}, err
 	}
-	out, err := h.Store.CreateSession(r.Context(), writer(r, in.UpdatedAt), s)
-	if err != nil {
-		return err
-	}
-	w.Header().Set("Location", "/v1/sessions/"+out.ID.String())
-	WriteJSON(w, r, http.StatusCreated, sessionFrom(out))
-	return nil
+	return h.Store.CreateSession(ctx, wr, s)
 }
 
 func (h *handlers) getSession(w http.ResponseWriter, r *http.Request) error {
@@ -62,14 +68,19 @@ func (h *handlers) updateSession(w http.ResponseWriter, r *http.Request) error {
 	if err := h.body(w, r, "SessionUpdate", &in); err != nil {
 		return err
 	}
-	out, err := h.Store.UpdateSession(r.Context(), writer(r, in.UpdatedAt), id, func(s *training.Session) error {
-		return applySessionUpdate(s, in)
-	})
+	out, err := h.applyUpdateSession(r.Context(), writer(r, in.UpdatedAt), id, in)
 	if err != nil {
 		return err
 	}
 	WriteJSON(w, r, http.StatusOK, sessionFrom(out))
 	return nil
+}
+
+// applyUpdateSession is the one path that edits a session.
+func (h *handlers) applyUpdateSession(ctx context.Context, wr store.Writer, id uuid.UUID, in sessionUpdateIn) (training.Session, error) {
+	return h.Store.UpdateSession(ctx, wr, id, func(s *training.Session) error {
+		return applySessionUpdate(s, in)
+	})
 }
 
 // applySessionUpdate applies the present fields of a PATCH and re-derives
@@ -218,19 +229,24 @@ func (h *handlers) putBlock(w http.ResponseWriter, r *http.Request) error {
 	if err := h.body(w, r, "BlockWrite", &in); err != nil {
 		return err
 	}
-	b := training.Block{
-		ID: blockID, SessionID: sessionID, OrderIndex: in.OrderIndex, Kind: orDefault(in.Kind, "straight"),
-		RoundsPlanned: in.RoundsPlanned, RoundsDone: in.RoundsDone, IntervalS: in.IntervalS, Notes: in.Notes,
-	}
-	if err := training.ValidateBlock(b); err != nil {
-		return err
-	}
-	out, created, err := h.Store.PutBlock(r.Context(), writer(r, in.UpdatedAt), sessionID, b)
+	out, created, err := h.applyPutBlock(r.Context(), writer(r, in.UpdatedAt), sessionID, blockID, in)
 	if err != nil {
 		return err
 	}
 	WriteJSON(w, r, createdOrOK(created), blockFrom(out))
 	return nil
+}
+
+// applyPutBlock is the one path that writes a block.
+func (h *handlers) applyPutBlock(ctx context.Context, wr store.Writer, sessionID, blockID uuid.UUID, in blockIn) (training.Block, bool, error) {
+	b := training.Block{
+		ID: blockID, SessionID: sessionID, OrderIndex: in.OrderIndex, Kind: orDefault(in.Kind, "straight"),
+		RoundsPlanned: in.RoundsPlanned, RoundsDone: in.RoundsDone, IntervalS: in.IntervalS, Notes: in.Notes,
+	}
+	if err := training.ValidateBlock(b); err != nil {
+		return training.Block{}, false, err
+	}
+	return h.Store.PutBlock(ctx, wr, sessionID, b)
 }
 
 func (h *handlers) deleteBlock(w http.ResponseWriter, r *http.Request) error {
@@ -264,16 +280,22 @@ func (h *handlers) putSet(w http.ResponseWriter, r *http.Request) error {
 	if err := h.body(w, r, "SetEntryWrite", &in); err != nil {
 		return err
 	}
-	set := in.toDomain(setID, sessionID)
-	if err := training.ValidateSet(&set); err != nil {
-		return err
-	}
-	out, created, err := h.Store.PutSet(r.Context(), writer(r, in.UpdatedAt), sessionID, set)
+	out, created, err := h.applyPutSet(r.Context(), writer(r, in.UpdatedAt), sessionID, setID, in)
 	if err != nil {
 		return err
 	}
 	WriteJSON(w, r, createdOrOK(created), setFrom(out))
 	return nil
+}
+
+// applyPutSet is the one path that writes a set, whether it has one element
+// or several, for REST and sync alike.
+func (h *handlers) applyPutSet(ctx context.Context, wr store.Writer, sessionID, setID uuid.UUID, in setIn) (training.SetEntry, bool, error) {
+	set := in.toDomain(setID, sessionID)
+	if err := training.ValidateSet(&set); err != nil {
+		return training.SetEntry{}, false, err
+	}
+	return h.Store.PutSet(ctx, wr, sessionID, set)
 }
 
 func (h *handlers) deleteSet(w http.ResponseWriter, r *http.Request) error {

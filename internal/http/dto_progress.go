@@ -223,3 +223,24 @@ func nonNil[T any](s []T) []T {
 	}
 	return s
 }
+
+func (in completeIn) toStore() store.CompleteInput {
+	return store.CompleteInput{
+		CompletedAt: in.CompletedAt, EndedAt: in.EndedAt, PerceivedFatigue: in.PerceivedFatigue, BodyweightKg: in.BodyweightKg,
+	}
+}
+
+func completionFrom(c store.Completion) completionOut {
+	out := completionOut{
+		Session: sessionFrom(c.Session), AlreadyCompleted: c.AlreadyCompleted,
+		Unlocked: make([]unlockOut, len(c.Unlocked)), NewlyAvailable: nonNil(c.NewlyAvailable),
+		XPAwarded: make([]xpAwardOut, len(c.XPAwarded)), XPTotal: c.XPTotal, Streak: streakFrom(c.Streak),
+	}
+	for i, u := range c.Unlocked {
+		out.Unlocked[i] = unlockFrom(u)
+	}
+	for i, a := range c.XPAwarded {
+		out.XPAwarded[i] = xpAwardOut{Source: a.Source, Amount: a.Amount}
+	}
+	return out
+}

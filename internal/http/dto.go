@@ -337,6 +337,7 @@ type elementIn struct {
 	FormQuality     *int          `json:"form_quality"`
 	Failed          bool          `json:"failed"`
 	Assistance      *assistanceIn `json:"assistance"`
+	MediaIDs        []uuid.UUID   `json:"media_ids"`
 }
 
 type assistanceIn struct {
@@ -361,7 +362,7 @@ func (s setIn) toDomain(id, sessionID uuid.UUID) training.SetEntry {
 			ID: e.ID, ExerciseID: e.ExerciseID, Measure: training.Measure(e.Measure), Reps: e.Reps,
 			HoldSeconds: e.HoldSeconds, DistanceM: e.DistanceM, Tempo: e.Tempo, LoadKg: e.LoadKg,
 			IsEccentricOnly: e.IsEccentricOnly, IsPartialROM: e.IsPartialROM, ROMNote: e.ROMNote,
-			FormQuality: e.FormQuality, Failed: e.Failed,
+			FormQuality: e.FormQuality, Failed: e.Failed, MediaIDs: e.MediaIDs,
 		}
 		if a := e.Assistance; a != nil {
 			el.Assistance = &training.Assistance{
@@ -421,6 +422,7 @@ type elementOut struct {
 	Failed          bool           `json:"failed"`
 	AssistanceClass string         `json:"assistance_class"`
 	Assistance      *assistanceOut `json:"assistance"`
+	MediaIDs        []uuid.UUID    `json:"media_ids"`
 }
 
 type assistanceOut struct {
@@ -439,6 +441,7 @@ func elementFrom(e training.Element) elementOut {
 		HoldSeconds: e.HoldSeconds, DistanceM: e.DistanceM, Tempo: e.Tempo, LoadKg: e.LoadKg,
 		IsEccentricOnly: e.IsEccentricOnly, IsPartialROM: e.IsPartialROM, ROMNote: e.ROMNote,
 		FormQuality: e.FormQuality, Failed: e.Failed, AssistanceClass: string(e.AssistanceClass),
+		MediaIDs: nonNil(e.MediaIDs),
 	}
 	if a := e.Assistance; a != nil {
 		out.Assistance = &assistanceOut{
