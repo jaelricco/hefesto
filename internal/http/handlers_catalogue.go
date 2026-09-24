@@ -44,11 +44,7 @@ func (h *handlers) listExercises(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return err
 	}
-	etag := `"` + version + `"`
-	w.Header().Set("ETag", etag)
-	w.Header().Set("Cache-Control", "private, no-cache")
-	if version != "" && r.Header.Get("If-None-Match") == etag {
-		w.WriteHeader(http.StatusNotModified)
+	if notModified(w, r, version) {
 		return nil
 	}
 
