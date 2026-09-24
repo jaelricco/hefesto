@@ -13,10 +13,10 @@ The logger feeds the map. That coupling is the product.
 
 ## Status
 
-**Phase 3 — the unlock engine**, awaiting review. Completing a session
-evaluates every skill level against what was logged and returns the unlocks,
-XP and streak; the skill map, skill detail (with injury notes and their
-disclaimer), self-attest and progress endpoints are live.
+**Phase 4 — sync and media**, awaiting review. The delta sync feed and
+batched offline push (idempotent, conflict rules in ADR 0009) and presigned
+image uploads are live, on top of the logger, the unlock engine and the skill
+map.
 Current state and open questions: [`STATUS.md`](STATUS.md).
 
 See [`docs/PROJECT_BRIEF.md`](docs/PROJECT_BRIEF.md) for the full plan,

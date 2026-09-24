@@ -58,6 +58,12 @@ Use **two separate object-storage credentials**: one for media (the API needs
 it) and one for backups with write access to the backup bucket only. A
 compromised API key must not be able to delete the backups.
 
+The media bucket (`HEFESTO_S3_BUCKET`) must exist and stay **private**: phones
+upload and download through short-lived presigned URLs the API signs
+(`HEFESTO_S3_PRESIGN_TTL`, 15 minutes by default), never through public reads.
+Outside dev the API refuses to start without `HEFESTO_S3_ENDPOINT`. Objects live
+under `u/<user id>/`; deleting an account removes that prefix.
+
 ### 4. GitHub repository secrets
 
 Settings → Secrets and variables → Actions:
