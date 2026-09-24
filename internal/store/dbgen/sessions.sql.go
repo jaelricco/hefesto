@@ -599,6 +599,62 @@ func (q *Queries) ListSetEntries(ctx context.Context, arg ListSetEntriesParams) 
 	return items, nil
 }
 
+const markSessionCompleted = `-- name: MarkSessionCompleted :one
+UPDATE workout_sessions SET
+    status = 'completed', completed_at = $1, ended_at = $2,
+    perceived_fatigue = $3, bodyweight_kg = $4,
+    client_id = $5, updated_at = $6
+WHERE id = $7 AND user_id = $8 AND deleted_at IS NULL AND status = 'draft'
+RETURNING id, user_id, started_at, ended_at, timezone, local_date, title, notes, perceived_fatigue, bodyweight_kg, status, is_rest_day, template_id, completed_at, client_id, updated_at, server_updated_at, server_seq, deleted_at
+`
+
+type MarkSessionCompletedParams struct {
+	CompletedAt      *time.Time
+	EndedAt          *time.Time
+	PerceivedFatigue *int16
+	BodyweightKg     pgtype.Numeric
+	ClientID         *uuid.UUID
+	UpdatedAt        time.Time
+	ID               uuid.UUID
+	UserID           uuid.UUID
+}
+
+func (q *Queries) MarkSessionCompleted(ctx context.Context, arg MarkSessionCompletedParams) (WorkoutSession, error) {
+	row := q.db.QueryRow(ctx, markSessionCompleted,
+		arg.CompletedAt,
+		arg.EndedAt,
+		arg.PerceivedFatigue,
+		arg.BodyweightKg,
+		arg.ClientID,
+		arg.UpdatedAt,
+		arg.ID,
+		arg.UserID,
+	)
+	var i WorkoutSession
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.StartedAt,
+		&i.EndedAt,
+		&i.Timezone,
+		&i.LocalDate,
+		&i.Title,
+		&i.Notes,
+		&i.PerceivedFatigue,
+		&i.BodyweightKg,
+		&i.Status,
+		&i.IsRestDay,
+		&i.TemplateID,
+		&i.CompletedAt,
+		&i.ClientID,
+		&i.UpdatedAt,
+		&i.ServerUpdatedAt,
+		&i.ServerSeq,
+		&i.DeletedAt,
+	)
+	return i, err
+}
+
 const setBlockOrder = `-- name: SetBlockOrder :exec
 UPDATE session_blocks b
 SET order_index = o.ord - 1, client_id = $1, updated_at = $2
