@@ -163,5 +163,8 @@ Further rules:
 - Clock skew on a phone can make its set edits lose to (or beat) another
   device's. That is the accepted cost of trusting the athlete's clock for
   sets. Everything else follows the server's order.
-- The integration tests run against MinIO in CI (testcontainers). Locally,
-  `HEFESTO_TEST_S3_ENDPOINT` can point at any S3-compatible server.
+- The integration tests run against real MinIO, locally and in CI.
+  `scripts/with-minio.sh` builds a pinned commit of the official source and
+  starts it beside the tests, because MinIO no longer publishes container
+  images. `HEFESTO_TEST_S3_ENDPOINT` points the tests at another server
+  instead.

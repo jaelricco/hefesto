@@ -43,7 +43,7 @@ func TestPresignedUploadAndDownload(t *testing.T) {
 	if up.Headers["Content-Type"] != "image/png" || up.Headers["Content-Length"] != "15" {
 		t.Fatalf("headers %v", up.Headers)
 	}
-	if s3test.IsMinIO() {
+	if s3test.ChecksSignatures() {
 		// The signature covers the type and the size.
 		if code := put(t, up, body, "image/jpeg"); code != http.StatusForbidden {
 			t.Fatalf("upload with another content type: %d", code)

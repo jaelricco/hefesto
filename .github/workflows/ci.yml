@@ -62,8 +62,10 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: true
-      # testcontainers starts its own Postgres and MinIO; the runner's Docker is enough.
-      - run: go test -race -tags=integration -count=1 ./...
+      # testcontainers starts Postgres on the runner's Docker. MinIO no longer
+      # publishes images, so with-minio.sh builds the pinned official source
+      # and runs it beside the tests.
+      - run: ./scripts/with-minio.sh go test -race -tags=integration -count=1 ./...
 
   migrations:
     name: migrations apply cleanly

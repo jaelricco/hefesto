@@ -85,11 +85,16 @@ Run in the development container against PostgreSQL 16:
 - `redocly lint` is clean apart from the four warnings from Phase 0.
 - `oasdiff` reports no breaking change against `main`.
 
-This container cannot pull Docker images or download MinIO. The storage tests
-therefore ran against an S3-compatible stand-in (`gofakes3`, run from outside
-the repository) through `HEFESTO_TEST_S3_ENDPOINT`. That stand-in does not
-check signatures, so the assertions that a presigned upload refuses another
-type or size run only against real MinIO, which is what CI uses.
+MinIO no longer publishes container images: `minio/minio` is gone from Docker
+Hub, so the first CI run could not start it. The tests now run under
+`scripts/with-minio.sh`, which builds a pinned commit of MinIO's official
+source with the Go toolchain and starts it beside them. `make test-integration`
+and CI both use it. The suite passes against that real MinIO here, including
+the checks that a presigned upload refuses another content type or size.
+
+**Needs a decision:** `docker-compose.yml` (from Phase 0) still names
+`minio/minio` and `minio/mc`, so `make up` cannot start object storage until it
+moves to an image that exists.
 
 ### Deliberately not in this phase
 
