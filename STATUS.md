@@ -4,69 +4,74 @@ The project is built in the numbered phases of `docs/PROJECT_BRIEF.md` §12.
 Each phase ends with a summary and a stop for review. This file records where
 that stands.
 
-## Current phase: 1 — schema and content pipeline (complete, awaiting review)
+## Done
+
+- **Phase 0** — scaffold, Compose, CI, deploy pipeline, ADRs 0001–0004, DDL proposal.
+- **Phase 1** — migrations, content pipeline, seed (ADRs 0005–0006). Merged in #4.
+
+## Current phase: 2 — auth and the core API (complete, awaiting review)
 
 Built:
 
-- **Migrations** `db/migrations/00001`–`00008`: the approved schema, with the
-  review decisions of ADR 0005 applied (`load_kg ≥ 0`, `user_bodyweight_log`,
-  30-day soft deletion). Up, down and up again are tested.
-- **sqlc** wired: `db/queries/content.sql` → `internal/store/dbgen`. CI fails
-  if the generated code is stale (`make sqlc-check`).
-- **Content JSON Schemas** in `content/schema/`, including the unlock-criteria
-  DSL; the Go types for criteria live in `internal/domain/progress`, ready for
-  the Phase 3 evaluator.
-- **`internal/content`**: load, schema-validate, cross-file checks, checksum.
-  `cmd/contentlint` reports; `cmd/seed` refuses to seed a tree with errors.
-- **`cmd/seed`**: one transaction, advisory-locked, slug-keyed upserts that do
-  not touch unchanged rows, soft retirement, refusal to drop a level, SQL
-  re-check for prerequisite cycles, a `content_versions` row per change.
-  Production now seeds on every deploy, after migrations.
-- **Placeholder content**: `pull-up`, `front-lever` (the brief's reference
-  file) and `handstand`, with seven exercises, all `draft_placeholder`.
-- **`docs/CONTENT_AUTHORING.md`**, ADR 0005 (schema review), ADR 0006
-  (content pipeline).
-- `/readyz` now checks a real pgx pool.
-- **Tests**: 25 content-check cases, schema-invariant integration tests
-  (the 15 assertions of DDL §14, plus the unlock and append-only triggers,
-  sync ownership, deletion), 8 seed integration tests.
-
-Fixed on the way — pre-existing CI breakage:
-
-- `.env.prod.example` was never committed (`.gitignore`'s `.env.*` swallowed
-  it), so the CI `scripts` job and `make deploy-check` could not pass. It is
-  now tracked, with every secret blank.
-- `.golangci.yml` was a v1 config while CI installed `latest` (v2), which
-  refuses it. Migrated to v2, and CI pins `v2.5.0`.
+- **OpenAPI** `api/openapi.yaml` v0.2.0 covers auth, me, exercises, bands and
+  sessions/blocks/sets. It is embedded in the binary and **enforced**: every
+  request body is validated against its schema, integration tests validate
+  every response against its schema, and a unit test fails if routes and spec
+  drift apart (ADR 0007).
+- **Auth** (`internal/auth`): email/password with argon2id; Sign in with Apple
+  (identity token checked against Apple's keys, nonce, audience; verified
+  emails link to existing accounts); 15-minute HS256 access tokens; rotating
+  refresh tokens with family-wide revocation on reuse; per-device sign-out;
+  per-address rate limiting on credential endpoints.
+- **Account deletion**: `DELETE /v1/me` starts the 30-day grace period and
+  signs out everywhere; signing in cancels it; an hourly, advisory-locked job
+  hard-deletes accounts past it.
+- **Logging API**: create/list/get/patch/delete sessions; `PUT`/`DELETE`
+  blocks; `PUT`/`DELETE` sets — the one write path, a set with its complete
+  ordered `elements`, one for a plain set, N for a combo; assistance and
+  derived `assistance_class`; a reorder endpoint; "repeat last set".
+  Client-generated UUIDv7 ids throughout, as the Phase 4 sync contract needs.
+- **Catalogue**: exercise search (fuzzy name, family, equipment) with an
+  `ETag` keyed on the content version; bands (catalogue + my own).
+- **Domain** (`internal/domain/training`): set/element/block/session rules and
+  the assistance-class derivation, pure and unit-tested.
+- **Tests**: unit tests for the domain, tokens, passwords, Apple verification
+  and the route/spec contract; 23 HTTP integration tests against real Postgres
+  covering the auth flows, reuse detection, deletion and reaping, the
+  catalogue, bands, combos, element replacement, assistance, validation,
+  ordering, tombstones, pagination, last-set and cross-user isolation.
 
 ### Verification
 
-Run in the development container against PostgreSQL 16.13:
-`golangci-lint` clean; `go test -race -short ./...` and
-`go test -race -tags integration ./...` green; `contentlint -strict` clean;
-seed applied, re-run as a no-op, and dry-run; `/readyz` 200 against the
-database.
+Run in the development container against PostgreSQL 16.13: `golangci-lint`
+clean; `go test -race -short ./...` and `go test -race -tags integration ./...`
+green; `redocly lint` clean apart from four warnings carried over from Phase 0;
+`oasdiff` reports no breaking change against `main`; the API was exercised by
+hand with curl against the dev database.
 
-**Not run here:** Docker Hub image pulls are blocked in the development
-container, so neither `make up && make seed` through Compose nor the
-testcontainers path was exercised; the integration tests ran through
-`HEFESTO_TEST_DATABASE_URL` against a local Postgres 16 instead. CI runs the
-testcontainers path.
+As in Phase 1, Docker image pulls are blocked here, so the integration tests
+ran through `HEFESTO_TEST_DATABASE_URL`; CI runs them on testcontainers.
+
+### Deliberately not in this phase
+
+- **Email verification and password reset.** Not in the brief's §4 list; the
+  `email_verifications` table is ready. Worth doing before a public release.
+- **`POST /v1/sessions/{id}/complete`** arrives with the unlock engine in
+  Phase 3, so a session cannot be completed yet (only drafted or abandoned).
+- **Templates** have tables but no endpoints yet.
 
 ### Open questions for review
 
-1. **Implicit level ladder** (ADR 0006 §3): level *n* requires level *n − 1*
-   of the same skill without being written. Right default?
-2. **Levels cannot be removed or renamed** once seeded (ADR 0006 §7). A rename
-   will need a progress-migration story when the real content lands.
-3. **Criteria `assistance`** is `none | any` for now. Should a criterion be
-   able to demand a specific assistance type (e.g. "band-assisted only"), or
-   is that never an unlock standard?
-4. **User bands are not syncable yet** (ADR 0005). Planned as an expand-only
-   migration in Phase 4 — confirm.
+1. **Registration reveals a taken email** (409). Acceptable, or should
+   registration go through email verification so it cannot be probed?
+2. **Rate limits** are in memory, per API process: 10 credential attempts per
+   minute per address. Fine for one instance; revisit if we scale out.
+3. **Device ids are per account.** A phone switching accounts must mint a new
+   device id. The iOS client needs to know this in Phase 5.
+4. Phase 1's questions still stand: the implicit level ladder, permanent
+   levels, criteria `assistance: none | any`, and user bands in Phase 4 sync.
 
-## Next: Phase 2
+## Next: Phase 3
 
-Auth (Sign in with Apple, email/password, JWT + rotating refresh, the 30-day
-deletion reaper) and the core API: exercises, sessions, blocks, sets, set
-elements, assistance. OpenAPI spec complete for these; integration tests.
+Unlock rules engine with golden tests, `/v1/me/skill-map`, `/complete`
+returning unlocks, XP and streaks.

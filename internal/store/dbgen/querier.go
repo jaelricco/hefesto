@@ -6,11 +6,16 @@ package dbgen
 
 import (
 	"context"
+	"time"
 
 	"github.com/google/uuid"
 )
 
 type Querier interface {
+	// A sign-in during the grace period cancels the deletion.
+	CancelUserDeletion(ctx context.Context, id uuid.UUID) (int64, error)
+	// Users, devices, refresh tokens and Apple identities.
+	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
 	DeleteAllSkillEdges(ctx context.Context) error
 	DeleteInjuryPrehab(ctx context.Context, riskID uuid.UUID) error
 	// Injury content references no user rows, so entries gone from a skill file
@@ -18,10 +23,14 @@ type Querier interface {
 	DeleteInjuryRisksNotIn(ctx context.Context, arg DeleteInjuryRisksNotInParams) error
 	// Associations carry no user data, so they are replaced wholesale.
 	DeleteSkillLevelExercises(ctx context.Context, skillLevelID uuid.UUID) error
+	ExerciseStatuses(ctx context.Context, ids []uuid.UUID) ([]ExerciseStatusesRow, error)
 	// Belt and braces for deviation D-7: contentlint already rejected cycles, but
 	// the seed re-checks the graph as the database now holds it. Returns the ids
 	// of levels that can reach themselves through prerequisite edges.
 	FindPrerequisiteCycles(ctx context.Context) ([]uuid.UUID, error)
+	GetAppleIdentity(ctx context.Context, appleSub string) (AppleIdentity, error)
+	GetBlock(ctx context.Context, arg GetBlockParams) (SessionBlock, error)
+	GetExerciseBySlug(ctx context.Context, slug string) (GetExerciseBySlugRow, error)
 	// Content import (cmd/seed). Every upsert is keyed on slug and leaves a row
 	// untouched — updated_at and content_version_id included — when nothing in it
 	// changed. The CTE returns the id whether the row was inserted, updated or
@@ -31,24 +40,94 @@ type Querier interface {
 	// The newest version is what the database currently holds; its checksum is
 	// the /v1/skills ETag.
 	GetLatestContentVersion(ctx context.Context) (ContentVersion, error)
+	// Locks the row: two concurrent refreshes with the same token must not both
+	// succeed.
+	GetRefreshTokenForUpdate(ctx context.Context, tokenHash []byte) (RefreshToken, error)
+	GetSession(ctx context.Context, arg GetSessionParams) (WorkoutSession, error)
+	GetSessionForUpdate(ctx context.Context, arg GetSessionForUpdateParams) (WorkoutSession, error)
+	GetSetEntry(ctx context.Context, arg GetSetEntryParams) (SetEntry, error)
+	GetUserByEmail(ctx context.Context, email *string) (User, error)
+	GetUserByID(ctx context.Context, id uuid.UUID) (User, error)
+	InsertAppleIdentity(ctx context.Context, arg InsertAppleIdentityParams) error
 	InsertContentVersion(ctx context.Context, arg InsertContentVersionParams) error
 	InsertInjuryPrehab(ctx context.Context, arg InsertInjuryPrehabParams) error
+	InsertRefreshToken(ctx context.Context, arg InsertRefreshTokenParams) error
+	// Sessions -> blocks -> set entries -> set elements (+ assistance).
+	//
+	// Every query filters on user_id. Soft-deleted rows are "parked": their
+	// order_index moves above 999999999, so a tombstone never blocks a live
+	// sibling from taking its old position (the unique constraint cannot be
+	// partial and deferrable at the same time).
+	// ------------------------------------------------------------- sessions
+	InsertSession(ctx context.Context, arg InsertSessionParams) (WorkoutSession, error)
 	InsertSkillEdge(ctx context.Context, arg InsertSkillEdgeParams) error
 	InsertSkillLevelExercise(ctx context.Context, arg InsertSkillLevelExerciseParams) error
+	InsertUserBand(ctx context.Context, arg InsertUserBandParams) (Band, error)
+	// ------------------------------------------------------------- last set
+	LastSetWithExercise(ctx context.Context, arg LastSetWithExerciseParams) (LastSetWithExerciseRow, error)
+	// ----------------------------------------------------------- assistance
+	ListAssistance(ctx context.Context, arg ListAssistanceParams) ([]SetElementAssistance, error)
+	ListBandsForUser(ctx context.Context, ownerUserID *uuid.UUID) ([]Band, error)
+	// --------------------------------------------------------------- blocks
+	ListBlocks(ctx context.Context, arg ListBlocksParams) ([]SessionBlock, error)
+	ListElementsOfSet(ctx context.Context, arg ListElementsOfSetParams) ([]SetElement, error)
+	// Exercises and bands as the API reads them.
+	ListExercises(ctx context.Context, arg ListExercisesParams) ([]ListExercisesRow, error)
+	// Newest first; the cursor is the (started_at, id) of the last row seen.
+	ListSessions(ctx context.Context, arg ListSessionsParams) ([]ListSessionsRow, error)
+	// ------------------------------------------------------------- elements
+	ListSetElements(ctx context.Context, arg ListSetElementsParams) ([]SetElement, error)
+	// ----------------------------------------------------------------- sets
+	ListSetEntries(ctx context.Context, arg ListSetEntriesParams) ([]SetEntry, error)
 	ListSkillLevelSlugs(ctx context.Context, skillID uuid.UUID) ([]string, error)
+	MarkRefreshTokenRotated(ctx context.Context, arg MarkRefreshTokenRotatedParams) error
+	// Hard deletion after the grace period. Everything the user owns goes with
+	// the row through ON DELETE CASCADE.
+	ReapDeletedUsers(ctx context.Context, cutoff *time.Time) (int64, error)
+	RequestUserDeletion(ctx context.Context, id uuid.UUID) (User, error)
 	// Removal is soft: rows gone from content are retired, never deleted,
 	// because logged set elements reference them.
 	RetireExercisesNotIn(ctx context.Context, arg RetireExercisesNotInParams) (int64, error)
 	RetireSkillsNotIn(ctx context.Context, arg RetireSkillsNotInParams) (int64, error)
+	RevokeRefreshFamily(ctx context.Context, arg RevokeRefreshFamilyParams) (int64, error)
+	RevokeUserRefreshTokens(ctx context.Context, arg RevokeUserRefreshTokensParams) (int64, error)
+	SetBlockOrder(ctx context.Context, arg SetBlockOrderParams) error
+	SetSetOrder(ctx context.Context, arg SetSetOrderParams) error
+	SetUserEmail(ctx context.Context, arg SetUserEmailParams) error
+	SoftDeleteBlocksOfSession(ctx context.Context, arg SoftDeleteBlocksOfSessionParams) error
 	// Global bands gone from content are soft-deleted; logged assistance keeps
 	// pointing at them.
 	SoftDeleteGlobalBandsNotIn(ctx context.Context, keys []string) (int64, error)
+	// An element has at most one live assistance row: the one being kept, if any.
+	SoftDeleteOtherAssistance(ctx context.Context, arg SoftDeleteOtherAssistanceParams) error
+	SoftDeleteSession(ctx context.Context, arg SoftDeleteSessionParams) (int64, error)
+	// Tombstones the live elements of sets (a whole session, one set, or those
+	// of one set not in keep) along with their assistance rows.
+	SoftDeleteSetElements(ctx context.Context, arg SoftDeleteSetElementsParams) error
+	// Parks and tombstones live sets of a block, or of the whole session, or one set.
+	SoftDeleteSetEntries(ctx context.Context, arg SoftDeleteSetEntriesParams) error
+	SoftDeleteUserBand(ctx context.Context, arg SoftDeleteUserBandParams) (int64, error)
+	TemplateBelongsToUser(ctx context.Context, arg TemplateBelongsToUserParams) (bool, error)
+	UpdateSession(ctx context.Context, arg UpdateSessionParams) (WorkoutSession, error)
+	UpdateUserProfile(ctx context.Context, arg UpdateUserProfileParams) (User, error)
+	UpsertAssistance(ctx context.Context, arg UpsertAssistanceParams) (uuid.UUID, error)
+	// Inserts, or replaces a live block of the same session. Returns no row when
+	// the id belongs to another session or user, or is a tombstone.
+	UpsertBlock(ctx context.Context, arg UpsertBlockParams) (UpsertBlockRow, error)
+	// A device id is claimed by the first account that signs in with it and is
+	// never re-owned: the row returns nothing if another account holds the id.
+	UpsertDevice(ctx context.Context, arg UpsertDeviceParams) (uuid.UUID, error)
 	UpsertExercise(ctx context.Context, arg UpsertExerciseParams) (uuid.UUID, error)
 	UpsertFamily(ctx context.Context, arg UpsertFamilyParams) (uuid.UUID, error)
 	UpsertGlobalBand(ctx context.Context, arg UpsertGlobalBandParams) error
 	UpsertInjuryRisk(ctx context.Context, arg UpsertInjuryRiskParams) (uuid.UUID, error)
+	UpsertSetElement(ctx context.Context, arg UpsertSetElementParams) (uuid.UUID, error)
+	UpsertSetEntry(ctx context.Context, arg UpsertSetEntryParams) (UpsertSetEntryRow, error)
 	UpsertSkill(ctx context.Context, arg UpsertSkillParams) (uuid.UUID, error)
 	UpsertSkillLevel(ctx context.Context, arg UpsertSkillLevelParams) (uuid.UUID, error)
+	// Bands a user may log with: the catalogue and their own, deleted or not,
+	// so repeating an old set keeps working after a band is retired.
+	VisibleBandIDs(ctx context.Context, arg VisibleBandIDsParams) ([]uuid.UUID, error)
 }
 
 var _ Querier = (*Queries)(nil)

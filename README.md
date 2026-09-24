@@ -13,10 +13,10 @@ The logger feeds the map. That coupling is the product.
 
 ## Status
 
-**Phase 1 — schema and content pipeline**, awaiting review. The schema is
-migrated (`db/migrations/`), the content pipeline validates and seeds
-`content/`, and three placeholder skills prove the shape end to end. Current
-state and open questions: [`STATUS.md`](STATUS.md).
+**Phase 2 — auth and the core API**, awaiting review. Accounts (email and
+Sign in with Apple), the exercise catalogue, bands, and the session logger —
+sets and combos through one write path — are live against the migrated schema.
+Current state and open questions: [`STATUS.md`](STATUS.md).
 
 See [`docs/PROJECT_BRIEF.md`](docs/PROJECT_BRIEF.md) for the full plan,
 [`docs/adr/`](docs/adr/) for decisions taken so far, and

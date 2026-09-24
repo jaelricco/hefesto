@@ -51,7 +51,9 @@ make prod-version / prod-logs / prod-ps
 - **Migrations are structure, seed is data.** Content is never inserted by a
   migration. Migrations are never edited once merged.
 - **The OpenAPI spec is the source of truth.** Swift DTOs are generated from
-  it, never hand-written. Change `api/openapi.yaml` first.
+  it, never hand-written. Change `api/openapi.yaml` first: request bodies are
+  validated against it at runtime, and tests fail when routes or responses
+  drift from it (ADR 0007).
 - **Errors**: wrapped with `%w`, never swallowed; `application/problem+json`
   (RFC 9457) at the HTTP edge; `slog` with the request ID on context.
 - **No `panic` outside `main`.**

@@ -36,6 +36,14 @@ type Config struct {
 	JWTIssuer      string
 	AccessTokenTTL time.Duration
 	ContentDir     string
+
+	RefreshTokenTTL      time.Duration
+	Argon2MemoryKiB      uint32
+	Argon2Iterations     uint32
+	Argon2Parallelism    uint8
+	AppleClientIDs       []string // accepted `aud` values for Sign in with Apple
+	AccountDeletionGrace time.Duration
+	TrustProxyHeaders    bool // take the client IP from X-Forwarded-For (behind Caddy)
 }
 
 // Load reads configuration from the environment and validates it.
@@ -63,6 +71,38 @@ func Load() (Config, error) {
 	if c.AccessTokenTTL, err = dur("HEFESTO_ACCESS_TOKEN_TTL", 15*time.Minute); err != nil {
 		errs = append(errs, err)
 	}
+	if c.RefreshTokenTTL, err = dur("HEFESTO_REFRESH_TOKEN_TTL", 90*24*time.Hour); err != nil {
+		errs = append(errs, err)
+	}
+	if c.AccountDeletionGrace, err = dur("HEFESTO_ACCOUNT_DELETION_GRACE", 30*24*time.Hour); err != nil {
+		errs = append(errs, err)
+	}
+	var n int32
+	if n, err = i32("HEFESTO_ARGON2_MEMORY_KIB", 64*1024); err != nil {
+		errs = append(errs, err)
+	}
+	c.Argon2MemoryKiB = uint32(n) //nolint:gosec // validated below
+	if n, err = i32("HEFESTO_ARGON2_ITERATIONS", 3); err != nil {
+		errs = append(errs, err)
+	}
+	c.Argon2Iterations = uint32(n) //nolint:gosec // validated below
+	if n, err = i32("HEFESTO_ARGON2_PARALLELISM", 2); err != nil {
+		errs = append(errs, err)
+	}
+	if n < 1 || n > 255 {
+		errs = append(errs, errors.New("HEFESTO_ARGON2_PARALLELISM: between 1 and 255"))
+	} else {
+		c.Argon2Parallelism = uint8(n)
+	}
+	if c.Argon2MemoryKiB < 8*1024 || c.Argon2Iterations < 1 {
+		errs = append(errs, errors.New("HEFESTO_ARGON2_*: memory must be at least 8192 KiB and iterations at least 1"))
+	}
+	for _, id := range strings.Split(str("HEFESTO_APPLE_CLIENT_ID", ""), ",") {
+		if id = strings.TrimSpace(id); id != "" {
+			c.AppleClientIDs = append(c.AppleClientIDs, id)
+		}
+	}
+	c.TrustProxyHeaders = str("HEFESTO_TRUST_PROXY_HEADERS", "false") == "true"
 	if c.DBMaxConns, err = i32("HEFESTO_DB_MAX_CONNS", 10); err != nil {
 		errs = append(errs, err)
 	}
@@ -79,8 +119,8 @@ func Load() (Config, error) {
 	// Outside dev these are hard requirements; there is no built-in fallback
 	// secret anywhere in this codebase.
 	if c.Env != EnvDev {
-		if c.JWTSigningKey == "" {
-			errs = append(errs, errors.New("HEFESTO_JWT_SIGNING_KEY: required outside dev"))
+		if len(c.JWTSigningKey) < 32 {
+			errs = append(errs, errors.New("HEFESTO_JWT_SIGNING_KEY: required outside dev, at least 32 characters"))
 		}
 		if c.LogFormat != "json" {
 			errs = append(errs, errors.New("HEFESTO_LOG_FORMAT: must be json outside dev"))
