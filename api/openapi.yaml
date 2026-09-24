@@ -1,15 +1,50 @@
 openapi: 3.1.0
 info:
   title: Hefesto API
-  version: 0.1.0
+  version: 0.2.0
   summary: Calisthenics training logger and skill map
   description: |
-    Phase 0 skeleton. The full surface described in the project brief §4 is
-    written in Phase 2 (auth, exercises, sessions) and Phase 3 (skill map,
-    unlocks), and this file is the source of truth for the generated Swift
-    client — DTOs are never hand-written.
+    The source of truth for the Hefesto API and for the generated Swift client.
+    DTOs are never hand-written; change this file first.
 
-    All errors use `application/problem+json` (RFC 9457).
+    ## Conventions
+
+    - JSON bodies use `snake_case`. Instants are RFC 3339 in UTC; `local_date`
+      is the athlete's calendar day in the session's own time zone.
+    - Every row a client creates carries a **client-generated UUIDv7 `id`**.
+      This is the same contract the delta sync (Phase 4) uses, so an object
+      created over REST and one created offline are indistinguishable.
+    - `updated_at` on a write is the client's clock; the server records its own
+      `server_updated_at` beside it.
+    - **One code path for sets.** A set of 8 pull-ups is one set entry with one
+      element; a combo is one set entry with N ordered elements. There is no
+      endpoint that writes an element on its own.
+    - Deleting is soft: the row keeps its id with `deleted_at` set, so other
+      devices learn about the deletion when they sync.
+
+    ## Errors
+
+    Every error is `application/problem+json` (RFC 9457). Clients switch on
+    `type`, never on `detail`. `errors` maps a JSON pointer into the request
+    body to a message, for validation failures.
+
+    | `type` (under `https://hefesto.fit/problems/`) | Status | Meaning |
+    |---|---|---|
+    | `bad-request` | 400 | The body is not valid JSON or has unknown fields. |
+    | `unauthorized` | 401 | Missing, malformed or expired access token. |
+    | `invalid-credentials` | 401 | Email and password do not match. |
+    | `invalid-refresh-token` | 401 | Unknown, expired, revoked or reused refresh token. |
+    | `invalid-identity-token` | 401 | The Sign in with Apple token failed verification. |
+    | `forbidden` | 403 | Not allowed: the account is suspended, or the subject is not yours. |
+    | `not-found` | 404 | No such resource for this user. |
+    | `method-not-allowed` | 405 | The path exists but not with this method. |
+    | `already-exists` | 409 | A resource with this id already exists. |
+    | `email-taken` | 409 | An account already uses this email. |
+    | `order-conflict` | 409 | Another live sibling already has this `order_index`; use the reorder endpoint. |
+    | `validation` | 422 | The body is well-formed but breaks a rule; see `errors`. |
+    | `rate-limited` | 429 | Too many attempts; retry after `Retry-After`. |
+    | `internal` | 500 | A server bug. Quote `trace_id` when reporting it. |
+    | `not-ready` | 503 | A dependency is unavailable. |
   license:
     name: Proprietary
 servers:
@@ -21,6 +56,19 @@ servers:
 tags:
   - name: system
     description: Liveness and readiness probes.
+  - name: auth
+    description: Accounts, tokens and Sign in with Apple.
+  - name: me
+    description: The signed-in athlete's profile and account.
+  - name: exercises
+    description: The exercise catalogue (content, versioned as a whole).
+  - name: bands
+    description: Resistance bands used as assistance.
+  - name: sessions
+    description: Logged workouts — sessions, blocks, set entries and their ordered elements.
+
+security:
+  - bearerAuth: []
 
 paths:
   /healthz:
@@ -55,6 +103,644 @@ paths:
         "503":
           $ref: "#/components/responses/Problem"
 
+  # ------------------------------------------------------------------ auth
+
+  /v1/auth/register:
+    post:
+      tags: [auth]
+      operationId: register
+      summary: Create an account with email and password
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        "201":
+          description: Account created and signed in.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/Problem"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+
+  /v1/auth/login:
+    post:
+      tags: [auth]
+      operationId: login
+      summary: Sign in with email and password
+      description: |
+        Signing in to an account whose deletion is pending cancels the
+        deletion; the response then carries `deletion_cancelled: true`.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Signed in.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "403":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/Problem"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+
+  /v1/auth/apple:
+    post:
+      tags: [auth]
+      operationId: signInWithApple
+      summary: Sign in with Apple
+      description: |
+        Exchanges an Apple identity token for a Hefesto session. The first
+        sign-in creates the account. If Apple reports a verified email that
+        already belongs to a Hefesto account, the Apple identity is linked to
+        that account. As with password login, signing in cancels a pending
+        deletion.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AppleSignInRequest"
+      responses:
+        "200":
+          description: Signed in to an existing account.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "201":
+          description: Account created and signed in.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "403":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/Problem"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+
+  /v1/auth/refresh:
+    post:
+      tags: [auth]
+      operationId: refreshTokens
+      summary: Rotate a refresh token
+      description: |
+        Returns a new access token and a new refresh token; the one presented
+        is spent. Presenting a spent token again is treated as theft: every
+        token descended from the same sign-in is revoked and the device must
+        sign in again.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefreshRequest"
+      responses:
+        "200":
+          description: Rotated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "403":
+          $ref: "#/components/responses/Problem"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+
+  /v1/auth/logout:
+    post:
+      tags: [auth]
+      operationId: logout
+      summary: Sign out this device
+      description: Revokes the presented refresh token and every token rotated from the same sign-in. Unknown tokens are accepted silently.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefreshRequest"
+      responses:
+        "204":
+          description: Signed out.
+        "400":
+          $ref: "#/components/responses/Problem"
+
+  # -------------------------------------------------------------------- me
+
+  /v1/me:
+    get:
+      tags: [me]
+      operationId: getMe
+      summary: The signed-in athlete
+      responses:
+        "200":
+          description: The profile.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          $ref: "#/components/responses/Problem"
+    patch:
+      tags: [me]
+      operationId: updateMe
+      summary: Update profile preferences
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdate"
+      responses:
+        "200":
+          description: Updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/Problem"
+    delete:
+      tags: [me]
+      operationId: requestAccountDeletion
+      summary: Request account deletion
+      description: |
+        Starts a 30-day grace period and signs out every device. Signing in
+        again within the grace period cancels the deletion. After it, the
+        account and all its data are permanently deleted.
+      responses:
+        "202":
+          description: Deletion scheduled.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeletionScheduled"
+        "401":
+          $ref: "#/components/responses/Problem"
+
+  /v1/me/exercises/{exerciseId}/last-set:
+    get:
+      tags: [sessions]
+      operationId: getLastSetForExercise
+      summary: The most recent performed set containing an exercise
+      description: |
+        Drives "repeat last set": the whole set entry is returned, so a combo
+        is repeated as a combo. Planned and deleted sets are ignored.
+      parameters:
+        - $ref: "#/components/parameters/ExerciseId"
+      responses:
+        "200":
+          description: The most recent set.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LastSet"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "404":
+          $ref: "#/components/responses/Problem"
+
+  /v1/me/bands:
+    post:
+      tags: [bands]
+      operationId: createMyBand
+      summary: Add a band to my collection
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BandCreate"
+      responses:
+        "201":
+          description: Created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Band"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/Problem"
+
+  /v1/me/bands/{bandId}:
+    delete:
+      tags: [bands]
+      operationId: deleteMyBand
+      summary: Remove a band from my collection
+      description: The band stays attached to sets already logged with it.
+      parameters:
+        - $ref: "#/components/parameters/BandId"
+      responses:
+        "204":
+          description: Removed.
+        "401":
+          $ref: "#/components/responses/Problem"
+        "404":
+          $ref: "#/components/responses/Problem"
+
+  # ------------------------------------------------------------- exercises
+
+  /v1/exercises:
+    get:
+      tags: [exercises]
+      operationId: listExercises
+      summary: Search the exercise catalogue
+      description: |
+        Retired exercises are never listed. With no filters this is the whole
+        catalogue; the response carries an `ETag` keyed on the content
+        version, and a matching `If-None-Match` returns 304.
+      parameters:
+        - name: q
+          in: query
+          description: Fuzzy match on name and alternative names.
+          schema:
+            type: string
+            maxLength: 100
+        - name: family
+          in: query
+          description: A family slug, e.g. `pull`.
+          schema:
+            $ref: "#/components/schemas/Slug"
+        - name: equipment
+          in: query
+          description: Only exercises that list this equipment tag.
+          schema:
+            type: string
+            maxLength: 40
+        - name: If-None-Match
+          in: header
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The matching exercises, by name.
+          headers:
+            ETag:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExerciseList"
+        "304":
+          description: The catalogue has not changed.
+        "401":
+          $ref: "#/components/responses/Problem"
+
+  /v1/exercises/{slug}:
+    get:
+      tags: [exercises]
+      operationId: getExercise
+      summary: One exercise by slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Slug"
+      responses:
+        "200":
+          description: The exercise.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Exercise"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "404":
+          $ref: "#/components/responses/Problem"
+
+  # ----------------------------------------------------------------- bands
+
+  /v1/bands:
+    get:
+      tags: [bands]
+      operationId: listBands
+      summary: Bands available to me
+      description: The global catalogue plus my own bands.
+      responses:
+        "200":
+          description: The bands, by brand then colour.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BandList"
+        "401":
+          $ref: "#/components/responses/Problem"
+
+  # -------------------------------------------------------------- sessions
+
+  /v1/sessions:
+    post:
+      tags: [sessions]
+      operationId: createSession
+      summary: Start a session (as a draft)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SessionCreate"
+      responses:
+        "201":
+          description: Created.
+          headers:
+            Location:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Session"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/Problem"
+    get:
+      tags: [sessions]
+      operationId: listSessions
+      summary: My sessions, newest first
+      parameters:
+        - name: from
+          in: query
+          description: Earliest `local_date`, inclusive.
+          schema:
+            type: string
+            format: date
+        - name: to
+          in: query
+          description: Latest `local_date`, inclusive.
+          schema:
+            type: string
+            format: date
+        - name: cursor
+          in: query
+          description: The `next_cursor` of the previous page. Opaque.
+          schema:
+            type: string
+            maxLength: 200
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        "200":
+          description: One page.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionPage"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+
+  /v1/sessions/{sessionId}:
+    parameters:
+      - $ref: "#/components/parameters/SessionId"
+    get:
+      tags: [sessions]
+      operationId: getSession
+      summary: A session with its blocks, sets and elements
+      responses:
+        "200":
+          description: The session.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Session"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "404":
+          $ref: "#/components/responses/Problem"
+    patch:
+      tags: [sessions]
+      operationId: updateSession
+      summary: Update session fields
+      description: |
+        Only the fields present change; `null` clears a nullable field.
+        Completing a session is not done here: `POST /v1/sessions/{id}/complete`
+        arrives with the unlock engine in Phase 3.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SessionUpdate"
+      responses:
+        "200":
+          description: Updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Session"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "404":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/Problem"
+    delete:
+      tags: [sessions]
+      operationId: deleteSession
+      summary: Delete a session and everything in it
+      responses:
+        "204":
+          description: Deleted.
+        "401":
+          $ref: "#/components/responses/Problem"
+        "404":
+          $ref: "#/components/responses/Problem"
+
+  /v1/sessions/{sessionId}/blocks/{blockId}:
+    parameters:
+      - $ref: "#/components/parameters/SessionId"
+      - $ref: "#/components/parameters/BlockId"
+    put:
+      tags: [sessions]
+      operationId: putBlock
+      summary: Create or replace a block
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BlockWrite"
+      responses:
+        "200":
+          description: Replaced.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Block"
+        "201":
+          description: Created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Block"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "404":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/Problem"
+    delete:
+      tags: [sessions]
+      operationId: deleteBlock
+      summary: Delete a block and its sets
+      responses:
+        "204":
+          description: Deleted.
+        "401":
+          $ref: "#/components/responses/Problem"
+        "404":
+          $ref: "#/components/responses/Problem"
+
+  /v1/sessions/{sessionId}/sets/{setId}:
+    parameters:
+      - $ref: "#/components/parameters/SessionId"
+      - $ref: "#/components/parameters/SetId"
+    put:
+      tags: [sessions]
+      operationId: putSet
+      summary: Create or replace a set entry with its ordered elements
+      description: |
+        The one way to write a set. `elements` is the complete, ordered list:
+        one element for a plain set, several for a combo. Elements present
+        before and missing now are deleted; array order is element order.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SetEntryWrite"
+      responses:
+        "200":
+          description: Replaced.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SetEntry"
+        "201":
+          description: Created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SetEntry"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "404":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/Problem"
+    delete:
+      tags: [sessions]
+      operationId: deleteSet
+      summary: Delete a set entry and its elements
+      responses:
+        "204":
+          description: Deleted.
+        "401":
+          $ref: "#/components/responses/Problem"
+        "404":
+          $ref: "#/components/responses/Problem"
+
+  /v1/sessions/{sessionId}/reorder:
+    parameters:
+      - $ref: "#/components/parameters/SessionId"
+    post:
+      tags: [sessions]
+      operationId: reorderSession
+      summary: Reorder blocks, and sets within blocks, in one step
+      description: |
+        Each list must name exactly the live children it orders — every live
+        block of the session, or every live set of the named block — and they
+        are renumbered 0..n-1 in list order. Moving a set to another block is
+        done with `PUT .../sets/{id}`, not here.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReorderRequest"
+      responses:
+        "200":
+          description: Reordered; the whole session is returned.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Session"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "404":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/Problem"
+
 components:
   securitySchemes:
     bearerAuth:
@@ -62,7 +748,82 @@ components:
       scheme: bearer
       bearerFormat: JWT
 
+  parameters:
+    SessionId:
+      name: sessionId
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/Id"
+    BlockId:
+      name: blockId
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/Id"
+    SetId:
+      name: setId
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/Id"
+    ExerciseId:
+      name: exerciseId
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/Id"
+    BandId:
+      name: bandId
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/Id"
+
+  responses:
+    Problem:
+      description: An error occurred.
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    RateLimited:
+      description: Too many attempts.
+      headers:
+        Retry-After:
+          schema:
+            type: integer
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+
   schemas:
+    # -------------------------------------------------------------- basics
+    Id:
+      description: A UUID. Rows a client creates carry a client-generated UUIDv7.
+      type: string
+      format: uuid
+    Slug:
+      type: string
+      pattern: "^[a-z0-9]+(-[a-z0-9]+)*$"
+      maxLength: 80
+    Timestamp:
+      type: string
+      format: date-time
+    NullableTimestamp:
+      type: [string, "null"]
+      format: date-time
+    TimeZone:
+      description: An IANA time-zone name.
+      type: string
+      minLength: 1
+      maxLength: 64
+      examples: [Europe/Zurich]
+    Measure:
+      type: string
+      enum: [reps, hold_seconds, distance_m, none]
+
     HealthStatus:
       type: object
       required: [status]
@@ -108,13 +869,791 @@ components:
           additionalProperties:
             type: string
 
-  responses:
-    Problem:
-      description: An error occurred.
-      content:
-        application/problem+json:
-          schema:
-            $ref: "#/components/schemas/Problem"
+    # ---------------------------------------------------------------- auth
+    Device:
+      description: |
+        The device signing in. Its `id` becomes the `client_id` on every row
+        written with the resulting tokens, and signing out revokes only this
+        device's tokens.
+      type: object
+      additionalProperties: false
+      required: [id, platform]
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        platform:
+          type: string
+          enum: [ios, android, web]
+        model:
+          type: string
+          maxLength: 100
+        os_version:
+          type: string
+          maxLength: 40
+        app_version:
+          type: string
+          maxLength: 40
 
-security:
-  - bearerAuth: []
+    RegisterRequest:
+      type: object
+      additionalProperties: false
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        password:
+          type: string
+          minLength: 10
+          maxLength: 256
+        display_name:
+          type: string
+          maxLength: 80
+        locale:
+          type: string
+          maxLength: 20
+          examples: [de-CH]
+        timezone:
+          $ref: "#/components/schemas/TimeZone"
+        device:
+          $ref: "#/components/schemas/Device"
+
+    LoginRequest:
+      type: object
+      additionalProperties: false
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          maxLength: 254
+        password:
+          type: string
+          maxLength: 256
+        device:
+          $ref: "#/components/schemas/Device"
+
+    AppleSignInRequest:
+      type: object
+      additionalProperties: false
+      required: [identity_token]
+      properties:
+        identity_token:
+          description: The JWT from `ASAuthorizationAppleIDCredential.identityToken`.
+          type: string
+          maxLength: 8192
+        nonce:
+          description: The raw nonce whose SHA-256 was sent to Apple, if one was.
+          type: string
+          maxLength: 256
+        display_name:
+          description: Apple only reveals the name on the first sign-in; send it then.
+          type: string
+          maxLength: 80
+        device:
+          $ref: "#/components/schemas/Device"
+
+    RefreshRequest:
+      type: object
+      additionalProperties: false
+      required: [refresh_token]
+      properties:
+        refresh_token:
+          type: string
+          maxLength: 200
+
+    AuthResponse:
+      type: object
+      required: [access_token, token_type, expires_in, refresh_token, refresh_expires_at, user]
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+          enum: [Bearer]
+        expires_in:
+          description: Access-token lifetime in seconds.
+          type: integer
+        refresh_token:
+          type: string
+        refresh_expires_at:
+          $ref: "#/components/schemas/Timestamp"
+        user:
+          $ref: "#/components/schemas/User"
+        deletion_cancelled:
+          description: True when this sign-in cancelled a pending account deletion.
+          type: boolean
+
+    # ------------------------------------------------------------------ me
+    User:
+      type: object
+      required: [id, email, email_verified, display_name, locale, unit_system, week_start, timezone, status, deletion_requested_at, created_at]
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        email:
+          type: [string, "null"]
+        email_verified:
+          type: boolean
+        display_name:
+          type: string
+        locale:
+          type: string
+        unit_system:
+          type: string
+          enum: [metric, imperial]
+        week_start:
+          description: ISO weekday the week starts on; 1 is Monday.
+          type: integer
+          minimum: 1
+          maximum: 7
+        timezone:
+          $ref: "#/components/schemas/TimeZone"
+        status:
+          type: string
+          enum: [active, suspended, deletion_pending]
+        deletion_requested_at:
+          $ref: "#/components/schemas/NullableTimestamp"
+        created_at:
+          $ref: "#/components/schemas/Timestamp"
+
+    UserUpdate:
+      type: object
+      additionalProperties: false
+      minProperties: 1
+      properties:
+        display_name:
+          type: string
+          maxLength: 80
+        locale:
+          type: string
+          minLength: 2
+          maxLength: 20
+        unit_system:
+          type: string
+          enum: [metric, imperial]
+        week_start:
+          type: integer
+          minimum: 1
+          maximum: 7
+        timezone:
+          $ref: "#/components/schemas/TimeZone"
+
+    DeletionScheduled:
+      type: object
+      required: [deletion_requested_at, hard_delete_after]
+      properties:
+        deletion_requested_at:
+          $ref: "#/components/schemas/Timestamp"
+        hard_delete_after:
+          $ref: "#/components/schemas/Timestamp"
+
+    # ----------------------------------------------------------- exercises
+    Exercise:
+      type: object
+      required: [id, slug, name, aka, family, default_measure, load_semantics, is_bodyweight, unilateral, tempo_applicable, equipment, summary, cues, common_faults, status]
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        slug:
+          $ref: "#/components/schemas/Slug"
+        name:
+          type: string
+        aka:
+          type: array
+          items:
+            type: string
+        family:
+          $ref: "#/components/schemas/Slug"
+        default_measure:
+          $ref: "#/components/schemas/Measure"
+        load_semantics:
+          type: string
+          enum: [added, external, none]
+        is_bodyweight:
+          type: boolean
+        unilateral:
+          type: boolean
+        tempo_applicable:
+          type: boolean
+        equipment:
+          type: array
+          items:
+            type: string
+        summary:
+          type: string
+        cues:
+          type: array
+          items:
+            type: string
+        common_faults:
+          type: array
+          items:
+            type: string
+        status:
+          description: "`draft_placeholder` marks content that is not yet researched."
+          type: string
+          enum: [active, draft_placeholder]
+
+    ExerciseList:
+      type: object
+      required: [items, content_version]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Exercise"
+        content_version:
+          description: Checksum of the content tree these exercises come from.
+          type: string
+
+    # --------------------------------------------------------------- bands
+    Band:
+      type: object
+      required: [id, owner, brand, colour_label, resistance_min_kg, resistance_max_kg, length_cm, thickness_mm]
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        owner:
+          type: string
+          enum: [catalogue, mine]
+        brand:
+          type: string
+        colour_label:
+          type: string
+        resistance_min_kg:
+          type: number
+        resistance_max_kg:
+          type: number
+        length_cm:
+          type: [number, "null"]
+        thickness_mm:
+          type: [number, "null"]
+
+    BandList:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Band"
+
+    BandCreate:
+      type: object
+      additionalProperties: false
+      required: [id, brand, colour_label, resistance_min_kg, resistance_max_kg]
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        brand:
+          type: string
+          minLength: 1
+          maxLength: 80
+        colour_label:
+          type: string
+          minLength: 1
+          maxLength: 80
+        resistance_min_kg:
+          type: number
+          minimum: 0
+          maximum: 999
+        resistance_max_kg:
+          type: number
+          minimum: 0
+          maximum: 999
+        length_cm:
+          type: number
+          exclusiveMinimum: 0
+          maximum: 10000
+        thickness_mm:
+          type: number
+          exclusiveMinimum: 0
+          maximum: 1000
+
+    # ------------------------------------------------------------ sessions
+    SessionCreate:
+      type: object
+      additionalProperties: false
+      required: [id, started_at, timezone]
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        started_at:
+          $ref: "#/components/schemas/Timestamp"
+        timezone:
+          $ref: "#/components/schemas/TimeZone"
+        title:
+          type: string
+          maxLength: 200
+        notes:
+          type: string
+          maxLength: 10000
+        bodyweight_kg:
+          type: number
+          exclusiveMinimum: 0
+          maximum: 500
+        is_rest_day:
+          description: A planned rest day logged as a session; it maintains the streak (ADR 0003).
+          type: boolean
+        template_id:
+          $ref: "#/components/schemas/Id"
+        updated_at:
+          $ref: "#/components/schemas/Timestamp"
+
+    SessionUpdate:
+      type: object
+      additionalProperties: false
+      minProperties: 1
+      properties:
+        started_at:
+          $ref: "#/components/schemas/Timestamp"
+        ended_at:
+          $ref: "#/components/schemas/NullableTimestamp"
+        timezone:
+          $ref: "#/components/schemas/TimeZone"
+        title:
+          type: string
+          maxLength: 200
+        notes:
+          type: string
+          maxLength: 10000
+        perceived_fatigue:
+          type: [integer, "null"]
+          minimum: 1
+          maximum: 10
+        bodyweight_kg:
+          type: [number, "null"]
+          exclusiveMinimum: 0
+          maximum: 500
+        is_rest_day:
+          type: boolean
+        status:
+          description: A draft may be abandoned, and an abandoned session reopened. Completion is a separate endpoint.
+          type: string
+          enum: [draft, abandoned]
+        updated_at:
+          $ref: "#/components/schemas/Timestamp"
+
+    SessionStatus:
+      type: string
+      enum: [draft, completed, abandoned]
+
+    Session:
+      type: object
+      required: [id, started_at, ended_at, timezone, local_date, title, notes, perceived_fatigue, bodyweight_kg, status, is_rest_day, template_id, completed_at, updated_at, server_updated_at, blocks]
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        started_at:
+          $ref: "#/components/schemas/Timestamp"
+        ended_at:
+          $ref: "#/components/schemas/NullableTimestamp"
+        timezone:
+          $ref: "#/components/schemas/TimeZone"
+        local_date:
+          type: string
+          format: date
+        title:
+          type: string
+        notes:
+          type: string
+        perceived_fatigue:
+          type: [integer, "null"]
+        bodyweight_kg:
+          type: [number, "null"]
+        status:
+          $ref: "#/components/schemas/SessionStatus"
+        is_rest_day:
+          type: boolean
+        template_id:
+          type: [string, "null"]
+          format: uuid
+        completed_at:
+          $ref: "#/components/schemas/NullableTimestamp"
+        updated_at:
+          $ref: "#/components/schemas/Timestamp"
+        server_updated_at:
+          $ref: "#/components/schemas/Timestamp"
+        blocks:
+          description: Live blocks in order, each with its live sets in order.
+          type: array
+          items:
+            $ref: "#/components/schemas/Block"
+
+    SessionSummary:
+      type: object
+      required: [id, started_at, ended_at, timezone, local_date, title, status, is_rest_day, block_count, set_count]
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        started_at:
+          $ref: "#/components/schemas/Timestamp"
+        ended_at:
+          $ref: "#/components/schemas/NullableTimestamp"
+        timezone:
+          $ref: "#/components/schemas/TimeZone"
+        local_date:
+          type: string
+          format: date
+        title:
+          type: string
+        status:
+          $ref: "#/components/schemas/SessionStatus"
+        is_rest_day:
+          type: boolean
+        block_count:
+          type: integer
+        set_count:
+          type: integer
+
+    SessionPage:
+      type: object
+      required: [items, next_cursor]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/SessionSummary"
+        next_cursor:
+          type: [string, "null"]
+
+    BlockKind:
+      type: string
+      enum: [straight, superset, circuit, emom, amrap]
+
+    BlockWrite:
+      type: object
+      additionalProperties: false
+      required: [order_index]
+      properties:
+        order_index:
+          type: integer
+          minimum: 0
+          maximum: 9999
+        kind:
+          $ref: "#/components/schemas/BlockKind"
+        rounds_planned:
+          type: [integer, "null"]
+          minimum: 1
+          maximum: 1000
+        rounds_done:
+          type: [integer, "null"]
+          minimum: 0
+          maximum: 1000
+        interval_s:
+          description: EMOM window or AMRAP cap. Only for `emom` and `amrap` blocks.
+          type: [integer, "null"]
+          minimum: 1
+          maximum: 86400
+        notes:
+          type: string
+          maxLength: 10000
+        updated_at:
+          $ref: "#/components/schemas/Timestamp"
+
+    Block:
+      type: object
+      required: [id, order_index, kind, rounds_planned, rounds_done, interval_s, notes, updated_at, sets]
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        order_index:
+          type: integer
+        kind:
+          $ref: "#/components/schemas/BlockKind"
+        rounds_planned:
+          type: [integer, "null"]
+        rounds_done:
+          type: [integer, "null"]
+        interval_s:
+          type: [integer, "null"]
+        notes:
+          type: string
+        updated_at:
+          $ref: "#/components/schemas/Timestamp"
+        sets:
+          type: array
+          items:
+            $ref: "#/components/schemas/SetEntry"
+
+    SetKind:
+      type: string
+      enum: [working, warmup, backoff, drop, cluster, test]
+
+    SetEntryWrite:
+      type: object
+      additionalProperties: false
+      required: [block_id, order_index, elements]
+      properties:
+        block_id:
+          $ref: "#/components/schemas/Id"
+        order_index:
+          type: integer
+          minimum: 0
+          maximum: 9999
+        round_index:
+          description: For circuits, which round this set belongs to. Each round is its own set entry.
+          type: [integer, "null"]
+          minimum: 0
+          maximum: 1000
+        kind:
+          $ref: "#/components/schemas/SetKind"
+        is_planned:
+          description: True for a set that is planned but not yet performed.
+          type: boolean
+        rest_after_planned_s:
+          type: [integer, "null"]
+          minimum: 0
+          maximum: 86400
+        rest_after_actual_s:
+          type: [integer, "null"]
+          minimum: 0
+          maximum: 86400
+        rpe:
+          type: [number, "null"]
+          minimum: 1
+          maximum: 10
+        rir:
+          type: [integer, "null"]
+          minimum: 0
+          maximum: 10
+        completed_at:
+          $ref: "#/components/schemas/NullableTimestamp"
+        notes:
+          type: string
+          maxLength: 10000
+        updated_at:
+          $ref: "#/components/schemas/Timestamp"
+        elements:
+          description: The complete ordered list. One element for a plain set, several for a combo.
+          type: array
+          minItems: 1
+          maxItems: 20
+          items:
+            $ref: "#/components/schemas/SetElementWrite"
+
+    SetElementWrite:
+      type: object
+      additionalProperties: false
+      required: [id, exercise_id, measure]
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        exercise_id:
+          $ref: "#/components/schemas/Id"
+        measure:
+          $ref: "#/components/schemas/Measure"
+        reps:
+          description: Only with `measure = reps`.
+          type: [integer, "null"]
+          minimum: 0
+          maximum: 10000
+        hold_seconds:
+          description: Only with `measure = hold_seconds`.
+          type: [number, "null"]
+          minimum: 0
+          maximum: 36000
+        distance_m:
+          description: Only with `measure = distance_m`.
+          type: [number, "null"]
+          minimum: 0
+          maximum: 100000
+        tempo:
+          description: Four characters, digits or `X`, e.g. `30X1`.
+          type: [string, "null"]
+          pattern: "^[0-9X]{4}$"
+        load_kg:
+          description: Added external load. Never negative — assistance, a counterweight included, goes in `assistance`.
+          type: number
+          minimum: 0
+          maximum: 1000
+        is_eccentric_only:
+          type: boolean
+        is_partial_rom:
+          type: boolean
+        rom_note:
+          description: Only with `is_partial_rom`.
+          type: [string, "null"]
+          maxLength: 500
+        form_quality:
+          description: 1 (poor) to 5 (textbook). Drives unlock confidence.
+          type: [integer, "null"]
+          minimum: 1
+          maximum: 5
+        failed:
+          type: boolean
+        assistance:
+          oneOf:
+            - $ref: "#/components/schemas/AssistanceWrite"
+            - type: "null"
+
+    AssistanceType:
+      type: string
+      enum: [band, partner, machine, incline, counterweight, foot_support]
+
+    AssistanceWrite:
+      type: object
+      additionalProperties: false
+      required: [id, type]
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        type:
+          $ref: "#/components/schemas/AssistanceType"
+        band_id:
+          description: Required with `type = band`, forbidden otherwise.
+          type: [string, "null"]
+          format: uuid
+        band_count:
+          description: Number of bands; at least 1 with `type = band`.
+          type: integer
+          minimum: 0
+          maximum: 10
+        anchor:
+          type: [string, "null"]
+          enum: [overhead, under_foot, under_knee, hip, other, null]
+        estimated_assist_kg:
+          type: [number, "null"]
+          minimum: 0
+          maximum: 1000
+        note:
+          type: string
+          maxLength: 500
+
+    SetEntry:
+      type: object
+      required: [id, block_id, order_index, round_index, kind, is_planned, rest_after_planned_s, rest_after_actual_s, rpe, rir, completed_at, notes, updated_at, elements]
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        block_id:
+          $ref: "#/components/schemas/Id"
+        order_index:
+          type: integer
+        round_index:
+          type: [integer, "null"]
+        kind:
+          $ref: "#/components/schemas/SetKind"
+        is_planned:
+          type: boolean
+        rest_after_planned_s:
+          type: [integer, "null"]
+        rest_after_actual_s:
+          type: [integer, "null"]
+        rpe:
+          type: [number, "null"]
+        rir:
+          type: [integer, "null"]
+        completed_at:
+          $ref: "#/components/schemas/NullableTimestamp"
+        notes:
+          type: string
+        updated_at:
+          $ref: "#/components/schemas/Timestamp"
+        elements:
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/SetElement"
+
+    SetElement:
+      type: object
+      required: [id, order_index, exercise_id, measure, reps, hold_seconds, distance_m, tempo, load_kg, is_eccentric_only, is_partial_rom, rom_note, form_quality, failed, assistance_class, assistance]
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        order_index:
+          type: integer
+        exercise_id:
+          $ref: "#/components/schemas/Id"
+        measure:
+          $ref: "#/components/schemas/Measure"
+        reps:
+          type: [integer, "null"]
+        hold_seconds:
+          type: [number, "null"]
+        distance_m:
+          type: [number, "null"]
+        tempo:
+          type: [string, "null"]
+        load_kg:
+          type: number
+        is_eccentric_only:
+          type: boolean
+        is_partial_rom:
+          type: boolean
+        rom_note:
+          type: [string, "null"]
+        form_quality:
+          type: [integer, "null"]
+        failed:
+          type: boolean
+        assistance_class:
+          description: Derived by the server from `assistance` and `load_kg`.
+          type: string
+          enum: [unassisted, assisted, loaded]
+        assistance:
+          oneOf:
+            - $ref: "#/components/schemas/Assistance"
+            - type: "null"
+
+    Assistance:
+      type: object
+      required: [id, type, band_id, band_count, anchor, estimated_assist_kg, note]
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        type:
+          $ref: "#/components/schemas/AssistanceType"
+        band_id:
+          type: [string, "null"]
+          format: uuid
+        band_count:
+          type: integer
+        anchor:
+          type: [string, "null"]
+        estimated_assist_kg:
+          type: [number, "null"]
+        note:
+          type: string
+
+    ReorderRequest:
+      type: object
+      additionalProperties: false
+      minProperties: 1
+      properties:
+        blocks:
+          description: Every live block of the session, in the new order.
+          type: array
+          maxItems: 500
+          items:
+            $ref: "#/components/schemas/Id"
+        sets:
+          type: array
+          maxItems: 500
+          items:
+            type: object
+            additionalProperties: false
+            required: [block_id, set_ids]
+            properties:
+              block_id:
+                $ref: "#/components/schemas/Id"
+              set_ids:
+                description: Every live set of the block, in the new order.
+                type: array
+                maxItems: 1000
+                items:
+                  $ref: "#/components/schemas/Id"
+
+    LastSet:
+      type: object
+      required: [session_id, local_date, set]
+      properties:
+        session_id:
+          $ref: "#/components/schemas/Id"
+        local_date:
+          type: string
+          format: date
+        set:
+          $ref: "#/components/schemas/SetEntry"
