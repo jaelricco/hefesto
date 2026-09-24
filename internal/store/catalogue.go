@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"log/slog"
 	"time"
 
 	"github.com/google/uuid"
@@ -159,9 +160,11 @@ func bandFromRow(r dbgen.Band) Band {
 }
 
 // ReapDeletedUsers hard-deletes accounts whose deletion grace period has
-// passed. Safe to run from several processes: an advisory lock makes all but
-// one skip.
-func (s *Store) ReapDeletedUsers(ctx context.Context, grace time.Duration) (int64, error) {
+// passed. purge runs first for each account, to remove what lives outside the
+// database (media objects); an account whose purge fails is kept for the next
+// run. Safe to run from several processes: an advisory lock makes all but one
+// skip.
+func (s *Store) ReapDeletedUsers(ctx context.Context, grace time.Duration, purge func(context.Context, uuid.UUID) error) (int64, error) {
 	var n int64
 	err := pgx.BeginFunc(ctx, s.pool, func(tx pgx.Tx) error {
 		var got bool
@@ -171,11 +174,24 @@ func (s *Store) ReapDeletedUsers(ctx context.Context, grace time.Duration) (int6
 		if !got {
 			return nil
 		}
-		var err error
+		q := dbgen.New(tx)
 		cutoff := time.Now().Add(-grace)
-		n, err = dbgen.New(tx).ReapDeletedUsers(ctx, &cutoff)
+		ids, err := q.UsersDueForReaping(ctx, &cutoff)
 		if err != nil {
-			return fmt.Errorf("reaping users: %w", err)
+			return fmt.Errorf("listing accounts to reap: %w", err)
+		}
+		for _, id := range ids {
+			if purge != nil {
+				if err := purge(ctx, id); err != nil {
+					slog.ErrorContext(ctx, "purging a deleted account failed; keeping it for the next run", "user_id", id, "error", err)
+					continue
+				}
+			}
+			k, err := q.ReapUser(ctx, dbgen.ReapUserParams{ID: id, Cutoff: &cutoff})
+			if err != nil {
+				return fmt.Errorf("reaping user: %w", err)
+			}
+			n += k
 		}
 		return nil
 	})

@@ -41,9 +41,14 @@ WHERE id = $1 AND status = 'deletion_pending';
 
 -- Hard deletion after the grace period. Everything the user owns goes with
 -- the row through ON DELETE CASCADE.
--- name: ReapDeletedUsers :execrows
+-- name: UsersDueForReaping :many
+SELECT id FROM users
+WHERE status = 'deletion_pending' AND deletion_requested_at < @cutoff
+ORDER BY deletion_requested_at;
+
+-- name: ReapUser :execrows
 DELETE FROM users
-WHERE status = 'deletion_pending' AND deletion_requested_at < @cutoff;
+WHERE id = @id AND status = 'deletion_pending' AND deletion_requested_at < @cutoff;
 
 -- A device id is claimed by the first account that signs in with it and is
 -- never re-owned: the row returns nothing if another account holds the id.

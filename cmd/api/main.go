@@ -190,7 +190,7 @@ func reapDeletedAccounts(ctx context.Context, st *store.Store, grace time.Durati
 	tick := time.NewTicker(time.Hour)
 	defer tick.Stop()
 	for {
-		n, err := st.ReapDeletedUsers(ctx, grace)
+		n, err := st.ReapDeletedUsers(ctx, grace, nil)
 		switch {
 		case err != nil && ctx.Err() == nil:
 			slog.Error("reaping deleted accounts failed", "error", err)

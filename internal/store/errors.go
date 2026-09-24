@@ -18,6 +18,12 @@ var (
 	ErrEmailTaken    = errors.New("email already registered")
 	ErrOrderConflict = errors.New("another live sibling has this order_index")
 	ErrDeviceTaken   = errors.New("device id belongs to another account")
+	// ErrDeleted is a write to, or a delete of, a row that is a tombstone. It
+	// is also ErrNotFound, which is what the REST API answers.
+	ErrDeleted = fmt.Errorf("%w: deleted", ErrNotFound)
+	// ErrStaleWrite is a set write older, by the athlete's clock, than the
+	// server's copy (ADR 0009).
+	ErrStaleWrite = errors.New("the stored copy is newer than this write")
 )
 
 const (

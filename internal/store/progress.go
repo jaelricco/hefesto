@@ -349,9 +349,9 @@ func (s *Store) CompleteSession(ctx context.Context, w Writer, sessionID uuid.UU
 		if err := q.LockUserProgress(ctx, w.UserID.String()); err != nil {
 			return fmt.Errorf("locking progress: %w", err)
 		}
-		row, err := q.GetSessionForUpdate(ctx, dbgen.GetSessionForUpdateParams{ID: sessionID, UserID: w.UserID})
+		row, err := lockSession(ctx, q, w.UserID, sessionID)
 		if err != nil {
-			return err //nolint:wrapcheck // translated by tx
+			return err
 		}
 		user, err := q.GetUserByID(ctx, w.UserID)
 		if err != nil {
