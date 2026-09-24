@@ -1,10 +1,6 @@
 // Command contentlint validates the authored content tree in content/.
 //
-// Phase 1 implements the checks below. Phase 0 ships the entrypoint and the
-// check list so that `make content-validate` exists from the first commit and
-// CI has something to call.
-//
-// Checks (all must pass before seeding):
+// Checks (all must pass before seeding; cmd/seed runs the same ones):
 //
 //  1. every YAML file validates against its JSON Schema in content/schema/
 //  2. slugs are unique within their kind (skill, skill level, exercise, band)
@@ -16,12 +12,18 @@
 //     primary_test exercise
 //  8. map coordinates are present on every milestone skill and do not collide
 //  9. injury entries carry disclaimer: educational_only
+//
+// The checks live in internal/content; this command only reports them.
+// Exit status is 1 on any error, or on any warning with -strict.
 package main
 
 import (
 	"flag"
 	"fmt"
+	"io"
 	"os"
+
+	"github.com/jaelricco/hefesto/internal/content"
 )
 
 func main() {
@@ -29,17 +31,40 @@ func main() {
 	strict := flag.Bool("strict", false, "treat warnings as errors")
 	flag.Parse()
 
-	if err := run(*dir, *strict); err != nil {
+	ok, err := run(os.Stdout, *dir, *strict)
+	if err != nil {
 		fmt.Fprintln(os.Stderr, "contentlint:", err)
+		os.Exit(2)
+	}
+	if !ok {
 		os.Exit(1)
 	}
 }
 
-func run(dir string, _ bool) error {
-	if _, err := os.Stat(dir); err != nil {
-		return fmt.Errorf("content directory: %w", err)
+func run(w io.Writer, dir string, strict bool) (bool, error) {
+	tree, issues, err := content.Load(dir)
+	if err != nil {
+		return false, fmt.Errorf("loading %s: %w", dir, err)
 	}
-	// TODO(phase-1): implement the nine checks documented above.
-	fmt.Printf("contentlint: %s — no checks implemented yet (Phase 1)\n", dir)
-	return nil
+	// Cross-file checks on a tree with schema errors only produce noise
+	// about the files that failed to load.
+	if !content.HasErrors(issues, false) {
+		issues = append(issues, content.Validate(tree)...)
+	}
+	content.SortIssues(issues)
+
+	errs, warns := 0, 0
+	for _, i := range issues {
+		_, _ = fmt.Fprintln(w, i)
+		if i.Severity == content.SeverityError {
+			errs++
+		} else {
+			warns++
+		}
+	}
+
+	counts := tree.Counts()
+	_, _ = fmt.Fprintf(w, "contentlint: %d skills, %d levels, %d edges, %d exercises, %d bands — %d errors, %d warnings\n",
+		counts["skills"], counts["levels"], counts["edges"], counts["exercises"], counts["bands"], errs, warns)
+	return !content.HasErrors(issues, strict), nil
 }

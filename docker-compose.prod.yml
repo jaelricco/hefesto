@@ -63,6 +63,20 @@ services:
     restart: "no"
     logging: *default-logging
 
+  # One-shot. scripts/deploy.sh runs this after migrate, before the API. It
+  # imports the content tree baked into the image; unchanged content is a no-op.
+  seed:
+    image: ${HEFESTO_IMAGE:?}:${HEFESTO_TAG:?}
+    entrypoint: ["/usr/local/bin/seed"]
+    command: ["-dir", "/srv/content"]
+    environment:
+      DATABASE_URL: ${DATABASE_URL:?}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+    logging: *default-logging
+
   api:
     image: ${HEFESTO_IMAGE:?}:${HEFESTO_TAG:?}
     restart: unless-stopped

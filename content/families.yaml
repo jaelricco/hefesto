@@ -1,0 +1,9 @@
+# The family vocabulary shared by skills and exercises (brief §3.3).
+families:
+  - { slug: push,      name: Push }
+  - { slug: pull,      name: Pull }
+  - { slug: core,      name: Core }
+  - { slug: legs,      name: Legs }
+  - { slug: handstand, name: Handstand }
+  - { slug: dynamic,   name: Dynamic }
+  - { slug: mobility,  name: Mobility }

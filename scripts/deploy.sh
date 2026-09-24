@@ -11,8 +11,9 @@
 #   1. records the currently running tag so a rollback has somewhere to go
 #   2. pulls the new image
 #   3. runs migrations to completion and aborts if they fail
-#   4. recreates the API and reloads Caddy
-#   5. polls /readyz until healthy, and rolls back if it never gets there
+#   4. imports the content baked into the image (a no-op if unchanged)
+#   5. recreates the API and reloads Caddy
+#   6. polls /readyz until healthy, and rolls back if it never gets there
 #
 # Migrations run BEFORE the new API starts, which means every migration must be
 # backward compatible with the currently running version for the length of one
@@ -54,7 +55,7 @@ export HEFESTO_TAG="$NEW_TAG"
 
 # ---------------------------------------------------------------- pull
 log "pulling image"
-compose pull --quiet api migrate backup \
+compose pull --quiet api migrate seed backup \
     || die "could not pull ${HEFESTO_IMAGE:-image}:$NEW_TAG — is the tag published and is the registry login still valid?"
 
 # ---------------------------------------------------------- database up
@@ -67,6 +68,14 @@ compose exec -T postgres sh -c 'until pg_isready -U "$POSTGRES_USER" -d "$POSTGR
 log "running migrations"
 if ! compose run --rm migrate; then
     die "migrations failed — the running version was not touched"
+fi
+
+# ---------------------------------------------------------------- seed
+# Content ships inside the image. The import is one transaction and a no-op
+# when nothing changed; the running API only ever sees the old tree or the new.
+log "importing content"
+if ! compose run --rm seed -dir /srv/content -applied-by "deploy:$NEW_TAG"; then
+    die "content import failed — the running version was not touched (migrations from $NEW_TAG are applied)"
 fi
 
 # ------------------------------------------------------------- release

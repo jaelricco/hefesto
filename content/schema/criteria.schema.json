@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hefesto.fit/schema/criteria.schema.json",
+  "title": "Unlock criteria",
+  "description": "The declarative unlock DSL evaluated by internal/domain/progress (brief §6). A level unlocks when every `all` condition holds AND, if `any` is present, at least one `any` condition holds. An empty object means the level can only be self-attested.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "all": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/condition" } },
+    "any": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/condition" } }
+  },
+  "$defs": {
+    "condition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["exercise", "measure", "op", "value"],
+      "properties": {
+        "exercise": { "$ref": "common.schema.json#/$defs/slug" },
+        "measure": { "$ref": "common.schema.json#/$defs/measure" },
+        "op": { "type": "string", "enum": [">=", ">"] },
+        "value": { "type": "number", "exclusiveMinimum": 0 },
+        "assistance": {
+          "description": "none = only unassisted elements count; any = assisted elements count too.",
+          "type": "string", "enum": ["none", "any"], "default": "none"
+        },
+        "min_load_kg": { "type": "number", "minimum": 0 },
+        "max_load_kg": { "type": "number", "minimum": 0 },
+        "min_form_quality": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "occurrences": { "type": "integer", "minimum": 1, "default": 1 },
+        "within_days": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}

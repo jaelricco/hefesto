@@ -15,6 +15,7 @@ import (
 
 	"github.com/jaelricco/hefesto/internal/config"
 	lhttp "github.com/jaelricco/hefesto/internal/http"
+	"github.com/jaelricco/hefesto/internal/store"
 )
 
 // Set via -ldflags at build time.
@@ -48,12 +49,25 @@ func run() error {
 	slog.Info("starting hefesto api",
 		"version", version, "commit", commit, "env", cfg.Env, "addr", cfg.HTTPAddr)
 
-	// Phase 1 replaces nil with the pgx pool; /readyz reports 503 until then.
-	router := lhttp.NewRouter(lhttp.RouterDeps{
-		DB:      nil,
-		Version: version,
-		Commit:  commit,
-	})
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+
+	deps := lhttp.RouterDeps{Version: version, Commit: commit}
+	if cfg.DatabaseURL == "" {
+		// Allowed so the binary can start without a database in dev; /readyz
+		// then reports 503, which keeps it out of rotation anywhere real.
+		slog.Warn("DATABASE_URL is not set; /readyz will report not ready")
+	} else {
+		openCtx, cancel := context.WithTimeout(ctx, 15*time.Second)
+		pool, err := store.Open(openCtx, cfg.DatabaseURL, cfg.DBMaxConns, cfg.DBMinConns)
+		cancel()
+		if err != nil {
+			return fmt.Errorf("database: %w", err)
+		}
+		defer pool.Close()
+		deps.DB = pool
+	}
+	router := lhttp.NewRouter(deps)
 
 	srv := &stdhttp.Server{
 		Addr:              cfg.HTTPAddr,
@@ -63,9 +77,6 @@ func run() error {
 		WriteTimeout:      60 * time.Second,
 		IdleTimeout:       120 * time.Second,
 	}
-
-	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
-	defer stop()
 
 	errCh := make(chan error, 1)
 	go func() {

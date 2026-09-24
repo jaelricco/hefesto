@@ -1,11 +1,22 @@
-# Hefesto — proposed schema (Phase 0 deliverable, for review)
+# Hefesto — schema (approved Phase 0 proposal)
 
-**Nothing in this file has been written as a migration.** It is the proposal the
-brief asks for in §12 Phase 0. Once you approve or amend it, Phase 1 turns it
-into numbered goose migrations, the sqlc query set, and the content JSON Schemas.
+**Status: approved 2026-09-23 and implemented in Phase 1** as
+`db/migrations/00001`–`00008`. The decisions on §12 and §13, and the
+corrections made while implementing, are recorded in
+[ADR 0005](adr/0005-schema-review-decisions.md). The migrations are now the
+source of truth; this document explains the reasoning behind them and is kept
+as written, except where a note below says otherwise.
 
-Read §12 (Deviations) and §13 (Open questions) first if you are short on time —
-that is where I need decisions. The rest is the schema itself.
+Review outcome, in short:
+
+- D-1 … D-8 accepted.
+- Open questions: one `set_entry` per circuit round; no rest inside a combo;
+  edges between levels; `est_weeks_from_prev` is a display hint.
+- **Changed from this proposal:** `load_kg` is never negative (all assistance,
+  counterweight included, lives in `set_element_assistance`); a
+  `user_bodyweight_log` table is added; deletion is soft for 30 days
+  (`users.deletion_requested_at`); `touch_sync` always assigns `server_seq`;
+  `content_versions.checksum` is not unique. See ADR 0005.
 
 ---
 

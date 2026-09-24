@@ -13,13 +13,14 @@ The logger feeds the map. That coupling is the product.
 
 ## Status
 
-**Phase 0 — scaffold.** The repository, Compose stack, Makefile and CI exist;
-the schema is proposed in [`docs/DDL_PROPOSAL.md`](docs/DDL_PROPOSAL.md) and
-awaits review. There are no migrations yet, so `make up` starts a stack against
-an empty database.
+**Phase 1 — schema and content pipeline**, awaiting review. The schema is
+migrated (`db/migrations/`), the content pipeline validates and seeds
+`content/`, and three placeholder skills prove the shape end to end. Current
+state and open questions: [`STATUS.md`](STATUS.md).
 
-See [`docs/PROJECT_BRIEF.md`](docs/PROJECT_BRIEF.md) for the full plan and
-[`docs/adr/`](docs/adr/) for decisions taken so far.
+See [`docs/PROJECT_BRIEF.md`](docs/PROJECT_BRIEF.md) for the full plan,
+[`docs/adr/`](docs/adr/) for decisions taken so far, and
+[`docs/CONTENT_AUTHORING.md`](docs/CONTENT_AUTHORING.md) for writing content.
 
 ## Getting started
 

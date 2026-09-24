@@ -1,0 +1,18 @@
+# PLACEHOLDER — proves the pipeline's shape. Replace with researched content.
+slug: pull-up
+status: draft_placeholder
+name: Pull-up
+family: pull
+difficulty_tier: 2
+summary: Placeholder entry; not coaching content.
+map: { constellation: pull_north, x: 340, y: 360 }
+levels:
+  - slug: strict-5
+    name: Five Strict Pull-ups
+    order: 1
+    exercises:
+      - { slug: pull-up, role: primary_test }
+      - { slug: scapular-pull-up, role: progression }
+    unlock_criteria:
+      all:
+        - { exercise: pull-up, measure: reps, op: ">=", value: 5, assistance: none, occurrences: 2, within_days: 30 }

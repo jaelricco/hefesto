@@ -1,0 +1,47 @@
+# PLACEHOLDER — the reference file from the project brief §7, kept to prove the
+# shape end to end. Replace with researched content.
+slug: front-lever
+status: draft_placeholder
+name: Front Lever
+family: pull
+difficulty_tier: 7
+is_milestone: true
+aka: [FL]
+summary: >
+  Placeholder entry; not coaching content.
+primary_muscles: [latissimus_dorsi, lower_trapezius, rectus_abdominis]
+common_faults:
+  - Hips sagging below shoulder line
+  - Elbows bending to shorten the lever
+map: { constellation: pull_north, x: 340, y: 120 }
+levels:
+  - slug: tuck
+    name: Tuck Front Lever
+    order: 1
+    est_weeks_from_prev: 6
+    exercises:
+      - { slug: front-lever-tuck, role: primary_test }
+      - { slug: scapular-pull-up, role: progression }
+      - { slug: band-assisted-tuck-fl, role: progression }
+    unlock_criteria:
+      all:
+        - { exercise: front-lever-tuck, measure: hold_seconds, op: ">=", value: 15, assistance: none, occurrences: 2, within_days: 30 }
+    prerequisites:
+      - { skill: pull-up, level: strict-5 }
+  - slug: advanced-tuck
+    name: Advanced Tuck Front Lever
+    order: 2
+    # No criteria yet: until researched values exist this level can only be
+    # self-attested.
+    exercises:
+      - { slug: front-lever-advanced-tuck, role: primary_test }
+      - { slug: front-lever-tuck, role: progression }
+injuries:
+  - region: elbow
+    name: Medial epicondylalgia
+    risk_factors:
+      - Rapid volume jumps
+      - Full-lay attempts before straddle is solid
+    prehab_exercises:
+      - { slug: pronated-curl-eccentric }
+    disclaimer: educational_only
