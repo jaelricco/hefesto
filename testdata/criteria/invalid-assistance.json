@@ -1,0 +1,17 @@
+{
+  "description": "Assistance is none or any.",
+  "now": "2026-09-30T12:00:00Z",
+  "criteria": {
+    "all": [
+      {
+        "exercise": "pull-up",
+        "measure": "reps",
+        "op": ">=",
+        "value": 5,
+        "assistance": "band"
+      }
+    ]
+  },
+  "history": [],
+  "expect_error": "assistance"
+}

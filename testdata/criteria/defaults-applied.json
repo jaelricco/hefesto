@@ -1,0 +1,45 @@
+{
+  "description": "Omitted occurrences means 1 and omitted assistance means \"none\".",
+  "now": "2026-09-30T12:00:00Z",
+  "criteria": {
+    "all": [
+      {
+        "exercise": "pull-up",
+        "measure": "reps",
+        "op": ">=",
+        "value": 5
+      }
+    ]
+  },
+  "history": [
+    {
+      "set": "s1",
+      "exercise": "pull-up",
+      "measure": "reps",
+      "value": 5,
+      "at": "2026-09-20T18:00:00Z",
+      "assistance": "assisted"
+    },
+    {
+      "set": "s2",
+      "exercise": "pull-up",
+      "measure": "reps",
+      "value": 5,
+      "at": "2026-09-21T18:00:00Z"
+    }
+  ],
+  "expect": {
+    "met": true,
+    "self_attest_only": false,
+    "started": true,
+    "evidence": "s2",
+    "all": [
+      {
+        "met": true,
+        "count": 1,
+        "best": 5
+      }
+    ],
+    "any": []
+  }
+}

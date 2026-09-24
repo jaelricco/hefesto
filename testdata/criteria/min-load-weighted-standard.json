@@ -1,0 +1,49 @@
+{
+  "description": "A weighted standard: only sets with at least min_load_kg added count.",
+  "now": "2026-09-30T12:00:00Z",
+  "criteria": {
+    "all": [
+      {
+        "exercise": "pull-up",
+        "measure": "reps",
+        "op": ">=",
+        "value": 5,
+        "min_load_kg": 20
+      }
+    ]
+  },
+  "history": [
+    {
+      "set": "s1",
+      "exercise": "pull-up",
+      "measure": "reps",
+      "value": 5,
+      "at": "2026-09-20T18:00:00Z",
+      "load_kg": 15,
+      "assistance": "loaded"
+    },
+    {
+      "set": "s2",
+      "exercise": "pull-up",
+      "measure": "reps",
+      "value": 5,
+      "at": "2026-09-22T18:00:00Z",
+      "load_kg": 20,
+      "assistance": "loaded"
+    }
+  ],
+  "expect": {
+    "met": true,
+    "self_attest_only": false,
+    "started": true,
+    "evidence": "s2",
+    "all": [
+      {
+        "met": true,
+        "count": 1,
+        "best": 5
+      }
+    ],
+    "any": []
+  }
+}

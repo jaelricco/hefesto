@@ -1,0 +1,52 @@
+{
+  "description": "Two qualifying holds inside one combo are one attempt: occurrences counts set entries, not elements.",
+  "now": "2026-09-30T12:00:00Z",
+  "criteria": {
+    "all": [
+      {
+        "exercise": "front-lever-tuck",
+        "measure": "hold_seconds",
+        "op": ">=",
+        "value": 10,
+        "occurrences": 2
+      }
+    ]
+  },
+  "history": [
+    {
+      "set": "s1",
+      "exercise": "front-lever-tuck",
+      "measure": "hold_seconds",
+      "value": 12,
+      "at": "2026-09-29T18:00:00Z"
+    },
+    {
+      "set": "s1",
+      "exercise": "front-lever-advanced-tuck",
+      "measure": "hold_seconds",
+      "value": 3,
+      "at": "2026-09-29T18:00:00Z"
+    },
+    {
+      "set": "s1",
+      "exercise": "front-lever-tuck",
+      "measure": "hold_seconds",
+      "value": 11,
+      "at": "2026-09-29T18:00:00Z"
+    }
+  ],
+  "expect": {
+    "met": false,
+    "self_attest_only": false,
+    "started": true,
+    "evidence": null,
+    "all": [
+      {
+        "met": false,
+        "count": 1,
+        "best": 12
+      }
+    ],
+    "any": []
+  }
+}

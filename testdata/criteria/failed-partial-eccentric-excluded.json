@@ -1,0 +1,61 @@
+{
+  "description": "Failed, partial-range and eccentric-only reps are not the skill, and are not candidates at all.",
+  "now": "2026-09-30T12:00:00Z",
+  "criteria": {
+    "all": [
+      {
+        "exercise": "pull-up",
+        "measure": "reps",
+        "op": ">=",
+        "value": 5
+      }
+    ]
+  },
+  "history": [
+    {
+      "set": "s1",
+      "exercise": "pull-up",
+      "measure": "reps",
+      "value": 6,
+      "at": "2026-09-20T18:00:00Z",
+      "failed": true
+    },
+    {
+      "set": "s2",
+      "exercise": "pull-up",
+      "measure": "reps",
+      "value": 6,
+      "at": "2026-09-21T18:00:00Z",
+      "partial_rom": true
+    },
+    {
+      "set": "s3",
+      "exercise": "pull-up",
+      "measure": "reps",
+      "value": 6,
+      "at": "2026-09-22T18:00:00Z",
+      "eccentric_only": true
+    },
+    {
+      "set": "s4",
+      "exercise": "pull-up",
+      "measure": "reps",
+      "value": 3,
+      "at": "2026-09-23T18:00:00Z"
+    }
+  ],
+  "expect": {
+    "met": false,
+    "self_attest_only": false,
+    "started": true,
+    "evidence": null,
+    "all": [
+      {
+        "met": false,
+        "count": 0,
+        "best": 3
+      }
+    ],
+    "any": []
+  }
+}

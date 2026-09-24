@@ -1,0 +1,37 @@
+{
+  "description": "An element stamped after now (a wrong device clock) neither counts nor sets the best.",
+  "now": "2026-09-30T12:00:00Z",
+  "criteria": {
+    "all": [
+      {
+        "exercise": "front-lever-tuck",
+        "measure": "hold_seconds",
+        "op": ">=",
+        "value": 10
+      }
+    ]
+  },
+  "history": [
+    {
+      "set": "s1",
+      "exercise": "front-lever-tuck",
+      "measure": "hold_seconds",
+      "value": 12,
+      "at": "2026-10-01T18:00:00Z"
+    }
+  ],
+  "expect": {
+    "met": false,
+    "self_attest_only": false,
+    "started": true,
+    "evidence": null,
+    "all": [
+      {
+        "met": false,
+        "count": 0,
+        "best": null
+      }
+    ],
+    "any": []
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "description": "Criteria with only `any`: one met condition is enough.",
+  "now": "2026-09-30T12:00:00Z",
+  "criteria": {
+    "any": [
+      {
+        "exercise": "front-lever-tuck",
+        "measure": "hold_seconds",
+        "op": ">=",
+        "value": 10
+      },
+      {
+        "exercise": "front-lever-advanced-tuck",
+        "measure": "hold_seconds",
+        "op": ">=",
+        "value": 5
+      }
+    ]
+  },
+  "history": [
+    {
+      "set": "s1",
+      "exercise": "front-lever-advanced-tuck",
+      "measure": "hold_seconds",
+      "value": 6,
+      "at": "2026-09-20T18:00:00Z"
+    }
+  ],
+  "expect": {
+    "met": true,
+    "self_attest_only": false,
+    "started": true,
+    "evidence": "s1",
+    "all": [],
+    "any": [
+      {
+        "met": false,
+        "count": 0,
+        "best": null
+      },
+      {
+        "met": true,
+        "count": 1,
+        "best": 6
+      }
+    ]
+  }
+}

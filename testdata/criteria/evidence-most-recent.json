@@ -1,0 +1,62 @@
+{
+  "description": "With several conditions, the evidence is the most recent set that proved any of them.",
+  "now": "2026-09-30T12:00:00Z",
+  "criteria": {
+    "all": [
+      {
+        "exercise": "pull-up",
+        "measure": "reps",
+        "op": ">=",
+        "value": 5
+      },
+      {
+        "exercise": "front-lever-tuck",
+        "measure": "hold_seconds",
+        "op": ">=",
+        "value": 10
+      }
+    ]
+  },
+  "history": [
+    {
+      "set": "s1",
+      "exercise": "pull-up",
+      "measure": "reps",
+      "value": 6,
+      "at": "2026-09-20T18:00:00Z"
+    },
+    {
+      "set": "s2",
+      "exercise": "front-lever-tuck",
+      "measure": "hold_seconds",
+      "value": 11,
+      "at": "2026-09-25T18:00:00Z"
+    },
+    {
+      "set": "s3",
+      "exercise": "front-lever-tuck",
+      "measure": "hold_seconds",
+      "value": 13,
+      "at": "2026-09-10T18:00:00Z"
+    }
+  ],
+  "expect": {
+    "met": true,
+    "self_attest_only": false,
+    "started": true,
+    "evidence": "s2",
+    "all": [
+      {
+        "met": true,
+        "count": 1,
+        "best": 6
+      },
+      {
+        "met": true,
+        "count": 2,
+        "best": 13
+      }
+    ],
+    "any": []
+  }
+}
