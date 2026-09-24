@@ -92,9 +92,12 @@ source with the Go toolchain and starts it beside them. `make test-integration`
 and CI both use it. The suite passes against that real MinIO here, including
 the checks that a presigned upload refuses another content type or size.
 
-**Needs a decision:** `docker-compose.yml` (from Phase 0) still names
-`minio/minio` and `minio/mc`, so `make up` cannot start object storage until it
-moves to an image that exists.
+The same missing images broke `make up`: `docker-compose.yml` from Phase 0
+named `minio/minio` and `minio/mc`. Compose now builds both from the same
+pinned official source (`docker/Dockerfile.minio`), and CI builds that image on
+every run. The container's startup, healthcheck and bucket setup were run here
+with binaries built from the same commits. The image itself was built only in
+CI, because this container has no Docker daemon.
 
 ### Deliberately not in this phase
 

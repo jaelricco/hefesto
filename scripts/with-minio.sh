@@ -25,7 +25,8 @@ if [[ -n "${HEFESTO_TEST_S3_ENDPOINT:-}" ]]; then
 fi
 
 # A pinned commit of the official source. MinIO's community edition is no
-# longer published as images or binaries.
+# longer published as images or binaries. docker/Dockerfile.minio pins the same
+# commit for `make up`; move both together.
 MINIO_MODULE="github.com/minio/minio@v0.0.0-20260212201848-7aac2a2c5b7c"
 PORT="${HEFESTO_TEST_MINIO_PORT:-9123}"
 

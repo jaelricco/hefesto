@@ -171,3 +171,9 @@ jobs:
           build-args: |
             VERSION=${{ github.sha }}
             COMMIT=${{ github.sha }}
+      # Development object storage, built from MinIO's source for `make up`.
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile.minio
+          push: false
