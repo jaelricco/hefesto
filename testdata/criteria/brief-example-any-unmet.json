@@ -1,0 +1,73 @@
+{
+  "description": "All of `all` holds, but no `any` condition does, so the level stays locked.",
+  "now": "2026-09-30T12:00:00Z",
+  "criteria": {
+    "all": [
+      {
+        "exercise": "front-lever-full",
+        "measure": "hold_seconds",
+        "op": ">=",
+        "value": 5,
+        "assistance": "none",
+        "max_load_kg": 0,
+        "min_form_quality": 4,
+        "occurrences": 2,
+        "within_days": 30
+      }
+    ],
+    "any": [
+      {
+        "exercise": "front-lever-half-lay",
+        "measure": "hold_seconds",
+        "op": ">=",
+        "value": 12,
+        "occurrences": 1
+      }
+    ]
+  },
+  "history": [
+    {
+      "set": "s1",
+      "exercise": "front-lever-full",
+      "measure": "hold_seconds",
+      "value": 6,
+      "at": "2026-09-20T18:00:00Z",
+      "form_quality": 4
+    },
+    {
+      "set": "s2",
+      "exercise": "front-lever-full",
+      "measure": "hold_seconds",
+      "value": 5,
+      "at": "2026-09-25T18:00:00Z",
+      "form_quality": 5
+    },
+    {
+      "set": "s3",
+      "exercise": "front-lever-half-lay",
+      "measure": "hold_seconds",
+      "value": 11,
+      "at": "2026-09-10T18:00:00Z"
+    }
+  ],
+  "expect": {
+    "met": false,
+    "self_attest_only": false,
+    "started": true,
+    "evidence": null,
+    "all": [
+      {
+        "met": true,
+        "count": 2,
+        "best": 6
+      }
+    ],
+    "any": [
+      {
+        "met": false,
+        "count": 0,
+        "best": 11
+      }
+    ]
+  }
+}

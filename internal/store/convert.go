@@ -66,3 +66,5 @@ func intPtr16(p *int16) *int {
 	v := int(*p)
 	return &v
 }
+
+type pgDate = pgtype.Date

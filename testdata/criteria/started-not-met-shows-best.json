@@ -1,0 +1,46 @@
+{
+  "description": "Logged attempts below the threshold mark the level as started and report the best so far.",
+  "now": "2026-09-30T12:00:00Z",
+  "criteria": {
+    "all": [
+      {
+        "exercise": "front-lever-tuck",
+        "measure": "hold_seconds",
+        "op": ">=",
+        "value": 15,
+        "occurrences": 2,
+        "within_days": 30
+      }
+    ]
+  },
+  "history": [
+    {
+      "set": "s1",
+      "exercise": "front-lever-tuck",
+      "measure": "hold_seconds",
+      "value": 8,
+      "at": "2026-09-20T18:00:00Z"
+    },
+    {
+      "set": "s2",
+      "exercise": "front-lever-tuck",
+      "measure": "hold_seconds",
+      "value": 11,
+      "at": "2026-09-25T18:00:00Z"
+    }
+  ],
+  "expect": {
+    "met": false,
+    "self_attest_only": false,
+    "started": true,
+    "evidence": null,
+    "all": [
+      {
+        "met": false,
+        "count": 0,
+        "best": 11
+      }
+    ],
+    "any": []
+  }
+}

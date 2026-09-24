@@ -1,0 +1,46 @@
+{
+  "description": "With the default assistance \"none\", a band-assisted set neither counts nor sets the best.",
+  "now": "2026-09-30T12:00:00Z",
+  "criteria": {
+    "all": [
+      {
+        "exercise": "pull-up",
+        "measure": "reps",
+        "op": ">=",
+        "value": 5,
+        "assistance": "none"
+      }
+    ]
+  },
+  "history": [
+    {
+      "set": "s1",
+      "exercise": "pull-up",
+      "measure": "reps",
+      "value": 8,
+      "at": "2026-09-20T18:00:00Z",
+      "assistance": "assisted"
+    },
+    {
+      "set": "s2",
+      "exercise": "pull-up",
+      "measure": "reps",
+      "value": 4,
+      "at": "2026-09-21T18:00:00Z"
+    }
+  ],
+  "expect": {
+    "met": false,
+    "self_attest_only": false,
+    "started": true,
+    "evidence": null,
+    "all": [
+      {
+        "met": false,
+        "count": 0,
+        "best": 4
+      }
+    ],
+    "any": []
+  }
+}

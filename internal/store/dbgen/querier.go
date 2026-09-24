@@ -9,14 +9,23 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Querier interface {
 	// A sign-in during the grace period cancels the deletion.
 	CancelUserDeletion(ctx context.Context, id uuid.UUID) (int64, error)
+	// Freezes are recomputed from scratch: clear the old ones, then mark the
+	// days the current walk bridged.
+	ClearFreezes(ctx context.Context, userID uuid.UUID) error
+	CompletedSessionsOnDay(ctx context.Context, arg CompletedSessionsOnDayParams) (int32, error)
+	// Days that count on their own merit. Freeze days are not included: which
+	// days a freeze bridges is recomputed from these every time.
+	CountedDays(ctx context.Context, userID uuid.UUID) ([]pgtype.Date, error)
 	// Users, devices, refresh tokens and Apple identities.
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
 	DeleteAllSkillEdges(ctx context.Context) error
+	DeleteEmptyFreezeDays(ctx context.Context, userID uuid.UUID) error
 	DeleteInjuryPrehab(ctx context.Context, riskID uuid.UUID) error
 	// Injury content references no user rows, so entries gone from a skill file
 	// are deleted outright.
@@ -31,6 +40,7 @@ type Querier interface {
 	GetAppleIdentity(ctx context.Context, appleSub string) (AppleIdentity, error)
 	GetBlock(ctx context.Context, arg GetBlockParams) (SessionBlock, error)
 	GetExerciseBySlug(ctx context.Context, slug string) (GetExerciseBySlugRow, error)
+	GetGraphSkill(ctx context.Context, slug string) (GetGraphSkillRow, error)
 	// Content import (cmd/seed). Every upsert is keyed on slug and leaves a row
 	// untouched — updated_at and content_version_id included — when nothing in it
 	// changed. The CTE returns the id whether the row was inserted, updated or
@@ -46,8 +56,11 @@ type Querier interface {
 	GetSession(ctx context.Context, arg GetSessionParams) (WorkoutSession, error)
 	GetSessionForUpdate(ctx context.Context, arg GetSessionForUpdateParams) (WorkoutSession, error)
 	GetSetEntry(ctx context.Context, arg GetSetEntryParams) (SetEntry, error)
+	GetStreak(ctx context.Context, userID uuid.UUID) (UserStreak, error)
+	GetUnlockEvent(ctx context.Context, arg GetUnlockEventParams) (SkillUnlockEvent, error)
 	GetUserByEmail(ctx context.Context, email *string) (User, error)
 	GetUserByID(ctx context.Context, id uuid.UUID) (User, error)
+	GetUserSkillState(ctx context.Context, arg GetUserSkillStateParams) (UserSkillState, error)
 	InsertAppleIdentity(ctx context.Context, arg InsertAppleIdentityParams) error
 	InsertContentVersion(ctx context.Context, arg InsertContentVersionParams) error
 	InsertInjuryPrehab(ctx context.Context, arg InsertInjuryPrehabParams) error
@@ -62,7 +75,10 @@ type Querier interface {
 	InsertSession(ctx context.Context, arg InsertSessionParams) (WorkoutSession, error)
 	InsertSkillEdge(ctx context.Context, arg InsertSkillEdgeParams) error
 	InsertSkillLevelExercise(ctx context.Context, arg InsertSkillLevelExerciseParams) error
+	InsertUnlockEvent(ctx context.Context, arg InsertUnlockEventParams) error
 	InsertUserBand(ctx context.Context, arg InsertUserBandParams) (Band, error)
+	// ------------------------------------------------------------------- xp
+	InsertXPEvent(ctx context.Context, arg InsertXPEventParams) (int32, error)
 	// ------------------------------------------------------------- last set
 	LastSetWithExercise(ctx context.Context, arg LastSetWithExerciseParams) (LastSetWithExerciseRow, error)
 	// ----------------------------------------------------------- assistance
@@ -73,14 +89,36 @@ type Querier interface {
 	ListElementsOfSet(ctx context.Context, arg ListElementsOfSetParams) ([]SetElement, error)
 	// Exercises and bands as the API reads them.
 	ListExercises(ctx context.Context, arg ListExercisesParams) ([]ListExercisesRow, error)
+	ListGraphEdges(ctx context.Context) ([]SkillEdge, error)
+	ListGraphLevelExercises(ctx context.Context) ([]ListGraphLevelExercisesRow, error)
+	// Every level of every skill, retired or not: prerequisites may point at a
+	// retired skill's level, and unlocks on them still stand.
+	ListGraphLevels(ctx context.Context) ([]ListGraphLevelsRow, error)
+	// The skill graph, user progress, XP and streaks.
+	// ----------------------------------------------------------------- graph
+	ListGraphSkills(ctx context.Context) ([]ListGraphSkillsRow, error)
+	ListInjuryPrehab(ctx context.Context, skillID uuid.UUID) ([]ListInjuryPrehabRow, error)
 	// Newest first; the cursor is the (started_at, id) of the last row seen.
 	ListSessions(ctx context.Context, arg ListSessionsParams) ([]ListSessionsRow, error)
 	// ------------------------------------------------------------- elements
 	ListSetElements(ctx context.Context, arg ListSetElementsParams) ([]SetElement, error)
 	// ----------------------------------------------------------------- sets
 	ListSetEntries(ctx context.Context, arg ListSetEntriesParams) ([]SetEntry, error)
+	ListSkillInjuries(ctx context.Context, skillID uuid.UUID) ([]SkillInjuryRisk, error)
 	ListSkillLevelSlugs(ctx context.Context, skillID uuid.UUID) ([]string, error)
+	ListUnlockEventsForSession(ctx context.Context, arg ListUnlockEventsForSessionParams) ([]SkillUnlockEvent, error)
+	// ----------------------------------------------------------- user state
+	ListUserSkillStates(ctx context.Context, userID uuid.UUID) ([]UserSkillState, error)
+	LockUserProgress(ctx context.Context, userKey string) error
+	MarkFreezeDays(ctx context.Context, arg MarkFreezeDaysParams) error
 	MarkRefreshTokenRotated(ctx context.Context, arg MarkRefreshTokenRotatedParams) error
+	MarkSessionCompleted(ctx context.Context, arg MarkSessionCompletedParams) (WorkoutSession, error)
+	// --------------------------------------------------------------- streaks
+	MarkTrainingDay(ctx context.Context, arg MarkTrainingDayParams) error
+	// ----------------------------------------------------------------- history
+	// Every performed element of the named exercises, from completed sessions.
+	// Planned sets, deleted rows and abandoned or draft sessions are not evidence.
+	ObservationsForExercises(ctx context.Context, arg ObservationsForExercisesParams) ([]ObservationsForExercisesRow, error)
 	// Hard deletion after the grace period. Everything the user owns goes with
 	// the row through ON DELETE CASCADE.
 	ReapDeletedUsers(ctx context.Context, cutoff *time.Time) (int64, error)
@@ -91,6 +129,7 @@ type Querier interface {
 	RetireSkillsNotIn(ctx context.Context, arg RetireSkillsNotInParams) (int64, error)
 	RevokeRefreshFamily(ctx context.Context, arg RevokeRefreshFamilyParams) (int64, error)
 	RevokeUserRefreshTokens(ctx context.Context, arg RevokeUserRefreshTokensParams) (int64, error)
+	SessionPerformance(ctx context.Context, arg SessionPerformanceParams) (SessionPerformanceRow, error)
 	SetBlockOrder(ctx context.Context, arg SetBlockOrderParams) error
 	SetSetOrder(ctx context.Context, arg SetSetOrderParams) error
 	SetUserEmail(ctx context.Context, arg SetUserEmailParams) error
@@ -108,6 +147,7 @@ type Querier interface {
 	SoftDeleteSetEntries(ctx context.Context, arg SoftDeleteSetEntriesParams) error
 	SoftDeleteUserBand(ctx context.Context, arg SoftDeleteUserBandParams) (int64, error)
 	TemplateBelongsToUser(ctx context.Context, arg TemplateBelongsToUserParams) (bool, error)
+	TotalXP(ctx context.Context, userID uuid.UUID) (int32, error)
 	UpdateSession(ctx context.Context, arg UpdateSessionParams) (WorkoutSession, error)
 	UpdateUserProfile(ctx context.Context, arg UpdateUserProfileParams) (User, error)
 	UpsertAssistance(ctx context.Context, arg UpsertAssistanceParams) (uuid.UUID, error)
@@ -125,6 +165,10 @@ type Querier interface {
 	UpsertSetEntry(ctx context.Context, arg UpsertSetEntryParams) (UpsertSetEntryRow, error)
 	UpsertSkill(ctx context.Context, arg UpsertSkillParams) (uuid.UUID, error)
 	UpsertSkillLevel(ctx context.Context, arg UpsertSkillLevelParams) (uuid.UUID, error)
+	UpsertStreak(ctx context.Context, arg UpsertStreakParams) error
+	// first_achieved_at, evidence and verification are only ever set once: the
+	// COALESCEs keep them, and the monotonic trigger refuses anything else.
+	UpsertUserSkillState(ctx context.Context, arg UpsertUserSkillStateParams) error
 	// Bands a user may log with: the catalogue and their own, deleted or not,
 	// so repeating an old set keeps working after a band is retired.
 	VisibleBandIDs(ctx context.Context, arg VisibleBandIDsParams) ([]uuid.UUID, error)

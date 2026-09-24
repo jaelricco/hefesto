@@ -1,0 +1,17 @@
+{
+  "description": "within_days below 1 is rejected.",
+  "now": "2026-09-30T12:00:00Z",
+  "criteria": {
+    "all": [
+      {
+        "exercise": "pull-up",
+        "measure": "reps",
+        "op": ">=",
+        "value": 5,
+        "within_days": 0
+      }
+    ]
+  },
+  "history": [],
+  "expect_error": "within_days"
+}

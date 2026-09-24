@@ -108,6 +108,13 @@ func NewRouter(deps RouterDeps) http.Handler {
 				r.Put("/sessions/{sessionId}/sets/{setId}", h.wrap(h.putSet))
 				r.Delete("/sessions/{sessionId}/sets/{setId}", h.wrap(h.deleteSet))
 				r.Post("/sessions/{sessionId}/reorder", h.wrap(h.reorder))
+				r.Post("/sessions/{sessionId}/complete", h.wrap(h.completeSession))
+
+				r.Get("/skills", h.wrap(h.getSkillGraph))
+				r.Get("/skills/{slug}", h.wrap(h.getSkill))
+				r.Get("/me/skill-map", h.wrap(h.getMySkillMap))
+				r.Post("/me/skills/{levelId}/attest", h.wrap(h.attestLevel))
+				r.Get("/me/progress", h.wrap(h.getMyProgress))
 			})
 		})
 	}

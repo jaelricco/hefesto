@@ -1,0 +1,44 @@
+{
+  "description": "Op \">\" excludes a value equal to the threshold.",
+  "now": "2026-09-30T12:00:00Z",
+  "criteria": {
+    "all": [
+      {
+        "exercise": "front-lever-tuck",
+        "measure": "hold_seconds",
+        "op": ">",
+        "value": 15
+      }
+    ]
+  },
+  "history": [
+    {
+      "set": "s1",
+      "exercise": "front-lever-tuck",
+      "measure": "hold_seconds",
+      "value": 15,
+      "at": "2026-09-20T18:00:00Z"
+    },
+    {
+      "set": "s2",
+      "exercise": "front-lever-tuck",
+      "measure": "hold_seconds",
+      "value": 15.5,
+      "at": "2026-09-21T18:00:00Z"
+    }
+  ],
+  "expect": {
+    "met": true,
+    "self_attest_only": false,
+    "started": true,
+    "evidence": "s2",
+    "all": [
+      {
+        "met": true,
+        "count": 1,
+        "best": 15.5
+      }
+    ],
+    "any": []
+  }
+}

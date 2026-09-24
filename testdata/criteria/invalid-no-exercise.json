@@ -1,0 +1,16 @@
+{
+  "description": "A condition must name an exercise.",
+  "now": "2026-09-30T12:00:00Z",
+  "criteria": {
+    "all": [
+      {
+        "exercise": "",
+        "measure": "reps",
+        "op": ">=",
+        "value": 5
+      }
+    ]
+  },
+  "history": [],
+  "expect_error": "names no exercise"
+}

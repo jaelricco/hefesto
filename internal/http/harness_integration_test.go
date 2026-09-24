@@ -109,6 +109,17 @@ type res struct {
 // call sends a request. body may be nil, a []byte, or anything JSON-encodable.
 func (a *api) call(method, path, token string, body any) res {
 	a.t.Helper()
+	return a.do(method, path, token, body, nil)
+}
+
+// callWith sends a bodiless request with extra headers.
+func (a *api) callWith(method, path, token string, headers map[string]string) res {
+	a.t.Helper()
+	return a.do(method, path, token, nil, headers)
+}
+
+func (a *api) do(method, path, token string, body any, headers map[string]string) res {
+	a.t.Helper()
 	var rd io.Reader
 	switch b := body.(type) {
 	case nil:
@@ -130,6 +141,9 @@ func (a *api) call(method, path, token string, body any) res {
 	}
 	if token != "" {
 		req.Header.Set("Authorization", "Bearer "+token)
+	}
+	for k, v := range headers {
+		req.Header.Set(k, v)
 	}
 	resp, err := a.srv.Client().Do(req)
 	if err != nil {

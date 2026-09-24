@@ -85,6 +85,7 @@ func TestEveryRequestSchemaCompiles(t *testing.T) {
 		"SessionCreate", "SessionUpdate", "BlockWrite", "SetEntryWrite", "ReorderRequest",
 		"AuthResponse", "User", "DeletionScheduled", "ExerciseList", "Exercise", "BandList", "Band",
 		"Session", "SessionPage", "Block", "SetEntry", "LastSet", "Problem",
+		"SessionComplete", "AttestRequest", "CompletionResult", "AttestResult", "SkillGraph", "SkillDetail", "SkillMap", "Progress",
 	} {
 		if _, err := schemas.Schema(name); err != nil {
 			t.Errorf("%s: %v", name, err)

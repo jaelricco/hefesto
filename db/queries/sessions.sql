@@ -37,6 +37,14 @@ UPDATE workout_sessions SET
 WHERE id = @id AND user_id = @user_id AND deleted_at IS NULL
 RETURNING *;
 
+-- name: MarkSessionCompleted :one
+UPDATE workout_sessions SET
+    status = 'completed', completed_at = @completed_at, ended_at = @ended_at,
+    perceived_fatigue = @perceived_fatigue, bodyweight_kg = @bodyweight_kg,
+    client_id = @client_id, updated_at = @updated_at
+WHERE id = @id AND user_id = @user_id AND deleted_at IS NULL AND status = 'draft'
+RETURNING *;
+
 -- name: SoftDeleteSession :execrows
 UPDATE workout_sessions SET deleted_at = now(), client_id = @client_id, updated_at = @updated_at
 WHERE id = @id AND user_id = @user_id AND deleted_at IS NULL;

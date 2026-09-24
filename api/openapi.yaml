@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Hefesto API
-  version: 0.2.0
+  version: 0.3.0
   summary: Calisthenics training logger and skill map
   description: |
     The source of truth for the Hefesto API and for the generated Swift client.
@@ -41,6 +41,7 @@ info:
     | `already-exists` | 409 | A resource with this id already exists. |
     | `email-taken` | 409 | An account already uses this email. |
     | `order-conflict` | 409 | Another live sibling already has this `order_index`; use the reorder endpoint. |
+    | `prerequisites-unmet` | 409 | A level cannot be attested before its prerequisites are unlocked. |
     | `validation` | 422 | The body is well-formed but breaks a rule; see `errors`. |
     | `rate-limited` | 429 | Too many attempts; retry after `Retry-After`. |
     | `internal` | 500 | A server bug. Quote `trace_id` when reporting it. |
@@ -66,6 +67,8 @@ tags:
     description: Resistance bands used as assistance.
   - name: sessions
     description: Logged workouts — sessions, blocks, set entries and their ordered elements.
+  - name: skills
+    description: The skill graph and the athlete's progress through it.
 
 security:
   - bearerAuth: []
@@ -739,6 +742,171 @@ paths:
         "404":
           $ref: "#/components/responses/Problem"
         "422":
+          $ref: "#/components/responses/Problem"
+
+  /v1/sessions/{sessionId}/complete:
+    parameters:
+      - $ref: "#/components/parameters/SessionId"
+    post:
+      tags: [sessions]
+      operationId: completeSession
+      summary: Complete a session and evaluate unlocks
+      description: |
+        Marks the session completed, then evaluates every skill level against
+        the athlete's completed sessions and returns what changed: levels
+        unlocked (for the celebration), levels newly available, XP awarded
+        and the streak.
+
+        Idempotent: completing an already completed session changes nothing
+        and returns the unlocks that session caused, with
+        `already_completed: true`. Rest-day sessions keep the streak but earn
+        no XP and unlock nothing.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SessionComplete"
+      responses:
+        "200":
+          description: Completed.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompletionResult"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "404":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/Problem"
+
+  # ---------------------------------------------------------------- skills
+
+  /v1/skills:
+    get:
+      tags: [skills]
+      operationId: getSkillGraph
+      summary: The whole skill graph
+      description: |
+        Every skill that is not retired, with its levels, their exercises and
+        unlock criteria, and every edge between levels. Map positions are
+        authored, not computed. The response carries an `ETag` keyed on the
+        content version; a matching `If-None-Match` returns 304.
+      parameters:
+        - name: If-None-Match
+          in: header
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The graph.
+          headers:
+            ETag:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SkillGraph"
+        "304":
+          description: The graph has not changed.
+        "401":
+          $ref: "#/components/responses/Problem"
+
+  /v1/skills/{slug}:
+    get:
+      tags: [skills]
+      operationId: getSkill
+      summary: One skill, with its injury notes
+      description: Injury notes are educational, never medical advice; each carries its disclaimer, and the payload carries the disclaimer text.
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Slug"
+      responses:
+        "200":
+          description: The skill.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SkillDetail"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "404":
+          $ref: "#/components/responses/Problem"
+
+  /v1/me/skill-map:
+    get:
+      tags: [skills]
+      operationId: getMySkillMap
+      summary: The graph and my standing on every level, in one payload
+      responses:
+        "200":
+          description: The map.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SkillMap"
+        "401":
+          $ref: "#/components/responses/Problem"
+
+  /v1/me/skills/{levelId}/attest:
+    parameters:
+      - name: levelId
+        in: path
+        required: true
+        schema:
+          $ref: "#/components/schemas/Id"
+    post:
+      tags: [skills]
+      operationId: attestSkillLevel
+      summary: Self-attest a level
+      description: |
+        The fallback for levels the log cannot prove: levels with no unlock
+        criteria, and levels the athlete achieved before using Hefesto. The
+        level's prerequisites must be unlocked. A self-attested unlock is
+        recorded as such and earns no XP. Attesting an unlocked level
+        changes nothing.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AttestRequest"
+      responses:
+        "200":
+          description: Unlocked (or already was).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AttestResult"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "404":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+
+  /v1/me/progress:
+    get:
+      tags: [skills]
+      operationId: getMyProgress
+      summary: My XP and streak
+      responses:
+        "200":
+          description: Progress.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Progress"
+        "401":
           $ref: "#/components/responses/Problem"
 
 components:
@@ -1657,3 +1825,390 @@ components:
           format: date
         set:
           $ref: "#/components/schemas/SetEntry"
+
+    # --------------------------------------------------------------- skills
+    Criteria:
+      description: The unlock DSL (brief §6), with defaults made explicit. Empty means self-attest only.
+      type: object
+      properties:
+        all:
+          type: array
+          items:
+            $ref: "#/components/schemas/Condition"
+        any:
+          type: array
+          items:
+            $ref: "#/components/schemas/Condition"
+
+    Condition:
+      type: object
+      required: [exercise, measure, op, value, assistance, occurrences]
+      properties:
+        exercise:
+          $ref: "#/components/schemas/Slug"
+        measure:
+          type: string
+          enum: [reps, hold_seconds, distance_m]
+        op:
+          type: string
+          enum: [">=", ">"]
+        value:
+          type: number
+        assistance:
+          type: string
+          enum: [none, any]
+        min_load_kg:
+          type: number
+        max_load_kg:
+          type: number
+        min_form_quality:
+          type: integer
+        occurrences:
+          type: integer
+        within_days:
+          type: integer
+
+    MapPoint:
+      type: object
+      required: [constellation, x, y]
+      properties:
+        constellation:
+          type: string
+        x:
+          type: number
+        y:
+          type: number
+
+    SkillLevel:
+      type: object
+      required: [id, slug, name, order, description, est_weeks_from_prev, unlock_criteria, exercises]
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        slug:
+          $ref: "#/components/schemas/Slug"
+        name:
+          type: string
+        order:
+          type: integer
+        description:
+          type: string
+        est_weeks_from_prev:
+          description: A display hint shared by everyone; not a promise.
+          type: [integer, "null"]
+        unlock_criteria:
+          $ref: "#/components/schemas/Criteria"
+        exercises:
+          type: array
+          items:
+            type: object
+            required: [exercise_id, slug, role]
+            properties:
+              exercise_id:
+                $ref: "#/components/schemas/Id"
+              slug:
+                $ref: "#/components/schemas/Slug"
+              role:
+                type: string
+                enum: [primary_test, progression, accessory, prehab]
+
+    Skill:
+      type: object
+      required: [id, slug, name, family, difficulty_tier, is_milestone, status, aka, summary, primary_muscles, common_faults, map, levels]
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        slug:
+          $ref: "#/components/schemas/Slug"
+        name:
+          type: string
+        family:
+          $ref: "#/components/schemas/Slug"
+        difficulty_tier:
+          type: integer
+          minimum: 1
+          maximum: 10
+        is_milestone:
+          type: boolean
+        status:
+          description: "`draft_placeholder` marks content that is not yet researched."
+          type: string
+          enum: [active, draft_placeholder]
+        aka:
+          type: array
+          items:
+            type: string
+        summary:
+          type: string
+        primary_muscles:
+          type: array
+          items:
+            type: string
+        common_faults:
+          type: array
+          items:
+            type: string
+        map:
+          oneOf:
+            - $ref: "#/components/schemas/MapPoint"
+            - type: "null"
+        levels:
+          type: array
+          items:
+            $ref: "#/components/schemas/SkillLevel"
+
+    SkillEdge:
+      type: object
+      required: [from_level_id, to_level_id, relation, weight]
+      properties:
+        from_level_id:
+          $ref: "#/components/schemas/Id"
+        to_level_id:
+          $ref: "#/components/schemas/Id"
+        relation:
+          type: string
+          enum: [prerequisite, recommended, alternative, antagonist]
+        weight:
+          type: number
+
+    SkillGraph:
+      type: object
+      required: [content_version, skills, edges]
+      properties:
+        content_version:
+          type: string
+        skills:
+          type: array
+          items:
+            $ref: "#/components/schemas/Skill"
+        edges:
+          type: array
+          items:
+            $ref: "#/components/schemas/SkillEdge"
+
+    Disclaimer:
+      type: object
+      required: [code, text]
+      properties:
+        code:
+          type: string
+          enum: [educational_only]
+        text:
+          type: string
+
+    Injury:
+      type: object
+      required: [region, name, description, risk_factors, early_signs, prehab_exercises, disclaimer]
+      properties:
+        region:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        risk_factors:
+          type: array
+          items:
+            type: string
+        early_signs:
+          type: array
+          items:
+            type: string
+        prehab_exercises:
+          type: array
+          items:
+            type: object
+            required: [exercise_id, slug]
+            properties:
+              exercise_id:
+                $ref: "#/components/schemas/Id"
+              slug:
+                $ref: "#/components/schemas/Slug"
+        disclaimer:
+          type: string
+          enum: [educational_only]
+
+    SkillDetail:
+      allOf:
+        - $ref: "#/components/schemas/Skill"
+        - type: object
+          required: [injuries, injury_disclaimer]
+          properties:
+            injuries:
+              type: array
+              items:
+                $ref: "#/components/schemas/Injury"
+            injury_disclaimer:
+              $ref: "#/components/schemas/Disclaimer"
+
+    LevelState:
+      type: object
+      required: [level_id, state, best_value, best_unit, best_at, first_achieved_at, verification, stale_since, attempts_count]
+      properties:
+        level_id:
+          $ref: "#/components/schemas/Id"
+        state:
+          type: string
+          enum: [locked, available, in_progress, unlocked]
+        best_value:
+          description: The best logged value for the level's headline condition. Current form, not achievement.
+          type: [number, "null"]
+        best_unit:
+          type: [string, "null"]
+          enum: [reps, hold_seconds, distance_m, null]
+        best_at:
+          $ref: "#/components/schemas/NullableTimestamp"
+        first_achieved_at:
+          $ref: "#/components/schemas/NullableTimestamp"
+        verification:
+          type: [string, "null"]
+          enum: [auto, self_attested, coach, null]
+        stale_since:
+          description: A hint that an unlocked skill has not been practised for a while. It never changes `state`.
+          $ref: "#/components/schemas/NullableTimestamp"
+        attempts_count:
+          type: integer
+
+    SkillMap:
+      type: object
+      required: [content_version, skills, edges, states]
+      properties:
+        content_version:
+          type: string
+        skills:
+          type: array
+          items:
+            $ref: "#/components/schemas/Skill"
+        edges:
+          type: array
+          items:
+            $ref: "#/components/schemas/SkillEdge"
+        states:
+          description: One entry per level of every listed skill.
+          type: array
+          items:
+            $ref: "#/components/schemas/LevelState"
+
+    Unlock:
+      type: object
+      required: [level_id, skill_slug, skill_name, level_slug, level_name, verification, occurred_at, evidence_set_entry_id]
+      properties:
+        level_id:
+          $ref: "#/components/schemas/Id"
+        skill_slug:
+          $ref: "#/components/schemas/Slug"
+        skill_name:
+          type: string
+        level_slug:
+          $ref: "#/components/schemas/Slug"
+        level_name:
+          type: string
+        verification:
+          type: string
+          enum: [auto, self_attested, coach]
+        occurred_at:
+          $ref: "#/components/schemas/Timestamp"
+        evidence_set_entry_id:
+          type: [string, "null"]
+          format: uuid
+
+    XPAward:
+      type: object
+      required: [source, amount]
+      properties:
+        source:
+          type: string
+          enum: [session_completed, skill_unlocked, badge_earned, streak_milestone, plan_adherence, deload_completed]
+        amount:
+          type: integer
+
+    Streak:
+      type: object
+      required: [current_days, longest_days, freeze_credits, last_counted_date]
+      properties:
+        current_days:
+          description: Consecutive days trained, rested by plan, or bridged by a freeze.
+          type: integer
+        longest_days:
+          type: integer
+        freeze_credits:
+          description: Earned automatically; each bridges one missed day.
+          type: integer
+        last_counted_date:
+          type: [string, "null"]
+          format: date
+
+    SessionComplete:
+      type: object
+      additionalProperties: false
+      properties:
+        completed_at:
+          description: When the athlete finished. Defaults to now.
+          $ref: "#/components/schemas/Timestamp"
+        ended_at:
+          $ref: "#/components/schemas/Timestamp"
+        perceived_fatigue:
+          type: integer
+          minimum: 1
+          maximum: 10
+        bodyweight_kg:
+          type: number
+          exclusiveMinimum: 0
+          maximum: 500
+        updated_at:
+          $ref: "#/components/schemas/Timestamp"
+
+    CompletionResult:
+      type: object
+      required: [session, already_completed, unlocked, newly_available, xp_awarded, xp_total, streak]
+      properties:
+        session:
+          $ref: "#/components/schemas/Session"
+        already_completed:
+          type: boolean
+        unlocked:
+          description: Levels this completion unlocked, in prerequisite order.
+          type: array
+          items:
+            $ref: "#/components/schemas/Unlock"
+        newly_available:
+          description: Levels that became available because their prerequisites are now unlocked.
+          type: array
+          items:
+            $ref: "#/components/schemas/Id"
+        xp_awarded:
+          type: array
+          items:
+            $ref: "#/components/schemas/XPAward"
+        xp_total:
+          type: integer
+        streak:
+          $ref: "#/components/schemas/Streak"
+
+    AttestRequest:
+      description: |
+        Empty for now (send `{}`); a body keeps room for fields such as a
+        coach reference without a breaking change.
+      type: object
+      additionalProperties: false
+      properties: {}
+
+    AttestResult:
+      type: object
+      required: [unlock, newly_available]
+      properties:
+        unlock:
+          $ref: "#/components/schemas/Unlock"
+        newly_available:
+          type: array
+          items:
+            $ref: "#/components/schemas/Id"
+
+    Progress:
+      type: object
+      required: [xp_total, streak]
+      properties:
+        xp_total:
+          type: integer
+        streak:
+          $ref: "#/components/schemas/Streak"

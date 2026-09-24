@@ -1,0 +1,22 @@
+{
+  "description": "Empty criteria never unlock automatically; the level can only be self-attested.",
+  "now": "2026-09-30T12:00:00Z",
+  "criteria": {},
+  "history": [
+    {
+      "set": "s1",
+      "exercise": "pull-up",
+      "measure": "reps",
+      "value": 20,
+      "at": "2026-09-20T18:00:00Z"
+    }
+  ],
+  "expect": {
+    "met": false,
+    "self_attest_only": true,
+    "started": false,
+    "evidence": null,
+    "all": [],
+    "any": []
+  }
+}

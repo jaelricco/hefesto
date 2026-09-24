@@ -1,0 +1,73 @@
+{
+  "description": "The criteria from the brief \u00a76: two good full-lever holds in 30 days, and one 12 s half-lay at any time.",
+  "now": "2026-09-30T12:00:00Z",
+  "criteria": {
+    "all": [
+      {
+        "exercise": "front-lever-full",
+        "measure": "hold_seconds",
+        "op": ">=",
+        "value": 5,
+        "assistance": "none",
+        "max_load_kg": 0,
+        "min_form_quality": 4,
+        "occurrences": 2,
+        "within_days": 30
+      }
+    ],
+    "any": [
+      {
+        "exercise": "front-lever-half-lay",
+        "measure": "hold_seconds",
+        "op": ">=",
+        "value": 12,
+        "occurrences": 1
+      }
+    ]
+  },
+  "history": [
+    {
+      "set": "s1",
+      "exercise": "front-lever-full",
+      "measure": "hold_seconds",
+      "value": 6,
+      "at": "2026-09-20T18:00:00Z",
+      "form_quality": 4
+    },
+    {
+      "set": "s2",
+      "exercise": "front-lever-full",
+      "measure": "hold_seconds",
+      "value": 5,
+      "at": "2026-09-25T18:00:00Z",
+      "form_quality": 5
+    },
+    {
+      "set": "s3",
+      "exercise": "front-lever-half-lay",
+      "measure": "hold_seconds",
+      "value": 12,
+      "at": "2026-09-10T18:00:00Z"
+    }
+  ],
+  "expect": {
+    "met": true,
+    "self_attest_only": false,
+    "started": true,
+    "evidence": "s2",
+    "all": [
+      {
+        "met": true,
+        "count": 2,
+        "best": 6
+      }
+    ],
+    "any": [
+      {
+        "met": true,
+        "count": 1,
+        "best": 12
+      }
+    ]
+  }
+}

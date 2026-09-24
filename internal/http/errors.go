@@ -40,6 +40,9 @@ func writeError(w http.ResponseWriter, r *http.Request, err error) {
 	case errors.Is(err, store.ErrOrderConflict):
 		p = problem("order-conflict", "Order conflict", http.StatusConflict,
 			"another live sibling already has this order_index; use the reorder endpoint to move several at once")
+	case errors.Is(err, store.ErrPrerequisitesUnmet):
+		p = problem("prerequisites-unmet", "Prerequisites not unlocked", http.StatusConflict,
+			"unlock this level's prerequisites first")
 	case errors.Is(err, auth.ErrInvalidCredentials):
 		p = problem("invalid-credentials", "Invalid credentials", http.StatusUnauthorized, "")
 	case errors.Is(err, auth.ErrInvalidRefreshToken):
