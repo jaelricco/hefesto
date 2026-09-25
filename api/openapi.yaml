@@ -1867,9 +1867,7 @@ components:
         failed:
           type: boolean
         assistance:
-          oneOf:
-            - $ref: "#/components/schemas/AssistanceWrite"
-            - type: "null"
+          $ref: "#/components/schemas/AssistanceWrite"
         media_ids:
           description: Ready images of the athlete's own to attach (a form check). The complete list; omit for none.
           type: array
@@ -1883,7 +1881,9 @@ components:
       enum: [band, partner, machine, incline, counterweight, foot_support]
 
     AssistanceWrite:
-      type: object
+      # Nullable here rather than as oneOf [ref, null] at the use site, which
+      # swift-openapi-generator cannot express and silently drops (ADR 0010).
+      type: [object, "null"]
       additionalProperties: false
       required: [id, type]
       properties:
@@ -1984,16 +1984,16 @@ components:
           type: string
           enum: [unassisted, assisted, loaded]
         assistance:
-          oneOf:
-            - $ref: "#/components/schemas/Assistance"
-            - type: "null"
+          $ref: "#/components/schemas/Assistance"
         media_ids:
           type: array
           items:
             $ref: "#/components/schemas/Id"
 
     Assistance:
-      type: object
+      # Nullable here rather than as oneOf [ref, null] at the use site, which
+      # swift-openapi-generator cannot express and silently drops (ADR 0010).
+      type: [object, "null"]
       required: [id, type, band_id, band_count, anchor, estimated_assist_kg, note]
       properties:
         id:
@@ -2095,7 +2095,9 @@ components:
           type: integer
 
     MapPoint:
-      type: object
+      # Nullable here rather than as oneOf [ref, null] at the use site, which
+      # swift-openapi-generator cannot express and silently drops (ADR 0010).
+      type: [object, "null"]
       required: [constellation, x, y]
       properties:
         constellation:
@@ -2175,9 +2177,7 @@ components:
           items:
             type: string
         map:
-          oneOf:
-            - $ref: "#/components/schemas/MapPoint"
-            - type: "null"
+          $ref: "#/components/schemas/MapPoint"
         levels:
           type: array
           items:
