@@ -1,0 +1,53 @@
+name: ios
+
+# The iOS app (ADR 0010). Runs only when the app or the API spec it is
+# generated from changes: macOS runners cost about ten times Linux minutes.
+on:
+  pull_request:
+    paths: ["ios/**", "api/openapi.yaml", ".github/workflows/ios.yml"]
+  push:
+    branches: [main]
+    paths: ["ios/**", "api/openapi.yaml", ".github/workflows/ios.yml"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  package:
+    name: HefestoKit tests (macOS)
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+      - name: swift test
+        working-directory: ios/Packages/HefestoKit
+        run: swift test --parallel
+
+  app:
+    name: app builds (iOS simulator)
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+      - name: generate the project
+        working-directory: ios
+        run: |
+          brew install xcodegen
+          xcodegen generate
+      - name: build for the simulator
+        working-directory: ios
+        run: |
+          xcodebuild build \
+            -project Hefesto.xcodeproj -scheme Hefesto \
+            -destination 'generic/platform=iOS Simulator' \
+            -skipPackagePluginValidation -skipMacroValidation \
+            CODE_SIGNING_ALLOWED=NO | tee build.log | grep -E '(error|warning:|BUILD)' || true
+          grep -q 'BUILD SUCCEEDED' build.log
