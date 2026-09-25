@@ -23,7 +23,7 @@ concurrency:
 jobs:
   ios:
     name: HefestoKit tests and app build (self-hosted Mac)
-    runs-on: [self-hosted, macOS]
+    runs-on: self-hosted
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
