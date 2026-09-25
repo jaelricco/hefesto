@@ -46,6 +46,8 @@ targets:
       path: Hefesto/Info.plist
       properties:
         CFBundleDisplayName: Hefesto
+        # English and German (brief §10); strings are in Localizable.xcstrings.
+        CFBundleLocalizations: [en, de]
         UILaunchScreen: {}
         UIApplicationSceneManifest:
           UIApplicationSupportsMultipleScenes: false

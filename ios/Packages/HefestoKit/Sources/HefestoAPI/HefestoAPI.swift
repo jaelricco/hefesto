@@ -4,6 +4,7 @@
 
 import Foundation
 import OpenAPIRuntime
+import OpenAPIURLSession
 
 /// Timestamps as the server writes them: RFC 3339, with fractional seconds
 /// when there are any (Go drops trailing zeros, so a whole second has none).
@@ -38,6 +39,12 @@ public enum HefestoAPIConfiguration {
 
     /// The configuration every `Client` of the app uses.
     public static let configuration = Configuration(dateTranscoder: dates, jsonEncodingOptions: [.sortedKeys])
+
+    /// A client of the API at `serverURL` over URLSession.
+    public static func client(serverURL: URL, middlewares: [any ClientMiddleware] = []) -> Client {
+        Client(serverURL: serverURL, configuration: configuration, transport: URLSessionTransport(),
+               middlewares: middlewares)
+    }
 
     /// An encoder that writes generated types exactly as the client does, so
     /// a payload stored for a retry is the payload that was sent.

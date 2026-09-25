@@ -70,6 +70,7 @@ let package = Package(
             name: "HefestoSyncTests",
             dependencies: [
                 "HefestoSync", "HefestoStore", "HefestoAPI",
+                .product(name: "GRDB", package: "GRDB.swift"),
                 .product(name: "OpenAPIRuntime", package: "swift-openapi-runtime"),
                 .product(name: "HTTPTypes", package: "swift-http-types"),
             ]

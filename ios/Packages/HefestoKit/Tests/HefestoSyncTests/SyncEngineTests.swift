@@ -1,4 +1,5 @@
 import Foundation
+import GRDB
 import HTTPTypes
 import OpenAPIRuntime
 import Testing
@@ -61,6 +62,11 @@ func results(_ statuses: [String]) -> String {
             : #"{"index":\#(i),"status":"\#(s)"}"#
     }
     return #"{"results":[\#(items.joined(separator: ","))]}"#
+}
+
+/// A synchronous read: in an async test `reader.read` picks GRDB's async overload.
+func fetch<T>(_ db: AppDatabase, _ value: (Database) throws -> T) throws -> T {
+    try db.reader.read(value)
 }
 
 let emptyPage = #"{"cursor":0,"has_more":false,"sessions":[],"blocks":[],"sets":[],"bodyweight":[]}"#
@@ -129,7 +135,7 @@ func logSet(_ db: AppDatabase, _ session: Session, _ block: Block, reps: Int) th
         #expect(try db.batchInFlight()?.key == "key-0001")
 
         // An edit made meanwhile waits for the next batch; the retry does not change.
-        var s = try #require(try db.reader.read { try Session.fetchOne($0, key: session.id) })
+        var s = try #require(try fetch(db) { try Session.fetchOne($0, key: session.id) })
         s.title = "Renamed"
         try db.saveSession(s)
 
@@ -174,7 +180,7 @@ func logSet(_ db: AppDatabase, _ session: Session, _ block: Block, reps: Int) th
         _ = try await SyncEngine(client: server.client, db: db).sync()
 
         #expect(server.requests("getSession").count == 1)
-        let tree = try #require(try db.reader.read { try AppDatabase.sessionTree($0, id: session.id) })
+        let tree = try #require(try fetch(db) { try AppDatabase.sessionTree($0, id: session.id) })
         #expect(tree.blocks.first?.sets.first?.elements.first?.reps == 9, "the server's copy wins")
     }
 
@@ -191,7 +197,7 @@ func logSet(_ db: AppDatabase, _ session: Session, _ block: Block, reps: Int) th
         _ = try await SyncEngine(client: server.client, db: db).sync()
 
         #expect(server.requests("getSession").count == 1, "one fetch per session")
-        #expect(try db.reader.read { try AppDatabase.sessionTree($0, id: session.id) } == nil)
+        #expect(try fetch(db) { try AppDatabase.sessionTree($0, id: session.id) } == nil)
     }
 
     @Test func completionReportsWhatItUnlocked() async throws {
@@ -233,7 +239,7 @@ func logSet(_ db: AppDatabase, _ session: Session, _ block: Block, reps: Int) th
         #expect(server.requests("pullChanges").count == 2)
         #expect(try db.cursor() == 7)
         #expect(report.pulled == 2)
-        let s = try #require(try db.reader.read { try Session.fetchOne($0, key: sessionId) })
+        let s = try #require(try fetch(db) { try Session.fetchOne($0, key: sessionId) })
         #expect(s.serverSeq == 5)
         #expect(s.startedAt.timeIntervalSince1970 == 1_789_997_600.25, "fractional seconds survive")
     }
@@ -250,7 +256,7 @@ func logSet(_ db: AppDatabase, _ session: Session, _ block: Block, reps: Int) th
 
         #expect(server.requests.count == 2)
         #expect(try db.contentVersion() == "v1")
-        #expect(try db.reader.read { try AppDatabase.exercises($0) }.map(\.slug) == ["pull-up"])
+        #expect(try fetch(db) { try AppDatabase.exercises($0) }.map(\.slug) == ["pull-up"])
     }
 }
 
