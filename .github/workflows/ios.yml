@@ -1,13 +1,17 @@
 name: ios
 
-# The iOS app (ADR 0010). Runs only when the app or the API spec it is
-# generated from changes: macOS runners cost about ten times Linux minutes.
+# The iOS app (ADR 0010), built and tested on the self-hosted Mac runner.
+# Runs only when the app, the API spec it is generated from, or this file
+# changes. The runner is the owner's machine, so the job changes nothing
+# outside its workspace: it uses whatever Xcode `xcode-select` points to, and
+# keeps build products under ios/.derived and the package's .build.
 on:
   pull_request:
     paths: ["ios/**", "api/openapi.yaml", ".github/workflows/ios.yml"]
   push:
-    branches: [main]
+    branches: [main, "claude/**"]
     paths: ["ios/**", "api/openapi.yaml", ".github/workflows/ios.yml"]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -17,37 +21,41 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  package:
-    name: HefestoKit tests (macOS)
-    runs-on: macos-15
+  ios:
+    name: HefestoKit tests and app build (self-hosted Mac)
+    runs-on: [self-hosted, macOS]
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
-      - uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: latest-stable
-      - name: swift test
+
+      - name: toolchain
+        run: |
+          xcode-select -p
+          xcodebuild -version
+          swift --version
+          xcrun simctl list runtimes available | grep -i ios || echo "no iOS simulator runtime installed"
+          if ! command -v xcodegen >/dev/null; then
+            echo "installing XcodeGen with Homebrew"
+            brew install xcodegen
+          fi
+          xcodegen --version
+
+      - name: swift test (HefestoKit)
         working-directory: ios/Packages/HefestoKit
         run: swift test --parallel
 
-  app:
-    name: app builds (iOS simulator)
-    runs-on: macos-15
-    steps:
-      - uses: actions/checkout@v4
-      - uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: latest-stable
       - name: generate the project
         working-directory: ios
-        run: |
-          brew install xcodegen
-          xcodegen generate
-      - name: build for the simulator
+        run: xcodegen generate
+
+      - name: build the app for the simulator
         working-directory: ios
         run: |
+          set -o pipefail
           xcodebuild build \
             -project Hefesto.xcodeproj -scheme Hefesto \
             -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath .derived \
             -skipPackagePluginValidation -skipMacroValidation \
-            CODE_SIGNING_ALLOWED=NO | tee build.log | grep -E '(error|warning:|BUILD)' || true
-          grep -q 'BUILD SUCCEEDED' build.log
+            CODE_SIGNING_ALLOWED=NO 2>&1 | tee build.log | grep -E 'error:|warning:|\*\* BUILD' || true
+          grep -q '\*\* BUILD SUCCEEDED \*\*' build.log

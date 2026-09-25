@@ -37,3 +37,5 @@ ios/Packages/*/.build/
 ios/Packages/*/.swiftpm/
 ios/Hefesto/Info.plist
 ios/Hefesto/Hefesto.entitlements
+ios/.derived/
+ios/build.log
