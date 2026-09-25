@@ -1,0 +1,21 @@
+# Development object storage: MinIO and its client, built from source.
+#
+# MinIO no longer publishes container images (minio/minio and minio/mc are gone
+# from Docker Hub), so Compose builds the official source at pinned commits.
+# The server commit matches scripts/with-minio.sh, so `make up` and the
+# integration tests run the same MinIO. Development only: production uses
+# Hetzner Object Storage.
+
+# --- build -------------------------------------------------------------------
+FROM golang:1.24-alpine AS build
+ARG MINIO_MODULE=github.com/minio/minio@v0.0.0-20260212201848-7aac2a2c5b7c
+ARG MC_MODULE=github.com/minio/mc@v0.0.0-20251106162529-77f82e18b540
+ENV CGO_ENABLED=0 GOBIN=/out
+RUN go install "$MINIO_MODULE" && go install "$MC_MODULE"
+
+# --- runtime -----------------------------------------------------------------
+FROM alpine:3.20
+RUN apk add --no-cache ca-certificates curl
+COPY --from=build /out/minio /out/mc /usr/local/bin/
+EXPOSE 9000 9001
+ENTRYPOINT ["minio"]

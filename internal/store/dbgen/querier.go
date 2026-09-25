@@ -13,11 +13,20 @@ import (
 )
 
 type Querier interface {
+	// The device has everything up to this cursor.
+	AckSyncCursor(ctx context.Context, arg AckSyncCursorParams) error
+	AttachElementMedia(ctx context.Context, arg AttachElementMediaParams) error
 	// A sign-in during the grace period cancels the deletion.
 	CancelUserDeletion(ctx context.Context, id uuid.UUID) (int64, error)
+	// ----------------------------------------------------------- idempotency
+	// Claims a key: a new key, an expired one, or one whose earlier attempt
+	// stalled (in progress for five minutes, same request) is taken. Returns no
+	// row when the key is live and held.
+	ClaimIdempotencyKey(ctx context.Context, arg ClaimIdempotencyKeyParams) (string, error)
 	// Freezes are recomputed from scratch: clear the old ones, then mark the
 	// days the current walk bridged.
 	ClearFreezes(ctx context.Context, userID uuid.UUID) error
+	CompleteIdempotencyKey(ctx context.Context, arg CompleteIdempotencyKeyParams) error
 	CompletedSessionsOnDay(ctx context.Context, arg CompletedSessionsOnDayParams) (int32, error)
 	// Days that count on their own merit. Freeze days are not included: which
 	// days a freeze bridges is recomputed from these every time.
@@ -32,15 +41,22 @@ type Querier interface {
 	DeleteInjuryRisksNotIn(ctx context.Context, arg DeleteInjuryRisksNotInParams) error
 	// Associations carry no user data, so they are replaced wholesale.
 	DeleteSkillLevelExercises(ctx context.Context, skillLevelID uuid.UUID) error
+	DetachMedia(ctx context.Context, arg DetachMediaParams) error
+	DetachOtherElementMedia(ctx context.Context, arg DetachOtherElementMediaParams) error
 	ExerciseStatuses(ctx context.Context, ids []uuid.UUID) ([]ExerciseStatusesRow, error)
+	// Uploads never completed: their objects, if any, are removed and the asset
+	// marked failed.
+	ExpirePendingMedia(ctx context.Context, before time.Time) ([]string, error)
 	// Belt and braces for deviation D-7: contentlint already rejected cycles, but
 	// the seed re-checks the graph as the database now holds it. Returns the ids
 	// of levels that can reach themselves through prerequisite edges.
 	FindPrerequisiteCycles(ctx context.Context) ([]uuid.UUID, error)
 	GetAppleIdentity(ctx context.Context, appleSub string) (AppleIdentity, error)
 	GetBlock(ctx context.Context, arg GetBlockParams) (SessionBlock, error)
+	GetBodyweight(ctx context.Context, arg GetBodyweightParams) (UserBodyweightLog, error)
 	GetExerciseBySlug(ctx context.Context, slug string) (GetExerciseBySlugRow, error)
 	GetGraphSkill(ctx context.Context, slug string) (GetGraphSkillRow, error)
+	GetIdempotencyKey(ctx context.Context, arg GetIdempotencyKeyParams) (IdempotencyKey, error)
 	// Content import (cmd/seed). Every upsert is keyed on slug and leaves a row
 	// untouched — updated_at and content_version_id included — when nothing in it
 	// changed. The CTE returns the id whether the row was inserted, updated or
@@ -50,10 +66,13 @@ type Querier interface {
 	// The newest version is what the database currently holds; its checksum is
 	// the /v1/skills ETag.
 	GetLatestContentVersion(ctx context.Context) (ContentVersion, error)
+	GetMediaAsset(ctx context.Context, arg GetMediaAssetParams) (MediaAsset, error)
 	// Locks the row: two concurrent refreshes with the same token must not both
 	// succeed.
 	GetRefreshTokenForUpdate(ctx context.Context, tokenHash []byte) (RefreshToken, error)
 	GetSession(ctx context.Context, arg GetSessionParams) (WorkoutSession, error)
+	// Any session row of the user's, tombstones included.
+	GetSessionAny(ctx context.Context, arg GetSessionAnyParams) (WorkoutSession, error)
 	GetSessionForUpdate(ctx context.Context, arg GetSessionForUpdateParams) (WorkoutSession, error)
 	GetSetEntry(ctx context.Context, arg GetSetEntryParams) (SetEntry, error)
 	GetStreak(ctx context.Context, userID uuid.UUID) (UserStreak, error)
@@ -64,6 +83,8 @@ type Querier interface {
 	InsertAppleIdentity(ctx context.Context, arg InsertAppleIdentityParams) error
 	InsertContentVersion(ctx context.Context, arg InsertContentVersionParams) error
 	InsertInjuryPrehab(ctx context.Context, arg InsertInjuryPrehabParams) error
+	// Media assets and their attachment to set elements.
+	InsertMediaAsset(ctx context.Context, arg InsertMediaAssetParams) (MediaAsset, error)
 	InsertRefreshToken(ctx context.Context, arg InsertRefreshTokenParams) error
 	// Sessions -> blocks -> set entries -> set elements (+ assistance).
 	//
@@ -86,6 +107,7 @@ type Querier interface {
 	ListBandsForUser(ctx context.Context, ownerUserID *uuid.UUID) ([]Band, error)
 	// --------------------------------------------------------------- blocks
 	ListBlocks(ctx context.Context, arg ListBlocksParams) ([]SessionBlock, error)
+	ListElementMedia(ctx context.Context, arg ListElementMediaParams) ([]ListElementMediaRow, error)
 	ListElementsOfSet(ctx context.Context, arg ListElementsOfSetParams) ([]SetElement, error)
 	// Exercises and bands as the API reads them.
 	ListExercises(ctx context.Context, arg ListExercisesParams) ([]ListExercisesRow, error)
@@ -111,6 +133,8 @@ type Querier interface {
 	ListUserSkillStates(ctx context.Context, userID uuid.UUID) ([]UserSkillState, error)
 	LockUserProgress(ctx context.Context, userKey string) error
 	MarkFreezeDays(ctx context.Context, arg MarkFreezeDaysParams) error
+	MarkMediaFailed(ctx context.Context, arg MarkMediaFailedParams) (MediaAsset, error)
+	MarkMediaReady(ctx context.Context, arg MarkMediaReadyParams) (MediaAsset, error)
 	MarkRefreshTokenRotated(ctx context.Context, arg MarkRefreshTokenRotatedParams) error
 	MarkSessionCompleted(ctx context.Context, arg MarkSessionCompletedParams) (WorkoutSession, error)
 	// --------------------------------------------------------------- streaks
@@ -119,9 +143,11 @@ type Querier interface {
 	// Every performed element of the named exercises, from completed sessions.
 	// Planned sets, deleted rows and abandoned or draft sessions are not evidence.
 	ObservationsForExercises(ctx context.Context, arg ObservationsForExercisesParams) ([]ObservationsForExercisesRow, error)
-	// Hard deletion after the grace period. Everything the user owns goes with
-	// the row through ON DELETE CASCADE.
-	ReapDeletedUsers(ctx context.Context, cutoff *time.Time) (int64, error)
+	PurgeExpiredIdempotencyKeys(ctx context.Context) (int64, error)
+	ReadyMediaIDs(ctx context.Context, arg ReadyMediaIDsParams) ([]uuid.UUID, error)
+	ReapUser(ctx context.Context, arg ReapUserParams) (int64, error)
+	// A failed attempt gives the key back, so the client can retry with it.
+	ReleaseIdempotencyKey(ctx context.Context, arg ReleaseIdempotencyKeyParams) error
 	RequestUserDeletion(ctx context.Context, id uuid.UUID) (User, error)
 	// Removal is soft: rows gone from content are retired, never deleted,
 	// because logged set elements reference them.
@@ -134,9 +160,11 @@ type Querier interface {
 	SetSetOrder(ctx context.Context, arg SetSetOrderParams) error
 	SetUserEmail(ctx context.Context, arg SetUserEmailParams) error
 	SoftDeleteBlocksOfSession(ctx context.Context, arg SoftDeleteBlocksOfSessionParams) error
+	SoftDeleteBodyweight(ctx context.Context, arg SoftDeleteBodyweightParams) (int64, error)
 	// Global bands gone from content are soft-deleted; logged assistance keeps
 	// pointing at them.
 	SoftDeleteGlobalBandsNotIn(ctx context.Context, keys []string) (int64, error)
+	SoftDeleteMediaAsset(ctx context.Context, arg SoftDeleteMediaAssetParams) (MediaAsset, error)
 	// An element has at most one live assistance row: the one being kept, if any.
 	SoftDeleteOtherAssistance(ctx context.Context, arg SoftDeleteOtherAssistanceParams) error
 	SoftDeleteSession(ctx context.Context, arg SoftDeleteSessionParams) (int64, error)
@@ -146,14 +174,38 @@ type Querier interface {
 	// Parks and tombstones live sets of a block, or of the whole session, or one set.
 	SoftDeleteSetEntries(ctx context.Context, arg SoftDeleteSetEntriesParams) error
 	SoftDeleteUserBand(ctx context.Context, arg SoftDeleteUserBandParams) (int64, error)
+	SyncAssistanceOfSets(ctx context.Context, arg SyncAssistanceOfSetsParams) ([]SetElementAssistance, error)
+	SyncBlocks(ctx context.Context, arg SyncBlocksParams) ([]SessionBlock, error)
+	SyncBodyweight(ctx context.Context, arg SyncBodyweightParams) ([]UserBodyweightLog, error)
+	// Delta sync, offline push bookkeeping and the bodyweight log.
+	//
+	// server_seq is a per-user total order over writes (next_sync_seq takes it
+	// from the user's row, so concurrent writers of one user serialise). The feed
+	// pages over it exactly: every unit appears at its latest change.
+	// ------------------------------------------------------------------ pull
+	// A set is one unit with its elements and their assistance: it changes when
+	// any of them does, and appears at the latest of those changes.
+	SyncChanges(ctx context.Context, arg SyncChangesParams) ([]SyncChangesRow, error)
+	SyncElementMediaOfSets(ctx context.Context, arg SyncElementMediaOfSetsParams) ([]SyncElementMediaOfSetsRow, error)
+	SyncElementsOfSets(ctx context.Context, arg SyncElementsOfSetsParams) ([]SetElement, error)
+	SyncSessions(ctx context.Context, arg SyncSessionsParams) ([]WorkoutSession, error)
+	SyncSetEntries(ctx context.Context, arg SyncSetEntriesParams) ([]SetEntry, error)
+	// The latest change to each set unit, for sets pulled in as a whole.
+	SyncSetSeqs(ctx context.Context, arg SyncSetSeqsParams) ([]SyncSetSeqsRow, error)
 	TemplateBelongsToUser(ctx context.Context, arg TemplateBelongsToUserParams) (bool, error)
 	TotalXP(ctx context.Context, userID uuid.UUID) (int32, error)
+	// Touches the elements an asset is attached to, so the detachment syncs.
+	TouchElementsWithMedia(ctx context.Context, arg TouchElementsWithMediaParams) error
 	UpdateSession(ctx context.Context, arg UpdateSessionParams) (WorkoutSession, error)
 	UpdateUserProfile(ctx context.Context, arg UpdateUserProfileParams) (User, error)
 	UpsertAssistance(ctx context.Context, arg UpsertAssistanceParams) (uuid.UUID, error)
 	// Inserts, or replaces a live block of the same session. Returns no row when
 	// the id belongs to another session or user, or is a tombstone.
 	UpsertBlock(ctx context.Context, arg UpsertBlockParams) (UpsertBlockRow, error)
+	// ------------------------------------------------------------ bodyweight
+	// Inserts, or replaces a live entry of the same user. No row for a tombstone
+	// or another user's id.
+	UpsertBodyweight(ctx context.Context, arg UpsertBodyweightParams) (UserBodyweightLog, error)
 	// A device id is claimed by the first account that signs in with it and is
 	// never re-owned: the row returns nothing if another account holds the id.
 	UpsertDevice(ctx context.Context, arg UpsertDeviceParams) (uuid.UUID, error)
@@ -169,6 +221,9 @@ type Querier interface {
 	// first_achieved_at, evidence and verification are only ever set once: the
 	// COALESCEs keep them, and the monotonic trigger refuses anything else.
 	UpsertUserSkillState(ctx context.Context, arg UpsertUserSkillStateParams) error
+	// Hard deletion after the grace period. Everything the user owns goes with
+	// the row through ON DELETE CASCADE.
+	UsersDueForReaping(ctx context.Context, cutoff *time.Time) ([]uuid.UUID, error)
 	// Bands a user may log with: the catalogue and their own, deleted or not,
 	// so repeating an old set keeps working after a band is retired.
 	VisibleBandIDs(ctx context.Context, arg VisibleBandIDsParams) ([]uuid.UUID, error)

@@ -120,6 +120,8 @@ type Element struct {
 	Failed          bool
 	AssistanceClass AssistanceClass
 	Assistance      *Assistance
+	// MediaIDs are attached images (a form check), in order.
+	MediaIDs []uuid.UUID
 }
 
 // Assistance is help received on an element: a band, a partner, a machine,

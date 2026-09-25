@@ -172,7 +172,7 @@ func TestAccountDeletionGraceAndReaper(t *testing.T) {
 	// Delete again, let the grace period pass, and reap.
 	a.call("DELETE", "/v1/me", back["access_token"].(string), nil).ok(202, "DeletionScheduled")
 	a.exec(`UPDATE users SET deletion_requested_at = now() - interval '31 days'`)
-	n, err := a.store.ReapDeletedUsers(context.Background(), 30*24*time.Hour)
+	n, err := a.store.ReapDeletedUsers(context.Background(), 30*24*time.Hour, nil)
 	if err != nil || n != 1 {
 		t.Fatalf("reaped %d, err %v", n, err)
 	}

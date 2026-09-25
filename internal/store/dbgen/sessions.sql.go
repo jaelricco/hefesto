@@ -81,6 +81,43 @@ func (q *Queries) GetSession(ctx context.Context, arg GetSessionParams) (Workout
 	return i, err
 }
 
+const getSessionAny = `-- name: GetSessionAny :one
+SELECT id, user_id, started_at, ended_at, timezone, local_date, title, notes, perceived_fatigue, bodyweight_kg, status, is_rest_day, template_id, completed_at, client_id, updated_at, server_updated_at, server_seq, deleted_at FROM workout_sessions WHERE id = $1 AND user_id = $2
+`
+
+type GetSessionAnyParams struct {
+	ID     uuid.UUID
+	UserID uuid.UUID
+}
+
+// Any session row of the user's, tombstones included.
+func (q *Queries) GetSessionAny(ctx context.Context, arg GetSessionAnyParams) (WorkoutSession, error) {
+	row := q.db.QueryRow(ctx, getSessionAny, arg.ID, arg.UserID)
+	var i WorkoutSession
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.StartedAt,
+		&i.EndedAt,
+		&i.Timezone,
+		&i.LocalDate,
+		&i.Title,
+		&i.Notes,
+		&i.PerceivedFatigue,
+		&i.BodyweightKg,
+		&i.Status,
+		&i.IsRestDay,
+		&i.TemplateID,
+		&i.CompletedAt,
+		&i.ClientID,
+		&i.UpdatedAt,
+		&i.ServerUpdatedAt,
+		&i.ServerSeq,
+		&i.DeletedAt,
+	)
+	return i, err
+}
+
 const getSessionForUpdate = `-- name: GetSessionForUpdate :one
 SELECT id, user_id, started_at, ended_at, timezone, local_date, title, notes, perceived_fatigue, bodyweight_kg, status, is_rest_day, template_id, completed_at, client_id, updated_at, server_updated_at, server_seq, deleted_at FROM workout_sessions
 WHERE id = $1 AND user_id = $2 AND deleted_at IS NULL

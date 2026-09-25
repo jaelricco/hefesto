@@ -22,7 +22,8 @@ being asked. Current state is in the project's `STATUS.md`.
 make up               # full stack, seeded
 make down / make reset
 make test             # unit, no database
-make test-integration # testcontainers against real Postgres
+make test-integration # real Postgres (testcontainers) and real MinIO (built from
+                      # source by scripts/with-minio.sh)
                       # (no Docker? HEFESTO_TEST_DATABASE_URL=<server url>)
 make lint
 make check            # what CI runs

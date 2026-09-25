@@ -24,7 +24,13 @@ func (e errBadRequest) Error() string { return e.msg }
 // silently ignored field.
 func decode(w http.ResponseWriter, r *http.Request, v any) error {
 	r.Body = http.MaxBytesReader(w, r.Body, maxBodyBytes)
-	dec := json.NewDecoder(r.Body)
+	return decodeJSON(r.Body, v)
+}
+
+// decodeJSON is decode for a reader: the same strictness for a document that
+// is part of a larger body, such as the data of a sync op.
+func decodeJSON(rd io.Reader, v any) error {
+	dec := json.NewDecoder(rd)
 	dec.DisallowUnknownFields()
 	if err := dec.Decode(v); err != nil {
 		var tooBig *http.MaxBytesError

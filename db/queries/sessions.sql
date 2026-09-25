@@ -273,3 +273,7 @@ SELECT EXISTS (
     SELECT 1 FROM workout_templates
     WHERE id = @id AND user_id = @user_id AND deleted_at IS NULL
 );
+
+-- Any session row of the user's, tombstones included.
+-- name: GetSessionAny :one
+SELECT * FROM workout_sessions WHERE id = @id AND user_id = @user_id;

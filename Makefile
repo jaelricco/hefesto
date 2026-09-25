@@ -118,8 +118,8 @@ test: ## Unit tests (no database)
 	go test -race -short $(PKG)
 
 .PHONY: test-integration
-test-integration: ## Integration tests against a real Postgres via testcontainers (or HEFESTO_TEST_DATABASE_URL)
-	go test -race -tags=integration -count=1 $(PKG)
+test-integration: ## Integration tests against real Postgres (testcontainers, or HEFESTO_TEST_DATABASE_URL) and MinIO (built by scripts/with-minio.sh, or HEFESTO_TEST_S3_ENDPOINT)
+	./scripts/with-minio.sh go test -race -tags=integration -count=1 $(PKG)
 
 .PHONY: cover
 cover: ## Coverage report (opens coverage.html)

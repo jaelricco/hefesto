@@ -46,6 +46,21 @@ func (s *Store) tx(ctx context.Context, fn func(q *dbgen.Queries) error) error {
 	return translate(err)
 }
 
+// lockSession locks a live session for a write. A tombstone is ErrDeleted.
+func lockSession(ctx context.Context, q *dbgen.Queries, userID, id uuid.UUID) (dbgen.WorkoutSession, error) {
+	row, err := q.GetSessionForUpdate(ctx, dbgen.GetSessionForUpdateParams{ID: id, UserID: userID})
+	if errors.Is(err, pgx.ErrNoRows) {
+		if prev, err := q.GetSessionAny(ctx, dbgen.GetSessionAnyParams{ID: id, UserID: userID}); err == nil && prev.DeletedAt != nil {
+			return row, ErrDeleted
+		}
+		return row, ErrNotFound
+	}
+	if err != nil {
+		return row, fmt.Errorf("locking session: %w", err)
+	}
+	return row, nil
+}
+
 // ----------------------------------------------------------------- sessions
 
 // CreateSession inserts a new draft session.
@@ -82,6 +97,18 @@ func (s *Store) CreateSession(ctx context.Context, w Writer, in training.Session
 	return out, err
 }
 
+// SessionTombstoned reports whether id is a deleted session of the user's.
+func (s *Store) SessionTombstoned(ctx context.Context, userID, id uuid.UUID) (bool, error) {
+	row, err := s.q.GetSessionAny(ctx, dbgen.GetSessionAnyParams{ID: id, UserID: userID})
+	if errors.Is(err, pgx.ErrNoRows) {
+		return false, nil
+	}
+	if err != nil {
+		return false, fmt.Errorf("reading session: %w", err)
+	}
+	return row.DeletedAt != nil, nil
+}
+
 // GetSession returns a live session with its whole tree.
 func (s *Store) GetSession(ctx context.Context, userID, id uuid.UUID) (training.Session, error) {
 	row, err := s.q.GetSession(ctx, dbgen.GetSessionParams{ID: id, UserID: userID})
@@ -96,9 +123,9 @@ func (s *Store) GetSession(ctx context.Context, userID, id uuid.UUID) (training.
 func (s *Store) UpdateSession(ctx context.Context, w Writer, id uuid.UUID, edit func(*training.Session) error) (training.Session, error) {
 	var out training.Session
 	err := s.tx(ctx, func(q *dbgen.Queries) error {
-		row, err := q.GetSessionForUpdate(ctx, dbgen.GetSessionForUpdateParams{ID: id, UserID: w.UserID})
+		row, err := lockSession(ctx, q, w.UserID, id)
 		if err != nil {
-			return err //nolint:wrapcheck // translated by tx
+			return err
 		}
 		sess := sessionFromRow(row)
 		if err := edit(&sess); err != nil {
@@ -131,7 +158,11 @@ func (s *Store) DeleteSession(ctx context.Context, w Writer, id uuid.UUID) error
 			return fmt.Errorf("deleting session: %w", err)
 		}
 		if n == 0 {
-			return ErrNotFound
+			_, err := lockSession(ctx, q, w.UserID, id)
+			if err == nil {
+				err = ErrNotFound
+			}
+			return err
 		}
 		return deleteChildren(ctx, q, w, id, nil)
 	})
@@ -211,8 +242,8 @@ func (s *Store) PutBlock(ctx context.Context, w Writer, sessionID uuid.UUID, b t
 		created bool
 	)
 	err := s.tx(ctx, func(q *dbgen.Queries) error {
-		if _, err := q.GetSessionForUpdate(ctx, dbgen.GetSessionForUpdateParams{ID: sessionID, UserID: w.UserID}); err != nil {
-			return err //nolint:wrapcheck // translated by tx
+		if _, err := lockSession(ctx, q, w.UserID, sessionID); err != nil {
+			return err
 		}
 		row, err := q.UpsertBlock(ctx, dbgen.UpsertBlockParams{
 			ID: b.ID, UserID: w.UserID, SessionID: sessionID,
@@ -221,7 +252,12 @@ func (s *Store) PutBlock(ctx context.Context, w Writer, sessionID uuid.UUID, b t
 			IntervalS: int32Ptr(b.IntervalS), Notes: b.Notes, ClientID: w.DeviceID, UpdatedAt: w.At,
 		})
 		if errors.Is(err, pgx.ErrNoRows) {
-			return ErrNotFound // the id is a tombstone, or belongs to another session
+			// The id is a tombstone of this session, or belongs elsewhere.
+			if prev, err := q.GetBlock(ctx, dbgen.GetBlockParams{ID: b.ID, UserID: w.UserID}); err == nil &&
+				prev.SessionID == sessionID && prev.DeletedAt != nil {
+				return ErrDeleted
+			}
+			return ErrNotFound
 		}
 		if err != nil {
 			return fmt.Errorf("writing block: %w", err)
@@ -236,15 +272,18 @@ func (s *Store) PutBlock(ctx context.Context, w Writer, sessionID uuid.UUID, b t
 // DeleteBlock tombstones a block and its sets.
 func (s *Store) DeleteBlock(ctx context.Context, w Writer, sessionID, blockID uuid.UUID) error {
 	return s.tx(ctx, func(q *dbgen.Queries) error {
-		if _, err := q.GetSessionForUpdate(ctx, dbgen.GetSessionForUpdateParams{ID: sessionID, UserID: w.UserID}); err != nil {
-			return err //nolint:wrapcheck // translated by tx
+		if _, err := lockSession(ctx, q, w.UserID, sessionID); err != nil {
+			return err
 		}
 		b, err := q.GetBlock(ctx, dbgen.GetBlockParams{ID: blockID, UserID: w.UserID})
 		if err != nil {
 			return err //nolint:wrapcheck // translated by tx
 		}
-		if b.SessionID != sessionID || b.DeletedAt != nil {
+		if b.SessionID != sessionID {
 			return ErrNotFound
+		}
+		if b.DeletedAt != nil {
+			return ErrDeleted
 		}
 		return deleteChildren(ctx, q, w, sessionID, &blockID)
 	})
@@ -260,8 +299,20 @@ func (s *Store) PutSet(ctx context.Context, w Writer, sessionID uuid.UUID, set t
 		created bool
 	)
 	err := s.tx(ctx, func(q *dbgen.Queries) error {
-		if _, err := q.GetSessionForUpdate(ctx, dbgen.GetSessionForUpdateParams{ID: sessionID, UserID: w.UserID}); err != nil {
-			return err //nolint:wrapcheck // translated by tx
+		if _, err := lockSession(ctx, q, w.UserID, sessionID); err != nil {
+			return err
+		}
+		// The athlete's clock decides between two copies of a set (ADR 0009).
+		switch prev, err := q.GetSetEntry(ctx, dbgen.GetSetEntryParams{ID: set.ID, UserID: w.UserID}); {
+		case errors.Is(err, pgx.ErrNoRows):
+		case err != nil:
+			return fmt.Errorf("reading set: %w", err)
+		case prev.SessionID != sessionID:
+			return ErrNotFound
+		case prev.DeletedAt != nil:
+			return ErrDeleted
+		case prev.UpdatedAt.After(w.At):
+			return ErrStaleWrite
 		}
 		if err := checkSetReferences(ctx, q, w.UserID, sessionID, set); err != nil {
 			return err
@@ -280,7 +331,7 @@ func (s *Store) PutSet(ctx context.Context, w Writer, sessionID uuid.UUID, set t
 			ClientID: w.DeviceID, UpdatedAt: w.At,
 		})
 		if errors.Is(err, pgx.ErrNoRows) {
-			return ErrNotFound // the id is a tombstone, or belongs to another session
+			return ErrNotFound // belongs to another user
 		}
 		if err != nil {
 			return fmt.Errorf("writing set: %w", err)
@@ -364,6 +415,23 @@ func writeElement(ctx context.Context, q *dbgen.Queries, w Writer, sessionID, se
 	}); err != nil {
 		return fmt.Errorf("removing replaced assistance: %w", err)
 	}
+
+	media := e.MediaIDs
+	if media == nil {
+		media = []uuid.UUID{} // NULL would keep every attachment
+	}
+	if err := q.DetachOtherElementMedia(ctx, dbgen.DetachOtherElementMediaParams{
+		SetElementID: e.ID, UserID: w.UserID, Keep: media,
+	}); err != nil {
+		return fmt.Errorf("detaching media: %w", err)
+	}
+	if len(media) > 0 {
+		if err := q.AttachElementMedia(ctx, dbgen.AttachElementMediaParams{
+			SetElementID: e.ID, UserID: w.UserID, MediaIds: media,
+		}); err != nil {
+			return fmt.Errorf("attaching media: %w", err)
+		}
+	}
 	return nil
 }
 
@@ -393,12 +461,13 @@ func checkSetReferences(ctx context.Context, q *dbgen.Queries, userID, sessionID
 	}
 
 	exIDs := make([]uuid.UUID, 0, len(set.Elements))
-	var bandIDs []uuid.UUID
+	var bandIDs, mediaIDs []uuid.UUID
 	for _, e := range set.Elements {
 		exIDs = append(exIDs, e.ExerciseID)
 		if e.Assistance != nil && e.Assistance.BandID != nil {
 			bandIDs = append(bandIDs, *e.Assistance.BandID)
 		}
+		mediaIDs = append(mediaIDs, e.MediaIDs...)
 	}
 	statuses, err := q.ExerciseStatuses(ctx, exIDs)
 	if err != nil {
@@ -419,8 +488,24 @@ func checkSetReferences(ctx context.Context, q *dbgen.Queries, userID, sessionID
 		}
 	}
 
+	ready := map[uuid.UUID]bool{}
+	if len(mediaIDs) > 0 {
+		ids, err := q.ReadyMediaIDs(ctx, dbgen.ReadyMediaIDsParams{OwnerUserID: &userID, Ids: mediaIDs})
+		if err != nil {
+			return fmt.Errorf("reading media: %w", err)
+		}
+		for _, id := range ids {
+			ready[id] = true
+		}
+	}
+
 	for i, e := range set.Elements {
 		p := fmt.Sprintf("/elements/%d", i)
+		for j, m := range e.MediaIDs {
+			if !ready[m] {
+				errs[fmt.Sprintf("%s/media_ids/%d", p, j)] = "no such uploaded image"
+			}
+		}
 		switch st, ok := status[e.ExerciseID]; {
 		case !ok:
 			errs[p+"/exercise_id"] = "no such exercise"
@@ -437,15 +522,18 @@ func checkSetReferences(ctx context.Context, q *dbgen.Queries, userID, sessionID
 // DeleteSet tombstones a set and its elements.
 func (s *Store) DeleteSet(ctx context.Context, w Writer, sessionID, setID uuid.UUID) error {
 	return s.tx(ctx, func(q *dbgen.Queries) error {
-		if _, err := q.GetSessionForUpdate(ctx, dbgen.GetSessionForUpdateParams{ID: sessionID, UserID: w.UserID}); err != nil {
-			return err //nolint:wrapcheck // translated by tx
+		if _, err := lockSession(ctx, q, w.UserID, sessionID); err != nil {
+			return err
 		}
 		e, err := q.GetSetEntry(ctx, dbgen.GetSetEntryParams{ID: setID, UserID: w.UserID})
 		if err != nil {
 			return err //nolint:wrapcheck // translated by tx
 		}
-		if e.SessionID != sessionID || e.DeletedAt != nil {
+		if e.SessionID != sessionID {
 			return ErrNotFound
+		}
+		if e.DeletedAt != nil {
+			return ErrDeleted
 		}
 		if err := q.SoftDeleteSetElements(ctx, dbgen.SoftDeleteSetElementsParams{
 			ClientID: w.DeviceID, UpdatedAt: w.At, SessionID: sessionID, UserID: w.UserID,
@@ -475,7 +563,7 @@ type SetOrder struct {
 func (s *Store) Reorder(ctx context.Context, w Writer, sessionID uuid.UUID, blocks []uuid.UUID, sets []SetOrder) (training.Session, error) {
 	var out training.Session
 	err := s.tx(ctx, func(q *dbgen.Queries) error {
-		row, err := q.GetSessionForUpdate(ctx, dbgen.GetSessionForUpdateParams{ID: sessionID, UserID: w.UserID})
+		row, err := lockSession(ctx, q, w.UserID, sessionID)
 		if err != nil {
 			return err //nolint:wrapcheck // translated by tx
 		}
@@ -577,32 +665,30 @@ func loadTree(ctx context.Context, q *dbgen.Queries, userID uuid.UUID, sess trai
 		return sess, fmt.Errorf("reading assistance: %w", err)
 	}
 
+	links, err := q.ListElementMedia(ctx, dbgen.ListElementMediaParams{SessionID: sess.ID, UserID: userID})
+	if err != nil {
+		return sess, fmt.Errorf("reading media links: %w", err)
+	}
+	media := map[uuid.UUID][]uuid.UUID{}
+	for _, l := range links {
+		media[l.SetElementID] = append(media[l.SetElementID], l.MediaID)
+	}
+
 	byElement := make(map[uuid.UUID]*training.Assistance, len(assists))
 	for _, a := range assists {
-		byElement[a.SetElementID] = &training.Assistance{
-			ID: a.ID, Type: a.Type, BandID: a.BandID, BandCount: int(a.BandCount), Anchor: a.Anchor,
-			EstimatedAssistKg: numericPtrToFloat(a.EstimatedAssistKg), Note: a.Note,
-		}
+		byElement[a.SetElementID] = assistanceFromRow(a)
 	}
 	bySet := map[uuid.UUID][]training.Element{}
 	for _, e := range elements {
-		bySet[e.SetEntryID] = append(bySet[e.SetEntryID], training.Element{
-			ID: e.ID, OrderIndex: int(e.OrderIndex), ExerciseID: e.ExerciseID, Measure: training.Measure(e.Measure),
-			Reps: intPtr32(e.Reps), HoldSeconds: numericPtrToFloat(e.HoldSeconds), DistanceM: numericPtrToFloat(e.DistanceM),
-			Tempo: e.Tempo, LoadKg: numericToFloat(e.LoadKg), IsEccentricOnly: e.IsEccentricOnly,
-			IsPartialROM: e.IsPartialRom, ROMNote: e.RomNote, FormQuality: intPtr16(e.FormQuality), Failed: e.Failed,
-			AssistanceClass: training.AssistanceClass(e.AssistanceClass), Assistance: byElement[e.ID],
-		})
+		el := elementFromRow(e, byElement[e.ID])
+		el.MediaIDs = nonNilIDs(media[e.ID])
+		bySet[e.SetEntryID] = append(bySet[e.SetEntryID], el)
 	}
 	byBlock := map[uuid.UUID][]training.SetEntry{}
 	for _, e := range entries {
-		byBlock[e.BlockID] = append(byBlock[e.BlockID], training.SetEntry{
-			ID: e.ID, SessionID: e.SessionID, BlockID: e.BlockID, OrderIndex: int(e.OrderIndex),
-			RoundIndex: intPtr16(e.RoundIndex), Kind: e.Kind, IsPlanned: e.IsPlanned,
-			RestAfterPlannedS: intPtr32(e.RestAfterPlannedS), RestAfterActualS: intPtr32(e.RestAfterActualS),
-			RPE: numericPtrToFloat(e.Rpe), RIR: intPtr16(e.Rir), CompletedAt: e.CompletedAt, Notes: e.Notes,
-			UpdatedAt: e.UpdatedAt, Elements: nonNilElements(bySet[e.ID]),
-		})
+		st := setFromRow(e)
+		st.Elements = nonNilElements(bySet[e.ID])
+		byBlock[e.BlockID] = append(byBlock[e.BlockID], st)
 	}
 	sess.Blocks = make([]training.Block, len(blocks))
 	for i, b := range blocks {
@@ -666,4 +752,38 @@ func nonNilSets(s []training.SetEntry) []training.SetEntry {
 		return []training.SetEntry{}
 	}
 	return s
+}
+
+func nonNilIDs(ids []uuid.UUID) []uuid.UUID {
+	if ids == nil {
+		return []uuid.UUID{}
+	}
+	return ids
+}
+
+func assistanceFromRow(a dbgen.SetElementAssistance) *training.Assistance {
+	return &training.Assistance{
+		ID: a.ID, Type: a.Type, BandID: a.BandID, BandCount: int(a.BandCount), Anchor: a.Anchor,
+		EstimatedAssistKg: numericPtrToFloat(a.EstimatedAssistKg), Note: a.Note,
+	}
+}
+
+func elementFromRow(e dbgen.SetElement, a *training.Assistance) training.Element {
+	return training.Element{
+		ID: e.ID, OrderIndex: int(e.OrderIndex), ExerciseID: e.ExerciseID, Measure: training.Measure(e.Measure),
+		Reps: intPtr32(e.Reps), HoldSeconds: numericPtrToFloat(e.HoldSeconds), DistanceM: numericPtrToFloat(e.DistanceM),
+		Tempo: e.Tempo, LoadKg: numericToFloat(e.LoadKg), IsEccentricOnly: e.IsEccentricOnly,
+		IsPartialROM: e.IsPartialRom, ROMNote: e.RomNote, FormQuality: intPtr16(e.FormQuality), Failed: e.Failed,
+		AssistanceClass: training.AssistanceClass(e.AssistanceClass), Assistance: a, MediaIDs: []uuid.UUID{},
+	}
+}
+
+func setFromRow(e dbgen.SetEntry) training.SetEntry {
+	return training.SetEntry{
+		ID: e.ID, SessionID: e.SessionID, BlockID: e.BlockID, OrderIndex: int(e.OrderIndex),
+		RoundIndex: intPtr16(e.RoundIndex), Kind: e.Kind, IsPlanned: e.IsPlanned,
+		RestAfterPlannedS: intPtr32(e.RestAfterPlannedS), RestAfterActualS: intPtr32(e.RestAfterActualS),
+		RPE: numericPtrToFloat(e.Rpe), RIR: intPtr16(e.Rir), CompletedAt: e.CompletedAt, Notes: e.Notes,
+		UpdatedAt: e.UpdatedAt, Elements: []training.Element{},
+	}
 }

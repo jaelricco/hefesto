@@ -235,15 +235,18 @@ func (q *Queries) MarkRefreshTokenRotated(ctx context.Context, arg MarkRefreshTo
 	return err
 }
 
-const reapDeletedUsers = `-- name: ReapDeletedUsers :execrows
+const reapUser = `-- name: ReapUser :execrows
 DELETE FROM users
-WHERE status = 'deletion_pending' AND deletion_requested_at < $1
+WHERE id = $1 AND status = 'deletion_pending' AND deletion_requested_at < $2
 `
 
-// Hard deletion after the grace period. Everything the user owns goes with
-// the row through ON DELETE CASCADE.
-func (q *Queries) ReapDeletedUsers(ctx context.Context, cutoff *time.Time) (int64, error) {
-	result, err := q.db.Exec(ctx, reapDeletedUsers, cutoff)
+type ReapUserParams struct {
+	ID     uuid.UUID
+	Cutoff *time.Time
+}
+
+func (q *Queries) ReapUser(ctx context.Context, arg ReapUserParams) (int64, error) {
+	result, err := q.db.Exec(ctx, reapUser, arg.ID, arg.Cutoff)
 	if err != nil {
 		return 0, err
 	}
@@ -419,4 +422,32 @@ func (q *Queries) UpsertDevice(ctx context.Context, arg UpsertDeviceParams) (uui
 	var id uuid.UUID
 	err := row.Scan(&id)
 	return id, err
+}
+
+const usersDueForReaping = `-- name: UsersDueForReaping :many
+SELECT id FROM users
+WHERE status = 'deletion_pending' AND deletion_requested_at < $1
+ORDER BY deletion_requested_at
+`
+
+// Hard deletion after the grace period. Everything the user owns goes with
+// the row through ON DELETE CASCADE.
+func (q *Queries) UsersDueForReaping(ctx context.Context, cutoff *time.Time) ([]uuid.UUID, error) {
+	rows, err := q.db.Query(ctx, usersDueForReaping, cutoff)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []uuid.UUID{}
+	for rows.Next() {
+		var id uuid.UUID
+		if err := rows.Scan(&id); err != nil {
+			return nil, err
+		}
+		items = append(items, id)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
