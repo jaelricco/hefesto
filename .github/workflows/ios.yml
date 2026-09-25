@@ -57,5 +57,9 @@ jobs:
             -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath .derived \
             -skipPackagePluginValidation -skipMacroValidation \
-            CODE_SIGNING_ALLOWED=NO 2>&1 | tee build.log | grep -E 'error:|warning:|\*\* BUILD' || true
-          grep -q '\*\* BUILD SUCCEEDED \*\*' build.log
+            CODE_SIGNING_ALLOWED=NO 2>&1 | tee build.log | grep -E 'error:|\*\* BUILD' || true
+          if ! grep -q '\*\* BUILD SUCCEEDED \*\*' build.log; then
+            # Linker errors name their symbols on the lines around "error:".
+            grep -B2 -A12 -E 'error:|Undefined symbols' build.log | tail -150
+            exit 1
+          fi

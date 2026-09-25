@@ -22,6 +22,7 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-openapi-runtime", from: "1.12.0"),
         .package(url: "https://github.com/apple/swift-openapi-urlsession", from: "1.3.0"),
         .package(url: "https://github.com/groue/GRDB.swift", from: "7.11.0"),
+        .package(url: "https://github.com/apple/swift-http-types", from: "1.3.0"),
     ],
     targets: [
         // Generated from api/openapi.yaml (symlinked). DTOs are never written by hand.
@@ -39,11 +40,15 @@ let package = Package(
         ),
         .target(
             name: "HefestoAuth",
-            dependencies: ["HefestoAPI"]
+            dependencies: [
+                "HefestoAPI",
+                .product(name: "OpenAPIRuntime", package: "swift-openapi-runtime"),
+                .product(name: "HTTPTypes", package: "swift-http-types"),
+            ]
         ),
         .target(
             name: "HefestoSync",
-            dependencies: ["HefestoAPI", "HefestoStore"]
+            dependencies: ["HefestoAPI", "HefestoStore", .product(name: "GRDB", package: "GRDB.swift")]
         ),
         .target(
             name: "HefestoLogger",
@@ -53,8 +58,22 @@ let package = Package(
             name: "HefestoStoreTests",
             dependencies: ["HefestoStore", .product(name: "GRDB", package: "GRDB.swift")]
         ),
-        .testTarget(name: "HefestoAuthTests", dependencies: ["HefestoAuth", "HefestoAPI"]),
-        .testTarget(name: "HefestoSyncTests", dependencies: ["HefestoSync", "HefestoStore", "HefestoAPI"]),
+        .testTarget(
+            name: "HefestoAuthTests",
+            dependencies: [
+                "HefestoAuth", "HefestoAPI",
+                .product(name: "OpenAPIRuntime", package: "swift-openapi-runtime"),
+                .product(name: "HTTPTypes", package: "swift-http-types"),
+            ]
+        ),
+        .testTarget(
+            name: "HefestoSyncTests",
+            dependencies: [
+                "HefestoSync", "HefestoStore", "HefestoAPI",
+                .product(name: "OpenAPIRuntime", package: "swift-openapi-runtime"),
+                .product(name: "HTTPTypes", package: "swift-http-types"),
+            ]
+        ),
         .testTarget(name: "HefestoLoggerTests", dependencies: ["HefestoLogger", "HefestoStore"]),
     ]
 )

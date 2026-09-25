@@ -132,6 +132,13 @@ extension AppDatabase {
         }
     }
 
+    /// The content version of the cached exercise catalogue, if any.
+    public func contentVersion() throws -> String? {
+        try reader.read { db in
+            try String.fetchOne(db, sql: "SELECT contentVersion FROM syncState WHERE id = 1")
+        }
+    }
+
     /// Problems the server reported on rejected ops, newest first.
     public func syncProblems() throws -> [(entity: String, rowId: String, type: String, detail: String)] {
         try reader.read { db in

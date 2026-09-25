@@ -65,9 +65,13 @@ public struct BlockWithSets: Sendable, Hashable, Identifiable {
     public var block: Block
     public var sets: [SetWithElements]
     public var id: String { block.id }
+
+    public init(block: Block, sets: [SetWithElements]) { self.block = block; self.sets = sets }
 }
 
 public struct SessionTree: Sendable, Hashable {
     public var session: Session
     public var blocks: [BlockWithSets]
+
+    public init(session: Session, blocks: [BlockWithSets]) { self.session = session; self.blocks = blocks }
 }
