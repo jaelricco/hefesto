@@ -32,7 +32,7 @@ ios/
 ```
 
 - **The app target holds only views.** Everything else is in the package's
-  targets, which build and test with `swift test` on macOS and on Linux. The
+  targets, which build and test with `swift test`, without a simulator. The
   views are thin enough that CI building them on a simulator is enough.
 - **XcodeGen** generates the project from `project.yml`. It is a build tool,
   not an architecture framework. A generated project cannot have merge
@@ -44,11 +44,22 @@ ios/
 `api/openapi.yaml`. The file is symlinked, not copied, so it cannot drift. DTOs
 are never written by hand. A request middleware adds the access token.
 
+- **The spec has to be expressible.** The generator drops a property written
+  as `oneOf: [$ref, {type: "null"}]` without failing the build. It dropped
+  `assistance` from set elements. Nullable objects are therefore nullable at
+  their component (`type: [object, "null"]`) and referenced directly. The JSON
+  Schema is the same, so the server validates as before.
+- **Timestamps** are decoded with or without fractional seconds, because Go
+  omits them on a whole second. They are sent with milliseconds.
+- **Enums** are stored locally as their raw strings, and mapped through
+  `init(rawValue:)`. A value the spec does not know fails loudly.
+
 ### The UI reads only the local database
 
 GRDB holds the athlete's sessions, blocks, sets, bodyweight and the exercise
-catalogue. Views observe the database through GRDB's value observation, and
-never wait for the network.
+catalogue. Views observe the database through streams that `HefestoStore` builds on
+GRDB's value observation. They never import GRDB, and never wait for the
+network.
 
 - **Tables mirror the sync feed** (ADR 0009). A set's elements are rows of
   their own. Assistance is a column group on its element, because it is
@@ -78,7 +89,9 @@ comes back.
 
 - **Push.** Each result settles its op:
   - `applied` removes it;
-  - `superseded` removes it, and the next pull overwrites the local copy;
+  - `superseded` removes it and fetches the server's copy of the session
+    (`GET /v1/sessions/{id}`; a 404 deletes it locally). Waiting for the next
+    pull is not enough: the feed may already be past that row;
   - `rejected` removes it and records the problem for the UI.
 - **Completion.** An applied `complete` op carries the unlocks, which the logger
   shows as the celebration.
@@ -91,7 +104,7 @@ comes back.
 `AuthService` signs in with email and password, or with Sign in with Apple.
 
 - **Token storage.** Tokens live in the Keychain on Apple platforms, behind a
-  protocol so tests and Linux use memory.
+  protocol so tests use memory.
 - **Refresh.** The access token is refreshed once, shortly before it expires or
   after a 401, and concurrent requests wait for the same refresh.
 
@@ -112,8 +125,9 @@ outbox.
 
 ## Consequences
 
-- The logic that matters (outbox, sync, logger, timer) is tested without a
-  simulator, on Linux in this environment and on macOS in CI.
+- The logic that matters (outbox, sync, auth, logger, timer) is tested with
+  `swift test`, without a simulator. CI runs it on a self-hosted Mac runner,
+  and builds the app for the simulator there.
 - Adding a synced table means a GRDB migration, a record, a pull mapping and
   an op mapping. That is deliberate friction that mirrors the server.
 - The Live Activity for the rest timer needs a widget extension target. It

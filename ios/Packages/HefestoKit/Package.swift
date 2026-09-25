@@ -1,7 +1,7 @@
 // swift-tools-version:6.1
 //
 // Everything in the iOS app that is not a view. Each target builds and tests
-// with `swift test` on macOS and Linux; the app target in ../../Hefesto holds
+// with `swift test`, without a simulator; the app target in ../../Hefesto holds
 // only SwiftUI views. See docs/adr/0010-ios-architecture.md.
 
 import PackageDescription

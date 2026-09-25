@@ -27,6 +27,10 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Keep ios/.derived and the package's .build between runs (both are
+          # git-ignored): a cold build resolves and compiles every dependency.
+          clean: false
 
       - name: toolchain
         run: |

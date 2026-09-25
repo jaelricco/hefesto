@@ -13,10 +13,10 @@ The logger feeds the map. That coupling is the product.
 
 ## Status
 
-**Phase 4 — sync and media**, awaiting review. The delta sync feed and
-batched offline push (idempotent, conflict rules in ADR 0009) and presigned
-image uploads are live, on top of the logger, the unlock engine and the skill
-map.
+**Phase 5 — the iOS app**, awaiting review. The iOS app has sign-in, an
+offline-first local database with a sync engine, and the session logger
+(combos, repeat last set, rest timer). It runs on the API: logging, the unlock
+engine, sync and media.
 Current state and open questions: [`STATUS.md`](STATUS.md).
 
 See [`docs/PROJECT_BRIEF.md`](docs/PROJECT_BRIEF.md) for the full plan,
@@ -38,6 +38,16 @@ make up                  # postgres, api, minio, mailpit, pgweb — and seed
 | MinIO console | http://localhost:9001 |
 
 `make help` lists every target.
+
+### The iOS app
+
+```sh
+brew install xcodegen
+cd ios && xcodegen generate && open Hefesto.xcodeproj
+cd ios/Packages/HefestoKit && swift test   # the logic, no simulator needed
+```
+
+A Debug build talks to `http://localhost:8080`, which is the API from `make up`.
 
 ## Deploying
 
@@ -67,7 +77,7 @@ internal/
 db/           goose migrations and the .sql files sqlc consumes
 content/      authored skills, exercises, bands and injury notes (YAML + JSON Schema)
 api/          openapi.yaml — the source of truth for the generated Swift client
-ios/          Xcode project (Phase 5)
+ios/          the app: SwiftUI views over the HefestoKit package (XcodeGen, ADR 0010)
 docs/adr/     one ADR per significant decision
 docker/       Dockerfiles and the production Caddyfile
 scripts/      server bootstrap, deploy with rollback, backup sidecar
