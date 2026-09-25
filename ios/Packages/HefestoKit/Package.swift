@@ -49,7 +49,10 @@ let package = Package(
             name: "HefestoLogger",
             dependencies: ["HefestoStore"]
         ),
-        .testTarget(name: "HefestoStoreTests", dependencies: ["HefestoStore"]),
+        .testTarget(
+            name: "HefestoStoreTests",
+            dependencies: ["HefestoStore", .product(name: "GRDB", package: "GRDB.swift")]
+        ),
         .testTarget(name: "HefestoAuthTests", dependencies: ["HefestoAuth", "HefestoAPI"]),
         .testTarget(name: "HefestoSyncTests", dependencies: ["HefestoSync", "HefestoStore", "HefestoAPI"]),
         .testTarget(name: "HefestoLoggerTests", dependencies: ["HefestoLogger", "HefestoStore"]),
