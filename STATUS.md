@@ -85,9 +85,10 @@ CI runs on a self-hosted Mac runner (`.github/workflows/ios.yml`). It runs
 whatever Xcode the machine has selected and changes nothing outside its
 workspace.
 
-- `swift test` passes on the runner: the store, logger, auth and sync suites.
-- The app's first simulator build is in progress on the runner; this section
-  is updated with its result.
+- On the runner (run 7), `swift test` passes: 36 tests in 10 suites, covering
+  the outbox, pull, sets, UUIDv7, the logger, the rest timer, auth, the auth
+  middleware, push and pull. The app builds for the iOS Simulator with
+  `** BUILD SUCCEEDED **`, under Swift 6 strict concurrency.
 - The Go unit tests, `golangci-lint` and the HTTP integration tests (real
   PostgreSQL and MinIO) are green on the changed spec.
 
