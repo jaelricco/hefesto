@@ -48,7 +48,9 @@ are never written by hand. A request middleware adds the access token.
   as `oneOf: [$ref, {type: "null"}]` without failing the build. It dropped
   `assistance` from set elements. Nullable objects are therefore nullable at
   their component (`type: [object, "null"]`) and referenced directly. The JSON
-  Schema is the same, so the server validates as before.
+  Schema is the same, so the server validates as before. oasdiff reports the
+  move as breaking because it compares shapes, not what they accept;
+  `api/oasdiff-ignore.txt` records those findings and why they are not.
 - **Timestamps** are decoded with or without fractional seconds, because Go
   omits them on a whole second. They are sent with milliseconds.
 - **Enums** are stored locally as their raw strings, and mapped through
