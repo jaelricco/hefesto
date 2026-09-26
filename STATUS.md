@@ -12,118 +12,116 @@ that stands.
 - **Phase 3** — unlock engine, XP and streaks (ADR 0008). Merged in #6. Its open
   questions (prerequisite gating, self-attest XP, daily vs weekly streaks,
   occurrences per set) still stand.
+- **Phase 4** — sync, idempotency and media (ADR 0009). Merged in #7. Its open
+  questions (the set conflict rule, per-op results, offline bands, media
+  retention) still stand.
 
-## Current phase: 4 — sync, idempotency and media (complete, awaiting review)
+## Current phase: 5 — the iOS app's foundation and the logger (complete, awaiting review)
 
-Built (`api/openapi.yaml` v0.4.0; the rules are in ADR 0009):
+The app lives in `ios/` (ADR 0010). There is a thin SwiftUI target, generated
+by XcodeGen from `project.yml`, over a local package, `HefestoKit`, which holds
+everything that is not a view:
 
-- **Delta pull**, `GET /v1/sync?cursor=`.
-  - Every change after the cursor, deletions included. It pages over the
-    per-user `server_seq` from one consistent snapshot, so no change is skipped.
-  - A set comes whole, with its elements, their assistance and their media.
-  - A page also carries any parent the client cannot have yet, so each page
-    applies on its own.
-  - The device's acknowledged cursor is recorded.
-- **Batched push**, `POST /v1/sync`.
-  - Up to 200 ops on sessions, blocks, sets and the bodyweight log: `put`,
-    `delete`, and `complete` for a session.
-  - Every op runs through the same function as its REST endpoint (now shared),
-    so a set is still written whole.
-  - Each op gets its own result:
-    - `applied`;
-    - `superseded`: the server's copy wins;
-    - `rejected`: with its problem located in the op.
-  - One bad op never blocks the queue.
-  - An offline `complete` returns the unlock celebration.
-- **Conflicts.** The last write received wins, except for sets. There the
-  athlete's clock decides: an older set write is `superseded` over sync and
-  `409 stale-write` over REST. Deletions and completion are final.
-- **Idempotency.** `Idempotency-Key` is required on push and kept for 24 hours.
-  - The same request is replayed from the stored response.
-  - The same key with another body is a 422.
-  - A concurrent duplicate is a 409.
-  - A failed request gives its key back.
-- **Media**, through presigned URLs to a private bucket (MinIO in dev, Hetzner
-  Object Storage in prod):
-  - `POST /v1/media/uploads` reserves an asset and signs a `PUT` bound to its
-    type and size.
-  - `POST /v1/media/{id}/complete` checks what arrived.
-  - `GET /v1/media/{id}` signs a download; `DELETE` removes it.
-  - Images only (ADR 0002 §4).
-  - Attached to set elements with `media_ids` on the one set path.
-- **Housekeeping**, hourly:
-  - deleting an account also removes its objects;
-  - uploads never completed expire after 24 hours;
-  - expired idempotency keys are purged.
-- **Tests.**
-  - The S3 client runs against real storage (MinIO via testcontainers in CI).
-  - 10 new HTTP integration tests cover:
-    - paging and tombstones in the feed;
-    - parents brought forward;
-    - an offline session pushed whole and completed, with its replay and key
-      reuse;
-    - stale set writes over sync and REST;
-    - writes to tombstones;
-    - per-op rejections;
-    - bodyweight via sync;
-    - the media upload, attach, sync and delete flow;
-    - a mismatched upload;
-    - media without storage;
-    - the reaper removing objects.
-  - Deliberately breaking three behaviours showed the tests catch each:
-    - pulling parents forward;
-    - the stale-set rule;
-    - syncing a detachment.
+- **HefestoAPI**
+  - The client is generated from `api/openapi.yaml` at build time; no DTO is
+    written by hand.
+  - Timestamps are read with or without fractional seconds, as Go writes them.
+- **HefestoStore**
+  - GRDB tables mirror the sync feed. Every local write queues its outbox op
+    in the same transaction.
+  - A newer put replaces a queued one in place, so parents stay ahead of
+    children.
+  - A batch freezes its payloads under one `Idempotency-Key` until it is
+    settled.
+  - Pull pages skip rows that still have a queued op, and the cursor never
+    moves back.
+  - Views observe streams from the store and never import GRDB.
+- **HefestoAuth**
+  - Email and password, or Sign in with Apple; tokens are kept in the
+    Keychain.
+  - The access token is refreshed once, before it expires or after a 401.
+    Concurrent callers share the refresh.
+  - A middleware adds the token and retries a refused request once.
+- **HefestoSync**
+  - Push, then pull.
+  - A retry after a lost response resends the same bytes under the same key.
+  - `superseded` fetches the server's copy of the session; `rejected` is kept
+    as a problem.
+  - An offline completion reports its unlocks.
+  - The exercise catalogue is refreshed by ETag.
+- **HefestoLogger**
+  - `LoggerModel` is the only way a view changes a session.
+  - A plain set is one element and a combo is several, on the same set path.
+  - Repeat last set takes one tap.
+  - The rest timer is computed from the wall clock, so it is right after the
+    app was backgrounded. The actual rest is recorded on the previous set.
+
+Screens:
+- sign in and register, including Sign in with Apple;
+- **Today**: start a session, log a planned rest day, see the sessions so far
+  and a count of changes waiting to sync;
+- **the logger**:
+  - dark, high contrast, 56 pt targets;
+  - blocks and sets;
+  - a set composer where adding an exercise makes a combo;
+  - repeat;
+  - a rest timer with haptics and a local notification;
+  - finish, with an optional perceived effort;
+- **the unlock celebration** when the completion syncs.
+
+Strings are in a catalog, in English and German. The app syncs on launch, on
+foregrounding, after completing a session, and when the network returns.
+
+One spec change came out of this phase. The generator silently dropped
+`assistance` (and a skill's `map`), because they were written as
+`oneOf: [$ref, null]`. The nullability now sits on the component. The JSON
+Schema is the same, so the server's validation and responses are unchanged,
+and the Go unit and HTTP integration suites are green on it.
 
 ### Verification
 
-Run in the development container against PostgreSQL 16:
-- `golangci-lint` is clean.
-- `go test -race -short ./...` and `go test -race -tags integration ./...` are
-  green.
-- `sqlc` output is current.
-- `redocly lint` is clean apart from the four warnings from Phase 0.
-- `oasdiff` reports no breaking change against `main`.
+CI runs on a self-hosted Mac runner (`.github/workflows/ios.yml`). It runs
+`swift test` on HefestoKit and builds the app for the iOS Simulator; it uses
+whatever Xcode the machine has selected and changes nothing outside its
+workspace.
 
-MinIO no longer publishes container images: `minio/minio` is gone from Docker
-Hub, so the first CI run could not start it. The tests now run under
-`scripts/with-minio.sh`, which builds a pinned commit of MinIO's official
-source with the Go toolchain and starts it beside them. `make test-integration`
-and CI both use it. The suite passes against that real MinIO here, including
-the checks that a presigned upload refuses another content type or size.
+- On the runner (run 7), `swift test` passes: 36 tests in 10 suites, covering
+  the outbox, pull, sets, UUIDv7, the logger, the rest timer, auth, the auth
+  middleware, push and pull. The app builds for the iOS Simulator with
+  `** BUILD SUCCEEDED **`, under Swift 6 strict concurrency.
+- The Go unit tests, `golangci-lint` and the HTTP integration tests (real
+  PostgreSQL and MinIO) are green on the changed spec.
 
-The same missing images broke `make up`: `docker-compose.yml` from Phase 0
-named `minio/minio` and `minio/mc`. Compose now builds both from the same
-pinned official source (`docker/Dockerfile.minio`), and CI builds that image on
-every run. The container's startup, healthcheck and bucket setup were run here
-with binaries built from the same commits. The image itself was built only in
-CI, because this container has no Docker daemon.
+This container has no Swift toolchain (`download.swift.org` is not reachable),
+so all Swift was compiled and tested on the runner.
 
 ### Deliberately not in this phase
 
-- **Templates** in sync: there is no templates API yet.
-- **User bands** in sync: bands have no sync columns. They are created online
-  and refreshed with `GET /v1/bands`. Adding them is an expand migration when
-  the app needs offline band creation.
-- **Video**: the schema and endpoints are ready, but only images are accepted.
-- **Upload checksums**: the size and type are signed and checked; content
-  hashes are not.
+- **History, the Skill Map and Skill detail**: Phase 6 in the brief, as is the
+  full unlock celebration. This phase shows a plain sheet listing what
+  unlocked. The brief places **Profile** in no phase yet.
+- **The Live Activity** for the rest timer. It needs a widget extension; until
+  it exists, the local notification carries the timer.
+- **Band assistance in the logger.** A band names one of the athlete's bands,
+  and there is no bands screen yet. The other kinds of assistance are there.
+- **Editing a logged set's values in place.** Sets can be deleted and logged
+  again; the model already supports editing (`editSet`).
+- **Media attachments** from the app.
 
 ### Open questions for review
 
-1. **The set conflict rule.** I read "the client copy wins for set_elements"
-   as "the athlete's clock decides between two copies of a set". Is that the
-   intent? The alternative is plain last-received-wins, which lets a phone
-   that was offline overwrite a later correction.
-2. **Per-op results rather than all-or-nothing.** A rejected op is dropped by
-   the client. Is it acceptable that invalid data never reaches the server,
-   given it is only possible through a client bug?
-3. **Offline band creation.** Should bands get sync columns now, or wait for
-   the app to need them?
-4. **Media retention.** Should an asset whose element is deleted also be
-   deleted? Today it stays until the athlete deletes it or the account goes.
+1. **Rest-day logging.** "Log a rest day" creates and completes a rest-day
+   session at once, so it counts for the streak. Is that the planned-rest
+   mechanic you want, or should rest days come only from a plan?
+2. **Bodyweight time zone.** The feed does not carry a
+   bodyweight entry's time zone. An entry edited on a device other than the
+   one that created it takes that device's zone. Should `SyncBodyweight` carry
+   `timezone`? That would be an additive spec change.
+3. **Signing out.** Signing out keeps the local database, so the next account
+   on the device would see it. Should signing out wipe it? It would wipe with
+   a warning when changes are still unsynced.
 
-## Next: Phase 5
+## Next: Phase 6
 
-iOS: project setup, generated client, GRDB store, sync engine, auth, and the
-session logger including combos and the rest timer.
+iOS: the skill map constellation, skill detail, the unlock celebration, and
+history and stats.

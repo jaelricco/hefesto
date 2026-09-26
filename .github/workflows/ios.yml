@@ -1,0 +1,69 @@
+name: ios
+
+# The iOS app (ADR 0010), built and tested on the self-hosted Mac runner.
+# Runs only when the app, the API spec it is generated from, or this file
+# changes. The runner is the owner's machine, so the job changes nothing
+# outside its workspace: it uses whatever Xcode `xcode-select` points to, and
+# keeps build products under ios/.derived and the package's .build.
+on:
+  pull_request:
+    paths: ["ios/**", "api/openapi.yaml", ".github/workflows/ios.yml"]
+  push:
+    branches: [main, "claude/**"]
+    paths: ["ios/**", "api/openapi.yaml", ".github/workflows/ios.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ios:
+    name: HefestoKit tests and app build (self-hosted Mac)
+    runs-on: self-hosted
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Keep ios/.derived and the package's .build between runs (both are
+          # git-ignored): a cold build resolves and compiles every dependency.
+          clean: false
+
+      - name: toolchain
+        run: |
+          xcode-select -p
+          xcodebuild -version
+          swift --version
+          xcrun simctl list runtimes available | grep -i ios || echo "no iOS simulator runtime installed"
+          if ! command -v xcodegen >/dev/null; then
+            echo "installing XcodeGen with Homebrew"
+            brew install xcodegen
+          fi
+          xcodegen --version
+
+      - name: swift test (HefestoKit)
+        working-directory: ios/Packages/HefestoKit
+        run: swift test --parallel
+
+      - name: generate the project
+        working-directory: ios
+        run: xcodegen generate
+
+      - name: build the app for the simulator
+        working-directory: ios
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -project Hefesto.xcodeproj -scheme Hefesto \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath .derived \
+            -skipPackagePluginValidation -skipMacroValidation \
+            CODE_SIGNING_ALLOWED=NO 2>&1 | tee build.log | grep -E 'error:|\*\* BUILD' || true
+          if ! grep -q '\*\* BUILD SUCCEEDED \*\*' build.log; then
+            # Linker errors name their symbols on the lines around "error:".
+            grep -B2 -A12 -E 'error:|Undefined symbols' build.log | tail -150
+            exit 1
+          fi

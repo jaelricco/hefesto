@@ -1,0 +1,17 @@
+# Findings oasdiff reports as breaking that are not, one per line as
+# `METHOD PATH message` (see `oasdiff breaking --err-ignore`). Each entry
+# says why; delete entries once the change they cover is on main.
+#
+# Nullable objects moved from `oneOf: [$ref, {type: "null"}]` at the use site
+# to `type: [object, "null"]` on the component, because swift-openapi-generator
+# drops a property with a null branch (ADR 0010). The accepted documents are
+# identical: `required` applies only to objects, so null still validates, and
+# each component is referenced only where it was already nullable.
+PUT /v1/sessions/{sessionId}/sets/{setId} added the new required request property `elements/items/assistance/id`
+PUT /v1/sessions/{sessionId}/sets/{setId} added the new required request property `elements/items/assistance/type`
+PUT /v1/sessions/{sessionId}/sets/{setId} removed `#/components/schemas/AssistanceWrite, subschema #2` from the `elements/items/assistance` request property `oneOf` list
+PUT /v1/sessions/{sessionId}/sets/{setId} the `elements/items/assistance` request property `type` changed from `any` to `object, null`
+POST /v1/sync added the new required request property `ops/items/data/anyOf[#/components/schemas/SetEntryWrite]/elements/items/assistance/id`
+POST /v1/sync added the new required request property `ops/items/data/anyOf[#/components/schemas/SetEntryWrite]/elements/items/assistance/type`
+POST /v1/sync removed `#/components/schemas/AssistanceWrite, subschema #2` from the `ops/items/data/anyOf[#/components/schemas/SetEntryWrite]/elements/items/assistance` request property `oneOf` list
+POST /v1/sync the `ops/items/data/anyOf[#/components/schemas/SetEntryWrite]/elements/items/assistance` request property `type` changed from `any` to `object, null`
