@@ -22,8 +22,8 @@ public struct SyncReport: Sendable {
 /// One sync at a time: a call during a sync waits for it and shares its
 /// report.
 public actor SyncEngine {
-    private let client: Client
-    private let db: AppDatabase
+    let client: Client
+    let db: AppDatabase
     private let newKey: @Sendable () -> String
     private var running: Task<SyncReport, any Error>?
 
@@ -176,7 +176,7 @@ public actor SyncEngine {
         }
     }
 
-    private static func refused(_ status: Int, _ p: Components.Schemas.Problem?) -> SyncError {
+    static func refused(_ status: Int, _ p: Components.Schemas.Problem?) -> SyncError {
         .refused(status: status, type: p?._type ?? "")
     }
 }
