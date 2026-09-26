@@ -13,10 +13,10 @@ The logger feeds the map. That coupling is the product.
 
 ## Status
 
-**Phase 5 — the iOS app**, awaiting review. The iOS app has sign-in, an
-offline-first local database with a sync engine, and the session logger
-(combos, repeat last set, rest timer). It runs on the API: logging, the unlock
-engine, sync and media.
+**Phase 6 — the skill map**, awaiting review. The iOS app adds the skill map
+constellation, skill detail with injury notes, the unlock celebration, and
+history and stats. These sit on top of the offline-first logger and sync from
+Phase 5, and on the API's logging, unlock engine, sync and media.
 Current state and open questions: [`STATUS.md`](STATUS.md).
 
 See [`docs/PROJECT_BRIEF.md`](docs/PROJECT_BRIEF.md) for the full plan,
