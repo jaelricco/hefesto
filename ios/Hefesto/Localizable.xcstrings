@@ -11,6 +11,56 @@
         }
       }
     },
+    "%@ m": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ m"
+          }
+        }
+      }
+    },
+    "%@ of %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ %2$@"
+          }
+        }
+      }
+    },
+    "%@ reps": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ Wdh."
+          }
+        }
+      }
+    },
+    "%@ s": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ s"
+          }
+        }
+      }
+    },
+    "%lld XP": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld XP"
+          }
+        }
+      }
+    },
     "%lld m": {
       "localizations": {
         "de": {
@@ -57,6 +107,16 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "%lld of 10": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld von 10"
           }
         }
       }
@@ -111,12 +171,152 @@
         }
       }
     },
+    "%lld sessions": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld session"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld sessions"
+                }
+              }
+            }
+          }
+        },
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld Training"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld Trainings"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld sets": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld set"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld sets"
+                }
+              }
+            }
+          }
+        },
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld Satz"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld Sätze"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld times": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld-mal"
+          }
+        }
+      }
+    },
+    "%lld times within %lld days": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld-mal innert %2$lld Tagen"
+          }
+        }
+      }
+    },
     "%lld to sync": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "%lld zu synchronisieren"
+          }
+        }
+      }
+    },
+    "%lld-day streak": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld-day streak"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld-day streak"
+                }
+              }
+            }
+          }
+        },
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld Tag in Folge"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld Tage in Folge"
+                }
+              }
+            }
           }
         }
       }
@@ -281,6 +481,36 @@
         }
       }
     },
+    "Best: %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bestwert: %@"
+          }
+        }
+      }
+    },
+    "Bests": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bestwerte"
+          }
+        }
+      }
+    },
+    "Bests count full, unassisted repetitions.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bestwerte zählen nur volle Wiederholungen ohne Unterstützung."
+          }
+        }
+      }
+    },
     "Block %lld": {
       "localizations": {
         "de": {
@@ -331,12 +561,32 @@
         }
       }
     },
+    "Common faults": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Häufige Fehler"
+          }
+        }
+      }
+    },
     "Completed": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Abgeschlossen"
+          }
+        }
+      }
+    },
+    "Continue this session": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Training fortsetzen"
           }
         }
       }
@@ -381,6 +631,26 @@
         }
       }
     },
+    "Date": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datum"
+          }
+        }
+      }
+    },
+    "Days": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tage"
+          }
+        }
+      }
+    },
     "Delete": {
       "localizations": {
         "de": {
@@ -391,12 +661,52 @@
         }
       }
     },
+    "Difficulty %lld of 10": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schwierigkeit %lld von 10"
+          }
+        }
+      }
+    },
     "Done": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Fertig"
+          }
+        }
+      }
+    },
+    "Duration": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dauer"
+          }
+        }
+      }
+    },
+    "Early signs": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Frühe Anzeichen"
+          }
+        }
+      }
+    },
+    "Effort": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anstrengung"
           }
         }
       }
@@ -431,12 +741,42 @@
         }
       }
     },
+    "Every level unlocked": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle Stufen freigeschaltet"
+          }
+        }
+      }
+    },
     "Exercise": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Übung"
+          }
+        }
+      }
+    },
+    "Exercises": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Übungen"
+          }
+        }
+      }
+    },
+    "Exercises you log appear here.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Übungen, die du einträgst, erscheinen hier."
           }
         }
       }
@@ -461,12 +801,32 @@
         }
       }
     },
+    "Fit": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einpassen"
+          }
+        }
+      }
+    },
     "Foot support": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Fussstütze"
+          }
+        }
+      }
+    },
+    "For levels you reached before Hefesto, or that the log cannot show. It is marked as self-attested and earns no XP.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Für Stufen, die du vor Hefesto erreicht hast oder die das Log nicht zeigen kann. Sie wird als selbst bestätigt markiert und bringt keine XP."
           }
         }
       }
@@ -501,6 +861,16 @@
         }
       }
     },
+    "History": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verlauf"
+          }
+        }
+      }
+    },
     "How hard did it feel?": {
       "localizations": {
         "de": {
@@ -517,6 +887,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ich habe schon ein Konto"
+          }
+        }
+      }
+    },
+    "I can already do this": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das kann ich schon"
+          }
+        }
+      }
+    },
+    "I can do %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ich kann %@"
           }
         }
       }
@@ -541,6 +931,36 @@
         }
       }
     },
+    "Injury awareness": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verletzungen vorbeugen"
+          }
+        }
+      }
+    },
+    "Levels": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stufen"
+          }
+        }
+      }
+    },
+    "Locked": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gesperrt"
+          }
+        }
+      }
+    },
     "Log a rest day": {
       "localizations": {
         "de": {
@@ -561,12 +981,102 @@
         }
       }
     },
+    "Longest distance": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Längste Distanz"
+          }
+        }
+      }
+    },
+    "Longest distance per day": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Längste Distanz pro Tag"
+          }
+        }
+      }
+    },
+    "Longest hold": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Längstes Halten"
+          }
+        }
+      }
+    },
+    "Longest hold per day": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Längstes Halten pro Tag"
+          }
+        }
+      }
+    },
     "Machine": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Maschine"
+          }
+        }
+      }
+    },
+    "Mark as achieved?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Als erreicht markieren?"
+          }
+        }
+      }
+    },
+    "Milestone": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Meilenstein"
+          }
+        }
+      }
+    },
+    "More than %@ of %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mehr als %1$@ %2$@"
+          }
+        }
+      }
+    },
+    "Most added load": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Meistes Zusatzgewicht"
+          }
+        }
+      }
+    },
+    "Most reps": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Meiste Wiederholungen"
           }
         }
       }
@@ -591,6 +1101,16 @@
         }
       }
     },
+    "Next: %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nächste: %@"
+          }
+        }
+      }
+    },
     "No exercises yet": {
       "localizations": {
         "de": {
@@ -607,6 +1127,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Keine Treffer"
+          }
+        }
+      }
+    },
+    "No sets logged yet.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noch keine Sätze eingetragen."
           }
         }
       }
@@ -637,6 +1167,36 @@
           "stringUnit": {
             "state": "translated",
             "value": "OK"
+          }
+        }
+      }
+    },
+    "One of:": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eines davon:"
+          }
+        }
+      }
+    },
+    "Open": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Offen"
+          }
+        }
+      }
+    },
+    "Open to work on": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bereit zum Üben"
           }
         }
       }
@@ -681,6 +1241,16 @@
         }
       }
     },
+    "Prehab": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prehab"
+          }
+        }
+      }
+    },
     "Ready for the next set when you are.": {
       "localizations": {
         "de": {
@@ -707,6 +1277,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Diesen Satz wiederholen"
+          }
+        }
+      }
+    },
+    "Reps per day": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wiederholungen pro Tag"
           }
         }
       }
@@ -761,12 +1341,52 @@
         }
       }
     },
+    "Risk factors": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Risikofaktoren"
+          }
+        }
+      }
+    },
     "Save": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Sichern"
+          }
+        }
+      }
+    },
+    "See it on the map": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auf der Karte ansehen"
+          }
+        }
+      }
+    },
+    "Self-attested on %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Selbst bestätigt am %@"
+          }
+        }
+      }
+    },
+    "Self-attested: the log cannot show this one.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Selbst bestätigt: Das Log kann diese Stufe nicht zeigen."
           }
         }
       }
@@ -821,6 +1441,16 @@
         }
       }
     },
+    "Show": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anzeigen"
+          }
+        }
+      }
+    },
     "Sign in": {
       "localizations": {
         "de": {
@@ -847,6 +1477,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Abmelden"
+          }
+        }
+      }
+    },
+    "Skills": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skills"
+          }
+        }
+      }
+    },
+    "Skills appear after the first sync.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skills erscheinen nach der ersten Synchronisierung."
           }
         }
       }
@@ -911,12 +1561,42 @@
         }
       }
     },
+    "The map is on its way": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Karte ist unterwegs"
+          }
+        }
+      }
+    },
     "This account cannot sign in.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Dieses Konto kann sich nicht anmelden."
+          }
+        }
+      }
+    },
+    "This session was deleted.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dieses Training wurde gelöscht."
+          }
+        }
+      }
+    },
+    "This skill's content is still being researched.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Inhalte dieses Skills werden noch recherchiert."
           }
         }
       }
@@ -961,6 +1641,16 @@
         }
       }
     },
+    "Unlock the levels before this one first.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schalte zuerst die Stufen davor frei."
+          }
+        }
+      }
+    },
     "Unlocked": {
       "localizations": {
         "de": {
@@ -971,12 +1661,62 @@
         }
       }
     },
+    "Unlocked on %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Freigeschaltet am %@"
+          }
+        }
+      }
+    },
+    "Week %lld": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Woche %lld"
+          }
+        }
+      }
+    },
     "Your sessions appear here.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Deine Trainings erscheinen hier."
+          }
+        }
+      }
+    },
+    "at least %@ kg added": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "mindestens %@ kg Zusatzgewicht"
+          }
+        }
+      }
+    },
+    "at most %@ kg added": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "höchstens %@ kg Zusatzgewicht"
+          }
+        }
+      }
+    },
+    "form %lld+": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ausführung %lld+"
           }
         }
       }
@@ -997,6 +1737,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "bis zum Versagen"
+          }
+        }
+      }
+    },
+    "unassisted": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ohne Unterstützung"
           }
         }
       }

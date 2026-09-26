@@ -42,7 +42,17 @@ struct RootView: View {
         @Bindable var model = model
         Group {
             if model.isSignedIn {
-                TodayView()
+                TabView(selection: $model.tab) {
+                    TodayView()
+                        .tabItem { Label("Today", systemImage: "figure.strengthtraining.functional") }
+                        .tag(AppTab.today)
+                    HistoryView()
+                        .tabItem { Label("History", systemImage: "calendar") }
+                        .tag(AppTab.history)
+                    SkillMapView()
+                        .tabItem { Label("Skills", systemImage: "sparkles") }
+                        .tag(AppTab.map)
+                }
             } else {
                 SignInView()
             }
