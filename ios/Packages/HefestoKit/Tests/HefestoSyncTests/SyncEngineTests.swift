@@ -320,3 +320,76 @@ let exerciseJSON = #"""
      "load_semantics":"added","is_bodyweight":true,"unilateral":false,"tempo_applicable":true,"equipment":["bar"],
      "summary":"","cues":[],"common_faults":[],"status":"active"}
     """#
+
+@Suite struct SkillMapSyncTests {
+    static let skillMapJSON = #"""
+        {"content_version":"cv1",
+         "skills":[
+          {"id":"s-pull","slug":"pull-up","name":"Pull-up","family":"pull","difficulty_tier":2,"is_milestone":false,
+           "status":"active","aka":["chin-over-bar"],"summary":"","primary_muscles":["lats"],"common_faults":[],
+           "map":{"constellation":"pull_north","x":340,"y":360},
+           "levels":[{"id":"l-5","slug":"strict-5","name":"Five Strict Pull-ups","order":1,"description":"",
+             "est_weeks_from_prev":null,
+             "unlock_criteria":{"all":[{"exercise":"pull-up","measure":"reps","op":">=","value":5,
+               "assistance":"none","occurrences":1,"min_form_quality":3}]},
+             "exercises":[{"exercise_id":"e-pull","slug":"pull-up","role":"primary_test"}]}]},
+          {"id":"s-draft","slug":"draft","name":"Draft","family":"pull","difficulty_tier":1,"is_milestone":false,
+           "status":"draft_placeholder","aka":[],"summary":"","primary_muscles":[],"common_faults":[],
+           "map":null,"levels":[]}],
+         "edges":[],
+         "states":[{"level_id":"l-5","state":"unlocked","best_value":7,"best_unit":"reps",
+           "best_at":"2026-09-20T10:00:00Z","first_achieved_at":"2026-09-20T10:00:00.5Z","verification":"auto",
+           "stale_since":null,"attempts_count":3}]}
+        """#
+    static let progressJSON = #"""
+        {"xp_total":120,"streak":{"current_days":4,"longest_days":9,"freeze_credits":1,"last_counted_date":"2026-09-25"}}
+        """#
+
+    @Test func refreshesTheMapAndProgress() async throws {
+        let db = try AppDatabase.inMemory()
+        let server = ScriptedServer { r in
+            r.operation == "getMySkillMap" ? (200, Self.skillMapJSON) : (200, Self.progressJSON)
+        }
+        try await SyncEngine(client: server.client, db: db).refreshSkillMap()
+
+        let m = try fetch(db) { try AppDatabase.skillMap($0) }
+        let pull = try #require(m.skills.first { $0.skill.slug == "pull-up" })
+        #expect(pull.skill.x == 340 && pull.skill.constellation == "pull_north")
+        #expect(m.skills.first { $0.skill.slug == "draft" }?.skill.x == nil, "a null map point keeps it off the map")
+        #expect(pull.levels.first?.criteria.all.first?.minFormQuality == 3)
+        #expect(pull.levels.first?.exercises.first?.role == "primary_test")
+        #expect(m.states["l-5"]?.state == "unlocked")
+        #expect(m.states["l-5"]?.bestValue == 7)
+        let progress = try #require(try fetch(db) { try AppDatabase.progress($0) })
+        #expect(progress.xpTotal == 120 && progress.currentDays == 4 && progress.freezeCredits == 1)
+    }
+
+    @Test func attestingWithoutPrerequisitesIsExplained() async throws {
+        let db = try AppDatabase.inMemory()
+        let server = ScriptedServer { _ in
+            (409, #"{"type":"https://hefesto.fit/problems/prerequisites","title":"Prerequisites","status":409}"#)
+        }
+        await #expect(throws: AttestError.prerequisitesMissing) {
+            try await SyncEngine(client: server.client, db: db).attest(levelId: UUIDv7.make())
+        }
+        #expect(server.requests("attestSkillLevel").first?.body == Data("{}".utf8))
+    }
+
+    @Test func keepsASkillsInjuryNotesWithTheirDisclaimer() async throws {
+        let db = try AppDatabase.inMemory()
+        let server = ScriptedServer { _ in
+            (200, #"""
+            {"id":"s-pull","slug":"pull-up","name":"Pull-up","family":"pull","difficulty_tier":2,"is_milestone":false,
+             "status":"active","aka":[],"summary":"","primary_muscles":[],"common_faults":[],"map":null,"levels":[],
+             "injuries":[{"region":"elbow","name":"Medial elbow irritation","description":"Overuse.",
+               "risk_factors":["sudden volume jumps"],"early_signs":["ache after sessions"],
+               "prehab_exercises":[{"exercise_id":"e-1","slug":"wrist-curl"}],"disclaimer":"educational_only"}],
+             "injury_disclaimer":{"code":"educational_only","text":"Educational only. Not medical advice."}}
+            """#)
+        }
+        try await SyncEngine(client: server.client, db: db).refreshSkillNotes(slug: "pull-up")
+        let notes = try #require(try fetch(db) { try AppDatabase.skillNotes($0, slug: "pull-up") })
+        #expect(notes.disclaimer == "Educational only. Not medical advice.")
+        #expect(notes.injuries.first?.prehabExerciseSlugs == ["wrist-curl"])
+    }
+}
