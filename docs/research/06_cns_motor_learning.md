@@ -1,106 +1,145 @@
 # 06 — CNS & motorisches Lernen
 
 > Stream E der Phase-2-Recherche. Thema: neuronale Anpassungen an Krafttraining,
-> Spezifität und Transfer, Reihenfolge und Frische in der Einheit, Ermüdung und
-> Lernen, Frequenz und Abstände für Skillarbeit. **Teilweise abgeschlossen:** Das
-> sitzungsweite Budget für Websuchen (200 Aufrufe, geteilt mit den parallelen
-> Streams) war nach 36 Suchen dieses Streams erschöpft, und das Abrufen von
-> Volltexten (WebFetch) war für alle Fachverlage und Datenbanken durch die
-> Egress-Policy gesperrt. Belegt sind deshalb nur die Teilthemen in §2–§5. Die
-> Teilthemen in §6 (Lernstadien, contextual interference, verteilte Übung,
-> Schlaf, zentrale vs. periphere Ermüdung, «CNS-Fatigue», Potenzierung, Greasing
-> the Groove) sind **nicht belegt**. Dort stehen nur markierte Heuristiken und
-> eine Liste für die Nachrecherche. Alle 28 zitierten Quellen wurden über
-> Suchtreffer mit Abstract bzw. Landing-Page-Auszug geprüft (Titel, Autoren,
-> Jahr, DOI/URL); Volltexte konnten nicht geöffnet werden. Zahlen stammen daher
-> aus Abstracts.
+> Stadien motorischen Lernens, Spezifität und Transfer, Übungsplanung
+> (geblockt/zufällig, verteilt/massiert, Frequenz vs. Volumen), Schlaf und
+> Konsolidierung, zentrale und periphere Ermüdung samt Erholungszeitverlauf,
+> kritische Einordnung von «CNS-Fatigue», Aufwärmen und Potenzierung, Greasing
+> the Groove sowie die Folgen für Einheitsaufbau, Frequenz, Pausen und
+> Stoppregeln. **Zwei Läufe:** Der erste Lauf (E-01 bis E-28, §2–§5) war durch
+> ein erschöpftes Suchbudget und gesperrte Volltexte begrenzt; seine Quellen
+> wurden über Suchtreffer mit Abstract bzw. Landing-Page geprüft. Der zweite
+> Lauf (Vervollständigung, E-29 bis E-105, §6–§14) hat alle damals offenen
+> Teilthemen über Europe PMC, PMC-Volltexte, Crossref und die Websites der
+> Coaching-Quellen belegt. Die Prüftiefe je Quelle (Volltext, Abstract,
+> nur bibliografischer Eintrag) steht unter «Quellen». Was weiterhin nicht
+> belegt ist, trägt das Label **Heuristik** bzw. **Praxisheuristik**.
 
 ## Kurzfassung
 
-- **Frühe Kraftzuwächse bei Untrainierten sind gross und an die geübte Aufgabe
-  gebunden:** +32.8 % isometrische Maximalkraft nach 8 Wochen [E-08], +54 % nach
-  4–8 Wochen [E-09], +38.9 % nach 35 Tagen [E-12], rund +40 % nach 12 Wochen
-  [E-20]. Alle Werte stammen aus überwiegend eingelenkigen Laborstudien (Evidenz A/B).
-- **Die Lehrmeinung «früh neuronal, später Hypertrophie» ist nur teilweise
-  gedeckt.** Die klassische Studie sieht Hypertrophie erst nach 3–5 Wochen als
-  dominanten Faktor [E-11]. Hypertrophie ist aber schon nach etwa 20 Tagen
-  messbar [E-12], ein Teil der frühen Querschnittszunahme ist Ödem [E-13], und
-  der ursächliche Beitrag der Hypertrophie zur Kraft ist bis heute umstritten
-  [E-15, E-16] (Evidenz B).
-- **Wo genau sich das Nervensystem anpasst, ist offen** [E-01, E-18]. Einzelne
-  Studien zeigen nach 4 Wochen eine tiefere Rekrutierungsschwelle und eine höhere
-  Entladungsrate der motorischen Einheiten [E-05]. Eine Meta-Analyse findet für
-  die Entladungsrate dagegen keine signifikante Änderung (P = 0.43, I² = 91 %)
-  [E-06].
-- **Kortikale und spinale Befunde:** Die intrakortikale Hemmung nimmt deutlich
-  und konsistent ab [E-03]. Die kortikospinale Erregbarkeit ändert sich nur
-  moderat und uneinheitlich [E-03]; nach einer neueren multivariaten
-  Meta-Analyse sagt sie den Kraftzuwachs trotzdem vorher, ausser bei
-  isometrischem Training [E-04]. V-Welle und H-Reflex steigen [E-07]. Die
-  Messmethoden sind begrenzt [E-01] (Evidenz A/B).
-- **Synchronisation ist als Kraftmechanismus schwach belegt:** Sie blieb trotz
-  +54 % Kraft unverändert [E-09]. In einer Simulation erhöht sie die
-  EMG-Amplitude und macht die Kraft unruhiger [E-10]. Die Koaktivierung der
-  Antagonisten sinkt dagegen früh, um rund 20 % nach einer Woche [E-08].
-- **Cross-Education:** Im untrainierten Arm oder Bein steigt die Kraft gepoolt
-  um 11.9 % [E-19] (Evidenz A), in einer Einzelstudie um 16.2 % [E-08]; eine
-  andere Studie fand keinen Effekt [E-20].
-- **Spezifität ist der robusteste Befund dieses Streams** (Evidenz A/B).
-  Isometrisches Training wirkt vor allem am trainierten Gelenkwinkel (±5°
-  [E-21], robust bestätigt [E-22]) und steigert die isometrische Kraft stärker
-  als dynamisches Training (SMD 0.43) [E-24]. Wer nur den 1RM-Test übte (bis zu
-  5 Maximalversuche pro Einheit), gewann 1RM-Kraft ohne messbaren Unterschied
-  zu 4 Sätzen bis zum Versagen [E-25].
+- **Frühe Kraftzuwächse sind gross und an die geübte Aufgabe gebunden:**
+  +32.8 % isometrische Maximalkraft nach 8 Wochen [E-08], +54 % nach 4–8 Wochen
+  [E-09], +38.9 % nach 35 Tagen [E-12], rund +40 % nach 12 Wochen [E-20]. Die
+  Lehrmeinung «früh neuronal, später Hypertrophie» [E-11] ist nur teilweise
+  gedeckt: Hypertrophie ist ab etwa 20 Tagen messbar [E-12], teils Ödem [E-13],
+  und ihr ursächlicher Beitrag zur Kraft ist umstritten [E-15, E-16] (Evidenz A/B).
+- **Wo sich das Nervensystem anpasst, ist offen** [E-01, E-18]. Eine
+  Einzelstudie zeigt tiefere Rekrutierungsschwellen und höhere Entladungsraten
+  [E-05], eine Meta-Analyse findet für die Entladungsrate keine signifikante
+  Änderung (P = 0.43, I² = 91 %) [E-06]. Konsistent ist nur die Abnahme der
+  intrakortikalen Hemmung [E-03]. Synchronisation ist als Kraftmechanismus
+  schwach belegt [E-09, E-10]; Cross-Education bringt gepoolt +11.9 % [E-19].
+- **Spezifität ist der robusteste Befund** (Evidenz A/B): Isometrie wirkt am
+  trainierten Winkel (±5° [E-21], bestätigt [E-22]), isometrisches Training
+  steigert isometrische Kraft stärker als dynamisches (SMD 0.43) [E-24], und
+  wer nur den 1RM-Test übte (bis zu 5 Versuche pro Einheit), gewann gleich viel
+  1RM-Kraft wie mit 4 Sätzen bis zum Versagen [E-25]. Konstantes Üben genau am
+  Ziel erzeugt dort einen eigenen Leistungsvorteil («especial skill») [E-45].
+- **Lernstadien:** Fitts & Posner beschreiben drei Stadien (kognitiv,
+  assoziativ, autonom) [E-29, E-30]. Neuere Modelle trennen schnelles Lernen
+  innerhalb einer Einheit von langsamem Lernen über Einheiten hinweg; die
+  Dauer der Phasen ist stark aufgabenabhängig [E-31, E-32]. Die Leistung am
+  Ende einer Übungseinheit ist ein schlechterer Lernindikator als die Leistung
+  bei späterer Wiederholung [E-34]. Der Planer misst Fortschritt deshalb am
+  ersten frischen Satz der Folgeeinheit (PAR-E-31).
+- **Contextual interference wirkt im Labor, kaum in der Sportpraxis:** gesamt
+  0.38, Laborstudien 0.57, angewandte Studien 0.19 [E-36]; Behalten im Labor
+  SMD 0.92, in angewandten Settings 0.23 (n. s.) [E-37]; Transfer angewandt
+  0.34 (n. s.) [E-38]; nur 20 % von 183 Ergebnissen folgen dem erwarteten
+  CI-Muster [E-39]. Die Debatte ist offen [E-37, E-40] (Evidenz A).
+  Maximalversuche bleiben geblockt, variiert wird zwischen Einheiten.
+- **Verteilt schlägt massiert, aber nicht grenzenlos:** Wöchentlich verteiltes
+  Üben ergab bessere Behaltens- und Transferleistung als ein einzelner Übungstag
+  bei gleicher Übungszeit (RCT) [E-48]; systematische Reviews bestätigen den
+  Vorteil [E-49, E-50], am wirksamsten schienen aufeinanderfolgende Tage [E-50].
+  Zu starkes Strecken schadet wieder [E-52] (Evidenz A/B).
+- **Frequenz vs. Volumen:** Der Frequenzeffekt auf Kraft verschwindet bei
+  gleichem Volumen (p = 0.421) [E-53]; eine neuere Meta-Regression findet
+  dennoch steigende Kraft mit steigender Frequenz bei abnehmendem Grenznutzen
+  [E-54]. Sechs exzentrische Maximalkontraktionen täglich an 5 Tagen steigerten
+  die Kraft um 9–14 %, dieselben 30 Kontraktionen einmal pro Woche nicht
+  signifikant [E-58]. Gleichgewichtstraining wirkt am besten mit 3 oder 6
+  Einheiten pro Woche zu 11–15 min [E-59] (Evidenz A/B).
+- **Ermüdung schadet dem Lernen:** Nach einer Ermüdung von rund 60 % der
+  Maximalkraft lernten Probanden auch am Folgetag ohne Ermüdung langsamer und
+  holten den Rückstand erst an Tag 3–4 auf [E-28]. Ältere Studien sind
+  widersprüchlich; Üben unter Ermüdung verbessert vor allem die Leistung unter
+  Ermüdung [E-99]. Daraus folgen Stoppregeln bei Form- und Leistungsabfall
+  (PAR-E-15 bis PAR-E-18).
+- **Schlaf und Konsolidierung sind umstritten:** Eine Nacht Schlaf brachte +20 %
+  Tempo [E-61], doch nach Kontrolle von Störfaktoren bleibt keine Verbesserung
+  durch Schlaf übrig [E-62, E-65]; Schlaf stabilisiert eher, als dass er
+  verbessert [E-64]. Ob schnelle Gewinne in Pausen Konsolidierung [E-66] oder
+  abklingende Hemmung [E-67] sind, ist offen. Keine Planerregel hängt an
+  «Schlaf verstärkt Lernen».
+- **Schlafmangel (≤ 6 h) senkt die Leistung:** gesamt −7.56 %, Skill-Aufgaben
+  −20.9 %, Kraft −2.85 %; Oberkörperkraft war unbeeinflusst, Aufgaben am Morgen
+  weitgehend auch [E-70]. Mehrere Nächte Schlafrestriktion senken vor allem die
+  Kraft in Mehrgelenkübungen [E-71] (Evidenz A).
+- **Zentrale Ermüdung ist real, aber nach kurzen Maximalreizen kurzlebig:**
+  Während einer 3-min-Maximalkontraktion fiel die willentliche Aktivierung von
+  über 99 % auf 90.7 % [E-74]. Nach kurzer, hochintensiver Belastung erholt sich
+  die zentrale Komponente typischerweise in 2 min, die periphere in 3–5 min,
+  vollständig teils erst nach Stunden [E-81]. Die Literatur empfiehlt 3–5 min
+  Pause bei schweren Sätzen [E-60, E-87, E-88]; der Default von 300 s bleibt
+  (Praxisquelle ≥ 5 min [P-01 S. 1–3]).
+- **«CNS-Fatigue» als mehrtägiges Burnout ist nicht belegt:** Nach 10 × 5
+  Kniebeugen mit 80 % 1RM hielt die Ermüdung bis 72 h an, war aber «nicht
+  primär» zentral; die willentliche Aktivierung war bis 48 h reduziert [E-82].
+  Übertraining ist eine lang anhaltende Fehlanpassung ohne anerkannten Marker
+  [E-85]. Der Planer begründet nichts mit «CNS-Fatigue» (PAR-E-29).
 - **Reihenfolge:** Die Kraft steigt bei den Übungen am stärksten, die am Anfang
-  der Einheit stehen [E-26] (Evidenz A), und dort gelingen auch mehr
-  Wiederholungen [E-27]. Skill- und Maximalarbeit gehören also an den Anfang;
-  das bestätigt das PDF-Muster F-1 [P-01 S. 1–3; P-02 S. 1–4; P-03 S. 1–4].
-- **Ermüdung schadet dem Lernen, nicht nur der Ausführung:** Wer ermüdet übte,
-  lernte auch an Folgetagen ohne Ermüdung schlechter; der Effekt ist teils
-  zentral vermittelt [E-28] (Evidenz B). Daraus folgt die Regel, einen
-  Skill-Block bei Formverlust zu beenden. Die Schwellenwerte dafür sind
-  Heuristik.
-- **Frequenz:** Laborprotokolle mit 3 Einheiten pro Woche und kurzen maximalen
-  Isometrien steigern die Kraft zuverlässig [E-08, E-09, E-21, E-22]. Der Default
-  für kraftlimitierte Statics ist daher 3 Einheiten pro Woche (Evidenz B). Die
-  Übertragung auf Ganzkörper-Skills ist nicht geprüft.
-- **Pausen vor Maximalversuchen:** In den Programmen der Praxisquelle haben alle
-  Maximalversuche an der Zielstufe mindestens 5 min Pause [P-01 S. 1–3; P-02
-  S. 1–4; P-03 S. 1–4], Maltese-Elemente 7 min [P-02 S. 4; P-03 S. 4]; der Autor
-  selbst nutzt für den Maltese Press 5–7 min [P-04 S. 1] (Evidenz C). Literatur zu Pausenlängen wurde in
-  diesem Lauf nicht verifiziert; das muss mit Stream B abgeglichen werden.
-- **EMG-Amplituden sind kein sauberer Marker für neuronale Anpassung** [E-17].
-  Eine Studie fand +32.8 % Maximalkraft ohne Änderung des maximalen IEMG [E-08].
-- **Nicht belegt in diesem Lauf:** Lernstadien, contextual interference,
-  verteilte Übung, Schlaf, zentrale Ermüdung und deren Erholungszeitverlauf,
-  «CNS-Fatigue», Potenzierung, Greasing the Groove. Die zugehörigen
-  Planerregeln sind als **Heuristik** markiert (§6).
+  der Einheit stehen [E-26], dort gelingen mehr Wiederholungen [E-27], und
+  intensive Übungen gehören vor weniger intensive [E-60]. Das bestätigt das
+  PDF-Muster F-1 [P-01 S. 1–3; P-02 S. 1–4; P-03 S. 1–4].
+- **Aufwärmen hilft, Potenzierung für Halte kaum:** Aufwärmen verbesserte die
+  Leistung in 79 % der Kriterien [E-95]; allgemeines plus spezifisches Aufwärmen
+  steigerte den 1RM um 8.4 % [E-97]; statisches Dehnen ≥ 60 s pro Muskel senkt
+  die Leistung um 4.6 % [E-96]. Maximale Isometrien als Vorbelastung zeigen
+  keinen Potenzierungseffekt (ES −0.09) [E-92], und nach vollständigem
+  Aufwärmen fehlt der Effekt meist ganz [E-91, E-98].
+- **Greasing the Groove (GTG)** ist ein Coaching-Konzept (Evidenz C/D): häufig
+  üben, submaximal, nie bis zum Versagen, «so oft wie möglich, so frisch wie
+  möglich» [E-100, E-101, E-103]. Laborbefunde zu täglichen Kleinstdosen
+  stützen das Prinzip [E-57, E-58], eine kontrollierte GTG-Studie wurde nicht
+  gefunden. Straight-Arm-Skills bleiben ausgeschlossen (Heuristik, Stream D).
 
 ## 1. Abdeckung und Methode
 
 | Teilthema (Auftrag) | Status | Quellen |
 |---|---|---|
 | Neuronale Anpassungen: Rekrutierung, Rate Coding, Synchronisation, Koaktivierung, kortikal/spinal, Cross-Education, Zeitverlauf | **belegt** | E-01 bis E-20 |
-| Spezifität (Aufgabe, Winkel, Modus) und Transfer | **belegt** | E-20 bis E-25 |
-| Reihenfolge in der Einheit, Frische | **belegt** | E-26, E-27, E-28, P-01 bis P-04 |
-| Üben unter Ermüdung und Lernen | **belegt (eine Studie)** | E-28 |
-| Stadien motorischen Lernens (Fitts & Posner, spätere Modelle) | **nicht belegt** | — (§6) |
-| Blocked vs. random, contextual interference, Variabilität | **nicht belegt** | — (§6) |
-| Massed vs. distributed, Frequenz vs. Volumen beim Skillerwerb | **teilweise** (nur Kraftprotokolle) | E-08, E-09, E-21, E-22, E-25 |
-| Schlaf und Konsolidierung, Schlafmangel | **nicht belegt** | — (§6) |
-| Zentrale vs. periphere Ermüdung, Twitch Interpolation, Erholungszeitverlauf | **nicht belegt** | — (§6) |
-| «CNS-Fatigue»: was belegt ist, was Mythos ist | **nicht belegt** | — (§6) |
-| Aufwärmen, Potenzierung | **nicht belegt** | — (§6) |
-| Greasing the Groove | **nicht belegt** | — (§6) |
+| Spezifität (Aufgabe, Winkel, Modus) und Transfer | **belegt** | E-20 bis E-25, E-45 |
+| Stadien motorischen Lernens (Fitts & Posner, spätere Modelle) | **belegt** (§6) | E-29 bis E-35 |
+| Blocked vs. random, contextual interference, Variabilität | **belegt** (§7) | E-36 bis E-45 |
+| Massed vs. distributed; Frequenz vs. Volumen; Anwendung auf Kraft- und Balance-Skills | **belegt** (§8) | E-46 bis E-60, E-104, E-105 |
+| Schlaf und Konsolidierung (inkl. Replikationsdebatte), Schlafmangel | **belegt** (§9) | E-61 bis E-72 |
+| Zentrale vs. periphere Ermüdung, Twitch Interpolation, supraspinale Ermüdung, Erholungszeitverlauf | **belegt** (§10) | E-73 bis E-83 |
+| «CNS-Fatigue»: was belegt ist, was Mythos ist | **belegt** (§11) | E-79, E-81, E-82, E-84, E-85 |
+| Reihenfolge in der Einheit, Frische | **belegt** (§4) | E-26 bis E-28, E-60, P-01 bis P-04 |
+| Üben unter Ermüdung und Lernen | **belegt** (§5) | E-28, E-99 |
+| Pausen vor Maximalversuchen | **belegt** (§12) | E-60, E-81, E-86 bis E-88, E-91, P-01 bis P-04 |
+| Stoppregeln (Qualität, Leistungsabfall) | **teilweise** (§5.2; Schwellen für Form sind Heuristik) | E-28, E-83, E-89, E-90 |
+| Aufwärmen, Potenzierung | **belegt** (§13) | E-91 bis E-98 |
+| Greasing the Groove | **belegt als Coaching-Konzept, keine kontrollierte Studie** (§14) | E-57, E-58, E-100 bis E-103 |
 
-**Evidenzstufen im Stream:** 10 Quellen der Stufe A (8 Meta-Analysen bzw.
-systematische Reviews, 2 kleine RCTs) und 18 der Stufe B (Einzelstudien,
-Reviews, Kommentare). Dazu kommt die Praxisquelle P-01 bis P-04 (Stufe C).
-Wichtige Einschränkung: Die Trainingsstudien arbeiten überwiegend mit
-**untrainierten Personen und meist einem einzigen Gelenk** (Knie, Sprunggelenk,
-Finger) im Labor. Für
+**Methode des zweiten Laufs.** Suche in Europe PMC (PubMed, PMC), Prüfung von
+Titel, Autoren, Jahr und DOI über Europe PMC bzw. Crossref, Abstracts über
+Europe PMC oder Crossref, Volltexte über PMC, sofern frei verfügbar.
+Coaching-Quellen wurden direkt auf der Website gelesen. Zwei Quellen, deren
+Inhalt nur als Sekundärbeschreibung vorlag, sind nicht als eigene Quelle
+geführt, sondern über die beschreibende Quelle zitiert (z. B. Baddeley &
+Longman 1978 über [E-52], Shea & Morgan 1979 über [E-37]).
+
+**Evidenzstufen im Stream:** 43 Quellen der Stufe A (Meta-Analysen,
+systematische Reviews, RCTs), 57 der Stufe B (Einzelstudien, narrative Reviews,
+Positionspapiere, Lehrbuch), 4 der Stufe C (Coaching-Artikel) und 1 der Stufe D.
+Dazu kommt die Praxisquelle P-01 bis P-04 (Stufe C). Wichtige Einschränkung:
+Die Trainings- und Lernstudien arbeiten überwiegend mit **Untrainierten, einem
+einzelnen Gelenk oder Labor- bzw. Feinmotorikaufgaben**. Für
 Straight-Arm-Statics im Calisthenics gibt es in diesem Quellenbestand keine
-direkte Studie.
+direkte Studie; alle Übertragungen sind als *Ableitung* oder *Analogie*
+gekennzeichnet.
 
 ## 2. Neuronale Anpassungen an Krafttraining
 
@@ -120,9 +159,10 @@ direkte Studie.
 | Intermuskuläre Koordination: Aufgabe | Die Zuwächse sind stark aufgabenspezifisch: grosse Verbesserung in der geübten Hebebewegung, wenig isometrischer Kraftzuwachs, keine Verbesserung der Sprintleistung auf dem Rad. Die Autoren deuten den Hauptnutzen als erlernte Koordination (32 Personen, 12 Wochen). | B | E-20 | Kernbeleg für «Kraft ist teilweise Skill». |
 | Kortikal: intrakortikale Hemmung | Deutliche und konsistente Abnahme der intrakortikalen Hemmung und der kortikalen Innervationsstille (Silent Period). | A | E-03 | TMS-Befunde, methodisch begrenzt [E-01]. |
 | Kortikal: kortikospinale Erregbarkeit | Moderat und heterogen [E-03]. Nach einer multivariaten Meta-Analyse sagt sie den Kraftzuwachs vorher, Hemmungsänderungen dagegen nicht; metronomgeführtes Training wirkt stärker als selbstbestimmtes oder isometrisches, und nach isometrischem Training fand sich kein Zusammenhang [E-04]. | A | E-03, E-04 | **Widerspruch** (W-3). |
-| Kortikal + subkortikal | Subtile neuronale Anpassungen auf kortikaler und subkortikaler Ebene erhöhen die Aktivierung der Motoneurone. | A | E-02 | Eine frühere Fassung dieses Reviews wurde zurückgezogen (PubMed 31359349); zitiert wird die Fassung von 2020. |
+| Kortikal + subkortikal | Subtile neuronale Anpassungen auf kortikaler und subkortikaler Ebene erhöhen die Aktivierung der Motoneurone. | A | E-02 | Eine frühere Fassung dieses Reviews wurde zurückgezogen (PubMed 31359349); zitiert wird ausschliesslich die Fassung von 2020 (DOI 10.1007/s40279-020-01258-z). |
 | Spinal | Nach 14 Wochen schwerem Beintraining (n = 14) steigen V-Welle und H-Reflex; gedeutet als erhöhter zentraler Antrieb, höhere Erregbarkeit der Motoneurone und weniger präsynaptische Hemmung. | B | E-07 | Die Deutung der Autoren ist vorsichtig formuliert («may comprise»). |
 | Ort der Anpassung insgesamt | Anpassungen der motorischen Einheiten sind gut belegt, der genaue Ort ist unklar. Stimulationsstudien liefern variable Ergebnisse, und methodische Grenzen verhindern feste Schlüsse. | B | E-01 | Kritische Übersicht. |
+| Willentliche Aktivierung (Twitch Interpolation) | Einige Studien zeigen eine bessere willentliche Aktivierung nach Krafttraining für Quadrizeps und Wadenmuskulatur, nicht aber für den Bizeps. | B | E-76 | Messmethode siehe §10.2. |
 | Cross-Education | Gepoolter Kraftzuwachs von +11.9 % im untrainierten Glied [E-19]. Einzelstudien: +16.2 % [E-08], kein Effekt [E-20]. Die frühe Studie deutet Cross-Education als vermutlich rein neuronal [E-11]. | A/B | E-08, E-11, E-19, E-20 | **Widerspruch** (W-4) in Einzelstudien, Meta-Analyse positiv. |
 
 ### 2.2 Zeitverlauf: was frühe Studien konkret zeigen
@@ -146,14 +186,13 @@ direkte Studie.
 1. **Frühe Fortschritte nicht hochrechnen.** Novizen verbessern sich in der
    geübten Aufgabe in wenigen Wochen um 30–55 % [E-08, E-09, E-12, E-20]. Ein
    grosser Teil davon ist Koordination in genau dieser Aufgabe [E-20, E-25].
-   Wer diese Rate linear fortschreibt, unterschätzt vermutlich die Zeit bis zur
-   nächsten Stufe. **Praxisheuristik:** Fortschrittsraten aus den ersten 4–6
-   Wochen eines neuen Skills nicht für Prognosen über diesen Zeitraum hinaus
-   verwenden. Begründung: In den ersten 3–5 Wochen dominiert der neuronale
-   Anteil [E-11], und ein grosser Teil des Zuwachses ist aufgabenspezifische
-   Koordination [E-20, E-25]; danach trägt zunehmend strukturelle Anpassung bei
-   [E-11, E-14]. Dass sich der Zuwachs danach verlangsamt, ist eine Annahme, die
-   in diesem Lauf nicht belegt wurde.
+   Lernkurven zeigen allgemein eine schnelle Anfangsphase und danach deutlich
+   langsamere Zuwächse [E-30, E-31]. **Praxisheuristik:** Fortschrittsraten aus
+   den ersten 4–6 Wochen eines neuen Skills nicht für Prognosen über diesen
+   Zeitraum hinaus verwenden (PAR-E-21). Begründung: Die Form der Lernkurve ist
+   belegt [E-30, E-31], die Länge der schnellen Phase ist aufgabenabhängig
+   (Minuten bis Monate) [E-31]; das Fenster von 4–6 Wochen folgt aus den
+   Kraftstudien oben [E-11, E-12] und ist nicht für Skills validiert.
 2. **Frühe Erfolge sind echt, aber spezifisch.** Das rechtfertigt Unlocks in
    dieser Phase (ADR 0008: Unlocks halten Erreichtes fest). Es rechtfertigt aber
    nicht, benachbarte Stufen als mittrainiert zu werten (§3).
@@ -179,6 +218,7 @@ direkte Studie.
 | Gelenkwinkel (Isometrie) | Zuwachs nur am trainierten Winkel und an den beiden Nachbarwinkeln, Messabstand 5° [E-21]. Winkelspezifität robust bestätigt; die Evidenz für eine neuronale Ursache ist schwach [E-22]. | B | E-21, E-22 | Ein Halt trainiert vor allem **genau diese Position**. Tuck-Planche-Halte zählen nicht als Straddle-Training (Unlock-Logik ohnehin getrennt, ADR 0008). |
 | Kontraktionsmodus | Isometrisches Training steigert die isometrische Kraft stärker als dynamisches (SMD 0.43; 32 Studien, 621 Personen); bei isokinetischer Kraft kein Unterschied (SMD −0.20, p = 0.24). Gegenüber Kontrollen: SMD 0.65. | A | E-24 | Für statische Skills sind Halte in der Zielposition spezifischer als dynamische Ersatzübungen. Dynamische Übungen (z. B. Presses) bleiben als Ergänzung sinnvoll. |
 | Aufgabe / Bewegungsmuster | Zuwächse sind stark aufgabenspezifisch; der Hauptnutzen wird als erlernte Koordination gedeutet [E-20]. Das blosse Üben des Tests (≤ 5 Maximalversuche pro Einheit) steigerte den 1RM ohne messbaren Unterschied zu Volumentraining bis zum Versagen [E-25]. | A/B | E-20, E-25 | Jede Einheit für einen Skill enthält die **Zielbewegung selbst** oder ihre nächste Regression, nicht nur Zubringerübungen. |
+| Konstantes Üben am Ziel («especial skill») | 300 Würfe nur von der Freiwurflinie (n = 10) erzeugten dort einen Vorteil gegenüber der aus benachbarten Distanzen erwarteten Leistung; die Gruppe mit variablen Distanzen (n = 10) nicht. Schon kurzes, repetitives Üben reicht dafür; entscheidend ist die Art, nicht die Menge des Übens. | A (kleines RCT) | E-45 | Die Zielstufe selbst wird regelmässig geübt; Variation ersetzt sie nicht (§7). |
 | Intention | Ballistische Intention (explosiv, maximal) führt bei Isometrie zu höherer neuromuskulärer Aktivierung und schnellerer Kraftentwicklung; Kraft und Hypertrophie steigen unabhängig von der Intensität deutlich; Training bei langer Muskellänge erzeugt mehr Hypertrophie. | A | E-23 | Hinweistext für Halte im Kraftblock: «mit maximaler Spannung halten». Mit Formkriterien abgleichen (Stream A). |
 | Seitentransfer (Cross-Education) | +11.9 % im untrainierten Glied (gepoolt) | A | E-19 | Nur Information. **Keine Reha-Logik** (Brief §11, CONTENT_AUTHORING). |
 
@@ -186,15 +226,18 @@ direkte Studie.
 von Planche und Maltese mit kurzen Halten (2–8 s) bzw. Presses mit 1–3 Wdh. bei
 5–7 min Pause; über alle Workouts liegen die Haltezeiten bei 2–20 s pro Satz
 [P-01 S. 1–3; P-02 S. 1–4; P-03 S. 1–4]. Das ist das Muster
-maximalkraftlimitierter Elemente (*Ableitung*). Für den Handstand als
-gleichgewichtslimitierten Skill wurde in diesem Lauf keine Quelle verifiziert.
-**Praxisheuristik:** Jeder Skill bekommt ein Metadatum
-`limiting_factor ∈ {strength, balance, mixed}`: Planche, Front Lever, Maltese und
-One-Arm-Pull-up sind `strength`, Handstand ist `balance`, Muscle-up und
-Handstand-Press sind `mixed`. Begründung: Die Dosierungslogik unterscheidet sich
-(kurze Maximalreize vs. häufige, submaximale Übung), und der Planer braucht ein
-explizites Feld statt impliziter Annahmen. Die Zuordnung muss Stream A je Skill
-bestätigen.
+maximalkraftlimitierter Elemente (*Ableitung*). Der Handstand ist dagegen eine
+Gleichgewichtsaufgabe: Das Gleichgewicht wird überwiegend über ein Drehmoment
+im Handgelenk gesteuert (Handgelenkstrategie in über 75 % der Zeit)
+[E-105]; bei besseren Handständen tragen Handgelenk und Schulter am meisten
+bei, bei weniger erfolgreichen zunehmend die Hüfte [E-104] (Evidenz B,
+Biomechanik, kleine Stichproben). **Praxisheuristik:** Jeder Skill bekommt ein
+Metadatum `limiting_factor ∈ {strength, balance, mixed}`: Planche, Front Lever,
+Maltese und One-Arm-Pull-up sind `strength`, Handstand ist `balance`,
+Muscle-up und Handstand-Press sind `mixed`. Begründung: Die Dosierungslogik
+unterscheidet sich (kurze Maximalreize vs. häufige, submaximale Übung, §8.4),
+und der Planer braucht ein explizites Feld statt impliziter Annahmen. Die
+Zuordnung muss Stream A je Skill bestätigen.
 
 ## 4. Reihenfolge in der Einheit und Frische
 
@@ -202,17 +245,18 @@ bestätigen.
 |---|---|---|---|
 | Die Kraft steigt bei den Übungen am stärksten, die am Anfang der Einheit stehen: Mehrgelenkige Übungen zuerst begünstigt deren Kraft, eingelenkige zuerst begünstigt deren Kraft. Für Hypertrophie spielt die Reihenfolge keine Rolle (ES = 0.03, p = 0.862; 11 Studien, 268 Personen). | A | E-26 | Die priorisierte Zielübung steht zuerst. |
 | Die Wiederholungsleistung ist höher, wenn eine Übung am Anfang steht, unabhängig von der beteiligten Muskelmasse. | B | E-27 | Maximalversuche nie nach Volumenarbeit am selben Muster. |
-| Wer ermüdet übt, lernt schlechter, und der Nachteil bleibt an Folgetagen ohne Ermüdung bestehen. Er ist teils zentral vermittelt und lässt sich durch Veränderung der Motorkortex-Funktion abmildern. Die Autoren empfehlen, Training unter oder jenseits der Ermüdung zu überdenken. | B | E-28 | Skillarbeit in frischem Zustand; Skill-Block bei Formverlust beenden (Schwellen: Heuristik). |
-| In allen 33 Programm-Workouts der Praxisquelle steht die intensivste, spezifischste Übung an Position 1 (2–3 Sätze, 5–7 min Pause), gefolgt von zwei Volumenübungen (je 5 Sätze, 3–5 min) und Zubringern (2–3 Sätze, 2–3 min). | C | P-01 S. 1–3; P-02 S. 1–4; P-03 S. 1–4 | Blockschema F-1 aus `01_pdf_extract.md` ist mit E-26 bis E-28 vereinbar. |
+| Positionspapier: Übungen so ordnen, dass die Intensität erhalten bleibt: grosse vor kleinen Muskelgruppen, mehrgelenkig vor eingelenkig, höhere vor niedrigerer Intensität. | B | E-60 | Skill-Maximum vor Skill-Volumen vor Zubringern. |
+| Wer ermüdet übt, lernt schlechter, und der Nachteil bleibt an Folgetagen ohne Ermüdung bestehen. Er ist teils zentral vermittelt und lässt sich durch Veränderung der Motorkortex-Funktion abmildern. | B | E-28 | Skillarbeit in frischem Zustand; Skill-Block bei Formverlust beenden (§5.2). |
+| Aufwärmen verbessert die Leistung in den meisten untersuchten Kriterien; allgemeines plus spezifisches Aufwärmen vor Maximalversuchen ist wirksamer als nur spezifisches. | A | E-95, E-97 | Aufwärmen steht vor dem Skill-Maximum (§13). |
+| In allen 33 Programm-Workouts der Praxisquelle steht die intensivste, spezifischste Übung an Position 1 (2–3 Sätze, 5–7 min Pause), gefolgt von zwei Volumenübungen (je 5 Sätze, 3–5 min) und Zubringern (2–3 Sätze, 2–3 min). | C | P-01 S. 1–3; P-02 S. 1–4; P-03 S. 1–4 | Blockschema F-1 aus `01_pdf_extract.md` ist mit E-26 bis E-28 und E-60 vereinbar. |
 | Die persönlichen Workouts des Autors weichen ab: 5 Sätze an Position 1, Pausen nicht streng fallend. | C | P-04 S. 1 | Das Schema ist ein Default, keine starre Regel (W-8). |
 
-**Abgeleitete Blockfolge einer Skill-Einheit** (Belege wie oben, die
-Aufwärm-Sätze sind Heuristik, §6):
+**Abgeleitete Blockfolge einer Skill-Einheit:**
 
 1. Allgemeines und spezifisches Aufwärmen, erfasst als `set_entries.kind =
-   warmup` (Heuristik).
-2. **Skill-Maximum:** Zielstufe, wenige Versuche, lange Pausen [E-26, E-28;
-   P-01 bis P-03].
+   warmup` [E-95, E-97]; Aufbau in §13.
+2. **Skill-Maximum:** Zielstufe, wenige Versuche, lange Pausen [E-26, E-28,
+   E-60; P-01 bis P-03].
 3. **Skill-Volumen:** dieselbe Bewegung, leichter oder assistiert [P-01 bis
    P-03]; assistierte Sätze zählen für die Belastung (F-3), nicht für Unlocks
    (ADR 0008).
@@ -231,12 +275,36 @@ S. 1].
 
 ### 5.1 Was belegt ist
 
-- Ermüdung beeinträchtigt das Lernen über die Ausführung hinaus, und das
-  Defizit hält an Folgetagen an [E-28] (Evidenz B, eine Laborstudie; die
-  Übertragbarkeit auf Ganzkörper-Skills ist ungeprüft).
-- Wenige Maximalversuche reichen für einen spezifischen Kraftzuwachs: Bis zu 5
-  Maximalversuche pro Einheit steigerten den 1RM ohne messbaren Unterschied zu 4
-  Sätzen bis zum Versagen [E-25] (Evidenz A, Untrainierte, 8 Wochen).
+- **Ermüdung beeinträchtigt das Lernen über die Ausführung hinaus** [E-28]
+  (Evidenz B; Volltext geprüft). Im ersten Experiment (n = 38) übten die
+  Probanden eine isometrische Kraftdosierungsaufgabe mit den Fingern; die
+  Ermüdungsgruppe kontrahierte vorher bis zu einem Abfall von rund 60 % der
+  Maximalkraft. Die Lernrate war an Tag 1 **und** an Tag 2 ohne Ermüdung
+  kleiner; am Ende von Tag 2 erreichte die Ermüdungsgruppe nur 68 % des
+  Niveaus, das die Kontrollgruppe am Ende von Tag 1 hatte, und holte erst gegen
+  Ende von Tag 3 bzw. an Tag 4 auf. Der Nachteil übertrug sich auf die
+  unermüdete Hand. Wer am Tag 1 ermüdet wurde, aber erst an Tag 2 übte (n = 5),
+  lernte normal; eine Tastensequenz-Aufgabe (n = 18) war nicht betroffen.
+  *Ableitung:* Schädlich ist das **Üben** im ermüdeten Zustand, nicht die
+  Ermüdung am Vortag; betroffen sind Aufgaben mit hohem Anspruch an die
+  Kraftdosierung, also gerade Balance- und Halteskills.
+- **Die ältere Literatur ist widersprüchlich:** Frühe Studien fanden teils kein
+  Lernen unter Ermüdung, teils keinen Nachteil [E-28 zitiert diese Übersicht].
+  Ein kleines RCT (n = 36, Leiterklettern) zeigte, dass Üben unter starker
+  Ermüdung die Leistung **unter Ermüdung** verbessert (Spezifität); für den
+  unermüdeten Zustand war der Unterschied nicht signifikant [E-99]. Für die App
+  gilt das Ziel «Skill in Bestform»; Üben unter Ermüdung ist dafür kein Mittel
+  (W-15).
+- **Wenige Maximalversuche reichen für einen spezifischen Kraftzuwachs:** Bis zu
+  5 Maximalversuche pro Einheit steigerten den 1RM ohne messbaren Unterschied zu
+  4 Sätzen bis zum Versagen [E-25] (Evidenz A, Untrainierte, 8 Wochen).
+- **Mehr Versuche am selben Tag sind nicht automatisch besser:** Bei gleicher
+  Gesamtzahl von 10 Versuchen über 2 Tage zeigten Gruppen mit 1 oder 3
+  Versuchen an Tag 1 Verbesserungen über Nacht und eine bessere Endleistung als
+  die Gruppe mit 7 Versuchen an Tag 1 [E-51] (Evidenz B, Spiegelzeichnen).
+- **Training bis zum Versagen verlängert die Erholung:** 3 × 10 bis zum
+  Versagen verzögerte die Erholung der neuromuskulären Leistung um 24–48 h
+  gegenüber 3 × 5 bzw. 6 × 5 mit gleicher Gesamtwiederholungszahl [E-83].
 - Wirksame isometrische Laborprotokolle: 20 × 5 s MVC pro Einheit [E-21],
   30 MVC pro Einheit [E-08], 60 maximale Isometrien (6 × 10) für einen
   Fingermuskel [E-09], jeweils 3× pro Woche (Evidenz A/B). Das sind Obergrenzen
@@ -246,7 +314,7 @@ S. 1].
   pro Einheit in den Programmen, 17–18 beim Autor [P-01 bis P-04, siehe
   `01_pdf_extract.md` §4.1] (Evidenz C).
 
-### 5.2 Qualitäts-Stoppregeln (Heuristik, belegt motiviert)
+### 5.2 Qualitäts-Stoppregeln
 
 Die Log-Felder sind vorhanden: `set_elements.form_quality` (1–5, optional),
 `set_elements.failed`, der Wert (Wdh. oder Haltesekunden) sowie `rpe`/`rir` am
@@ -254,65 +322,360 @@ Satz (`codebase_notes.md` §2).
 
 | Regel | Auslöser | Aktion | Status |
 |---|---|---|---|
-| Formabfall | `form_quality` ≤ Formwert des ersten Arbeitssatzes dieser Übung minus 1 **oder** `form_quality` < 3 | Skill-Block beenden; der Rest der Einheit läuft mit Regression bzw. Kraftübungen weiter | Heuristik, motiviert durch E-28 |
+| Formabfall | `form_quality` ≤ Formwert des ersten Arbeitssatzes dieser Übung minus 1 **oder** `form_quality` < 3 | Skill-Block beenden; der Rest der Einheit läuft mit Regression bzw. Kraftübungen weiter | Heuristik, motiviert durch E-28 (Üben unter Ermüdung schadet dem Lernen) und E-34 (Leistung während des Übens ist nicht gleich Lernen); die Schwellen sind nicht validiert |
 | Fehlversuche | 2 aufeinanderfolgende Elemente mit `failed = true` auf derselben Stufe | Stufe für diese Einheit beenden, eine Stufe leichter oder assistiert weiter | Heuristik |
-| Leistungsabfall (Fallback ohne Formwert) | Haltezeit bzw. Wdh. < 80 % des besten Satzes dieser Übung in der Einheit | Block beenden | Heuristik; die Literatur zu Abbruchschwellen (Geschwindigkeitsverlust) wurde nicht verifiziert (§6) |
-| Kein Versagen im Skill-Block | Skill- und Maximalsätze nicht bis zum Muskelversagen planen | `target_rir` ≥ 1 bzw. «saubere Wiederholungen» | E-28 (B) + Heuristik |
-| Tagesform-Gate | Hohes Ermüdungssignal vor der Einheit (z. B. `perceived_fatigue` ≥ 8 der letzten Einheit ohne Ruhetag dazwischen, oder ein künftiger Check-in) | Maximalversuche durch submaximale Technikarbeit ersetzen | Heuristik; `perceived_fatigue` misst subjektive, nicht muskuläre Ermüdung (offene Frage) |
+| Leistungsabfall (Fallback ohne Formwert) | Haltezeit bzw. Wdh. < 80 % des besten Satzes dieser Übung in der Einheit | Block beenden | **Analogie, Evidenz A:** Ein Satzabbruch bei 20 % Geschwindigkeitsverlust brachte gleich viel Kniebeugenkraft wie 40 % bei 40 % weniger Wiederholungen und mehr Sprungkraftzuwachs [E-90]; die Höhe des Geschwindigkeitsverlusts beeinflusste den Kraftzuwachs nicht [E-89]. Übertragung von Geschwindigkeit auf Haltezeit ist Heuristik. |
+| Kein Versagen im Skill-Block | Skill- und Maximalsätze nicht bis zum Muskelversagen planen | `target_rir` ≥ 1 bzw. «saubere Wiederholungen» | E-28, E-83 (B), E-89 (A); Coaching: 2 Wdh. vor dem Versagen aufhören [E-101] (C) |
+| Tagesform-Gate | Hohes Ermüdungssignal vor der Einheit (z. B. `perceived_fatigue` ≥ 8 der letzten Einheit ohne Ruhetag dazwischen, oder ein künftiger Check-in mit Schlaf ≤ 6 h) | Maximalversuche durch submaximale Technikarbeit ersetzen | Heuristik für die Aktion; Schlafmangel senkt Skill-Leistung um 20.9 % [E-70] (A); `perceived_fatigue` misst subjektive, nicht muskuläre Ermüdung (offene Frage) |
 
-## 6. Nicht belegte Teilthemen: vorläufige Heuristiken
+## 6. Stadien motorischen Lernens
 
-Die folgenden Teilthemen verlangt der Auftrag. Für sie wurde in diesem Lauf
-**keine Quelle geprüft**. Aussagen über die Literatur fehlen deshalb bewusst.
-Die Spalte «Vorläufige Regel» enthält nur Heuristiken, die sich aus dem
-Datenmodell und den belegten Abschnitten ergeben.
+| Modell / Befund | Kernaussage | Evidenz | Quellen | Folge für den Planer |
+|---|---|---|---|---|
+| Fitts & Posner (1967) | Drei aufeinanderfolgende Stadien: **kognitiv** (Ziel und Handlungsfolge werden festgelegt, explizites Wissen), **assoziativ** (Feinabstimmung von Teilen und Übergängen), **autonom** (routinierte Kontrolle). Die Lernrate unterscheidet sich zwischen den Stadien. | B (Lehrbuch; Inhalt über E-30 geprüft) | E-29, E-30 | Frühe Einheiten einer neuen Stufe brauchen Erklärung und wenige Cues; später tritt das in den Hintergrund. Keine Zahl, keine harte Stadienlogik. |
+| Form der Lernkurve | Über viele Aufgaben zeigt sich eine schnelle Anfangsphase und danach eine deutlich langsamere Phase. | B | E-30 | Stützt PAR-E-21 (frühe Raten nicht hochrechnen). |
+| Schnelles vs. langsames Lernen | Schnelles Lernen findet innerhalb einer Einheit statt, langsames über mehrere Einheiten. Die Dauer ist stark aufgabenabhängig: Die schnelle Phase dauert bei einer Tastensequenz Minuten, bei einem komplexen Musikstück Monate. Verbesserungen entstehen während des Übens und zwischen den Einheiten; Leistung kann automatisch werden. | B | E-31 | Fortschritt wird über Einheiten bewertet, nicht innerhalb einer Einheit. |
+| Konsolidierung zwischen Einheiten | Die Aneignung besteht aus schnellem (in der Einheit) und langsamem Lernen (zwischen Einheiten). Kurz nach dem Training ist die neue Fertigkeit anfällig für Störung durch andere Fertigkeiten; Konsolidierung findet in den Pausen zwischen Einheiten statt. | B | E-32 | *Ableitung:* Direkt nach dem Skill-Maximum keine ähnliche, konkurrierende Bewegung als neuen Lernreiz einplanen. Ohne Zahl, nur Planungshinweis (Heuristik). |
+| Bernstein: «Einfrieren» von Freiheitsgraden | Ob Lernende zu Beginn Freiheitsgrade einfrieren oder freigeben, hängt nicht allein von der Art der Fertigkeit oder ihrem Ziel ab, sondern von deren Zusammenspiel. | A | E-33 | Keine allgemeine Regel «Anfänger bewegen sich steif»; Formkriterien kommen je Skill aus Stream A. |
+| Leistung ≠ Lernen | Die Leistung bei verzögerter Wiederholung oder im Transfer ist ein besserer Lernindikator als die Leistung am Ende des Übens. Schwierige Übungsbedingungen können die Übungsleistung senken und das Behalten trotzdem verbessern. | B | E-34 | Fortschritt am **ersten frischen Arbeitssatz der Folgeeinheit** messen (PAR-E-31). Ein schwacher letzter Satz ist kein Rückschritt. |
+| Challenge Point | Lernen hängt von der Information ab, die eine Ausführung liefert; die optimale Schwierigkeit hängt vom Könnensstand und der Aufgabenschwierigkeit ab. | B (Theorie) | E-35 | Stufenwahl mit überwiegend gelingenden, aber fordernden Versuchen. Eine Erfolgsquote als Zahl liefert die Quelle nicht (Heuristik, Stream B/A). |
 
-| Teilthema | Was der Algorithmus braucht | Vorläufige Regel (Heuristik) | Begründung der Heuristik |
+**Konsequenz.** Es gibt keine belegte, zählbare Grenze zwischen den Stadien.
+Der Planer führt deshalb **kein Stadienfeld**, sondern nutzt die Log-Historie je
+Stufe (Anzahl Einheiten, Verlauf der ersten Sätze). Belegt und umgesetzt sind
+nur zwei Regeln: frühe Raten nicht hochrechnen (PAR-E-21) und Fortschritt am
+frischen ersten Satz messen (PAR-E-31).
+
+## 7. Übungsplan: geblockt vs. zufällig, Variabilität
+
+### 7.1 Contextual interference (CI)
+
+Beim geblockten Üben werden alle Versuche einer Aufgabe hintereinander
+ausgeführt, beim zufälligen oder seriellen Üben wechseln die Aufgaben. Die
+klassische Studie von Shea & Morgan (1979) fand kürzere Zeiten beim geblockten
+Üben während der Aneignung, aber bessere Werte des zufälligen Übens im
+Behaltenstest [beschrieben in E-37].
+
+| Quelle | Umfang | Befund | Evidenz |
 |---|---|---|---|
-| Stadien motorischen Lernens | Unterschiedliche Dosierung für Neulinge und Könner einer Stufe | Keine stadienabhängige Logik; stattdessen Stufe und Log-Historie je Skill | Ohne geprüfte Quelle keine stadienbasierte Regel. Das Log liefert direkte Leistungsdaten. |
-| Blocked vs. random, contextual interference | Variation vs. Wiederholung derselben Übung | Innerhalb einer Einheit geblockt (Sätze einer Übung hintereinander); Variation **zwischen** Einheiten über die PDF-Varianten (Normal/Type A/Type B) | Entspricht der Praxisquelle [P-01 bis P-03]; Aufgabenspezifität spricht gegen zu viel Streuung weg von der Zielbewegung [E-20, E-25]. |
-| Massed vs. distributed, Frequenz vs. Volumen | Wochenfrequenz und Tagesabstände pro Skill | Kraftlimitiert: 3×/Woche [E-08, E-09, E-21, E-22]; gleichgewichtslimitiert: häufige kurze Einheiten (5–7×/Woche) | Die Frequenz für kraftlimitierte Skills ist belegt (B); für Balance-Skills ist sie Heuristik mit geringer muskulärer Last als Begründung. |
-| Schlaf und Konsolidierung; Schlafmangel | Hinweise, ggf. Tagesform-Anpassung | Keine Planerregel auf Schlafbasis; das Datenmodell kennt keinen Schlafwert | Ohne geprüfte Quelle und ohne Datenfeld keine Regel. |
-| Zentrale vs. periphere Ermüdung; Erholungszeitverlauf | Mindestabstand zwischen harten Einheiten desselben Skills | 48 h zwischen Einheiten mit Maximalversuchen am selben Skill; 24 h für submaximale Technikarbeit | Leitet sich aus den wirksamen 3×/Woche-Protokollen ab [E-08, E-09, E-21]; der Erholungszeitverlauf selbst ist nicht verifiziert. |
-| «CNS-Fatigue» | Begründungstexte, Pausenlogik | Der Planer begründet Pausen und Deloads **nie** mit «CNS-Fatigue», sondern mit Planstruktur und beobachtbaren Log-Werten (Form, Haltezeit, RPE) | Die Aussagen der Fitness-Szene konnten nicht geprüft werden; beobachtbare Werte sind überprüfbar und passen zu ADR 0003 (Ruhe ist Training). |
-| Aufwärmen, Potenzierung | Aufwärmblock vor Maximalversuchen | 2–3 Rampensätze der Zielbewegung mit steigender Schwierigkeit (Regression → assistiert → Zielstufe, submaximal), erfasst als `warmup` | Spezifität [E-20, E-25]; Potenzierung selbst ist nicht belegt. |
-| Greasing the Groove | Häufige submaximale Übung über den Tag | Nur für Grundübungen mit gebeugtem Arm (Klimmzug, Liegestütz, Dip), ≤ 50 % der Maximalwiederholungen, nie bis zum Versagen; **nicht** für Straight-Arm-Skills | Die GTG-Quellen wurden nicht verifiziert; der Ausschluss von Straight-Arm-Arbeit folgt aus der Sehnenbelastung (Stream D, ADR 0003). |
-| Pausen vor Maximalversuchen (Literatur) | Mindestpause | 300 s (Maltese: 420 s) aus der Praxisquelle | [P-01 bis P-04] (C); mit der Literatur aus Stream B abgleichen. |
+| Brady 2004 [E-36] | 61 Studien, 139 Effektstärken | Mittlerer Effekt 0.38; Grundlagenforschung 0.57 vs. angewandte Forschung 0.19; Erwachsene 0.50 vs. Jüngere 0.10; mittlere statistische Power der Studien 0.43. | A |
+| Czyż et al. 2024, Behalten [E-37] | 54 Studien | Gesamt SMD 0.63 [0.33; 0.93] (ohne Ausreisser 0.43); Labor 0.92; angewandte Settings 0.23 [−0.16; 0.62], p = 0.24, nach Sensitivitätsanalyse −0.01; Heterogenität I² ≈ 90 %. Nutzen bei Erwachsenen und Älteren, bei Jungen vernachlässigbar. | A (Volltext) |
+| Czyż et al. 2024, Transfer [E-38] | 34 Studien in der Meta-Analyse | Gesamt SMD 0.55; Labor 0.75 (signifikant); angewandt 0.34 (n. s.); Erwachsene 0.54, Ältere 1.28, Junge 0.12. | A |
+| Ammar et al. 2024 [E-39] | 36 Studien, 183 gepoolte Ergebnisse (Sport und Sportunterricht) | Nur 37 Ergebnisse (20 %) folgten dem CI-Muster; kein Unterschied in der Aneignung (ES 0.1, p = 0.35); kein grösserer Langzeitgewinn des zufälligen Übens (ES −0.13, p = 0.18). | A |
+| Debatte [E-37, E-40] | — | E-37 hält eine frühere Meta-Analyse derselben Gruppe (2023) für methodisch mangelhaft; E-40 antwortet auf eine Kritik an E-39 und bemängelt ihrerseits die Methodik der Gegenseite. | B |
+| Naimo et al. 2013 [E-41] | 24 Personen, 4 Wochen Bankdrücken | Bankdrücksätze abwechselnd mit Dartwürfen (hohe CI) verbesserten 1RM-Prozent und Technik-Checkliste auch nach dem Training; bei geblockter Reihenfolge verschwanden die Verbesserungen danach weitgehend. | B (kleine Studie) |
+| Porter & Magill 2010 [E-42] | 2 Experimente, Novizen (Golf-Putten, Basketballpässe) | Ein Übungsplan mit **schrittweise steigender** CI (erst geblockt, dann seriell, dann zufällig) war beim Behalten und Transfer besser als rein geblockt oder rein zufällig. | A (RCT) |
+| Ammar et al. 2024, Reissen [E-43] | 16 aktive Männer, je 36 Versuche | Akut kein Vorteil eines Lernmodells (repetitiv, geblockt, seriell, differenziell) für die technische Effizienz. | B |
+
+### 7.2 Variabilität und «especial skills»
+
+| Befund | Evidenz | Quelle |
+|---|---|---|
+| Mehr Variabilität im Üben erschwert das anfängliche Lernen, führt aber zu allgemeinerer und robusterer Leistung; das Prinzip taucht in vielen Bereichen unter anderen Namen auf. Entscheidend ist, ob aufgabenrelevante oder irrelevante Dimensionen variiert werden. | B | E-44 |
+| Konstantes Üben genau an der Zielaufgabe erzeugt dort einen Vorteil («especial skill»), schon nach kurzem Üben. | A (kleines RCT) | E-45 |
+
+### 7.3 Folgen für den Planer
+
+1. **Maximalversuche an der Zielstufe bleiben geblockt** (PAR-E-32). Der
+   CI-Vorteil ist in angewandten Settings klein und nicht signifikant [E-36,
+   E-37, E-38, E-39], die Spezifität der Zielaufgabe ist robust [E-20, E-25,
+   E-45], und Maximalversuche brauchen ohnehin lange Pausen (§12).
+2. **Technikarbeit darf verschachtelt werden** (PAR-E-33): Submaximale Sätze
+   zweier Skills (z. B. Handstand und Planche-Lean) im Wechsel sind erlaubt.
+   Beleg: Verschachtelung verbesserte Kraft und Technik beim Bankdrücken
+   [E-41]; bei Novizen ist ein Übergang von geblockt zu gemischt sinnvoll
+   [E-42]. Die Pause je Skill (§12) gilt trotzdem. Die genaue Anwendung ist
+   Heuristik.
+3. **Variation zwischen Einheiten, Zielstufe konstant** (PAR-E-34): Varianten
+   (z. B. Normal/Type A/Type B der Praxisquelle [P-01 bis P-03]) wechseln
+   zwischen Einheiten; die Zielstufe selbst bleibt in jeder Skill-Einheit
+   enthalten [E-44, E-45].
+4. **Keine App-Texte, die CI als gesicherten Mechanismus verkaufen** (W-10).
+
+## 8. Verteilte vs. massierte Übung; Frequenz vs. Volumen
+
+### 8.1 Verteilung des Übens
+
+| Quelle | Aufgabe | Befund | Evidenz |
+|---|---|---|---|
+| Lee & Genovese 1989 [E-46] | Timing-Aufgabe, diskret vs. kontinuierlich | Kontinuierliche Aufgabe: verteiltes Üben (25 s zwischen Versuchen) besser in Aneignung und Behalten; diskrete Aufgabe: massiertes Üben (0.5 s) besser. | B |
+| Dail & Christina 2004 [E-47] | Golf-Putten (diskret) | Verteiltes Üben besser in Aneignung und Behalten; keine Unterschiede zwischen Behaltensintervallen von 1, 7 und 28 Tagen. | B |
+| Moulton et al. 2006 [E-48] | Mikrochirurgische Naht, 38 Assistenzärzte, randomisiert | Gleiche Übungszeit an einem Tag vs. wöchentlich verteilt: beide sofort besser, die verteilte Gruppe nach 1 Monat im Behalten (Zeit, Handbewegungen, Expertenurteil; p < 0.05) und im Transfer besser. | A |
+| Cecilio-Fernandes et al. 2018 [E-49] | 11 Studien, chirurgische Fertigkeiten | Verteiltes Üben verbessert das langfristige Behalten; der optimale Abstand ist unklar. | A |
+| Fahl et al. 2023 [E-50] | 7 Studien, VR-Simulator | Verteilte Einheiten besser als ein einzelner Übungstag; Einheiten an **aufeinanderfolgenden Tagen** schienen am wirksamsten (z. B. 4 × 1 h an 4 Tagen besser als wöchentlich); zu heterogen für eine Meta-Analyse. | A |
+| Goedert & Miller 2008 [E-51] | Spiegelzeichnen, 10 Versuche über 2 Tage | 1 oder 3 Versuche an Tag 1 führten zu Verbesserungen über Nacht und besserer Endleistung als 7 Versuche an Tag 1. | B |
+| Smith & Scarf 2017 [E-52] (Übersicht) | Verschiedene | Beschreibt: Pöstler lernten Maschinenschreiben mit 1 Einheit à 1 h pro Tag schneller und genauer als mit längeren oder doppelten Einheiten (Baddeley & Longman 1978); bei hochkomplexen Aufgaben war der Spacing-Effekt in einer Meta-Analyse sehr klein (d = 0.07; Donovan & Radosevich 1999); beim Balancieren eines inversen Pendels waren 8 Einheiten in 1 Woche besser als 8 Einheiten in 2 Wochen (Paik & Ritter 2015). | B (Sekundärbeschreibung) |
+
+### 8.2 Frequenz vs. Volumen bei Kraft
+
+| Quelle | Befund | Evidenz |
+|---|---|---|
+| Grgic et al. 2018 [E-53] | 22 Studien. Effektstärken steigen von 0.74 (1×/Woche) über 0.82 und 0.93 auf 1.08 (4+×/Woche); bei gleichem Volumen kein Frequenzeffekt (p = 0.421). Frequenzeffekt für Mehrgelenkübungen und Oberkörper signifikant. Meist Untrainierte. | A |
+| Pelland et al. 2025 [E-54] | 67 Studien, 2058 Personen. Kraft steigt mit dem Volumen mit deutlich abnehmendem Grenznutzen; Kraft steigt auch mit der Frequenz (mit abnehmendem Grenznutzen), Hypertrophie kaum. | A |
+| Cuthbert et al. 2021 [E-55] | Gut Trainierte, 6–12 Wochen: keine klaren Unterschiede der Maximalkraft zwischen Frequenzen; Volumen kann auf kürzere, häufigere Einheiten verteilt werden. | A |
+| Ochi et al. 2018 [E-56] | Volumengleich, 11 Wochen Beinstrecker: 3×/Woche à 2 Sätze +65.2 % MVC vs. 1×/Woche à 6 Sätze +43.5 % (p < 0.05); RPE in der 3×-Gruppe tiefer. | B |
+| Sato et al. 2022 [E-57] | Eine einzige 3-s-Maximalkontraktion pro Tag, 5 Tage/Woche, 4 Wochen: exzentrisch +10–13 % in allen Kraftmassen; isometrisch nur +7.2 % exzentrische Kraft; keine Änderung der Muskeldicke. | B |
+| Yoshida et al. 2022 [E-58] | 6 exzentrische Maximalkontraktionen 1×/Woche: keine Änderung; dieselben 6 an 5 Tagen/Woche: +9.3–13.5 %; 30 an einem Tag pro Woche: keine signifikante Kraftzunahme (Muskeldicke +8.0 %). | B |
+| ACSM 2009 [E-60] | Frequenz 2–3 Tage/Woche für Novizen, 3–4 für Fortgeschrittene, 4–5 für sehr Erfahrene. | B |
+| Mattocks et al. 2017 [E-25] | Das Üben des 1RM-Tests allein (≤ 5 Versuche pro Einheit) bringt gleich viel 1RM-Kraft wie Volumentraining. | A |
+
+*Ableitung:* Für Kraft zählt vor allem die wöchentliche Dosis; wird sie auf
+mehr Einheiten verteilt, geht nichts verloren und bei Untrainierten oft etwas
+gewonnen [E-53, E-54, E-56, E-58]. Sehr kleine, häufige Maximalreize wirken
+[E-57, E-58]. Das spricht für 3 Einheiten pro Woche als Default für
+kraftlimitierte Skills (PAR-E-11) und begründet Greasing the Groove (§14).
+
+### 8.3 Gleichgewichts-Skills
+
+| Quelle | Befund | Evidenz |
+|---|---|---|
+| Lesinski et al. 2015 [E-59] | 25 RCTs mit gesunden jungen Erwachsenen: Gleichgewichtstraining verbessert das statische Gleichgewicht (ES 0.73). Am wirksamsten: 11–12 Wochen, 3 Einheiten/Woche (mittlere ES 0.72) oder 6 (eine Studie, ES 1.84), mindestens 16–19 Einheiten, 11–15 min pro Einheit, 4 Übungen, 2 Sätze, 21–40 s pro Übung. Eliteathleten profitierten am stärksten (ES 1.29). Mittlere Studienqualität (PEDro 5). Ein Erratum existiert; sein Inhalt wurde nicht geprüft. | A |
+| Kerwin & Trewartha 2001 [E-104]; Blenkinsop et al. 2017 [E-105] | Handstand-Gleichgewicht wird vor allem über das Handgelenk gesteuert. | B |
+
+### 8.4 Anwendung auf Skill-Typen
+
+| Merkmal | `strength` (Planche, Front Lever, Maltese, OAP) | `balance` (Handstand) | Quellen / Status |
+|---|---|---|---|
+| Einheiten pro Woche | Default 3, Spanne 2–4 | Default 4, Spanne 3–6 | E-53 bis E-56, E-60; E-59 (Analogie aus allgemeinem Gleichgewichtstraining) |
+| Umfang des Skill-Blocks | 2–5 Maximalversuche (Default 3) | 11–15 min | E-25, P-01 bis P-04; E-59 |
+| Mindestabstand gleiche Stufe | 48 h nach Maximalversuchen | 24 h | E-82, E-83; E-50, E-57, E-58 |
+| Pause im Block | ≥ 180 s, Default 300 s | Pause ≥ Versuchsdauer (1:1) | E-81, E-87, E-88; Heuristik, motiviert durch E-46, E-66, E-67 |
+| Satz- bzw. Versuchsdauer | kurze Maximalhalte 2–8 s | 21–40 s Übungsdauer pro Satz (inkl. Versuche) | P-01 bis P-03; E-59 (Analogie) |
+| Verteilung | über die Woche gleichmässig | kurze Einheiten an möglichst vielen, auch aufeinanderfolgenden Tagen | E-50, E-52 |
+
+`mixed`-Skills (Muscle-up, Handstand-Press) nutzen für Maximalversuche die
+`strength`-Regeln und für Technikarbeit die `balance`-Regeln (Heuristik).
+
+## 9. Schlaf, Konsolidierung und Schlafmangel
+
+### 9.1 Konsolidierung: die Replikationsdebatte
+
+| Quelle | Befund | Evidenz |
+|---|---|---|
+| Walker et al. 2002 [E-61] | Nach einer Nacht Schlaf +20 % Tempo in einer Fingersequenz ohne Genauigkeitsverlust; gleich lange Wachzeit ohne Nutzen; Korrelation mit NREM-Stadium 2. | B |
+| Rickard et al. 2008 [E-62] | Vier Störfaktoren (Mittelung, reaktive Hemmung, Tageszeit, Ermüdung durch massiertes Üben) können die Verbesserung erklären; kontrolliert man sie, verschwindet der Schlafeffekt. Schlaf schützt eventuell vor Vergessen. | B |
+| Brawn et al. 2010 [E-63] | Bei Training am Morgen verschlechtert sich die Leistung über den Tag und erholt sich im Schlaf; bei Training am Abend bleibt sie stabil. | B |
+| Nettersheim et al. 2015 [E-64] | Früher Leistungssprung 30 min nach dem Training, dann Abfall über 4 h Wachzeit; Schlaf stellt das Niveau des frühen Sprungs wieder her, bringt aber keinen Zusatzgewinn: **Stabilisierung, keine Verbesserung**. | B |
+| Pan & Rickard 2015 [E-65] | Meta-Analyse, 34 Artikel, 88 Gruppen, 1296 Personen: grosser Gewinn nach Schlaf, kleinerer nach Wachzeit; nach Berücksichtigung der Moderatoren **kein Beleg**, dass Schlaf das Lernen verbessert; eine Stabilisierung ist möglich, aber nicht gesichert. | A |
+| Bönstrup et al. 2019 [E-66] | In einer Übungseinheit mit kurzen Übungs- und Pausenphasen entstanden die frühen Verbesserungen **in den Pausen** («micro-offline gains»), gedeutet als schnelle Konsolidierung. | B |
+| Gupta & Rickard 2022 [E-67] | 159 Personen: Je kleiner das Verhältnis von Pause zu Übungszeit, desto grösser die Verbesserung nach einer Pause. Das Muster ist ohne Konsolidierung erklärbar: reaktive Hemmung baut sich beim Üben auf und klingt in Pausen ab. | B |
+| Christova et al. 2018 [E-68] | Übersicht grobmotorisches Lernen bei Erwachsenen: Schlaf nützt den meisten grobmotorischen Aufgaben, Schlafentzug führt aber nicht immer zu Leistungsverlust. | B |
+| Hoedlmoser et al. 2015 [E-69] | 24 Männer, Fahrrad mit umgekehrter Lenkung: ein 2-h-Mittagsschlaf brachte keinen Konsolidierungsvorteil. | B |
+
+**Einordnung.** Die frühen, grossen Schlafeffekte sind in Fingersequenz-Aufgaben
+entstanden und lassen sich weitgehend durch Messartefakte erklären [E-62,
+E-65]. Für grobmotorische Aufgaben ist die Lage uneinheitlich [E-68, E-69].
+Für den Planer bleibt: **Verteilung über Tage ist belegt** (§8.1), eine
+Regel «Schlaf verstärkt den Lerneffekt, deshalb muss zwischen Einheiten eine
+Nacht liegen» ist es nicht (PAR-E-44). Aus E-66 und E-67 folgt übereinstimmend,
+dass kurze Pausen innerhalb eines Technikblocks die Leistung verbessern; ob
+durch Konsolidierung oder Abklingen von Hemmung, ist für die Planung
+unerheblich (PAR-E-38).
+
+### 9.2 Schlafmangel und Leistung
+
+| Quelle | Befund | Evidenz |
+|---|---|---|
+| Craven et al. 2022 [E-70] | 69 Publikationen, 227 Ergebnisse; Schlafmangel definiert als ≤ 6 h in 24 h. Leistung gesamt −7.56 % [−11.9; −3.13]; Kraft −2.85 % [−4.47; −1.23] (25 Studien), Kraftausdauer −9.85 %, **Skill −20.9 % [−27.0; −14.9]** (9 Studien). Pro Stunde Wachzeit vor der Aufgabe rund −0.4 %. Negativ vor allem nach Schlafentzug und spätem Aufstehen-Müssen, am Nachmittag/Abend; Aufgaben am Morgen weitgehend unbeeinflusst; Oberkörperkraft unbeeinflusst, Beinkraft beeinträchtigt. 89 % Männer. | A (Volltext) |
+| Knowles et al. 2018 [E-71] | 17 Studien: Eine Nacht Schlafentzug hatte wenig Einfluss auf die Muskelkraft; mehrere Nächte Schlafrestriktion können die Kraft in Mehrgelenkübungen senken, nicht in eingelenkigen. Studienqualität moderat bis schwach. | A |
+| Walsh et al. 2020 [E-72] | Expertenkonsens: Eine oder mehrere Nächte ohne Schlaf senken die Leistung; der Einfluss von 1–3 Nächten partieller Restriktion ist unklar; eine Einheitsempfehlung von 7–9 h ist wohl nicht ideal, der individuelle Schlafbedarf zählt. | B |
+
+### 9.3 Folgen für den Planer
+
+1. **Kein Schlafwert, keine Schlafregel ohne Datenfeld.** Das Datenmodell kennt
+   keinen Schlafwert (`codebase_notes.md` §2). Falls Phase 4 einen Check-in
+   vorsieht, gilt als Schwelle «≤ 6 h» (PAR-E-41) [E-70].
+2. **Aktion bei Schlafmangel:** Maximalversuche an Skills durch submaximale
+   Technikarbeit ersetzen, Kraftarbeit am Oberkörper normal lassen (PAR-E-43).
+   Begründung: Skill-Leistung sinkt stark, Oberkörperkraft nicht [E-70]. Die
+   Aktion selbst ist Heuristik; sie verändert nur den Inhalt der Einheit und
+   darf weder Streak noch Fortschritt schmälern (ADR 0003).
+3. **Keine medizinischen Aussagen zum Schlaf.** Texte bleiben bei «Schlaf
+   beeinflusst die Tagesleistung» [E-70, E-72].
+
+## 10. Zentrale vs. periphere Ermüdung und Erholung
+
+### 10.1 Begriffe
+
+| Begriff | Definition | Quelle |
+|---|---|---|
+| Muskelermüdung | Belastungsbedingte Abnahme der maximalen willentlichen Kraft. | E-73 |
+| Periphere Ermüdung | Beeinträchtigte Muskelfunktion (Muskel und Erregungs-Kontraktions-Kopplung). | E-73, E-81 |
+| Zentrale Ermüdung | Abnahme der Fähigkeit des Nervensystems, den Muskel maximal zu aktivieren; messbar als sinkende willentliche Aktivierung. | E-73, E-81 |
+| Supraspinale Ermüdung | Teil der zentralen Ermüdung oberhalb des Rückenmarks: Die Ausgabe des Motorkortex ist nicht mehr optimal, sodass Kortexstimulation zusätzliche Kraft erzeugt. | E-73, E-74 |
+| Spinale Anteile | Veränderter Zufluss aus Muskelspindeln, Sehnenorganen und dünnen Muskelafferenzen (Gruppe III/IV); Motoneurone reagieren schlechter auf synaptischen Input. | E-73, E-75 |
+| Fatigue vs. Fatigability | Vorschlag, «Fatigue» als Symptom zu definieren, das aus Leistungs-Ermüdbarkeit und wahrgenommener Ermüdbarkeit entsteht; kein Adjektiv wie «zentral» vor «Fatigue», solange der Ort nicht mechanistisch belegt ist. | E-79 |
+| Zusammenwirken | Veränderungen auf allen Ebenen (Gehirn, Rückenmark, motorische Ausgabe, sensorischer Input, autonome Funktion); die Mischung hängt von der Belastungsart ab; die meisten Befunde stammen aus isometrischen Kontraktionen eines Gliedes. | E-80 |
+
+### 10.2 Messung: Twitch Interpolation und ihre Grenzen
+
+- **Prinzip:** Während einer maximalen willentlichen Kontraktion wird der Nerv
+  oder Muskel elektrisch gereizt. Entsteht noch ein Zusatzzucken, war die
+  Aktivierung unvollständig [E-73, E-76].
+- **Befunde:** Empfindliche Messungen zeigen kleine bis mässige
+  Aktivierungsdefizite schon bei kurzen Maximalanstrengungen und zunehmende
+  Defizite bei erschöpfender Belastung [E-76].
+- **Grenzen:** Wie das Ergebnis in eine Aktivierung umgerechnet wird, ist
+  umstritten [E-76]; eine Gegenposition hält die Methode für kein valides Mass
+  der willentlichen Aktivierung [E-77]. Die Verzögerung zwischen Belastungsende
+  und Messung, die Stimulationsintensität und die Auswertung verzerren die
+  Ergebnisse [E-78].
+- **Folge:** Zentrale Ermüdung ist nur mit Laborstimulation messbar. Die App
+  kann sie **nicht** erfassen und leitet sie nicht aus Log-Werten ab.
+
+### 10.3 Zeitverlauf der Erholung
+
+| Situation | Zentral | Peripher | Quelle | Evidenz |
+|---|---|---|---|---|
+| Anhaltende maximale Isometrie (Ellbogenbeuger, 2–3 min) | Willentliche Aktivierung fällt von über 99 % auf durchschnittlich 90.7 %; Zusatzkraft durch Kortexstimulation steigt von 1.0 % auf 9.8 % | — | E-74 | B |
+| Kurze, hochintensive Belastung | Erholung typischerweise **innerhalb von 2 min** | Erregungs-Kontraktions-Kopplung und Durchblutung **innerhalb von 3–5 min**; vollständige Muskelfunktion teils erst nach **Stunden** (Kalziumfreisetzung/-empfindlichkeit) | E-81 | B |
+| Lange Belastung mit niedriger Intensität | Schnelle Teilerholung in den ersten Minuten, Aktivierung aber teils nach 30 min noch nicht vollständig | nach 20–30 min unvollständig | E-81 | B |
+| Einzelne maximale Hebung (Kniebeuge, Bankdrücken) | Erholung in weniger als 1 min (Sekundärangabe) | — | E-91 | B |
+| Schwere Krafteinheit: 10 × 5 Kniebeugen mit 80 % 1RM (10 Athleten) | Willentliche Aktivierung **bis 48 h** reduziert | Potenzierte Zuckungskraft 48 h reduziert; Ermüdung erst nach **72 h** ganz abgeklungen | E-82 | A (kleines RCT) |
+| Sprung- bzw. Sprinteinheit (gleiche Studie) | Aktivierung 24 h reduziert | Zuckungskraft 48 h reduziert; Ermüdung nach 48 h (Sprung) bzw. 72 h (Sprint) abgeklungen | E-82 | A (kleines RCT) |
+| Sätze bis zum Versagen vs. nicht bis zum Versagen (Bankdrücken, Kniebeuge) | — | Versagen verzögert die Erholung von Leistung und Stoffwechselmarkern um 24–48 h | E-83 | B |
+
+**Folgen.** Innerhalb einer Einheit erholt sich die zentrale Komponente nach
+kurzen Maximalversuchen in Minuten, die Pausenlänge wird deshalb von der
+peripheren Erholung bestimmt (§12). Zwischen Einheiten sind 48 h nach schwerer,
+umfangreicher Arbeit plausibel [E-82, E-83]; ein Skill-Maximum mit 2–5 kurzen
+Versuchen hat deutlich weniger Volumen als 10 × 5 Kniebeugen, 48 h sind hier
+also eher konservativ (PAR-E-13). Für Straight-Arm-Arbeit gibt es keine
+eigenen Daten; Stream D (Sehnen) hat Vorrang.
+
+## 11. «CNS-Fatigue»: was belegt ist, was Mythos ist
+
+| Aussage aus der Fitness-Szene | Beleglage | Bewertung | Quellen |
+|---|---|---|---|
+| «Maximale Anstrengungen ermüden das Nervensystem.» | Während anhaltender oder wiederholter Maximalkontraktionen sinkt die willentliche Aktivierung, auch supraspinal. | **Belegt, akut.** | E-73, E-74, E-75 |
+| «Nach schwerem Training ist das CNS tagelang platt; deshalb 48 h Pause.» | Die Praxis trennt maximale Einheiten üblicherweise um mindestens 48 h unter dieser Annahme, die kaum untersucht war. In der Studie dazu hielt die Ermüdung bis 72 h an, war aber «nicht primär» zentral bedingt; die Aktivierung war nach der schweren Einheit bis 48 h leicht reduziert, andere Masse der ZNS-Funktion unverändert. | **Teilweise:** Ein zentraler Anteil ist messbar, der Hauptteil ist peripher. «Mehrtägiges CNS-Burnout» als Hauptursache ist **nicht belegt**. | E-82 |
+| «Nach einem Maximalversuch braucht das CNS lange Erholung.» | Zentrale Ermüdung nach kurzer, hochintensiver Belastung erholt sich typischerweise in 2 min. | **Mythos** für kurze Einzelversuche; Pausen von 3–5 min begründen sich peripher. | E-81 |
+| «Training bis zum Versagen brennt das CNS aus.» | Versagen verlängert die Erholung um 24–48 h, gemessen an Leistung, Ammoniak, Wachstumshormon und Kreatinkinase; ein spezifisch zentraler Mechanismus wurde nicht gezeigt. | **Effekt belegt, Zuschreibung ans CNS nicht.** | E-83 |
+| «CNS-Fatigue ist dasselbe wie Übertraining.» | Übertraining ist eine lang anhaltende Fehlanpassung vieler biologischer, neurochemischer und hormoneller Systeme, eine Ausschlussdiagnose ohne allgemein anerkannten Marker. Die klassische «zentrale Ermüdungshypothese» (Serotonin, Dopamin) stammt aus langen Ausdauerbelastungen und ist nicht robust belegt. | **Begriffsverwechslung.** | E-84, E-85 |
+| «Man kann CNS-Fatigue mit einfachen Tests feststellen.» | Zentrale Ermüdung ist nur mit Stimulationsmethoden messbar, die selbst methodische Probleme haben; Ermüdung sollte ohne Ortsadjektiv beschrieben werden, solange der Mechanismus nicht belegt ist. | **Nicht belegt** für App-taugliche Tests. | E-76, E-77, E-78, E-79 |
+
+**Regel:** Der Planer begründet Pausen, Abstände und Deloads **nie** mit
+«CNS-Fatigue», sondern mit Planstruktur und beobachtbaren Log-Werten (Form,
+Haltezeit, RPE) (PAR-E-29). Das passt zu ADR 0003 (Ruhe ist Teil des Plans).
+Zulässige Erklärung in Texten: «Nach schweren Einheiten braucht der Körper
+bis zu 2–3 Tage, bis die volle Leistung zurück ist» [E-82].
+
+## 12. Pausen zwischen Maximalversuchen
+
+| Quelle | Empfehlung bzw. Befund | Evidenz |
+|---|---|---|
+| Carroll et al. 2017 [E-81] | Zentrale Erholung ~2 min, periphere 3–5 min nach kurzer, hochintensiver Belastung. | B |
+| Willardson 2006 [E-88] | Training mit Lasten unter 90 % 1RM: 3–5 min Pause für grössere Kraftzuwächse; beim **Testen** der Maximalkraft können 1–2 min zwischen Versuchen reichen; Power: mindestens 3 min. | B |
+| de Salles et al. 2009 [E-87] | 35 Studien: 3–5 min erlauben mehr Wiederholungen bei 50–90 % 1RM und bringen chronisch mehr Maximalkraft; beim Testen kann 1 min reichen, 3–5 min sind aber sicherer und zuverlässiger. | B |
+| ACSM 2009 [E-60] | Schwere Lasten (1–6RM): 3–5 min Pause. | B |
+| Grgic et al. 2018 [E-86] | 23 Studien, 491 Personen: Auch kurze Pausen (< 60 s) bringen Kraft; für Trainierte maximieren Pausen > 2 min den Kraftzuwachs, für Untrainierte reichen 60–120 s. | A |
+| Praxisquelle | Zielstufe ≥ 5 min, Maltese 7 min; Autor selbst 5–7 min für den Maltese Press. | C [P-01 S. 1–3; P-02 S. 4; P-03 S. 4; P-04 S. 1] |
+
+**Folge:** Die Literatur trägt 180–300 s; die Praxisquelle liegt bei 300–420 s.
+Default bleibt 300 s (PAR-E-04), Untergrenze 180 s, Maltese und vergleichbar
+schwerste Elemente 420 s (PAR-E-05, nur Evidenz C). Für isometrische
+Straight-Arm-Halte gibt es keine eigene Pausenstudie (Offene Fragen).
+
+## 13. Aufwärmen und Potenzierung
+
+| Quelle | Befund | Evidenz |
+|---|---|---|
+| Fradkin et al. 2010 [E-95] | 32 Studien hoher Qualität: Aufwärmen verbesserte die Leistung in 79 % der untersuchten Kriterien; kaum Hinweise auf Nachteile. | A |
+| McGowan et al. 2015 [E-94] | Aufwärmen wirkt über Temperatur, Stoffwechsel, neuronale und psychologische Effekte; Aufwärmstrategien beruhen noch weitgehend auf Erfahrung. | B |
+| Abad et al. 2011 [E-97] | 13 Trainierte: Spezifisches Aufwärmen (1 × 8 bei ~50 % und 1 × 3 bei ~70 % des geschätzten 1RM) plus 20 min lockeres Radfahren (60 % HFmax) ergab einen um 8.4 % höheren Beinpressen-1RM als nur spezifisches Aufwärmen. | A (kleines RCT) |
+| Behm et al. 2016 [E-96] | Statisches Dehnen −3.7 %, dynamisches +1.3 %, PNF −4.4 % unmittelbar danach; ≥ 60 s statisches Dehnen pro Muskelgruppe −4.6 %, < 60 s −1.1 %; mit anschliessender dynamischer Aktivität kein klarer Effekt. | A |
+| Blazevich & Babault 2019 [E-91] | Klassische Potenzierung (PAP) hat eine Halbwertszeit von ~28 s und wirkt nur bei submaximaler Aktivierung; die **maximale isometrische Kraft lässt sich nicht steigern, wenn der Muskel voll aktiviert ist**. Die Leistungssteigerung nach Vorbelastung (PAPE) erreicht ihr Maximum meist 6–10 min danach und beruht teils auf Temperatur; nach vollständigem Aufwärmen gibt es kaum Belege für einen Zusatznutzen. | B (Volltext) |
+| Seitz & Haff 2016 [E-92] | 47 Studien, 1954 Personen: kleiner Effekt für Sprung (0.29), Wurf (0.26) und ballistische Oberkörperleistung (0.23), mittlerer für Sprint (0.51); maximale Isometrie als Vorbelastung ES −0.09; Stärkere profitieren mehr. | A |
+| Wilson et al. 2013 [E-93] | 32 Studien: ES 0.38; mittlere Intensität (60–84 %) besser als hohe; mehrere Sätze besser; 7–10 min Pause besser als 3–7 min, > 10 min ohne Effekt; Athleten 0.81 vs. Untrainierte 0.14. | A |
+| Mina et al. 2019 [E-98] | Nach einem vollständigen, aufgabenspezifischen Aufwärmen brachten 3 Kniebeugen mit 85 % 1RM keine Sprungsteigerung (mit elastischen Bändern dagegen +5.3–6.5 %). | A (kleines RCT) |
+
+**Folgen für den Planer:**
+
+1. **Aufwärmblock vor dem Skill-Maximum** (PAR-E-01): kurzes allgemeines
+   Aufwärmen (PAR-E-47) plus 2–3 spezifische Rampensätze der Zielbewegung mit
+   steigender Schwierigkeit (Regression → assistiert → Zielstufe, submaximal),
+   erfasst als `warmup` (PAR-E-26) [E-95, E-97].
+2. **Kein langes statisches Dehnen vor Maximalversuchen:** höchstens < 60 s pro
+   Muskelgruppe, danach dynamische Aktivität (PAR-E-45) [E-96].
+3. **Keine eigene Potenzierungsübung für Halte** (PAR-E-46): Maximale
+   Isometrie als Vorbelastung wirkt nicht [E-92], maximale isometrische Kraft
+   lässt sich nicht potenzieren [E-91], und nach vollständigem Aufwärmen fehlt
+   der Effekt meist [E-91, E-98].
+
+## 14. Greasing the Groove aus Sicht des motorischen Lernens
+
+| Aussage des Konzepts | Quelle (Stufe) | Einordnung durch Lern- und Trainingsforschung |
+|---|---|---|
+| Häufiges Üben derselben Bewegung über den Tag; Pavel Tsatsouline überträgt das Prinzip auch auf Sprünge, **schliesst aber besonders belastende Sprünge** (Drop- und Tiefsprünge) davon aus. | E-100 (C) | Verteiltes Üben ist belegt [E-48, E-49, E-50]; der Ausschluss belastender Varianten stützt die Heuristik, Straight-Arm-Skills auszuschliessen. |
+| Nie bis zum Versagen; «so oft wie möglich, so frisch wie möglich»; Sätze mit etwa 40–50 % (andere Stimmen: 50–80 %) der Maximalwiederholungen, mehrmals täglich. | E-103 (D), zitiert Tsatsouline | Üben ohne Ermüdung ist lernfreundlicher [E-28]; Versagen verlängert die Erholung [E-83]. Die Prozentwerte sind nicht belegt. |
+| Eine perfekte Wiederholung mehrmals täglich; jeden Satz 2 Wdh. vor dem Versagen beenden. | E-101 (C) | Deckt sich mit PAR-E-18 und dem Befund, dass Kraft mit Satzabbruch vor dem Versagen gleich stark steigt [E-89, E-90]. |
+| Erfahrungsbericht: 16 → 24 Klimmzüge in 6 Wochen mit 22 Einheiten und 1681 Wiederholungen, ohne Versagen; zuvor Stagnation mit 3 Sätzen bis zum Versagen 3× pro Woche. | E-102 (C, n = 1) | Anekdote; das Programm hat hohes Volumen. Nach E-53 könnte der Effekt eher über das Zusatzvolumen als über «neuronales Einschleifen» laufen (W-21). |
+| Kraft ist eine Fertigkeit. | E-100, E-103 (C/D) | Gestützt durch Aufgabenspezifität [E-20, E-25]. |
+| Kleine, häufige Dosen wirken. | — | Laboranalogie: eine 3-s-Maximalkontraktion pro Tag +6–13 % [E-57]; 6 Kontraktionen täglich besser als 30 einmal pro Woche [E-58]. Eine kontrollierte Studie zu GTG selbst wurde nicht gefunden. |
+
+**Folgen für den Planer:** GTG ist ein optionales Modul für Grundübungen mit
+gebeugtem Arm (Klimmzug, Liegestütz, Dip) (PAR-E-27): Sätze mit ≤ 50 % der
+Maximalwiederholungen (PAR-E-48, Evidenz D, Default konservativ), mindestens
+2 Wdh. Reserve (PAR-E-49, Evidenz C), nie bis zum Versagen, mehrere Sätze über
+den Tag verteilt. **Nicht** für Straight-Arm-Skills und nicht für
+Handgelenk-intensive Balancearbeit ausserhalb geplanter Einheiten; das ist
+Heuristik mit Begründung in der Sehnen- und Gelenklast (Stream D, ADR 0003).
+GTG-Sätze werden geloggt wie jeder Satz (ein Codepfad) und erzeugen keine
+Streak- oder XP-Logik, die Häufigkeit belohnt (ADR 0003).
 
 ## Parameter für den Algorithmus
 
 | Param-ID | Parameter (key, English snake_case) | Wert/Spanne | Einheit | Quelle(n) | Evidenz | Anmerkung |
 |---|---|---|---|---|---|---|
-| PAR-E-01 | `session_block_order` | `warmup` → `skill_max` → `skill_volume` → `strength_accessory` → `prehab_conditioning` | Reihenfolge | E-26, E-27, E-28, P-01 bis P-03 | A/B/C | Kraftzuwachs am grössten bei Übungen am Anfang [E-26]; Ermüdung schadet dem Lernen [E-28]; PDF-Muster F-1. Position von Warm-up und Prehab: Heuristik. |
-| PAR-E-02 | `skill_priority_first` | true: Der Skill mit der höchsten User-Priorität erhält den ersten Arbeitsblock | Regel | E-26 | A | Übertragung des Reihenfolgeeffekts auf die Skill-Priorität. |
+| PAR-E-01 | `session_block_order` | `warmup` → `skill_max` → `skill_volume` → `strength_accessory` → `prehab_conditioning` | Reihenfolge | E-26, E-27, E-28, E-60, E-95, E-97, P-01 bis P-03 | A/B/C | Kraftzuwachs am grössten bei Übungen am Anfang [E-26]; höhere vor niedrigerer Intensität [E-60]; Ermüdung schadet dem Lernen [E-28]; Aufwärmen verbessert Leistung [E-95, E-97]. Position von Prehab zuletzt: Heuristik. |
+| PAR-E-02 | `skill_priority_first` | true: Der Skill mit der höchsten User-Priorität erhält den ersten Arbeitsblock | Regel | E-26, E-60 | A/B | Übertragung des Reihenfolgeeffekts auf die Skill-Priorität. |
 | PAR-E-03 | `equal_priority_order_rotation` | Bei gleicher Priorität wechselt die Reihenfolge je Einheit | Regel | E-26; P-02 S. 1, P-03 S. 1 | Heuristik | Verteilt den Vorteil der ersten Position. |
-| PAR-E-04 | `max_effort_min_rest_s` | 300 | s | P-01 S. 1–3; P-02 S. 1–3; P-03 S. 1–3; P-04 S. 1 | C | Pause vor jedem weiteren Maximalversuch an der Zielstufe (Holds und Presses). Literatur nicht verifiziert: mit Stream B abgleichen. |
-| PAR-E-05 | `max_effort_min_rest_heavy_s` | 420 (Spanne 300–420) | s | P-02 S. 4; P-03 S. 4; P-04 S. 1 | C | Maltese und vergleichbare schwerste Elemente. |
-| PAR-E-06 | `skill_volume_rest_s` | 180–300 (Default 240) | s | P-01 bis P-03 (Positionen 2–3) | C | Volumensätze derselben Bewegung. |
-| PAR-E-07 | `accessory_rest_s` | 120–180 | s | P-01 bis P-03 (letzte Positionen) | C | Leans, Pseudo-Liegestütze, Zubringer. |
-| PAR-E-08 | `max_attempts_per_skill_per_session` | Default 3, Spanne 2–5 | Sätze/Versuche | P-01 bis P-03 (2–3), P-04 S. 1 (5), E-25 (≤ 5 wirksam) | A/C | Gilt nur, solange die Stoppregeln (PAR-E-15 bis 17) nicht greifen. Keine XP für Maximalversuche (ADR 0003). |
+| PAR-E-04 | `max_effort_min_rest_s` | Default 300, Untergrenze 180 | s | E-81, E-86, E-87, E-88, E-60, P-01 S. 1–3, P-02 S. 1–3, P-03 S. 1–3, P-04 S. 1 | A/B/C | Literatur 180–300 s (zentral ~2 min, peripher 3–5 min [E-81]; 3–5 min bei schweren Lasten [E-60, E-87, E-88]; > 2 min für Trainierte [E-86]); Praxisquelle ≥ 300 s. Default am oberen Literaturende = Praxiswert. Abgleich mit PAR-B-39 (Stream B) nötig. |
+| PAR-E-05 | `max_effort_min_rest_heavy_s` | 420 (Spanne 300–420) | s | P-02 S. 4; P-03 S. 4; P-04 S. 1 | C | Maltese und vergleichbare schwerste Elemente. Literatur nennt für Maximalversuche nichts über 5 min [E-87, E-88]. |
+| PAR-E-06 | `skill_volume_rest_s` | 180–300 (Default 240) | s | P-01 bis P-03 (Positionen 2–3), E-86, E-87 | A/B/C | Volumensätze derselben Bewegung; 3–5 min bei 50–90 % Intensität [E-87]. |
+| PAR-E-07 | `accessory_rest_s` | 120–180 | s | P-01 bis P-03 (letzte Positionen), E-86 | A/C | 60–120 s reichen Untrainierten, > 2 min maximieren Kraft bei Trainierten [E-86]. |
+| PAR-E-08 | `max_attempts_per_skill_per_session` | Default 3, Spanne 2–5 | Sätze/Versuche | P-01 bis P-03 (2–3), P-04 S. 1 (5), E-25 (≤ 5 wirksam), E-51 | A/B/C | Gilt nur, solange die Stoppregeln (PAR-E-15 bis 17) nicht greifen. Wenige Versuche pro Tag können über Nacht mehr bringen als viele [E-51]. Für Skills keine direkte Studie. Keine XP für Maximalversuche (ADR 0003). |
 | PAR-E-09 | `working_sets_per_skill_session` | 12–18 | Sätze | P-01 bis P-04 (`01_pdf_extract.md` §4.1) | C | Obergrenze aller Arbeitssätze einer Skill-Einheit; Überschneidung mit Stream B. |
-| PAR-E-10 | `lab_max_isometric_contractions_reference` | 20–60 | Kontraktionen/Einheit | E-08, E-09, E-21 | B | **Nur Referenz, kein Default.** Eingelenkige Laborstudien mit Untrainierten; bei Straight-Arm-Skills begrenzt die Sehnenlast (Stream D). |
-| PAR-E-11 | `strength_skill_sessions_per_week` | Default 3, Spanne 2–4 | Einheiten/Woche | E-08, E-09, E-21, E-22 | B | Alle wirksamen Protokolle: 3×/Woche bzw. 14 Einheiten in 4 Wochen. Die Obergrenze 4 ist Heuristik. Gilt für `limiting_factor = strength`. |
-| PAR-E-12 | `balance_skill_sessions_per_week` | 5–7 kurze Einheiten (≤ 15 min) | Einheiten/Woche | — | Heuristik | Für `limiting_factor = balance` (Handstand). Begründung: geringe muskuläre Last, Übung der Zielaufgabe [E-20, E-25]. Belege zur verteilten Übung nicht verifiziert (§6). |
-| PAR-E-13 | `same_skill_min_spacing_h_max_effort` | 48 | h | abgeleitet aus E-08, E-09, E-21 | Heuristik | Abstand zwischen zwei Einheiten mit Maximalversuchen am selben Skill; 3×/Woche entspricht im Mittel etwa 48 h. Der Erholungszeitverlauf ist nicht verifiziert. |
-| PAR-E-14 | `same_skill_min_spacing_h_submax` | 24 | h | — | Heuristik | Submaximale Technikarbeit (z. B. Handstand, Leans). |
-| PAR-E-15 | `quality_stop_form_drop` | Stopp, wenn `form_quality` ≤ (erster Arbeitssatz − 1) oder < 3 | Formwert 1–5 | E-28 (Motivation) | Heuristik | Beendet den Skill-Block; die Einheit läuft mit Regression bzw. Kraftübungen weiter. |
+| PAR-E-10 | `lab_max_isometric_contractions_reference` | 1–6 pro Tag bei täglicher Übung; 20–60 pro Einheit bei 3×/Woche | Kontraktionen | E-57, E-58, E-08, E-09, E-21 | B | **Nur Referenz, kein Default.** Eingelenkige Laborstudien mit Untrainierten; bei Straight-Arm-Skills begrenzt die Sehnenlast (Stream D). |
+| PAR-E-11 | `strength_skill_sessions_per_week` | Default 3, Spanne 2–4 | Einheiten/Woche | E-53, E-54, E-55, E-56, E-60, E-08, E-09, E-21, E-22 | A/B | Kraft steigt mit der Frequenz, vor allem über das Volumen [E-53, E-54]; 3× besser als 1× bei gleichem Volumen [E-56]; ACSM 2–3 (Novizen) bis 4–5 (sehr Erfahrene) [E-60]; Trainierte ohne klaren Frequenzeffekt [E-55]. Gilt für `limiting_factor = strength`; Stream D hat Vorrang. |
+| PAR-E-12 | `balance_skill_sessions_per_week` | Default 4, Spanne 3–6 | Einheiten/Woche | E-59, E-50, E-52 | A (Analogie) | Allgemeines Gleichgewichtstraining: 3 (mehrere Studien) oder 6 (eine Studie) pro Woche am wirksamsten [E-59]; kurze Einheiten an vielen Tagen [E-50, E-52]. Default 4 ist Heuristik zwischen beiden Werten. Nicht handstand-spezifisch; Handgelenkslast (Stream D) prüfen. Abgleich mit PAR-B-35. |
+| PAR-E-13 | `same_skill_min_spacing_h_max_effort` | 48 | h | E-82, E-83, E-08, E-09, E-21 | A/B | Nach 10 × 5 mit 80 % 1RM: Aktivierung und Zuckungskraft bis 48 h reduziert, Ermüdung nach 72 h weg [E-82]; ohne Versagen schnellere Erholung [E-83]. Skill-Maxima haben weniger Volumen: 48 h eher konservativ. Übertragung auf Straight-Arm ungeprüft. |
+| PAR-E-14 | `same_skill_min_spacing_h_submax` | 24 | h | E-57, E-58, E-59, E-50 | B/A | Tägliche kleine Maximaldosen an 5 Tagen/Woche wirksam [E-57, E-58]; Gleichgewichtstraining bis 6×/Woche [E-59]; aufeinanderfolgende Tage beim Fertigkeitslernen wirksam [E-50]. Gilt für submaximale Technikarbeit. |
+| PAR-E-15 | `quality_stop_form_drop` | Stopp, wenn `form_quality` ≤ (erster Arbeitssatz − 1) oder < 3 | Formwert 1–5 | E-28, E-34 (Motivation) | Heuristik | Beendet den Skill-Block; die Einheit läuft mit Regression bzw. Kraftübungen weiter. Schwellen nicht validiert. |
 | PAR-E-16 | `quality_stop_consecutive_failures` | 2 | Fehlversuche in Folge | — | Heuristik | `failed = true` auf derselben Stufe; danach eine Stufe leichter oder assistiert. |
-| PAR-E-17 | `quality_stop_performance_drop_pct` | 20 | % unter dem besten Satz der Einheit | — | Heuristik | Fallback ohne Formwert (Haltezeit/Wdh.). Literatur zu Abbruchschwellen nicht verifiziert. |
-| PAR-E-18 | `skill_sets_to_failure` | false (`target_rir` ≥ 1) | Regel | E-28 | B + Heuristik | Skill- und Maximalsätze nicht bis zum Versagen. |
-| PAR-E-19 | `fatigue_gate_replace_max_attempts` | Bei hohem Ermüdungssignal Maximalversuche durch submaximale Technik ersetzen | Regel | E-28 (Motivation) | Heuristik | Signalquelle offen (`perceived_fatigue` der letzten Einheit oder künftiger Check-in). |
+| PAR-E-17 | `quality_stop_performance_drop_pct` | 20 | % unter dem besten Satz der Einheit | E-89, E-90 | A (Analogie) + Heuristik | Satzabbruch bei 20 % Geschwindigkeitsverlust = gleicher Kraftzuwachs wie 40 % [E-90]; Verlustschwelle ohne Einfluss auf Kraft [E-89]. Übertragung auf Haltezeit/Wdh. ist Heuristik. |
+| PAR-E-18 | `skill_sets_to_failure` | false (`target_rir` ≥ 1) | Regel | E-28, E-83, E-89, E-101 | A/B/C | Versagen verlängert die Erholung um 24–48 h [E-83] und bringt keinen Kraftvorteil [E-89]; Üben unter Ermüdung schadet dem Lernen [E-28]. Tests (`kind = test`) ausgenommen. |
+| PAR-E-19 | `fatigue_gate_replace_max_attempts` | Bei hohem Ermüdungssignal Maximalversuche durch submaximale Technik ersetzen | Regel | E-28, E-70 (Motivation) | Heuristik | Signalquelle offen (`perceived_fatigue` der letzten Einheit oder künftiger Check-in, siehe PAR-E-41). |
 | PAR-E-20 | `early_neural_phase_weeks` | 3–5 | Wochen | E-11 | B | Umstritten: frühe Hypertrophie ab etwa 20 Tagen messbar [E-12], teils Ödem [E-13]. Nur für Erwartung und Texte. |
-| PAR-E-21 | `progress_extrapolation_window_weeks` | 4–6 | Wochen | E-11, E-12 | Heuristik | Frühe Fortschrittsraten eines neuen Skills nicht über dieses Fenster hinaus hochrechnen (Realismus-Check Persona 5). |
+| PAR-E-21 | `progress_extrapolation_window_weeks` | 4–6 | Wochen | E-11, E-12, E-30, E-31 | B + Heuristik | Lernkurven: schnell, dann langsam [E-30, E-31]; Fensterlänge aus Kraftstudien, für Skills nicht validiert. Realismus-Check Persona 5. |
 | PAR-E-22 | `novice_early_gain_reference_pct` | 30–55 in 4–12 Wochen | % Zuwachs in der geübten Aufgabe | E-08, E-09, E-12, E-20 | A/B | Nur Plausibilitätsprüfung; eingelenkige Laboraufgaben, nicht auf Skill-Stufen übertragbar. |
-| PAR-E-23 | `hold_training_credit_adjacent_levels` | 0 für Unlocks; 0.5 als Trainingsreiz für die direkt benachbarte Stufe | Faktor | E-21, E-22, E-24 | A/B + Heuristik | Winkel- und Modusspezifität belegt; der Faktor 0.5 ist Heuristik. |
-| PAR-E-24 | `target_pattern_exposure_per_session` | ≥ 1 Block mit der Zielbewegung oder ihrer nächsten Regression je Skill-Einheit | Blöcke | E-20, E-25 | A/B | Zubringer allein reichen nicht; das Üben der Aufgabe selbst ist der stärkste spezifische Reiz. |
+| PAR-E-23 | `hold_training_credit_adjacent_levels` | 0 für Unlocks; 0.5 als Trainingsreiz für die direkt benachbarte Stufe | Faktor | E-21, E-22, E-24, E-45 | A/B + Heuristik | Winkel-, Modus- und Zielspezifität belegt; der Faktor 0.5 ist Heuristik. |
+| PAR-E-24 | `target_pattern_exposure_per_session` | ≥ 1 Block mit der Zielbewegung oder ihrer nächsten Regression je Skill-Einheit | Blöcke | E-20, E-25, E-45 | A/B | Zubringer allein reichen nicht; das Üben der Aufgabe selbst ist der stärkste spezifische Reiz. |
 | PAR-E-25 | `isometric_intent_cue` | «maximale Spannung» für Halte im Kraftblock | Hinweistext | E-23 | A | Ballistische Intention steigert Aktivierung und Kraftanstiegsrate. |
-| PAR-E-26 | `pre_max_ramp_sets` | 2–3 (`kind = warmup`, submaximal, steigend) | Sätze | E-20, E-25 (Spezifität) | Heuristik | Potenzierung und Aufwärmen nicht verifiziert (§6). |
-| PAR-E-27 | `gtg_allowed` | nur Grundübungen mit gebeugtem Arm, ≤ 50 % Max-Wdh., nie bis zum Versagen; nie Straight-Arm | Regel | — | Heuristik | GTG-Quellen nicht verifiziert; Ausschluss Straight-Arm wegen Sehnenlast (Stream D, ADR 0003). |
-| PAR-E-28 | `skill_limiting_factor` | `strength` (Planche, Front Lever, Maltese, One-Arm Pull-up) · `balance` (Handstand) · `mixed` (Muscle-up, Press to Handstand) | Metadatum | P-01 bis P-03 (Dosierungsmuster Planche/Maltese) | C + Heuristik | Steuert PAR-E-11 vs. PAR-E-12. Zuordnung je Skill durch Stream A bestätigen. |
-| PAR-E-29 | `rationale_excludes_cns_fatigue` | true | Regel | — | Heuristik | Begründungen nutzen Plan und Log-Werte, keine unbelegten Mechanismen. |
+| PAR-E-26 | `pre_max_ramp_sets` | 2–3 (`kind = warmup`, submaximal, steigend; z. B. ~50 % und ~70 % der Zielschwierigkeit) | Sätze | E-97, E-95, E-94 | A/B | Zwei spezifische Aufwärmsätze (~50 %, ~70 %) plus allgemeines Aufwärmen [E-97]. Übertragung von Last-% auf Progressionsstufen ist Heuristik. |
+| PAR-E-27 | `gtg_allowed` | nur Grundübungen mit gebeugtem Arm (Klimmzug, Liegestütz, Dip); nie bis zum Versagen; nie Straight-Arm | Regel | E-100, E-101, E-102, E-103, E-57, E-58, E-28 | C/D + B | Konzept aus Coaching-Quellen; Laboranalogie für kleine tägliche Dosen [E-57, E-58]; keine kontrollierte GTG-Studie. Ausschluss Straight-Arm: Heuristik (Stream D, ADR 0003; vgl. Ausschluss belastender Sprünge [E-100]). |
+| PAR-E-28 | `skill_limiting_factor` | `strength` (Planche, Front Lever, Maltese, One-Arm Pull-up) · `balance` (Handstand) · `mixed` (Muscle-up, Press to Handstand) | Metadatum | P-01 bis P-03, E-104, E-105 | B/C + Heuristik | Handstand wird über das Handgelenk balanciert [E-104, E-105]; Planche/Maltese als Maximalkraftmuster dosiert [P-01 bis P-03]. Steuert PAR-E-11 vs. PAR-E-12. Zuordnung je Skill durch Stream A bestätigen. |
+| PAR-E-29 | `rationale_excludes_cns_fatigue` | true | Regel | E-82, E-81, E-79, E-85 | A/B | Mehrtägige Ermüdung nach schwerem Training ist «nicht primär» zentral [E-82]; zentrale Erholung nach kurzen Maximalreizen in ~2 min [E-81]; Ortsadjektive vor «Fatigue» vermeiden [E-79]; Übertraining ist etwas anderes [E-85]. |
 | PAR-E-30 | `cross_education_reference_pct` | 11.9 | % | E-19 | A | Nur Information für Erklärtexte; keine Reha- oder Therapielogik. |
+| PAR-E-31 | `progress_eval_on_first_fresh_set` | true: Fortschritt einer Stufe wird am ersten Arbeitssatz der Folgeeinheit gemessen, nicht an späten Sätzen einer Einheit | Regel | E-34, E-28 | B | Verzögerte Leistung ist der bessere Lernindikator [E-34]; späte Sätze sind durch Ermüdung verzerrt [E-28]. |
+| PAR-E-32 | `max_attempt_schedule` | `blocked` (alle Maximalversuche eines Skills hintereinander) | Regel | E-36, E-37, E-38, E-39, E-45 | A | CI-Vorteil in angewandten Settings klein/n. s. [E-36, E-37, E-38, E-39]; Zielspezifität [E-45]. |
+| PAR-E-33 | `interleave_submax_technique_allowed` | true (optional; Pause je Skill nach PAR-E-04/06 bleibt) | Regel | E-41, E-42, E-37 | A/B + Heuristik | Verschachtelung half beim Bankdrücken [E-41]; steigende CI für Novizen [E-42]; Laboreffekt [E-37]. Anwendung auf Calisthenics ist Heuristik. |
+| PAR-E-34 | `variation_between_sessions` | Varianten wechseln zwischen Einheiten; Zielstufe bleibt in jeder Skill-Einheit | Regel | E-44, E-45, P-01 bis P-03 | A/B/C | Variabilität fördert Generalisierung [E-44], konstantes Üben am Ziel die Zielleistung [E-45]. |
+| PAR-E-35 | `balance_block_minutes` | 11–15 | min | E-59 | A (Analogie) | Allgemeines Gleichgewichtstraining; nicht handstand-spezifisch. Abgleich mit PAR-B-35 (5–10 min, Heuristik). |
+| PAR-E-36 | `balance_set_duration_s` | 21–40 | s pro Satz (inkl. Versuche) | E-59 | A (Analogie) | Übungsdauer im Gleichgewichtstraining; Handstand-Anfänger erreichen das über mehrere kurze Versuche. |
+| PAR-E-37 | `balance_min_sessions_before_review` | 16 | Einheiten | E-59 | A (Analogie) + Heuristik | Wirksam waren ≥ 16–19 Einheiten [E-59]; der Planer bewertet eine Stufe nicht als «stagnierend», bevor diese Zahl erreicht ist (Anwendung Heuristik). |
+| PAR-E-38 | `technique_rest_to_work_ratio_min` | 1.0 (Pause ≥ Versuchsdauer) | Verhältnis | E-46, E-66, E-67 | Heuristik | Pausen verbessern Leistung bei kontinuierlichen Aufgaben [E-46, E-66, E-67]; das Verhältnis 1:1 ist nicht belegt. |
+| PAR-E-39 | `central_fatigue_recovery_reference_min` | zentral 2; peripher 3–5 | min | E-81 | B | Nur Referenz für Pausenlogik und Texte. |
+| PAR-E-40 | `heavy_session_recovery_reference_h` | 48–72 | h | E-82 | A (kleines RCT) | Nur Referenz; Beinübungen, Athleten, n = 10. |
+| PAR-E-41 | `sleep_loss_threshold_h` | ≤ 6 | h in 24 h | E-70 | A | Nur aktiv, falls Phase 4 einen Schlaf-Check-in einführt (heute kein Datenfeld). |
+| PAR-E-42 | `sleep_loss_effect_reference_pct` | Skill −20.9; Kraft −2.85; gesamt −7.56 | % | E-70 | A | Nur für Texte und Erwartung; Oberkörperkraft war unbeeinflusst. |
+| PAR-E-43 | `sleep_loss_action` | Skill-Maximalversuche → submaximale Technik; Oberkörperkraft unverändert; keine Streak- oder Fortschrittsfolgen | Regel | E-70, E-71 | A + Heuristik | Wirkung belegt, Aktion Heuristik; ADR 0003: keine Bestrafung. |
+| PAR-E-44 | `rationale_excludes_sleep_enhancement` | true | Regel | E-62, E-64, E-65 | A/B | Keine Regel und kein Text «Schlaf verstärkt den Lerneffekt»; Verteilung über Tage wird mit E-48 bis E-50 begründet. |
+| PAR-E-45 | `static_stretch_max_s_before_max` | < 60 pro Muskelgruppe, danach dynamische Aktivität | s | E-96 | A | ≥ 60 s: −4.6 %; < 60 s: −1.1 % [E-96]. |
+| PAR-E-46 | `pap_conditioning_for_holds` | false | Regel | E-91, E-92, E-98 | A/B | Maximale Isometrie als Vorbelastung ES −0.09 [E-92]; volle Aktivierung nicht potenzierbar [E-91]; kein Effekt nach vollständigem Aufwärmen [E-98]. |
+| PAR-E-47 | `general_warmup_min` | 5–10 | min | E-97, E-95 | Heuristik | Getestet wurden 20 min Radfahren [E-97]; 5–10 min sind eine zeitbudgetbedingte Heuristik. |
+| PAR-E-48 | `gtg_reps_pct_of_max` | ≤ 50 (Spanne 40–50) | % der Maximalwiederholungen | E-103 | D | Einzige gefundene Zahlenangabe; konservative Wahl innerhalb der genannten Spannen. |
+| PAR-E-49 | `gtg_min_rir` | 2 | Wdh. Reserve | E-101 | C | «2 Wiederholungen vor dem Versagen aufhören» [E-101]; konsistent mit PAR-E-18. |
 
 ## Widersprüche
 
@@ -324,73 +687,93 @@ Datenmodell und den belegten Abschnitten ergeben.
 | W-4 | Cross-Education | +11.9 % gepoolt [E-19]; +16.2 % [E-08]; als neuronaler Effekt gedeutet [E-11] | Kein Effekt auf der untrainierten Seite [E-20] | Meta-Analyse wiegt schwerer; bleibt reine Information (PAR-E-30). |
 | W-5 | Winkelspezifität: Mechanismus | Neuronaler Mechanismus [E-21] | Winkelspezifität robust, neuronale Ursache nur schwach belegt [E-22] | Der Effekt ist unstrittig, der Mechanismus nicht; PAR-E-23 hängt nur am Effekt. |
 | W-6 | EMG als Marker neuronaler Anpassung | EMG-Anstieg (+34.8 %) parallel zum Kraftzuwachs als Zeichen neuronaler Anpassung [E-12] | +32.8 % MVC ohne IEMG-Änderung [E-08]; Amplituden-Deutung methodisch fragwürdig [E-17]; Synchronisation erhöht die Amplitude [E-10] | EMG-Befunde nicht als Planungsgrundlage verwenden. |
-| W-7 | Üben vs. Volumen | Übung des Tests allein bringt 1RM-Kraft ohne messbaren Unterschied zum Volumentraining [E-25]; Kraft als erlernte Koordination [E-20] | Hypertrophie ist eine beitragende Ursache der Kraft [E-16] | Kurzfristig und bei Untrainierten genügt spezifische Übung [E-25]; Volumentraining bringt aber mehr Muskelzuwachs [E-25], der nach E-16 zur Kraft beiträgt. *Ableitung:* Der Planer braucht beides (PAR-E-24 plus Volumenblöcke). |
-| W-8 | Praxisquelle intern | Position 1 mit 2–3 Sätzen, Pausen fallend [P-01 S. 1–3; P-02; P-03] | Autor selbst: 5 Sätze an Position 1, Pausen nicht streng fallend; «Max Planche Press» 4–8 Wdh. mit nur 1–3 min Pause [P-04 S. 1] | Default 3, Spanne 2–5 (PAR-E-08). *Ableitung:* Der Satz mit kurzer Pause steht an Position 3 nach der gewichteten Variante, ist also nicht die schwerste Stufe der Einheit; PAR-E-04 bleibt 300 s. |
+| W-7 | Üben vs. Volumen | Übung des Tests allein bringt 1RM-Kraft ohne messbaren Unterschied zum Volumentraining [E-25]; Kraft als erlernte Koordination [E-20] | Hypertrophie ist eine beitragende Ursache der Kraft [E-16]; Kraft steigt mit dem Volumen [E-54] | Kurzfristig und bei Untrainierten genügt spezifische Übung [E-25]; Volumentraining bringt mehr Muskelzuwachs [E-25], der nach E-16 zur Kraft beiträgt. *Ableitung:* Der Planer braucht beides (PAR-E-24 plus Volumenblöcke). |
+| W-8 | Pausen vor Maximalversuchen | Praxisquelle intern: Position 1 mit 2–3 Sätzen, Pausen fallend, 5–7 min [P-01 S. 1–3; P-02; P-03]; Autor selbst: 5 Sätze, «Max Planche Press» mit nur 1–3 min Pause [P-04 S. 1] | Literatur: 3–5 min bei schweren Lasten [E-60, E-87, E-88]; beim Testen können 1–2 min reichen [E-88], 1 min [E-87]; Erholung nach einer einzelnen Maximalhebung < 1 min [E-91] | Default 300 s, Untergrenze 180 s (PAR-E-04). *Ableitung:* Der Satz mit kurzer Pause in P-04 steht an Position 3 und ist nicht die schwerste Stufe der Einheit. |
 | W-9 | Wo die Anpassung sitzt | Anpassungen der motorischen Einheiten sind gut belegt [E-01, E-05] | Subtil und verteilt über kortikale und subkortikale Ebenen [E-02]; Ort unklar [E-01] | Keine Folge für Regeln. |
+| W-10 | Contextual interference | Mittlerer Vorteil des zufälligen Übens für Behalten (SMD 0.63) und Transfer (0.55), grösser im Labor [E-37, E-38]; E-37 hält eine frühere Gegenanalyse für mangelhaft | Nur 20 % der Ergebnisse folgen dem CI-Muster, kein Langzeitvorteil [E-39]; angewandte Effekte klein und nicht signifikant [E-36, E-37, E-38]; Replik auf die Kritik [E-40] | Für die Praxis ist der Effekt unsicher. Maximalversuche geblockt (PAR-E-32), Verschachtelung nur optional für Technikarbeit (PAR-E-33). |
+| W-11 | Verteilung bei diskreten und komplexen Aufgaben | Diskrete Aufgabe: massiertes Üben besser [E-46]; sehr komplexe Aufgaben: Spacing-Effekt fast null (d = 0.07, beschrieben in [E-52]) | Golf-Putten (diskret): verteiltes Üben besser [E-47]; mikrochirurgische Naht (komplex): verteiltes Üben besser [E-48] | Zwischen Tagen verteilen ist gut gestützt [E-48, E-49, E-50]; der Abstand zwischen Versuchen innerhalb einer Einheit bleibt Heuristik (PAR-E-38). |
+| W-12 | Schlaf und Konsolidierung | +20 % nach Schlaf [E-61]; Schlaf nützt den meisten grobmotorischen Aufgaben [E-68]; Schlaf stellt nach Tagesabfall wieder her [E-63] | Nach Kontrolle der Störfaktoren keine Verbesserung durch Schlaf [E-62, E-65]; nur Stabilisierung [E-64]; Mittagsschlaf ohne Nutzen für eine grobmotorische Aufgabe [E-69] | Keine Planerregel auf Basis von «Schlaf verstärkt Lernen» (PAR-E-44). |
+| W-13 | Gewinne in kurzen Pausen | Schnelle Konsolidierung in Sekundenpausen [E-66] | Abklingen reaktiver Hemmung genügt als Erklärung [E-67] | Beide stützen kurze Pausen im Technikblock; die Deutung ist für den Planer unerheblich (PAR-E-38). |
+| W-14 | Frequenz vs. Volumen | Bei gleichem Volumen kein Frequenzeffekt [E-53]; Trainierte ohne klaren Unterschied [E-55] | Kraft steigt mit der Frequenz [E-54]; 3× besser als 1× bei gleichem Volumen [E-56]; tägliche Kleinstdosen besser als wöchentliche Gesamtdosis [E-58] | Default 3×/Woche (PAR-E-11); Verteilung der Wochendosis auf mehr Einheiten schadet nicht und hilft Untrainierten eher. |
+| W-15 | Üben unter Ermüdung | Ermüdetes Üben schadet dem Lernen über Tage [E-28] | Ältere Studien uneinheitlich [E-28 zitiert sie]; Üben unter Ermüdung verbessert die Leistung unter Ermüdung (Spezifität) [E-99] | App-Ziel ist Bestform, nicht Leistung unter Ermüdung: Skill-Arbeit frisch (PAR-E-01, PAR-E-15). |
+| W-16 | «CNS-Fatigue» nach schwerem Training | Praxisannahme: maximale Einheiten brauchen ≥ 48 h wegen ZNS-Ermüdung [in E-82 beschrieben] | Ermüdung bis 72 h, aber nicht primär zentral; Aktivierung nur bis 48 h leicht reduziert [E-82]; zentrale Erholung nach kurzen Maximalreizen in ~2 min [E-81] | 48 h bleiben als Abstand (PAR-E-13), aber ohne CNS-Begründung (PAR-E-29). |
+| W-17 | Twitch Interpolation | Etabliertes Verfahren, mit sorgfältiger Technik aussagekräftig [E-73, E-76] | Kein valides Mass der willentlichen Aktivierung [E-77]; viele Messfallen [E-78] | Zentrale Ermüdung ist ein Laborkonstrukt; die App misst sie nicht (§10.2). |
+| W-18 | Schlafmangel und Kraft | Eine Nacht Schlafentzug hat wenig Einfluss auf Kraft [E-71] | Kraft sinkt signifikant um 2.85 % [E-70] | Beides kleine Effekte; der grosse Effekt betrifft Skill-Aufgaben (−20.9 %) [E-70]. PAR-E-43 schont deshalb Kraft und passt nur Skill-Maxima an. |
+| W-19 | Pause nach Vorbelastung (PAPE) | 7–10 min am besten [E-93] | Längere Pausen besser, maximale Isometrie ohne Effekt [E-92]; nach vollständigem Aufwärmen kein Effekt [E-98] | Keine Potenzierungsübung für Halte (PAR-E-46). |
+| W-20 | Frequenz für Balance-Skills | 3 Einheiten/Woche (mehrere Studien, ES 0.72) [E-59] | 6 Einheiten/Woche (eine Studie, ES 1.84) [E-59]; 8 Einheiten in 1 Woche besser als in 2 Wochen (beschrieben in [E-52]) | Default 4, Spanne 3–6 (PAR-E-12); Stream B nennt 3–7 (PAR-B-35). |
+| W-21 | Mechanismus von Greasing the Groove | «Kraft ist eine Fertigkeit», häufiges Üben schleift das Muster ein [E-100, E-103]; Erfahrungsbericht mit grossem Zuwachs [E-102] | Der Frequenzeffekt auf Kraft läuft vor allem über das Volumen [E-53]; das berichtete Programm hat hohes Volumen [E-102] | GTG als Option ohne Mechanismus-Aussage in Texten (PAR-E-27). |
+| W-22 | Rolle von Übungsvariabilität | Variabilität fördert Generalisierung [E-44] | Konstantes Üben am Ziel erzeugt einen Zielvorteil [E-45] | Variation zwischen Einheiten, Zielstufe konstant (PAR-E-34). |
 
 ## Offene Fragen
 
-1. **Nachrecherche nötig (Suchbudget erschöpft).** Die Teilthemen aus §6 müssen
-   in einem Folgelauf belegt werden. Die folgenden Suchhinweise stammen aus dem
-   Vorwissen des Recherche-Agenten. Sie sind **ungeprüft, nicht zitiert** und
-   dürfen erst nach Prüfung von Titel, Autoren, Jahr und DOI verwendet werden:
-   - Lernstadien: Fitts & Posner (1967, *Human Performance*); Gentile (1972);
-     Dayan & Cohen (2011, *Neuron*); Vereijken et al. (1992, *J Mot Behav*).
-   - Contextual interference und Variabilität: Shea & Morgan (1979); Magill &
-     Hall (1990); Brady (2004, Meta-Analyse); Czyż et al. (2024, *Sci Rep*);
-     kritisch: Ammar et al. (2023, *Educ Res Rev*); Challenge Point: Guadagnoli &
-     Lee (2004).
-   - Verteilte Übung: Lee & Genovese (1988); Donovan & Radosevich (1999,
-     Meta-Analyse); Shea et al. (2000); Baddeley & Longman (1978).
-   - Schlaf: Walker et al. (2002); Rickard et al. (2008); Brawn et al. (2010);
-     Nettersheim et al. (2015); Pan & Rickard (2015, Meta-Analyse); Bönstrup et
-     al. (2019, Micro-offline Gains) vs. Gupta & Rickard (2022); Schlafmangel
-     und Leistung: Craven et al. (2022, Meta-Analyse), Knowles et al. (2018),
-     Walsh et al. (2021, Konsensus).
-   - Ermüdung: Gandevia (2001, *Physiol Rev*); Shield & Zhou (2004, Twitch
-     Interpolation); Taylor et al. (2016); Enoka & Duchateau (2016); Carroll,
-     Taylor & Gandevia (2017, Erholungszeitverlauf); Thomas et al. (2018,
-     Erholung nach schwerem Krafttraining); Zając et al. (2015); Morán-Navarro
-     et al. (2017, Versagen vs. Nicht-Versagen); Häkkinen (1993).
-   - Pausen, Potenzierung, Frequenz, Abbruchschwellen: Grgic et al. (2018,
-     Pausen und Kraft; 2018, Frequenz); de Salles et al. (2009); Blazevich &
-     Babault (2019); Seitz & Haff (2016); McMahon & Jenkins (2002);
-     Pareja-Blanco et al. (2017) und Jukic et al. (2023) zu Geschwindigkeitsverlust;
-     Zourdos et al. (2016, tägliches 1RM).
-   - Coaching (Stufe C): Tsatsouline (*Power to the People*, GTG); Low
-     (*Overcoming Gravity*). Handstand-Biomechanik: Kerwin & Trewartha (2001).
-2. **Übertragbarkeit.** Die meisten belegten Trainingsstudien sind eingelenkig,
-   im Labor und mit Untrainierten [E-05, E-08, E-09, E-21, E-22, E-25]. Gelten
-   Frequenz (PAR-E-11) und Versuchszahl (PAR-E-08) für Straight-Arm-Statics mit
-   Ganzkörperspannung?
-3. **Dosis-Wirkung der Ermüdung.** E-28 zeigt, dass Ermüdung dem Lernen schadet,
-   aber nicht ab welchem Grad. Die Stoppschwellen (PAR-E-15 bis 17) sind
-   Heuristik. Sie sollten nach dem Start anhand der Logs geprüft werden
-   (Formverlauf innerhalb einer Einheit vs. Fortschritt über Wochen).
+1. **Prüftiefe einzelner Aussagen.** Nicht selbst geprüft, sondern nur über eine
+   beschreibende Quelle zitiert: Baddeley & Longman 1978, Donovan & Radosevich
+   1999 und Paik & Ritter 2015 [über E-52], Shea & Morgan 1979 [über E-37].
+   Der Inhalt von Fitts & Posner 1967 [E-29] ist über die Beschreibung in E-30
+   geprüft, der Buchtitel über den Bibliothekseintrag. E-77 (Counterpoint) hat
+   kein Abstract; zitiert wird nur die im Titel formulierte Position. Das
+   Erratum zu E-59 wurde nicht gelesen. Eine Kritik von Czyż (2025) an E-39
+   hat kein zugängliches Abstract und ist deshalb nicht aufgenommen.
+2. **Übertragbarkeit.** Die meisten Trainings- und Lernstudien sind eingelenkig,
+   im Labor, mit Untrainierten oder mit feinmotorischen Aufgaben [E-05, E-08,
+   E-09, E-21, E-22, E-25, E-28, E-57, E-58, E-61]. Gelten Frequenz (PAR-E-11),
+   Versuchszahl (PAR-E-08) und Erholungszeiten (PAR-E-13) für
+   Straight-Arm-Statics mit Ganzkörperspannung? Zur Erholung nach schweren
+   isometrischen Straight-Arm-Einheiten (Oberkörper) wurde keine Studie
+   gefunden; E-82 und E-83 betreffen Beine und Bankdrücken.
+3. **Dosis-Wirkung der Ermüdung.** E-28 zeigt, dass Ermüdung von rund 60 % der
+   Maximalkraft dem Lernen schadet, aber nicht, ab welchem geringeren Grad. Die
+   Stoppschwellen (PAR-E-15 bis 17) sind Heuristik bzw. Analogie. Sie sollten
+   nach dem Start anhand der Logs geprüft werden (Formverlauf innerhalb einer
+   Einheit vs. Fortschritt über Wochen, gemessen nach PAR-E-31).
 4. **Formwert fehlt oft.** `form_quality` ist optional. Reicht der Fallback über
    den Leistungsabfall (PAR-E-17), oder braucht die App einen Pflicht-Formwert
    bei Skill-Sätzen?
-5. **Tagesform-Signal.** Das Datenmodell kennt `perceived_fatigue` pro Einheit,
-   aber keinen Check-in vor der Einheit und keinen Schlafwert. Soll die
-   Spezifikation (Phase 4) einen kurzen Check-in vorsehen? Er darf keine
-   Mechanik erzeugen, die Ruhe bestraft (ADR 0003).
+5. **Tagesform- und Schlaf-Signal.** Das Datenmodell kennt `perceived_fatigue`
+   pro Einheit, aber keinen Check-in vor der Einheit und keinen Schlafwert.
+   Soll die Spezifikation (Phase 4) einen kurzen Check-in vorsehen, damit
+   PAR-E-41 bis PAR-E-43 greifen können? Er darf keine Mechanik erzeugen, die
+   Ruhe bestraft (ADR 0003).
 6. **Sehnen vs. Nervensystem.** Frequenz und Abstände für Straight-Arm-Skills
    werden wahrscheinlich eher durch die Sehnenanpassung begrenzt (Stream D) als
    durch neuronale Faktoren. Die strengere Regel aus Stream D muss Vorrang vor
-   PAR-E-11 und PAR-E-13 haben.
-7. **Handstand-Frequenz.** PAR-E-12 (5–7×/Woche) ist reine Heuristik. Sie
-   braucht Belege zur verteilten Übung und zur Handgelenksbelastung (Stream D).
-8. **Zurückgezogene Vorversion.** Von E-02 existiert eine zurückgezogene frühere
-   Fassung (PubMed 31359349). Bei der Zusammenführung in `00_sources.md` muss
-   klar sein, dass die Fassung von 2020 (DOI 10.1007/s40279-020-01258-z) gemeint
-   ist.
+   PAR-E-11, PAR-E-13 und PAR-E-14 haben.
+7. **Handstand-Dosis.** PAR-E-12 und PAR-E-35 bis PAR-E-37 stammen aus
+   allgemeinem Gleichgewichtstraining [E-59], nicht aus Handstandstudien. Die
+   Handgelenkslast (Stream D) kann die Frequenz begrenzen. Stream B nennt 3–7
+   Einheiten zu 5–10 min (PAR-B-35, Heuristik); die Streams müssen sich auf
+   einen Wert einigen.
+8. **Abgleich mit Stream B.** Pausen (PAR-E-04 bis 07 vs. PAR-B-39 bis 44) und
+   Abstände (PAR-E-13/14 vs. PAR-B-38) stimmen im Default überein, die
+   Begründungen unterscheiden sich. Bei der Zusammenführung eine gemeinsame
+   Parameterquelle festlegen.
+9. **Greasing the Groove.** Es gibt keine kontrollierte Studie; alle
+   Zahlenwerte sind Coaching-Angaben (PAR-E-48 Stufe D, PAR-E-49 Stufe C). Soll
+   das Modul in der ersten Version überhaupt angeboten werden?
+10. **Zurückgezogene Vorversion.** Von E-02 existiert eine zurückgezogene
+    frühere Fassung (PubMed 31359349). Bei der Zusammenführung in
+    `00_sources.md` muss klar sein, dass ausschliesslich die Fassung von 2020
+    (DOI 10.1007/s40279-020-01258-z) gemeint ist; die Vorversion darf nicht
+    zitiert werden.
 
 ## Quellen
 
-Alle Quellen wurden über Suchmaschinen-Treffer mit Abstract bzw.
-Landing-Page-Auszug geprüft; Volltexte waren gesperrt. «Kohortenstudie» wird hier
-auch für kontrollierte Interventions- und Laborstudien verwendet, deren
-Randomisierung nicht geprüft werden konnte.
+**Prüfprotokoll.** Erster Lauf (E-01 bis E-27): Titel, Autoren, Jahr und
+DOI/URL über Suchmaschinen-Treffer mit Abstract bzw. Landing-Page-Auszug
+geprüft; Volltexte waren damals gesperrt, Zahlen stammen aus Abstracts. Zweiter
+Lauf (E-28 bis E-105): Metadaten über Europe PMC und/oder Crossref bestätigt.
+«Kohortenstudie» wird auch für kontrollierte Interventions- und Laborstudien
+verwendet, deren Randomisierung nicht geprüft werden konnte.
+
+- **Volltext geprüft (PMC bzw. Website):** E-28, E-30, E-31, E-37, E-38
+  (Teile), E-50, E-52, E-70, E-91; Coaching-Seiten E-100, E-101, E-102, E-103.
+- **Abstract geprüft (Europe PMC bzw. Crossref):** E-25, E-32 bis E-36, E-39
+  bis E-49, E-51, E-53 bis E-69, E-71 bis E-76, E-78 bis E-90, E-92 bis E-99,
+  E-104, E-105.
+- **Nur bibliografischer Eintrag:** E-29 (Buch; Open-Library-Eintrag, Inhalt
+  über E-30), E-77 (kein Abstract; nur die Titelposition zitiert).
+- **E-103** wurde 2016 erstveröffentlicht und 2022 neu publiziert; zitiert
+  wird die Fassung von 2022.
 
 | ID | Titel | Autor(en) | Jahr | URL/DOI | Typ | Evidenz |
 |---|---|---|---|---|---|---|
@@ -422,3 +805,80 @@ Randomisierung nicht geprüft werden konnte.
 | E-26 | What influence does resistance exercise order have on muscular strength gains and muscle hypertrophy? A systematic review and meta-analysis | Nunes JP, Grgic J, Cunha PM, Ribeiro AS, Schoenfeld BJ, de Salles BF, Cyrino ES | 2021 | https://doi.org/10.1080/17461391.2020.1733672 | Meta-Analyse | A |
 | E-27 | Exercise order in resistance training | Simão R, de Salles BF, Figueiredo T, Dias I, Willardson JM | 2012 | https://doi.org/10.2165/11597240-000000000-00000 | Narratives Review | B |
 | E-28 | Fatigue induces long-lasting detrimental changes in motor-skill learning | Branscheidt M, Kassavetis P, Anaya M, Rogers D, Huang HD, Lindquist MA, Celnik P | 2019 | https://doi.org/10.7554/eLife.40578 | Kohortenstudie | B |
+| E-29 | Human Performance | Fitts PM, Posner MI | 1967 | https://openlibrary.org/works/OL6554807W | Lehrbuch | B |
+| E-30 | The role of strategies in motor learning | Taylor JA, Ivry RB | 2012 | https://doi.org/10.1111/j.1749-6632.2011.06430.x | Narratives Review | B |
+| E-31 | Neuroplasticity subserving motor skill learning | Dayan E, Cohen LG | 2011 | https://doi.org/10.1016/j.neuron.2011.10.008 | Narratives Review | B |
+| E-32 | Stages of motor skill learning | Luft AR, Buitrago MM | 2005 | https://doi.org/10.1385/MN:32:3:205 | Narratives Review | B |
+| E-33 | Freezing Degrees of Freedom During Motor Learning: A Systematic Review | Guimarães AN, Ugrinowitsch H, Dascal JB, Porto AB, Okazaki VHA | 2020 | https://doi.org/10.1123/mc.2019-0060 | Systematic Review | A |
+| E-34 | Learning-performance distinction and memory processes for motor skills: a focused review and perspective | Kantak SS, Winstein CJ | 2012 | https://doi.org/10.1016/j.bbr.2011.11.028 | Narratives Review | B |
+| E-35 | Challenge point: a framework for conceptualizing the effects of various practice conditions in motor learning | Guadagnoli MA, Lee TD | 2004 | https://doi.org/10.3200/JMBR.36.2.212-224 | Narratives Review | B |
+| E-36 | Contextual interference: a meta-analytic study | Brady F | 2004 | https://doi.org/10.2466/pms.99.1.116-126 | Meta-Analyse | A |
+| E-37 | High contextual interference improves retention in motor learning: systematic review and meta-analysis | Czyż SH, Wójcik AM, Solarská P, Kiper P | 2024 | https://doi.org/10.1038/s41598-024-65753-3 | Meta-Analyse | A |
+| E-38 | The effect of contextual interference on transfer in motor learning - a systematic review and meta-analysis | Czyż SH, Wójcik AM, Solarská P | 2024 | https://doi.org/10.3389/fpsyg.2024.1377122 | Meta-Analyse | A |
+| E-39 | The Effects of Contextual Interference Learning on the Acquisition and Relatively Permanent Gains in Skilled Performance: A Critical Systematic Review with Multilevel Meta-Analysis | Ammar A, Trabelsi K, Boujelbane MA, Salem A, Boukhris O, Glenn JM, Zmijewski P, Jahrami H, et al. | 2024 | https://doi.org/10.1007/s10648-024-09892-z | Meta-Analyse | A |
+| E-40 | Advancing Contextual Interference: Addressing Methodological Debates, Reflecting on Meta-Analytic Practices and Generalizability, and Guiding Future Directions in Motor Learning | Ammar A, Trabelsi K, Salem A, Jahrami H, Schöllhorn WI | 2025 | https://doi.org/10.1007/s10648-025-10043-1 | Narratives Review | B |
+| E-41 | Contextual interference effects on the acquisition of skill and strength of the bench press | Naimo MA, Zourdos MC, Wilson JM, Kim JS, Ward EG, Eccles DW, Panton LB | 2013 | https://doi.org/10.1016/j.humov.2013.02.002 | Kohortenstudie | B |
+| E-42 | Systematically increasing contextual interference is beneficial for learning sport skills | Porter JM, Magill RA | 2010 | https://doi.org/10.1080/02640414.2010.502946 | RCT | A |
+| E-43 | Unveiling the acute neurophysiological responses to strength training: An exploratory study on novices performing weightlifting bouts with different motor learning models | Ammar A, Boujelbane MA, Simak ML, Fraile-Fuente I, Rizzi N, Washif JA, Zmijewski P, Jahrami H, Schöllhorn WI | 2024 | https://doi.org/10.5114/biolsport.2024.133481 | Kohortenstudie | B |
+| E-44 | How variability shapes learning and generalization | Raviv L, Lupyan G, Green SC | 2022 | https://doi.org/10.1016/j.tics.2022.03.007 | Narratives Review | B |
+| E-45 | Constant or variable practice: recreating the especial skill effect | Breslin G, Hodges NJ, Steenson A, Williams AM | 2012 | https://doi.org/10.1016/j.actpsy.2012.04.002 | RCT | A |
+| E-46 | Distribution of practice in motor skill acquisition: different effects for discrete and continuous tasks | Lee TD, Genovese ED | 1989 | https://doi.org/10.1080/02701367.1989.10607414 | Kohortenstudie | B |
+| E-47 | Distribution of practice and metacognition in learning and long-term retention of a discrete motor task | Dail TK, Christina RW | 2004 | https://doi.org/10.1080/02701367.2004.10609146 | Kohortenstudie | B |
+| E-48 | Teaching surgical skills: what kind of practice makes perfect? A randomized, controlled trial | Moulton CA, Dubrowski A, Macrae H, Graham B, Grober E, Reznick R | 2006 | https://doi.org/10.1097/01.sla.0000234808.85789.6a | RCT | A |
+| E-49 | Avoiding Surgical Skill Decay: A Systematic Review on the Spacing of Training Sessions | Cecilio-Fernandes D, Cnossen F, Jaarsma DADC, Tio RA | 2018 | https://doi.org/10.1016/j.jsurg.2017.08.002 | Systematic Review | A |
+| E-50 | Towards best practice in developing motor skills: a systematic review on spacing in VR simulator-based psychomotor training for surgical novices | Fahl JT, Duvivier R, Reinke L, Pierie JEN, Schönrock-Adema J | 2023 | https://doi.org/10.1186/s12909-023-04046-1 | Systematic Review | A |
+| E-51 | Spacing practice sessions across days earlier rather than later in training improves performance of a visuomotor skill | Goedert KM, Miller J | 2008 | https://doi.org/10.1007/s00221-008-1414-9 | Kohortenstudie | B |
+| E-52 | Spacing Repetitions Over Long Timescales: A Review and a Reconsolidation Explanation | Smith CD, Scarf D | 2017 | https://doi.org/10.3389/fpsyg.2017.00962 | Narratives Review | B |
+| E-53 | Effect of Resistance Training Frequency on Gains in Muscular Strength: A Systematic Review and Meta-Analysis | Grgic J, Schoenfeld BJ, Davies TB, Lazinica B, Krieger JW, Pedisic Z | 2018 | https://doi.org/10.1007/s40279-018-0872-x | Meta-Analyse | A |
+| E-54 | The Resistance Training Dose Response: Meta-Regressions Exploring the Effects of Weekly Volume and Frequency on Muscle Hypertrophy and Strength Gains | Pelland JC, Remmert JF, Robinson ZP, Hinson SR, Zourdos MC | 2025 | https://doi.org/10.1007/s40279-025-02344-w | Meta-Analyse | A |
+| E-55 | Effects of Variations in Resistance Training Frequency on Strength Development in Well-Trained Populations and Implications for In-Season Athlete Training: A Systematic Review and Meta-analysis | Cuthbert M, Haff GG, Arent SM, Ripley N, McMahon JJ, Evans M, Comfort P | 2021 | https://doi.org/10.1007/s40279-021-01460-7 | Meta-Analyse | A |
+| E-56 | Higher Training Frequency Is Important for Gaining Muscular Strength Under Volume-Matched Training | Ochi E, Maruo M, Tsuchiya Y, Ishii N, Miura K, Sasaki K | 2018 | https://doi.org/10.3389/fphys.2018.00744 | Kohortenstudie | B |
+| E-57 | Effect of daily 3-s maximum voluntary isometric, concentric, or eccentric contraction on elbow flexor strength | Sato S, Yoshida R, Murakoshi F, Sasaki Y, Yahata K, Nosaka K, Nakamura M | 2022 | https://doi.org/10.1111/sms.14138 | Kohortenstudie | B |
+| E-58 | Greater effects by performing a small number of eccentric contractions daily than a larger number of them once a week | Yoshida R, Sato S, Kasahara K, Murakami Y, Murakoshi F, Aizawa K, Koizumi R, Nosaka K, Nakamura M | 2022 | https://doi.org/10.1111/sms.14220 | Kohortenstudie | B |
+| E-59 | Dose-response relationships of balance training in healthy young adults: a systematic review and meta-analysis | Lesinski M, Hortobágyi T, Muehlbauer T, Gollhofer A, Granacher U | 2015 | https://doi.org/10.1007/s40279-014-0284-5 | Meta-Analyse | A |
+| E-60 | American College of Sports Medicine position stand. Progression models in resistance training for healthy adults | American College of Sports Medicine | 2009 | https://doi.org/10.1249/MSS.0b013e3181915670 | Positionspapier/Konsensus | B |
+| E-61 | Practice with sleep makes perfect: sleep-dependent motor skill learning | Walker MP, Brakefield T, Morgan A, Hobson JA, Stickgold R | 2002 | https://doi.org/10.1016/S0896-6273(02)00746-8 | Kohortenstudie | B |
+| E-62 | Sleep does not enhance motor sequence learning | Rickard TC, Cai DJ, Rieth CA, Jones J, Ard MC | 2008 | https://doi.org/10.1037/0278-7393.34.4.834 | Kohortenstudie | B |
+| E-63 | Consolidating the effects of waking and sleep on motor-sequence learning | Brawn TP, Fenn KM, Nusbaum HC, Margoliash D | 2010 | https://doi.org/10.1523/JNEUROSCI.3295-10.2010 | Kohortenstudie | B |
+| E-64 | The role of sleep in motor sequence consolidation: stabilization rather than enhancement | Nettersheim A, Hallschmid M, Born J, Diekelmann S | 2015 | https://doi.org/10.1523/JNEUROSCI.1236-14.2015 | Kohortenstudie | B |
+| E-65 | Sleep and motor learning: Is there room for consolidation? | Pan SC, Rickard TC | 2015 | https://doi.org/10.1037/bul0000009 | Meta-Analyse | A |
+| E-66 | A Rapid Form of Offline Consolidation in Skill Learning | Bönstrup M, Iturrate I, Thompson R, Cruciani G, Censor N, Cohen LG | 2019 | https://doi.org/10.1016/j.cub.2019.02.049 | Kohortenstudie | B |
+| E-67 | Dissipation of reactive inhibition is sufficient to explain post-rest improvements in motor sequence learning | Gupta MW, Rickard TC | 2022 | https://doi.org/10.1038/s41539-022-00140-z | Kohortenstudie | B |
+| E-68 | Adult Gross Motor Learning and Sleep: Is There a Mutual Benefit? | Christova M, Aftenberger H, Nardone R, Gallasch E | 2018 | https://doi.org/10.1155/2018/3076986 | Narratives Review | B |
+| E-69 | The impact of diurnal sleep on the consolidation of a complex gross motor adaptation task | Hoedlmoser K, Birklbauer J, Schabus M, Eibenberger P, Rigler S, Mueller E | 2015 | https://doi.org/10.1111/jsr.12207 | Kohortenstudie | B |
+| E-70 | Effects of Acute Sleep Loss on Physical Performance: A Systematic and Meta-Analytical Review | Craven J, McCartney D, Desbrow B, Sabapathy S, Bellinger P, Roberts L, Irwin C | 2022 | https://doi.org/10.1007/s40279-022-01706-y | Meta-Analyse | A |
+| E-71 | Inadequate sleep and muscle strength: Implications for resistance training | Knowles OE, Drinkwater EJ, Urwin CS, Lamon S, Aisbett B | 2018 | https://doi.org/10.1016/j.jsams.2018.01.012 | Systematic Review | A |
+| E-72 | Sleep and the athlete: narrative review and 2021 expert consensus recommendations | Walsh NP, Halson SL, Sargent C, Roach GD, Nédélec M, Gupta L, Leeder J, Fullagar HH, et al. | 2020 | https://doi.org/10.1136/bjsports-2020-102025 | Positionspapier/Konsensus | B |
+| E-73 | Spinal and supraspinal factors in human muscle fatigue | Gandevia SC | 2001 | https://doi.org/10.1152/physrev.2001.81.4.1725 | Narratives Review | B |
+| E-74 | Supraspinal factors in human muscle fatigue: evidence for suboptimal output from the motor cortex | Gandevia SC, Allen GM, Butler JE, Taylor JL | 1996 | https://doi.org/10.1113/jphysiol.1996.sp021164 | EMG-Studie | B |
+| E-75 | A comparison of central aspects of fatigue in submaximal and maximal voluntary contractions | Taylor JL, Gandevia SC | 2008 | https://doi.org/10.1152/japplphysiol.01053.2007 | Narratives Review | B |
+| E-76 | Assessing voluntary muscle activation with the twitch interpolation technique | Shield A, Zhou S | 2004 | https://doi.org/10.2165/00007256-200434040-00005 | Narratives Review | B |
+| E-77 | Counterpoint: the interpolated twitch does not provide a valid measure of the voluntary activation of muscle | de Haan A, Gerrits KH, de Ruiter CJ | 2009 | https://doi.org/10.1152/japplphysiol.91220.2008a | Narratives Review | B |
+| E-78 | Quantification of Neuromuscular Fatigue: What Do We Do Wrong and Why? | Place N, Millet GY | 2020 | https://doi.org/10.1007/s40279-019-01203-9 | Narratives Review | B |
+| E-79 | Translating Fatigue to Human Performance | Enoka RM, Duchateau J | 2016 | https://doi.org/10.1249/MSS.0000000000000929 | Narratives Review | B |
+| E-80 | Neural Contributions to Muscle Fatigue: From the Brain to the Muscle and Back Again | Taylor JL, Amann M, Duchateau J, Meeusen R, Rice CL | 2016 | https://doi.org/10.1249/MSS.0000000000000923 | Narratives Review | B |
+| E-81 | Recovery of central and peripheral neuromuscular fatigue after exercise | Carroll TJ, Taylor JL, Gandevia SC | 2017 | https://doi.org/10.1152/japplphysiol.00775.2016 | Narratives Review | B |
+| E-82 | Neuromuscular Fatigue and Recovery after Heavy Resistance, Jump, and Sprint Training | Thomas K, Brownstein CG, Dent J, Parker P, Goodall S, Howatson G | 2018 | https://doi.org/10.1249/MSS.0000000000001733 | RCT | A |
+| E-83 | Time course of recovery following resistance training leading or not to failure | Morán-Navarro R, Pérez CE, Mora-Rodríguez R, de la Cruz-Sánchez E, González-Badillo JJ, Sánchez-Medina L, Pallarés JG | 2017 | https://doi.org/10.1007/s00421-017-3725-7 | Kohortenstudie | B |
+| E-84 | Central fatigue: the serotonin hypothesis and beyond | Meeusen R, Watson P, Hasegawa H, Roelands B, Piacentini MF | 2006 | https://doi.org/10.2165/00007256-200636100-00006 | Narratives Review | B |
+| E-85 | Prevention, diagnosis, and treatment of the overtraining syndrome: joint consensus statement of the European College of Sport Science and the American College of Sports Medicine | Meeusen R, Duclos M, Foster C, Fry A, Gleeson M, Nieman D, Raglin J, Rietjens G, Steinacker J, Urhausen A | 2013 | https://doi.org/10.1249/MSS.0b013e318279a10a | Positionspapier/Konsensus | B |
+| E-86 | Effects of Rest Interval Duration in Resistance Training on Measures of Muscular Strength: A Systematic Review | Grgic J, Schoenfeld BJ, Skrepnik M, Davies TB, Mikulic P | 2018 | https://doi.org/10.1007/s40279-017-0788-x | Systematic Review | A |
+| E-87 | Rest interval between sets in strength training | de Salles BF, Simão R, Miranda F, Novaes JS, Lemos A, Willardson JM | 2009 | https://doi.org/10.2165/11315230-000000000-00000 | Narratives Review | B |
+| E-88 | A brief review: factors affecting the length of the rest interval between resistance exercise sets | Willardson JM | 2006 | https://doi.org/10.1519/R-17995.1 | Narratives Review | B |
+| E-89 | The Acute and Chronic Effects of Implementing Velocity Loss Thresholds During Resistance Training: A Systematic Review, Meta-Analysis, and Critical Evaluation of the Literature | Jukic I, Castilla AP, Ramos AG, Van Hooren B, McGuigan MR, Helms ER | 2023 | https://doi.org/10.1007/s40279-022-01754-4 | Meta-Analyse | A |
+| E-90 | Effects of velocity loss during resistance training on athletic performance, strength gains and muscle adaptations | Pareja-Blanco F, Rodríguez-Rosell D, Sánchez-Medina L, Sanchis-Moysi J, Dorado C, Mora-Custodio R, et al. | 2017 | https://doi.org/10.1111/sms.12678 | RCT | A |
+| E-91 | Post-activation Potentiation Versus Post-activation Performance Enhancement in Humans: Historical Perspective, Underlying Mechanisms, and Current Issues | Blazevich AJ, Babault N | 2019 | https://doi.org/10.3389/fphys.2019.01359 | Narratives Review | B |
+| E-92 | Factors Modulating Post-Activation Potentiation of Jump, Sprint, Throw, and Upper-Body Ballistic Performances: A Systematic Review with Meta-Analysis | Seitz LB, Haff GG | 2016 | https://doi.org/10.1007/s40279-015-0415-7 | Meta-Analyse | A |
+| E-93 | Meta-analysis of postactivation potentiation and power: effects of conditioning activity, volume, gender, rest periods, and training status | Wilson JM, Duncan NM, Marin PJ, Brown LE, Loenneke JP, Wilson SM, Jo E, Lowery RP, Ugrinowitsch C | 2013 | https://doi.org/10.1519/JSC.0b013e31825c2bdb | Meta-Analyse | A |
+| E-94 | Warm-Up Strategies for Sport and Exercise: Mechanisms and Applications | McGowan CJ, Pyne DB, Thompson KG, Rattray B | 2015 | https://doi.org/10.1007/s40279-015-0376-x | Narratives Review | B |
+| E-95 | Effects of warming-up on physical performance: a systematic review with meta-analysis | Fradkin AJ, Zazryn TR, Smoliga JM | 2010 | https://doi.org/10.1519/JSC.0b013e3181c643a0 | Meta-Analyse | A |
+| E-96 | Acute effects of muscle stretching on physical performance, range of motion, and injury incidence in healthy active individuals: a systematic review | Behm DG, Blazevich AJ, Kay AD, McHugh M | 2016 | https://doi.org/10.1139/apnm-2015-0235 | Systematic Review | A |
+| E-97 | Combination of general and specific warm-ups improves leg-press one repetition maximum compared with specific warm-up in trained individuals | Abad CC, Prado ML, Ugrinowitsch C, Tricoli V, Barroso R | 2011 | https://doi.org/10.1519/JSC.0b013e3181e8611b | RCT | A |
+| E-98 | Variable, but not free-weight, resistance back squat exercise potentiates jump performance following a comprehensive task-specific warm-up | Mina MA, Blazevich AJ, Tsatalas T, Giakas G, Seitz LB, Kay AD | 2019 | https://doi.org/10.1111/sms.13341 | RCT | A |
+| E-99 | Specificity of training for motor skill under physical fatigue | Williams LR, Daniell-Smith JH, Gunson LK | 1976 | https://doi.org/10.1249/00005768-197600830-00005 | RCT | A |
+| E-100 | The Case for Grease-the-Groove Jump Training | Tsatsouline P | 2015 | https://www.strongfirst.com/jump/ | Coaching-Artikel | C |
+| E-101 | Two Powerful Methods for Improving Your Pull-Up | Allen D | 2018 | https://www.strongfirst.com/two-powerful-methods-for-improving-your-pull-up/ | Coaching-Artikel | C |
+| E-102 | How to Increase your Pullups by 50 Percent (at Least) | Tanskey A | 2018 | https://www.strongfirst.com/how-to-increase-your-pull-ups-50-percent/ | Coaching-Artikel | C |
+| E-103 | How to Get Stronger by Greasing the Groove | McKay B, McKay K | 2022 | https://www.artofmanliness.com/health-fitness/fitness/get-stronger-by-greasing-the-groove/ | Coaching-Artikel | D |
+| E-104 | Strategies for maintaining a handstand in the anterior-posterior direction | Kerwin DG, Trewartha G | 2001 | https://doi.org/10.1097/00005768-200107000-00016 | Biomechanik-Studie | B |
+| E-105 | Balance control strategies during perturbed and unperturbed balance in standing and handstand | Blenkinsop GM, Pain MTG, Hiley MJ | 2017 | https://doi.org/10.1098/rsos.161018 | Biomechanik-Studie | B |

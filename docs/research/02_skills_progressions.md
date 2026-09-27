@@ -119,7 +119,7 @@ unlock_criteria:
 | Punkt | Umsetzung |
 |---|---|
 | Suche | Europe PMC (Titel- und Volltextsuche) für Studien zu Ringelementen, Handstand, Liegestütz, Klimmzug, Rudern, Muscle-up; Direktabruf der Regelwerke (FIG MAG CoP 2025–2028, WSWCF, Calisthenics Cup), der OG-Charts (Google Sheet des Autors), der OG-Leseprobe (Kap. 1–3) und von Coaching-Seiten (GMB, The Movement Athlete, Spiegel der r/bodyweightfitness-Routine). Das Websuch-Kontingent war nach ~45 Suchen erschöpft; danach nur Europe PMC und Direktabrufe bekannter URLs. |
-| Prüftiefe | Studienzahlen wurden, wo Open Access, im Volltext geprüft (z. B. Tabelle 3 in [A-21], Push-up-Tabelle in der Proceedings-Fassung von [A-05]); sonst am Abstract. Die Prüftiefe steht je Quelle in der Quellentabelle. |
+| Prüftiefe | Studienzahlen wurden, wo Open Access, im Volltext geprüft (z. B. Tabelle 3 in [A-21], Push-up-Tabelle in der Proceedings-Fassung [A-32]); sonst am Abstract. Die Prüftiefe steht je Quelle in der Quellentabelle. |
 | Evidenzstufen | A = SR/MA/RCT; B = Einzelstudien, FIG-Regelwerk als Expertenkonsens; C = Coaching-Bücher/-Seiten, Street-Workout-Regelwerk; D = Community-Wikis, App-Marketingseiten, Einzel-Event-Regeln. |
 | r/bodyweightfitness | **D** (Community-Wiki), aber seit Jahren kuratiert und breit genutzt; nur für Reihenfolgen und Wechselregeln der Grundübungen verwendet. |
 | Overcoming Gravity | **C**. Charts laut Autor aus dem FIG Code of Points konstruiert [A-47]; Level-Definition in Kap. 3 [A-30 S. 21–25]. Das Chart nennt **keine Haltezeiten oder Wiederholungen** pro Level. |
@@ -314,7 +314,7 @@ Einstiegswurzeln unter OG-Level 1 erhalten Ordinal 0 und Tier 1.
 
 ### 3.5 Relative Last innerhalb der Liegestütz-Leiter (Evidenz B)
 
-| Variante | Spitzen-GRF in % KG [A-05] | relativ zum Standard | statisch (oben / unten) |
+| Variante | Spitzen-GRF in % KG [A-05, A-32] | relativ zum Standard | statisch (oben / unten) |
 |---|---|---|---|
 | Hände 60,96 cm erhöht | 41 % (0,41 ± 0,06) | 0,64 | — |
 | Knie-Liegestütz | 49 % (0,49 ± 0,05) | 0,77 | 53,6 % / 61,8 % [A-06] *(S)* |
@@ -323,8 +323,8 @@ Einstiegswurzeln unter OG-Level 1 erhalten Ordinal 0 und Tier 1.
 | Füsse 30,48 cm erhöht | 70 % (0,70 ± 0,02) | 1,09 | — |
 | Füsse 60,96 cm erhöht | 74 % (0,74 ± 0,02) | 1,16 | — |
 
-Werte aus Tabelle 1 der Proceedings-Volltextfassung von [A-05]; Relativwerte
-eigene Rechnung. In der statischen Messung tragen die Arme unten mehr Last als
+Werte aus Tabelle 1 der Proceedings-Volltextfassung [A-32] derselben Studie
+[A-05]; Relativwerte eigene Rechnung. In der statischen Messung tragen die Arme unten mehr Last als
 oben, beim Knie-Liegestütz ist die Änderung grösser [A-06]. Liegestütz-
 Progressionen mit erhöhten Füssen steigern die Aktivität von Serratus anterior
 und oberem Trapez [A-07].
@@ -393,8 +393,8 @@ Handgelenk-Vorbereitung ohne Schmerz» als Planche-Voraussetzung [A-40].
 
 ### 4.2 Hang- und Scapula-Grundlagen (`hang-foundation`, Familie `pull`)
 
-Die RR-Pull-up-Leiter beginnt mit Scapula-Pulls; Arch Hangs kommen ins Aufwärmen,
-sobald negative Klimmzüge erreicht sind [A-44]. GMB baut den ersten Klimmzug über
+Die RR-Pull-up-Leiter beginnt mit Scapula-Pulls [A-45]; Arch Hangs kommen ins
+Aufwärmen, sobald negative Klimmzüge erreicht sind [A-44]. GMB baut den ersten Klimmzug über
 «Pulling Prep» (3–5 × 5–10, gestreckte Ellbogen, Bewegung nur im Schultergürtel),
 Rudern und Negative (8 × 1–3) auf [A-38]. OG: Sprung-Klimmzug Level 1,
 exzentrisch Level 2, Klimmzug Level 3 [A-31]. Weil `pull-up` bereits mit
@@ -403,7 +403,7 @@ exzentrisch Level 2, Klimmzug Level 3 [A-31]. Weil `pull-up` bereits mit
 | Stufe | Slug-Vorschlag | Beschreibung | Formkriterien | Unlock-Kriterium | Dauer bis nächste Stufe | Quellen |
 |---|---|---|---|---|---|---|
 | 1 | `hang-foundation/dead-hang` · `dead-hang` | passiver Hang | Arme gestreckt, ohne Bodenkontakt (H-FORM) | `dead-hang hold ≥ 30 s · occ 3 · 7 d` | 1–2 Wo. (H-DUR) | 30 s Isometrie-Regel [A-44]; 30 s Dead Hang als FL-Voraussetzung [A-41] |
-| 2 | `hang-foundation/scapular-pull` · `scapular-pull-up` (existiert) | Schulterblätter aus dem Hang nach unten ziehen | Ellbogen gestreckt, Bewegung nur im Schultergürtel [A-38] | `scapular-pull-up reps ≥ 8 · occ 3 · 7 d` | 1–2 Wo. (H-DUR) | [A-44, A-38] |
+| 2 | `hang-foundation/scapular-pull` · `scapular-pull-up` (existiert) | Schulterblätter aus dem Hang nach unten ziehen | Ellbogen gestreckt, Bewegung nur im Schultergürtel [A-38] | `scapular-pull-up reps ≥ 8 · occ 3 · 7 d` | 1–2 Wo. (H-DUR) | Stufe 1 der RR-Leiter [A-45]; 3×8-Regel [A-44]; [A-38] |
 | 3 | `hang-foundation/arch-hang` · `arch-hang` | Scapula-Zug plus Brust Richtung Stange | Arme gestreckt (H-FORM) | `arch-hang reps ≥ 8 · occ 3 · 7 d` | 2–8 Wo. bis `pull-up/strict-5` (H-DUR) | RR-Aufwärmen 10 Wdh. [A-44] |
 | (Übungen) | `pull-up-jump`, `pull-up-negative`, `row-ring` (Rolle `progression` bei `pull-up/strict-5`) | Sprung-, Negativ-Klimmzug, Rudern | kontrolliert | kein Level (§2.5) | — | OG 1–2 [A-31]; GMB [A-38] |
 
@@ -424,7 +424,10 @@ Planche [A-41, A-40]; die RR nutzt Deadbugs (30 s) im Aufwärmen [A-44].
 | 1 | `hollow-body/tuck` · `hollow-hold-tuck` | Rückenlage, Knie angezogen, Schultern vom Boden | Lendenwirbelsäule am Boden (H-FORM) | `hollow-hold-tuck hold ≥ 30 s · occ 3 · 7 d` | 1–2 Wo. (H-DUR) | Regel [A-44]; Stufe (H) |
 | 2 | `hollow-body/full` · `hollow-hold` | Arme über Kopf, Beine gestreckt knapp über dem Boden | Lendenwirbelsäule am Boden [A-41] | `hollow-hold hold ≥ 60 s · form≥4 · occ 2 · 14 d` | 2–6 Wo. (H-DUR) | 60 s [A-41, A-40] |
 | 1 | `arch-body/hold` · `arch-hold` | Bauchlage, Arme/Beine angehoben | Gesäss angespannt, Nacken neutral (H-FORM) | `arch-hold hold ≥ 30 s · occ 3 · 7 d` | 1–2 Wo. (H-DUR) | Regel [A-44]; Stufe (H) |
-| 1 | `plank/hold-60` · `plank-hold` | Unterarm- oder Liegestütz-Plank | Körperlinie gerade (H-FORM) | `plank-hold hold ≥ 60 s · occ 2 · 14 d` | — | OG Level 3 [A-31] |
+
+Der Plank (60 s = OG-Level 3 [A-31]) wird als Übung `plank-hold` mit Rolle
+`accessory` geführt; Stufe 3 von `wrist-conditioning` nutzt dieselbe Übung mit
+30 s (§4.1).
 
 - **Voraussetzungen:** keine.
 - **Häufige Fehler:** Hohlkreuz im Hollow; Nacken überstreckt im Arch (H-FAULT).
@@ -434,7 +437,7 @@ Planche [A-41, A-40]; die RR nutzt Deadbugs (30 s) im Aufwärmen [A-44].
 ### 4.4 Stützhalte (`support-hold`, Familie `push`)
 
 OG: Stützhalt = Ring-Dip-Leiter Level 1, Stütz RTO = Level 2 [A-31]. Die RR
-beginnt die Dip-Leiter mit dem Barren-Stütz und nimmt 30 s Stützhalt ins
+beginnt die Dip-Leiter mit dem Barren-Stütz [A-45] und nimmt 30 s Stützhalt ins
 Aufwärmen, sobald negative Dips erreicht sind [A-44]. TMA verlangt 30 s
 Ring-Stütz vor dem ersten Ring-Dip [A-43].
 
@@ -494,7 +497,7 @@ Ring-Dips 6, RTO 45° 7 [A-31].
 | (weiter) | Weighted Dips §7.4 | | | | | [A-31] |
 
 - **Voraussetzungen:** `dip/parallel-bars` ← `support-hold/parallel-bars`
-  (`prerequisite`) [A-44]; `dip/rings` ← `support-hold/rings` (`prerequisite`)
+  (`prerequisite`) [A-45]; `dip/rings` ← `support-hold/rings` (`prerequisite`)
   und `dip-pb` 15 Wdh. (`recommended`) [A-43].
 - **Häufige Fehler:** zu flach, Schultern rollen nach vorn/oben, Schwung aus den
   Beinen (H-FAULT).
@@ -539,7 +542,7 @@ beidbeinigem Stand [A-12].
 | (Alt.) | `chin-up` (Übung) | Untergriff | wie 1 | Alternative zu 1–2 | — | [A-08, A-09] |
 | (weiter) | Weighted §7.4; One-Arm §7.1 | | | | | [A-31] |
 
-- **Voraussetzungen:** `hang-foundation/arch-hang` (`prerequisite`) [A-44].
+- **Voraussetzungen:** `hang-foundation/arch-hang` (`prerequisite`) [A-44, A-45].
 - **Häufige Fehler:** halber Weg unten, Kipping, Kinn reckt statt Zug (H-FAULT).
 - **Carryover:** Rudern, Front Lever, Muscle-up, One-Arm-Chin (H-PRE). Weiter
   Griff betont den Latissimus, Frontgriff Bizeps/Brachialis, Untergriff anteilig
@@ -579,7 +582,7 @@ Standard-Schultertests sagen die Handstandqualität bei Novizen nicht voraus
 | 5 | `handstand/free-60s` · `handstand-freestanding` | freistehend 60 s | wie 3 | `handstand-freestanding hold ≥ 60 s · form≥4 · occ 2 · 28 d` | — | ~60 s bequem vor One-Arm-HS-Training [A-37] |
 | P1 | `press-handstand/straddle-stand` · `press-handstand-straddle` | Press aus dem Grätschstand, gestreckte Arme | kein Sprung; Arme gestreckt (FIG-Abzug ab 0–15° Beugung [A-29 S. 19]) | `press-handstand-straddle reps ≥ 1 · form≥4 · occ 2 · 28 d` | 4–13 Wo. (H-DUR) | OG 7 [A-31] |
 | P2 | `press-handstand/l-sit-straddle` · `press-handstand-from-l-sit` | aus L-Sit/Straddle-L in den Handstand | wie P1 | `press-handstand-from-l-sit reps ≥ 1 · form≥4 · occ 2 · 28 d` | 4–13 Wo. (H-DUR) | OG 8 [A-31] |
-| P3 | `press-handstand/l-sit-pike` · `press-handstand-pike-from-l-sit` | aus L-Sit mit geschlossenen Beinen | wie P1 | `… reps ≥ 1 · form≥4 · occ 2 · 28 d` | — | OG 9 [A-31] |
+| P3 | `press-handstand/l-sit-pike` · `press-handstand-pike-from-l-sit` | aus L-Sit mit geschlossenen Beinen | wie P1 | `press-handstand-pike-from-l-sit reps ≥ 1 · form≥4 · occ 2 · 28 d` | — | OG 9 [A-31] |
 | (Übungen) | `press-handstand-wall-eccentric`, `press-handstand-elevated` | exzentrisch an der Wand, erhöhter Stand | — | Rolle `progression` | — | OG 5–6 [A-31] |
 
 - **Voraussetzungen:** `wrist-conditioning/prep` (`recommended`); Press:
@@ -1021,8 +1024,8 @@ wegen [A-21, A-23, A-24] nie `prerequisite`.
 
 | Von (Skill/Level) | Nach (Skill/Level) | Relation | Gewicht | Begründung | Quelle / Evidenz |
 |---|---|---|---|---|---|
-| `hang-foundation/arch-hang` | `pull-up/strict-5` | prerequisite | 1,0 | RR-Leiter Scapula → Arch → Negative → Klimmzug | [A-44] D |
-| `support-hold/parallel-bars` | `dip/parallel-bars` | prerequisite | 1,0 | RR-Dip-Leiter beginnt mit dem Stütz | [A-44] D |
+| `hang-foundation/arch-hang` | `pull-up/strict-5` | prerequisite | 1,0 | RR-Leiter Scapula → Arch → Negative → Klimmzug | [A-44, A-45] D |
+| `support-hold/parallel-bars` | `dip/parallel-bars` | prerequisite | 1,0 | RR-Dip-Leiter beginnt mit dem Stütz | [A-45] D |
 | `support-hold/rings` | `dip/rings` | prerequisite | 1,0 | 30 s Ring-Stütz vor dem ersten Ring-Dip | [A-43] D |
 | `dip/parallel-bars` | `dip/rings` | recommended | 0,7 | 15 Barren-Dips vor Ring-Dips; OG 3 → 4 | [A-43] D; [A-31] C |
 | `support-hold/parallel-bars` | `l-sit/tuck` | prerequisite | 1,0 | L-Sit ist ein Stütz mit gehobenen Beinen | (H-PRE) |

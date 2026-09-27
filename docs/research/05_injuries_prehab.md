@@ -328,8 +328,8 @@ sinnvoll und sicher ist (Abschnitt 10).
 | Turnspezifische Reihenfolge | Handgelenk: zuerst Zug- und Hangelemente, dann Stütz in geschlossener Kette ohne Impact, zuletzt offene Kette mit axialer Last, Plyometrie und Flugelementen | [D-53] | B |
 | Startvolumen | «75-%-Reduktionsregel»: Rückkehr nach Handgelenkbeschwerden mit einem Viertel des früheren Volumens an Elementen | [D-53] unter Berufung auf [D-07] | B |
 | Einstiegsvoraussetzung | Beweglichkeit und Kraft idealerweise 50–75 % der Gegenseite vor Beginn des Protokolls | [D-53] | B |
-| «Soreness Rules» | kein Schmerz während/nach → nach Plan steigern; Schmerz > 1 h nach dem Training oder am Folgetag → 1 Tag Pause, letzte Woche wiederholen; Schmerz im Aufwärmen, der nach 15 min verschwindet → letzte Einheit wiederholen, bei erneutem Schmerz abbrechen; Schmerz im Aufwärmen, der über 15 min anhält → stoppen, 2 Tage Pause, eine Woche zurück | [D-53], abgeleitet aus Wurfprogrammen [D-54] | B |
-| Frequenz bei Sehnen-/Bandverletzung (Wurf) | leicht: jeden 2. Tag, mittlere Stufen jeden 3. Tag; mittel/schwer: höchstens 1 Stufe pro 3 Tage mit 2 aktiven Ruhetagen | [D-54] | B |
+| «Soreness Rules» | kein Schmerz während/nach → nach Plan steigern; Schmerz > 1 h nach dem Training oder am Folgetag → 1 Tag Pause, letzte Woche wiederholen; Schmerz im Aufwärmen, der in den ersten 15 min verschwindet → letzte Einheit wiederholen, bei erneutem Schmerz abbrechen, 2 Tage Pause, eine Woche zurück; Schmerz im Aufwärmen, der über 15 min anhält → stoppen, 2 Tage Pause, eine Woche zurück | [D-53], abgeleitet aus Wurfprogrammen [D-54] | B |
+| Frequenz bei Sehnen-/Bandverletzung (Wurf) | leichte Verletzung: je nach Stufe jeden 2. oder 3. Tag werfen; mittlere/schwere: höchstens 1 Stufe pro 3 Tage mit 2 aktiven Ruhetagen | [D-54] | B |
 
 ### 6.2 Rampe des Planers
 
