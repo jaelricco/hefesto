@@ -16,6 +16,8 @@
   Advanced Tuck ≈ 75 %, One-Leg ≈ 88 %, Half-Lay ≈ 93 %, Straddle 85–96 % je
   nach Grätschweite (**Modell** mit Segmentdaten nach de Leva [C-01, C-02]).
   Mit Dempster-Massen verschieben sich die Anteile um ≤ 2 Prozentpunkte [C-02].
+  Alle Segmentwerte sind gegen die Originaltabelle 4 von de Leva geprüft und
+  identisch [C-01].
 - **Gleiche Körperform, gleiches Moment:** Planche und Front Lever verlangen
   bei gleicher Stufe dasselbe Schultermoment (**Modell**), aber mit
   Schulter*beugern* bzw. *streckern*. Bei erwachsenen Turnern liegt das
@@ -44,7 +46,10 @@
   10 % KG Zugkraft nimmt ≈ 12 % des Full- bzw. ≈ 21 % des Tuck-Moments; an
   Schulter-/Halshöhe fast 0 % (**Modell**). +2 kg an den Knöcheln bzw. +4 kg an
   der Hüfte (P-03 S. 2) erhöhen das Full-Moment eines 70-kg-Athleten um ≈ 9 %
-  bzw. ≈ 7 % (**Modell**).
+  bzw. ≈ 7 % (**Modell**). Die Bandkraft selbst ist unsicher: Therapiebänder
+  liefern 13–44 % weniger als vom Hersteller angegeben, doppelte Dehnung
+  bringt nur das 1,33- bis 1,60-Fache der Kraft [C-79]; Loop-Bänder gleicher
+  Farbe streuen um 8–19 % [C-80].
 - **Körpermasse:** Leistungen, bei denen das eigene Gewicht getragen wird,
   skalieren mit Masse^−0,33 bzw. Grösse^−1 (Evidenz B) [C-59]; Kraft mit
   Masse^0,67, Drehmoment mit Masse^1 [C-58]. +10 % Zusatzmasse senken die
@@ -54,6 +59,9 @@
   52 → 62 %) [C-42]; Liegestütz in Extension erhöht den radioskaphoidalen
   Druck gegenüber der Faust-/Neutralstellung [C-43]. 56,7 % der befragten
   Handstand-Praktizierenden berichten chronische Handgelenkschmerzen [C-44].
+  Gemessene Winkel gibt es nur dynamisch: 95° Extension beim Aufsetzen im
+  Flick-Flack, mehr bei geringerer Schulterflexion [C-81]; das
+  Handgelenkmoment im Press liegt konstant bei ≈ 0,4 N·m/kg [C-17].
 - **Schulter:** Hohe Armelevation beim Klimmzug verkleinert den subakromialen
   Raum; weiter Griff und Untergriff zeigen ungünstigere Kinematik [C-22]. Der
   Bench Dip erreicht 88° Schulterextension (101 % der individuellen Max-ROM),
