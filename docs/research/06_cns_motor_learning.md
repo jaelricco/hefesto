@@ -45,8 +45,8 @@
   Basketball-Wurf, n = 10 je Gruppe) [E-45].
 - **Lernstadien:** Fitts & Posner beschreiben drei Stadien (kognitiv,
   assoziativ, autonom) [E-29; Inhalt nur nach der Beschreibung in E-30].
-  Neuere Modelle trennen schnelles Lernen
-  innerhalb einer Einheit von langsamem Lernen über Einheiten hinweg; die
+  Neuere Modelle trennen schnelles Lernen innerhalb einer Einheit von
+  langsamem Lernen über Einheiten hinweg; die
   Dauer der Phasen ist stark aufgabenabhängig [E-31, E-32]. Die Leistung am
   Ende einer Übungseinheit ist ein schlechterer Lernindikator als die Leistung
   bei späterer Wiederholung [E-34]. Der Planer misst Fortschritt deshalb am
@@ -67,9 +67,10 @@
   gleichem Volumen (p = 0.421) [E-53]; eine neuere Meta-Regression findet
   dennoch steigende Kraft mit steigender Frequenz bei abnehmendem Grenznutzen
   [E-54]. Sechs exzentrische Maximalkontraktionen täglich an 5 Tagen steigerten
-  die Kraft um 9–14 %, dieselben 30 Kontraktionen einmal pro Woche nicht
-  signifikant [E-58]. Gleichgewichtstraining wirkt am besten mit 3 oder 6
-  Einheiten pro Woche zu 11–15 min [E-59] (Evidenz A/B).
+  die Kraft der Ellbogenbeuger um 9–14 %, dieselben 30 Kontraktionen einmal pro
+  Woche nicht signifikant [E-58]. Gleichgewichtstraining junger Erwachsener
+  (nicht handstand-spezifisch) wirkt am besten mit 3 oder 6 Einheiten pro Woche
+  zu 11–15 min [E-59] (Evidenz A/B).
 - **Ermüdung schadet dem Lernen:** Nachdem ihre Maximalkraft durch Ermüdung um
   rund 60 % gesunken war, lernten junge Gesunde eine isometrische
   Kraftdosierungsaufgabe (Spitzgriff) auch am Folgetag ohne Ermüdung langsamer
@@ -78,14 +79,14 @@
   Ermüdung [E-99]. Daraus folgen Stoppregeln bei Form- und Leistungsabfall
   (PAR-E-15 bis PAR-E-18).
 - **Schlaf und Konsolidierung sind umstritten:** Eine Nacht Schlaf brachte +20 %
-  Tempo in einer motorischen Sequenzaufgabe [E-61], doch nach Kontrolle von Störfaktoren bleibt keine Verbesserung
-  durch Schlaf übrig [E-62, E-65]; Schlaf stabilisiert eher, als dass er
+  Tempo in einer motorischen Sequenzaufgabe [E-61], doch nach Kontrolle von
+  Störfaktoren bleibt keine Verbesserung durch Schlaf übrig [E-62, E-65]; Schlaf stabilisiert eher, als dass er
   verbessert [E-64]. Ob schnelle Gewinne in Pausen Konsolidierung [E-66] oder
   abklingende Hemmung [E-67] sind, ist offen. Keine Planerregel hängt an
   «Schlaf verstärkt Lernen».
 - **Schlafmangel (≤ 6 h) senkt die Leistung:** gesamt −7.56 %, Skill-Aufgaben
-  (Präzisionsaufgaben aus Ballsportarten) −20.9 %, Kraft −2.85 %; Oberkörperkraft war unbeeinflusst, Aufgaben am Morgen
-  weitgehend auch [E-70]. Mehrere Nächte Schlafrestriktion senken vor allem die
+  (Präzisionsaufgaben aus Ballsportarten) −20.9 %, Kraft −2.85 %;
+  Oberkörperkraft war unbeeinflusst, Aufgaben am Morgen weitgehend auch [E-70]. Mehrere Nächte Schlafrestriktion senken vor allem die
   Kraft in Mehrgelenkübungen [E-71] (Evidenz A).
 - **Zentrale Ermüdung ist real, aber nach kurzen Maximalreizen kurzlebig:**
   Während einer 3-min-Maximalkontraktion fiel die willentliche Aktivierung von
@@ -96,8 +97,8 @@
   Pause bei schweren Sätzen [E-60, E-87, E-88]; der Default von 300 s bleibt
   (Praxisquelle ≥ 5 min [P-01 S. 1–3]).
 - **«CNS-Fatigue» als mehrtägiges Burnout ist nicht belegt:** Nach 10 × 5
-  Kniebeugen mit 80 % 1RM (10 männliche Athleten) hielt die Ermüdung bis 72 h an, war aber «nicht
-  primär» zentral; die willentliche Aktivierung war bis 48 h reduziert [E-82].
+  Kniebeugen mit 80 % 1RM (10 männliche Athleten) hielt die Ermüdung bis 72 h
+  an, war aber «nicht primär» zentral; die willentliche Aktivierung war bis 48 h reduziert [E-82].
   Übertraining ist eine lang anhaltende Fehlanpassung ohne anerkannten Marker
   [E-85]. Der Planer begründet nichts mit «CNS-Fatigue» (PAR-E-29).
 - **Reihenfolge:** Die Kraft steigt bei den Übungen am stärksten, die am Anfang
@@ -130,7 +131,7 @@
 | Massed vs. distributed; Frequenz vs. Volumen; Anwendung auf Kraft- und Balance-Skills | **belegt** (§8) | E-46 bis E-60, E-104, E-105 |
 | Schlaf und Konsolidierung (inkl. Replikationsdebatte), Schlafmangel | **belegt** (§9) | E-61 bis E-72 |
 | Zentrale vs. periphere Ermüdung, Twitch Interpolation, supraspinale Ermüdung, Erholungszeitverlauf | **belegt** (§10) | E-73 bis E-83 |
-| «CNS-Fatigue»: was belegt ist, was Mythos ist | **belegt** (§11) | E-79, E-81, E-82, E-84, E-85 |
+| «CNS-Fatigue»: was belegt ist, was Mythos ist | **belegt** (§11) | E-73 bis E-85, E-91 |
 | Reihenfolge in der Einheit, Frische | **belegt** (§4) | E-26 bis E-28, E-60, P-01 bis P-04 |
 | Üben unter Ermüdung und Lernen | **belegt** (§5) | E-28, E-99 |
 | Pausen vor Maximalversuchen | **belegt** (§12) | E-60, E-81, E-86 bis E-88, E-91, P-01 bis P-04 |
@@ -488,9 +489,9 @@ kraftlimitierte Skills (PAR-E-11) und begründet Greasing the Groove (§14).
 | Christova et al. 2018 [E-68] | Übersicht grobmotorisches Lernen bei Erwachsenen: Schlaf nützt den meisten grobmotorischen Aufgaben, Schlafentzug führt aber nicht immer zu Leistungsverlust. | B |
 | Hoedlmoser et al. 2015 [E-69] | 24 Männer, Fahrrad mit umgekehrter Lenkung: ein 2-h-Mittagsschlaf brachte keinen Konsolidierungsvorteil. | B |
 
-**Einordnung.** Die frühen, grossen Schlafeffekte sind in Fingersequenz-Aufgaben
-entstanden und lassen sich weitgehend durch Messartefakte erklären [E-62,
-E-65]. Für grobmotorische Aufgaben ist die Lage uneinheitlich [E-68, E-69].
+**Einordnung.** Die frühen, grossen Schlafeffekte sind in motorischen
+Sequenzaufgaben (u. a. Fingertippen [E-64]) entstanden und lassen sich
+weitgehend durch Messartefakte erklären [E-62, E-65]. Für grobmotorische Aufgaben ist die Lage uneinheitlich [E-68, E-69].
 Für den Planer bleibt: **Verteilung über Tage ist belegt** (§8.1), eine
 Regel «Schlaf verstärkt den Lerneffekt, deshalb muss zwischen Einheiten eine
 Nacht liegen» ist es nicht (PAR-E-44). Aus E-66 und E-67 folgt übereinstimmend,
@@ -560,7 +561,7 @@ unerheblich (PAR-E-38).
 | Einzelne maximale Hebung (Kniebeuge, Bankdrücken) | nicht getrennt berichtet | Erholung der Leistung in weniger als 1 min (Sekundärangabe; E-91 zitiert Hitchcock 1989, Weir 1994, Matuszak 2003) | E-91 | B |
 | Schwere Krafteinheit: 10 × 5 Kniebeugen mit 80 % 1RM (10 Athleten) | Willentliche Aktivierung **bis 48 h** reduziert | Potenzierte Zuckungskraft 48 h reduziert; Ermüdung erst nach **72 h** ganz abgeklungen | E-82 | B (akutes Crossover, n = 10) |
 | Sprung- bzw. Sprinteinheit (gleiche Studie) | Aktivierung 24 h reduziert | Zuckungskraft 48 h reduziert; Ermüdung nach 48 h (Sprung) bzw. 72 h (Sprint) abgeklungen | E-82 | B (akutes Crossover, n = 10) |
-| Sätze bis zum Versagen vs. nicht bis zum Versagen (Bankdrücken, Kniebeuge; 10 krafttrainierte Männer) | nicht gemessen | Nach Versagen langsamere Erholung von Leistung und Stoffwechselmarkern; Unterschiede bis 24–48 h nach der Einheit | E-83 | B |
+| Sätze bis zum Versagen vs. nicht bis zum Versagen (Bankdrücken, Kniebeuge; 10 krafttrainierte Männer) | nicht gemessen | Nach Versagen langsamere Erholung von Leistung, Stoffwechsel- und Hormonmarkern; Unterschiede bis 24–48 h nach der Einheit | E-83 | B |
 
 **Folgen.** Innerhalb einer Einheit erholt sich die zentrale Komponente nach
 kurzen Maximalversuchen in Minuten, die Pausenlänge wird deshalb von der
@@ -916,6 +917,34 @@ verwendet, deren Randomisierung nicht geprüft werden konnte.
 | E-100 | The Case for Grease-the-Groove Jump Training | Tsatsouline P | 2015 | https://www.strongfirst.com/jump/ | Coaching-Artikel | C |
 | E-101 | Two Powerful Methods for Improving Your Pull-Up | Allen D | 2018 | https://www.strongfirst.com/two-powerful-methods-for-improving-your-pull-up/ | Coaching-Artikel | C |
 | E-102 | How to Increase your Pullups by 50 Percent (at Least) | Tanskey A | 2018 | https://www.strongfirst.com/how-to-increase-your-pull-ups-50-percent/ | Coaching-Artikel | C |
-| E-103 | How to Get Stronger by Greasing the Groove | McKay B, McKay K | 2022 | https://www.artofmanliness.com/health-fitness/fitness/get-stronger-by-greasing-the-groove/ | Coaching-Artikel | D |
+| E-103 | How to Get Stronger by Greasing the Groove | McKay B, McKay K | 2022 | https://www.artofmanliness.com/strength/fitness/get-stronger-by-greasing-the-groove/ | Coaching-Artikel | D |
 | E-104 | Strategies for maintaining a handstand in the anterior-posterior direction | Kerwin DG, Trewartha G | 2001 | https://doi.org/10.1097/00005768-200107000-00016 | Biomechanik-Studie | B |
 | E-105 | Balance control strategies during perturbed and unperturbed balance in standing and handstand | Blenkinsop GM, Pain MTG, Hiley MJ | 2017 | https://doi.org/10.1098/rsos.161018 | Biomechanik-Studie | B |
+
+## Prüfprotokoll
+
+Adversariale Prüfung vom 27.09.2026 (Stream-E-Audit). Werkzeuge: Europe-PMC-
+und Crossref-REST, OpenAlex (Abstracts von E-39 und E-40, Springer-Seite
+gesperrt), PMC-Volltexte, Originalseiten der Coaching-Quellen und Open Library.
+Prüftiefe: **Volltext** für E-28, E-30, E-31, E-37, E-50, E-52, E-70, E-91 und
+die Seiten E-100 bis E-103; **nur Titel** für E-15, E-16 (Meinungsbeiträge ohne
+Abstract; zitiert wird nur die Titelposition) und E-77; **bibliografischer
+Eintrag** für E-29; alle übrigen **Abstract**. Wo nur das Abstract vorlag, wird
+nichts aus dem Volltext behauptet. Die Metadaten der 99 im deterministischen
+Vorabgleich unauffälligen Zeilen wurden nicht erneut geprüft.
+
+| Prüfung | Ergebnis | Änderung |
+|---|---|---|
+| Existenz und Metadaten (105 Quellen) | Keine erfundene Quelle. E-61: DOI 10.1016/s0896-6273(02)00746-8 existiert (Crossref, PMID 12123620, Neuron 2002); die Meldung DOI_NOT_FOUND war ein Artefakt der Klammern. E-29: Open Library OL6554807W = Fitts PM, Posner MI, *Human Performance*, Brooks/Cole 1967; dieselbe Angabe im Literaturverzeichnis von E-30. E-100 bis E-103 auf den Originalseiten bestätigt (Autor und Datum: Tsatsouline 30.06.2015; Allen 20.02.2018; Tanskey 04.12.2018; McKay & McKay 20.02.2022, Erstfassung Januar 2016). E-54: Druckjahr 2026 (Crossref online 2025), wie bei E-18 und Stream B (B-23). E-103: URL leitet auf eine neue Adresse um. E-39: Crossref nennt 8, OpenAlex 10 Autoren; «et al.» ist korrekt | E-54 Jahr 2025 → 2026 (auch im Text); E-103 URL aktualisiert |
+| E-02 und die zurückgezogene Vorversion | Zurückgezogen ist Siddique et al., Sports Med 2019, DOI 10.1007/s40279-019-01152-3 (PMID 31359349; Crossref-Rückzugsvermerk). Die Fassung von 2020 (DOI 10.1007/s40279-020-01258-z, PMID 31993949) trägt keinen Rückzugsvermerk; nur sie steht in der Tabelle, und alle zitierten Zahlen (30 RCTs, n = 623, V-Welle SMD 0.62, SICI in Ruhe unverändert) stammen aus ihrem Abstract | DOI und PMID beider Fassungen in §2.1 und Offene Frage 10 ergänzt |
+| Typ und Evidenzstufe nach Schema | E-82, E-97 und E-98 sind akute, randomisierte Crossover-Experimente (eine Einheit je Bedingung), keine Trainings-RCTs; Einordnung wie in Stream B. Randomisierte Interventionen bestätigt für E-08, E-25, E-42, E-45, E-48, E-90, E-99 (bleiben A, meist klein). E-41 wurde stratifiziert, nicht randomisiert (bleibt B) | E-82, E-97, E-98: A → B, Typ RCT, Designhinweis im Titel; alle Textstellen und Zählung in §1 angepasst (35 A, 66 B, 3 C, 1 D) |
+| Parameter-Tabelle: alle 49 Zeilen gegen Quelle (Zahl, Richtung, Population, Stufe) | 16 ohne Änderung; 15 inhaltlich korrigiert; 18 um Population bzw. Übertragungsvermerk ergänzt | Inhaltlich: PAR-E-10 enthielt exzentrische Daten unter einem Isometrie-Schlüssel, und die tägliche isometrische Einzelkontraktion steigerte die isometrische Kraft gar nicht [E-57] → Schlüssel `lab_max_contractions_reference`, Wert präzisiert; PAR-E-18 und alle E-83-Stellen: «verzögert um 24–48 h» und «gleiche Wiederholungszahl» bei 3 × 5 waren falsch → «langsamere Erholung, Unterschiede bis 24–48 h», gleiche Wiederholungszahl nur bei 6 × 5; PAR-E-22 verschwieg die ≈ +200 % Trainingslast in dynamischen Programmen [E-20]; PAR-E-23 um den breiten Winkelübertrag aus E-22 ergänzt; PAR-E-25 Hinweistext entsprach nicht der «ballistischen Intention» [E-23] → «Spannung so schnell wie möglich maximal aufbauen»; PAR-E-11 ACSM-Frequenz sind Trainingstage insgesamt, nicht je Skill → Evidenz «A/B (Analogie) + Heuristik»; PAR-E-08 A/B nur als Analogie; PAR-E-17 → Heuristik (Geschwindigkeitsverlust im Satz ≠ Haltezeitabfall zwischen Sätzen); PAR-E-32 → «A (Begründung) + Heuristik», kein Befund zeigt geblocktes Üben als überlegen; PAR-E-41 ≤ 6 h ist die Einschlussdefinition, keine ermittelte Schwelle; PAR-E-13, 26, 29, 40, 46 Evidenz an die Umstufung von E-82/E-97/E-98 angepasst, bei PAR-E-46 zudem «kein Effekt nach vollständigem Aufwärmen» abgeschwächt. Population bzw. Übertragungsvermerk: PAR-E-01, 02 (E-27 als Beleg ergänzt), 04, 06, 12, 14, 20, 24, 27, 30, 31, 33, 35, 36, 39, 42, 45, 48 |
+| Erholungszeitverlauf nach schwerer bzw. isometrischer Arbeit | E-74 (99 % → 90.7 % Aktivierung bei 3 min Dauer-MVC; 1.0 → 9.8 % Zusatzkraft bei 2 min), E-81 (zentral ~2 min, peripher 3–5 min, vollständig teils Stunden; lange Belastung: Aktivierung nach 30 min teils unvollständig) und E-82 (Aktivierung 48 h, Zuckungskraft 48 h, Ermüdung 72 h) bestätigt. E-83 falsch wiedergegeben (siehe oben). E-91-Angabe «< 1 min nach einzelner Maximalhebung» ist eine Sekundärangabe und nicht zentral-spezifisch. Befunde überwiegend aus eingelenkigen Laborprotokollen [E-80]; keine Studie zu Straight-Arm-Isometrie | §10.3: E-91-Zeile in die Spalte «Peripher/Leistung» verschoben, Primärquellen genannt; E-83-Zeile korrigiert (zentral «nicht gemessen»); E-74-Zeile um «kurze MVC können optimal aktiviert sein» ergänzt; Kurzfassung, §12 und PAR-E-39 mit Hinweis auf eingelenkige Laborprotokolle [E-80] |
+| «CNS-Fatigue»-Tabelle (§11): jede Bewertung auf eine Quelle zurückgeführt | Zeile 1 [E-73, E-74, E-75, E-80] und Zeile 2 [E-82] tragen; Zeile 3 («Mythos») trägt nur für kurze Einzelversuche in Laborprotokollen [E-80, E-81, E-91]; Zeile 4: E-83 hat zentrale Ermüdung nicht gemessen, «nicht gezeigt» war zu stark; Zeile 5: E-84 nennt für Dopamin und Noradrenalin durchaus Belege (v. a. Hitze), nur die Serotonin-Hypothese ist schwach; Zeile 6 [E-76 bis E-79] trägt | Bewertungen präzisiert; Population (10 männliche Athleten, Knieextensoren) ergänzt; Erklärtext für die App auf «nach sehr harten, umfangreichen Einheiten» eingegrenzt |
+| Nur sekundär gesehene Quellen | Fitts & Posner (Stadien, Lernkurve, Abb. 1B) im Volltext von E-30 bestätigt; Baddeley & Longman, Donovan & Radosevich (d = 0.07), Paik & Ritter und Arthur et al. im Volltext von E-52; Shea & Morgan im Volltext von E-37; Hitchcock, Weir, Matuszak in E-91. Die Kurzfassung zitierte Fitts & Posner und Paik & Ritter ohne Hinweis auf die Sekundärquelle | Kurzfassung, §1 (Methode), §6 und Offene Frage 1 kennzeichnen jetzt jede dieser Angaben als «beschrieben in» bzw. «über» die Sekundärquelle |
+| Neuronale Anpassungen (E-01 bis E-20) | Fehler: «konsistente Abnahme der intrakortikalen Hemmung» [E-03] widerspricht E-04 (SICI n. s.) und E-02 (nur unter Kontraktion); E-03 fand für die Erregbarkeit nur einen grenzwertigen Effekt (SMD 0.27), nicht «moderat und heterogen»; E-04 fand keinen stärkeren Effekt von Metronomtraining «als» anderen Formen, sondern nur dort einen signifikanten; E-06 = SR mit 7, Meta-Analyse mit 4 Studien; E-07 Anstieg nur unter maximaler Kontraktion; E-18 sagt nicht «Ort offen»; E-20 «keine Verbesserung der Sprintleistung auf dem Rad» ist im Abstract nicht enthalten und der Volltext war gesperrt (HTTP 403) | Aussagen korrigiert bzw. die nicht prüfbare Aussage zu E-20 gestrichen; Zahlen aus E-02, E-03, E-07, E-20, E-22 ergänzt |
+| Spezifität, Lernen, Übungsplanung (E-21 bis E-52) | E-22 zeigt breiten Winkelübertrag (+5 bis +11 %), «bestätigt ±5°» war falsch; E-37 kritisiert nicht «dieselbe Gruppe», sondern eine Meta-Analyse der Gruppe um Ammar (2023, 28 Studien) und nicht E-39; E-41 nicht randomisiert, Verschachtelung mit Dartwürfen; E-28-Wortlaut «Ermüdung von 60 % der Maximalkraft» mehrdeutig. Bestätigt: E-25 (38 Untrainierte, randomisiert), E-26 (11 Studien; 268 Personen nur über Tabelle 1 des Umbrella-Reviews Bernárdez-Vázquez et al. 2022, PMC9302196, bestätigt), E-28 (n = 38, 68 %, Tag 3–4 bei n = 12, n = 5, n = 18), E-36, E-38, E-39 (OpenAlex-Abstract), E-45, E-48, E-50 (4 × 1 h an 4 Tagen besser als wöchentlich) | Korrigiert; Population ergänzt (E-21, E-22, E-25, E-41, E-45) |
+| Frequenz, Gleichgewicht, Schlaf, Aufwärmen, GTG (E-53 bis E-105) | Bestätigt: E-53, E-55, E-56, E-57, E-58, E-59, E-62 bis E-72, E-86 bis E-90, E-92 bis E-96, E-104, E-105. Fehler: ACSM-Frequenz [E-60] sind Trainingstage insgesamt; «Skill −20.9 %» [E-70] betrifft Tennisaufschlag, Rugbypass, Freiwurf, Schiessen; «Fingersequenz» [E-61] ist aus dem Abstract nicht belegbar; E-91 «nach vollständigem Aufwärmen fehlt der Effekt meist» übertrieben (selten geprüft, uneinheitlich); E-100 empfiehlt für Sprünge ausdrücklich *verschiedene* Sprungformen, nicht «dieselbe Bewegung», und enthält «Kraft ist eine Fertigkeit» nicht (steht in E-103 als Tsatsouline-Zitat); E-57: tägliche isometrische MVC steigerte nur die exzentrische Kraft | Korrigiert; E-102 als «Fighter Pullup Plan» gekennzeichnet |
+| Widersprüche | Zwei nicht dokumentierte Widersprüche gefunden (SICI: E-03 vs. E-02/E-04; Breite der Winkelspezifität: E-21 vs. E-22); W-11 unterschlug die Einschränkung von d = 0.07 in E-52 | W-23 und W-24 neu; W-3, W-6, W-11, W-21 korrigiert |
+| Interne Konsistenz | 105 IDs E-01 bis E-105, lückenlos und eindeutig; jede zitierte ID steht in der Tabelle, jede Tabellen-ID wird zitiert; 49 Parameter PAR-E-01 bis PAR-E-49 eindeutig, alle Verweise aufgelöst; W-1 bis W-24; Quellen-Tabelle im Pflichtformat (7 Spalten). Nebenbefund ausserhalb dieser Datei: `03_training_methods.md` (PAR-B-35) zitiert PAR-E-12 als «5–7», richtig ist 3–6 (Default 4) | Zwischenüberschrift «Prüfprotokoll» im Quellenteil in «Prüftiefe bei der Erstellung» umbenannt, damit sie nicht mit diesem Abschnitt kollidiert |
+| Bilanz | Quellen: 105 geprüft, 100 ohne Änderung, 5 korrigiert (E-54, E-82, E-97, E-98, E-103), 0 entfernt. Aussagen: 49 Parameter und rund 150 weitere Zahlen bzw. Kernaussagen geprüft; 33 Parameterzeilen und 30 weitere Aussagen korrigiert | Quellen danach: 105 |
