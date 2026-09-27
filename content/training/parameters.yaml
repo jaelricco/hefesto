@@ -36,7 +36,6 @@ parameters:
   unit: Wdh.
   sources: [A-44]
   evidence: D
-  rationale: ''
 - id: PAR-A-05
   key: dynamic_rep_increment_per_session
   text: '+1'
@@ -132,7 +131,6 @@ parameters:
   unit: OG-Level
   sources: [A-31]
   evidence: C
-  rationale: ''
 - id: PAR-A-27
   key: rings_level_offset
   text: Planche +1…+3; Liegestütz +3 (1 → 4); Dip +1 (3 → 4); L-Sit +2 (3 → 5); HS +2…+3
@@ -162,7 +160,6 @@ parameters:
   unit: OG-Level
   sources: [A-31]
   evidence: C
-  rationale: ''
 - id: PAR-A-31
   key: og_level_l_v_manna
   text: Tuck-L 1 · 1-Bein 2 · L 3 · Straddle-L 4 · RTO-L 5 · V45 6 · V75 7 · V100 8 · V120 9 · V140 10
@@ -207,7 +204,6 @@ parameters:
   unit: OG-Level
   sources: [A-31]
   evidence: C
-  rationale: ''
 - id: PAR-A-37
   key: og_level_push_dip_row
   text: 'Liegestütz: Standard 1 · Diamond 2 · Ringe 4 · RTO 5 · RTO-PPPU 40° 7; Dips: Barren 3 · L 4 ·
@@ -216,7 +212,6 @@ parameters:
   unit: OG-Level
   sources: [A-31]
   evidence: C
-  rationale: ''
 - id: PAR-A-38
   key: maltese_og_level
   text: 17 (jenseits des Charts)
@@ -1464,6 +1459,8 @@ parameters:
 - id: PAR-D-37
   key: prehab_sessions_per_week
   text: 3 (Spanne 2–4)
+  value: 3
+  values: {lo: 2, hi: 4}
   unit: Einheiten/Woche
   sources: [D-75, D-11, D-80]
   evidence: A (Analogie)
@@ -2391,3 +2388,7 @@ parameters:
     und nach Pausen ab 7 Wochen); Faktor ist dort als Heuristik festgelegt'}
 - {id: PAR-S-45, key: unknown_answer_sigma_frac, text: σ ≥ 0.5 × μ, value: 0.5, evidence: Heuristik, heuristic: true,
   rationale: '`onboarding.md` §5.2, Zeile «weiss nicht»: Populations-Prior mit breiter Unsicherheit'}
+- {id: PAR-S-46, key: prerequisite_plausibility_fraction, text: '0.5', value: 0.5, evidence: Heuristik,
+  heuristic: true, rationale: 'R-2 (`onboarding.md` §5.5): eine Vorstufe gilt als plausibel, wenn ihre
+    Schätzung mindestens die Hälfte ihrer Schwelle erreicht; die Hälfte entspricht dem Startanteil neuer
+    Belastung (PAR-D-12) und lässt Messrauschen der Selbstauskunft (PAR-F-20: 30 %) Platz'}

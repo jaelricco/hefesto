@@ -7,9 +7,21 @@
 #
 # Deviations from research 02, all for lack of a load profile or equipment
 # model in phase 5: the frog stand is not a planche rung (no row in the load
-# table), wrist conditioning is prehab rather than a ladder, rows need a low
-# bar, and the ring muscle-up, back lever, HSPU and press are not planned yet.
+# table), rows need a low bar, the ring muscle-up, back lever, HSPU and press
+# are not planned yet, and wrist conditioning keeps only its plank stage as a
+# ladder: the routine and the loaded extension (research 02 §4.1, stages 1–2)
+# are the wrist prehab of every session instead, so the edge «prep → handstand
+# wall, planche lean» is served by the warm-up.
 skills:
+  - slug: wrist-conditioning
+    name: Handgelenk-Vorbereitung
+    foundation: true
+    limiting_factor: strength
+    rungs: [plank-hold]
+    levels:
+      - { slug: plank, exercise: plank-hold, threshold: 30, og_ordinal: 2 }
+    sources: [A-35, A-31]
+
   - slug: hang-foundation
     name: Hängen und Schulterblatt
     foundation: true
@@ -151,6 +163,8 @@ skills:
         threshold: 30
         og_ordinal: 0
         prerequisites: [push-up/full]
+        recommended:
+          - { to: wrist-conditioning/plank, weight: 0.5 }
       - slug: tuck
         exercise: planche-tuck
         threshold: 10

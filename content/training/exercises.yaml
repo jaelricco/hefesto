@@ -725,6 +725,23 @@ exercises:
     bw_fraction: 1.0
     sources: [A-31]
 
+  # --- wrist-conditioning (research 02 §4.1) ---
+  - slug: plank-hold
+    name: Unterarmstütz mit gestreckten Armen (Plank)
+    status: draft_placeholder
+    pattern: horizontal_push
+    straight_arm: straight_arm_axial
+    direction: push
+    load_family: push_up
+    complaint_family: push_up_dip
+    measure: hold_seconds
+    hold_class: endurance
+    requires: [floor]
+    og_ordinal: 2
+    bw_fraction: 0.69
+    sources: [A-35, A-31]
+    note: Tabelle 2 hat keine Zeile für den Plank; er wird als statischer Liegestütz oben geführt (Lastanteil 0.69, PAR-C-18, Heuristik). OG 2 = Plank 25 s im Chart.
+
   # --- prehab (research 05 §10; coaching practice, PAR-D-38) ---
   - slug: wrist-prep-routine
     name: Handgelenk-Vorbereitung

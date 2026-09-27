@@ -21,6 +21,7 @@ type Plan struct {
 	Realism        []Realism          `json:"realism,omitempty"`
 	Monitor        []RegionMonitor    `json:"monitor,omitempty"`
 	Headroom       map[string]float64 `json:"headroom,omitempty"`
+	Loads          []AccountLoad      `json:"loads,omitempty"`
 	Reasons        []Reason           `json:"reasons"`
 	Disclaimer     string             `json:"disclaimer"`
 }
@@ -84,6 +85,17 @@ type Item struct {
 	Reasons     []Reason `json:"reasons"`
 }
 
+// AccountLoad is the week load of one account before and after the caps
+// (spec §7.2): Target is what the ladders asked for, Cap the limit and Rule
+// the rule that set it.
+type AccountLoad struct {
+	Account string  `json:"account"`
+	Target  float64 `json:"target"`
+	Planned float64 `json:"planned"`
+	Cap     float64 `json:"cap"`
+	Rule    string  `json:"rule"`
+}
+
 // Exclusion explains why an exercise is not in the plan.
 type Exclusion struct {
 	Exercise string `json:"exercise"`
@@ -118,6 +130,9 @@ type gen struct {
 	fullCount int
 	deload    string
 	weekIdx   int // weeks since onboarding
+	caps      map[string]float64
+	capRules  map[string]string
+	targets   map[string]float64
 }
 
 // Generate builds the plan for the week starting at week (a Monday, date at
@@ -225,12 +240,34 @@ func (g *gen) deloadKind() string {
 	return ""
 }
 
-// finish fills rest days, monitoring questions and hints.
+// finish drops sessions left without training, fills rest days,
+// monitoring questions and hints.
 func (g *gen) finish() {
 	k := g.k
+	// A day with nothing but warm-up and prehab is a planned rest day
+	// (WEEK-02); the planner never writes user_training_days (ENT-S-8).
+	kept := g.plan.Sessions[:0]
+	dropped := 0
+	for _, ps := range g.plan.Sessions {
+		if hasTraining(ps) {
+			ps.Index = len(kept)
+			kept = append(kept, ps)
+		} else {
+			dropped++
+		}
+	}
+	g.plan.Sessions = kept
+	if dropped > 0 {
+		g.plan.Reasons = append(g.plan.Reasons, k.reason(RuleSessionKind, "full", g.fullCount, "rest", dropped))
+	}
+	week := g.weekLoads()
+	for _, a := range sortedKeys(g.caps) {
+		g.plan.Loads = append(g.plan.Loads, AccountLoad{Account: a, Target: round3(g.targets[a]),
+			Planned: round3(week[a]), Cap: round3(g.caps[a]), Rule: g.capRules[a]})
+	}
 	used := map[time.Weekday]bool{}
-	for _, sl := range g.slots {
-		used[sl.day] = true
+	for _, ps := range g.plan.Sessions {
+		used[ps.Date.Weekday()] = true
 	}
 	for d := 0; d < 7; d++ {
 		day := g.week.AddDate(0, 0, d)
@@ -261,4 +298,20 @@ func (g *gen) finish() {
 		}
 		return 0
 	})
+}
+
+// hasTraining reports whether a session has a working set outside the
+// warm-up and prehab.
+func hasTraining(ps PlannedSession) bool {
+	for _, b := range ps.Blocks {
+		if b.Role == BlockWarmup {
+			continue
+		}
+		for _, it := range b.Items {
+			if it.Sets > 0 && it.Stimulus != StimPrehab {
+				return true
+			}
+		}
+	}
+	return false
 }

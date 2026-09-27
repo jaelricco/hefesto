@@ -69,7 +69,13 @@ func (k *Knowledge) RealismFor(s Snapshot, g Goal, now time.Time) (Realism, bool
 	r := Realism{Skill: g.Skill, TargetLevel: g.TargetLevel, LowerWeeks: lower, ShownFrom: from, ShownTo: to,
 		WeeksToDate: math.Floor(weeks)}
 	r.Unrealistic = weeks < lower
-	if r.Unrealistic && next >= 0 {
+	// The milestone is the first unmet level one OG step or more above the
+	// current one; a level on the same ordinal (e.g. the planche lean) has no
+	// band of its own and is the working rung anyway.
+	for next >= 0 && next < len(sk.Levels) && sk.Levels[next].OG <= cur {
+		next++
+	}
+	if r.Unrealistic && next >= 0 && next < len(sk.Levels) {
 		ms := sk.Levels[next]
 		_, mf, mt := k.span(cur, ms.OG)
 		r.Milestone, r.MilestoneFrom, r.MilestoneTo = ms.Slug, mf, mt

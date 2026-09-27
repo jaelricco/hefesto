@@ -1,0 +1,43 @@
+onboarding: complete
+  [INJ-03] Stand für innen am Ellbogen aktualisiert.
+week 2026-09-28  ruleset 0.1.0  stopped=false
+  plan: [WEEK-01] Die App verteilt 4 Einheiten so, dass zwischen harten Einheiten möglichst viel Abstand liegt.
+  plan: [WEEK-03] Bei 4 vollen Einheiten verteilt die App Druck und Zug auf verschiedene Tage.
+session 1 Mon 28.09. full ~23 min
+  warmup (10 min)
+    Aussenrotation mit Band                2 × 15       res 2  rest  90s  prehab p99 support  [warm-up]  {DOSE-10}
+    Handgelenk-Vorbereitung                2 × 15       res 2  rest  90s  prehab p99 support  [warm-up]  {DOSE-10}
+  skill_max
+    Planche Lean                           2 × 4 s      res 2  rest 300s  skill p1 goal  [calibration, monitor]  {GOAL-01 SEL-07 SEL-08 WEEK-04 INJ-05 DOSE-01 LOAD-04b LOAD-10 LOAD-03 LOAD-10}
+  strength
+    Klimmzug                               1 × 6        res 2  rest 120s  accessory p2 support  [calibration, monitor]  {GOAL-06 SEL-07 SEL-08 WEEK-04 INJ-05 DOSE-12 LOAD-04b LOAD-10 LOAD-03 LOAD-10}
+  end
+    Aussenrotation mit Band                2 × 15       res 2  rest  90s  prehab p99 support  {DOSE-10}
+    Handgelenk-Wippen im Vierfüsslerstand  2 × 15       res 2  rest  90s  prehab p99 support  {DOSE-10}
+session 2 Tue 29.09. full ~18 min
+  warmup (10 min)
+    Aussenrotation mit Band                2 × 15       res 2  rest  90s  prehab p99 support  [warm-up]  {DOSE-10}
+    Handgelenk-Vorbereitung                2 × 15       res 2  rest  90s  prehab p99 support  [warm-up]  {DOSE-10}
+  strength
+    Unterarmstütz mit gestreckten Armen (Plank) 1 × 10 s     res 2  rest 120s  conditioning p1 support  [calibration, monitor]  {GOAL-02 SEL-07 DOSE-04 LOAD-04b LOAD-10 LOAD-03 LOAD-10}
+  end
+    Aussenrotation mit Band                2 × 15       res 2  rest  90s  prehab p99 support  {DOSE-10}
+    Handgelenk-Wippen im Vierfüsslerstand  2 × 15       res 2  rest  90s  prehab p99 support  {DOSE-10}
+session 3 Thu 01.10. full ~24 min
+  warmup (10 min)
+    Aussenrotation mit Band                2 × 15       res 2  rest  90s  prehab p99 support  [warm-up]  {DOSE-10}
+    Handgelenk-Vorbereitung                2 × 15       res 2  rest  90s  prehab p99 support  [warm-up]  {DOSE-10}
+  skill_max
+    Planche Lean                           2 × 4 s      res 2  rest 300s  skill p1 goal  [calibration, monitor]  {GOAL-01 SEL-07 SEL-08 WEEK-04 INJ-05 DOSE-01 LOAD-04b LOAD-10}
+  strength
+    Unterarmstütz mit gestreckten Armen (Plank) 1 × 10 s     res 2  rest 120s  conditioning p1 support  [calibration, monitor]  {GOAL-02 SEL-07 DOSE-04 LOAD-04b LOAD-10}
+    Klimmzug                               1 × 6        res 2  rest 120s  accessory p2 support  [calibration, monitor]  {GOAL-06 SEL-07 SEL-08 WEEK-04 INJ-05 DOSE-12 LOAD-04b LOAD-10}
+  end
+    Aussenrotation mit Band                2 × 15       res 2  rest  90s  prehab p99 support  {DOSE-10}
+    Handgelenk-Wippen im Vierfüsslerstand  2 × 15       res 2  rest  90s  prehab p99 support  {DOSE-10}
+session 4 Sat 03.10. full ~11 min
+  warmup (10 min)
+  strength
+    Unterarmstütz mit gestreckten Armen (Plank) 1 × 10 s     res 2  rest 120s  conditioning p1 support  [calibration, monitor]  {GOAL-02 SEL-07 DOSE-04 LOAD-04b LOAD-10}
+rest: Wed Fri Sun
+monitor elbow_inner: RF-01 RF-02 RF-03 RF-04 RF-05 RF-06 RF-07 RF-10

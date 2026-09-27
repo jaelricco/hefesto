@@ -2130,6 +2130,7 @@ festgemacht ist.
 | PAR-S-43 | `entry_ramp_current_trainers` | 0.5 → 0.75 → 1.0 wöchentlich; Einheitsdeckel in diesen Wochen 1.5 × Vorwochenmaximum | ENT-S-1 (b); Schritte aus PAR-D-25; 1.5 = grösster Schritt (0.5 → 0.75), damit der Einheitsdeckel die Rampe nicht blockiert |
 | PAR-S-44 | `plausibility_widening_factor` | σ × 1.25 | `onboarding.md` §5.2 (Verbreiterung bei widersprüchlichen Angaben, R-2, und nach Pausen ab 7 Wochen); Faktor ist dort als Heuristik festgelegt |
 | PAR-S-45 | `unknown_answer_sigma_frac` | σ ≥ 0.5 × μ | `onboarding.md` §5.2, Zeile «weiss nicht»: Populations-Prior mit breiter Unsicherheit |
+| PAR-S-46 | `prerequisite_plausibility_fraction` | 0.5 | R-2 (`onboarding.md` §5.5): eine Vorstufe gilt als plausibel, wenn ihre Schätzung mindestens die Hälfte ihrer Schwelle erreicht; die Hälfte entspricht dem Startanteil neuer Belastung (PAR-D-12) und lässt Messrauschen der Selbstauskunft (PAR-F-20: 30 %) Platz |
 
 ## Anhang C: Index der verwendeten Forschungsparameter
 

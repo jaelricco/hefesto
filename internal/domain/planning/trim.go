@@ -218,7 +218,6 @@ type violation struct {
 // (LOAD-02–LOAD-06, LOAD-10). Every step removes a set or lowers a rung, so
 // the loop ends.
 func (g *gen) trimLoads() {
-	k := g.k
 	targetWeek := g.weekLoads()
 	targetSess := make([]map[string]float64, len(g.plan.Sessions))
 	for si := range g.plan.Sessions {
@@ -240,6 +239,7 @@ func (g *gen) trimLoads() {
 	}
 	// Carry the unused fraction of a set (PAR-S-35).
 	week := g.weekLoads()
+	g.caps, g.capRules, g.targets = caps, rules, targetWeek
 	g.plan.Headroom = map[string]float64{}
 	for _, a := range sortedKeys(caps) {
 		if rules[a] != RuleWeekCap {
@@ -255,7 +255,6 @@ func (g *gen) trimLoads() {
 			g.plan.Headroom[a] = math.Min(left, unit)
 		}
 	}
-	_ = k
 }
 
 func (g *gen) findViolation(caps map[string]float64, rules map[string]string, targetSess []map[string]float64) (violation, bool) {
@@ -305,19 +304,23 @@ func (g *gen) contributes(v violation, r itemRef, it *Item) bool {
 }
 
 // cutStep ranks an item by the LOAD-10 order; the floor is the smallest
-// set count that step may reach.
+// set count that step may reach. Working items keep at least one set until
+// step 7, so a halved first week (LOAD-04) plans fewer sets of every
+// exercise rather than fewer exercises.
 func (g *gen) cutStep(it *Item, block string) (int, int) {
 	switch {
 	case it.Kind == KindWarmup:
 		return 1, 0
-	case it.Role == RoleSupport:
+	case it.Offer:
 		return 1, 0
-	case it.Stimulus == StimBalance || it.Stimulus == StimTechnique || it.Stimulus == StimPrehab || it.Offer:
+	case it.Role == RoleSupport && it.Stimulus != StimPrehab:
+		return 1, 1
+	case it.Stimulus == StimBalance || it.Stimulus == StimTechnique || it.Stimulus == StimPrehab:
 		return 2, 0
 	case block == BlockVolume:
 		return 3, 0
-	case block == BlockStrength:
-		return 4, 2
+	case block == BlockStrength || block == BlockEnd:
+		return 4, 1
 	case block == BlockMax:
 		return 5, 1
 	}
@@ -345,6 +348,11 @@ func (g *gen) cut(v violation) bool {
 			return a.step - b.step
 		}
 		ia, ib := g.item(a.ref), g.item(b.ref)
+		// Within a step, the item with the most sets first, so cuts spread
+		// over the items instead of emptying one after the other.
+		if ia.Sets != ib.Sets {
+			return ib.Sets - ia.Sets
+		}
 		if ia.Priority != ib.Priority {
 			return ib.Priority - ia.Priority // lowest priority (largest number) first
 		}
@@ -377,7 +385,14 @@ func (g *gen) cut(v violation) bool {
 			}
 		}
 	}
-	// Step 7: drop the exposure.
+	// Step 7: drop the exposure, lowest priority first.
+	slices.SortStableFunc(cands, func(a, b cand) int {
+		ia, ib := g.item(a.ref), g.item(b.ref)
+		if ia.Priority != ib.Priority {
+			return ib.Priority - ia.Priority
+		}
+		return a.step - b.step
+	})
 	for _, c := range cands {
 		it := g.item(c.ref)
 		if it.Sets > 0 {
@@ -590,3 +605,6 @@ func (g *gen) shrinkBalance(ps *PlannedSession) bool {
 	}
 	return false
 }
+
+// round3 rounds for display; plans stay byte-stable because the inputs are.
+func round3(x float64) float64 { return math.Round(x*1000) / 1000 }

@@ -157,7 +157,9 @@ func Start(k *Knowledge, a Answers, now time.Time) (Snapshot, OnboardingResult, 
 		s.Capacities[CapKey(ex.Slug, AssistNone)] = e
 	}
 
-	// Stages of goal skills, with plausibility checks (§5.5).
+	// Stages of goal skills, with plausibility checks (onboarding §5.5). At
+	// most two questions; an unanswered or declined question resolves
+	// conservatively, so the start state is safe even before the answers.
 	var questions []Question
 	for _, g := range s.Goals {
 		st, ok := a.Stages[g.Skill]
@@ -165,16 +167,23 @@ func Start(k *Knowledge, a Answers, now time.Time) (Snapshot, OnboardingResult, 
 			continue
 		}
 		sk := k.skills[g.Skill]
-		lvl := k.level(g.Skill + "/" + st.Level)
-		if lvl == nil {
+		claimedIdx := slices.IndexFunc(sk.Levels, func(l Level) bool { return l.Slug == st.Level })
+		if claimedIdx < 0 {
 			continue
 		}
-		claimedIdx := slices.IndexFunc(sk.Levels, func(l Level) bool { return l.Slug == st.Level })
-		if q, lower := k.plausibility(s, a, sk, claimedIdx); q != nil {
-			if yes, answered := a.Clarifications[q.ID]; !answered {
+		if q, rule := k.plausibility(s, a, sk, claimedIdx); q != nil {
+			yes, answered := a.Clarifications[q.ID]
+			if !answered && len(questions) < 2 {
 				questions = append(questions, *q)
-			} else if !yes && lower {
-				claimedIdx--
+			}
+			if rule == "R-3" {
+				widen = true
+			}
+			if !answered || !yes {
+				if rule == "R-3" {
+					claimedIdx--
+				}
+				claimedIdx = k.plausibleLevel(s, sk, claimedIdx)
 				widen = true
 				res.Reasons = append(res.Reasons, k.reason(RuleEntryRung, "skill", sk.Name))
 			}
@@ -182,7 +191,7 @@ func Start(k *Knowledge, a Answers, now time.Time) (Snapshot, OnboardingResult, 
 		if claimedIdx < 0 {
 			continue
 		}
-		lvl = &sk.Levels[claimedIdx]
+		lvl := &sk.Levels[claimedIdx]
 		ex := k.exercises[lvl.Exercise]
 		for _, sq := range k.onboarding.Stages {
 			if sq.Skill != g.Skill {
@@ -341,33 +350,54 @@ func (k *Knowledge) classPrior(ex *Exercise, classes []AnswerClass, key, confide
 	return Estimate{}, false
 }
 
-// plausibility checks a claimed stage (R-2, R-3, R-8). It returns a question
-// and whether a "no" should lower the claimed stage by one level.
-func (k *Knowledge) plausibility(s Snapshot, a Answers, sk *Skill, idx int) (*Question, bool) {
+// plausibility checks a claimed stage (R-2, R-3). It returns the question to
+// ask and the rule that raised it.
+func (k *Knowledge) plausibility(s Snapshot, a Answers, sk *Skill, idx int) (*Question, string) {
 	if idx < 0 {
-		return nil, false
+		return nil, ""
 	}
 	lvl := sk.Levels[idx]
 	name := k.exercises[lvl.Exercise].Name
 	// R-3: sedentary or recreational with an advanced stage (OG ≥ 6).
 	if (a.TrainingLevel == LevelSedentary || a.TrainingLevel == LevelRecreational) && lvl.OG >= k.T.IntermediateOG {
 		return &Question{ID: "R-3/" + sk.Slug, Rule: "R-3", Skill: sk.Slug,
-			Text: fmt.Sprintf("Hältst du die Stufe «%s» ohne Band und mit gestreckten Armen?", name)}, true
+			Text: fmt.Sprintf("Hältst du die Stufe «%s» ohne Band und mit gestreckten Armen?", name)}, "R-3"
 	}
 	// R-2: a stage whose foundations look implausible.
-	for _, p := range k.allPrereqs(sk.Slug + "/" + lvl.Slug) {
+	if !k.foundationsPlausible(s, sk, idx) {
+		prev := sk.Levels[max(idx-1, 0)]
+		return &Question{ID: "R-2/" + sk.Slug, Rule: "R-2", Skill: sk.Slug,
+			Text: fmt.Sprintf("Kannst du die Stufe «%s» sauber halten bzw. ausführen?", k.exercises[prev.Exercise].Name)}, "R-2"
+	}
+	return nil, ""
+}
+
+// foundationsPlausible reports whether every hard prerequisite outside the
+// skill's own chain has an estimate of at least PAR-S-46 × its threshold.
+// A prerequisite without an estimate counts as plausible (nothing to
+// contradict).
+func (k *Knowledge) foundationsPlausible(s Snapshot, sk *Skill, idx int) bool {
+	for _, p := range k.allPrereqs(sk.Slug + "/" + sk.Levels[idx].Slug) {
 		pl := k.level(p)
 		if pl == nil {
 			continue
 		}
-		e, ok := s.Capacities[CapKey(pl.Exercise, AssistNone)]
-		if ok && e.Mu < float64(0.5*pl.Threshold) {
-			prev := sk.Levels[max(idx-1, 0)]
-			return &Question{ID: "R-2/" + sk.Slug, Rule: "R-2", Skill: sk.Slug,
-				Text: fmt.Sprintf("Kannst du die Stufe «%s» sauber halten bzw. ausführen?", k.exercises[prev.Exercise].Name)}, true
+		if e, ok := s.Capacities[CapKey(pl.Exercise, AssistNone)]; ok && e.Mu < float64(k.T.PlausibleFrac*pl.Threshold) {
+			return false
 		}
 	}
-	return nil, false
+	return true
+}
+
+// plausibleLevel is the conservative resolution of R-2: the highest level at
+// or below idx whose foundations are plausible, or -1.
+func (k *Knowledge) plausibleLevel(s Snapshot, sk *Skill, idx int) int {
+	for ; idx >= 0; idx-- {
+		if k.foundationsPlausible(s, sk, idx) {
+			return idx
+		}
+	}
+	return -1
 }
 
 // allPrereqs returns every hard prerequisite reachable from a level,

@@ -24,15 +24,45 @@ var trainingFiles = []string{"manifest", "parameters", "rules", "sources", "body
 // issues; the error is reserved for an unreadable tree or broken schemas.
 // When any issue is an error the knowledge must not be used for planning.
 func LoadTraining(dir string) (*planning.Knowledge, []Issue, error) {
+	f, issues, err := ReadTraining(dir)
+	if err != nil || HasErrors(issues, false) {
+		return nil, issues, err
+	}
+	k, kbIssues := planning.Build(f)
+	drafts := 0
+	for _, i := range kbIssues {
+		// KB-13: draft content is the expected state until the review of
+		// ENT-10; it is reported once as a note, like draft_placeholder in
+		// the rest of the tree, which contentlint does not flag either.
+		if i.Check == "KB-13" {
+			drafts++
+			continue
+		}
+		sev := SeverityError
+		if i.Warn {
+			sev = SeverityWarning
+		}
+		issues = append(issues, Issue{Severity: sev, File: TrainingDir, Msg: fmt.Sprintf("%s: %s: %s", i.Check, i.Where, i.Msg)})
+	}
+	if drafts > 0 {
+		issues = append(issues, Issue{Severity: SeverityNote, File: TrainingDir,
+			Msg: fmt.Sprintf("KB-13: %d exercises are draft content awaiting review (ENT-10)", drafts)})
+	}
+	return k, issues, nil
+}
+
+// ReadTraining reads and schema-validates the knowledge-base files without
+// building them; tests use it to check the cross-file validation.
+func ReadTraining(dir string) (planning.Files, []Issue, error) {
 	root := filepath.Join(dir, TrainingDir)
 	if st, err := os.Stat(root); err != nil {
-		return nil, nil, fmt.Errorf("training directory: %w", err)
+		return planning.Files{}, nil, fmt.Errorf("training directory: %w", err)
 	} else if !st.IsDir() {
-		return nil, nil, fmt.Errorf("training directory: %s is not a directory", root)
+		return planning.Files{}, nil, fmt.Errorf("training directory: %s is not a directory", root)
 	}
 	schemas, err := compileSchemas(filepath.Join(dir, TrainingSchemaDir), trainingSchemaBase, trainingFiles)
 	if err != nil {
-		return nil, nil, err
+		return planning.Files{}, nil, err
 	}
 	l := loader{dir: dir, schemas: schemas}
 	var f planning.Files
@@ -73,32 +103,7 @@ func LoadTraining(dir string) (*planning.Knowledge, []Issue, error) {
 	l.decode(rel("sessions"), "sessions", &f.Sessions)
 	l.decode(rel("onboarding"), "onboarding", &f.Onboarding)
 	if l.err != nil {
-		return nil, nil, l.err
+		return planning.Files{}, nil, l.err
 	}
-	// Cross-file checks on files that failed their schema only produce noise.
-	if HasErrors(l.issues, false) {
-		return nil, l.issues, nil
-	}
-	k, kbIssues := planning.Build(f)
-	issues := l.issues
-	drafts := 0
-	for _, i := range kbIssues {
-		// KB-13: draft content is the expected state until the review of
-		// ENT-10; it is reported once as a note, like draft_placeholder in
-		// the rest of the tree, which contentlint does not flag either.
-		if i.Check == "KB-13" {
-			drafts++
-			continue
-		}
-		sev := SeverityError
-		if i.Warn {
-			sev = SeverityWarning
-		}
-		issues = append(issues, Issue{Severity: sev, File: TrainingDir, Msg: fmt.Sprintf("%s: %s: %s", i.Check, i.Where, i.Msg)})
-	}
-	if drafts > 0 {
-		issues = append(issues, Issue{Severity: SeverityNote, File: TrainingDir,
-			Msg: fmt.Sprintf("KB-13: %d exercises are draft content awaiting review (ENT-10)", drafts)})
-	}
-	return k, issues, nil
+	return f, l.issues, nil
 }

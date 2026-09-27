@@ -3,6 +3,7 @@ package planning
 import (
 	"math"
 	"slices"
+	"strings"
 )
 
 // template returns the session template for the available minutes.
@@ -21,16 +22,14 @@ func (k *Knowledge) template(minutes int) Template {
 func (g *gen) buildSessions() {
 	k := g.k
 	tpl := k.template(g.s.Profile.SessionMinutes)
-	prehabLeft := 3
+	prehabLeft := int(k.T.PrehabSessions)
 	fulls := 0
 	for _, sl := range g.slots {
 		if sl.full {
 			fulls++
 		}
 	}
-	if fulls < 3 {
-		prehabLeft = fulls
-	}
+	prehabLeft = min(prehabLeft, fulls)
 	exposure := map[string]int{}
 	for i, sl := range g.slots {
 		ps := PlannedSession{Index: i, Date: sl.date, Kind: SessionFull}
@@ -246,19 +245,23 @@ func (g *gen) conditioning(a *active, reasons []Reason) Item {
 	it := g.baseItem(a, a.rung, StimConditioning, reasons)
 	d := k.Dose(a.cap)
 	h := clamp(math.Floor(math.Min(float64(k.T.SetHoldFraction*d), d-k.T.MinSetHold)), k.T.CondHoldMin, k.T.CondHoldMax)
+	reserve := math.Floor(d - h)
 	if !a.hasCap || d < k.T.CondHoldMin+k.T.MinSetHold {
 		h = math.Max(k.T.MinSetHold, math.Floor(math.Min(float64(k.T.SetHoldFraction*d), d-k.T.MinSetHold)))
+		reserve = math.Floor(d - h)
 		if !a.hasCap {
-			h = k.T.VolumeHoldMin
+			// No estimate: a calibration set at the lower bound of the
+			// conditioning window, stopped with the usual reserve (§4.3).
+			h, reserve = k.T.CondHoldMin, k.T.MinSetHold
 		}
 		it.Calibration = true
 	}
 	it.HoldS = int(h)
-	it.Sets = 3
-	if 3*h > k.T.CondMaxTotal {
-		it.Sets = 2
+	it.Sets = int(k.T.CondSetsHi)
+	if k.T.CondSetsHi*h > k.T.CondMaxTotal {
+		it.Sets = int(k.T.CondSetsLo)
 	}
-	it.Reserve = int(math.Max(0, math.Floor(d-h)))
+	it.Reserve = int(math.Max(0, reserve))
 	it.RestS = g.rest(k.T.RestAccessory)
 	it.Reasons = append(it.Reasons, k.reason(RuleDoseCond, "hold_s", it.HoldS, "sets", it.Sets))
 	return it
@@ -417,22 +420,34 @@ func (g *gen) techniqueItem(a *active) Item {
 
 // prehabRegions returns the regions for prehab: injured in the last 12
 // months first, then the authored order (PAR-D-01); at most two.
+// prehabRegions picks at most two regions for prehab: regions injured in the
+// last 12 months first, then the order of the body file, which follows
+// PAR-D-01 (shoulder, wrist, elbow, lower back). Regions that share a prehab
+// programme (both shoulder regions, both wrist regions) count once.
 func (g *gen) prehabRegions() []string {
-	var out []string
+	var ordered []string
 	for _, id := range sortedKeys(g.s.Regions) {
 		if g.s.Regions[id].PriorInjury {
-			if _, ok := g.k.prehab[id]; ok {
-				out = append(out, id)
-			}
+			ordered = append(ordered, id)
 		}
 	}
-	for _, id := range g.k.regionIDs {
-		if _, ok := g.k.prehab[id]; ok && !slices.Contains(out, id) {
-			out = append(out, id)
+	ordered = append(ordered, g.k.regionIDs...)
+	var out []string
+	seen := map[string]bool{}
+	for _, id := range ordered {
+		p, ok := g.k.prehab[id]
+		if !ok || slices.Contains(out, id) {
+			continue
 		}
-	}
-	if len(out) > 2 {
-		out = out[:2]
+		key := strings.Join(p.Activation, ",")
+		if seen[key] {
+			continue
+		}
+		seen[key] = true
+		out = append(out, id)
+		if len(out) == 2 {
+			break
+		}
 	}
 	return out
 }

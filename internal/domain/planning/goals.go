@@ -308,8 +308,14 @@ func (g *gen) selectRung(a *active) {
 	}
 	var fallback *Exercise
 	var ecc *Exercise
+	var feasibleRungs []*Exercise // non-eccentric, hardest first
+	verdicts := map[string]regionVerdict{}
+	known := -1 // lowest rung with an estimate of its own
 	for r := top; r >= 0; r-- {
 		ex := k.exercises[sk.Rungs[r]]
+		if _, own := g.s.Capacities[CapKey(ex.Slug, AssistNone)]; own && !ex.Eccentric {
+			known = r
+		}
 		ok, why, verdict := g.feasible(ex, ex.OG)
 		if !ok {
 			g.exclude(ex, why)
@@ -322,6 +328,8 @@ func (g *gen) selectRung(a *active) {
 			continue
 		}
 		fallback = ex
+		verdicts[ex.Slug] = verdict
+		feasibleRungs = append(feasibleRungs, ex)
 		e, has := g.capacity(ex, AssistNone)
 		if !has {
 			continue
@@ -336,11 +344,28 @@ func (g *gen) selectRung(a *active) {
 			return
 		}
 	}
-	// Nothing clears the threshold: eccentric (reps), band, or the lowest
-	// feasible rung with a calibration start.
+	// Nothing clears the threshold. For reps, easier rungs only carry the
+	// harder rung's estimate as a lower bound (PAR-S-39), so the root would
+	// always win; the rung just below the lowest one the user reported is the
+	// calibration start instead (SEL-08 spirit), unless that estimate is
+	// under one repetition, where the eccentric variant takes over (SEL-09).
+	if fallback != nil && fallback.Measure == MeasureReps && known > 0 {
+		if e, ok := g.s.Capacities[CapKey(sk.Rungs[known], AssistNone)]; ok && k.Dose(e) >= 1 || ecc == nil {
+			for _, ex := range feasibleRungs {
+				if ex.Rung < known {
+					fallback = ex
+					ecc = nil
+					break
+				}
+			}
+		}
+	}
+	// Otherwise: eccentric (reps), band, or the lowest feasible rung with a
+	// calibration start.
 	if ecc != nil {
 		e, _ := g.capacity(ecc, AssistNone)
-		g.setRung(a, ecc, e, regionVerdict{})
+		_, _, v := g.feasible(ecc, ecc.OG)
+		g.setRung(a, ecc, e, v)
 		a.stim, a.class = StimEccentric, classHard
 		a.reasons = append(a.reasons, k.reason(RuleRepRung, "exercise", ecc.Name))
 		return
@@ -351,10 +376,10 @@ func (g *gen) selectRung(a *active) {
 			if eb, ok := g.capacity(fallback, AssistBand); ok {
 				e, has = eb, true
 			}
-			g.setRung(a, fallback, e, regionVerdict{})
+			g.setRung(a, fallback, e, verdicts[fallback.Slug])
 			a.assist = AssistBand
 		} else {
-			g.setRung(a, fallback, e, regionVerdict{})
+			g.setRung(a, fallback, e, verdicts[fallback.Slug])
 		}
 		a.hasCap = has
 		a.calib = true

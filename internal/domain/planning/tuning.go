@@ -8,21 +8,22 @@ import "fmt"
 // validation (KB-03). The comment on each field names its parameter.
 type Tuning struct {
 	// Dosing of holds (spec §5.7, 08 §4).
-	SetHoldFraction  float64 // PAR-S-01
-	TargetTotalHold  float64 // PAR-S-02
-	MinSetHold       float64 // PAR-B-07 min
-	MinSets, MaxSets float64 // PAR-B-08 range
-	DefaultMaxSets   float64 // PAR-B-08 standard
-	VolumeHoldMin    float64 // PAR-B-10
-	VolumeHoldMax    float64 // PAR-B-10
-	VolumeSetsMin    float64 // PAR-B-11
-	VolumeSetsMax    float64 // PAR-B-11
-	CondHoldMin      float64 // PAR-B-76
-	CondHoldMax      float64 // PAR-B-76
-	CondMaxTotal     float64 // PAR-B-76
-	StageOffer       float64 // PAR-B-05 upper
-	StageSwitch      float64 // PAR-A-65
-	HoldStepPerWeek  float64 // PAR-B-33 upper
+	SetHoldFraction        float64 // PAR-S-01
+	TargetTotalHold        float64 // PAR-S-02
+	MinSetHold             float64 // PAR-B-07 min
+	MinSets, MaxSets       float64 // PAR-B-08 range
+	DefaultMaxSets         float64 // PAR-B-08 standard
+	VolumeHoldMin          float64 // PAR-B-10
+	VolumeHoldMax          float64 // PAR-B-10
+	VolumeSetsMin          float64 // PAR-B-11
+	VolumeSetsMax          float64 // PAR-B-11
+	CondHoldMin            float64 // PAR-B-76
+	CondHoldMax            float64 // PAR-B-76
+	CondMaxTotal           float64 // PAR-B-76
+	CondSetsLo, CondSetsHi float64 // PAR-B-76
+	StageOffer             float64 // PAR-B-05 upper
+	StageSwitch            float64 // PAR-A-65
+	HoldStepPerWeek        float64 // PAR-B-33 upper
 
 	// Rest (08 §4, PAR-E-04–07, PAR-B-42–45, PAR-B-74, PAR-B-77).
 	RestMax             float64 // PAR-E-04 default
@@ -139,6 +140,8 @@ type Tuning struct {
 	BreachWindow                               float64 // PAR-D-20
 	RTT5Weeks                                  float64 // PAR-S-32
 	PainEntryDays                              float64 // PAR-S-42
+	PrehabSessions                             float64 // PAR-D-37
+	PlausibleFrac                              float64 // PAR-S-46
 	PainTrendPoints                            float64 // PAR-S-42
 
 	// Breaks (spec §6.11).
@@ -226,6 +229,8 @@ func resolveTuning(k *Knowledge, issues []Issue) (Tuning, []Issue) {
 		{&t.CondHoldMin, "PAR-B-76", "hold_lo"},
 		{&t.CondHoldMax, "PAR-B-76", "hold_hi"},
 		{&t.CondMaxTotal, "PAR-B-76", "total_hi"},
+		{&t.CondSetsLo, "PAR-B-76", "sets_lo"},
+		{&t.CondSetsHi, "PAR-B-76", "sets_hi"},
 		{&t.StageOffer, "PAR-B-05", "hi"},
 		{&t.StageSwitch, "PAR-A-65", ""},
 		{&t.HoldStepPerWeek, "PAR-B-33", "hi"},
@@ -351,6 +356,8 @@ func resolveTuning(k *Knowledge, issues []Issue) (Tuning, []Issue) {
 		{&t.RTT5Weeks, "PAR-S-32", ""},
 		{&t.PainEntryDays, "PAR-S-42", "entry_days"},
 		{&t.PainTrendPoints, "PAR-S-42", "trend_points"},
+		{&t.PrehabSessions, "PAR-D-37", ""},
+		{&t.PlausibleFrac, "PAR-S-46", ""},
 
 		{&t.BreakShort, "PAR-S-41", "normal_below_days"},
 		{&t.BreakMid, "PAR-S-41", "mid_from_days"},

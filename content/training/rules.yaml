@@ -72,9 +72,9 @@ rules:
   params: [PAR-S-06]
   evidence: H
 - id: WEEK-02
-  title: Volle und leichte Einheiten
-  text: '{full} volle Einheiten; die übrigen {light} sind leicht (Balance, Technik, Prehab), damit genug
-    Erholung bleibt.'
+  title: Volle und leichte Einheiten, Ruhetage
+  text: Die Woche hat volle Einheiten, bei Bedarf leichte Einheiten mit Balance, Technik und Prehab, und
+    geplante Ruhetage. Ruhe gehört zum Plan und hält deine Serie.
   params: [PAR-B-36, PAR-S-20]
   evidence: B/H
 - id: WEEK-03

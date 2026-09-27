@@ -1,0 +1,31 @@
+onboarding: complete
+week 2026-09-28  ruleset 0.1.0  stopped=false
+  plan: [WEEK-01] Die App verteilt 3 Einheiten so, dass zwischen harten Einheiten möglichst viel Abstand liegt.
+session 1 Mon 28.09. full ~15 min
+  warmup (10 min)
+    Push-up Plus                           1 × 15       res 2  rest  90s  prehab p99 support  [warm-up]  {DOSE-10 ADAPT-16 LOAD-10}
+    Handgelenk-Vorbereitung                2 × 15       res 2  rest  90s  prehab p99 support  [warm-up]  {DOSE-10}
+  skill_max
+    Planche Lean                           1 × 5 s      res 2  rest 300s  skill p1 goal  [calibration]  {GOAL-01 SEL-07 DOSE-01 ADAPT-16 LOAD-10}
+  strength
+    Unterarmstütz mit gestreckten Armen (Plank) 1 × 10 s     res 2  rest 120s  conditioning p1 support  [calibration]  {GOAL-02 SEL-07 DOSE-04 ADAPT-16 LOAD-10}
+    Klimmzug                               1 × 3        res 2  rest 120s  accessory p2 support  [calibration]  {GOAL-06 SEL-07 SEL-08 DOSE-12 ADAPT-16 LOAD-10}
+  end
+    Handgelenk-Wippen im Vierfüsslerstand  2 × 15       res 2  rest  90s  prehab p99 support  {DOSE-10}
+session 2 Wed 30.09. full ~15 min
+  warmup (10 min)
+    Push-up Plus                           1 × 15       res 2  rest  90s  prehab p99 support  [warm-up]  {DOSE-10 ADAPT-16 LOAD-10}
+    Handgelenk-Vorbereitung                2 × 15       res 2  rest  90s  prehab p99 support  [warm-up]  {DOSE-10}
+  strength
+    Unterarmstütz mit gestreckten Armen (Plank) 1 × 10 s     res 2  rest 120s  conditioning p1 support  [calibration]  {GOAL-02 SEL-07 DOSE-04 ADAPT-16 LOAD-10}
+    Klimmzug                               1 × 3        res 2  rest 120s  accessory p2 support  [calibration]  {GOAL-06 SEL-07 SEL-08 DOSE-12 ADAPT-16 LOAD-10}
+  end
+    Handgelenk-Wippen im Vierfüsslerstand  2 × 15       res 2  rest  90s  prehab p99 support  {DOSE-10}
+session 3 Fri 02.10. full ~14 min
+  warmup (10 min)
+    Handgelenk-Vorbereitung                2 × 15       res 2  rest  90s  prehab p99 support  [warm-up]  {DOSE-10}
+  strength
+    Klimmzug                               1 × 3        res 2  rest 120s  accessory p2 support  [calibration]  {GOAL-06 SEL-07 SEL-08 DOSE-12 ADAPT-16 LOAD-10}
+  end
+    Handgelenk-Wippen im Vierfüsslerstand  2 × 15       res 2  rest  90s  prehab p99 support  {DOSE-10}
+rest: Tue Thu Sat Sun

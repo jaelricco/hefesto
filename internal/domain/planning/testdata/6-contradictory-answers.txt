@@ -1,0 +1,40 @@
+onboarding: complete
+  asked R-3/planche: Hältst du die Stufe «Straddle Planche» ohne Band und mit gestreckten Armen?
+  asked R-3/front-lever: Hältst du die Stufe «Full Front Lever» ohne Band und mit gestreckten Armen?
+  [SEL-08] Die ersten Einheiten liegen eine Stufe unter deiner Angabe, bis Logs sie bestätigen.
+  [SEL-08] Die ersten Einheiten liegen eine Stufe unter deiner Angabe, bis Logs sie bestätigen.
+week 2026-09-28  ruleset 0.1.0  stopped=false
+  plan: [WEEK-01] Die App verteilt 3 Einheiten so, dass zwischen harten Einheiten möglichst viel Abstand liegt.
+session 1 Mon 28.09. full ~18 min
+  warmup (10 min)
+    Handgelenk-Vorbereitung                2 × 15       res 2  rest  90s  prehab p99 support  [warm-up]  {DOSE-10}
+  strength
+    Liegestütz mit erhöhten Händen         2 × 5        res 2  rest 120s  strength p1 feeder  [calibration]  {GOAL-02 SEL-07 DOSE-05 LOAD-04 LOAD-10}
+    Unterarmstütz mit gestreckten Armen (Plank) 1 × 10 s     res 2  rest 120s  conditioning p1 support  [calibration]  {GOAL-02 SEL-07 DOSE-04 LOAD-04 LOAD-10 LOAD-03 LOAD-10}
+    Negativer Klimmzug                     1 × 3 à 3 s  res 0  rest 180s  eccentric p2 feeder  {GOAL-02 SEL-09 DOSE-07 LOAD-04 LOAD-10}
+    Hollow Hold, gehockt                   1 × 10 s     res 2  rest 120s  conditioning p2 support  [calibration]  {GOAL-02 SEL-07 DOSE-04 LOAD-04 LOAD-10 LOAD-03 LOAD-10}
+  end
+    Handgelenk-Wippen im Vierfüsslerstand  2 × 15       res 2  rest  90s  prehab p99 support  {DOSE-10}
+session 2 Wed 30.09. full ~16 min
+  warmup (10 min)
+    Handgelenk-Vorbereitung                2 × 15       res 2  rest  90s  prehab p99 support  [warm-up]  {DOSE-10}
+  strength
+    Unterarmstütz mit gestreckten Armen (Plank) 1 × 10 s     res 2  rest 120s  conditioning p1 support  [calibration]  {GOAL-02 SEL-07 DOSE-04 LOAD-04 LOAD-10}
+    Dead Hang                              1 × 4 s      res 2  rest 120s  conditioning p2 feeder  [calibration]  {GOAL-02 SEL-07 SEL-08 DOSE-04 LOAD-04b LOAD-10 LOAD-03 LOAD-10}
+    Hollow Hold, gehockt                   1 × 10 s     res 2  rest 120s  conditioning p2 support  [calibration]  {GOAL-02 SEL-07 DOSE-04 LOAD-04 LOAD-10}
+    Rudern, fast aufrecht                  1 × 5        res 2  rest 120s  accessory p2 support  [calibration]  {SEL-09 SEL-07 DOSE-12 LOAD-04 LOAD-10}
+  end
+    Handgelenk-Wippen im Vierfüsslerstand  2 × 15       res 2  rest  90s  prehab p99 support  {DOSE-10}
+session 3 Fri 02.10. full ~18 min
+  warmup (10 min)
+    Handgelenk-Vorbereitung                2 × 15       res 2  rest  90s  prehab p99 support  [warm-up]  {DOSE-10}
+  strength
+    Liegestütz mit erhöhten Händen         2 × 5        res 2  rest 120s  strength p1 feeder  [calibration]  {GOAL-02 SEL-07 DOSE-05 LOAD-04 LOAD-10}
+    Dead Hang                              1 × 4 s      res 2  rest 120s  conditioning p2 feeder  [calibration]  {GOAL-02 SEL-07 SEL-08 DOSE-04 LOAD-04b LOAD-10}
+    Negativer Klimmzug                     1 × 3 à 3 s  res 0  rest 180s  eccentric p2 feeder  {GOAL-02 SEL-09 DOSE-07 LOAD-04 LOAD-10}
+    Rudern, fast aufrecht                  1 × 5        res 2  rest 120s  accessory p2 support  [calibration]  {SEL-09 SEL-07 DOSE-12 LOAD-04 LOAD-10}
+  end
+    Handgelenk-Wippen im Vierfüsslerstand  2 × 15       res 2  rest  90s  prehab p99 support  {DOSE-10}
+rest: Tue Thu Sat Sun
+excluded push-up-rings: [SEL-02] Liegestütz an Ringen braucht Ausrüstung, die du nicht angegeben hast.
+hint: [GOAL-04] Front Lever: Coaching-Erfahrung nennt als Einstieg etwa 10 strikte Klimmzüge, 30 s Hängen und 60 s Hollow Hold. Das ist ein Hinweis, keine Sperre.

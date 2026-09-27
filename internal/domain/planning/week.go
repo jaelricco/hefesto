@@ -263,6 +263,9 @@ func (g *gen) score(a *active, i int) float64 {
 		gap = math.Min(gap, math.Min(fw, bw))
 	}
 	s += float64(gap * 10)
+	// Prefer less crowded days, so light ladders fill days the hard ones
+	// leave empty (spec §5.4, a fourth day without straight-arm work).
+	s -= float64(len(sl.ladders) * 5)
 	s -= float64(weekdayOrder(sl.day)) * 0.01
 	return s
 }
