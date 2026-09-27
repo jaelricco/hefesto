@@ -19,24 +19,33 @@
 
 - **Frühe Kraftzuwächse sind gross und an die geübte Aufgabe gebunden:**
   +32.8 % isometrische Maximalkraft nach 8 Wochen [E-08], +54 % nach 4–8 Wochen
-  [E-09], +38.9 % nach 35 Tagen [E-12], rund +40 % nach 12 Wochen [E-20]. Die
+  [E-09], +38.9 % nach 35 Tagen [E-12], rund +40 % nach 12 Wochen [E-20]
+  (eingelenkige Maximalkraft, überwiegend Untrainierte); in dynamischen
+  Hebeübungen stieg die Trainingslast sogar um rund 200 % [E-20]. Die
   Lehrmeinung «früh neuronal, später Hypertrophie» [E-11] ist nur teilweise
   gedeckt: Hypertrophie ist ab etwa 20 Tagen messbar [E-12], teils Ödem [E-13],
   und ihr ursächlicher Beitrag zur Kraft ist umstritten [E-15, E-16] (Evidenz A/B).
-- **Wo sich das Nervensystem anpasst, ist offen** [E-01, E-18]. Eine
+- **Wo sich das Nervensystem anpasst, ist offen** [E-01]; die Zuordnung von
+  Trainingsreiz zu neuronaler Anpassung gilt als lückenhaft [E-18]. Eine
   Einzelstudie zeigt tiefere Rekrutierungsschwellen und höhere Entladungsraten
   [E-05], eine Meta-Analyse findet für die Entladungsrate keine signifikante
-  Änderung (P = 0.43, I² = 91 %) [E-06]. Konsistent ist nur die Abnahme der
-  intrakortikalen Hemmung [E-03]. Synchronisation ist als Kraftmechanismus
-  schwach belegt [E-09, E-10]; Cross-Education bringt gepoolt +11.9 % [E-19].
+  Änderung (P = 0.43, I² = 91 %) [E-06]. Übereinstimmend in drei
+  Meta-Analysen ist nur die kürzere kortikale Silent Period [E-02, E-03, E-04];
+  für die intrakortikale Hemmung (SICI) sind die Befunde uneinheitlich [E-02,
+  E-03, E-04] (W-23). Synchronisation ist als Kraftmechanismus schwach belegt
+  [E-09, E-10]; Cross-Education bringt gepoolt +11.9 % [E-19].
 - **Spezifität ist der robusteste Befund** (Evidenz A/B): Isometrie wirkt am
-  trainierten Winkel (±5° [E-21], bestätigt [E-22]), isometrisches Training
+  stärksten am trainierten Winkel; wie breit der Übertrag ist, variiert (nur
+  ±5° an der Wade [E-21]; am Knie +12 % am Trainingswinkel und noch +5 bis
+  +11 % bis 30° daneben [E-22]; W-24), isometrisches Training
   steigert isometrische Kraft stärker als dynamisches (SMD 0.43) [E-24], und
   wer nur den 1RM-Test übte (bis zu 5 Versuche pro Einheit), gewann gleich viel
   1RM-Kraft wie mit 4 Sätzen bis zum Versagen [E-25]. Konstantes Üben genau am
-  Ziel erzeugt dort einen eigenen Leistungsvorteil («especial skill») [E-45].
+  Ziel erzeugt dort einen eigenen Leistungsvorteil («especial skill»; Novizen,
+  Basketball-Wurf, n = 10 je Gruppe) [E-45].
 - **Lernstadien:** Fitts & Posner beschreiben drei Stadien (kognitiv,
-  assoziativ, autonom) [E-29, E-30]. Neuere Modelle trennen schnelles Lernen
+  assoziativ, autonom) [E-29; Inhalt nur nach der Beschreibung in E-30].
+  Neuere Modelle trennen schnelles Lernen
   innerhalb einer Einheit von langsamem Lernen über Einheiten hinweg; die
   Dauer der Phasen ist stark aufgabenabhängig [E-31, E-32]. Die Leistung am
   Ende einer Übungseinheit ist ein schlechterer Lernindikator als die Leistung
@@ -52,7 +61,8 @@
   Üben ergab bessere Behaltens- und Transferleistung als ein einzelner Übungstag
   bei gleicher Übungszeit (RCT) [E-48]; systematische Reviews bestätigen den
   Vorteil [E-49, E-50], am wirksamsten schienen aufeinanderfolgende Tage [E-50].
-  Zu starkes Strecken schadet wieder [E-52] (Evidenz A/B).
+  Zu starkes Strecken schadet wieder (Paik & Ritter 2015, beschrieben in
+  [E-52]) (Evidenz A/B).
 - **Frequenz vs. Volumen:** Der Frequenzeffekt auf Kraft verschwindet bei
   gleichem Volumen (p = 0.421) [E-53]; eine neuere Meta-Regression findet
   dennoch steigende Kraft mit steigender Frequenz bei abnehmendem Grenznutzen
@@ -60,31 +70,33 @@
   die Kraft um 9–14 %, dieselben 30 Kontraktionen einmal pro Woche nicht
   signifikant [E-58]. Gleichgewichtstraining wirkt am besten mit 3 oder 6
   Einheiten pro Woche zu 11–15 min [E-59] (Evidenz A/B).
-- **Ermüdung schadet dem Lernen:** Nach einer Ermüdung von rund 60 % der
-  Maximalkraft lernten Probanden auch am Folgetag ohne Ermüdung langsamer und
-  holten den Rückstand erst an Tag 3–4 auf [E-28]. Ältere Studien sind
+- **Ermüdung schadet dem Lernen:** Nachdem ihre Maximalkraft durch Ermüdung um
+  rund 60 % gesunken war, lernten junge Gesunde eine isometrische
+  Kraftdosierungsaufgabe (Spitzgriff) auch am Folgetag ohne Ermüdung langsamer
+  und holten den Rückstand erst an Tag 3–4 auf [E-28]. Ältere Studien sind
   widersprüchlich; Üben unter Ermüdung verbessert vor allem die Leistung unter
   Ermüdung [E-99]. Daraus folgen Stoppregeln bei Form- und Leistungsabfall
   (PAR-E-15 bis PAR-E-18).
 - **Schlaf und Konsolidierung sind umstritten:** Eine Nacht Schlaf brachte +20 %
-  Tempo [E-61], doch nach Kontrolle von Störfaktoren bleibt keine Verbesserung
+  Tempo in einer motorischen Sequenzaufgabe [E-61], doch nach Kontrolle von Störfaktoren bleibt keine Verbesserung
   durch Schlaf übrig [E-62, E-65]; Schlaf stabilisiert eher, als dass er
   verbessert [E-64]. Ob schnelle Gewinne in Pausen Konsolidierung [E-66] oder
   abklingende Hemmung [E-67] sind, ist offen. Keine Planerregel hängt an
   «Schlaf verstärkt Lernen».
 - **Schlafmangel (≤ 6 h) senkt die Leistung:** gesamt −7.56 %, Skill-Aufgaben
-  −20.9 %, Kraft −2.85 %; Oberkörperkraft war unbeeinflusst, Aufgaben am Morgen
+  (Präzisionsaufgaben aus Ballsportarten) −20.9 %, Kraft −2.85 %; Oberkörperkraft war unbeeinflusst, Aufgaben am Morgen
   weitgehend auch [E-70]. Mehrere Nächte Schlafrestriktion senken vor allem die
   Kraft in Mehrgelenkübungen [E-71] (Evidenz A).
 - **Zentrale Ermüdung ist real, aber nach kurzen Maximalreizen kurzlebig:**
   Während einer 3-min-Maximalkontraktion fiel die willentliche Aktivierung von
   über 99 % auf 90.7 % [E-74]. Nach kurzer, hochintensiver Belastung erholt sich
   die zentrale Komponente typischerweise in 2 min, die periphere in 3–5 min,
-  vollständig teils erst nach Stunden [E-81]. Die Literatur empfiehlt 3–5 min
+  vollständig teils erst nach Stunden [E-81]; die Daten stammen überwiegend aus
+  eingelenkigen Laborprotokollen [E-80]. Die Literatur empfiehlt 3–5 min
   Pause bei schweren Sätzen [E-60, E-87, E-88]; der Default von 300 s bleibt
   (Praxisquelle ≥ 5 min [P-01 S. 1–3]).
 - **«CNS-Fatigue» als mehrtägiges Burnout ist nicht belegt:** Nach 10 × 5
-  Kniebeugen mit 80 % 1RM hielt die Ermüdung bis 72 h an, war aber «nicht
+  Kniebeugen mit 80 % 1RM (10 männliche Athleten) hielt die Ermüdung bis 72 h an, war aber «nicht
   primär» zentral; die willentliche Aktivierung war bis 48 h reduziert [E-82].
   Übertraining ist eine lang anhaltende Fehlanpassung ohne anerkannten Marker
   [E-85]. Der Planer begründet nichts mit «CNS-Fatigue» (PAR-E-29).
@@ -94,13 +106,16 @@
   PDF-Muster F-1 [P-01 S. 1–3; P-02 S. 1–4; P-03 S. 1–4].
 - **Aufwärmen hilft, Potenzierung für Halte kaum:** Aufwärmen verbesserte die
   Leistung in 79 % der Kriterien [E-95]; allgemeines plus spezifisches Aufwärmen
-  steigerte den 1RM um 8.4 % [E-97]; statisches Dehnen ≥ 60 s pro Muskel senkt
-  die Leistung um 4.6 % [E-96]. Maximale Isometrien als Vorbelastung zeigen
-  keinen Potenzierungseffekt (ES −0.09) [E-92], und nach vollständigem
-  Aufwärmen fehlt der Effekt meist ganz [E-91, E-98].
+  steigerte den Beinpressen-1RM von 13 Trainierten um 8.4 % [E-97]; statisches
+  Dehnen ≥ 60 s pro Muskel senkt die Leistung ohne anschliessende dynamische
+  Aktivität um 4.6 % [E-96]. Maximale Isometrien als Vorbelastung zeigen
+  keinen Potenzierungseffekt (ES −0.09) [E-92]; ob Vorbelastung nach
+  vollständigem Aufwärmen noch etwas bringt, ist kaum untersucht und
+  uneinheitlich [E-91], in einer Studie blieb der Effekt aus [E-98].
 - **Greasing the Groove (GTG)** ist ein Coaching-Konzept (Evidenz C/D): häufig
-  üben, submaximal, nie bis zum Versagen, «so oft wie möglich, so frisch wie
-  möglich» [E-100, E-101, E-103]. Laborbefunde zu täglichen Kleinstdosen
+  über den Tag verteilt üben [E-100, E-101, E-103], submaximal und nie bis zum
+  Versagen [E-101, E-103], «so oft wie möglich, so frisch wie möglich»
+  (Tsatsouline, zitiert in [E-103]). Laborbefunde zu täglichen Kleinstdosen
   stützen das Prinzip [E-57, E-58], eine kontrollierte GTG-Studie wurde nicht
   gefunden. Straight-Arm-Skills bleiben ausgeschlossen (Heuristik, Stream D).
 
@@ -126,16 +141,20 @@
 **Methode des zweiten Laufs.** Suche in Europe PMC (PubMed, PMC), Prüfung von
 Titel, Autoren, Jahr und DOI über Europe PMC bzw. Crossref, Abstracts über
 Europe PMC oder Crossref, Volltexte über PMC, sofern frei verfügbar.
-Coaching-Quellen wurden direkt auf der Website gelesen. Zwei Quellen, deren
+Coaching-Quellen wurden direkt auf der Website gelesen. Primärarbeiten, deren
 Inhalt nur als Sekundärbeschreibung vorlag, sind nicht als eigene Quelle
-geführt, sondern über die beschreibende Quelle zitiert (z. B. Baddeley &
-Longman 1978 über [E-52], Shea & Morgan 1979 über [E-37]).
+geführt, sondern ausdrücklich über die beschreibende Quelle zitiert: Baddeley
+& Longman 1978, Donovan & Radosevich 1999, Paik & Ritter 2015 und Arthur et
+al. 2010 über [E-52], Shea & Morgan 1979 über [E-37], die Erholungsangabe nach
+einzelnen Maximalhebungen (Hitchcock 1989, Weir 1994, Matuszak 2003) über
+[E-91]. Fitts & Posner 1967 [E-29] ist als Buch bibliografisch bestätigt; sein
+Inhalt ist nur über die Beschreibung in [E-30] geprüft.
 
-**Evidenzstufen im Stream:** 105 Quellen: 38 der Stufe A (21 Meta-Analysen,
-7 systematische Reviews, 10 RCTs), 63 der Stufe B (Einzel- und Laborstudien,
-narrative Reviews, Positionspapiere, ein Lehrbuch), 3 der Stufe C
-(Coaching-Artikel) und 1 der Stufe D. Davon stammen aus dem zweiten Lauf 77
-(28 A, 45 B, 3 C, 1 D).
+**Evidenzstufen im Stream (Stand nach dem Audit):** 105 Quellen: 35 der Stufe
+A (21 Meta-Analysen, 7 systematische Reviews, 7 RCTs), 66 der Stufe B (Einzel-
+und Laborstudien einschliesslich dreier akuter Crossover-Experimente, narrative
+Reviews, Positionspapiere, ein Lehrbuch), 3 der Stufe C (Coaching-Artikel) und
+1 der Stufe D. Davon stammen aus dem zweiten Lauf 77 (25 A, 48 B, 3 C, 1 D).
 Dazu kommt die Praxisquelle P-01 bis P-04 (Stufe C). Wichtige Einschränkung:
 Die Trainings- und Lernstudien arbeiten überwiegend mit **Untrainierten, einem
 einzelnen Gelenk oder Labor- bzw. Feinmotorikaufgaben**. Für
