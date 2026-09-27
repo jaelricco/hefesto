@@ -25,22 +25,35 @@ final class AppModel {
     var tab: AppTab = .today
 
     private var pathMonitor: NWPathMonitor?
+    /// Set for UI tests: signed in, local data only, never syncs.
+    private let offline: Bool
 
-    init() throws {
+    convenience init() throws {
         let baseURL = Self.apiBaseURL
         let dir = try FileManager.default.url(
             for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-        db = try AppDatabase.onDisk(at: dir.appending(path: "hefesto.sqlite"))
+        let db = try AppDatabase.onDisk(at: dir.appending(path: "hefesto.sqlite"))
 
-        auth = AuthService(
+        let auth = AuthService(
             client: HefestoAPIConfiguration.client(serverURL: baseURL),
             store: KeychainTokenStore(), deviceId: Self.deviceId,
             appVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String)
         let api = HefestoAPIConfiguration.client(serverURL: baseURL, middlewares: [AuthMiddleware(auth: auth)])
-        sync = SyncEngine(client: api, db: db)
+        self.init(db: db, auth: auth, sync: SyncEngine(client: api, db: db), offline: false)
+    }
+
+    init(db: AppDatabase, auth: AuthService, sync: SyncEngine, offline: Bool) {
+        self.db = db
+        self.auth = auth
+        self.sync = sync
+        self.offline = offline
     }
 
     func start() async {
+        if offline {
+            isSignedIn = true
+            return
+        }
         isSignedIn = await auth.isSignedIn
         watchNetwork()
         await syncNow()
@@ -63,7 +76,7 @@ final class AppModel {
     /// One push-then-pull, and the catalogue if it changed. Failures leave
     /// everything queued; the next trigger tries again.
     func syncNow() async {
-        guard isSignedIn else { return }
+        guard isSignedIn, !offline else { return }
         isSyncing = true
         defer { isSyncing = false }
         do {

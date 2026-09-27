@@ -42,6 +42,8 @@ struct CelebrationView: View {
                     VStack(spacing: 6) {
                         Text(unlocked ? LocalizedStringKey("New skill unlocked") : "Session saved")
                             .font(.title.bold())
+                            .multilineTextAlignment(.center)
+                            .accessibilityAddTraits(.isHeader)
                         if xp > 0 { Text("+\(xp) XP").font(.headline).foregroundStyle(.secondary) }
                     }
 

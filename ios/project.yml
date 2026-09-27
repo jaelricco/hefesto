@@ -65,5 +65,19 @@ targets:
         Release:
           HEFESTO_API_BASE_URL: https://api.hefesto.fit
     scheme:
-      testTargets: []
+      testTargets: [HefestoUITests]
       gatherCoverageData: false
+
+  # Apple's accessibility audit over every main screen, on the app's offline
+  # fixture (Hefesto/UITestFixture.swift, Debug only).
+  HefestoUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: HefestoUITests
+    dependencies:
+      - target: Hefesto
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: fit.hefesto.ios.uitests
+        GENERATE_INFOPLIST_FILE: YES

@@ -21,6 +21,7 @@ struct HistoryView: View {
                         Text("Exercises").tag(Mode.exercises)
                     }
                     .pickerStyle(.segmented)
+                    .accessibilityIdentifier("history-mode")
                     .listRowBackground(Color.clear)
                     .listRowInsets(EdgeInsets())
                 }
@@ -51,6 +52,7 @@ struct HistoryView: View {
             Section {
                 ForEach(week.sessions) { s in
                     NavigationLink(value: SessionLink(id: s.id)) { SessionRow(session: s) }
+                        .accessibilityIdentifier("history-session")
                 }
             } header: {
                 HStack {
@@ -75,6 +77,7 @@ struct HistoryView: View {
                 }
                 .frame(minHeight: 44)
             }
+            .accessibilityIdentifier("history-exercise")
         }
     }
 }
@@ -156,9 +159,12 @@ struct ExerciseStatsView: View {
                 Section(chartTitle) {
                     Chart(stats.days) { day in
                         if let y = chartValue(day) {
-                            BarMark(x: .value("Day", Day.date(day.localDate) ?? .distantPast, unit: .day),
-                                    y: .value("Value", y))
+                            let date = Day.date(day.localDate) ?? .distantPast
+                            BarMark(x: .value("Date", date, unit: .day), y: .value(axisLabel, y))
                                 .foregroundStyle(.yellow.gradient)
+                                // VoiceOver reads each bar as a day and its value.
+                                .accessibilityLabel(Text(date, format: .dateTime.day().month().year()))
+                                .accessibilityValue(Text(verbatim: LevelText.value(y, unit: chartUnit)))
                         }
                     }
                     .frame(height: 200)
@@ -209,6 +215,14 @@ struct ExerciseStatsView: View {
         switch measure {
         case "hold_seconds", "distance_m": measure
         default: "reps"
+        }
+    }
+
+    private var axisLabel: LocalizedStringKey {
+        switch measure {
+        case "hold_seconds": "Hold (s)"
+        case "distance_m": "Distance (m)"
+        default: "Reps"
         }
     }
 

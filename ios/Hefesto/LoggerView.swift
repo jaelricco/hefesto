@@ -27,11 +27,11 @@ struct LoggerView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Close") { dismiss() }
+                    Button("Close") { dismiss() }.accessibilityIdentifier("close-logger")
                 }
                 if logger?.session.status == "draft" {
                     ToolbarItem(placement: .confirmationAction) {
-                        Button("Finish") { finishing = true }.bold()
+                        Button("Finish") { finishing = true }.bold().accessibilityIdentifier("finish-session")
                     }
                 }
             }
@@ -53,7 +53,7 @@ struct LoggerView: View {
         }
         .sheet(isPresented: $finishing) {
             FinishSheet { fatigue in finish(fatigue) }
-                .presentationDetents([.medium])
+                .presentationDetents([.medium, .large])
         }
         .alert("Something went wrong", isPresented: .constant(error != nil)) {
             Button("OK") { error = nil }
@@ -85,6 +85,7 @@ struct LoggerView: View {
                             composing = Composing(blockId: block.id)
                         } label: {
                             Label("Log a set", systemImage: "plus.circle.fill")
+                                .accessibilityIdentifier("log-set")
                                 .font(.title3.weight(.semibold))
                                 .frame(maxWidth: .infinity, minHeight: 56)
                         }
@@ -111,6 +112,7 @@ struct LoggerView: View {
         attempt {
             try logger.logCombo(in: blockId, elements: drafts, restPlannedSeconds: rest)
             loggedCount += 1
+            AccessibilityNotification.Announcement(String(localized: "Set logged")).post()
             if let end = logger.rest?.endsAt { RestNotifier.schedule(at: end) }
         }
     }
@@ -120,6 +122,7 @@ struct LoggerView: View {
         attempt {
             if try logger.repeatLastSet(of: first.exerciseId, in: blockId) != nil {
                 loggedCount += 1
+                AccessibilityNotification.Announcement(String(localized: "Set logged")).post()
                 if let end = logger.rest?.endsAt { RestNotifier.schedule(at: end) }
             }
         }
@@ -216,6 +219,8 @@ enum ElementFormat {
 struct RestBanner: View {
     let rest: RestTimer
     let onSkip: () -> Void
+    /// The clock scales with the athlete's text size.
+    @ScaledMetric(relativeTo: .largeTitle) private var clockSize: CGFloat = 48
 
     var body: some View {
         TimelineView(.periodic(from: rest.startedAt, by: 1)) { context in
@@ -224,17 +229,21 @@ struct RestBanner: View {
                 VStack(alignment: .leading) {
                     Text(done ? LocalizedStringKey("Rest done") : "Rest").font(.headline)
                     Text(clock(context.date))
-                        .font(.system(size: 48, weight: .bold, design: .rounded).monospacedDigit())
+                        .font(.system(size: clockSize, weight: .bold, design: .rounded).monospacedDigit())
                         .foregroundStyle(done ? .green : .primary)
                         .contentTransition(.numericText())
                 }
+                .accessibilityElement(children: .combine)
                 Spacer()
                 Button("Skip", action: onSkip)
                     .buttonStyle(.bordered)
                     .frame(minHeight: 56)
             }
             .sensoryFeedback(.impact(weight: .heavy), trigger: done) { old, new in !old && new }
-            .accessibilityElement(children: .combine)
+            .onChange(of: done) { old, new in
+                // The haptic's counterpart for VoiceOver.
+                if !old && new { AccessibilityNotification.Announcement(String(localized: "Rest done")).post() }
+            }
         }
     }
 
@@ -248,32 +257,38 @@ struct RestBanner: View {
 struct FinishSheet: View {
     let onFinish: (Int?) -> Void
     @State private var fatigue: Int?
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 20) {
-                Text("How hard did it feel?").font(.title3.weight(.semibold))
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 5), spacing: 8) {
-                    ForEach(1...10, id: \.self) { n in
-                        Button {
-                            fatigue = fatigue == n ? nil : n
-                        } label: {
-                            Text("\(n)").font(.title3.monospacedDigit().bold()).frame(maxWidth: .infinity, minHeight: 48)
+            ScrollView {
+                VStack(spacing: 20) {
+                    Text("How hard did it feel?").font(.title3.weight(.semibold))
+                    // Fewer columns at the largest text sizes, so numbers are not clipped.
+                    LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8),
+                                             count: typeSize.isAccessibilitySize ? 3 : 5), spacing: 8) {
+                        ForEach(1...10, id: \.self) { n in
+                            Button {
+                                fatigue = fatigue == n ? nil : n
+                            } label: {
+                                Text("\(n)").font(.title3.monospacedDigit().bold()).frame(maxWidth: .infinity, minHeight: 48)
+                            }
+                            .buttonStyle(.bordered)
+                            .tint(fatigue == n ? .accentColor : .secondary)
+                            .accessibilityLabel(Text("\(n) of 10"))
+                            .accessibilityAddTraits(fatigue == n ? .isSelected : [])
                         }
-                        .buttonStyle(.bordered)
-                        .tint(fatigue == n ? .accentColor : .secondary)
-                        .accessibilityAddTraits(fatigue == n ? .isSelected : [])
                     }
+                    Text("Optional. 1 is easy, 10 is everything you had.").font(.footnote).foregroundStyle(.secondary)
+                    Button {
+                        onFinish(fatigue)
+                    } label: {
+                        Text("Finish session").font(.title3.weight(.semibold)).frame(maxWidth: .infinity, minHeight: 56)
+                    }
+                    .buttonStyle(.borderedProminent)
                 }
-                Text("Optional. 1 is easy, 10 is everything you had.").font(.footnote).foregroundStyle(.secondary)
-                Button {
-                    onFinish(fatigue)
-                } label: {
-                    Text("Finish session").font(.title3.weight(.semibold)).frame(maxWidth: .infinity, minHeight: 56)
-                }
-                .buttonStyle(.borderedProminent)
+                .padding()
             }
-            .padding()
         }
     }
 }

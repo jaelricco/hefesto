@@ -21,7 +21,7 @@ struct HefestoApp: App {
             .task {
                 guard model == nil else { return }
                 do {
-                    let m = try AppModel()
+                    let m = try Self.makeModel()
                     model = m
                     await m.start()
                 } catch {
@@ -32,6 +32,16 @@ struct HefestoApp: App {
                 if phase == .active, let model { Task { await model.syncNow() } }
             }
         }
+    }
+}
+
+extension HefestoApp {
+    @MainActor
+    static func makeModel() throws -> AppModel {
+        #if DEBUG
+        if UITestFixture.isRequested { return try UITestFixture.model() }
+        #endif
+        return try AppModel()
     }
 }
 

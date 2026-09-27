@@ -24,6 +24,7 @@ struct TodayView: View {
                     .buttonStyle(.borderedProminent)
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)
+                    .accessibilityIdentifier("start-session")
 
                     // Planned rest counts as training kept (ADR 0003).
                     Button {

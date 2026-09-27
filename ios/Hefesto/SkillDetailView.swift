@@ -38,7 +38,9 @@ struct SkillDetailView: View {
         .navigationTitle(skill.map { Text(verbatim: $0.skill.name) } ?? Text(verbatim: ""))
         .navigationBarTitleDisplayMode(.inline)
         .confirmationDialog(
-            "Mark as achieved?", isPresented: .constant(attesting != nil), titleVisibility: .visible,
+            "Mark as achieved?",
+            isPresented: Binding(get: { attesting != nil }, set: { if !$0 { attesting = nil } }),
+            titleVisibility: .visible,
             presenting: attesting
         ) { level in
             Button("I can do \(level.name)") { Task { await attest(level) } }
@@ -156,6 +158,19 @@ struct LevelRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
+            details
+            // Outside the combined element, so VoiceOver keeps it a button.
+            if status == "available" || status == "in_progress" {
+                Button("I can already do this", action: onAttest)
+                    .font(.callout)
+                    .frame(minHeight: 44)
+            }
+        }
+        .padding(.vertical, 4)
+    }
+
+    private var details: some View {
+        VStack(alignment: .leading, spacing: 6) {
             HStack(alignment: .firstTextBaseline) {
                 Image(systemName: icon).foregroundStyle(tint).accessibilityHidden(true)
                 Text(verbatim: level.name).font(.headline)
@@ -175,13 +190,7 @@ struct LevelRow: View {
                      : "Unlocked on \(achieved.formatted(date: .abbreviated, time: .omitted))")
                     .font(.caption).foregroundStyle(.secondary)
             }
-            if status == "available" || status == "in_progress" {
-                Button("I can already do this", action: onAttest)
-                    .font(.callout)
-                    .frame(minHeight: 44)
-            }
         }
-        .padding(.vertical, 4)
         .accessibilityElement(children: .combine)
     }
 

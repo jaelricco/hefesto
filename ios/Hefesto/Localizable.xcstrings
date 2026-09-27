@@ -671,6 +671,16 @@
         }
       }
     },
+    "Distance (m)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Distanz (m)"
+          }
+        }
+      }
+    },
     "Done": {
       "localizations": {
         "de": {
@@ -737,6 +747,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Geschätzte Unterstützung"
+          }
+        }
+      }
+    },
+    "Estimated assist in kilograms": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geschätzte Unterstützung in Kilogramm"
           }
         }
       }
@@ -871,6 +891,16 @@
         }
       }
     },
+    "Hold (s)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Halten (s)"
+          }
+        }
+      }
+    },
     "How hard did it feel?": {
       "localizations": {
         "de": {
@@ -947,6 +977,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Stufen"
+          }
+        }
+      }
+    },
+    "Levels unlocked: %lld of %lld": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Freigeschaltete Stufen: %1$lld von %2$lld"
           }
         }
       }
@@ -1281,6 +1321,16 @@
         }
       }
     },
+    "Reps": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wiederholungen"
+          }
+        }
+      }
+    },
     "Reps per day": {
       "localizations": {
         "de": {
@@ -1441,12 +1491,42 @@
         }
       }
     },
+    "Set logged": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Satz eingetragen"
+          }
+        }
+      }
+    },
     "Show": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Anzeigen"
+          }
+        }
+      }
+    },
+    "Show as list": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Als Liste zeigen"
+          }
+        }
+      }
+    },
+    "Show as map": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Als Karte zeigen"
           }
         }
       }
