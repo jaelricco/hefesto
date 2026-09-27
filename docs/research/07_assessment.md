@@ -114,15 +114,16 @@
 | Reliabilität Kraft-Feldtests (Liegestütz, Klimmzug, Dip, 1RM) | belegt | F-01, F-06, F-16, F-17, F-18, F-19, F-20, F-28 |
 | Validität von Feldtests | belegt, meist schwach | F-02, F-04, F-05, F-12, F-24 |
 | Reliabilität und Validität bei Kindern und Jugendlichen (Kontext) | belegt | F-03, F-04 |
-| Isometrische Halte (Plank, Handstand, Ringe) | belegt | F-01, F-28, F-30, F-31 |
-| Hollow Hold, L-Sit, Stütz, Pistol Squat | **keine Studien gefunden** | – |
+| Isometrische Halte (Plank, Handstand, Ringe, Beugehang) | belegt | F-01, F-28, F-30, F-31, F-57, F-61 |
+| Hollow Hold, L-Sit, Stütz, Wand-Handstand, Pistol Squat | **keine Studien gefunden**; Analogien: Rumpfbeuger-Halte [F-59, F-60], visuelle Bewertung der einbeinigen Kniebeuge [F-62] | F-59, F-60, F-62 |
 | Mobilität (Schulter, Handgelenk, Sprunggelenk, BWS, Hamstrings, Smartphone, Selbstmessung) | belegt | F-10, F-11, F-12, F-28, F-32, F-33, F-34, F-35 |
-| Prädiktoren für Skills | Turnen belegt; Calisthenics **keine Studien** | F-27, F-28, F-29, F-40, P-01–P-03 |
-| Genauigkeit Selbstauskunft | indirekt belegt; zu Wiederholungszahlen **keine Studie gefunden** | F-13, F-14, F-36, F-50 |
+| Prädiktoren für Skills | Turnen belegt; Calisthenics **keine Studien**, nur Coaching-Schwellen (C/D) | F-27, F-28, F-29, F-40, F-63, F-64, F-68–F-76, P-01–P-03 |
+| Genauigkeit Selbstauskunft | belegt für erinnerte Testwerte und selbst durchgeführte Heimtests; Schätzungen ohne Test **Lücke** | F-13, F-14, F-36, F-50, F-51–F-55 |
 | RIR/RPE-Genauigkeit | belegt | F-08, F-37, F-38, F-39 |
-| Last in % Körpergewicht, Umrechnungen | Liegestütz gut, Zug/Dip teilweise; Dips, Rudern, Pike-Liegestütz **Lücke** | F-09, F-19, F-22, F-25, F-26 |
-| Wiederholungen → 1RM | belegt | F-07, F-21, F-23 |
-| Screening, Trainingsstatus, Verletzungsanamnese | belegt | F-15, F-41, F-42, F-43, F-44, F-45 |
+| Last in % Körpergewicht, Umrechnungen | Liegestütz gut; Suspension-Liegestütz und -Rudern belegt; Zug/Dip teilweise; Pike-Liegestütz, HSPU, Bank-Dip **Lücke** | F-09, F-19, F-22, F-25, F-26, F-65, F-66, F-67 |
+| Wiederholungen → 1RM | belegt | F-07, F-21, F-23, F-77 |
+| Protokolldetails (Liegestütz-Variante, Kadenz, Beugehang-Winkel) | teilweise belegt | F-16, F-56, F-57 |
+| Screening, Trainingsstatus, Verletzungsanamnese | belegt | F-15, F-41, F-42, F-43, F-44, F-45, F-69 |
 | Statistik der Nachkalibrierung | Messfehler belegt; Filterverfahren **Heuristik** | F-46, F-47, F-48, F-49 |
 
 Verweise auf andere Streams (dort vertieft, hier nicht zitiert): Dosierung nach
@@ -159,7 +160,11 @@ einstuft. Beispiel: Wiederholungen bei 70 % 1RM hatten den besseren ICC
 | 1RM, alle Übungen | ICC 0.64–0.99, median 0.97; 92 % ≥ 0.90 | CV 0.5–12.1 %, median 4.2 % | 32 Studien, n = 1595 | F-06 | A |
 | 1RM gewichteter Klimmzug / Dip | ICC 0.96–0.99 | SWC 3 % / 4 % der relativen Kraft | 15 Männer, 7 Tage | F-19 | B |
 | Max. Wdh. Bankdrücken 70 % / 90 % 1RM | ICC 0.86 / 0.65 | SEM 1.1 / 0.7 Wdh. | 24 Krafttrainierte, 1 Woche | F-20 | B |
-| Liegestütz (überarbeitetes Protokoll) | Stabilität .90/.93 (Frauen), .95/.95 (Männer); Bewerter .75–.88 in einer, .95–.99 in einer anderen Teilstudie | – | 152 Studierende | F-16 | B |
+| Liegestütz (überarbeitetes Protokoll) | Stabilität .90/.93 (Frauen), .95/.95 (Männer); Bewerter .75 (Frauen) / .88 (Männer) in der Objektivitätsstudie, .95–.99 in der Reliabilitätsstudie; Validität: r = .80 (Frauen) / .87 (Männer) mit Bankdrück-Wdh. bei einem Anteil des Körpergewichts | – | 80 bzw. 152 Studierende; Validität 106 | F-16 | B |
+| 3RM Klimmzug im Untergriff mit Zusatzlast | – | CV 1.7 % (≥ 2 Jahre Krafttraining) / 1.9 % (6–12 Monate) | 25 männliche Nachwuchsathleten, 72 h | F-58 | B |
+| Beugehang, 90° Ellbogenwinkel | Retest ICC 0.98; zwei Bewerter ICC 0.99; Validität für relative isometrische Kraft r = 0.88, für absolute r = 0.10 | – | 31 Studentinnen | F-57 | B |
+| Rumpfbeuger-Halte: modifizierter V-Sit / Unterarmstütz | ICC 0.71 / 0.95 | SEM ≈ 56 s bei Mittel 142 s (40 %) / ≈ 10 s bei 93 s (11 %) (eigene Rechnung, Näherung) | 60 Erwachsene, Retest-Untergruppe n = 10 | F-59 | B |
+| Rumpfbeuger-Test nach McGill (60°-Sitz, Halt bis Abbruch) u. a. | Reliabilitätskoeffizienten > .97 an 5 Tagen und nach 8 Wochen | – | 75 junge Erwachsene | F-60 | B |
 | Liegestütz und modifizierter Klimmzug, je 15 s | ICC 0.989 / 0.958 | MDC 2 Wdh. | 46 Erwachsene, ≤ 5 Tage | F-17 | B |
 | Klimmzug (Artisten, Messungen alle 6 Monate) | ICC 0.88 über 18 Monate | weite Übereinstimmungsgrenzen | 238 Artisten | F-18 | B |
 | Klimmzug, Handstand-Liegestütz, Handstand frei, hängende Pikes, Ringe-Halt, Schulterflexibilität, Spagat | ICC 0.89 / 0.96 / 0.91 / 0.83 / 0.75 / 0.90 / 0.97 | SEM (eigene Rechnung): 2.0 Wdh. / 1.8 Wdh. / 11.8 s / 3.8 Wdh. / – / – / – | 30 Turner, 7–18 J., 1 Woche | F-28 | B |
@@ -184,6 +189,8 @@ einstuft. Beispiel: Wiederholungen bei 70 % 1RM hatten den besseren ICC
 | SEM Klimmzüge (junge Turner, Mittel 11.3 Wdh.) | SD 5.9 × √(1 − 0.89) | **2.0 Wdh.** (17 % des Mittels) | F-28, Formel F-47 |
 | SEM Handstand frei (Mittel 47 s) | SD 39.2 × √(1 − 0.91) | **11.8 s** (25 %) | F-28, F-47 |
 | SEM Unterarmstütz (Mittel 145 s) | SD 71.5 × √(1 − 0.915) | **20.8 s** (14 %) | F-30, F-47 |
+| SEM modifizierter V-Sit (Mittel 141.7 s) | SD 104.1 × √(1 − 0.71); ICC aus der Retest-Untergruppe, SD aus allen 60 Personen | **56 s** (40 %) | F-59, F-47 |
+| Fehler erinnerter Liegestützzahlen (offizieller Test) | SD_diff = √(SD₁² + SD₂² − 2 r SD₁ SD₂); Mittelwertdifferenz / Mittel | Verzerrung **+4.4 bis +6.6 %**; SD_diff **7–8 Wdh. = 13–18 %**; 95-%-Grenzen ≈ ±25–35 % | F-51 (61 ± 14 vs. 65 ± 13, r 0.83), F-52 (Männer 63.5 ± 13.1 vs. 66.3 ± 14.0, r 0.82; Frauen 37.7 ± 12.8 vs. 40.2 ± 12.8, r 0.86) |
 | MDC95 Klimmzüge | 1.96 × √2 × 2.0 | **5.4 Wdh.** | F-28 |
 | MDC95 Bankdrücken bis Versagen, 70 % / 90 % 1RM | 1.96 × √2 × 1.1 / 0.7 | **3.0 / 1.9 Wdh.** | F-20 |
 | MDC95 1RM, falls CV ≈ typischer Fehler | 1.96 × √2 × 4.2 % | **≈ 11.6 %** | F-06 (Näherung) |
@@ -209,6 +216,16 @@ einstuft. Beispiel: Wiederholungen bei 70 % 1RM hatten den besseren ICC
 5. Weil Einzelveränderungen aus zwei Messungen kaum erkennbar sind [F-18],
    stützt sich der Planer auf viele Log-Beobachtungen statt auf seltene
    Retests (Abschnitt 8).
+6. Klimmzug- und Gleichgewichtswerte sind rechtsschief verteilt und wurden
+   deshalb log-transformiert ausgewertet [F-18]; beim freien Handstand von
+   Zirkusartisten war die Standardabweichung grösser als der Mittelwert
+   (z. B. 9.6 ± 15.8 s) [F-61]. Der Planer rechnet Fehler von Haltezeiten
+   deshalb relativ zu μ, was einer Log-Skala entspricht (PAR-F-68,
+   **Heuristik**, gestützt auf [F-18, F-61]).
+7. Protokollabweichungen verändern den Messfehler stark: Der Rumpfbeuger-Test
+   nach McGill war mit > .97 reliabel [F-60], ein modifizierter V-Sit nur mit
+   ICC 0.71 [F-59]. Haltetests brauchen deshalb ein festes Protokoll
+   (G-1).
 
 ## 3. Kandidatentests (Deliverable 1)
 
@@ -220,24 +237,24 @@ durchführbar. Protokolle im Detail: Abschnitt 4.2.
 
 | Test (Slug) | Kurzprotokoll | Reliabilität / Validität | Zeit | Equipment | Selbsttest |
 |---|---|---|---|---|---|
-| `push_up_max` | Standard-Liegestütz bis zur ersten ungültigen Wdh. | .90–.95 [F-16]; 15-s-Variante ICC 0.989, MDC 2 Wdh. [F-17]; Last 64–75 % KG [F-25, F-26] | 3 min | keins | ja |
+| `push_up_max` | Standard-Liegestütz bis zur ersten ungültigen Wdh. | .90–.95; Validität r .80/.87 [F-16]; 15-s-Variante ICC 0.989, MDC 2 Wdh. [F-17]; Last 64–75 % KG [F-25, F-26]; Hand-Release-Variante ergibt mehr Wdh. als Standard, Rohwert misst relative, nicht absolute Kraft (r 0.71) [F-56] | 3 min | keins | ja |
 | `knee_push_up_max`, `incline_push_up_max` | Knie am Boden bzw. Hände erhöht | Reliabilität: **Lücke**; Last Knie 49–62 %, Hände 30.5/61 cm erhöht 55/41 % KG [F-25, F-26] | 3 min | Box/Bank | ja |
 | `pull_up_max` | Obergriff, aus gestrecktem Hang, Kinn über Stange | moderat bis hoch (moderate Evidenz) [F-01]; ICC 0.89, SEM ≈ 2 Wdh. [F-28]; ICC 0.88 über 18 Monate [F-18]; misst relative Kraft [F-24] | 3 min | Stange | ja |
-| `chin_up_max` | wie oben, Untergriff | **Lücke** | 3 min | Stange | ja |
-| `dip_max` | Barren, Oberarm mindestens parallel zum Boden | Wdh.-Test: **Lücke** | 3 min | Barren | ja |
+| `chin_up_max` | wie oben, Untergriff | Wdh.-Test: **Lücke**; 3RM mit Zusatzlast CV 1.7–1.9 %, Erfahrung ohne relevanten Einfluss [F-58] | 3 min | Stange | ja |
+| `dip_max` | Barren, Oberarm mindestens parallel zum Boden | Wdh.-Test: **Lücke** (keine Reliabilitätsstudie in Europe PMC) | 3 min | Barren | ja |
 | `handstand_push_up_max` | an der Wand auf Parallettes, Kopf zum Boden | ICC 0.96, SEM ≈ 1.8 Wdh. (junge Turner) [F-28] | 3 min | Wand, Parallettes | ja, für Fortgeschrittene |
 | `weighted_pull_up_1rm`, `weighted_dip_1rm` | steigende Zusatzlast bis zur schwersten sauberen Wdh. | ICC 0.96–0.99; SWC 3 % / 4 % [F-19]; 1RM allgemein median ICC 0.97 [F-06] | 15–20 min | Gürtel, Gewichte | bedingt, nur Fortgeschrittene |
-| `bent_arm_hang`, `dead_hang` | Halt mit Kinn über Stange bzw. gestreckten Armen | Beugehang moderat bis hoch (moderate Evidenz) [F-01]; misst relative Kraft [F-24]; Totehang: **Lücke** | 2 min | Stange | ja |
+| `bent_arm_hang`, `dead_hang` | Halt mit Kinn über Stange bzw. 90° Ellbogen; Totehang mit gestreckten Armen | Beugehang moderat bis hoch (moderate Evidenz) [F-01]; 90°-Variante ICC 0.98, valide für relative isometrische Kraft (r 0.88) [F-57]; misst relative Kraft [F-24]; Totehang: **Lücke** | 2 min | Stange | ja; Einstiegstest bei 0 Klimmzügen |
 | `plank_hold` | Unterarmstütz bis Abbruch | moderat (starke Evidenz) [F-01]; ICC 0.915 [F-30]; 0.99 nach Gewöhnungsversuch [F-31] | 2–4 min | keins | ja |
 | `side_plank_hold` | Seitstütz je Seite | moderat (starke Evidenz) [F-01] | 3–5 min | keins | ja |
-| `hollow_body_hold` | Rückenlage, LWS am Boden | **keine Studien gefunden** | 2 min | keins | ja, Form schwer selbst zu beurteilen |
-| `handstand_hold_free` | frei auf Barren bzw. Boden, bester von 2 Versuchen | ICC 0.91, SEM ≈ 25 % des Mittels; r² 0.44 mit Wettkampfniveau (junge Turner) [F-28] | 3 min | Barren oder Boden | ja |
-| `handstand_hold_wall` | Bauch zur Wand | **Lücke** | 2 min | Wand | ja |
+| `hollow_body_hold` | Rückenlage, LWS am Boden | **keine Studien gefunden**; Analogie Rumpfbeuger-Halte: McGill-Test > .97 [F-60], modifizierter V-Sit ICC 0.71, SEM ≈ 40 % (eigene Rechnung) [F-59] | 2 min | keins | ja, Form schwer selbst zu beurteilen |
+| `handstand_hold_free` | frei auf Barren bzw. Boden, bester von 2 Versuchen | ICC 0.91, SEM ≈ 25 % des Mittels; r² 0.44 mit Wettkampfniveau (junge Turner) [F-28]; Zirkusartisten 9.6 ± 15.8 s (Vorprofis) bzw. 14.3 ± 19.3 s (Profis), Abbruch bei 60 s, Protokoll nicht validiert [F-61] | 3 min | Barren oder Boden | ja |
+| `handstand_hold_wall` | Bauch zur Wand | **keine Studien gefunden** | 2 min | Wand | ja |
 | `l_sit_hold`, `support_hold` | Stütz mit gestreckten Beinen bzw. Armen | **keine Studien gefunden** | 2 min | Parallettes/Barren | ja |
 | `hanging_pike_max` | hängende Pikes mit kurzem totem Hang zwischen den Wdh. | ICC 0.83, SEM ≈ 3.8 Wdh.; r² 0.29 mit Niveau (junge Turner) [F-28] | 2 min | Stange | ja |
 | `rings_hold_abduction` | Halt in den Ringen mit 90° abduzierten, gestreckten Armen; Ringe schrittweise nach aussen | ICC 0.75; r² 0.36 mit Niveau (junge Turner) [F-28] | 5 min | Ringe | bedingt, Fortgeschrittene (Maltese/Kreuz) |
 | Skill-Halte (`tuck_planche_hold`, `tuck_front_lever_hold` …) | beste saubere Haltezeit der aktuellen Stufe | Reliabilität: **keine Studien gefunden**; Praxisquellen stufen Niveaus über solche Halte ein [P-01 S. 1–3, P-02 S. 1] (C) | je 3 min | je nach Skill | ja |
-| `pistol_squat_max` | einbeinig, volle Tiefe | **keine Studien gefunden** | 3 min | keins | ja |
+| `pistol_squat_max` | einbeinig, volle Tiefe | Maximal-Wdh.: **keine Studien gefunden**; visuelle Formbewertung der einbeinigen Kniebeuge: zwei Bewerter 0.58, ein Bewerter 0.68 (gepoolt), Skalen mit ≤ 3 Stufen übereinstimmender [F-62] (Evidenz A) | 3 min | keins | ja |
 | `vertical_jump`, `standing_broad_jump` | Strecksprung bzw. Standweitsprung | Strecksprung ICC 0.91 [F-28], 0.85 über 18 Monate [F-18]; Standweitsprung moderat bis hoch (moderate Evidenz) [F-01] | 3 min | Wand, Massband | ja |
 | `handgrip` | Handdynamometer | hoch reliabel (starke Evidenz) [F-01]; valide für isometrische Handkraft [F-02] | 2 min | Dynamometer | nein |
 
@@ -255,9 +272,11 @@ durchführbar. Protokolle im Detail: Abschnitt 4.2.
 
 **Einordnung:** Beweglichkeit lässt sich reliabel messen, sagt aber bei jungen
 Turnern das Leistungsniveau nicht voraus (Spagat r² 0.004, Schulter r² 0.01),
-während Kraftmerkmale es tun (Klimmzüge r² 0.51) [F-28]. Mobilitätstests
-dienen im Planer deshalb der Übungsauswahl (z. B. ob eine Position erreichbar
-ist), nicht der Einstufung (**Heuristik**, abgeleitet). Alle Messwerte ausser
+während Kraftmerkmale es tun (Klimmzüge r² 0.51) [F-28]. Bei 111 Anfängern
+sagten Schulter-Feldtests (Upper Quarter Y Balance Test, CKCUEST) die Qualität
+des Handstands nicht voraus [F-63]. Mobilitätstests dienen im Planer deshalb
+der Übungsauswahl (z. B. ob eine Position erreichbar ist), nicht der
+Einstufung (**Heuristik**, abgeleitet aus [F-28, F-63]). Alle Messwerte ausser
 F-34 stammen von Untersuchern, nicht von Selbstmessungen; die Übertragung auf
 Selbsttests ist ungeprüft.
 
@@ -291,13 +310,15 @@ Selbsttests ist ungeprüft.
 | `split_front` / `split_side` | links, rechts, Mitte; Schienbein des hinteren Beins an der Wand | Abstand zum Boden | Wert = Summe der Abstände / Beinlänge | F-28 |
 | `ankle_dorsiflexion_wblt` | Ausfallschritt zur Wand | Knie berührt die Wand, Ferse bleibt am Boden; maximaler Fuss-Wand-Abstand | – | F-10 (mehrere Varianten, alle reliabel) |
 | `wrist_extension` | Unterarm aufgelegt, Handgelenk frei | App am Handrücken bzw. an der Handfläche ausgerichtet | – | F-33, F-34 |
-| `push_up_max` | Hochstütz, Hände schulterbreit, Körper gerade | Ellbogen mindestens 90° gebeugt, oben volle Streckung, Hüfte in Linie | erste ungültige Wdh., Pause > 2 s oben | **Praxisheuristik**: Das überarbeitete Protokoll aus F-16 war nicht im Detail einsehbar |
+| `push_up_max` | Hochstütz, Hände schulterbreit, Körper gerade | Ellbogen mindestens 90° gebeugt, oben volle Streckung, Hüfte in Linie; Hände bleiben am Boden (keine Hand-Release-Variante) | erste ungültige Wdh., Pause > 2 s oben | **Praxisheuristik** für die Kriterien: Das überarbeitete Protokoll aus F-16 war nur als Abstract einsehbar. Hand-Release-Liegestütze ergeben signifikant mehr Wdh. als Standard-Liegestütze [F-56]; deshalb eine Variante festlegen und beim Retest beibehalten |
+| `bent_arm_hang` | mit Hilfe (Kasten) in den Hang, Obergriff | Ellbogen 90° gebeugt | Winkel geht verloren; Wert in s | F-57 (90°-Variante); Hilfsmittel: **Praxisheuristik** |
 | `dip_max` | Stütz mit gestreckten Armen | Oberarm mindestens parallel zum Boden, oben volle Streckung | erste ungültige Wdh. | **Praxisheuristik** |
 | `plank_hold` | Unterarmstütz | Körperlinie Kopf–Ferse | Abbruch bei Erschöpfung oder wiederholtem Technikverlust | F-30 |
 | `hollow_body_hold`, `l_sit_hold`, Skill-Halte | Position der Stufe | Formkriterien aus Stream A | Verlassen der Position | **Praxisheuristik** |
 
-Offene Punkte: Kadenz (metronomgeführt oder frei) ist für keinen
-Körpergewichtstest geprüft. Die Messgrössen `cm`, Winkel und Verhältnisse
+Offene Punkte: Ob eine Kadenz (metronomgeführt oder frei) die Reliabilität
+verändert, ist für keinen Körpergewichtstest geprüft; F-56 und F-66 gaben das
+Tempo mit einem Metronom vor. Die Messgrössen `cm`, Winkel und Verhältnisse
 fehlen im heutigen `measure`-Vokabular (`reps`/`hold_seconds`/`distance_m`/
 `none`, `codebase_notes.md` §2).
 
@@ -323,6 +344,23 @@ bei 61 cm erhöhten Händen (r = 0.63) [F-26]. Verhältnis zur Standardvariante
 Hände 61 cm erhöht 0.64, Füsse 30.5 cm erhöht 1.09, Füsse 61 cm erhöht 1.16.
 Eine Übersicht fasst kinetische Daten zu 46 Liegestütz-Varianten aus
 26 Studien zusammen [F-09] (Evidenz A).
+
+**Weitere Übungen:**
+
+| Variante | Anteil Körpergewicht an Händen bzw. Griffen | Messart | Quelle | Evidenz |
+|---|---|---|---|---|
+| Suspension-Liegestütz, Gurte senkrecht (0°), Arme gestreckt / gebeugt | 50.4 % / 75.3 % | Kraftmessdosen in den Gurten, 28 Studenten | F-65 | B |
+| Suspension-Liegestütz, Gurte senkrecht, Körper laut Autoren etwa waagrecht, Füsse am Boden / in Schlaufen | 72.4 % / 75.0 % isometrisch; 70.1 % / 72.1 % dynamisch | Kraftmessdosen und Kraftplatte, 12 Athleten | F-66 | B |
+| Suspension-Rudern (Inverted Row), Gurte senkrecht, Körper laut Autoren etwa waagrecht, Füsse am Boden / in Schlaufen | 69.5 % / 73.3 % isometrisch; 73.4 % / 75.7 % dynamisch | wie oben | F-66 | B |
+| Suspension-Rudern, Körper 20.8° zum Boden, Ellbogen gebeugt | 58 % | laut F-66 aus F-67; längere Gurte → flacherer Körper → mehr Last an den Armen | F-66, F-67 | B |
+| Dip, Klimmzug, Muscle-up, HSPU (kein Fuss- oder Bodenkontakt) | ≈ 100 % statisch; in Beschleunigungsphasen darüber | Mechanik; keine Messung gefunden | – | **Heuristik** (Mechanik; Abgleich Stream C) |
+| Pike-Liegestütz, Bank-Dip | **keine Messdaten gefunden** | – | – | Pike vermutlich zwischen Liegestütz und HSPU: nur als Reihenfolge nutzbar (**Heuristik**) |
+
+Für das Suspension-Rudern mit 7 Gurtlängen erklärten Regressionsmodelle aus
+Neigungswinkel bzw. Gurtlänge, Körpermasse, Grösse, BMI und Ellbogenstellung
+die Bodenreaktionskraft signifikant [F-67]. Bei gleicher Gurtlänge ist die
+Last also personenabhängig; der Planer speichert den Körperwinkel nicht und
+ordnet Ring-Rudern deshalb nur grob ein (**Heuristik**).
 
 **Nutzung:** Die Anteile ordnen Varianten nach Last und begründen
 Plausibilitätsregeln (Abschnitt 8.7). Sie erlauben **keine** direkte
@@ -357,10 +395,11 @@ zwischen Übungen hängt von Übung und Person ab.
 | Streuung zwischen Personen | SD 2.51 Wdh. bei 80 %, 4.36 Wdh. bei 60 % 1RM | F-07 | A |
 | Moderatoren | Geschlecht, Alter und Trainingsstatus ohne klaren Einfluss; Beinpresse mehr Wdh. als Bankdrücken | F-07 | A |
 | Lineare 1RM-Formeln | nur bis 10 Wdh. verwenden; beste Genauigkeit aus 5RM | F-23 | B |
+| Formeln nach Mayhew und Wathen bei Zugübungen (Latzug, Kabelrudern, Wdh. bis Versagen bei 80 % 1RM) | unterschätzten den 1RM systematisch um 2.1–6.7 kg; r ≥ 0.96 mit dem echten 1RM | F-77 | B |
 | 1RM-Vorhersage (Wdh. bis Versagen, Last-Geschwindigkeit, Isometrie) | Mittel ≤ 1.3 kg daneben (ausser L-V Bank −5 kg); SEE 3.2–9.7 kg; nicht austauschbar | F-21 | B |
 | Wiederholungen bei fester relativer Last | SEM 0.7–1.1 Wdh. über eine Woche | F-20 | B |
 
-**Folgerung (Heuristik, abgeleitet aus F-07, F-21, F-23):** Der Planer dosiert
+**Folgerung (Heuristik, abgeleitet aus F-07, F-21, F-23, F-77):** Der Planer dosiert
 jede Übung aus ihren eigenen Logs. Umrechnungen zwischen Übungen oder von
 Wiederholungen auf Maximalkraft dienen nur als Startwert mit grosser
 Unsicherheit (PAR-F-26), wenn eine Übung noch nie geloggt wurde. Für
@@ -368,10 +407,14 @@ Umrechnungen werden nur Sätze mit ≤ 10 Wiederholungen verwendet [F-23].
 
 ## 6. Prädiktoren für Skill-Bereitschaft
 
+### 6.1 Studien und Praxisquellen
+
 | Befund | Wert | Population | Quelle | Evidenz |
 |---|---|---|---|---|
 | Spezifische Kraft (Maschinentest, gestreckte Arme) erklärt Maximalkraft in der Schwalbe / Stützwaage / im Kreuz verkehrt | R² 0.76–0.85 / 0.42–0.59 / 0.38–0.48 (Kreuz nicht signifikant) | 19 Elite-Turner | F-40 | B |
 | Kraftbenchmark, um das Element mit eigenem Körpergewicht zu halten | 56.66–94.10 % des Körpergewichts, je nach Element und Kontraktionsart | wie oben | F-40 | B |
+| Mindest-1RM im «Swallow supine» (Zug mit gestreckten Armen in Rückenlage), um das Element an den Ringen zu halten | 73.4 % KG für die Schwalbe, 67.4 % KG für die Stützwaage; Korrelation r 0.69–0.71 | 10 Turner der Schweizer Nationalmannschaft | F-64 | B |
+| Schulter-Feldtests (Y-Balance obere Extremität, CKCUEST) vs. Qualität des Handstands | kein Zusammenhang (POR 0.97 und 1.00) | 111 Anfänger, 19–23 J. | F-63 | B |
 | Turn-Testbatterie gesamt vs. Wettkampfniveau | r² 0.60 (Frauen, USA), 0.63 (Männer, USA), 0.97 (Frauen, Kanada) | Turnende 6–18 J. | F-27, F-28, F-29 | B |
 | Einzeltests vs. Niveau (Männer) | Strecksprung 0.64, Agilität 0.55, Klimmzüge 0.51, Handstand 0.44, Ringe-Halt 0.36, Pikes 0.29, HSPU 0.24, Schulterflexibilität 0.01, Spagat 0.004 | 83 Turner, 7–18 J. | F-28 | B |
 | Oberkörper-Feldtests spiegeln relative, nicht absolute Kraft | signifikant nur relativ zum Körpergewicht (p < .01) | 94 Kinder, 9–10 J. | F-24 | B |
@@ -391,9 +434,46 @@ Die Planche-Zeilen beschreiben die Zielübungen der Programme je Niveau
 **Nicht gefunden:** Studien, die Klimmzug- oder Dipzahlen mit dem Muscle-up,
 relative Zugkraft mit dem Front Lever oder Liegestütz-/Dip-Kapazität mit der
 Planche verknüpfen (Europe-PMC-Suche nach «muscle-up», «front lever»,
-«planche», «street workout», «calisthenics»: keine passenden Treffer).
-Coaching-Faustregeln (Evidenz C/D) waren nicht zugänglich; die Voraussetzungen
+«planche», «street workout», «calisthenics»: nur EMG-, Verletzungs- und
+Modellstudien, keine Prädiktoren). Die folgenden Schwellen stammen deshalb aus
+Coaching-Quellen und sind **nicht validiert**. Die Voraussetzungs-Kanten
 zwischen Skills legt Stream A fest.
+
+### 6.2 Coaching-Schwellen (Evidenz C/D)
+
+| Skill | Schwelle | Quelle | Evidenz | Einschränkung |
+|---|---|---|---|---|
+| Muscle-up | 15 saubere Klimmzüge und 15 saubere Dips («decent guidelines but not absolute prerequisites»; «Nobody really knows!») | F-70 (zitiert Glassman 2002) | C | Die Quelle selbst sagt, dass die Zahl von Person zu Person variiert, u. a. mit Beweglichkeit und Technik |
+| Muscle-up | Beginn des Übergangstrainings: 8–10 strikte Klimmzüge, 8–10 strikte Dips, 20–30 s False-Grip-Hang; erster Stangen-Muscle-up ohne Hilfe: ≥ 12 strikte Klimmzüge und 5 tiefe Dips an der geraden Stange; typisch 3–6 Monate Training | F-71 | C | Engpässe laut Quelle: Zugkraft und False Grip; der Übergang ist eine eigene Fertigkeit |
+| Muscle-up / Ring-Muscle-up | Minimum → ideal: Klimmzüge 10 → 15 / 12 → 18, Dips 15 → 20 / 20 → 25 | F-74 | D | anonyme Website, «community-consensus standards» |
+| Front Lever (Einstieg) | 10 strikte Klimmzüge, 30 s Totehang, 60 s Hollow Hold, 15 Beinheben mit gestreckten Beinen | F-72 | C | kommerzielle Seite; Zeitangaben (12–18 Monate bis Full) ohne Beleg |
+| Front Lever (Einstieg) | Klimmzüge 12 → 18, L-Sit 15 → 30 s, Rudern 15 → 20 | F-74 | D | wie oben |
+| Front Lever (voll) | Zusatzlast im Klimmzug-1RM: Einzelfall mit +62 % KG (Untergriff) bei gehaltenem Full Front Lever, unter den oft genannten 70–80 %; «there's no answer» | F-76 | D | n = 1, Selbstbericht |
+| Front Lever (voll) | Umfrage in einem Forum: relative Zugkraft (1RM / KG) wirkte wichtiger als absolute; Personen mit Straddle oder mehr waren eher leicht | F-75 | D | anonyme Umfrage, kleine Stichprobe, keine Auswertung publiziert |
+| Planche (Einstieg) | 60 s Hollow Hold plus Plank und Seitstütz, 3 × 20 Liegestütze (Brust zum Boden), 3 min Handgelenkvorbereitung ohne Schmerz; nächste Stufe erst nach 10 s sauberem Halt | F-73 | C | «research shows» für die 10-s-Regel ohne Beleg |
+| Planche (Einstieg) | Dips 20 → 30, Liegestütze 40 → 60, L-Sit 20 → 30 s, Handstand 15 → 30 s | F-74 | D | anonyme Website |
+
+### 6.3 Kraftäquivalente nach Overcoming Gravity (Evidenz C)
+
+Die OG2-Charts ordnen jede Übung einer von 16 Stufen zu; Übungen auf derselben
+Stufe gelten als ähnlich schwer, die Einordnung ist ausdrücklich «approximate»
+[F-68, F-69 S. 22]. Aus der Stufengleichheit ergeben sich diese Äquivalente
+(Systemmasse = Körper + Zusatzlast; Ablesung aus [F-68]):
+
+| Stufe | Front Lever | Klimmzug-1RM (× KG) | Planche | Dip-1RM (× KG) | Weitere Übungen derselben Stufe |
+|---|---|---|---|---|---|
+| 3 | – | 1.00 | Frog Stand | 1.00 (Dip) | Barren-Dip, Klimmzug |
+| 4 | Tuck | 1.18 | einarmiger Frog Stand | 1.20 | Pistol Squat, Kipping-Muscle-up |
+| 5 | Advanced Tuck | 1.35 | Tuck | 1.38 | Muscle-up, Wand-HSPU, Schulterdrücken 0.68 × KG |
+| 6 | Straddle | 1.50 | Advanced Tuck | 1.55 | – |
+| 7 | Half Lay / ein Bein | 1.65 | – | 1.70 | strikter Stangen-Muscle-up |
+| 8 | Full | 1.78 | Straddle | 1.85 | – |
+| 11 | – | 2.10 | Full | 2.25 | – |
+
+OG2 teilt die Stufen ein in Anfänger 1–5, Fortgeschrittene 6–9, Advanced
+10–13 und Elite 14–16 [F-69 S. 22]. Zum Vergleich: Männer von Freizeit- bis
+internationalem Niveau hatten im Mittel ein Klimmzug-1RM von 1.43 × KG und ein
+Dip-1RM von 1.59 × KG [F-19], College-Männer 1.16 × KG im Klimmzug [F-22].
 
 **Folgerungen:**
 
@@ -413,6 +493,16 @@ zwischen Skills legt Stream A fest.
    ein Muster für spätere eigene Daten: Sobald genug Logs vorliegen, lassen
    sich Benchmarks für Calisthenics-Stufen aus den Nutzerdaten schätzen
    (**Heuristik**, Vorschlag).
+5. Die Coaching-Schwellen in 6.2 streuen stark (Muscle-up: 8–18 Klimmzüge,
+   8–25 Dips) [F-70, F-71, F-74], und selbst die Quellen nennen sie nur
+   Richtwerte [F-70, F-76]. Der Planer nutzt sie als **Hinweis «bereit zum
+   Üben»** (untere Werte: F-71, F-72, F-73), nie als Sperre und nie als
+   Versprechen, dass der Skill gelingt (PAR-F-62 bis PAR-F-64, **Heuristik**).
+6. Die OG2-Äquivalente (6.3) erlauben eine grobe Einordnung von Usern, die
+   gewichtete Klimmzüge oder Dips loggen, aber die Skill-Stufe nicht angeben.
+   Sie gelten nur als Startwert mit niedriger Konfidenz, weil die Stufen
+   ausdrücklich «approximate» sind [F-69 S. 22] und Einzelfälle abweichen
+   [F-76] (PAR-F-65, **Heuristik**).
 
 ## 7. Selbsteinschätzung, Screening und 2-Stufen-Batterie (Deliverable 2)
 
@@ -423,13 +513,18 @@ zwischen Skills legt Stream A fest.
 | Stimmen Selbstauskünfte mit Messungen überein? | Körperliche Aktivität: Korrelationen −0.71 bis 0.96, Selbstauskunft teils höher, teils niedriger als gemessen, keine einheitliche Korrektur möglich | F-13 (A) | Selbstauskunft nie als Messwert behandeln |
 | Taugt eine Fitness-Selbsteinschätzung? | IFIS ordnet Jugendliche korrekt nach gemessener Fitness [F-50]; bei jungen Erwachsenen valide und reliabel, Zusammenhänge der Muskelfitness abhängig von absoluter vs. relativer Darstellung [F-36] | F-50, F-36 (B) | Selbstauskunft für die grobe Einordnung nutzen, nicht für Dosierung |
 | Wie reproduzierbar ist die Selbsteinschätzung? | Test-Retest 0.40–0.99, meist ≥ 0.60, hohe Heterogenität | F-14 (A) | breiter Fehler im Startwert |
-| Wie genau schätzen User ihre maximalen Wiederholungen oder Haltezeiten? | **keine Studie gefunden** | – | Fehlergrösse ist Heuristik (PAR-F-20) |
+| Wie genau erinnern User ihre Wiederholungszahl aus einem offiziellen Test? | Liegestütze: im Mittel 4 Wdh. zu hoch (61 ± 14 gemessen vs. 65 ± 13 erinnert, r 0.83); einzelne Angaben wichen laut Bland-Altman stark ab | F-51 (B) | Verzerrung nach oben; Einzelfehler SD ≈ 13–18 % (eigene Rechnung, 2.3) |
+| | 1047 Soldaten: Männer 63.5 → 66.3, Frauen 37.7 → 40.2 Liegestütze (r 0.82 / 0.86); kein Unterschied zwischen den Geschlechtern | F-52 (B) | Korrektur −5 % auf erinnerte Wdh. (PAR-F-55) |
+| Wie genau sind selbst durchgeführte Heimtests? | 14 166 junge Erwachsene, Messung 1–18 Monate später: r 0.29–0.82, κ 0.05–0.34 (schwach bis mässig); die höchste Übereinstimmung zeigten Klimmzüge; Frauen überschätzten häufiger als Männer | F-53 (B) | Klimmzüge eignen sich am ehesten zur Selbstauskunft; Klassen trotzdem breit (PAR-F-34) |
+| | Querschnittgelähmte: selbst gezählte Heim-Liegestütze 17.3 % über der Videozählung desselben Tests; der unbeaufsichtigte Heimtest ergab 15.5 % weniger Wdh. als der per Video beaufsichtigte | F-55 (B) | Q14 «gefilmt» senkt den Fehler; Übertragbarkeit auf Gesunde ungeprüft |
+| Wie genau schätzen User ihre Haltezeiten oder maximalen Wiederholungen im Voraus, ohne Test? | Haltezeiten (Plank, Hantel-Halten) wurden unterschätzt; die physische Selbstwirksamkeit erklärte 25–36 % der Schätzfehler, das Aktivitätsniveau nicht (31 Studierende) | F-54 (B) | Richtung anders als bei erinnerten Testwerten (Widersprüche); Betrag bleibt Heuristik (PAR-F-20) |
 | Wie genau ist die RIR-Schätzung? | Unterschätzung um 0.95 Wdh., genauer nahe am Versagen, bei ≤ 12 Wdh. und in späteren Sätzen; Trainingsstatus ohne Einfluss | F-08 (A) | RIR-Logs nur nahe am Versagen als Kapazitätsnachweis |
 | | SEM der Vorhersage 2.64–3.38 Wdh.; Tendenz zu besserer Genauigkeit mit Erfahrung | F-37 (B) | |
 | | Fehler bei 1 / 3 / 5 RIR: 2.05 / 3.65 / 5.15 Wdh. (Kniebeuge, ≈ 16 Wdh. pro Satz); Trainingsalter ohne Einfluss | F-38 (B) | RIR > 3 nicht verwenden (PAR-F-24) |
 | | Eingelenk-Maschinenübungen: genauer nahe am Versagen und in späteren Sätzen; Geschlecht und Erfahrung ohne Einfluss | F-39 (B) | |
 | Hängt ein Testwert davon ab, wer bewertet? | Liegestütz: Bewerter-Übereinstimmung .75–.88 bzw. .95–.99 je nach Teilstudie | F-16 (B) | klare Formkriterien (G-1) |
 | | Turn-Testbatterie: zwei Bewerter ICC 0.98 | F-29 (B) | |
+| | Visuelle Bewertung der Bewegungsqualität (einbeinige Kniebeuge, 31 Studien): zwei Bewerter 0.58, ein Bewerter 0.68; Skalen mit ≤ 3 Stufen übereinstimmender | F-62 (A) | `form_quality` (1–5) für Evidenzentscheidungen auf 3 Klassen verdichten (PAR-F-67) |
 | Messen Körpergewichtstests absolute oder relative Kraft? | relative | F-24 (B) | Körpergewicht mitspeichern (PAR-F-14) |
 
 ### 7.2 Screening und Vorgeschichte
@@ -466,7 +561,11 @@ zwischen Skills legt Stream A fest.
   Trainingsniveau und erfragt zusätzlich das Calisthenics-spezifische
   Trainingsalter in Kategorien (< 3 Monate, 3–12 Monate, 1–3 Jahre,
   > 3 Jahre; **Heuristik**) sowie eine Pause > 3 Monate im letzten Jahr
-  (Persona 4, Detraining: Stream B).
+  (Persona 4, Detraining: Stream B). Overcoming Gravity hält fest, dass die
+  Trainingsdauer für die Einteilung in Anfänger, Fortgeschrittene usw. «almost
+  no consideration» spielt; massgeblich sei das Können [F-69 S. 23]
+  (Evidenz C). Das Trainingsalter verbreitert deshalb nur die Startwerte; die
+  Einstufung selbst folgt der Leistung (Q9–Q13, **Heuristik**).
 
 ### 7.3 Stufe 1: Pflicht-Selbstauskunft (< 5 min)
 
@@ -489,13 +588,22 @@ Auswahl). Summe 285 s ≈ 4.8 min, davon 215 s für die Stream-F-Fragen Q4–Q14
 | Q11 | Saubere Dips am Stück | 0 · 1–3 · 4–7 · 8–12 · 13–20 · > 20 | Startwert `dip` | 10 | Klassen s. u. |
 | Q12 | Handstand | keiner · Wand < 30 s · Wand ≥ 30 s · frei < 10 s · frei ≥ 10 s | Startwert Handstand | 10 | **Heuristik** |
 | Q13 | Aktuelle Stufe je Ziel-Skill (Bildauswahl) mit Haltezeit-Klasse | Auswahl | Einstufung pro Skill | 45 | P-01 S. 1–3 (C) |
-| Q14 | Wie sicher sind diese Zahlen? | geschätzt · in den letzten 4 Wochen gezählt · gefilmt | Faktor auf die Breite der Startwerte | 10 | **Heuristik** |
+| Q14 | Wie sicher sind diese Zahlen? | geschätzt · in den letzten 4 Wochen gezählt · gefilmt | Faktor auf die Breite der Startwerte | 10 | Richtung: F-51–F-55; Faktoren **Heuristik** |
 
 **Klassenbreite (Q9–Q11):** Die MDC95 eines echten Tests liegt bei Sätzen um
 10 Wiederholungen bei 2–5 Wiederholungen [F-17, F-20, F-28]. Klassen, die
 schmaler als dieser Messfehler sind, täuschen Genauigkeit vor; ab
 4 Wiederholungen sind die Klassen deshalb mindestens 4 Wiederholungen breit
-(**Heuristik**, abgeleitet).
+(**Heuristik**, abgeleitet). Auch erinnerte Werte eines offiziellen Tests
+weichen einzeln um SD ≈ 13–18 % ab (eigene Rechnung aus [F-51, F-52]); bei
+20 Wiederholungen sind das ≈ 3 Wiederholungen, was die Klassenbreite
+zusätzlich stützt.
+
+**Klassenmitte und Verzerrung:** Erinnerte Wiederholungszahlen lagen im Mittel
+4–7 % zu hoch [F-51, F-52]. Der Planer zieht deshalb von der Klassenmitte 5 %
+ab (PAR-F-55; Betrag belegt, Anwendung auf Calisthenics-Übungen
+**Heuristik**). Bei 0 Klimmzügen (Q10) schlägt er statt `pull_up_max` den
+Beugehang mit 90° Ellbogen vor, dessen Reliabilität belegt ist [F-57].
 
 ### 7.4 Stufe 2: optionaler standardisierter Testtag
 
@@ -508,7 +616,7 @@ Rechnung).
 | 0 Aufwärmen | Inhalt aus Stream B | 10 | – | immer |
 | 1 Mobilität | `wrist_extension`, `shoulder_flexion_prone_lift` oder `shoulder_flexion_angle`, `ankle_dorsiflexion_wblt`, bei Pike-/Kompressionszielen `toe_touch` | 8 | keine | immer |
 | 2 Skill-Halte | `handstand_hold_free` (2 Versuche) oder `handstand_hold_wall`; aktuelle Stufe von bis zu 2 Ziel-Skills | 15 | ≥ 5 min | nur wenn Q12/Q13 eine Stufe angeben |
-| 3 Wiederholungen | `push_up_max` (oder Knie-/erhöhte Variante), `pull_up_max`, `dip_max`; optional `handstand_push_up_max` | 12 | ≥ 3 min, vor Maximaltests ≥ 5 min | je nach Equipment (Q2) |
+| 3 Wiederholungen | `push_up_max` (oder Knie-/erhöhte Variante), `pull_up_max` (bei 0 Klimmzügen `bent_arm_hang` mit 90°), `dip_max`; optional `handstand_push_up_max` | 12 | ≥ 3 min, vor Maximaltests ≥ 5 min | je nach Equipment (Q2) |
 | 4 Rumpf | `hanging_pike_max` oder `hollow_body_hold`, `plank_hold` | 5 | ≥ 2 min | immer |
 | 5 Maximalkraft (eigener Tag) | `weighted_pull_up_1rm`, `weighted_dip_1rm`, optional `rings_hold_abduction` | 30–40 | ≥ 5 min | nur Trainingsniveau ≥ 2 und ≥ 12 Klimmzüge (**Heuristik**) |
 
@@ -534,12 +642,13 @@ gefunden.
 
 | Evidenz | Beobachtung x | Fehler r | Beleg |
 |---|---|---|---|
-| Selbstauskunft (Klasse) | Klassenmitte | max(2 Wdh., 0.30 × μ); × 0.75 bei «in den letzten 4 Wochen gezählt» | Richtung: F-13, F-14; Betrag **Heuristik** |
-| Selbstauskunft «gefilmt» | angegebener Wert | wie Test | **Heuristik** |
+| Selbstauskunft (Klasse) | Klassenmitte × 0.95 (erinnerte Wdh.) | max(2 Wdh., 0.30 × μ); × 0.75 bei «in den letzten 4 Wochen gezählt» (= 0.225 × μ) | Untergrenze belegt: erinnerte Werte eines offiziellen Tests SD ≈ 13–18 %, Verzerrung +4–7 % (eigene Rechnung aus [F-51, F-52]); selbst gezählte Heimtests +17 % gegenüber Video [F-55]; Richtung ungenauer Selbstauskunft [F-13, F-14, F-53]; Betrag 0.30 **Heuristik** für Werte ohne Test |
+| Selbstauskunft «gefilmt» | angegebener Wert | wie Test | Video korrigierte in F-55 die Überschätzung des Selbstzählens; Gleichsetzung mit Test **Heuristik** |
 | Test, Körpergewicht, Wdh. | Testwert | 2.0 Wdh. | SEM Klimmzug [F-28]; Laborwert 1.1 Wdh. [F-20] als Untergrenze |
 | Test, ≤ 5 Wdh. | Testwert | 1.0 Wdh. | SEM 0.7 Wdh. bei 90 % 1RM [F-20]; aufgerundet **Heuristik** |
 | Test, Ausdauerhalt (Plank u. Ä.) | Testwert | 0.15 × μ | SEM ≈ 14 % des Mittels [F-30] (eigene Rechnung) |
 | Test, Gleichgewichtshalt (Handstand) | bester von 2 Versuchen | 0.25 × μ | SEM ≈ 25 % des Mittels [F-28] (eigene Rechnung) |
+| Test, Rumpfbeuger-Halt (Hollow Hold, L-Sit, V-Sit) | Testwert | 0.40 × μ | Analogie modifizierter V-Sit, SEM ≈ 40 % [F-59] (eigene Rechnung); kein eigener Beleg für Hollow Hold oder L-Sit, daher **Heuristik** |
 | Test, 1RM mit Zusatzlast | Testwert | 4.2 % der Systemmasse | median CV [F-06] |
 | Log-Satz mit RIR ≤ 3 und ≤ 12 Wdh. | reps + RIR | 2.0 Wdh. | Fehlergrössen 1.45–3.4 Wdh. [F-08, F-37, F-38]; Wert **Heuristik** |
 | Log-Satz bis Versagen (`failed` oder RIR 0) | reps | wie Test | **Heuristik** |
@@ -614,6 +723,8 @@ erkennen [F-18].
 | R-4 Zug vs. Druck | Dip-1RM deutlich unter Klimmzug-1RM ist möglich, aber auffällig (Mittel 1.11 ×). | F-19 (B), nur Hinweis |
 | R-5 Kraft vs. Skill | Gute allgemeine Kraft, aber keine Skill-Stufe: Stufe nicht überspringen, denn Kraft erklärt Gleichgewichtselemente nur zu 38–59 %. | F-40 (B) |
 | R-6 Widerspruch | Nie still den höheren Wert übernehmen (8.3, Schritt 4). | **Heuristik** |
+| R-7 Skill vs. gewichtete Kraft | Angegebene Skill-Stufe liegt mehr als 2 OG2-Stufen über der Stufe, die sich aus Klimmzug- oder Dip-1RM ergibt (6.3) → Testsatz vorschlagen, σ erhöhen, Stufe nicht ändern. | F-68 (C); Abstand 2 **Heuristik**, weil die Stufen nur ungefähr sind [F-69] und Einzelfälle abweichen [F-76] |
+| R-8 Muscle-up ohne Zugbasis | Muscle-up als erreichte Stufe angegeben, aber ≤ 3 Klimmzüge (Q10) → nachfragen (Kipping? Band?). | Niedrigste gefundene Coaching-Schwelle 8 Klimmzüge [F-71] (C); Grenze 3 **Heuristik** |
 
 ### 8.8 Anbindung an das Datenmodell
 
@@ -621,7 +732,10 @@ erkennen [F-18].
   mit `kind` in (`working`, `test`); Elemente mit `assistance_class =
   unassisted`, nicht `is_partial_rom`, nicht `is_eccentric_only`
   (`codebase_notes.md` §2, §4). `form_quality` unter 3 zählt nicht
-  (**Heuristik**).
+  (**Heuristik**). Für solche Entscheidungen wird die 5-stufige Skala auf
+  3 Klassen verdichtet (1–2 ungenügend, 3 akzeptabel, 4–5 gut), weil grobe
+  Skalen bei visueller Formbewertung übereinstimmender waren [F-62]
+  (PAR-F-67).
 - `rir` hängt am Satz, nicht am Element; bei Kombinationen (N Elemente) gilt
   das RIR nur für das letzte Element (**Heuristik**).
 - Die Schätzung (μ, σ, Quelle, Zeitpunkt) braucht eine neue Tabelle im
@@ -646,19 +760,19 @@ erkennen [F-18].
 | PAR-F-12 | `pull_up_to_lat_pull_1rm_ratio` | 1.25 (Männer); 1.33 (Frauen, assistiert) | Verhältnis | F-22 | B | Eigene Rechnung aus Mittelwerten; Klimmzug-1RM inkl. Körpergewicht bzw. minus Gegengewicht. |
 | PAR-F-13 | `dip_to_pull_up_1rm_ratio` | 1.11 | Verhältnis | F-19 | B | Nur Männer, n = 15; nur Plausibilitätshinweis. |
 | PAR-F-14 | `store_bodyweight_with_test` | true | bool | F-24 | B | Körpergewichtstests messen relative Kraft. |
-| PAR-F-15 | `field_test_reliability_class` | high: `handgrip`, `sit_and_reach`, `toe_touch`; moderate_high: `pull_up_max`, `bent_arm_hang`, `standing_broad_jump`; moderate: `plank_hold`, `side_plank_hold` | Klasse | F-01 | A | high und moderate mit starker, moderate_high mit moderater Evidenz. |
-| PAR-F-16 | `hold_test_sd_frac` | Ausdauerhalte 0.15; Gleichgewichtshalte 0.25 | Anteil von μ | F-30, F-28 | B | Eigene Rechnung: SEM 14 % (Plank), 25 % (Handstand frei). |
+| PAR-F-15 | `field_test_reliability_class` | high: `handgrip`, `sit_and_reach`, `toe_touch`; moderate_high: `pull_up_max`, `bent_arm_hang`, `standing_broad_jump`; moderate: `plank_hold`, `side_plank_hold` | Klasse | F-01, F-57 | A | high und moderate mit starker, moderate_high mit moderater Evidenz [F-01]. Die 90°-Variante des Beugehangs erreichte in einer Einzelstudie ICC 0.98 [F-57]. |
+| PAR-F-16 | `hold_test_sd_frac` | Ausdauerhalte 0.15; Gleichgewichtshalte 0.25; Rumpfbeuger-Halte (Hollow, L-Sit, V-Sit) 0.40 | Anteil von μ | F-30, F-28, F-59 | B | Eigene Rechnung: SEM 14 % (Plank), 25 % (Handstand frei), 40 % (modifizierter V-Sit; Näherung). Der Wert 0.40 gilt per Analogie für Hollow Hold und L-Sit (**Heuristik**); der McGill-Test war mit > .97 viel reliabler [F-60]. |
 | PAR-F-17 | `familiarization_test_required` | false | bool | F-06, F-31 | A | 1RM-Reliabilität unabhängig von Gewöhnung [F-06]; beim Plank optionaler Probeversuch [F-31]. |
 | PAR-F-18 | `test_termination_rule` | `first_invalid_rep` | enum | F-28 | Heuristik | Studie: Ende nach 3 ungültigen Versuchen; strenger wegen ADR 0003 und Selbstbewertung. |
 | PAR-F-19 | `test_attempts` | Wdh.-Tests 1; Gleichgewichtshalte bester von 2 | Versuche | F-28 | B | Wie in der Turn-Testbatterie. |
-| PAR-F-20 | `self_report_prior_sd` | max(2 Wdh., 0.30 × μ) | Wdh. | F-13, F-14 | Heuristik | Richtung belegt (Selbstauskunft ungenau, ohne einheitliche Verzerrung); Betrag geschätzt, keine Studie zu Wiederholungszahlen. |
-| PAR-F-21 | `self_report_recent_count_sd_factor` | 0.75 | Faktor | – | Heuristik | Für «in den letzten 4 Wochen gezählt». |
+| PAR-F-20 | `self_report_prior_sd` | max(2 Wdh., 0.30 × μ) | Wdh. | F-13, F-14, F-51, F-52, F-53 | Heuristik | Untergrenze belegt: Erinnerte Werte eines offiziellen Tests weichen einzeln um SD ≈ 13–18 % ab (eigene Rechnung aus [F-51, F-52]); für geschätzte Werte ohne Test gibt es keine Studie, daher 0.30 geschätzt. |
+| PAR-F-21 | `self_report_recent_count_sd_factor` | 0.75 | Faktor | F-51, F-52, F-55 | Heuristik | Für «in den letzten 4 Wochen gezählt»; ergibt 0.225 × μ. Das liegt über dem Fehler erinnerter offizieller Testwerte (13–18 %) [F-51, F-52], weil selbst gezählte Heimtests zusätzlich überschätzt wurden (+17 % gegenüber Video) [F-55]. |
 | PAR-F-22 | `test_obs_sd_reps` | = PAR-F-01 (2.0) | Wdh. | F-28 | B | Kein zusätzlicher Faktor für Selbstbewertung: F-28 nutzte Bewerter ohne Spezialschulung. Selbst- vs. Fremdbewertung ist nicht untersucht. |
 | PAR-F-23 | `log_rir_obs_sd_reps` | 2.0 | Wdh. | F-08, F-37, F-38 | Heuristik | Belegte Fehler 1.45–3.4 Wdh.; gilt nur für RIR ≤ 3 und ≤ 12 Wdh. |
 | PAR-F-24 | `log_rir_max_usable` | 3 | RIR | F-08, F-38 | B | Fehler bei 5 RIR ≈ 5 Wdh. [F-38]; darüber nur untere Schranke. |
 | PAR-F-25 | `log_rir_bias_correction_reps` | 0 | Wdh. | F-08 | Heuristik | Belegt ist eine Unterschätzung um 0.95 Wdh.; bewusst nicht korrigiert (konservativ). |
 | PAR-F-26 | `converted_estimate_sd_frac` | ≥ 0.35 | Anteil von μ | F-07, F-21 | Heuristik | Streuung zwischen Personen 2.5–4.4 Wdh. bei gleicher relativer Last [F-07]; Betrag geschätzt. |
-| PAR-F-27 | `conversion_max_reps` | 10 | Wdh. | F-23 | B | Nur Sätze ≤ 10 Wdh. für 1RM-Umrechnungen. |
+| PAR-F-27 | `conversion_max_reps` | 10 | Wdh. | F-23, F-77 | B | Nur Sätze ≤ 10 Wdh. für 1RM-Umrechnungen [F-23]. Bei Zugübungen unterschätzten Wdh.-Formeln den 1RM um 2.1–6.7 kg [F-77]. |
 | PAR-F-28 | `capacity_process_sd_per_week` | 0.5 | Wdh./Woche | – | Heuristik | Lässt alte Evidenz verblassen; Stream B soll kalibrieren. |
 | PAR-F-29 | `min_obs_stable_estimate` | 4 (±2 Wdh.); 7 (±1.5 Wdh.) | Beobachtungen | F-28, F-20 | B | Eigene Rechnung bei SEM 2.0; bei SEM 1.1: 2 bzw. 3. Untergrenze bei stabiler Kapazität. |
 | PAR-F-30 | `confidence_class_cv_thresholds` | hoch < 0.15; mittel 0.15–0.30; niedrig ≥ 0.30 | σ/μ | F-28 | Heuristik | 0.15 knapp unter dem Test-SEM von 17 %; übrige Grenzen geschätzt. |
@@ -684,8 +798,24 @@ erkennen [F-18].
 | PAR-F-50 | `wblt_mdc95_cm` | 1.6–1.9 | cm | F-10 | A | – |
 | PAR-F-51 | `sit_and_reach_role` | nur grober Hamstring-Proxy, nicht LWS, nicht zur Einstufung | Regel | F-12, F-02 | A | rp 0.46–0.67 Hamstrings, 0.16–0.35 LWS. |
 | PAR-F-52 | `wrist_self_measure_scope` | nur Flexion/Extension | Regel | F-34 | B | Andere Richtungen bei Selbstmessung moderat bis schlecht. |
-| PAR-F-53 | `mobility_used_for_placement` | false | bool | F-28 | Heuristik | Spagat und Schulterflexibilität ohne Zusammenhang mit dem Niveau (r² ≤ 0.01); Mobilität steuert Übungsauswahl. |
+| PAR-F-53 | `mobility_used_for_placement` | false | bool | F-28, F-63 | Heuristik | Spagat und Schulterflexibilität ohne Zusammenhang mit dem Niveau (r² ≤ 0.01) [F-28]; Schulter-Feldtests sagten den Handstand bei Anfängern nicht voraus [F-63]. Mobilität steuert die Übungsauswahl. |
 | PAR-F-54 | `icc_interpretation` | < 0.5 schlecht; 0.5–0.75 moderat; 0.75–0.9 gut; > 0.9 exzellent | ICC | F-48 | B | Für Einordnung neuer Testdaten. |
+| PAR-F-55 | `self_report_recall_bias_frac` | 0.05 (Klassenmitte × 0.95) | Anteil | F-51, F-52 | B | Erinnerte Liegestützzahlen lagen 4.4–6.6 % zu hoch. Anwendung auf Klimmzüge und Dips ist **Heuristik**; bei Haltezeiten nicht anwenden, dort wurde eher unterschätzt [F-54]. |
+| PAR-F-56 | `self_report_filmed_sd` | = PAR-F-22 (wie Test) | Wdh. | F-55 | Heuristik | Video beseitigte in F-55 die Überschätzung des Selbstzählens; Population (Querschnittlähmung) nur bedingt übertragbar. |
+| PAR-F-57 | `suspension_row_bw_fraction` | 0.69–0.76 (Körper etwa waagrecht); ≈ 0.58 (Körper 20.8° zum Boden) | Anteil KG | F-66, F-67 | B | Füsse am Boden 0.69–0.73, Füsse in Schlaufen 0.73–0.76 [F-66]; 0.58 laut F-66 aus F-67. Längere Gurte → mehr Last [F-67]. |
+| PAR-F-58 | `suspension_push_up_bw_fraction` | 0.50 (gestreckt) – 0.75 (gebeugt) bei senkrechten Gurten; 0.70–0.75 bei waagrechtem Körper | Anteil KG | F-65, F-66 | B | Last hängt stark von Phase und Körperwinkel ab. |
+| PAR-F-59 | `no_ground_contact_bw_fraction` | 1.0 | Anteil KG | – | Heuristik | Dip, Klimmzug, Muscle-up, HSPU: Mechanik (ganzes Körpergewicht an den Händen); dynamisch zeitweise mehr. Keine Messung gefunden; Abgleich Stream C. |
+| PAR-F-60 | `pike_push_up_bw_fraction` | unbekannt; Reihenfolge `push_up` < `pike_push_up` < `handstand_push_up` | Reihenfolge | – | Heuristik | Keine Messdaten gefunden; nur für Plausibilitätsregel R-1, nicht für Umrechnungen. |
+| PAR-F-61 | `bent_arm_hang_protocol` | Ellbogen 90°, Ende bei Winkelverlust; Einstiegstest bei 0 Klimmzügen | Protokoll | F-57 | B | ICC 0.98 (Retest), 0.99 (zwei Bewerter); valide für relative isometrische Kraft (r 0.88), nicht für absolute (r 0.10). Nur Frauen untersucht (n = 31). |
+| PAR-F-62 | `readiness_hint_muscle_up` | «bereit zum Üben»: ≥ 8 Klimmzüge und ≥ 8 Dips (+ 20 s False Grip); «erster Versuch ohne Hilfe»: ≥ 12 Klimmzüge; Spanne der Quellen 8–18 Klimmzüge, 8–25 Dips | Wdh. | F-70, F-71, F-74 | C | Nur weicher Hinweis (PAR-F-42). F-70: «decent guidelines but not absolute prerequisites»; F-74 ist D. |
+| PAR-F-63 | `readiness_hint_front_lever_start` | ≥ 10 Klimmzüge, ≥ 30 s Totehang, ≥ 60 s Hollow Hold | Wdh. / s | F-72 | C | Einstieg in die Tuck-Stufe; F-74 (D) nennt 12–18 Klimmzüge. Weicher Hinweis. |
+| PAR-F-64 | `readiness_hint_planche_start` | 3 × 20 Liegestütze, ≥ 60 s Hollow Hold, schmerzfreie Handgelenkvorbereitung | Wdh. / s | F-73 | C | Einstieg in Lean/Tuck; F-74 (D) nennt 20–30 Dips und 40–60 Liegestütze. Weicher Hinweis; Schmerz folgt den Regeln aus Stream D. |
+| PAR-F-65 | `og2_strength_equivalents` | Front Lever Tuck/Adv. Tuck/Straddle/Full ≈ Klimmzug-1RM 1.18/1.35/1.50/1.78 × KG; Planche Tuck/Adv. Tuck/Straddle/Full ≈ Dip-1RM 1.38/1.55/1.85/2.25 × KG | × KG (Systemmasse) | F-68, F-69 | C | Stufengleichheit der OG2-Charts, ausdrücklich «approximate»; Gegenbeispiel: Full Front Lever mit Klimmzug-1RM 1.62 × KG [F-76] (D). Nur Startwert und Plausibilitätsregel R-7, niedrige Konfidenz. |
+| PAR-F-66 | `ring_static_swallow_supine_min_bw_frac` | Stützwaage 0.674; Schwalbe 0.734 | Anteil KG (1RM) | F-64 | B | n = 10 Elite-Turner; nur für Ringe-Statik (Maltese/Planche an Ringen) als weicher Hinweis. |
+| PAR-F-67 | `form_quality_evidence_classes` | 1–2 ungenügend; 3 akzeptabel; 4–5 gut | Klassen | F-62 | A | Skalen mit ≤ 3 Stufen erreichten höhere Übereinstimmung zwischen Bewertern [F-62]; die Grenzen sind **Heuristik**. |
+| PAR-F-68 | `hold_capacity_error_model` | relativ (Anteil von μ, entspricht Log-Skala) | Modell | F-18, F-61 | Heuristik | Klimmzug- und Gleichgewichtswerte rechtsschief [F-18]; Handstand-SD > Mittelwert [F-61]. |
+| PAR-F-69 | `push_up_test_variant` | Standard (Hände bleiben am Boden, Ellbogen ≥ 90°), beim Retest identisch | Protokoll | F-16, F-56 | B | Hand-Release-Liegestütze ergeben mehr Wdh. als Standard [F-56]; Kriterien selbst **Heuristik** (4.2). |
+| PAR-F-70 | `training_age_role` | verbreitert Startwerte, bestimmt nicht die Stufe | Regel | F-45, F-69 | Heuristik | OG2: Trainingsdauer spielt für die Einstufung «almost no consideration» [F-69 S. 23] (C); F-45 nutzt Umfang und Leistung. |
 
 ## Widersprüche
 
@@ -745,31 +875,74 @@ erkennen [F-18].
     Machbarkeit und Sicherheit, ist die Evidenz für alle Feldtests bei
     Erwachsenen begrenzt [F-05], obwohl einzelne Eigenschaften stark belegt
     sind [F-01, F-02].
+13. **Richtung von Selbsteinschätzungsfehlern:** Erinnerte Testwerte lagen zu
+    hoch (+4–7 %) [F-51, F-52], selbst gezählte Heimtests ebenfalls (+17 %
+    gegenüber Video) [F-55]; im Voraus geschätzte Haltezeiten lagen dagegen zu
+    niedrig [F-54]. Beim Geschlecht fand F-52 keinen Unterschied, F-53 mehr
+    Überschätzung bei Frauen. Folge: PAR-F-55 korrigiert nur erinnerte
+    Wiederholungszahlen, nicht Haltezeiten.
+14. **Muscle-up-Schwellen:** 15 Klimmzüge und 15 Dips [F-70] gegenüber
+    8–10 und 8–10 für den Trainingsbeginn bzw. ≥ 12 Klimmzüge für den ersten
+    freien Versuch [F-71] und 10–18 Klimmzüge bzw. 15–25 Dips [F-74]. Die
+    CrossFit-Quelle sagt selbst «Nobody really knows!» [F-70]; keine Quelle
+    nennt Daten.
+15. **Zugkraft für den Front Lever:** Nach OG2 entspricht der volle Front
+    Lever einem Klimmzug-1RM von 1.78 × KG [F-68]; ein Einzelfall hielt ihn mit
+    1.62 × KG (Untergriff), also unter den oft genannten 70–80 % Zusatzlast,
+    und hält feste Zahlen für nicht allgemeingültig [F-76]; eine Forumsumfrage fand relative Kraft wichtiger als
+    absolute und leichte Personen häufiger in hohen Stufen [F-75]. Für den
+    Einstieg nennen F-72 10 Klimmzüge, F-74 12–18.
+16. **Reliabilität von Rumpfbeuger-Halten:** McGill-Test > .97 [F-60],
+    modifizierter V-Sit ICC 0.71 [F-59]. Die Autoren von F-59 führen den
+    Unterschied auf ihre Protokolländerungen zurück. PAR-F-16 übernimmt für
+    Hollow Hold und L-Sit den vorsichtigeren Wert.
+17. **Trainingsalter vs. Können:** F-45 stuft nach Umfang und Leistung ein;
+    OG2 lehnt die Trainingsdauer als Kriterium weitgehend ab [F-69 S. 23]. Q4
+    fragt beides ab, PAR-F-70 lässt das Trainingsalter nur die Breite der
+    Startwerte beeinflussen.
+18. **Last beim Suspension-Liegestütz:** 50 % (Arme gestreckt) bis 75 %
+    (gebeugt) bei senkrechten Gurten [F-65] gegenüber 70–75 % bei laut
+    Autoren waagrechtem Körper [F-66]. Unterschiedliche Körperwinkel und
+    Phasen erklären das; ein einzelner Anteil für «Ring-Liegestütz» wäre
+    irreführend.
 
 ## Offene Fragen
 
 **Evidenzlücken:**
 
-1. Reliabilität von Hollow Hold, L-Sit, Stütz, Pistol Squat, Wand-Handstand
-   und Skill-Halten (Tuck Planche, Tuck Front Lever): Europe PMC liefert keine
-   Studien. Die App-eigenen Testdaten könnten diese Lücke später füllen.
+1. Reliabilität von Hollow Hold, L-Sit, Stütz, Pistol Squat (Maximal-Wdh.),
+   Wand-Handstand und Skill-Halten (Tuck Planche, Tuck Front Lever): Europe PMC
+   liefert keine Studien. Es gibt nur Analogien (Rumpfbeuger-Halte [F-59,
+   F-60], visuelle Bewertung der einbeinigen Kniebeuge [F-62]). Die App-eigenen
+   Testdaten könnten diese Lücke später füllen.
 2. Schwellen für Skill-Bereitschaft (Muscle-up, Front Lever, Planche): keine
-   Studien; Coaching-Quellen (Evidenz C/D) waren nicht zugänglich. Abgleich mit
-   Stream A.
-3. Genauigkeit selbstberichteter Wiederholungszahlen und Haltezeiten: keine
-   Studie gefunden. PAR-F-20/21 bleiben Heuristik, bis eigene Daten vorliegen
-   (Selbstauskunft vs. erster Testsatz).
+   Studien; die Coaching-Schwellen (6.2, 6.3) sind nicht validiert und
+   widersprechen sich (Widersprüche 14, 15). Abgleich mit Stream A. Eigene
+   Nutzerdaten (Kraftwerte beim ersten Erreichen einer Stufe) wären die
+   bessere Quelle.
+3. Genauigkeit **geschätzter** Wiederholungszahlen und Haltezeiten ohne
+   vorherigen Test: Belegt sind nur erinnerte Werte offizieller Tests [F-51,
+   F-52], selbst durchgeführte Heimtests [F-53, F-55] und im Voraus
+   geschätzte Haltezeiten Untrainierter [F-54]. PAR-F-20/21 bleiben
+   Heuristik, bis eigene Daten vorliegen (Selbstauskunft vs. erster
+   Testsatz).
 4. Selbst- vs. Fremdbewertung von Wiederholungen und Halten: nicht
-   untersucht. Für Handgelenkwinkel gibt es eine Studie [F-34].
+   untersucht. Für Handgelenkwinkel gibt es eine Studie [F-34], für
+   Liegestütze nur Daten aus einer Population mit Querschnittlähmung [F-55].
 5. Selbstmessung von Schulterflexion, Sprunggelenk und Brustwirbelsäule per
    Smartphone: Die Reliabilitätsdaten stammen von Untersuchern [F-10, F-11,
    F-32, F-35].
-6. Last in % Körpergewicht für Dips, Rudern, Pike-Liegestütz, HSPU und
-   Band-Assistenz: Abgleich mit Stream C.
+6. Last in % Körpergewicht für Pike-Liegestütz, Bank-Dip, HSPU (gemessen)
+   und Band-Assistenz: keine Messdaten gefunden; Abgleich mit Stream C.
+   Suspension-Rudern und -Liegestütz sind jetzt belegt [F-65, F-66, F-67].
 7. Validiertes Filterverfahren (Kalman/Bayes) für Trainingsdaten: nicht
    gefunden; PAR-F-28 ist zu kalibrieren, sobald Logs vorliegen.
 8. Normwerte für Erwachsene nach Geschlecht und Trainingsniveau für
-   Klimmzüge, Dips, Handstand: nicht vorhanden bzw. nicht geprüft.
+   Klimmzüge, Dips, Handstand: nur Teildaten (Zirkusartisten [F-61],
+   Soldaten für Liegestütze [F-51, F-52]); für Dips keine.
+9. Reliabilität von Dip- und Klimmzug-Maximalwiederholungen (ohne Zusatzlast)
+   bei Erwachsenen: keine Einzelstudie gefunden; nur die Übersicht F-01 und
+   Klimmzüge junger Turner [F-28] bzw. von Artisten [F-18].
 
 **Produkt- und Spezifikationsfragen (Phase 4):**
 

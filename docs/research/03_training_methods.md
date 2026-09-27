@@ -13,10 +13,15 @@
 > **Methodik-Hinweis:** Jede Quelle wurde mindestens über Titel, Autoren, Jahr,
 > DOI/PMID und Abstract geprüft (Europe PMC / PubMed-Datensatz), bei Open-Access-
 > Artikeln zusätzlich im Volltext (markiert mit «Volltext»). Coaching-Quellen
-> wurden auf der Originalseite gelesen. Ausnahme: Der Preprint [B-24] war
-> während der Recherche nicht direkt erreichbar; geprüft wurde nur die
-> Zusammenfassung der Preprint-Landingpage (Suchergebnis), deshalb dient er
-> nur als Nebenbeleg. Zahlen, die aus eigener Rechnung
+> wurden auf der Originalseite gelesen. Der Preprint [B-24] wurde im
+> Vollständigkeits-Durchgang (27.09.2026) auf der SportRxiv-Landingpage
+> (Abstract, DOI 10.51224/SRXIV.537) geprüft. Eine begutachtete
+> Zeitschriftenfassung existiert zu diesem Datum **nicht** (Crossref- und
+> Europe-PMC-Suche nach Titel und Autoren); es gibt nur zwei
+> Kongress-Abstracts derselben Gruppe (ACSM 2026) mit denselben Kernzahlen
+> [B-117, B-118]. [B-24] bleibt deshalb Nebenbeleg. Quellen ab [B-117] stammen
+> aus diesem Durchgang; wo nur das Abstract gelesen wurde, steht «(Abstract)».
+> Zahlen, die aus eigener Rechnung
 > stammen, sind als *eigene Rechnung* markiert. Aussagen ohne Beleg tragen das
 > Label **Praxisheuristik** mit Begründung. Keine Aussage hier ist eine
 > medizinische Empfehlung; der Planer steuert Training, nicht Behandlung.
@@ -60,17 +65,24 @@
   nicht [B-46, B-23]; Kraft profitiert von höherer Frequenz mit abnehmendem
   Grenznutzen [B-23] und ≥ 2 Einheiten/Woche [B-31]. Eine Einheit pro Woche
   genügt zum Erhalt [B-87, B-98]. Für «Greasing the Groove» existiert keine
-  direkte Studie; indirekt stützen tägliche Kleinstdosen [B-17, B-18, B-99].
-- **Reihenfolge:** Die Übung am Anfang der Einheit gewinnt am meisten Kraft
-  [B-50] (Evidenz A); Ermüdung verschlechtert motorisches Lernen über den Tag
-  hinaus [B-51]. Das PDF-Muster «Schwerstes zuerst» [P-01 bis P-03] ist damit
-  gestützt.
+  direkte Studie; indirekt stützen tägliche Kleinstdosen [B-17, B-18, B-99]
+  und das Verteilen desselben Wochenvolumens auf mehr Einheiten (4× > 1× für
+  1RM [B-120]; 6× = 3× [B-121, B-122]).
+- **Reihenfolge und Interferenz:** Die Übung am Anfang der Einheit gewinnt am
+  meisten Kraft [B-50] (Evidenz A) und erreicht mehr Wiederholungen [B-123];
+  Ermüdung verschlechtert motorisches Lernen über den Tag hinaus [B-51]. Das
+  PDF-Muster «Schwerstes zuerst» [P-01 bis P-03] ist damit gestützt.
+  Antagonisten-Paare (Druck/Zug) sparen Zeit ohne Volumenverlust
+  [B-124, B-125]. Für Interferenz zwischen zwei Straight-Arm-Skills gibt es
+  keine Studie; motorische Interferenz ist nur für gegensätzliche
+  Laboraufgaben gezeigt und umstritten [B-127, B-128].
 - **Pausen:** Trainierte brauchen für maximale Kraftzuwächse > 2 min [B-55],
   3–5 min sind klassisch [B-32, B-53]; für Hypertrophie bringen > 60–90 s nur
   noch wenig [B-57]. ACSM 2026 findet keinen Einfluss kurzer vs. langer Pausen
   auf Kraft [B-31] — dokumentierter Widerspruch.
 - **Deload:** Praxis ist 5–7 Tage alle 4–6 (bis 8) Wochen, Volumen und Effort
-  runter, Frequenz und Übungswahl gleich [B-63, B-64, B-114]; Konsens: Deload = Phase
+  runter (Volumen −30 bis −50 %, +1–3 RIR), Frequenz und Übungswahl gleich
+  [B-63, B-64, B-114]; Konsens: Deload = Phase
   reduzierten Trainingsstresses [B-62]. Das einzige RCT fand für eine Woche
   Trainingspause keinen Vorteil, sondern leicht geringere Kraftzuwächse
   [B-65].
@@ -95,8 +107,11 @@
 - **Calisthenics-Studien:** Progressive Liegestütz-Varianten erzielen ähnliche
   Kraftzuwächse wie Bankdrücken [B-108, B-109, B-110]; Klimmzugtraining mit
   frühem Satzabbruch (25 % Geschwindigkeitsverlust) schlägt Training bis nahe
-  Versagen (50 %) [B-111]. Für Straight-Arm-Statics (Planche, Lever, Maltese)
-  gibt es **keine** Interventionsstudien.
+  Versagen (50 %) [B-111]. Isometrische Klimmzug-Lock-offs mit Körpergewicht
+  (55–75 % 1RM) steigerten die 1RM am wenigsten, exzentrisches Training bei
+  95 % 1RM am meisten [B-119]. Für Straight-Arm-Statics (Planche, Lever,
+  Maltese) gibt es **keine** Interventionsstudien; ebenso keine Studie zu
+  band-assistiertem Training (Zählweise: Abschnitt 3.5, **Praxisheuristik**).
 
 ## 1. Evidenzlage und Übertragbarkeit
 
@@ -163,6 +178,7 @@ ist eine **Praxisheuristik** in der Mitte dieser Spannen.
 | [B-17] Sato 2022 | Ein einziger 3-s-MVC täglich (5×/Woche, 4 Wochen): exzentrische Gruppe +10.2 bis +12.8 % in allen Kraftmodi; isometrische Gruppe nur +7.2 % in exzentrischer Kraft, sonst n. s. | Minimaldosis-Isometrie wirkt schwach |
 | [B-18] Yoshida 2022 | 6 exzentrische MVC täglich 5×/Woche > 30 MVC einmal pro Woche für Kraft; Hypertrophie volumenabhängig | Verteilte Kleinstdosen steigern Kraft (GtG-Analogie, Abschnitt 6) |
 | [B-19] Schärer 2021 | 19 Elite-Turner: Kraftanforderung statischer Ringelemente zwischen 56.66 % (Kreuz invers, konzentrisch) und 94.10 % (Schwalbe, exzentrisch) des Körpergewichts im Konditionstest | Statics lassen sich über Maximalkraft-Benchmarks mit Last/Gegengewicht steuern |
+| [B-119] Vigouroux & Devise 2024 (randomisiert, 30 fortgeschrittene bis Elite-Kletterer, 5 Wochen, 2×/Woche; Volltext) | Isometrische Lock-offs mit Körpergewicht (≈ 55–75 % 1RM; je Satz 3 Winkel à 7 s mit Zwischenzügen; 6 Sätze, 3 min Pause): 1RM-Klimmzug +2.2 ± 3.6 %; exzentrisch bei 95 % 1RM (3 × 5-s-Negativ, 6 Sätze, 3 min): +5.0 ± 2.4 %; Kontrolle −1.5 %. Die Autoren erklären den schwachen Isometrie-Effekt mit zu geringer Intensität und verweisen auf 80–100 % [B-09] | Einzige randomisierte Isometrie-Studie an einer Körpergewichts-Zugübung: Halte unterhalb ~80 % bringen wenig Maximalkraft; stützt die Stufenwahl über die Max.-Haltezeit (Abschnitt 3.2) |
 
 ### 3.2 Maximale Haltezeit als Intensitätsmass
 
@@ -225,6 +241,39 @@ Diese Stufen liegen im Bereich hoher Intensität.
 | `static_conditioning` (Lean, Support, Zubringer) | Max.-Zeit > 30 s | 10–30 s | 2–3 | 30–90 s | 1.5–2 min | [B-09, B-114, P-01 bis P-03] |
 | `eccentric` (Negativ in die Stufe) | Stufe noch nicht haltbar | 3–10 s je Wdh., 2–3 Cluster-Wdh. | 2–3 | — | 3 min | [B-113] |
 
+### 3.5 Band-Assistenz: Wie assistierte Sätze zählen
+
+**Befundlage.** Eine Trainingsstudie zu band-assistierten Halte-, Klimmzug-
+oder Dip-Varianten wurde nicht gefunden (Europe-PMC-Titel-/Abstract-Suche nach
+«assisted pull-up», «band-assisted», «assisted chin-ups», «assisted dips»
+sowie Crossref, 27.09.2026). Eine in Coaching-Blogs zitierte «JSCR-Studie
+2020» (Band vs. Gegengewicht vs. nur exzentrisch) war ohne Autorenangabe und
+in keiner der beiden Datenbanken auffindbar; sie wird nicht verwendet. Die
+Zählweise stützt sich daher auf indirekte Befunde:
+
+- Bei Sätzen bis (nahe) zum Versagen ist die Hypertrophie über ein breites
+  Lastspektrum gleich (≤ 60 % vs. > 60 % 1RM, 21 Studien), die 1RM steigt mit
+  schweren Lasten stärker [B-134, B-29] (Evidenz A).
+- Band-Liegestütze bei gleicher Muskelaktivität wirken wie Bankdrücken
+  [B-109]; Lasten > 80 % 1RM maximieren die Kraft [B-30].
+- Isometrie mit Körpergewicht bei ~55–75 % 1RM steigerte die Klimmzug-1RM
+  kaum [B-119]; Sehnen reagieren auf die Lasthöhe [B-12] und brauchen
+  ≥ 70 % MVC [B-08].
+- Sätze, die den Zielmuskel nur mittelbar trainieren, zählen in den
+  Meta-Regressionen für Kraft praktisch nicht («direct») und für Hypertrophie
+  halb («fractional») [B-23, B-117, B-118].
+- Ein Band entlastet je nach Ansatzpunkt und Dehnung unterschiedlich; die
+  Hebel-Rechnung liefert Stream C (`04_anatomy.md` §5.5, PAR-C-13).
+
+**Zählregel** (**Praxisheuristik**, abgeleitet aus den Befunden oben):
+
+| Zweck im Planer | Wie ein band-assistierter Satz zählt | Begründung |
+|---|---|---|
+| Hypertrophie-Wochensätze (PAR-B-21) | 1.0 Satz, wenn der Satz mit RIR/SIR ≤ 3 endet; sonst 0.5 | lastunabhängige Hypertrophie nahe am Versagen [B-134, B-29, B-109]; Abstand zum Versagen wirkt auf Hypertrophie [B-25] |
+| Maximalkraft der Zielstufe (`static_max`, Progressionstrigger PAR-B-30) | zählt nicht | Kraft braucht hohe Intensität [B-30, B-134, B-119] und ist winkel- und aufgabenspezifisch [B-14, B-16] |
+| Straight-Arm-Satzbudget (PAR-B-47) und Spitzen-Kappung (PAR-B-56) | 1.0 Satz | konservativ: ob Assistenz die Sehnenlast proportional senkt, ist nicht untersucht [B-12]; Grenzen legt Stream D |
+| Intensitätseinordnung | assistierte Variante = eigene Stufe mit eigener frischer Max.-Haltezeit (Abschnitt 3.2); Assistenz in `estimated_assist_kg` | Stream C (PAR-C-13) |
+
 ## 4. Dosierung dynamischer Arbeit
 
 ### 4.1 Volumen
@@ -235,7 +284,8 @@ Diese Stufen liegen im Bereich hoher Intensität.
 | [B-21] Ralston 2017 (MA, 9 Studien) | Kraft je Übung: hohe Wochensätze > niedrige (ES-Differenz 0.18); mittel > niedrig (0.15) |
 | [B-22] Baz-Valle 2022 (SR/MA, Trainierte) | < 12 / 12–20 / > 20 Sätze/Woche: moderat = hoch für Quadrizeps und Bizeps, hoch > moderat nur Trizeps; Empfehlung 12–20 Sätze/Muskel/Woche |
 | [B-23] Pelland 2026 (Meta-Regression, 67 Studien, 2058 Personen) | Volumen steigert Hypertrophie und Kraft (Wahrscheinlichkeit 100 %), mit abnehmendem Grenznutzen, **für Kraft deutlich stärker abflachend**; indirekte Sätze am besten als halbe Sätze gezählt |
-| [B-24] Remmert 2025 (Preprint, Meta-Regression) | Pro Einheit: kein nachweisbarer Zusatznutzen oberhalb ~2 direkter Sätze für Kraft und ~11 «fraktionaler» Sätze für Hypertrophie |
+| [B-24] Remmert 2025 (Preprint, Meta-Regression; Abstract) | Pro Einheit: kein nachweisbarer Zusatznutzen («point of undetectable outcome superiority») oberhalb ~2 direkter Sätze für Kraft und ~11 «fraktionaler» Sätze für Hypertrophie; die Autoren raten wegen weniger Daten bei sehr hohen Einheitsvolumina zur Vorsicht |
+| [B-117, B-118] Dunsmore bzw. Joachim, Remmert et al. 2026 (Kongress-Abstracts ACSM, gleiche Arbeitsgruppe; kein Volltext) | Kraft: 66 Studien, 490 Effekte, 2020 Personen, Schwelle 2 direkte Sätze pro Einheit; Hypertrophie: 35 Studien, 220 Effekte, 1032 Personen, Schwelle 11 fraktionale Sätze pro Einheit, kein Hinweis auf ein «umgekehrtes U» oberhalb der Schwelle. Bis 27.09.2026 keine begutachtete Vollpublikation |
 | [B-31] ACSM 2026 | Kraft: 2–3 Sätze; Hypertrophie: höhere Volumina (≥ 10 Sätze/Woche) |
 | [B-95] Iversen 2021 | Minimum für Zeitknappe: ≥ 4 Wochensätze pro Muskelgruppe, 6–15 RM |
 
@@ -244,6 +294,7 @@ Diese Stufen liegen im Bereich hoher Intensität.
 | Quelle | Befund |
 |---|---|
 | [B-29] Lopez 2021 (Netzwerk-MA, 28 Studien, bis zum Versagen) | Hypertrophie lastunabhängig (≤ 8 RM, 9–15 RM, > 15 RM gleich); Kraft: schwere und mittlere Lasten > leichte (> 15 RM) |
+| [B-134] Schoenfeld 2017 (MA, 21 Studien, alle Sätze bis zum Versagen; Abstract) | ≤ 60 % vs. > 60 % 1RM: 1RM-Zuwachs grösser mit hohen Lasten, isometrische Kraft und Hypertrophie gleich |
 | [B-30] Currier 2023 (Netzwerk-MA, 178/119 Studien) | Lasten > 80 % 1RM maximieren Kraft; alle Vorschriften fördern Hypertrophie ähnlich; bestplatziert: schwer, mehrere Sätze, 3×/Woche (Kraft) bzw. 2×/Woche (Hypertrophie) |
 | [B-31] ACSM 2026 | Kraft: ≥ 80 % 1RM, voller Bewegungsumfang, 2–3 Sätze, am Beginn der Einheit, ≥ 2×/Woche |
 | [B-32] ACSM 2009 | Anfänger 8–12 RM; Fortgeschrittene 1–12 RM periodisiert mit Schwerpunkt 1–6 RM und 3–5 min Pausen; Hypertrophie 6–12 RM mit 1–2 min Pausen |
@@ -283,6 +334,7 @@ als Anfänger (9.80 vs. 8.96) [B-35, B-36].
 | [B-38] Remmert 2023 | Intraset-RIR genauer näher am Versagen und in späteren Sätzen; Geschlecht, Erfahrung, RIR-Erfahrung ohne Einfluss |
 | [B-39] Refalo 2024 | Trainierte schätzen 1 und 3 RIR im Bankdrücken mit absolutem Fehler 0.65 ± 0.78 Wdh., leichte Tendenz zur Unterschätzung |
 | [B-44] Hermann 2025 | RIR-Schätzung im Bankdrücken genauer als in der Kniebeuge und verbessert sich mit Übung |
+| [B-130] Remmert 2023b (9 trainierte Männer, 18 Einheiten über 6 Wochen; Abstract) | Absoluter RIR-Fehler (Ansagen bei 4 und 1 RIR im Satz bis zum Versagen) verbesserte sich über die Zeit **nicht**; die Tendenz zur Unterschätzung nahm leicht zu, besonders bei vielen Wiederholungen |
 | [B-36] Helms 2016 (Volltext) | Anfänger sollen RIR zunächst nur protokollieren und Lasten nicht allein danach steuern; die Skala ist vor allem für RPE 7–10 geeignet |
 
 ### 5.2 Autoregulation
@@ -293,6 +345,7 @@ als Anfänger (9.80 vs. 8.96) [B-35, B-36].
 | [B-41] Zhang 2021 (MA, 8 Studien, Athleten) | Autoregulation > fixe Last für Maximalkraft (ES 0.64); APRE am wirksamsten (ES 0.78) |
 | [B-42] Helms 2018 (RCT) | RPE-gesteuerte Last vs. %1RM bei gleichen Sätzen/Wdh.: beide wirksam, kleiner wahrscheinlicher Vorteil für RPE |
 | [B-43] Mann 2010 | APRE über 6 Wochen > lineare Periodisierung bei College-Footballern (Bankdrücken, Kniebeuge) |
+| [B-131] Sánchez-Moreno 2017 (52 Männer, Klimmzug; Abstract) | Prozentualer Geschwindigkeitsverlust im Satz und Anteil der geschafften Wiederholungen hängen eng zusammen (R² = 0.88), auch nach 12 Wochen Training (+15 % Max.-Wdh.) stabil; die konkreten Umrechnungswerte stehen nur im nicht frei zugänglichen Volltext |
 
 ### 5.3 Sekunden in Reserve (SIR)
 
@@ -325,6 +378,9 @@ Konstrukt). Der Planer verwendet eine Analogie (**Praxisheuristik**):
 | [B-31] ACSM 2026 (Volltext) | Kraft steigt mit ≥ 2 Einheiten/Woche; Hypertrophie nicht frequenzabhängig |
 | [B-32] ACSM 2009 | Anfänger 2–3, Fortgeschrittene 3–4, Erfahrene 4–5 Tage/Woche |
 | [B-84] McMaster 2013 | Elite-Mannschaftssportler: Kraftzuwachs 0.9 / 1.8 / 1.3 %/Woche bei 2 / 3 / 4 Einheiten je Muskelregion |
+| [B-120] Pedersen 2024 (RCT, Trainierte, 8 Wochen, Volltext) | Gleiches Unterkörper-Wochenvolumen (16–20 Sätze, 4 Übungen) in 1 langen vs. 4 kurzen Einheiten (eine Übung pro Einheit): 1RM-Kniebeuge +15 vs. +8 kg (Gruppenunterschied ES 0.98); Muskeldicke gleich; die 4×-Gruppe bewegte 18 % mehr Last (n. s.) |
+| [B-121] Saric 2019 (RCT, 27 Trainierte, 6 Wochen; Abstract) | Volumengleich 3× vs. 6×/Woche: gleiche Kraft- und Hypertrophiezuwächse |
+| [B-122] Colquhoun 2018 (RCT, 28 Trainierte, 6 Wochen; Abstract) | Volumen- und intensitätsgleich 3× vs. 6×/Woche: gleiche 1RM-Zuwächse (z. B. Kniebeuge +16.8 vs. +16.7 kg) |
 
 *Folgerung:* Für **Kraft-Skills** (Statics, Presses) ist die Frequenz ein
 eigener Hebel — Übung ist spezifisch [B-16, B-52] —, für Hypertrophie zählt
@@ -336,8 +392,12 @@ reicht zum Erhalt [B-87, B-98] (Abschnitt 13, 14).
 GtG ist ein Coaching-Konzept (häufige, submaximale, nicht ermüdende Sätze über
 den Tag verteilt), das in der Calisthenics-Literatur mit hoher Frequenz
 begründet wird [B-116] (Evidenz C). **Eine kontrollierte Studie zu GtG selbst
-wurde nicht gefunden** (Europe-PMC-Suche nach «grease the groove» ohne
-Treffer). Indirekte Evidenz:
+wurde nicht gefunden** (Europe-PMC-Suche einschliesslich Volltexten nach
+«grease the groove», «greasing the groove» und «greasing-the-groove» ohne
+fachlichen Treffer, zuletzt 27.09.2026; der ursprüngliche StrongFirst-Artikel
+von Tsatsouline war nicht mehr abrufbar, HTTP 404). Die in Blogs genannten
+Dosierungen (z. B. «40–60 % der Maximalwiederholungen») sind deshalb nicht
+verifiziert und werden nicht übernommen. Indirekte Evidenz:
 
 - Ein einziger 3-s-Maximalversuch täglich steigert die Kraft messbar; bei
   exzentrischer Ausführung deutlich (+10–13 %), bei isometrischer kaum
