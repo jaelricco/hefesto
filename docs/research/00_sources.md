@@ -18,13 +18,13 @@
 | Stream | Datei | A | B | C | D | Total |
 |---|---|---|---|---|---|---|
 | P | `01_pdf_extract.md` | 0 | 0 | 4 | 0 | 4 |
-| A — Skills & Progressionen | `02_skills_progressions.md` | 7 | 38 | 12 | 14 | 71 |
+| A — Skills & Progressionen | `02_skills_progressions.md` | 7 | 39 | 12 | 14 | 72 |
 | B — Trainingsmethodik | `03_training_methods.md` | 67 | 62 | 6 | 0 | 135 |
-| C — Anatomie & Biomechanik | `04_anatomy.md` | 6 | 78 | 2 | 0 | 86 |
+| C — Anatomie & Biomechanik | `04_anatomy.md` | 6 | 79 | 2 | 0 | 87 |
 | D — Verletzungen & Prehab | `05_injuries_prehab.md` | 37 | 54 | 0 | 1 | 92 |
-| E — CNS & motorisches Lernen | `06_cns_motor_learning.md` | 38 | 63 | 3 | 1 | 105 |
+| E — CNS & motorisches Lernen | `06_cns_motor_learning.md` | 35 | 66 | 3 | 1 | 105 |
 | F — Leistungsdiagnostik | `07_assessment.md` | 16 | 52 | 6 | 3 | 77 |
-| **Total** | | 171 | 347 | 33 | 19 | 570 |
+| **Total** | | 168 | 352 | 33 | 19 | 572 |
 
 Quellen, die in mehreren Streams vorkommen, behalten ihre Stream-IDs; die Spalte
 «Auch als» verweist auf die Duplikate.
@@ -70,19 +70,19 @@ Quellen, die in mehreren Streams vorkommen, behalten ihre Stream-IDs; die Spalte
 | A-31 | Overcoming Gravity 2nd Edition Exercise Charts [VT] | Low S | 2016 | https://docs.google.com/spreadsheets/d/19l4tVfdTJLheLMwZBYqcw1oeEBPRh8mxngqrCz2YnVg | Coaching-Buch | C |  |
 | A-32 | Kinetic analysis of several variations of push-ups (ISBS-Proceedings-Fassung) [VT] | Wurm B, VanderZanden TL, Spadavecchia M, Durocher J, Bickham C, Petushek EJ, Ebben WP | 2010 | https://ojs.ub.uni-konstanz.de/cpa/article/view/4457 | Biomechanik-Studie | B |  |
 | A-33 | WSWCF Calisthenics Freestyle World Championship – Official Competition Rules [VT] | World Street Workout & Calisthenics Federation (WSWCF) | 2024 | https://wswcf.org/wp-content/uploads/2024/11/WSWCF_FREESTYLE-WORLD-CHAMPIONSHIP-RULES.pdf | Positionspapier/Konsensus | C |  |
-| A-34 | Freestyle Calisthenics Rules [VT] | Calisthenics Cup | o. J. | https://calisthenics-cup.com/freestyle-calisthenics-rules/ | Positionspapier/Konsensus | D |  |
-| A-35 | How To Train For The Planche: Tuck To Straddle Progression [VT] | Hurst R (GMB Fitness) | o. J. | https://gmb.io/planche/ | Coaching-Artikel | C |  |
-| A-36 | L-Sit Progression: 6 Steps To A Rock Solid Core [VT] | Hurst R (GMB Fitness) | o. J. | https://gmb.io/l-sit/ | Coaching-Artikel | C |  |
-| A-37 | How To Do A Handstand – Best Progression [VT] | GMB Fitness | o. J. | https://gmb.io/handstand/ | Coaching-Artikel | C |  |
-| A-38 | How To Build Up To Pull-Ups: A 3-Step Bodyweight Progression [VT] | GMB Fitness | o. J. | https://gmb.io/pull-ups/ | Coaching-Artikel | C |  |
-| A-39 | 12 Wrist Mobility And Strength Exercises [VT] | Ilano J (GMB Fitness) | o. J. | https://gmb.io/wrists/ | Coaching-Artikel | C |  |
+| A-34 | Freestyle Calisthenics Rules [VT] | Calisthenics Cup | 2024 | https://calisthenics-cup.com/freestyle-calisthenics-rules/ | Positionspapier/Konsensus | D |  |
+| A-35 | How To Train For The Planche: Tuck To Straddle Progression [VT] | Hurst R (GMB Fitness) | 2026 | https://gmb.io/planche/ | Coaching-Artikel | C |  |
+| A-36 | L-Sit Progression: 6 Steps To A Rock Solid Core [VT] | Hurst R (GMB Fitness) | 2026 | https://gmb.io/l-sit/ | Coaching-Artikel | C |  |
+| A-37 | How To Do A Handstand – Best Progression [VT] | Hurst R (GMB Fitness) | 2026 | https://gmb.io/handstand/ | Coaching-Artikel | C |  |
+| A-38 | How To Build Up To Pull-Ups: A 3-Step Bodyweight Progression [VT] | Hurst R (GMB Fitness) | 2026 | https://gmb.io/pull-ups/ | Coaching-Artikel | C |  |
+| A-39 | 12 Wrist Mobility And Strength Exercises [VT] | Ilano J (GMB Fitness) | 2026 | https://gmb.io/wrists/ | Coaching-Artikel | C |  |
 | A-40 | How To Achieve A Planche – The Most Effective Planche Progression [VT] | The Movement Athlete | 2025 | https://themovementathlete.com/planche-progression-training/ | Coaching-Artikel | D |  |
 | A-41 | The Most Effective Front Lever Progression: Master This Elite Skill in 12 Months (2025 Guide) [VT] | The Movement Athlete | 2025 | https://themovementathlete.com/front-lever-progression/ | Coaching-Artikel | D |  |
 | A-42 | Master the Back Lever: Complete Step-by-Step Progression Guide (2025 Edition) [VT] | The Movement Athlete | 2025 | https://themovementathlete.com/back-lever-progressions/ | Coaching-Artikel | D |  |
-| A-43 | Ring Dip Guide [VT] | The Movement Athlete | o. J. | https://themovementathlete.com/ring-dip-guide/ | Coaching-Artikel | D |  |
+| A-43 | The Ultimate Ring Dips Guide: Master This Elite Exercise in 30 Days (2025 Method) [VT] | The Movement Athlete | 2025 | https://themovementathlete.com/ring-dip-guide/ | Coaching-Artikel | D |  |
 | A-44 | Recommended Routine (r/bodyweightfitness-Wiki, GitHub-Spiegel) [VT] | r/bodyweightfitness-Community | o. J. | https://github.com/redditbwf/redditbwf.github.io/blob/master/wiki/recommended_routine.md | Forum/Wiki | D |  |
 | A-45 | Reddit's Bodyweight Fitness Recommended Routine (App-Programmseite) [VT; vollständige Leitern nur (S)] | Boostcamp | o. J. | https://www.boostcamp.app/coaches/r-bodyweightfitness/r-bodyweight-recommended-routine | Forum/Wiki | D |  |
-| A-46 | Reddit's Bodyweight Routine (Programmseite) [VT] | Fitloop | o. J. | https://fitloop.app/programs/reddit-recommended-routine | Forum/Wiki | D |  |
+| A-46 | Reddit's Bodyweight Routine (Programmseite) [VT] | Fitloop | 2026 | https://fitloop.app/programs/reddit-recommended-routine | Forum/Wiki | D |  |
 | A-47 | Overcoming Gravity 2nd Edition & Progression Charts (Autorenseite) [VT] | Low S | o. J. | https://stevenlow.org/overcoming-gravity/ | Coaching-Artikel | C |  |
 | A-48 | Performance Optimization in Streetlifting: The Combined Role of Nutrition, Lean Mass, and Sleep [Abs.] | Stranieri C, Bulbarelli A, Lonati E, Palestini P, Cazzaniga E | 2025 | https://doi.org/10.3390/nu18010105 | Narratives Review | B |  |
 | A-49 | Endurance time is joint-specific: a modelling and meta-analysis investigation [VT, Tabelle 2] | Frey Law LA, Avin KG | 2010 | https://doi.org/10.1080/00140130903389068 | Meta-Analyse | A | B-10 |
@@ -108,6 +108,7 @@ Quellen, die in mehreren Streams vorkommen, behalten ihre Stream-IDs; die Spalte
 | A-69 | Frequently Asked Questions (r/bodyweightfitness-FAQ, GitHub-Pages-Spiegel) [VT] | r/bodyweightfitness-Community | o. J. | https://asdjflk.github.io/r/bodyweightfitness/wiki/faq.html | Forum/Wiki | D |  |
 | A-70 | Bodyweight Strength Foundation (BWSF) Routine: Info Hub [VT] | Nick-E | o. J. | https://nick-e.com/exercise-library/routines/bwsf/ | Coaching-Artikel | D |  |
 | A-71 | Arthur Zanetti (Wikipedia; Infobox «Eponymous skills: Zanetti (Still rings)») [VT] | Wikipedia-Autorinnen und -Autoren | 2026 | https://en.wikipedia.org/wiki/Arthur_Zanetti | Forum/Wiki | D |  |
+| A-72 | Men's Artistic Gymnastics – 2022-2024 Code of Points (Wertetabelle Ringe, EG II, S. 86) [VT] | Fédération Internationale de Gymnastique (FIG) | 2022 | https://www.gymnastics.sport/publicdir/rules/files/en_%202022-2024%20MAG%20CoP.pdf | Positionspapier/Konsensus | B |  |
 | B-01 | Comparison of Periodized and Non-Periodized Resistance Training on Maximal Strength: A Meta-Analysis | Williams TD, Tolusso DV, Fedewa MV, Esco MR | 2017 | https://doi.org/10.1007/s40279-017-0734-y | Meta-Analyse | A |  |
 | B-02 | Effects of Periodization on Strength and Muscle Hypertrophy in Volume-Equated Resistance Training Programs: A Systematic Review and Meta-analysis | Moesgaard L, Beck MM, Christiansen L, Aagaard P, Lundbye-Jensen J | 2022 | https://doi.org/10.1007/s40279-021-01636-1 | Meta-Analyse | A |  |
 | B-03 | Systematic review and meta-analysis of linear and undulating periodized resistance training programs on muscular strength | Harries SK, Lubans DR, Callister R | 2015 | https://doi.org/10.1519/jsc.0000000000000712 | Meta-Analyse | A |  |
@@ -254,7 +255,7 @@ Quellen, die in mehreren Streams vorkommen, behalten ihre Stream-IDs; die Spalte
 | C-09 | Maximum Strength Benchmarks for Difficult Static Elements on Rings in Male Elite Gymnastics | Schärer C, Huber S, Bucher P, Capelli C, Hübner K | 2021 | https://doi.org/10.3390/sports9060078 | Querschnittstudie | B | A-21, B-19, F-40 |
 | C-10 | Relationship between swallow, support scale and iron cross on rings and their specific preconditioning strengthening exercises | Hübner K, Schärer C | 2015 | https://doi.org/10.52165/sgj.7.3.59-68 | Querschnittstudie | B | A-20, F-64 |
 | C-11 | Relative strength requirement for swallow element proper execution: a predictive test | Gorosito MA | 2013 | https://doi.org/10.52165/sgj.5.3.59-67 | Querschnittstudie | B |  |
-| C-12 | Relationship Between Bench Press and Iron Cross Maximal Isometric Contraction - How to Develop the Strength to Perform the Iron Cross on Rings | Lecocq T et al. | 2025 | https://doi.org/10.1002/ejsc.70002 | Querschnittstudie | B | A-23 |
+| C-12 | Relationship Between Bench Press and Iron Cross Maximal Isometric Contraction - How to Develop the Strength to Perform the Iron Cross on Rings | Lecocq T, Gouelle A, Schärer C, Mochizuki L, Tordi N | 2025 | https://doi.org/10.1002/ejsc.70002 | Querschnittstudie | B | A-23 |
 | C-13 | Strength Performance Assessment in a Simulated Men's Gymnastics Still Rings Cross | Dunlavy JK, Sands WA, McNeal JR, Stone MH, Smith SL, Jemni M, Haff GG | 2007 | https://pubmed.ncbi.nlm.nih.gov/24149230/ | Querschnittstudie | B |  |
 | C-14 | A Systematic Review of Dynamic, Kinematic, and Muscle Activity during Gymnastic Still Rings Elements | Malíř R, Chrudimský J, Šteffl M, Stastny P | 2023 | https://doi.org/10.3390/sports11030050 | Systematic Review | A | A-04 |
 | C-15 | The effect of gymnastic training on muscle strength and co-activation during isometric elbow and glenohumeral flexion/extension | Kochanowicz A, Niespodziński B, Mieszkowski J, Kochanowicz K, Sawczyn S | 2018 | https://doi.org/10.23736/S0022-4707.17.06916-X | Querschnittstudie | B |  |
@@ -302,16 +303,16 @@ Quellen, die in mehreren Streams vorkommen, behalten ihre Stream-IDs; die Spalte
 | C-57 | Comparison of lower extremity EMG between the 2-leg squat and modified single-leg squat in female athletes | McCurdy K, O'Kelley E, Kutz M, Langford G, Ernest J, Torres M | 2010 | https://doi.org/10.1123/jsr.19.1.57 | EMG-Studie | B |  |
 | C-58 | Muscle strength testing: use of normalisation for body size | Jaric S | 2002 | https://doi.org/10.2165/00007256-200232100-00002 | Narratives Review | B |  |
 | C-59 | Movement performance and body size: the relationship for different groups of tests | Markovic G, Jaric S | 2004 | https://doi.org/10.1007/s00421-004-1076-7 | Querschnittstudie | B |  |
-| C-60 | The Effect of Experimental Alterations in Excess Mass on Pull-up Performance in Fit Young Men | Vanderburgh PM, Edmonds T | 1997 | https://journals.lww.com/nsca-jscr/abstract/1997/11000/the_effect_of_experimental_alterations_in_excess.5.aspx | Querschnittstudie | B |  |
+| C-60 | The Effect of Experimental Alterations in Excess Mass on Pull-up Performance in Fit Young Men | Vanderburgh PM, Edmonds T | 1997 | https://doi.org/10.1519/00124278-199711000-00005 | Querschnittstudie | B |  |
 | C-61 | Training college-age women to perform the pull-up exercise | Flanagan SP, Vanderburgh PM, Borchers SG, Kohstall CD | 2003 | https://doi.org/10.1080/02701367.2003.10609064 | Kohortenstudie | B | A-50 |
 | C-62 | Determinant factors of pull-up performance in trained athletes | Sánchez-Moreno M, Pareja-Blanco F, Díaz-Cueli D, González-Badillo JJ | 2016 | https://pubmed.ncbi.nlm.nih.gov/26176615/ | Querschnittstudie | B |  |
 | C-63 | Morphological Differences of Street Workout Athletes According to the Training Experience | Sanchez-Martinez J, Hernández-Jaña S | 2022 | https://www.intjmorphol.com/wp-content/uploads/2022/04/art_06_402.pdf | Querschnittstudie | B |  |
-| C-64 | Muscular strength and anthropometry in calisthenics athletes (Preprint, nicht begutachtet) | Lozada-Medina JL | 2024 | https://sportrxiv.org/index.php/server/preprint/view/449 | Querschnittstudie | B |  |
+| C-64 | Muscular strength and anthropometry in calisthenics athletes (Preprint, nicht begutachtet) | Lozada-Medina JL, Martelo-Sierra E, Hoyos-Espitia C | 2024 | https://doi.org/10.51224/SRXIV.449 | Querschnittstudie | B |  |
 | C-65 | Human tendon adaptation in response to mechanical loading: a systematic review and meta-analysis of exercise intervention studies on healthy adults | Bohm S, Mersmann F, Arampatzis A | 2015 | https://doi.org/10.1186/s40798-015-0009-9 | Meta-Analyse | A | B-12, D-17 |
 | C-66 | Imbalances in the Development of Muscle and Tendon as Risk Factor for Tendinopathies in Youth Athletes: A Review of Current Evidence and Concepts of Prevention | Mersmann F, Bohm S, Arampatzis A | 2017 | https://doi.org/10.3389/fphys.2017.00987 | Narratives Review | B | D-25 |
 | C-67 | Anatomy and Physiology 2e, Kapitel 11.4–11.6 (Muskeln von Rumpf, Schultergürtel/Arm, Becken/Bein) | Betts JG, Young KA, Wise JA, Johnson E, Poe B, Kruse DH, Korol O, Johnson JE, Womble M, DeSaix P | 2022 | https://openstax.org/books/anatomy-and-physiology-2e/pages/11-5-muscles-of-the-pectoral-girdle-and-upper-limbs | Lehrbuch | B |  |
-| C-68 | Overcoming Gravity, 2. Auflage: Progression Charts (Buchseiten 30–33) | Low S | 2017 | https://stevenlow.org/wp-content/uploads/2017/02/OG2ChartsPrint.pdf | Coaching-Buch | C |  |
-| C-69 | Comprehensive Handstand Tutorial (Text eingesehen über die Archivkopie github.com/benjaminheng/link-archive) | Antranik (antranik.org) | o. J. | https://antranik.org/comprehensive-handstand-tutorial/ | Coaching-Artikel | C |  |
+| C-68 | Overcoming Gravity, 2. Auflage: Progression Charts (Buchseiten 30–33; Buch 2016, Chart-PDF 2017) | Low S | 2016 | https://stevenlow.org/wp-content/uploads/2017/02/OG2ChartsPrint.pdf | Coaching-Buch | C |  |
+| C-69 | Comprehensive Handstand Tutorial (Text eingesehen über die Archivkopie github.com/benjaminheng/link-archive) | Kizirian A (antranik.org) | o. J. | https://antranik.org/comprehensive-handstand-tutorial/ | Coaching-Artikel | C |  |
 | C-70 | Strategies for maintaining a handstand in the anterior-posterior direction | Kerwin DG, Trewartha G | 2001 | https://doi.org/10.1097/00005768-200107000-00016 | Biomechanik-Studie | B | A-14, E-104 |
 | C-71 | Distal Biceps Tendon Ruptures: An Epidemiological Analysis Using a Large Population Database | Kelly MP, Perkinson SG, Ablove RH, Tueting JL | 2015 | https://doi.org/10.1177/0363546515587738 | Kohortenstudie | B |  |
 | C-72 | Are the shoulder joint function, stability, and mobility tests predictive of handstand execution? | Malíř R, Chrudimský J, Provazník A, Třebický V | 2024 | https://doi.org/10.1371/journal.pone.0302922 | Querschnittstudie | B | A-19, F-63 |
@@ -329,6 +330,7 @@ Quellen, die in mehreren Streams vorkommen, behalten ihre Stream-IDs; die Spalte
 | C-84 | Gender differences in strength and muscle fiber characteristics | Miller AE, MacDougall JD, Tarnopolsky MA, Sale DG | 1993 | https://doi.org/10.1007/BF00235103 (PMID 8477683) | Querschnittstudie | B |  |
 | C-85 | Acute Effects of Elastic Bands as Resistance or Assistance on EMG, Kinetics, and Kinematics During Deadlift in Resistance-Trained Men | Andersen V, Pedersen H, Fimland MS, Shaw MP, Solstad TEJ, Stien N, Cumming KT, Saeterbakken AH | 2020 | https://doi.org/10.3389/fspor.2020.598284 (PMID 33345180) | EMG-Studie | B |  |
 | C-86 | Abnormal Wrist Sagittal Kinematics in Gymnasts With Dorsal Wrist Pain: A New Syndrome | Sekiguchi T, Saito S, Ogura T, Tsuchiya A, Shiratsuchi H | 2024 | https://doi.org/10.1177/03635465231204361 (PMID 38164673) | Querschnittstudie | B |  |
+| C-87 | Characterization of Axial Forces to the Head During Kipping Handstand Push-ups | Bove G | 2025 | https://doi.org/10.58524/jcss.v4i2.623 | Querschnittstudie | B |  |
 | D-01 | Injury incidence and patterns among Dutch calisthenics athletes: a cross-sectional observational study | Mohammad YS, Mehrab M, Weir A | 2025 | https://doi.org/10.23736/S0022-4707.24.16122-1 (PMID 39652047) | Querschnittstudie | B |  |
 | D-02 | Injury Profile Among Street Workout Practitioners | Ngo JK, Solis-Urra P, Sanchez-Martinez J | 2021 | https://doi.org/10.1177/2325967121990926 | Querschnittstudie | B | C-49 |
 | D-03 | Calisthenics: Epidemiology of Injury Patterns and Their Risk Factors | McDonald-Wedding L, Goodwin L, Preston A, McKay G, Williams C | 2023 | https://doi.org/10.2147/OAJSM.S394044 (PMID 37252647) | Querschnittstudie | B |  |
@@ -474,7 +476,7 @@ Quellen, die in mehreren Streams vorkommen, behalten ihre Stream-IDs; die Spalte
 | E-51 | Spacing practice sessions across days earlier rather than later in training improves performance of a visuomotor skill | Goedert KM, Miller J | 2008 | https://doi.org/10.1007/s00221-008-1414-9 | Kohortenstudie | B |  |
 | E-52 | Spacing Repetitions Over Long Timescales: A Review and a Reconsolidation Explanation | Smith CD, Scarf D | 2017 | https://doi.org/10.3389/fpsyg.2017.00962 | Narratives Review | B |  |
 | E-53 | Effect of Resistance Training Frequency on Gains in Muscular Strength: A Systematic Review and Meta-Analysis | Grgic J, Schoenfeld BJ, Davies TB, Lazinica B, Krieger JW, Pedisic Z | 2018 | https://doi.org/10.1007/s40279-018-0872-x | Meta-Analyse | A | B-47 |
-| E-54 | The Resistance Training Dose Response: Meta-Regressions Exploring the Effects of Weekly Volume and Frequency on Muscle Hypertrophy and Strength Gains | Pelland JC, Remmert JF, Robinson ZP, Hinson SR, Zourdos MC | 2025 | https://doi.org/10.1007/s40279-025-02344-w | Meta-Analyse | A | B-23 |
+| E-54 | The Resistance Training Dose Response: Meta-Regressions Exploring the Effects of Weekly Volume and Frequency on Muscle Hypertrophy and Strength Gains | Pelland JC, Remmert JF, Robinson ZP, Hinson SR, Zourdos MC | 2026 | https://doi.org/10.1007/s40279-025-02344-w | Meta-Analyse | A | B-23 |
 | E-55 | Effects of Variations in Resistance Training Frequency on Strength Development in Well-Trained Populations and Implications for In-Season Athlete Training: A Systematic Review and Meta-analysis | Cuthbert M, Haff GG, Arent SM, Ripley N, McMahon JJ, Evans M, Comfort P | 2021 | https://doi.org/10.1007/s40279-021-01460-7 | Meta-Analyse | A |  |
 | E-56 | Higher Training Frequency Is Important for Gaining Muscular Strength Under Volume-Matched Training | Ochi E, Maruo M, Tsuchiya Y, Ishii N, Miura K, Sasaki K | 2018 | https://doi.org/10.3389/fphys.2018.00744 | Kohortenstudie | B |  |
 | E-57 | Effect of daily 3-s maximum voluntary isometric, concentric, or eccentric contraction on elbow flexor strength | Sato S, Yoshida R, Murakoshi F, Sasaki Y, Yahata K, Nosaka K, Nakamura M | 2022 | https://doi.org/10.1111/sms.14138 | Kohortenstudie | B | B-17 |
@@ -502,7 +504,7 @@ Quellen, die in mehreren Streams vorkommen, behalten ihre Stream-IDs; die Spalte
 | E-79 | Translating Fatigue to Human Performance | Enoka RM, Duchateau J | 2016 | https://doi.org/10.1249/MSS.0000000000000929 | Narratives Review | B |  |
 | E-80 | Neural Contributions to Muscle Fatigue: From the Brain to the Muscle and Back Again | Taylor JL, Amann M, Duchateau J, Meeusen R, Rice CL | 2016 | https://doi.org/10.1249/MSS.0000000000000923 | Narratives Review | B |  |
 | E-81 | Recovery of central and peripheral neuromuscular fatigue after exercise | Carroll TJ, Taylor JL, Gandevia SC | 2017 | https://doi.org/10.1152/japplphysiol.00775.2016 | Narratives Review | B |  |
-| E-82 | Neuromuscular Fatigue and Recovery after Heavy Resistance, Jump, and Sprint Training | Thomas K, Brownstein CG, Dent J, Parker P, Goodall S, Howatson G | 2018 | https://doi.org/10.1249/MSS.0000000000001733 | RCT | A |  |
+| E-82 | Neuromuscular Fatigue and Recovery after Heavy Resistance, Jump, and Sprint Training (akutes Crossover-Experiment) | Thomas K, Brownstein CG, Dent J, Parker P, Goodall S, Howatson G | 2018 | https://doi.org/10.1249/MSS.0000000000001733 | RCT | B |  |
 | E-83 | Time course of recovery following resistance training leading or not to failure | Morán-Navarro R, Pérez CE, Mora-Rodríguez R, de la Cruz-Sánchez E, González-Badillo JJ, Sánchez-Medina L, Pallarés JG | 2017 | https://doi.org/10.1007/s00421-017-3725-7 | Kohortenstudie | B | B-58 |
 | E-84 | Central fatigue: the serotonin hypothesis and beyond | Meeusen R, Watson P, Hasegawa H, Roelands B, Piacentini MF | 2006 | https://doi.org/10.2165/00007256-200636100-00006 | Narratives Review | B |  |
 | E-85 | Prevention, diagnosis, and treatment of the overtraining syndrome: joint consensus statement of the European College of Sport Science and the American College of Sports Medicine | Meeusen R, Duclos M, Foster C, Fry A, Gleeson M, Nieman D, Raglin J, Rietjens G, Steinacker J, Urhausen A | 2013 | https://doi.org/10.1249/MSS.0b013e318279a10a | Positionspapier/Konsensus | B |  |
@@ -517,13 +519,13 @@ Quellen, die in mehreren Streams vorkommen, behalten ihre Stream-IDs; die Spalte
 | E-94 | Warm-Up Strategies for Sport and Exercise: Mechanisms and Applications | McGowan CJ, Pyne DB, Thompson KG, Rattray B | 2015 | https://doi.org/10.1007/s40279-015-0376-x | Narratives Review | B |  |
 | E-95 | Effects of warming-up on physical performance: a systematic review with meta-analysis | Fradkin AJ, Zazryn TR, Smoliga JM | 2010 | https://doi.org/10.1519/JSC.0b013e3181c643a0 | Meta-Analyse | A | B-67 |
 | E-96 | Acute effects of muscle stretching on physical performance, range of motion, and injury incidence in healthy active individuals: a systematic review | Behm DG, Blazevich AJ, Kay AD, McHugh M | 2016 | https://doi.org/10.1139/apnm-2015-0235 | Systematic Review | A | B-69 |
-| E-97 | Combination of general and specific warm-ups improves leg-press one repetition maximum compared with specific warm-up in trained individuals | Abad CC, Prado ML, Ugrinowitsch C, Tricoli V, Barroso R | 2011 | https://doi.org/10.1519/JSC.0b013e3181e8611b | RCT | A | B-133 |
-| E-98 | Variable, but not free-weight, resistance back squat exercise potentiates jump performance following a comprehensive task-specific warm-up | Mina MA, Blazevich AJ, Tsatalas T, Giakas G, Seitz LB, Kay AD | 2019 | https://doi.org/10.1111/sms.13341 | RCT | A |  |
+| E-97 | Combination of general and specific warm-ups improves leg-press one repetition maximum compared with specific warm-up in trained individuals (akutes Crossover-Experiment) | Abad CC, Prado ML, Ugrinowitsch C, Tricoli V, Barroso R | 2011 | https://doi.org/10.1519/JSC.0b013e3181e8611b | RCT | B | B-133 |
+| E-98 | Variable, but not free-weight, resistance back squat exercise potentiates jump performance following a comprehensive task-specific warm-up (akutes Crossover-Experiment) | Mina MA, Blazevich AJ, Tsatalas T, Giakas G, Seitz LB, Kay AD | 2019 | https://doi.org/10.1111/sms.13341 | RCT | B |  |
 | E-99 | Specificity of training for motor skill under physical fatigue | Williams LR, Daniell-Smith JH, Gunson LK | 1976 | https://doi.org/10.1249/00005768-197600830-00005 | RCT | A |  |
 | E-100 | The Case for Grease-the-Groove Jump Training | Tsatsouline P | 2015 | https://www.strongfirst.com/jump/ | Coaching-Artikel | C |  |
 | E-101 | Two Powerful Methods for Improving Your Pull-Up | Allen D | 2018 | https://www.strongfirst.com/two-powerful-methods-for-improving-your-pull-up/ | Coaching-Artikel | C |  |
 | E-102 | How to Increase your Pullups by 50 Percent (at Least) | Tanskey A | 2018 | https://www.strongfirst.com/how-to-increase-your-pull-ups-50-percent/ | Coaching-Artikel | C |  |
-| E-103 | How to Get Stronger by Greasing the Groove | McKay B, McKay K | 2022 | https://www.artofmanliness.com/health-fitness/fitness/get-stronger-by-greasing-the-groove/ | Coaching-Artikel | D |  |
+| E-103 | How to Get Stronger by Greasing the Groove | McKay B, McKay K | 2022 | https://www.artofmanliness.com/strength/fitness/get-stronger-by-greasing-the-groove/ | Coaching-Artikel | D |  |
 | E-104 | Strategies for maintaining a handstand in the anterior-posterior direction | Kerwin DG, Trewartha G | 2001 | https://doi.org/10.1097/00005768-200107000-00016 | Biomechanik-Studie | B | A-14, C-70 |
 | E-105 | Balance control strategies during perturbed and unperturbed balance in standing and handstand | Blenkinsop GM, Pain MTG, Hiley MJ | 2017 | https://doi.org/10.1098/rsos.161018 | Biomechanik-Studie | B | A-15 |
 | F-01 | Reliability of Field-Based Fitness Tests in Adults: A Systematic Review | Cuenca-Garcia M, Marin-Jimenez N, Perez-Bey A, Sánchez-Oliva D, Camiletti-Moiron D, Alvarez-Gallardo IC, Ortega FB, Castro-Piñero J | 2022 | https://doi.org/10.1007/s40279-021-01635-2 | Systematic Review | A |  |
@@ -595,18 +597,15 @@ Quellen, die in mehreren Streams vorkommen, behalten ihre Stream-IDs; die Spalte
 | F-67 | Evaluation of Training Load During Suspension Exercise | Giancotti GF, Fusco A, Varalda C, Capelli G, Cortis C | 2021 | https://doi.org/10.1519/JSC.0000000000003100 | Biomechanik-Studie | B |  |
 | F-68 | Overcoming Gravity 2nd Edition: Progression Charts (Druck-PDF, S. 30–33 des Buchs) | Low S | 2016 | https://stevenlow.org/wp-content/uploads/2017/02/OG2ChartsPrint.pdf | Coaching-Buch | C |  |
 | F-69 | Overcoming Gravity 2nd Edition: Leseprobe (Inhalt, Einleitung, Kap. 1–3; gelesen S. 21–25) | Low S | 2016 | https://stevenlow.org/wp-content/uploads/2018/09/OG2-preview-TOC-Intro-Ch1-3.pdf | Coaching-Buch | C |  |
-| F-70 | Developing a Muscle-Up (Pro Coach) | CrossFit | o. J. | https://www.crossfit.com/pro-coach/developing-a-muscle-up | Coaching-Artikel | C |  |
-| F-71 | How to Do a Muscle Up: The Complete Progression | CALIMOVE-Blog (Autorenangabe «El Eggs») | 2026 | https://blog.calimove.com/2026/09/14/muscle-up-progression-guide/ | Coaching-Artikel | C |  |
+| F-70 | How To Muscle-Up (Pro-Coach-Artikel, URL «developing-a-muscle-up») | CrossFit | 2024 | https://www.crossfit.com/pro-coach/developing-a-muscle-up | Coaching-Artikel | C |  |
+| F-71 | How to Do a Muscle Up: The Complete Progression | Lorenz A (Byline «El Eggs»), CALI MOVE Blog | 2026 | https://blog.calimove.com/2026/09/14/muscle-up-progression-guide/ | Coaching-Artikel | C |  |
 | F-72 | The Most Effective Front Lever Progression | The Movement Athlete | 2025 | https://themovementathlete.com/front-lever-progression/ | Coaching-Artikel | C |  |
 | F-73 | How To Achieve A Planche – The Most Effective Planche Progression | The Movement Athlete | 2025 | https://themovementathlete.com/planche-progression-training/ | Coaching-Artikel | C |  |
 | F-74 | Skill prerequisites — what you need before the big seven | bodyproskills (anonym) | 2026 | https://bodyproskills.com/articles/muscle-up-prerequisites/ | Coaching-Artikel | D |  |
-| F-75 | Mathematical Model - Weighted Pullups to Front Lever (Forumsthread) | StrongFirst-Forum, mehrere Nutzer | 2021 | https://www.strongfirst.com/community/threads/mathematical-model-weighted-pullups-to-front-lever.19107/ | Forum/Wiki | D |  |
-| F-76 | What YOU NEED To Know About The Front Lever! | Straight Talking Fitness (Blog) | 2018 | https://straighttalkingfitness.com/2018/03/18/what-you-need-to-know-about-the-front-lever/ | Coaching-Artikel | D |  |
+| F-75 | Mathematical Model - Weighted Pullups to Front Lever (Forumsthread) | StrongFirst-Forum, Thread von «Yak», Auswertung von «Hung» | 2021 | https://www.strongfirst.com/community/threads/mathematical-model-weighted-pullups-to-front-lever.19107/ | Forum/Wiki | D |  |
+| F-76 | What YOU NEED To Know About The Front Lever! | «JR», Straight Talking Fitness (Blog) | 2018 | https://straighttalkingfitness.com/2018/03/18/what-you-need-to-know-about-the-front-lever/ | Coaching-Artikel | D |  |
 | F-77 | Validity of Different Velocity-Based Methods and Repetitions-to-Failure Equations for Predicting the 1 Repetition Maximum During 2 Upper-Body Pulling Exercises | Pérez-Castilla A, Suzovic D, Domanovic A, Fernandes JFT, García-Ramos A | 2021 | https://doi.org/10.1519/JSC.0000000000003076 | Querschnittstudie | B |  |
 
 ## Konsistenzprüfung
 
-Befunde der automatischen Prüfung (zitiert ↔ gelistet):
-
-- 02_skills_progressions.md: zitiert, aber nicht gelistet: A-72, A-73, A-74, A-75, A-76, A-77, A-78
-- 04_anatomy.md: zitiert, aber nicht gelistet: C-87
+Keine Befunde: Jede zitierte ID ist gelistet, jede gelistete ID wird zitiert.

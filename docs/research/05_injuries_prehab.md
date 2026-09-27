@@ -321,7 +321,7 @@ Calisthenics-Strukturen ist Heuristik und keine Therapie.
 
 | Baustein | Regel | Grundlage |
 |---|---|---|
-| Last je Struktur | Wochenlast = Summe der Arbeitssätze × Strukturgewicht der Übung (Gewichte aus Stream C). Assistierte Sätze zählen voll. | PDF-Folgerung F-3 (`01_pdf_extract.md` §6); Überlastung ist das Hauptproblem [D-02]. Gewichtung: Heuristik bis Stream C. |
+| Last je Struktur | Wochenlast = Summe der Arbeitssätze × Strukturgewicht der Übung (Gewichte aus Stream C). Assistierte Sätze zählen voll. | PDF-Folgerung H-3 (`01_pdf_extract.md` §6); Überlastung ist das Hauptproblem [D-02]. Gewichtung: Heuristik bis Stream C. |
 | Wochendeckel | Wochenlast je Struktur ≤ Mittel der letzten 3 Wochen × (1 + PAR-D-09/10/11). | schwaches Signal [D-34, D-35]; D-36 fand für Wochenquotienten keinen bzw. einen umgekehrten Zusammenhang; Beträge PAR-D-09 bis PAR-D-11 sind Heuristik |
 | Einheitsdeckel | Last einer Struktur in einer Einheit ≤ grösste Einheit der letzten 30 Tage × (1 + PAR-D-31). | [D-36] (Analogie Laufen) |
 | Neue Belastungsart | beginnt mit PAR-D-12 des Zielvolumens | Heuristik (kein 30-Tage-Maximum vorhanden, entspricht dem «NP-Zustand» in [D-36]) |

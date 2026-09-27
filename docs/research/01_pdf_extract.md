@@ -270,14 +270,14 @@ die Recherche abgeglichen.
 
 | # | Folgerung | Grundlage |
 |---|---|---|
-| F-1 | Eine Skill-Einheit folgt dem Muster «1 Maximal-Übung (2–3 Sätze, lange Pause) → 2 Volumen-Übungen (je 5 Sätze) → 1–2 Zubringer (2–3 Sätze, kurze Pause)». | §4.1–4.2 |
-| F-2 | Straight-Arm-Isometrie wird kurz (2–20 s) und mit langen Pausen (≥ 3 min, Maximalversuche ≥ 5 min) dosiert. | §4.3 |
-| F-3 | Assistierte Sätze sind Trainingsvolumen und zählen in der Belastungssteuerung voll. | §4.4 |
-| F-4 | Zusatzlast ist ein eigener Progressionsweg für bereits beherrschte Stufen. | §4.5 |
-| F-5 | Jede Übung braucht Ersatzübungen nach Equipment und nach Schwierigkeit (leichter/schwerer). | §4.8 |
-| F-6 | Das Volumen pro Einheit bleibt über die Niveaus fast konstant; Progression läuft über die Übungswahl. | §4.1 |
-| F-7 | Die Programme setzen 60–90 min pro Einheit voraus; kürzere Einheiten brauchen eine Kürzungsregel. | §4.9 |
-| F-8 | «Beginner» in der Quelle ≠ Calisthenics-Anfänger. Das Onboarding muss das Niveau pro Skill erfassen, nicht global. | §4.7 |
+| H-1 | Eine Skill-Einheit folgt dem Muster «1 Maximal-Übung (2–3 Sätze, lange Pause) → 2 Volumen-Übungen (je 5 Sätze) → 1–2 Zubringer (2–3 Sätze, kurze Pause)». | §4.1–4.2 |
+| H-2 | Straight-Arm-Isometrie wird kurz (2–20 s) und mit langen Pausen (≥ 3 min, Maximalversuche ≥ 5 min) dosiert. | §4.3 |
+| H-3 | Assistierte Sätze sind Trainingsvolumen und zählen in der Belastungssteuerung voll. | §4.4 |
+| H-4 | Zusatzlast ist ein eigener Progressionsweg für bereits beherrschte Stufen. | §4.5 |
+| H-5 | Jede Übung braucht Ersatzübungen nach Equipment und nach Schwierigkeit (leichter/schwerer). | §4.8 |
+| H-6 | Das Volumen pro Einheit bleibt über die Niveaus fast konstant; Progression läuft über die Übungswahl. | §4.1 |
+| H-7 | Die Programme setzen 60–90 min pro Einheit voraus; kürzere Einheiten brauchen eine Kürzungsregel. | §4.9 |
+| H-8 | «Beginner» in der Quelle ≠ Calisthenics-Anfänger. Das Onboarding muss das Niveau pro Skill erfassen, nicht global. | §4.7 |
 
 ## Anhang A — Alle 36 Workouts
 

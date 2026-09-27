@@ -104,7 +104,7 @@
 - **Reihenfolge:** Die Kraft steigt bei den Übungen am stärksten, die am Anfang
   der Einheit stehen [E-26], dort gelingen mehr Wiederholungen [E-27], und
   intensive Übungen gehören vor weniger intensive [E-60]. Das bestätigt das
-  PDF-Muster F-1 [P-01 S. 1–3; P-02 S. 1–4; P-03 S. 1–4].
+  PDF-Muster H-1 [P-01 S. 1–3; P-02 S. 1–4; P-03 S. 1–4].
 - **Aufwärmen hilft, Potenzierung für Halte kaum:** Aufwärmen verbesserte die
   Leistung in 79 % der Kriterien [E-95]; allgemeines plus spezifisches Aufwärmen
   steigerte den Beinpressen-1RM von 13 Trainierten um 8.4 % [E-97]; statisches
@@ -272,7 +272,7 @@ Zuordnung muss Stream A je Skill bestätigen.
 | Positionspapier: Übungen so ordnen, dass die Intensität erhalten bleibt: grosse vor kleinen Muskelgruppen, mehrgelenkig vor eingelenkig, höhere vor niedrigerer Intensität. | B | E-60 | Skill-Maximum vor Skill-Volumen vor Zubringern. |
 | Wer ermüdet übt, lernt schlechter, und der Nachteil bleibt an Folgetagen ohne Ermüdung bestehen. Er ist teils zentral vermittelt und lässt sich durch Veränderung der Motorkortex-Funktion abmildern. | B | E-28 | Skillarbeit in frischem Zustand; Skill-Block bei Formverlust beenden (§5.2). |
 | Aufwärmen verbessert die Leistung in den meisten untersuchten Kriterien [E-95]; allgemeines plus spezifisches Aufwärmen vor Maximalversuchen ist wirksamer als nur spezifisches (13 Trainierte, Beinpresse) [E-97]. | A/B | E-95, E-97 | Aufwärmen steht vor dem Skill-Maximum (§13). |
-| In allen 33 Programm-Workouts der Praxisquelle steht die intensivste, spezifischste Übung an Position 1 (2–3 Sätze, 5–7 min Pause), gefolgt von zwei Volumenübungen (je 5 Sätze, 3–5 min) und Zubringern (2–3 Sätze, 2–3 min). | C | P-01 S. 1–3; P-02 S. 1–4; P-03 S. 1–4 | Blockschema F-1 aus `01_pdf_extract.md` ist mit E-26 bis E-28 und E-60 vereinbar. |
+| In allen 33 Programm-Workouts der Praxisquelle steht die intensivste, spezifischste Übung an Position 1 (2–3 Sätze, 5–7 min Pause), gefolgt von zwei Volumenübungen (je 5 Sätze, 3–5 min) und Zubringern (2–3 Sätze, 2–3 min). | C | P-01 S. 1–3; P-02 S. 1–4; P-03 S. 1–4 | Blockschema H-1 aus `01_pdf_extract.md` ist mit E-26 bis E-28 und E-60 vereinbar. |
 | Die persönlichen Workouts des Autors weichen ab: 5 Sätze an Position 1, Pausen nicht streng fallend. | C | P-04 S. 1 | Das Schema ist ein Default, keine starre Regel (W-8). |
 
 **Abgeleitete Blockfolge einer Skill-Einheit:**
@@ -282,7 +282,7 @@ Zuordnung muss Stream A je Skill bestätigen.
 2. **Skill-Maximum:** Zielstufe, wenige Versuche, lange Pausen [E-26, E-28,
    E-60; P-01 bis P-03].
 3. **Skill-Volumen:** dieselbe Bewegung, leichter oder assistiert [P-01 bis
-   P-03]; assistierte Sätze zählen für die Belastung (F-3), nicht für Unlocks
+   P-03]; assistierte Sätze zählen für die Belastung (H-3), nicht für Unlocks
    (ADR 0008).
 4. **Kraft und Zubringer:** dynamische Übungen desselben Musters, nach der
    Skillarbeit, weil Übungen am Anfang am meisten profitieren [E-26, E-27].

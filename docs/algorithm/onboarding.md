@@ -21,7 +21,7 @@ den Logs. Daraus folgen acht Grundsätze:
 | Nr. | Grundsatz | Begründung |
 |---|---|---|
 | O-1 | **Kurzer Pflichtteil (< 5 min), der Rest wird aus den Logs gelernt.** Jede Pflichtfrage muss eine Entscheidung der ersten Woche verändern. | Auftrag; die Kapazität ändert sich ohnehin, und mehrere Log-Beobachtungen tragen mehr Information als ein einzelner Messwert [F-18]; Stream F schätzt den Pflichtteil auf ≈ 4.8 min (`07_assessment.md` §7.3). |
-| O-2 | **Einstufung pro Skill und Bewegungsmuster, nicht global.** | Kraft erklärt Skill-Leistung nur teilweise (R² 0.42–0.85 je Element) [A-21, F-40]; «Beginner» in den PDFs heisst bereits solide Tuck-Planche (`01_pdf_extract.md` §4.7, F-8); OG stuft nach Können, nicht nach Trainingsjahren ein [A-30 S. 23, F-69]. |
+| O-2 | **Einstufung pro Skill und Bewegungsmuster, nicht global.** | Kraft erklärt Skill-Leistung nur teilweise (R² 0.42–0.85 je Element) [A-21, F-40]; «Beginner» in den PDFs heisst bereits solide Tuck-Planche (`01_pdf_extract.md` §4.7, H-8); OG stuft nach Können, nicht nach Trainingsjahren ein [A-30 S. 23, F-69]. |
 | O-3 | **Jeder Wert trägt Herkunft und Unsicherheit.** Selbstauskunft ist ein breiter Startwert, kein Messwert. | Selbstauskünfte ordnen Personen, messen aber nicht: von US-Soldaten erinnerte Liegestützzahlen im Mittel +4–7 % zu hoch, Einzelabweichung SD ≈ 13–18 % [F-51, F-52]; Heimtests bei norwegischen Stellungspflichtigen κ ≤ 0.34 [F-53]; Selbstauskunft vs. Messung körperlicher Aktivität r −0.71 bis 0.96 [F-13]. |
 | O-4 | **Sicherheit vor Plan.** Gesundheits-Vorabfragen, Beschwerden je Region und Red Flags kommen vor der Plan-Erzeugung. | Überlastung dominiert Calisthenics-Verletzungen (62 % in 12 Monaten verletzt, Tendinopathie häufigste Diagnose) [D-02]; Screening nach Symptomen und gewünschter Intensität [F-41]. |
 | O-5 | **Bei Unsicherheit konservativ dosieren.** Niedrige Konfidenz → Dosierung aus dem unteren Ende der Schätzung und ein Testsatz. | `07_assessment.md` §8.6; ADR 0003 (keine Maximalversuche als Belohnung). |
@@ -58,7 +58,7 @@ Start
 | je Region mit Beschwerde | verzweigt | + 60–90 | Heuristik; Sicherheit geht hier bewusst vor dem 5-Minuten-Ziel (O-4) |
 
 Die Zeitangaben sind Schätzungen für das Antippen von Auswahlen und müssen im
-Usability-Test gemessen werden (Offene Entscheidung E-9).
+Usability-Test gemessen werden (Offene Entscheidung OE-9).
 
 ## 3. Pflichtteil: Felder
 
@@ -72,8 +72,8 @@ ist; der Planer behandelt es als Selbstauskunft mit maximaler Unsicherheit
 
 | Feld | Frage / UI | Typ und Werte | Validierung | Begründung (Quelle) | Verwendung im Algorithmus |
 |---|---|---|---|---|---|
-| `birth_year` | «In welchem Jahr bist du geboren?» | Ganzzahl | 1920 ≤ Jahr ≤ aktuelles Jahr − Mindestalter; Mindestalter ist offen (E-1) | Unter 18 gelten eigene Risiken: Wachstumsfuge am Handgelenk (Risikoalter 10–14 bzw. 10–16) [D-06, D-53], Rückenschmerz bei Extension als Warnzeichen [D-82] | Setzt `is_minor` (PAR-D-23 = 18). Minderjährige: Steigerungsdeckel für Handgelenk und Straight-Arm × PAR-D-02 (0.5); Red Flags RF-12 und RF-13 aktiv. |
-| `health_data_consent` | Einwilligung zur Verarbeitung von Beschwerde- und Gesundheitsangaben, mit Erklärung wofür | Bool, Pflichtentscheidung | muss beantwortet werden | Beschwerden und Vorabfragen sind Gesundheitsdaten; ohne Einwilligung darf Block G nicht gespeichert werden (Rechtsfrage, nicht Recherche; E-2) | Ohne Einwilligung: Block G entfällt, der Planer nimmt «unbekannt» an und plant konservativ (keine Tests, keine Maximalversuche, Steigerungsdeckel × PAR-D-02). Der Hinweis dazu wird angezeigt. |
+| `birth_year` | «In welchem Jahr bist du geboren?» | Ganzzahl | 1920 ≤ Jahr ≤ aktuelles Jahr − Mindestalter; Mindestalter ist offen (OE-1) | Unter 18 gelten eigene Risiken: Wachstumsfuge am Handgelenk (Risikoalter 10–14 bzw. 10–16) [D-06, D-53], Rückenschmerz bei Extension als Warnzeichen [D-82] | Setzt `is_minor` (PAR-D-23 = 18). Minderjährige: Steigerungsdeckel für Handgelenk und Straight-Arm × PAR-D-02 (0.5); Red Flags RF-12 und RF-13 aktiv. |
+| `health_data_consent` | Einwilligung zur Verarbeitung von Beschwerde- und Gesundheitsangaben, mit Erklärung wofür | Bool, Pflichtentscheidung | muss beantwortet werden | Beschwerden und Vorabfragen sind Gesundheitsdaten; ohne Einwilligung darf Block G nicht gespeichert werden (Rechtsfrage, nicht Recherche; OE-2) | Ohne Einwilligung: Block G entfällt, der Planer nimmt «unbekannt» an und plant konservativ (keine Tests, keine Maximalversuche, Steigerungsdeckel × PAR-D-02). Der Hinweis dazu wird angezeigt. |
 | `disclaimer_ack` | Kurzer Hinweis: «Hefesto plant Training. Es ersetzt keine ärztliche oder physiotherapeutische Abklärung.» | Bool | muss bestätigt werden | ADR 0003; Brief §11 (keine medizinischen Aussagen) | Voraussetzung für die Plan-Erzeugung. Der Disclaimer liegt auch im API-Payload jeder Verletzungsinformation. |
 
 ### 3.2 Block B — Ziele
@@ -98,7 +98,7 @@ ist; der Planer behandelt es als Selbstauskunft mit maximaler Unsicherheit
 
 | Feld | Frage / UI | Typ und Werte | Validierung | Begründung (Quelle) | Verwendung im Algorithmus |
 |---|---|---|---|---|---|
-| `equipment[]` | «Was hast du zur Verfügung?» Kacheln mit Bild | Mehrfachauswahl aus geschlossenem Vokabular: `floor`, `wall`, `pull_up_bar`, `low_bar`, `parallel_bars`, `parallettes`, `rings`, `resistance_bands`, `weight_vest`, `dumbbells_or_plates`, `dip_belt`, `box_or_bench`, `gym` (Latzug, Kabelzug, Dip-Station), `outdoor_park` | mindestens eine Angabe; `floor` und `wall` sind immer gesetzt; `outdoor_park` setzt `pull_up_bar`, `low_bar`, `parallel_bars`; `gym` setzt `pull_up_bar`, `parallel_bars`, `dumbbells_or_plates`, `box_or_bench` (**Heuristik**, typische Ausstattung, beim ersten Plan bestätigen lassen) | Die PDFs ersetzen Übungen nach Equipment (`Normal`/`Elastic`/`Home`, `01` §4.8, F-5); Ringe machen Stufen 1–3 OG-Level schwerer [PAR-A-27]; Parallettes senken die Handgelenkbeuger-Aktivität im Handstand von 61 % auf 44 % [PAR-A-57, PAR-C-28] | Filtert die Übungsauswahl (`exercises.equipment`); steuert Ersatzübungen und Assistenz (Band) sowie Zusatzlast als Progressionsweg (`01` §4.5). Das Vokabular ersetzt die heutigen Freitext-Tags (`codebase_notes.md` §5). |
+| `equipment[]` | «Was hast du zur Verfügung?» Kacheln mit Bild | Mehrfachauswahl aus geschlossenem Vokabular: `floor`, `wall`, `pull_up_bar`, `low_bar`, `parallel_bars`, `parallettes`, `rings`, `resistance_bands`, `weight_vest`, `dumbbells_or_plates`, `dip_belt`, `box_or_bench`, `gym` (Latzug, Kabelzug, Dip-Station), `outdoor_park` | mindestens eine Angabe; `floor` und `wall` sind immer gesetzt; `outdoor_park` setzt `pull_up_bar`, `low_bar`, `parallel_bars`; `gym` setzt `pull_up_bar`, `parallel_bars`, `dumbbells_or_plates`, `box_or_bench` (**Heuristik**, typische Ausstattung, beim ersten Plan bestätigen lassen) | Die PDFs ersetzen Übungen nach Equipment (`Normal`/`Elastic`/`Home`, `01` §4.8, H-5); Ringe machen Stufen 1–3 OG-Level schwerer [PAR-A-27]; Parallettes senken die Handgelenkbeuger-Aktivität im Handstand von 61 % auf 44 % [PAR-A-57, PAR-C-28] | Filtert die Übungsauswahl (`exercises.equipment`); steuert Ersatzübungen und Assistenz (Band) sowie Zusatzlast als Progressionsweg (`01` §4.5). Das Vokabular ersetzt die heutigen Freitext-Tags (`codebase_notes.md` §5). |
 | `bands[]` | optional, nur bei `resistance_bands`: Farbe/Stärke laut Hersteller | Liste {Bezeichnung, Herstellerangabe kg} | kg ≥ 0 | Herstellerangaben liegen 13–44 % zu hoch, gleiche Farben streuen 8–19 % [C-79, C-80]; Assistenz ist am stärksten, wo das Band am meisten gedehnt ist [PAR-C-62] | `estimated_assist_kg` mit Unsicherheit ± 20 % [PAR-C-61]; Entlastung am Hebel über den Angriffspunkt [PAR-C-13]. Assistierte Sätze zählen voll für Belastung, nie für Unlocks [PAR-B-79, PAR-A-21]. |
 | `max_added_load_kg` | optional, bei Weste/Scheiben | Zahl | 0–100 | Zusatzlast überlädt beherrschte Stufen (`01` §4.5); Laststeigerung 2–10 % [PAR-B-32] | Obergrenze für Zusatzlast-Progressionen. |
 
@@ -139,7 +139,7 @@ sauber heisst (Formkriterien aus `02` und `07` §4.2).
 Es bietet nach dem Plan an, die angegebenen Stufen auf der Skill-Karte als
 «selbst bestätigt» zu markieren. Das bringt kein XP (ADR 0008) und berührt die
 Dosierung nicht, weil der Planer aus der Kapazitätsschätzung dosiert, nicht aus
-dem Unlock-Status (`codebase_notes.md` §6). Offene Entscheidung E-5.
+dem Unlock-Status (`codebase_notes.md` §6). Offene Entscheidung OE-5.
 
 ### 3.7 Block G — Gesundheit, Beschwerden, Verletzungen
 
@@ -149,7 +149,7 @@ Fragen und Texte beschreiben Symptome und Orte (`05_injuries_prehab.md` §8,
 
 | Feld | Frage / UI | Typ und Werte | Validierung | Begründung (Quelle) | Verwendung im Algorithmus |
 |---|---|---|---|---|---|
-| `screening[]` | 7 Ja/Nein-Fragen zur Trainingsbereitschaft: bekannte Herz-, Kreislauf-, Stoffwechsel- oder Nierenerkrankung; Brustschmerz, Atemnot, Schwindel oder Ohnmacht bei Belastung; ärztliche Einschränkung für Training; Medikamente, die die Belastbarkeit betreffen; Schwangerschaft; andere Erkrankung mit Einfluss aufs Training; Knochen-/Gelenkproblem, das sich durch Training verschlechtern könnte | 7 × Bool | alle beantwortet | Screening nach Aktivität, Symptomen/Erkrankung und gewünschter Intensität [F-41]; PAR-Q+-Konzept mit 7 Fragen und Folgefragen [F-42, F-43]. **Eigene Formulierung**, weil PAR-Q+ urheberrechtlich geschützt ist [F-43] (E-3) | Belastungssymptome (Brustschmerz, Atemnot, Schwindel, Ohnmacht) → wie RF-10: kein Plan, ärztliche Abklärung vor dem Training empfehlen. Jedes andere «Ja» → Abklärung empfehlen; der Planer plant bis zur bestätigten Freigabe ohne Tests und Maximalversuche (**Heuristik**, abgeleitet aus [F-41]). |
+| `screening[]` | 7 Ja/Nein-Fragen zur Trainingsbereitschaft: bekannte Herz-, Kreislauf-, Stoffwechsel- oder Nierenerkrankung; Brustschmerz, Atemnot, Schwindel oder Ohnmacht bei Belastung; ärztliche Einschränkung für Training; Medikamente, die die Belastbarkeit betreffen; Schwangerschaft; andere Erkrankung mit Einfluss aufs Training; Knochen-/Gelenkproblem, das sich durch Training verschlechtern könnte | 7 × Bool | alle beantwortet | Screening nach Aktivität, Symptomen/Erkrankung und gewünschter Intensität [F-41]; PAR-Q+-Konzept mit 7 Fragen und Folgefragen [F-42, F-43]. **Eigene Formulierung**, weil PAR-Q+ urheberrechtlich geschützt ist [F-43] (OE-3) | Belastungssymptome (Brustschmerz, Atemnot, Schwindel, Ohnmacht) → wie RF-10: kein Plan, ärztliche Abklärung vor dem Training empfehlen. Jedes andere «Ja» → Abklärung empfehlen; der Planer plant bis zur bestätigten Freigabe ohne Tests und Maximalversuche (**Heuristik**, abgeleitet aus [F-41]). |
 | `complaints[]` | «Hast du aktuell Beschwerden, die dein Training beeinflussen?» Körperkarte mit Orten | Mehrfachauswahl aus Ort-Schlüsseln: `shoulder_front`, `shoulder_top_side`, `elbow_inner`, `elbow_outer`, `elbow_crease`, `wrist_back_extension`, `wrist_pinky_side`, `fingers_forearm_inner`, `lower_back`, `knee`, `other` | Schlüssel aus geschlossenem Vokabular | Beschwerden beeinflussen Training weit öfter als Ausfälle: wöchentlich 39 % [F-44]; Orte statt Diagnosen, wie in der Matrix (`05` §8) | Je Ort: Matrix «Beschwerde × Übungsfamilie» (X/M/S), Red-Flag-Fragen, Rampe (`05` §6.2). |
 | `complaints[].pain_daily` | «Wie stark im Alltag?» | NRS 0–10 | 0–10 | Grün für höhere Last: Alltagsschmerz 1–2/10 [PAR-D-14] | ≤ 2: Rampe ab Stufe 1; > 2: Stufe 0 (Region nicht planen), übrige Regionen normal. |
 | `complaints[].pain_training` | «Wie stark beim oder nach dem Training?» | NRS 0–10 | 0–10 | Schmerzgrenze ≤ 5/10 während und direkt nach Belastung [PAR-D-15] (Reha-Kontext, Übertragung Heuristik) | > 5: betroffene Übungsfamilien der Region auf M/X nach Matrix, Volumen nach PAR-D-24. Baseline für das Schmerz-Monitoring [PAR-D-13]. |
@@ -329,7 +329,7 @@ die Spezifikation:
 
 Konventionen: UUIDv7 in Go, `text` + benannter `CHECK`, `user_id` auf jeder
 Zeile, Sync-Spalten für alles, was der Client offline ändert (CLAUDE.md).
-Gesundheitsangaben brauchen eine eigene Aufbewahrungs- und Löschregel (E-2).
+Gesundheitsangaben brauchen eine eigene Aufbewahrungs- und Löschregel (OE-2).
 
 ## 9. Abdeckung der Personas
 
@@ -346,12 +346,12 @@ Gesundheitsangaben brauchen eine eigene Aufbewahrungs- und Löschregel (E-2).
 
 | Nr. | Frage | Vorschlag |
 |---|---|---|
-| E-1 | Mindestalter; sind Minderjährige zugelassen? | Mindestalter rechtlich klären (Einwilligungsalter); wenn zugelassen, gelten PAR-D-23 und RF-12/RF-13. |
-| E-2 | Gesundheitsdaten: Einwilligung, Speicherort, Aufbewahrung, Löschung | Eigene Einwilligung, getrennte Tabellen, Löschung mit dem Konto; ADR in Phase 4. |
-| E-3 | PAR-Q+ ist urheberrechtlich geschützt | Eigene Formulierung nach ACSM-Logik [F-41]; PAR-Q+ nur mit Lizenz. |
-| E-4 | Geschlecht erfragen? | Optional, nur als Prior für Zeitschätzungen, mit «keine Angabe». |
-| E-5 | Onboarding-Angaben als «selbst bestätigt» auf der Karte markieren? | Nur auf ausdrücklichen Wunsch, ohne XP (ADR 0008). |
-| E-6 | Testtag in v1 oder nur die Alternative in den ersten Einheiten? | v1: Alternative in den ersten Einheiten; Testtag als optionaler Ablauf später. |
-| E-7 | Messgrössen `cm`, Winkel, Verhältnis fehlen im Log (`measure`) | Mobilitätstests zunächst im Profil speichern, nicht im Log; Erweiterung in Phase 4 prüfen. |
-| E-8 | Schmerzwerte im Log | Neue Tabelle `user_pain_reports` statt Feld im Satz; Abfrage nach der Einheit und am nächsten Morgen (PAR-D-13). |
-| E-9 | Zeitbudget | Im Usability-Test messen; Ziel < 5 min ohne Beschwerde-Verzweigung. |
+| OE-1 | Mindestalter; sind Minderjährige zugelassen? | Mindestalter rechtlich klären (Einwilligungsalter); wenn zugelassen, gelten PAR-D-23 und RF-12/RF-13. |
+| OE-2 | Gesundheitsdaten: Einwilligung, Speicherort, Aufbewahrung, Löschung | Eigene Einwilligung, getrennte Tabellen, Löschung mit dem Konto; ADR in Phase 4. |
+| OE-3 | PAR-Q+ ist urheberrechtlich geschützt | Eigene Formulierung nach ACSM-Logik [F-41]; PAR-Q+ nur mit Lizenz. |
+| OE-4 | Geschlecht erfragen? | Optional, nur als Prior für Zeitschätzungen, mit «keine Angabe». |
+| OE-5 | Onboarding-Angaben als «selbst bestätigt» auf der Karte markieren? | Nur auf ausdrücklichen Wunsch, ohne XP (ADR 0008). |
+| OE-6 | Testtag in v1 oder nur die Alternative in den ersten Einheiten? | v1: Alternative in den ersten Einheiten; Testtag als optionaler Ablauf später. |
+| OE-7 | Messgrössen `cm`, Winkel, Verhältnis fehlen im Log (`measure`) | Mobilitätstests zunächst im Profil speichern, nicht im Log; Erweiterung in Phase 4 prüfen. |
+| OE-8 | Schmerzwerte im Log | Neue Tabelle `user_pain_reports` statt Feld im Satz; Abfrage nach der Einheit und am nächsten Morgen (PAR-D-13). |
+| OE-9 | Zeitbudget | Im Usability-Test messen; Ziel < 5 min ohne Beschwerde-Verzweigung. |

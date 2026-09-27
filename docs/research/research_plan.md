@@ -102,7 +102,7 @@ keine Übungs-Metadaten für Belastungssteuerung (`codebase_notes.md` §5).
 | Schlaf und Konsolidierung | Tagesabstände, Hinweise |
 | Zentrale vs. periphere Ermüdung; Erholungszeitverlauf nach schwerem Krafttraining | Pausen zwischen Einheiten |
 | Kritische Einordnung «CNS-Fatigue» | Vermeidung von Mythen in Regeln und Begründungen |
-| Konsequenzen: Reihenfolge in der Einheit, Frequenz, Frische bei Skillarbeit | Session-Aufbau (PDF-Muster F-1 prüfen) |
+| Konsequenzen: Reihenfolge in der Einheit, Frequenz, Frische bei Skillarbeit | Session-Aufbau (PDF-Muster H-1 prüfen) |
 
 ## F — Leistungsdiagnostik → `07_assessment.md`
 
