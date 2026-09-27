@@ -146,7 +146,7 @@ func simulate(t testing.TB, k *planning.Knowledge, s planning.Snapshot, a *athle
 		}
 		var changes []planning.Change
 		for _, ps := range p.Sessions {
-			sess := a.perform(k, ps, fmt.Sprintf("w%d-s%d", w+1, ps.Index+1))
+			sess := a.perform(k, ps, sessionID(ps))
 			var ch []planning.Change
 			s, ch, err = planning.Adapt(k, s, planning.Event{Kind: planning.EventSession, At: ps.Date.Add(20 * time.Hour), Session: &sess})
 			if err != nil {

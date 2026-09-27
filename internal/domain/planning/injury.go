@@ -230,7 +230,7 @@ func (k *Knowledge) sessionPain(reports []PainReport, region, sessionID string, 
 			}
 		case PainMorning:
 			switch {
-			case r.NRS > baseline:
+			case baseline >= 0 && r.NRS > baseline:
 				worst(painBreach)
 			case r.NRS > k.T.PainGreen:
 				worst(painAcceptable)
@@ -268,7 +268,9 @@ func (k *Knowledge) weeklyTrendRising(reports []PainReport, region string, now t
 }
 
 // baselineBefore returns the pain value before a session: the
-// before_session report, else the latest morning or daily report before it.
+// before_session report, else the latest morning or daily report before it,
+// else -1: without any baseline the morning rule (PAR-D-16) cannot be
+// judged, and only the thresholds apply.
 func baselineBefore(reports []PainReport, region, sessionID string, at time.Time) float64 {
 	var best PainReport
 	found := false
@@ -286,5 +288,5 @@ func baselineBefore(reports []PainReport, region, sessionID string, at time.Time
 	if found {
 		return best.NRS
 	}
-	return 0
+	return -1
 }

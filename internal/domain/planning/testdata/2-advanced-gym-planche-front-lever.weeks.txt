@@ -20,8 +20,7 @@ week 9: 4 sessions, 40 sets (22 straight-arm)
   changes: deload_scheduled×2
 week 10: 4 sessions, 31 sets (22 straight-arm), deload stagnation
   front-lever=front-lever-tuck,front-lever-tuck+band planche=planche-tuck,planche-lean wrist-conditioning=plank-hold
-  changes: deload_scheduled×2
-week 11: 4 sessions, 31 sets (22 straight-arm), deload stagnation
-  front-lever=front-lever-tuck,front-lever-tuck+band planche=planche-tuck,planche-lean wrist-conditioning=plank-hold
+week 11: 4 sessions, 37 sets (22 straight-arm)
+  front-lever=front-lever-tuck planche=planche-tuck wrist-conditioning=plank-hold
 week 12: 4 sessions, 37 sets (22 straight-arm)
   front-lever=front-lever-tuck planche=planche-tuck wrist-conditioning=plank-hold

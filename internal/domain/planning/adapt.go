@@ -352,11 +352,24 @@ func (a *adapter) plateau() {
 	if !s.Phase.LastDeload.IsZero() && daysBetween(s.Phase.LastDeload, last) < 7*k.T.PlateauDeloadGap {
 		return
 	}
+	// A deload session is no evidence of a plateau, and the gap of PAR-S-17
+	// counts from the most recent one, also while its week is running.
+	for i := len(s.History) - 1; i >= 0; i-- {
+		if s.History[i].Deload {
+			if daysBetween(s.History[i].Date, last) < 7*k.T.PlateauDeloadGap {
+				return
+			}
+			break
+		}
+	}
 	if k.skills[g.Skill].LimitingFactor == LimitBalance && float64(ls.Exposures) < k.T.BalanceReview {
 		return
 	}
 	var xs []float64
 	for i := len(s.History) - 1; i >= 0 && len(xs) < 3; i-- {
+		if s.History[i].Deload {
+			continue
+		}
 		for _, set := range s.History[i].Sets {
 			if set.Exercise == ex.Slug && set.Kind != KindWarmup {
 				x := set.Value
@@ -403,9 +416,14 @@ func (a *adapter) rampSessions(sess LoggedSession) {
 		if st < 1 || st > 4 || !a.touches(sess, id) {
 			continue
 		}
+		// A ramp after a break without a complaint counts the session now;
+		// a complaint counts it when the next morning's report arrives
+		// (pain, below), because PAR-D-26 asks about the following day.
+		if !rs.BreakOnly {
+			continue
+		}
 		base := baselineBefore(s.Pain, id, sess.ID, sess.Date)
-		status, _, _ := k.sessionPain(s.Pain, id, sess.ID, base)
-		if status == painBreach || status == painNone && !rs.BreakOnly {
+		if status, _, _ := k.sessionPain(s.Pain, id, sess.ID, base); status == painBreach {
 			continue
 		}
 		rs.StepSessions++
@@ -506,6 +524,15 @@ func (a *adapter) pain(r PainReport) {
 		trend := k.weeklyTrendRising(s.Pain, r.Region, r.At)
 		if status == painBreach || trend {
 			a.breach(&rs, r.Region, day, lasted, persisted)
+		} else if r.Timepoint == PainMorning && status == painGreen && rttStage(rs.State) >= 1 && rttStage(rs.State) <= 4 {
+			// The morning report completes a green session (PAR-D-26).
+			for _, h := range s.History {
+				if h.ID == r.SessionID && a.touches(h, r.Region) {
+					rs.StepSessions++
+					a.advance(&rs, r.Region, day)
+					break
+				}
+			}
 		}
 	}
 	if rs.HoldAtRef && a.greenWeek(r.Region, day) {
