@@ -159,6 +159,51 @@ jobs:
           echo 'HEFESTO_TAG=v0.0.0-ci' >> /tmp/check.env
           docker compose -f docker-compose.prod.yml --env-file /tmp/check.env config --quiet
 
+  load-smoke:
+    name: load smoke test
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: hefesto
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: hefesto
+          POSTGRES_INITDB_ARGS: "--locale-provider=icu --icu-locale=en-US --encoding=UTF8"
+        options: >-
+          --health-cmd "pg_isready -U hefesto"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+        ports: ["5432:5432"]
+    env:
+      DATABASE_URL: postgres://hefesto:ci@localhost:5432/hefesto?sslmode=disable
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+      - name: migrate and seed
+        run: |
+          go install github.com/pressly/goose/v3/cmd/goose@v3.24.1
+          goose -dir db/migrations postgres "$DATABASE_URL" up
+          go run ./cmd/seed -dir ./content
+      - name: start the API
+        # The release build, with production's argon2 cost. Only the auth
+        # rate limit is raised, so 25 athletes can register from one address.
+        env:
+          HEFESTO_HTTP_ADDR: 127.0.0.1:8080
+          HEFESTO_AUTH_PER_MINUTE: "10000"
+          HEFESTO_LOG_LEVEL: warn
+          HEFESTO_DB_MAX_CONNS: "20"
+        run: |
+          go build -trimpath -o ./bin/api ./cmd/api
+          nohup ./bin/api > api.log 2>&1 &
+      - name: 25 athletes for 60 seconds
+        run: go run ./cmd/loadsmoke -base-url http://127.0.0.1:8080 -athletes 25 -duration 60s
+      - name: API log
+        if: always()
+        run: tail -n 200 api.log || true
+
   docker:
     name: docker image builds
     runs-on: ubuntu-latest

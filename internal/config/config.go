@@ -44,6 +44,7 @@ type Config struct {
 	AppleClientIDs       []string // accepted `aud` values for Sign in with Apple
 	AccountDeletionGrace time.Duration
 	TrustProxyHeaders    bool // take the client IP from X-Forwarded-For (behind Caddy)
+	AuthPerMinute        int32 // credential attempts per client address per minute
 
 	// Object storage for media. Media is off when S3Endpoint is empty, which
 	// only dev allows.
@@ -131,6 +132,11 @@ func Load() (Config, error) {
 	}
 	if c.MediaEnabled() && (c.S3AccessKey == "" || c.S3SecretKey == "") {
 		errs = append(errs, errors.New("HEFESTO_S3_ACCESS_KEY and HEFESTO_S3_SECRET_KEY: required with HEFESTO_S3_ENDPOINT"))
+	}
+	if c.AuthPerMinute, err = i32("HEFESTO_AUTH_PER_MINUTE", 10); err != nil {
+		errs = append(errs, err)
+	} else if c.AuthPerMinute < 1 || c.AuthPerMinute > 100000 {
+		errs = append(errs, errors.New("HEFESTO_AUTH_PER_MINUTE: between 1 and 100000"))
 	}
 	if c.DBMaxConns, err = i32("HEFESTO_DB_MAX_CONNS", 10); err != nil {
 		errs = append(errs, err)

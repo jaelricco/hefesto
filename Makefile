@@ -103,6 +103,7 @@ build: ## Build all binaries into ./bin
 	go build -trimpath -o ./bin/api ./cmd/api
 	go build -trimpath -o ./bin/seed ./cmd/seed
 	go build -trimpath -o ./bin/contentlint ./cmd/contentlint
+	go build -trimpath -o ./bin/loadsmoke ./cmd/loadsmoke
 
 .PHONY: lint
 lint: ## Run golangci-lint
@@ -126,6 +127,12 @@ cover: ## Coverage report (opens coverage.html)
 	go test -race -coverprofile=coverage.out -covermode=atomic $(PKG)
 	go tool cover -html=coverage.out -o coverage.html
 	@echo "wrote coverage.html"
+
+.PHONY: load-smoke
+load-smoke: ## Load smoke test against the local stack (make up first): make load-smoke args="-athletes 50"
+	@# Registration is rate limited per address (HEFESTO_AUTH_PER_MINUTE); the
+	@# tool waits it out, so raise the limit in .env for a faster start.
+	go run ./cmd/loadsmoke -base-url http://localhost:$${API_PORT_HOST:-8080} $(args)
 
 .PHONY: check
 check: lint test content-validate ## What CI runs on every push
