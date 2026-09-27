@@ -21,6 +21,7 @@
 |---|---|
 | Lauf 1 (2026-09-27) | 30 Websuchen; nur Suchauszüge, kein Volltext (Budget erschöpft, Literaturserver gesperrt). Ergebnis: D-01 bis D-16. |
 | Lauf 2 (2026-09-27) | Europe PMC (REST), PubMed-/PMC-Volltexte, Crossref und Verlagsseiten direkt. Alle Quellen aus Lauf 1 wurden erneut gegen Abstract oder Volltext geprüft; dabei wurden drei Fehler korrigiert (D-05, D-12, D-15, siehe Prüfprotokoll unter «Quellen»). Neu: D-17 bis D-91. |
+| Audit (2026-09-27) | Adversariale Prüfung: Metadaten aller 91 Quellen gegen Crossref/Europe PMC, alle 42 Parameter und die übrigen Zahlen gegen Abstract oder Volltext. Ergebnis und Änderungen im Abschnitt «Prüfprotokoll» am Dokumentende. Neu: D-92. |
 | Prüftiefe | je Quelle im Prüfprotokoll: **Volltext** oder **Abstract/Landingpage**. Zahlen aus Abstracts sind als solche zitiert; wo nur der Abstract geprüft war, wird nichts aus dem Volltext behauptet. |
 | Nicht Belegtes | ist als **Heuristik** bzw. **Praxisheuristik** mit einzeiliger Begründung markiert. Keine Quelle ist aus dem Gedächtnis zitiert. |
 | Übertragbarkeit | Studien aus Laufen, Teamsport, Handball, Baseball, Klettern und Turnen sind **Analogien**; im Text steht jeweils die Population. |
@@ -43,29 +44,32 @@
 | Return-to-Sport-Kontinuum, kriterienbasierte Rückkehr | belegt | D-50 bis D-54, D-79 |
 | Isometrie und HSR bei Sehnenschmerz (Kontext) | belegt | D-55 bis D-62 |
 | Matrix Beschwerde × Übungsfamilie | Mechanismen belegt, Aktionen grossteils Heuristik | Abschnitt 8 |
-| Red Flags | belegt (Leitlinien Schulter, LWS; CES; Screening) | D-70, D-73, D-85 bis D-91 |
+| Red Flags | belegt (Leitlinien Schulter, LWS; CES; Screening); Symptomlisten teils Heuristik | D-70, D-73, D-85 bis D-92 |
 | Prehab | Schulter/Ellbogen belegt (andere Sportarten); Handgelenk nicht | D-11, D-38, D-74 bis D-81 |
 
 ## Kurzfassung
 
-- **Schulter vor Handgelenk, Ellbogen und Rücken:** 32 % der Verletzungen bei
-  niederländischen Calisthenics-Athleten betreffen die Schulter, 15 % das
-  Handgelenk, je 10 % Ellbogen und Rücken [D-01]; im Street Workout liegt die
+- **Schulter vor Handgelenk, Ellbogen und Rücken:** Bei niederländischen
+  Calisthenics-Athleten war die Schulter am häufigsten verletzt (32 %), dann
+  Handgelenk (15 %), Ellbogen und Rücken (je 10 %; Bezugsgrösse im Abstract
+  nicht angegeben) [D-01]; im Street Workout liegt die
   Schulter mit 23,0 % vor oberem/mittlerem Rücken (18,4 %) [D-02] (Evidenz B).
-- **Überlastung dominiert, Vorverletzung ist der stärkste Risikofaktor:**
+- **Überlastung dominiert, Vorverletzung ist ein wiederkehrender Risikofaktor:**
   Tendinopathie ist die häufigste Diagnose (31,0 % der Verletzten), Vorverletzung
-  erhöht die Odds (OR 4,08) [D-02]; Vorverletzung ist auch im Klettern und
+  erhöht die Odds (OR 4,08; hohe körperliche Aktivität sogar OR 4,37–5,63) [D-02]; Vorverletzung ist auch im Klettern und
   CrossFit ein Risikofaktor [D-09, D-11, D-12].
 - **Die Sehne passt sich langsamer an als die Muskelkraft:** Kraft +29,6 % nach
   2 Monaten, Sehnensteifigkeit erst nach 3 Monaten signifikant erhöht [D-18,
   D-19]; wirksam sind hohe Lasten (> 70 % MVC, SMD 0,90 gegenüber 0,04) und
-  eher ≥ 12 Wochen [D-17] (Evidenz A/B) → PAR-D-06, PAR-D-07.
+  eher ≥ 12 Wochen [D-17] (Evidenz A/B; alle Daten von Achilles- und
+  Patellarsehne, D-18/D-19 mit n = 8 bzw. 9; Übertragung auf Arm und Schulter
+  ist Heuristik) → PAR-D-06, PAR-D-07.
 - **Nach einer Pause geht die Sehnenanpassung zuerst verloren:** Die
   Sehnensteifigkeit war nach 1 bzw. 2 Monaten Detraining wieder auf dem
   Ausgangswert, die Kraft nicht [D-18, D-19] → Wiedereinstieg ab 4 Wochen Pause
   über die Rampe (PAR-D-29).
 - **Kollagen braucht 2–3 Tage:** Netto-Abbau in den ersten 24–36 h, Netto-Aufbau
-  36–72 h nach Belastung [D-20, D-23]; Kollagensynthese bleibt bis 72 h erhöht
+  36–72 h nach Belastung (schematisches Modell) [D-20, D-23]; Kollagensynthese bleibt bis 72 h erhöht
   [D-21, D-22] → hohe Sehnenreize derselben Struktur ≥ 48 h, in der Rampe
   ≥ 72 h auseinander (PAR-D-08, PAR-D-34) [D-41, D-54].
 - **ACWR ist kein Steuerinstrument:** «Sweet Spot» 0,8–1,3 und «Danger Zone»
@@ -73,27 +77,32 @@
   Artefakte ohne Vorhersagewert [D-29, D-30] und gegen umgekehrte Befunde bei
   Läufern [D-36] → nur protokollieren (PAR-D-30).
 - **Die 10-%-Regel ist nicht belegt, Lastspitzen schon eher:** Ein RCT fand
-  keinen Nutzen (20,8 % vs. 20,3 % Verletzte) [D-33]; Wochensteigerungen
-  > 20–30 % [D-34, D-35] und Einzel-Einheiten > 10 % über dem 30-Tage-Maximum
-  (HRR 1,64) [D-36] sind mit mehr Verletzungen assoziiert → Deckel je Woche und
-  je Einheit (PAR-D-09, PAR-D-10, PAR-D-31).
-- **Krafttraining verhindert Verletzungen, Dehnen nicht:** RR 0,315 für
-  Krafttraining, 0,527 für Überlastungsverletzungen, Dehnen ohne Effekt
-  [D-38]; +10 % Krafttrainingsvolumen senkt das Risiko um mehr als 4
-  Prozentpunkte [D-39] (Evidenz A, überwiegend untere Extremität).
+  keinen Nutzen (20,8 % vs. 20,3 % Verletzte) [D-33]; Einzel-Einheiten > 10 %
+  über dem 30-Tage-Maximum sind mit mehr Verletzungen assoziiert (HRR 1,64)
+  [D-36]; für Wochensteigerungen > 20–30 % ist das Signal schwach (D-34: HR 1,59,
+  n. s., nur distanzbezogene Verletzungen; D-35: nur nach 21 Tagen) [D-34, D-35]
+  → Deckel je Woche (Heuristik) und je Einheit (PAR-D-09, PAR-D-10, PAR-D-31).
+- **Krafttraining senkt das Verletzungsrisiko, Dehnen nicht:** RR 0,315 für
+  Krafttraining; Übungsprogramme insgesamt RR 0,527 für Überlastungsverletzungen;
+  Dehnen ohne Effekt [D-38]; +10 % Krafttrainingsvolumen senkt das Risiko um
+  mehr als 4 Prozentpunkte [D-39] (Evidenz A; Sportverletzungen allgemein,
+  Oberkörper-Statics nicht untersucht, nur Abstracts geprüft).
 - **Schmerz-Monitoring statt Pause:** ≤ 5/10 während und direkt nach der
   Belastung, zurück auf das Ausgangsniveau bis zum nächsten Morgen, keine
-  Zunahme von Woche zu Woche [D-42, D-43]; so weiter zu trainieren war in RCTs
-  nicht schlechter als Pausieren [D-40] bzw. Teil eines wirksamen Programms
-  [D-45] (Evidenz A) → PAR-D-14 bis PAR-D-17.
+  Zunahme von Woche zu Woche [D-42, D-43]; so weiter zu trainieren war in einem
+  RCT (Achillessehne, n = 38) nicht schlechter als Pausieren [D-40] und Teil
+  eines wirksamen Programms bei Schulterpatienten [D-45] (Evidenz A im
+  Reha-Kontext; Übertragung auf Trainierende ist Heuristik) → PAR-D-14 bis
+  PAR-D-17.
 - **Rückkehr ist ein Kontinuum mit Kriterien:** Teilnahme → Sport → Leistung
-  [D-50, D-51]; turnspezifische Protokolle beginnen mit Zug/Hang, dann Stütz
+  [D-50, D-51]; turnspezifische Expertenprotokolle beginnen mit Zug/Hang, dann Stütz
   ohne Impact, zuletzt Stütz mit Impact, starten mit 25 % des früheren
   Volumens und haben feste «Soreness Rules» [D-53, D-07, D-54] → Rampe
   Abschnitt 6.
 - **Distale Bizepssehne: Hochrisiko ist der supinierte, fast gestreckte Arm
   unter isometrischer Last** (98 % Supination, 89 % bei 0–10° Beugung, 88 %
-  isometrisch); 9 % der Videofälle waren Planche-Versuche [D-68, D-69] →
+  isometrisch; 5 von 57 Videofällen Planche-Versuche) [D-68]; 96,4 % supiniert
+  in einer zweiten Videoserie [D-69] (Fallserien, fast nur Männer) →
   supinierte Straight-Arm-Halte sind eine eigene Risikokategorie (PAR-D-41).
 - **Isometrie ist kein Schmerzmittel-Versprechen:** Der starke Soforteffekt
   (n = 6) [D-55] liess sich nicht bestätigen [D-56, D-57, D-58]; HSR wirkt,
@@ -101,7 +110,8 @@
   (PAR-D-39).
 - **Red Flags aus Leitlinien, bewusst breit:** 13 Ja/Nein-Fragen mit
   abgestufter Dringlichkeit (Schulter BESS/BOA [D-73], LWS-Leitlinien [D-86,
-  D-88], Cauda equina [D-89], Sehnenriss [D-70, D-90]); einzelne Red Flags
+  D-88], Cauda equina [D-89, D-92], Sehnenriss [D-70, D-90]; Symptomlisten und
+  Übertragungen auf andere Regionen teils Heuristik); einzelne Red Flags
   haben geringe Treffsicherheit [D-85, D-87] → screenen und verweisen, nie
   diagnostizieren.
 - **Prehab:** Das OSTRC-Schulterprogramm senkte Schulterbeschwerden im
@@ -138,7 +148,7 @@
 |---|---|
 | Regionen-Rangfolge für Calisthenics: **Schulter > Handgelenk > Ellbogen ≈ Rücken**. Prehab-Auswahl und Hinweise folgen dieser Rangfolge. | [D-01, D-02] (Evidenz B); Schulter auch bei Turnbewegungen im CrossFit vorn [D-14] |
 | Überlastung/Tendinopathie ist das Hauptproblem, nicht der Unfall. Der Planer braucht vor allem Mengen- und Steigerungsgrenzen je Struktur. | [D-02]; Abschnitt 5 |
-| Die meisten Verletzungen kosten Wochen, nicht Monate (CrossFit-Schulter: 64,1 % ≤ 1 Monat Trainingsreduktion [D-13]). Lastreduktion ist der Normalfall, die Sperre einer Struktur die Ausnahme; Weitertrainieren nach Schmerzregel war im RCT nicht schlechter als Pause [D-40]. | [D-13, D-40, D-41] |
+| In den verfügbaren Umfragen kosten die meisten Verletzungen Wochen, nicht Monate (CrossFit-Schulter: 64,1 % ≤ 1 Monat Trainingsreduktion [D-13]; Street Workout: Heilung im Mittel 4,0 ± 5,7 Wochen [D-02]). Lastreduktion ist der Normalfall, die Sperre einer Struktur die Ausnahme; Weitertrainieren nach Schmerzregel war im RCT nicht schlechter als Pause [D-40]. | [D-02, D-13, D-40, D-41] |
 | Vorsaison-Screenings von Beweglichkeit und Kraft sagten Schulterverletzungen bei Turnerinnen nicht voraus [D-81]; die App leitet aus Onboarding-Tests kein Verletzungsrisiko ab. | [D-81, D-77] |
 | «Calisthenics» bezeichnet in Australien einen Darbietungssport; Studien unter diesem Namen sind vor Übernahme zu prüfen. | [D-03, D-16] |
 
@@ -146,7 +156,7 @@
 
 | Faktor | Richtung | Population | Quelle | Evidenz | Nutzung im Planer |
 |---|---|---|---|---|---|
-| Vorverletzung (gleiche Region) | ↑ (OR 4,08 im Street Workout) | Street Workout, Klettern, CrossFit | [D-02, D-09, D-11, D-12, D-13] | A–B | Onboarding-Frage je Region (Stream F, Q7); konservativere Steigerung (PAR-D-02) |
+| Vorverletzung (in D-02 ohne Regionsbezug erhoben) | ↑ (OR 4,08 im Street Workout) | Street Workout, Klettern, CrossFit | [D-02, D-09, D-11, D-12, D-13] | A–B | Onboarding-Frage je Region (Stream F, Q7); konservativere Steigerung (PAR-D-02) |
 | Rasche Laststeigerung, Lastspitzen | ↑ | Läufer, Teamsport, jugendliche Turner (Volumensteigerung, Wechsel auf höheres Niveau) | [D-27, D-34, D-35, D-36, D-53] | B | Wochen- und Einheitsdeckel (PAR-D-09 bis PAR-D-11, PAR-D-31) |
 | Mehrere Einheiten pro Tag | ↑ | Calisthenics NL | [D-01] | B | höchstens 1 Einheit pro Tag je Struktur (PAR-D-03) |
 | Trainingsstunden, Trainingsintensität | ↑ | Calisthenics AU, jugendliche Turner (Handgelenk), Kletterer | [D-03, D-06, D-11] | A–B | Wochenexposition je Struktur zählen und deckeln |
@@ -179,9 +189,9 @@ aus Stream C (`04_anatomy.md`) abgeglichen werden.
 | Ellbogen medial (Flexor carpi radialis, Pronator teres, Flexor carpi ulnaris; Valgus) | Degeneration der Beuger-Pronatoren bei wiederholter erzwungener Handgelenkextension und Supination während Beugung/Pronation; Valgus-Extensions-Überlastung bei Werfern; im Turnen «mediale Zugverletzungen» (Apophyse, UCL) | [D-53, D-63, D-64] | Planche und Leans (Handgelenkextension unter Last), Maltese und Iron Cross (Valgus, Heuristik), Klimmzug-Varianten mit hoher Griffkraft | Mechanismus belegt (B, Analogie Wurf); Zuordnung Heuristik |
 | Distale Bizepssehne | Klassisch beschrieben als exzentrische Last am gebeugten Ellbogen [D-67]; Videoanalysen: 96–98 % supiniert, 89 % bei 0–10° Beugung, 88 % isometrisch [D-68, D-69]; 5 von 57 Videofällen Planche-Versuche, ein Klinikfall beim Chin-up [D-68]. Bevölkerungsinzidenz 1,2 / 100 000 / Jahr, Mittel 47 Jahre, 86 % dominanter Arm [D-67]. | [D-67, D-68, D-69] | supinierte Planche, Maltese und Iron Cross mit supiniertem Griff, supinierter Back Lever, Chin-up, jede Straight-Arm-Halteposition mit supiniertem Unterarm | **Calisthenics-Bezug belegt (B)** |
 | Lange Bizepssehne, Bizepsanker (SLAP), vordere Schulter | Bei Turnern Läsionen von Bizepsanker, langer Bizepssehne und Supraspinatus durch repetitive Stütz- und Schwungkräfte, besonders an den Ringen [D-71]; glenohumerale Instabilität inkl. Labrumrisse bei jungen Turnern [D-53] | [D-53, D-71] | Ringelemente (Maltese, Iron Cross, Support), tiefe Dips, Back Lever, German Hang, Skin the Cat, Planche | Turnbezug belegt (B, Abstract); Zuordnung zu Einzelübungen Heuristik |
-| Rotatorenmanschette / subakromial | Meist Rotatorenmanschetten-Tendinopathie; durch Überkopfaktivität verstärkt, teils Nachtschmerz [D-73]; arbeitsbezogen assoziiert mit Kraft > 10 % MVC (OR 2,8–4,2), repetitiven Schulterbewegungen und Arbeit mit der Hand über Schulterhöhe (OR 1,04–4,7) sowie Oberarmflexion ≥ 45° über ≥ 15 % der Zeit (OR 2,43) [D-72]; im Street Workout diskutiert: breite und Reverse-Klimmzüge, Muscle-up, Arme > 90° [D-02] | [D-02, D-72, D-73] | Handstand/HSPU, Muscle-up, breite Klimmzüge, Dips, Hängen (passiv über Kopf) | Mechanismus belegt (A/B, Analogie Arbeit); Zuordnung teils aus D-02 (Diskussion), sonst Heuristik |
+| Rotatorenmanschette / subakromial | Meist Rotatorenmanschetten-Tendinopathie; durch Überkopfaktivität verstärkt, teils Nachtschmerz [D-73]; arbeitsbezogen assoziiert mit Kraft > 10 % MVC (OR 2,8–4,2), repetitiven Schulterbewegungen und Arbeit mit der Hand über Schulterhöhe (OR 1,04–4,7) sowie Oberarmflexion ≥ 45° über ≥ 15 % der Zeit (OR 2,43) [D-72]; im Street Workout diskutiert: breite und Reverse-Klimmzüge, Muscle-up mit breitem Griff [D-02] | [D-02, D-72, D-73] | Handstand/HSPU, Muscle-up, breite Klimmzüge, Dips, Hängen (passiv über Kopf) | Mechanismus belegt (A/B, Analogie Arbeit); Zuordnung teils aus D-02 (Diskussion), sonst Heuristik |
 | M. pectoralis major | Fallbericht: vollständige Ruptur bei einer einarmigen statischen Halteposition (Schulterextension 70°, Abduktion 90°) mit plötzlichem stechendem Schmerz, Bluterguss, verschobenem Muskelbauch | [D-90] | einarmige Halte mit Schulterextension/Abduktion, tiefe Dips (Heuristik) | Einzelfall (B) |
-| Lendenwirbelsäule | Pars-Defekte bei 11 % von 100 jungen Turnerinnen (4× Gleichaltrige), Spondylolisthese 6 %; Rückenschmerz beim jungen Turner als Warnzeichen [D-82]; Ursachen: Spondylolyse, Scheuermann, Bandscheibe, mechanisch [D-83]; 1-Jahres-Prävalenz von Rückenschmerz bei jugendlichen Athleten 57 % [D-84]; extensionsbasierte Elemente als häufigster lumbaler Mechanismus im australischen Calisthenics [D-03] | [D-03, D-82, D-83, D-84] | Back Lever, Brücke, Arch-Halte, Handstand mit Hohlkreuz, Dragon Flag | Mechanismus belegt (B); Zuordnung Heuristik |
+| Lendenwirbelsäule | Pars-Defekte bei 11 % von 100 jungen Turnerinnen (4× Gleichaltrige), Spondylolisthese 6 %; Rückenschmerz beim jungen Turner als Warnzeichen [D-82]; Ursachen: Spondylolyse, Scheuermann, Bandscheibe, mechanisch [D-83]; 1-Jahres-Prävalenz von Rückenschmerz bei jugendlichen Athleten 57 % (Hintergrundangabe im Abstract) [D-84]; extensionsbasierte Elemente als häufigster lumbaler Mechanismus im australischen Calisthenics [D-03] | [D-03, D-82, D-83, D-84] | Back Lever, Brücke, Arch-Halte, Handstand mit Hohlkreuz, Dragon Flag | Mechanismus belegt (B); Zuordnung Heuristik |
 
 **Für das Content-Modell** (`skill_injury_risks`: `region`, `name`,
 `risk_factors[]`, `early_signs[]`) stehen jetzt belegte Einträge zur Verfügung.
@@ -193,8 +203,8 @@ aus Stream C (`04_anatomy.md`) abgeglichen werden.
 | Sehne allgemein | Morgensteifigkeit (für die Achillessehne als Leitsymptom beschrieben) | [D-43] |
 | Schulter oben/seitlich | Schmerz oben und seitlich an der Schulter, stärker bei Überkopfaktivität, teils nachts | [D-73] |
 | Handgelenk (Heranwachsende) | Schmerz dorsal über dem Radius bei Stützbelastung, stärker in Extension; wird oft als «normal» abgetan | [D-53] |
-| Ellenbeuge (akut) | Schmerz in der Ellenbeuge, Bluterguss, Schwellung, Schwäche bei Beugung/Supination | [D-70] |
-| Lendenwirbelsäule (Jugendliche) | Rückenschmerz bei Extensionselementen | [D-82] |
+| Ellenbeuge (akut) | hörbarer oder gespürter «Pop», Schmerz und Bluterguss in der Ellenbeuge, Schwäche bei Beugung/Supination, ggf. nach oben verschobener Muskelbauch (akute Zeichen, keine Frühzeichen) | [D-70] |
+| Lendenwirbelsäule (Jugendliche) | Rückenschmerz beim jungen Turner als Warnzeichen [D-82]; Extensionselemente als häufigster lumbaler Mechanismus im australischen Calisthenics [D-03] | [D-82, D-03] |
 
 ## 4. Adaptationszeiten Sehne/Bindegewebe vs. Muskel
 
@@ -202,15 +212,15 @@ aus Stream C (`04_anatomy.md`) abgeglichen werden.
 
 | Grösse | Zeitverlauf / Befund | Quelle | Evidenz |
 |---|---|---|---|
-| Muskelkraft (isometrisches Kniestreckertraining) | +29,6 % nach 2 Monaten, +40,5 % nach 3 Monaten; neuronale Aktivierung +7,3 % bzw. +8,9 % | [D-18] | B |
+| Muskelkraft (isometrisches Kniestreckertraining, n = 8) | +29,6 % nach 2 Monaten, +40,5 % nach 3 Monaten; neuronale Aktivierung +7,3 % bzw. +8,9 % | [D-18] | B |
 | Muskelquerschnitt | keine Änderung bis 2 Monate, signifikant erst nach 3 Monaten | [D-18] | B |
-| Sehnensteifigkeit | keine Änderung bis 2 Monate, signifikant nach 3 Monaten (Achillessehne +50,3 %) | [D-18, D-19] | B |
-| Sehnensteifigkeit, Meta-Analyse (27 Studien, 37 Interventionen, 264 Personen, 35 von 37 Interventionen 8–14 Wochen, 2–4×/Woche) | SMD 0,70 (0,51–0,88); ≥ 12 Wochen SMD 0,91, 8–12 Wochen 0,81 (Unterschied n. s.); einzelne 8-Wochen-Studien bereits signifikant | [D-17] | A |
+| Sehnensteifigkeit | keine Änderung bis 2 Monate, signifikant nach 3 Monaten (Achillessehne +50,3 %; D-19: n = 9 Männer, 21–27 Jahre) | [D-18, D-19] | B |
+| Sehnensteifigkeit, Meta-Analyse (27 Studien, 37 Interventionen, 264 Personen, 35 von 37 Interventionen 8–14 Wochen, 2–4×/Woche) | SMD 0,70 (0,51–0,88); ≥ 12 Wochen SMD 0,91, 8–12 Wochen 0,81 (nur Hochlast-Interventionen, Unterschied n. s., p = 0,7); einzelne 8-Wochen-Studien bereits signifikant; 237 von 264 Teilnehmenden männlich, 18–50 Jahre | [D-17] | A |
 | Reiz für die Sehne | Intensität > 70 % MVC/RM: SMD 0,90; < 70 %: 0,04 (p < 0,00001); Kontraktionsart ohne Einfluss (isometrisch 0,95, konzentrisch-exzentrisch 0,82); Steifigkeit vor allem über Materialeigenschaften (E-Modul SMD 0,69), weniger über Querschnitt (0,24) | [D-17] | A |
 | Belastungsdauer pro Zyklus | 3 s Last / 3 s Pause: Steifigkeit +57 %; 12 s Last bei gleichem Volumen: +25 %; schnelle Last (Sprünge): nur Tendenz | [D-26] | B |
 | Kollagensynthese nach einer Einheit | erhöht nach 6 h, Maximum nach 24 h, sinkt bis 72 h, bleibt aber in der Sehne erhöht | [D-21] | B |
 | Peritendinöse Kollagensynthese | Syntheseprodukt (PICP) 72 h nach 3 h Laufen dreifach erhöht | [D-22] | B |
-| Bilanz Synthese vs. Abbau | Abbau steigt ebenfalls, erreicht sein Maximum früher als die Synthese [D-20]; daraus Netto-Abbau in den ersten 24–36 h, Netto-Aufbau zwischen 36 und 72 h (Abbildung aus D-20, wiedergegeben in D-23) | [D-20, D-23] | B |
+| Bilanz Synthese vs. Abbau | Abbau steigt ebenfalls, erreicht sein Maximum früher als die Synthese [D-20]; daraus Netto-Abbau in den ersten 24–36 h, Netto-Aufbau zwischen 36 und 72 h (schematische Abbildung aus D-20, wiedergegeben in D-23; keine direkte Messung dieser Fenster) | [D-20, D-23] | B |
 | Umbau des Sehnenkerns | Kern der Achillessehne entsteht im Längenwachstum (bis etwa 17 Jahre) und wird danach praktisch nicht erneuert; Muskel dagegen fortlaufend | [D-24] | B |
 | Detraining | Sehnensteifigkeit nach 1 Monat [D-19] bzw. 2 Monaten [D-18] zurück auf Ausgangswert; Muskelquerschnitt nach 1 Monat; Kraft und neuronale Aktivierung über 3 Monate unverändert [D-18] | [D-18, D-19] | B |
 | Jugend | Muskel und Sehne passen sich unterschiedlich schnell an; in der Adoleszenz kann die Kraft der Sehne davonlaufen (erhöhte Sehnendehnung bei jugendlichen Volleyballern) | [D-25] | B |
@@ -225,19 +235,21 @@ aus Stream C (`04_anatomy.md`) abgeglichen werden.
   Meta-Analyse empfehlen selbst, die langsamere Anpassung der Sehne
   einzuplanen [D-17].
 - **Umgekehrte Lücke nach Pausen.** Nach ≥ 4 Wochen Pause kann die Kraft noch
-  da sein, die Sehnensteifigkeit nicht mehr [D-18, D-19]. Genau hier liegt das
+  da sein, die Sehnensteifigkeit nicht mehr [D-18, D-19] (junge Männer nach 3
+  Monaten isometrischem Beintraining; Übertragung auf Straight-Arm-Strukturen
+  ist Heuristik). Genau hier liegt das
   Risiko für Persona 4: Der User kann die frühere Stufe vielleicht noch halten.
   Der Planer startet Straight-Arm-Strukturen deshalb in der Rampe (PAR-D-29).
 - **Abstand hoher Sehnenreize.** Wegen des Netto-Abbaus in den ersten
   24–36 h [D-20, D-23] liegen hohe Reize derselben Struktur mindestens 48 h
-  auseinander (PAR-D-08); das deckt sich mit Stream E (PAR-E-13, dort
+  auseinander (PAR-D-08; der Wert ist innerhalb 36–72 h gewählt, Heuristik); das deckt sich mit Stream E (PAR-E-13, dort
   Heuristik) und den Return-to-Sport-Programmen (Abschnitt 6).
 - **Welcher Reiz die Sehne anpasst.** Hohe Last (> 70 % MVC) wirkt, niedrige
   kaum [D-17]; kurze wiederholte Halte (3 s) wirkten stärker als lange (12 s)
   [D-26]. Für Straight-Arm-Halte heisst das nur: Lange submaximale Halte sind
   nicht automatisch ein guter Sehnenreiz. **Übertragung auf die obere
   Extremität ist Heuristik**, alle Daten stammen von Achilles- und
-  Patellarsehne junger, überwiegend männlicher Personen [D-17].
+  Patellarsehne gesunder Erwachsener (18–50 Jahre, 237 von 264 männlich) [D-17].
 
 ## 5. Belastungssteuerung
 
@@ -246,17 +258,17 @@ aus Stream C (`04_anatomy.md`) abgeglichen werden.
 | Befund | Zahl | Population | Quelle | Evidenz |
 |---|---|---|---|---|
 | Schlechtes Lastmanagement ist ein Hauptrisikofaktor für Verletzungen (IOC-Konsens) | – | Leistungssport | [D-28] | B |
-| ACWR «Sweet Spot» 0,8–1,3; ≥ 1,5 «Danger Zone» (2–4× Risiko in den Folgetagen bei Cricket-Bowlern) | 0,8–1,3; ≥ 1,5 | Cricket, Rugby, Fussball, Australian Football | [D-27] | B |
+| ACWR «Sweet Spot» 0,8–1,3; ≥ 1,5 «Danger Zone» (2–4× Risiko in den Folgetagen bei Cricket-Bowlern) | 0,8–1,3; ≥ 1,5 | Cricket, Rugby, Fussball, Australian Football (laut Autor auf Einzelsportarten nur mit Vorsicht übertragbar) | [D-27] | B |
 | Wochensteigerung ≥ 15 % → Verletzungsrisiko 21–49 %; Empfehlung < 10 % | < 10 % | Teamsport (laut Autor **unveröffentlichte Daten**) | [D-27] | B |
 | Hohe chronische Last wirkt schützend («Training-Injury Prevention Paradox») | – | Teamsport | [D-27] | B |
-| SR: Mehrheit der Studien findet höheres Risiko bei höherer ACWR, aber 14 verschiedene Einteilungen, Methoden kaum vergleichbar | 20 Studien, 1234 Athleten | Profi-Teamsport | [D-31] | A |
+| SR: Mehrheit der Studien findet höheres Risiko bei höherer ACWR, aber 14 verschiedene Einteilungen, Methoden kaum vergleichbar | 20 Studien, 1234 Athleten | Profi-Teamsport, nur Männer | [D-31] | A |
 | SR: Assoziation mit Kontaktfrei-Verletzungen, EWMA empfohlen | 22 Studien | Teamsport | [D-32] | A |
 | Kritik: kein kausaler Beleg, Ratio-Artefakte; keine Grundlage für Trainingsempfehlungen | – | – | [D-29] | B |
 | Reanalyse: Zufällige chronische Lasten erzeugen ähnliche Odds Ratios (1,16–2,07) wie die echte ACWR (2,45); kein Vorhersagegewinn (c-Statistik 0,574 vs. 0,5) | – | publizierte Teamsportdaten | [D-30] | B |
 | Läufer: Spitzen in der ACWR mit **weniger** Verletzungen assoziiert; Woche-zu-Woche-Quotient ohne Zusammenhang | 5205 Läufer, 588 071 Einheiten | Freizeitläufer | [D-36] | B |
 | Einzel-Einheit > 10 % länger als der längste Lauf der letzten 30 Tage: HRR 1,64 (1,31–2,05); > 30–100 %: 1,52; > 100 %: 2,28 | Referenz: ≤ 10 % | Freizeitläufer | [D-36] | B |
 | 10-%-Regel im RCT: 13-Wochen-Programm nach 10-%-Regel vs. 8-Wochen-Standard, 20,8 % vs. 20,3 % Verletzte | n = 532 | Laufanfänger | [D-33] | A |
-| Wochensteigerung > 30 % (über 2 Wochen) vs. < 10 %: HR 1,59 (0,96–2,66) nur für distanzbezogene Verletzungen; insgesamt kein Unterschied | n = 874 | Laufanfänger | [D-34] | B |
+| Wochensteigerung > 30 % (über 2 Wochen) vs. < 10 %: HR 1,59 (0,96–2,66; p = 0,07) nur für distanzbezogene Verletzungen; insgesamt kein Unterschied | n = 874 | Laufanfänger | [D-34] | B |
 | Wochensteigerung 20–60 % vs. < 20 %: Risikodifferenz 22,6 % nach 21 Tagen, nicht mehr nach 56 und 98 Tagen | n = 261 | Halbmarathon-Vorbereitung | [D-35] | B |
 | SR: Welche Trainingsfehler zu Laufverletzungen führen, ist nicht bestimmbar (widersprüchliche Ergebnisse, mittlere Qualität 44,1 %) | 31 Studien | Läufer | [D-37] | A |
 
@@ -274,12 +286,13 @@ ACWR nur.
 
 | Befund | Zahl | Quelle | Evidenz |
 |---|---|---|---|
-| Meta-Analyse, 25 RCTs, 26 610 Teilnehmende: Krafttraining RR 0,315 (0,207–0,480), Propriozeption 0,550, kombinierte Programme 0,655, Dehnen 0,963 (0,846–1,095, n. s.); akute Verletzungen RR 0,647, Überlastung RR 0,527 | – | [D-38] | A |
+| Meta-Analyse, 25 RCTs, 26 610 Teilnehmende: Krafttraining RR 0,315 (0,207–0,480), Propriozeption 0,550, kombinierte Programme 0,655, Dehnen 0,963 (0,846–1,095, n. s.); alle Übungsprogramme: akute Verletzungen RR 0,647, Überlastung RR 0,527 | – | [D-38] | A |
 | Meta-Analyse, 6 RCTs, 7738 Teilnehmende (12–40 Jahre): RR 0,338 (0,238–0,480); +10 % Krafttrainingsvolumen → Risiko um > 4 Prozentpunkte kleiner | – | [D-39] | A |
 | Kletterer: Kraftprogramm (geschlossene Kette, exzentrisch) 3–4×/Woche über 1 Jahr senkte Schulter- und Ellbogenverletzungen (ein RCT-Kollektiv, Qualität 18/32) | Schulter 3,2 → 0,5, Ellbogen 1,8 → 0,5 pro 1000 Expositionen | [D-11] | A (via SR) |
 
 **Einordnung.** Die Präventionsstudien testen *zusätzliches* Krafttraining
-gegen keines, meist für die untere Extremität [D-38, D-39]. Calisthenics ist
+gegen keines; die (allein geprüften) Abstracts schlüsseln Verletzungsorte nicht
+nach Region auf [D-38, D-39]. Calisthenics ist
 selbst Krafttraining; daraus folgt nicht, dass mehr Skill-Volumen schützt. Es
 folgt nur, dass ergänzendes Kraft- und Prehab-Training für gefährdete Strukturen
 sinnvoll und sicher ist (Abschnitt 10).
@@ -288,23 +301,28 @@ sinnvoll und sicher ist (Abschnitt 10).
 
 | Element | Regel | Quelle | Evidenz |
 |---|---|---|---|
-| Herkunft | Schmerz-Monitoring als Teil eines wirksamen Programms bei patellofemoralem Schmerz (12 Wochen, 40 Patientinnen, nach 12 Monaten 85 % schmerzfrei im Sport) | [D-48] | A |
+| Herkunft | Schmerz-Monitoring als Teil eines 12-Wochen-Programms bei patellofemoralem Schmerz (40 junge Frauen, randomisiert isometrisch vs. exzentrisch; nach 12 Monaten 85 % schmerzfrei im Sport). Keine Gruppe ohne Programm; der Autor nennt auch Spontanverlauf als mögliche Erklärung, der Beitrag des Schmerz-Monitorings ist nicht isoliert | [D-48] | B (für das Modell; die Studie selbst ist ein RCT) |
 | Wirksamkeit | Weiterlaufen/-springen nach Schmerz-Monitoring vs. 6 Wochen aktive Pause: keine Unterschiede, keine negativen Effekte (n = 38) | [D-40] | A |
-| Schmerzgrenze während/direkt nach | ≤ 5/10 (NRS) | [D-42, D-43, D-44] | A (Modell aus RCT D-40) |
+| Schmerzgrenze während/direkt nach | ≤ 5/10 (NRS) | [D-42, D-43, D-44] | A (Modell aus RCT D-40; D-42 ist ein Machbarkeits-Pilot, n = 15) |
 | Nächster Morgen | Schmerz zurück auf dem Niveau vor der Aktivität [D-42]; Beschwerden innerhalb von 24 h abgeklungen [D-44] | [D-42, D-44] | A |
 | Woche zu Woche | Schmerz und Steifigkeit nehmen nicht zu | [D-43] | A |
-| Schulter (subakromial, RCT BMJ) | während der Übung höchstens 5/10, etwas Schmerz erwünscht; vor der nächsten Einheit zurück auf Ausgangsniveau, sonst wird die Last reduziert | [D-45] | A |
+| Schulter (Patienten mit > 6 Monaten subakromialem Schmerz, RCT) | während der Übung höchstens 5/10, etwas Schmerz erwünscht; vor der nächsten Einheit zurück auf Ausgangsniveau, sonst wird die Last reduziert | [D-45] | A |
 | Varianten | Progression nur bei VAS ≤ 3 [D-46]; Progression bei Schmerz < 6/10 und Anstrengung < 3/10, Reduktion bei > 5/10 für eine ganze Woche, Steigerung höchstens einmal pro Woche [D-47] | [D-46, D-47] | A/B |
 | «Grün» für höhere Belastung | Vor der Rückkehr zu Lauf/Sprung sollte der Alltagsschmerz minimal sein (1–2/10); wer bei 20 Hüpfern > 2/10 hat, bleibt schwer innerhalb des Modells | [D-41] | B |
 | Schmerzhafte Übungen allgemein | kleiner Kurzzeitvorteil für schmerzhafte Übungen (SMD −0,27), mittel- und langfristig kein Unterschied | [D-49] | A |
 | Ruhe | Vollständige Ruhe und Entlastung der Sehne können schaden und die Erholung verlängern | [D-41] | B |
+
+**Geltungsbereich (Audit).** Alle Schmerzregeln stammen aus Reha-Studien mit
+Sehnen- bzw. Schulterbeschwerden (Achilles, Patella, subakromial). Im Planer
+sind sie Trainingssteuerung für User ohne Red Flags; ihre Übertragung auf
+Calisthenics-Strukturen ist Heuristik und keine Therapie.
 
 ### 5.4 Regelwerk für den Planer
 
 | Baustein | Regel | Grundlage |
 |---|---|---|
 | Last je Struktur | Wochenlast = Summe der Arbeitssätze × Strukturgewicht der Übung (Gewichte aus Stream C). Assistierte Sätze zählen voll. | PDF-Folgerung F-3 (`01_pdf_extract.md` §6); Überlastung ist das Hauptproblem [D-02]. Gewichtung: Heuristik bis Stream C. |
-| Wochendeckel | Wochenlast je Struktur ≤ Mittel der letzten 3 Wochen × (1 + PAR-D-09/10/11). | Richtung [D-34, D-35, D-36]; Beträge PAR-D-09 bis PAR-D-11 |
+| Wochendeckel | Wochenlast je Struktur ≤ Mittel der letzten 3 Wochen × (1 + PAR-D-09/10/11). | schwaches Signal [D-34, D-35]; D-36 fand für Wochenquotienten keinen bzw. einen umgekehrten Zusammenhang; Beträge PAR-D-09 bis PAR-D-11 sind Heuristik |
 | Einheitsdeckel | Last einer Struktur in einer Einheit ≤ grösste Einheit der letzten 30 Tage × (1 + PAR-D-31). | [D-36] (Analogie Laufen) |
 | Neue Belastungsart | beginnt mit PAR-D-12 des Zielvolumens | Heuristik (kein 30-Tage-Maximum vorhanden, entspricht dem «NP-Zustand» in [D-36]) |
 | Abstand hoher Sehnenreize | ≥ PAR-D-08, in der Rampe ≥ PAR-D-34 | [D-20, D-23, D-41, D-54] |
@@ -325,10 +343,10 @@ sinnvoll und sicher ist (Abschnitt 10).
 | Evidenzlage | Forschungsevidenz für Return-to-Sport-Entscheide ist dünn; auch für die Schulter gibt es nur prinzipienbasierte Konsensempfehlungen | [D-50, D-79] | B |
 | Kriterien statt Zeit | Achillessehne: vor Lauf/Sprung Alltagsschmerz 1–2/10, Hüpftest ≤ 2/10; Aktivitäten nach Schmerz und Anstrengung in leicht/mittel/hoch einteilen, alle 3–4 Wochen neu einstufen | [D-41] | B |
 | Erholungsabstand | leichte Aktivitäten täglich, mittlere mit 2, hohe mit 3 Erholungstagen; Grundlage: schwere Sehnenlast braucht 36–72 h | [D-41] | B |
-| Turnspezifische Reihenfolge | Handgelenk: zuerst Zug- und Hangelemente, dann Stütz in geschlossener Kette ohne Impact, zuletzt offene Kette mit axialer Last, Plyometrie und Flugelementen | [D-53] | B |
-| Startvolumen | «75-%-Reduktionsregel»: Rückkehr nach Handgelenkbeschwerden mit einem Viertel des früheren Volumens an Elementen | [D-53] unter Berufung auf [D-07] | B |
-| Einstiegsvoraussetzung | Beweglichkeit und Kraft idealerweise 50–75 % der Gegenseite vor Beginn des Protokolls | [D-53] | B |
-| «Soreness Rules» | kein Schmerz während/nach → nach Plan steigern; Schmerz > 1 h nach dem Training oder am Folgetag → 1 Tag Pause, letzte Woche wiederholen; Schmerz im Aufwärmen, der in den ersten 15 min verschwindet → letzte Einheit wiederholen, bei erneutem Schmerz abbrechen, 2 Tage Pause, eine Woche zurück; Schmerz im Aufwärmen, der über 15 min anhält → stoppen, 2 Tage Pause, eine Woche zurück | [D-53], abgeleitet aus Wurfprogrammen [D-54] | B |
+| Turnspezifische Reihenfolge | Handgelenk: zuerst Zug- und Hangelemente, dann Stütz in geschlossener Kette ohne Impact, zuletzt offene Kette mit axialer Last, Plyometrie und Flugelementen | [D-53] | B (Protokoll aus Literatur und Expertenmeinung) |
+| Startvolumen | «75-%-Reduktionsregel»: Rückkehr nach Handgelenkbeschwerden mit einem Viertel des früheren Volumens an Elementen | [D-53] unter Berufung auf [D-07] | B (Expertenregel) |
+| Einstiegsvoraussetzung | Beweglichkeit und Kraft idealerweise 50–75 % der Gegenseite vor Beginn des Protokolls (klinische Messung, von der App nicht erhoben) | [D-53] | B |
+| «Soreness Rules» | kein Schmerz während/nach → nach Plan steigern; Schmerz > 1 h nach dem Training oder am Folgetag → 1 Tag Pause, letzte Woche wiederholen; Schmerz im Aufwärmen, der in den ersten 15 min verschwindet → letzte Einheit wiederholen, bei erneutem Schmerz abbrechen, 2 Tage Pause, eine Woche zurück; Schmerz im Aufwärmen, der über 15 min anhält → stoppen, 2 Tage Pause, eine Woche zurück | [D-53], abgeleitet aus Wurfprogrammen [D-54] | B (Expertenprotokoll) |
 | Frequenz bei Sehnen-/Bandverletzung (Wurf) | leichte Verletzung: je nach Stufe jeden 2. oder 3. Tag werfen; mittlere/schwere: höchstens 1 Stufe pro 3 Tage mit 2 aktiven Ruhetagen | [D-54] | B |
 
 ### 6.2 Rampe des Planers
@@ -384,17 +402,26 @@ der Zelle belegt den **Mechanismus**, nicht die Aktion; die Aktion selbst ist
 immer **Heuristik** (Gelenkstellung unter Last, Abschnitt 3). Es gibt keine
 Studie, die Übungsausschlüsse bei Calisthenics-Beschwerden prüft.
 
-| Beschwerde (Region) | Handstand / HSPU | Planche, Leans, Pseudo-Liegestütz | Maltese, Iron Cross, Ringe Straight-Arm | Liegestütz, Dips | Klimmzug, Rudern | Front Lever, Back Lever, German Hang | Muscle-up | Core-Extension (Brücke, Arch) | Hängen / Griff |
+**Einordnung (Audit).** Die Matrix entscheidet nur, welche Übungen der Planer
+für eine Region einplant (Anpassung der Trainingslast). Sie ist keine
+Behandlungsempfehlung und ersetzt keine Abklärung: Jede gemeldete Beschwerde
+durchläuft parallel die Red-Flag-Fragen (Abschnitt 9) und die Verweisregeln
+(PAR-D-19, PAR-D-20, PAR-D-32, RF-11). Die Zeilen sind Schmerzorte, die der
+User angibt, keine Diagnosen; die Struktur hinter einem Ort (z. B. distale
+Bizepssehne bei der Ellenbeuge) steht nur in Abschnitt 3 als
+Mechanismus-Begründung und wird dem User nicht als Befund angezeigt.
+
+| Beschwerdeort (Angabe des Users) | Handstand / HSPU | Planche, Leans, Pseudo-Liegestütz | Maltese, Iron Cross, Ringe Straight-Arm | Liegestütz, Dips | Klimmzug, Rudern | Front Lever, Back Lever, German Hang | Muscle-up | Core-Extension (Brücke, Arch) | Hängen / Griff |
 |---|---|---|---|---|---|---|---|---|---|
-| Handgelenk, dorsal/Extension | M (Parallettes, Fäuste) [D-07, D-08, D-53] | M (Parallettes) [D-07, D-08] | M | M (Parallettes, Fäuste) [D-02] | S | S | M (kein False Grip) | M (Brücke auf Händen) | S (zuerst in der Rampe [D-53]) |
-| Handgelenk, ulnar | M [D-08] | M [D-08] | M | M [D-02] | M | M | M | M | M |
-| Ellbogen medial | S | M [D-64] | X [D-63] | S | M (neutraler Griff) | M | M | – | M |
-| Ellbogen lateral | S | S | M | S | M [D-65] | M | M | – | M [D-63, D-65] |
-| Ellenbeuge / distale Bizepssehne | S | M, supinierte Varianten X [D-68, D-69] | X [D-68] | S | M (kein Chin-up) [D-68] | M (kein supinierter Griff) | X | – | S |
-| Vordere Schulter / lange Bizepssehne | M | M | X [D-71] | M (keine tiefen Dips) | S | X (Back Lever, German Hang) / M (Front Lever) | X | M | S |
-| Schulter oben/seitlich (subakromial) | M [D-72, D-73] | M | M | M | M (kein breiter Griff) [D-02] | M | X [D-02] | – | M (Überkopf) [D-73] |
-| Finger / Unterarmbeuger | S | S | M | S (keine Fingerspitzen-Varianten) | M | M | M | – | M [D-10, D-11] |
-| Lendenwirbelsäule | M (kein Hohlkreuz) | M | M | S | S | M (Back Lever) | S | X [D-03, D-82] | S |
+| Handgelenk, Handrücken / bei Streckung | M (Parallettes, Fäuste) [D-07, D-08, D-53] | M (Parallettes) [D-07, D-08] | M | M (Parallettes, Fäuste) [D-02] | S | S | M (kein False Grip) | M (Brücke auf Händen) | S (zuerst in der Rampe [D-53]) |
+| Handgelenk, kleinfingerseitig | M [D-08] | M [D-08] | M | M [D-02] | M | M | M | M | M |
+| Ellbogen innen | S | M [D-64] | X [D-63] | S | M (neutraler Griff) | M | M | – | M |
+| Ellbogen aussen | S | S | M | S | M [D-65] | M | M | – | M [D-63, D-65] |
+| Ellenbeuge (vorne am Ellbogen) | S | M, supinierte Varianten X [D-68, D-69] | X [D-68] | S | M (kein Chin-up) [D-68] | M (kein supinierter Griff) | X | – | S |
+| Schulter vorne | M | M | X [D-71] | M (keine tiefen Dips) | S | X (Back Lever, German Hang) / M (Front Lever) | X | M | S |
+| Schulter oben/seitlich | M [D-72, D-73] | M | M | M | M (kein breiter Griff) [D-02] | M | X [D-02] | – | M (Überkopf) [D-73] |
+| Finger / Unterarm-Innenseite | S | S | M | S (keine Fingerspitzen-Varianten) | M | M | M | – | M [D-10, D-11] |
+| unterer Rücken | M (kein Hohlkreuz) | M | M | S | S | M (Back Lever) | S | X [D-03, D-82] | S |
 
 *Begründung für X:* Die Übung bringt die betroffene Struktur in ihre
 höchstbelastete Stellung, und eine Regression ohne diese Stellung existiert in
@@ -409,8 +436,10 @@ mit den Belastungskategorien aus Stream C abzugleichen.
 Die App stellt bei jeder Beschwerdemeldung diese Ja/Nein-Fragen. Die Liste
 folgt Leitlinien und Reviews; sie ist absichtlich breit, weil die meisten
 einzelnen Red Flags wenig trennscharf sind [D-85, D-86, D-87] und ein unnötiger
-Verweis wenig kostet, ein übersehener viel. Die App nennt keine
-Verdachtsdiagnose. Dringlichkeit: **N** = notfallmässig (sofort, gleicher Tag),
+Verweis wenig kostet, ein übersehener viel (diese Abwägung ist Heuristik). Die
+App nennt keine Verdachtsdiagnose: Frage- und Aktionstexte beschreiben Symptome
+und empfehlen eine Abklärung, ohne eine Erkrankung zu benennen; die Spalte
+«Quelle» ist interne Dokumentation und wird nicht angezeigt. Dringlichkeit: **N** = notfallmässig (sofort, gleicher Tag),
 **D** = dringend (in den nächsten Tagen), **A** = Abklärung empfehlen (nicht
 dringend).
 
@@ -418,17 +447,17 @@ dringend).
 |---|---|---|---|---|
 | RF-01 | Gab es einen plötzlichen Knall, Ruck oder stechenden Schmerz mit sofortigem Kraftverlust oder sichtbarer Formveränderung (z. B. verschobener Muskelbauch am Oberarm oder an der Brust)? | Region sperren; zeitnahe ärztliche Abklärung empfehlen | D | [D-70] (frühe Versorgung bevorzugt, spätere teurer und komplikationsreicher), [D-73] (akuter traumatischer Rotatorenmanschettenriss: dringend), [D-90] |
 | RF-02 | Taubheit, Kribbeln, ausstrahlender Schmerz oder Schwäche in Arm, Hand oder Bein? | Region sperren; Abklärung empfehlen | D | [D-88] (Radikulopathie: neurologische Untersuchung, Überweisung); für den Arm übertragen (Heuristik) |
-| RF-03 | Deutlicher Kraftverlust oder Unfähigkeit, das Gelenk normal zu bewegen oder zu belasten? | Region sperren; Abklärung empfehlen | D | [D-73], [D-70] |
-| RF-04 | Schmerz in Ruhe oder nachts, unabhängig von der Position? | Abklärung empfehlen; Region in Stufe 0 | A | [D-86] (häufigste unspezifische Red Flag in LWS-Leitlinien); Einschränkung: bei subakromialem Schmerz auch ohne ernste Ursache häufig [D-73] |
-| RF-05 | Deutliche Schwellung, grosser Bluterguss oder Formveränderung eines Gelenks? | Region sperren; Abklärung empfehlen; bei Verdacht auf ausgerenktes Gelenk sofort | D / N | [D-73] (nicht reponierte Luxation: gleicher Tag), [D-70, D-90] |
-| RF-06 | Sturz, Aufprall oder anderes Trauma vor Beginn des Schmerzes? | Region sperren; Abklärung empfehlen | D | [D-73] (Trauma-Anamnese), [D-86, D-87] (schweres Trauma als Fraktur-Red-Flag) |
-| RF-07 | Fieber, Rötung, Überwärmung eines Gelenks oder allgemeines Krankheitsgefühl? | Training stoppen; sofortige ärztliche Abklärung empfehlen | N | [D-73] (Verdacht auf Gelenkinfekt: Notfall am gleichen Tag), [D-86] (Infektion) |
-| RF-08 | Bei Rückenschmerz: Störung von Blase oder Darm, Taubheit im Gesäss-/Genitalbereich, sexuelle Funktionsstörung? | sofort notfallmässige Abklärung empfehlen | N | [D-89] (Definition Cauda-equina-Syndrom), [D-85, D-86] |
+| RF-03 | Deutlicher Kraftverlust oder Unfähigkeit, das Gelenk normal zu bewegen oder zu belasten? | Region sperren; Abklärung empfehlen | D | [D-73] (akuter traumatischer Rotatorenmanschettenriss, nicht reponierte Luxation), [D-70] (Schwäche bei Beugung/Supination); Bündelung zu einer Frage Heuristik |
+| RF-04 | Schmerz in Ruhe oder nachts, unabhängig von der Position? | Abklärung empfehlen; Region in Stufe 0 | A | [D-86] (in LWS-Leitlinien am häufigsten als Red Flag für verschiedene Pathologien genannt); Einschränkung: bei subakromialem Schmerz auch ohne ernste Ursache häufig [D-73] |
+| RF-05 | Deutliche Schwellung, grosser Bluterguss oder Formveränderung eines Gelenks? | Region sperren; Abklärung empfehlen; wirkt ein Gelenk sichtbar verschoben oder ausgerenkt: sofort | D / N | [D-73] (nicht reponierte Luxation: gleicher Tag), [D-70, D-90] |
+| RF-06 | Sturz, Aufprall oder anderes Trauma vor Beginn des Schmerzes? | Region sperren; Abklärung empfehlen | D | [D-73] (Trauma-Anamnese), [D-86, D-87] (schweres Trauma als Fraktur-Red-Flag); Dringlichkeit D Heuristik |
+| RF-07 | Fieber, Rötung, Überwärmung eines Gelenks oder allgemeines Krankheitsgefühl? | Training stoppen; sofortige ärztliche Abklärung empfehlen | N | [D-73] (Verdacht auf Gelenkinfekt: Notfall am gleichen Tag), [D-86] (Infektion); Symptomliste Heuristik |
+| RF-08 | Bei Rückenschmerz: Störung von Blase oder Darm, Taubheit im Gesäss-/Genitalbereich, sexuelle Funktionsstörung? | sofort notfallmässige Abklärung empfehlen | N | [D-89] (Definition Cauda-equina-Syndrom), [D-92] (Notfalldiagnose; dringliche Bildgebung in 80 % der Leitfäden), [D-85, D-86] |
 | RF-09 | Bei Rückenschmerz: Krebserkrankung in der Vorgeschichte oder ungewollter Gewichtsverlust? | Abklärung empfehlen | D | [D-86] (in den meisten Leitlinien), [D-87] (Krebs in der Vorgeschichte: höchste Nachtestwahrscheinlichkeit, 33 %) |
 | RF-10 | Brustschmerz, ungewohnte Atemnot, Schwindel oder Ohnmacht bei Belastung? | Training stoppen; ärztliche Abklärung vor weiterem Training | N / D | [D-91] (Warnsymptome gehen Herz-Kreislauf-Ereignissen häufig voraus und verlangen medizinische Freigabe); Symptomliste Heuristik |
-| RF-11 | Bestehen die Beschwerden trotz Lastreduktion länger als PAR-D-19, oder werden sie schlechter? | Fachperson empfehlen; Region in Stufe 0 | A | [D-88] (keine Besserung nach 4 Wochen → Überweisung), [D-73] (6 Wochen Physiotherapie, bei Besserung weitere 6) |
+| RF-11 | Bestehen die Beschwerden trotz Lastreduktion länger als PAR-D-19, oder werden sie schlechter? | Fachperson empfehlen; Region in Stufe 0 | A | [D-88] (keine Besserung nach 4 Wochen → Überweisung), [D-73] (6 Wochen Physiotherapie, bei Besserung weitere 6); Übertragung von LWS/Schulter auf alle Regionen Heuristik |
 | RF-12 | User unter 18 mit Handgelenkschmerz bei Stützbelastung länger als PAR-D-22? | Fachperson empfehlen; Stützbelastung pausieren | A | [D-06, D-07, D-53] (Risiko der Wachstumsfuge; späte Vorstellung häufig) |
-| RF-13 | User unter 18 mit Rückenschmerz bei Extensionselementen (Brücke, Back Lever, Arch) länger als PAR-D-42? | Fachperson empfehlen; Extensionselemente pausieren | A | [D-82] (Rückenschmerz beim jungen Turner als Warnzeichen), [D-84] |
+| RF-13 | User unter 18 mit Rückenschmerz bei Extensionselementen (Brücke, Back Lever, Arch) länger als PAR-D-42? | Fachperson empfehlen; Extensionselemente pausieren | A | [D-82] (Rückenschmerz beim jungen Turner als Warnzeichen), [D-84] (1-Jahres-Prävalenz 57 %, Hintergrundangabe); Frist Heuristik |
 
 Nach einem Verweis plant der Planer die betroffene Struktur nicht mehr, bis
 der User eine Freigabe bestätigt (Vorschlag aus `codebase_notes.md` §6). Das
@@ -443,9 +472,9 @@ Fragen.
 | Schulter | OSTRC-Programm: Innenrotations-Beweglichkeit, Aussenrotationskraft, Schulterblattmuskulatur, kinetische Kette, BWS-Mobilität; 3×/Woche im Aufwärmen, von Trainern geleitet | Prävalenz Schulterbeschwerden 17 % vs. 23 %; OR 0,72 (0,52–0,98); erhebliche Beschwerden OR 0,78 (n. s.) | Überkopf-Wurfsport; Übungsinhalte passen zu Stütz- und Zugsport, Wirkung dort ungeprüft | [D-75] | A |
 | Schulter | SR Überkopfsport: Risikofaktoren und Präventionsmassnahmen mit begrenzter bzw. widersprüchlicher Evidenz; SR Präventionsprogramme: nur 3 Studien mit günstigem Effekt, keine Schlussfolgerung möglich | – | – | [D-74, D-78] | A |
 | Schulter | Konsens: prinzipienbasierte Empfehlungen zu Last- und Risikomanagement | – | alle Sportarten | [D-79] | B |
-| Ellbogen medial | Programm mit 9 Kräftigungs- und 9 Dehnübungen, ≥ 1×/Woche, 8–11-jährige Baseballspieler | 0,8 vs. 1,7 mediale Ellbogenverletzungen pro 1000 Expositionen; HR 50,8 % | Wurfsport (Valgusstress); kontrollierte Kohorte, nicht randomisiert | [D-80] | B |
+| Ellbogen medial | Programm mit 9 Kräftigungs- und 9 Dehnübungen, ≥ 1×/Woche, 8–11-jährige Baseballspieler | 0,8 vs. 1,7 mediale Ellbogenverletzungen pro 1000 Expositionen; HR 0,508 (0,292–0,882; im Abstract als «50,8 %» angegeben) | Wurfsport (Valgusstress); kontrollierte Kohorte, nicht randomisiert | [D-80] | B |
 | Schulter + Ellbogen | Kletterer: geschlossene Kette, exzentrisch, Kraft, 3–4×/Woche über 1 Jahr | Schulter 3,2 → 0,5, Ellbogen 1,8 → 0,5 pro 1000 Expositionen | Zug- und Griffsport, nächste Analogie zum Calisthenics-Zug; ein Kollektiv, mittlere Qualität | [D-11] | A (via SR) |
-| Allgemein | Krafttraining als Prävention (RR 0,315 bzw. 0,338); Dehnen ohne Effekt | – | überwiegend untere Extremität | [D-38, D-39] | A |
+| Allgemein | Krafttraining als Prävention (RR 0,315 bzw. 0,338); Dehnen ohne Effekt | – | Sportverletzungen allgemein; Übertragbarkeit auf Oberkörper-Statics ungeprüft | [D-38, D-39] | A |
 | Sehne (Konzept) | Vorschlag für gefährdete Jugendliche: 5 × 4 Kontraktionen bei 85–90 % der isometrischen Maximalkraft mit 3 s Dehnung der Sehne | nicht auf Prävention getestet | Konzept, untere Extremität | [D-25] | B |
 | Handgelenk | **keine Präventionsstudie gefunden**; die Meta-Analyse zu Turnern fordert Forschung zu Intensitätsschwellen und Risikoreduktion | – | – | [D-06] | – |
 | Finger | richtiges Aufwärmen erhöht das physiologische «Bowstringing» und soll Verletzungen vorbeugen (Hypothese im Review) | – | nur Leisten/Fingerspitzen | [D-10] | B |
@@ -462,47 +491,47 @@ folgt dem OSTRC-Programm [D-75].
 
 | Param-ID | Parameter (key, English snake_case) | Wert/Spanne | Einheit | Quelle(n) | Evidenz | Anmerkung |
 |---|---|---|---|---|---|---|
-| PAR-D-01 | `injury_region_priority_order` | shoulder > wrist > elbow = lumbar | Rangfolge | D-01, D-02, D-14 | B | Schulter 32 %, Handgelenk 15 %, Ellbogen 10 %, Rücken 10 % [D-01]; Schulter auch im Street Workout [D-02] und bei CrossFit-Turnbewegungen [D-14] vorn. Steuert Prehab-Auswahl und Hinweise. |
+| PAR-D-01 | `injury_region_priority_order` | shoulder > wrist > elbow = lumbar | Rangfolge | D-01, D-02, D-14 | B | Schulter 32 %, Handgelenk 15 %, Ellbogen 10 %, Rücken 10 % [D-01]; Schulter auch im Street Workout [D-02] und bei CrossFit-Turnbewegungen [D-14] vorn (Querschnitt, Selbstauskunft). Steuert Prehab-Auswahl und Hinweise. |
 | PAR-D-02 | `prior_injury_increase_cap_factor` | 0.5 | Faktor auf die Steigerungsdeckel der Region | D-02, D-09, D-11, D-12, D-13 | Heuristik | Richtung belegt (OR 4,08 [D-02]); Betrag nicht belegt: Halbierung ist konservativ und erklärbar. |
 | PAR-D-03 | `max_sessions_per_day_same_structure` | 1 | Einheiten/Tag | D-01, D-41 | Heuristik | Mehrere Einheiten pro Tag mit mehr Verletzungen assoziiert (B) [D-01]; hohe Sehnenlast braucht 36–72 h [D-41]. Wert Heuristik. |
-| PAR-D-04 | `elevated_risk_training_age_months` | 6–48 | Monate Calisthenics-Erfahrung | D-01 | B | In dieser Phase konservativer steigern. Widerspricht teils D-03, D-04 («Widersprüche» W-2). |
+| PAR-D-04 | `elevated_risk_training_age_months` | 6–48 | Monate Calisthenics-Erfahrung | D-01 | B | In dieser Phase konservativer steigern. Assoziation im Querschnitt (12-Monats-Verletzungen), Referenzkategorie im Abstract nicht genannt. Widerspricht teils D-03, D-04 («Widersprüche» W-2). |
 | PAR-D-05 | `warmup_allows_max_skill_attempts` | false | bool | D-01 | Heuristik | Techniktraining als Aufwärmen mit mehr Verletzungen assoziiert (B, keine Kausalität). Aufsteigende submaximale Sätze (PAR-E-26) bleiben erlaubt. |
-| PAR-D-06 | `tendon_adaptation_horizon_weeks` | 12 (Spanne 8–14) | Wochen | D-17, D-18, D-19 | A/B | Bis dahin gilt eine neue oder deutlich schwerere Straight-Arm-Stufe nicht als voll belastbar. Steifigkeit signifikant erst nach 3 Monaten [D-18, D-19]; Meta-Analyse: ≥ 12 Wochen wirksamer, einzelne 8-Wochen-Studien schon signifikant [D-17]. Daten: untere Extremität. |
-| PAR-D-07 | `muscle_early_strength_gain_weeks` | 8 | Wochen | D-18 | B | Nach 8 Wochen Kraft +29,6 % bei unveränderter Sehnensteifigkeit [D-18]. PAR-D-06 minus PAR-D-07 ist die «Kraft-Sehnen-Lücke». Neuronale Frühphase siehe PAR-E-20. |
-| PAR-D-08 | `min_rest_hours_high_tendon_load_same_structure` | 48 | Stunden | D-20, D-21, D-23, D-41 | B | Netto-Kollagenabbau 24–36 h, Netto-Aufbau 36–72 h [D-20, D-23]; Synthese bis 72 h erhöht [D-21]; schwere Sehnenlast braucht 36–72 h [D-41]. Gilt für Maximal-/Hochlast-Einheiten derselben Struktur; deckt PAR-E-13. |
-| PAR-D-09 | `max_weekly_load_increase_straight_arm_pct` | 10 | % gegenüber Mittel der letzten 3 Wochen | D-17, D-18, D-27, D-33, D-36 | Heuristik | Straight-Arm-Strukturen (Bizepssehne, Ellbogen medial, vordere Schulter) sind sehnenlimitiert [D-17, D-18]. Die 10-%-Regel ist im RCT nicht belegt [D-33]; < 10 % stützt sich auf unveröffentlichte Daten [D-27]; 10 % entspricht der Referenzkategorie in [D-36]. Konservativ gewählt. |
-| PAR-D-10 | `max_weekly_load_increase_bent_arm_pct` | 20 | % gegenüber Mittel der letzten 3 Wochen | D-34, D-35 | B | Steigerungen ≥ 20 % [D-35] bzw. > 30 % [D-34] mit mehr Verletzungen assoziiert (Analogie Laufen). Mit Stream B abgleichen. |
+| PAR-D-06 | `tendon_adaptation_horizon_weeks` | 12 (Spanne 8–14) | Wochen | D-17, D-18, D-19 | A/B (Zeitverlauf) + Heuristik (Übertragung) | Bis dahin gilt eine neue oder deutlich schwerere Straight-Arm-Stufe nicht als voll belastbar. Steifigkeit signifikant erst nach 3 Monaten [D-18, D-19]; Meta-Analyse: ≥ 12 Wochen tendenziell wirksamer (n. s., p = 0,7), einzelne 8-Wochen-Studien schon signifikant [D-17]. Daten: Achilles-/Patellarsehne gesunder Erwachsener (237 von 264 männlich); Übertragung auf Bizepssehne, Ellbogen und Schulter ist Heuristik. |
+| PAR-D-07 | `muscle_early_strength_gain_weeks` | 8 | Wochen | D-18 | B + Heuristik | Nach 2 Monaten (≈ 8–9 Wochen) Kraft +29,6 % bei unveränderter Sehnensteifigkeit [D-18] (n = 8, isometrisches Kniestreckertraining; Übertragung Heuristik). PAR-D-06 minus PAR-D-07 ist die «Kraft-Sehnen-Lücke». Neuronale Frühphase siehe PAR-E-20. |
+| PAR-D-08 | `min_rest_hours_high_tendon_load_same_structure` | 48 | Stunden | D-20, D-21, D-23, D-41 | B (Zeitverlauf) / Wert Heuristik | 48 h ist ein Wert innerhalb 36–72 h. Netto-Kollagenabbau 24–36 h, Netto-Aufbau 36–72 h (schematische Abbildung) [D-20, D-23]; Synthese bis 72 h erhöht [D-21]; schwere Sehnenlast braucht 36–72 h [D-41]. Gilt für Maximal-/Hochlast-Einheiten derselben Struktur; deckt PAR-E-13. |
+| PAR-D-09 | `max_weekly_load_increase_straight_arm_pct` | 10 | % gegenüber Mittel der letzten 3 Wochen | D-17, D-18, D-27, D-33, D-36 | Heuristik | Straight-Arm-Strukturen (Bizepssehne, Ellbogen medial, vordere Schulter) sind sehnenlimitiert [D-17, D-18]. Die 10-%-Regel ist im RCT nicht belegt [D-33]; < 10 % stützt sich auf unveröffentlichte Daten [D-27]; die Referenzkategorie ≤ 10 % in [D-36] betrifft die Einzel-Einheit, für Wochenquotienten fand D-36 keinen (Woche zu Woche) bzw. einen umgekehrten (ACWR) Zusammenhang. Konservativ gewählt. |
+| PAR-D-10 | `max_weekly_load_increase_bent_arm_pct` | 20 | % gegenüber Mittel der letzten 3 Wochen | D-34, D-35, D-36 | Heuristik (Richtung B) | Signal schwach: 20–60 % vs. < 20 % nur nach 21 Tagen signifikant [D-35]; > 30 % vs. < 10 % HR 1,59 (0,96–2,66), n. s., nur distanzbezogene Verletzungen [D-34]; Woche-zu-Woche-Quotient ohne Zusammenhang [D-36]. Laufanfänger/Freizeitläufer (Analogie). Wert gesetzt; mit Stream B abgleichen. |
 | PAR-D-11 | `max_weekly_load_increase_wrist_extension_pct` | 10 | % gegenüber Mittel der letzten 3 Wochen | D-06, D-53 | Heuristik | Trainingsintensität und Wochenstunden mit Handgelenkschmerz assoziiert [D-06]; Volumensteigerung als Risikofaktor [D-53]. Betrag Heuristik (wie PAR-D-09). |
 | PAR-D-12 | `new_exercise_family_start_fraction` | 0.5 | Anteil des Zielvolumens in Woche 1 | – | Heuristik | Neue Belastungsart ohne 30-Tage-Referenz (entspricht dem nicht berechenbaren Zustand in [D-36]); halbes Volumen ist konservativ. |
-| PAR-D-13 | `pain_rating_points` | during, immediately_after, next_morning, weekly_trend | Zeitpunkte, NRS 0–10 je Region | D-42, D-43, D-45 | A | **Datenmodell fehlt**: Das Log kennt heute keinen Schmerzwert (nur `perceived_fatigue`, RPE, RIR, `form_quality`). |
-| PAR-D-14 | `pain_green_max_nrs` | 2 | NRS 0–10 | D-41 | B | Bis hier Progression erlaubt. Kriterium vor Rückkehr zu höherer Last: Alltagsschmerz 1–2/10, Hüpftest ≤ 2/10 [D-41]. Strengere Variante ≤ 3 als Progressionsgrenze [D-46] (W-9). |
-| PAR-D-15 | `pain_accept_max_nrs` | 5 | NRS 0–10 | D-40, D-42, D-43, D-44, D-45 | A | Bis hier Training ohne Progression; darüber Übung für diese Region beenden. |
+| PAR-D-13 | `pain_rating_points` | during, immediately_after, next_morning, weekly_trend | Zeitpunkte, NRS 0–10 je Region | D-42, D-43, D-45 | A (Reha-Kontext) | Modell aus Reha-Studien (Achilles, Patella, Schulterpatienten); Einsatz bei Trainierenden ist Übertragung. **Datenmodell fehlt**: Das Log kennt heute keinen Schmerzwert (nur `perceived_fatigue`, RPE, RIR, `form_quality`). |
+| PAR-D-14 | `pain_green_max_nrs` | 2 | NRS 0–10 | D-41 | B (Analogie) + Heuristik | Bis hier Progression erlaubt (Achillessehnen-Reha, als Progressionsgrenze übertragen). Kriterium vor Rückkehr zu höherer Last: Alltagsschmerz 1–2/10, Hüpftest ≤ 2/10 [D-41]. Strengere Variante ≤ 3 als Progressionsgrenze [D-46] (W-9). |
+| PAR-D-15 | `pain_accept_max_nrs` | 5 | NRS 0–10 | D-40, D-42, D-43, D-44, D-45 | A (Reha-Kontext) | Bis hier Training ohne Progression; darüber Übung für diese Region beenden (Aktion Heuristik). Grenze aus Reha-Programmen bei Sehnen- bzw. Schulterbeschwerden (Kern-RCT D-40: Achillessehne, n = 38). |
 | PAR-D-16 | `pain_next_morning_rule` | Schmerz am nächsten Morgen nicht höher als vor der Einheit | Regel | D-42, D-44, D-45 | A | Rückkehr auf Ausgangsniveau bis zum Folgemorgen [D-42] bzw. innerhalb 24 h [D-44] bzw. vor der nächsten Einheit [D-45]. |
 | PAR-D-17 | `pain_weekly_trend_rule` | Schmerz und Steifigkeit nehmen von Woche zu Woche nicht zu | Regel | D-43 | A | Teil des Modells aus dem RCT [D-40], beschrieben in [D-43]. |
 | PAR-D-18 | `pain_breach_action` | nächste Einheit: Struktur 1 Stufe Regression, −30 % Volumen, eine Woche halten | Regel | D-45, D-47 | Heuristik | Richtung belegt: Last senken, wenn der Schmerz nicht zurückgeht [D-45]; Reduktion eine Woche halten [D-47]. −30 % und «1 Stufe» sind Heuristik. Wird als Deload erfasst (ADR 0003). |
-| PAR-D-19 | `referral_persistent_symptom_days` | 28 | Tage ohne Besserung trotz Lastanpassung | D-88, D-73 | A/B | LWS-Leitlinien: Überweisung bei fehlender Besserung nach 4 Wochen [D-88]; Schulter: 6 Wochen Physiotherapie vor Eskalation [D-73]. Obergrenze; früherer Hinweis PAR-D-32. |
+| PAR-D-19 | `referral_persistent_symptom_days` | 28 | Tage ohne Besserung trotz Lastanpassung | D-88, D-73 | A/B + Heuristik | LWS-Leitlinien: Überweisung bei fehlender Besserung nach 4 Wochen [D-88]; Schulter: 6 Wochen Physiotherapie vor Eskalation [D-73]. Übertragung auf alle Regionen Heuristik. Obergrenze; früherer Hinweis PAR-D-32. |
 | PAR-D-20 | `referral_pain_breach_count` | 3 in 14 Tagen | Anzahl | – | Heuristik | Wiederholte Verletzung der Schmerzregel trotz Anpassung → Fachperson empfehlen. |
-| PAR-D-21 | `red_flag_action` | Struktur sperren, Abklärung mit Dringlichkeit N/D/A empfehlen, Freigabe durch User nötig | Regel | D-73, D-86, D-89 | B | Dringlichkeitsstufen nach Leitlinien (Infekt, Luxation, Cauda equina: sofort; Sehnenriss, Trauma: dringend) [D-73, D-89]. Sperr- und Freigabelogik ist Heuristik. |
+| PAR-D-21 | `red_flag_action` | Struktur sperren, Abklärung mit Dringlichkeit N/D/A empfehlen, Freigabe durch User nötig | Regel | D-70, D-73, D-86, D-89, D-92 | B + Heuristik | Dringlichkeit belegt für Infekt und nicht reponierte Luxation (gleicher Tag) sowie akuten traumatischen Sehnenriss (dringend) [D-73], Cauda equina als Notfall [D-92]; frühe Versorgung distaler Bizepsrisse bevorzugt [D-70]. «Trauma allgemein: dringend» sowie Sperr- und Freigabelogik sind Heuristik. |
 | PAR-D-22 | `minor_wrist_pain_referral_days` | 7 | Tage | D-06, D-07, D-53 | Heuristik | Risiko bei Heranwachsenden belegt (A–B); späte Vorstellung häufig [D-53]. Frist Heuristik. |
-| PAR-D-23 | `minor_age_threshold_years` | 18 | Jahre | D-06, D-25, D-53 | Heuristik | Risikoalter 10–16 [D-06, D-53]; Muskel-Sehnen-Ungleichgewicht in der Adoleszenz [D-25]. Unter 18: Handgelenk- und Straight-Arm-Steigerung × PAR-D-02. Ob die App Minderjährige zulässt, ist offen. |
+| PAR-D-23 | `minor_age_threshold_years` | 18 | Jahre | D-06, D-25, D-53 | Heuristik | Risikoalter 10–14 [D-06] bzw. 10–16 [D-53]; Muskel-Sehnen-Ungleichgewicht in der Adoleszenz [D-25]. Unter 18: Handgelenk- und Straight-Arm-Steigerung × PAR-D-02. Ob die App Minderjährige zulässt, ist offen. |
 | PAR-D-24 | `rtt_start_volume_fraction` | 0.5 | Anteil des letzten beschwerdefreien Volumens | – | Heuristik | Nach leichter Beschwerde ohne Verweis und ohne längere Pause. Nach Verweis oder ≥ 4 Wochen Pause gilt PAR-D-33. |
 | PAR-D-25 | `rtt_volume_steps` | 0.25 → 0.5 → 0.75 → 1.0 (Start je nach PAR-D-24/33) | Anteil | D-53 | Heuristik | Wochenweiser Aufbau wie im Turnprotokoll [D-53]; Schrittgrösse Heuristik. |
 | PAR-D-26 | `rtt_step_advance_criteria` | keine Soreness während/nach/am Folgetag in ≥ 2 Einheiten der Stufe; Schmerzregeln PAR-D-15 bis PAR-D-17 erfüllt; höchstens 1 Stufe pro 7 Tage | Regel | D-47, D-53 | B + Heuristik | Soreness Rules [D-53]; Steigerung höchstens einmal pro Woche [D-47]. «≥ 2 Einheiten» ist Heuristik. |
-| PAR-D-27 | `rtt_progression_order` | Hang/Zug → Stütz ohne Impact → Stütz mit Impact/Maximalversuch; innerhalb: Volumen → Intensität → Maximalversuch | Reihenfolge | D-53 | B + Heuristik | Reihenfolge für Handgelenk aus [D-53]; für andere Regionen übertragen (Heuristik). |
-| PAR-D-28 | `rtt_regress_on_breach` | Schmerz > 1 h danach oder am Folgetag: 1 Tag Pause, Stufe wiederholen; Schmerz im Aufwärmen > 15 min: stoppen, 2 Tage Pause, 1 Stufe zurück | Regel | D-53, D-54 | B | Soreness Rules aus Turn- und Wurfprotokollen. |
-| PAR-D-29 | `layoff_restart_threshold_weeks` | 4 | Wochen Pause der Struktur | D-18, D-19 | B | Sehnensteifigkeit nach 1–2 Monaten Pause zurück auf Ausgangswert, Kraft nicht [D-18, D-19]. Ab dieser Pause starten Straight-Arm-Strukturen in RTT-Stufe 1 mit PAR-D-33 (Persona 4). |
+| PAR-D-27 | `rtt_progression_order` | Hang/Zug → Stütz ohne Impact → Stütz mit Impact/Maximalversuch; innerhalb: Volumen → Intensität → Maximalversuch | Reihenfolge | D-53 | B + Heuristik | Reihenfolge für Handgelenk aus [D-53] (Protokoll aus Literatur und Expertenmeinung); für andere Regionen übertragen (Heuristik). |
+| PAR-D-28 | `rtt_regress_on_breach` | Schmerz > 1 h danach oder am Folgetag: 1 Tag Pause, Stufe wiederholen; Schmerz im Aufwärmen > 15 min: stoppen, 2 Tage Pause, 1 Stufe zurück | Regel | D-53, D-54 | B (Expertenprotokoll) | Soreness Rules aus Turn- (Handgelenk junger Turner) und Wurfprotokollen (Baseball). |
+| PAR-D-29 | `layoff_restart_threshold_weeks` | 4 | Wochen Pause der Struktur | D-18, D-19 | B (Richtung) + Heuristik (Schwelle) | Sehnensteifigkeit nach 1–2 Monaten Pause zurück auf Ausgangswert, Kraft nicht [D-18, D-19] (untrainierte junge Männer nach 3 Monaten isometrischem Beintraining, n = 8 bzw. 9). Ab dieser Pause starten Straight-Arm-Strukturen in RTT-Stufe 1 mit PAR-D-33 (Persona 4). |
 | PAR-D-30 | `acwr_hard_rule_enabled` | false | bool | D-29, D-30, D-31, D-36 | A/B | ACWR nur protokollieren: methodische Artefakte ohne Vorhersagegewinn [D-29, D-30], heterogene Studien [D-31], bei Läufern umgekehrt assoziiert [D-36]. |
-| PAR-D-31 | `max_session_spike_vs_30d_max_pct` | 10 | % über der grössten Einheit derselben Struktur in 30 Tagen | D-36 | B | Einzel-Einheit > 10 % über dem 30-Tage-Maximum: HRR 1,64 (Analogie Laufen) [D-36]. Gilt für Volumen, nicht für die Stufe selbst. |
+| PAR-D-31 | `max_session_spike_vs_30d_max_pct` | 10 | % über der grössten Einheit derselben Struktur in 30 Tagen | D-36 | B (Analogie) | Einzel-Einheit > 10 % über dem 30-Tage-Maximum: HRR 1,64 (Analogie Laufen; exploratorische Kohorte, Freizeitläufer im Mittel 45,8 Jahre) [D-36]; Übertragung auf Strukturlast Heuristik. Gilt für Volumen, nicht für die Stufe selbst. |
 | PAR-D-32 | `referral_soft_prompt_days` | 14 | Tage ohne Besserung trotz Lastanpassung | – | Heuristik | Freundlicher Hinweis auf eine Fachperson vor der Leitlinien-Obergrenze PAR-D-19, weil die App nicht untersucht. |
-| PAR-D-33 | `rtt_start_volume_fraction_after_referral` | 0.25 | Anteil des früheren Volumens | D-53, D-07 | B | «75-%-Reduktionsregel» für die Rückkehr nach Handgelenkbeschwerden bei Turnern [D-53, D-07]; für andere Regionen übertragen. |
-| PAR-D-34 | `min_rest_hours_high_tendon_load_rtt` | 72 | Stunden | D-41, D-54 | B | In der Rampe: hohe Aktivitäten mit 3 Erholungstagen [D-41]; Sehnen-/Bandverletzung im Wurfprogramm jeden 3. Tag [D-54]. |
-| PAR-D-35 | `tendon_adaptive_intensity_min_pct_mvc` | 70 | % der Maximalkraft | D-17 | A | **Nur Referenz** für Konditionierungs-/Prehab-Blöcke: unter 70 % keine messbare Steifigkeitszunahme [D-17]. Keine Mindestintensität für jeden Satz. |
+| PAR-D-33 | `rtt_start_volume_fraction_after_referral` | 0.25 | Anteil des früheren Volumens | D-53, D-07 | B (Expertenregel) + Heuristik (Übertragung) | «75-%-Reduktionsregel» für die Rückkehr nach Handgelenkbeschwerden bei Turnern [D-53, D-07]; für andere Regionen übertragen. |
+| PAR-D-34 | `min_rest_hours_high_tendon_load_rtt` | 72 | Stunden | D-41, D-54 | B (Analogie) | In der Rampe: hohe Aktivitäten mit 3 Erholungstagen [D-41]; Sehnen-/Bandverletzung im Wurfprogramm jeden 3. Tag [D-54]. |
+| PAR-D-35 | `tendon_adaptive_intensity_min_pct_mvc` | 70 | % der Maximalkraft | D-17 | A | **Nur Referenz** für Konditionierungs-/Prehab-Blöcke: unter 70 % keine messbare Steifigkeitszunahme [D-17] (Achilles-/Patellarsehne). Keine Mindestintensität für jeden Satz. |
 | PAR-D-36 | `tendon_loading_cycle_s` | 3 s Last / 3 s Pause | s | D-26, D-25 | B | **Nur Referenz**: bei gleichem Volumen stärker als 12-s-Halte [D-26]; Konzept 5 × 4 bei 85–90 % [D-25]. Untere Extremität. |
-| PAR-D-37 | `prehab_sessions_per_week` | 3 (Spanne 2–4) | Einheiten/Woche | D-75, D-11 | A | OSTRC 3×/Woche im Aufwärmen [D-75]; Kletterprogramm 3–4×/Woche [D-11]. |
-| PAR-D-38 | `prehab_evidence_label` | shoulder: `rct_other_sport`; elbow: `cohort_other_sport`; wrist, finger: `coaching_practice` | Enum | D-06, D-11, D-75, D-80 | A/B | Steuert die Formulierung in der App; keine Schutzversprechen ohne Evidenz. |
+| PAR-D-37 | `prehab_sessions_per_week` | 3 (Spanne 2–4) | Einheiten/Woche | D-75, D-11, D-80 | A (Analogie) | OSTRC 3×/Woche im Aufwärmen [D-75] (Handball); Kletterprogramm 3–4×/Woche [D-11]; Baseball-Kohorte schon ab ≥ 1×/Woche wirksam [D-80]. |
+| PAR-D-38 | `prehab_evidence_label` | shoulder: `rct_other_sport`; elbow: `rct_other_sport`; wrist, finger: `coaching_practice` | Enum | D-06, D-11, D-75, D-80 | A/B | Steuert die Formulierung in der App; keine Schutzversprechen ohne Evidenz. Audit: Ellbogen von `cohort_other_sport` auf `rct_other_sport` korrigiert, weil das Kletter-RCT (ein Kollektiv, via [D-11]) auch Ellbogenverletzungen senkte; dazu Baseball-Kohorte [D-80]. |
 | PAR-D-39 | `pain_relief_claims_allowed` | false | bool | D-55, D-56, D-57, D-58, D-59 | A | Isometrie nicht besser als isotonisches Training, Soforteffekt nicht bestätigt [D-56, D-58]. |
 | PAR-D-40 | `complete_rest_default_on_pain` | false | bool | D-40, D-41 | A/B | Ohne Red Flags: reduzieren statt sperren. Weitertrainieren nach Schmerzregel nicht schlechter als Pause [D-40]; vollständige Ruhe kann schaden [D-41]. |
-| PAR-D-41 | `supinated_straight_arm_high_risk` | true | bool (Metadatum je Übung) | D-68, D-69 | B | Supinierter, fast gestreckter Arm unter isometrischer Last ist die typische Rissposition der distalen Bizepssehne [D-68, D-69]. Solche Varianten: Deckel PAR-D-09, Einstieg PAR-D-12, Matrix Abschnitt 8. |
+| PAR-D-41 | `supinated_straight_arm_high_risk` | true | bool (Metadatum je Übung) | D-68, D-69 | B | Supinierter, fast gestreckter Arm unter isometrischer Last ist die typische Rissposition der distalen Bizepssehne [D-68, D-69] (Video-Fallserien, fast nur Männer, überwiegend Kreuzheben). Solche Varianten: Deckel PAR-D-09, Einstieg PAR-D-12, Matrix Abschnitt 8. |
 | PAR-D-42 | `minor_back_pain_referral_days` | 7 | Tage | D-82, D-84 | Heuristik | Rückenschmerz bei jungen Turnern als Warnzeichen [D-82]; hohe Prävalenz bei jugendlichen Athleten [D-84]. Frist Heuristik (wie PAR-D-22). |
 
 ## Widersprüche
@@ -516,10 +545,10 @@ folgt dem OSTRC-Programm [D-75].
 | W-5 | Körpergewicht/BMI | kein Zusammenhang im Klettern [D-11] | Risikofaktor im CrossFit [D-12] und für Handgelenkschmerz junger Turner [D-06] | Ungeklärt; BMI wird nicht verwendet. |
 | W-6 | Aufwärmen | Aufwärmen/Dehnen nicht mit Kletterverletzungen assoziiert [D-11]; Dehnen ohne Präventionseffekt [D-38] | Techniktraining als Aufwärmen mit mehr Calisthenics-Verletzungen assoziiert [D-01]; Aufwärmen soll Pulley-Verletzungen vorbeugen (Hypothese) [D-10] | D-01 betrifft den Inhalt (Skill-Arbeit), D-11/D-38 das Aufwärmen bzw. Dehnen an sich; D-10 ist eine Hypothese. PAR-D-05 bleibt Heuristik. |
 | W-7 | ACWR | «Sweet Spot» 0,8–1,3, ≥ 1,5 gefährlich [D-27]; SRs finden Assoziationen [D-31, D-32] | statistische Artefakte, kein Vorhersagegewinn, verwerfen [D-29, D-30]; Läufer: ACWR-Spitzen mit **weniger** Verletzungen [D-36] | Die SRs selbst nennen heterogene Methoden [D-31]. PAR-D-30 = false. |
-| W-8 | Wochensteigerung | < 10 % pro Woche empfohlen [D-27] | 10-%-Regel ohne Effekt im RCT [D-33]; Schwellen eher bei 20–30 % [D-34, D-35]; entscheidend könnte die Einzel-Einheit sein [D-36] | D-27 stützt sich auf unveröffentlichte Daten. Deshalb zwei Deckel: Woche (PAR-D-09/10) und Einheit (PAR-D-31); Straight-Arm-Wert bleibt Heuristik. |
+| W-8 | Wochensteigerung | < 10 % pro Woche empfohlen [D-27] | 10-%-Regel ohne Effekt im RCT [D-33]; schwache Signale erst bei 20–30 % [D-34, D-35]; entscheidend könnte die Einzel-Einheit sein [D-36] | D-27 stützt sich auf unveröffentlichte Daten. Deshalb zwei Deckel: Woche (PAR-D-09/10) und Einheit (PAR-D-31); Straight-Arm-Wert bleibt Heuristik. |
 | W-9 | Akzeptabler Schmerz | ≤ 5/10 [D-42, D-43, D-45] | Progression nur bei ≤ 3/10 [D-46]; Progression noch bei < 6/10 [D-47]; «minimal» = 1–2/10 vor höherer Last [D-41] | Unterschiedliche Zwecke (weitertrainieren vs. steigern). Der Planer trennt: bis 5 weitertrainieren (PAR-D-15), bis 2 steigern (PAR-D-14). |
 | W-10 | Isometrie lindert Sehnenschmerz | grosser Soforteffekt, ≥ 45 min [D-55] | kleiner, kurzer Effekt ohne Vorteil gegenüber dynamischem Training [D-56, D-57]; Meta-Analyse ohne Überlegenheit [D-58] | D-55 hatte n = 6. PAR-D-39 = false. |
-| W-11 | Mechanismus distale Bizepsruptur | exzentrische Last am gebeugten Ellbogen (alle 14 Patienten so beschrieben) [D-67] | supiniert, fast gestreckt, isometrisch (Videos und prospektive Patienten) [D-68, D-69] | Die Videodaten sind objektiver und näher an Straight-Arm-Halten; beide Positionen gelten als riskant (PAR-D-41 plus exzentrische Chin-up-Arbeit als M). |
+| W-11 | Mechanismus distale Bizepsruptur | exzentrische Last am gebeugten Ellbogen (alle 14 Patienten so beschrieben) [D-67]; im Review als typische Anamnese genannt [D-70] | supiniert, fast gestreckt, isometrisch (Videos und prospektive Patienten) [D-68, D-69] | Die Videodaten sind objektiver und näher an Straight-Arm-Halten; beide Positionen gelten als riskant (PAR-D-41 plus exzentrische Chin-up-Arbeit als M). |
 | W-12 | Schulter-Risikofaktoren | Skapuladyskinesie, Aussenrotationsschwäche, geringe GH-Rotation sind Risikofaktoren [D-76] | in einer grösseren gemischten Kohorte nicht bestätigt [D-77]; Vorsaison-Screening ohne Vorhersagewert bei Turnerinnen [D-81] | Keine Risikovorhersage aus Screenings; Prehab-Inhalte trotzdem sinnvoll, weil das Programm als Ganzes wirkte [D-75]. |
 | W-13 | Nachtschmerz | häufigste unspezifische Red Flag in LWS-Leitlinien [D-86] | subakromialer Schmerz geht oft mit Nachtschmerz einher [D-73] | RF-04 nur mit Dringlichkeit A; kombiniert mit anderen Red Flags gilt deren Dringlichkeit. |
 | W-14 | Dauer der Sehnenanpassung | Anpassung schon nach 8 Wochen in einzelnen Studien [D-17] | keine signifikante Änderung bis 2 Monate, erst nach 3 [D-18, D-19] | Beide innerhalb 8–14 Wochen; PAR-D-06 = 12 mit Spanne 8–14. |
@@ -555,14 +584,18 @@ folgt dem OSTRC-Programm [D-75].
 8. **Regionen-Vokabular.** `region` ist Freitext. Für Matrix und Deckel braucht
    der Planer ein geschlossenes Vokabular mit Unterregionen (z. B.
    `wrist_dorsal`, `wrist_ulnar`, `elbow_medial`, `elbow_lateral`,
-   `biceps_distal`, `shoulder_anterior`, `shoulder_subacromial`, `lumbar`,
-   `fingers`).
+   `elbow_anterior`, `shoulder_anterior`, `shoulder_superior_lateral`,
+   `lower_back`, `fingers`). Die Schlüssel benennen Schmerzorte, nicht
+   Strukturen oder Diagnosen (Audit: statt `biceps_distal`,
+   `shoulder_subacromial`, `lumbar`).
 9. **Nicht im Volltext geprüft.** Die Abbildung des Schmerz-Monitoring-Modells
    (Silbernagel & Crossley 2015) war nicht zugänglich; seine Regeln sind über
    D-42, D-43, D-44, D-47 belegt. Die vollständige Red-Flag-Liste des
    IFOMPT-Rahmens [D-85] und die Symptomliste des ACSM-Screenings [D-91] waren
    nur als Abstract zugänglich; RF-10 nennt deshalb Beispielsymptome als
-   Heuristik.
+   Heuristik. Ebenfalls nur Abstract: D-38, D-39 (Verletzungsorte nicht nach
+   Region aufgeschlüsselt) und D-50 (die drei Elemente des Kontinuums sind
+   über D-51 belegt).
 10. **Rauchen.** Starker Risikofaktor für Ellbogen- und Bizepssehnenprobleme
     [D-65, D-67]. Soll die App danach fragen? Vorschlag: nein (kein
     Trainingsparameter, sensibles Datum).

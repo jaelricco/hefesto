@@ -840,7 +840,17 @@ H = Körpergrösse. «B (Modell)» = eigene Rechnung auf publizierten Daten.
 | PAR-C-49 | straight_arm_category_rule | Ellbogen gestreckt UND Last über den Arm UND (Stufe ≥ Lean mit ≥ 15° Armneigung ODER horizontaler Körper im Hang/Stütz) | Regel | Heuristik, gestützt auf §4 | Heuristik | Schwelle 15° ≈ 26 % Full-Moment (PAR-C-10); Handstand und Stütz ohne Vorlage = «straight_arm_axial» (Ellbogenmoment ≈ 0): zählt für Handgelenk und Überkopf, nicht für die Ellbogen-/Bizeps-Last |
 | PAR-C-50 | handstand_wrist_pain_prevalence | 0,567 | Anteil Befragte | [C-44] | B | Selbstauskunft, Selektionsbias möglich; nur als Prior für Hinweise |
 | PAR-C-51 | handstand_shoulder_flexion_requirement | ≈ 180 | Grad | [C-69] | C | Coaching-Angabe |
-| PAR-C-52 | lever_absolute_torque_example | Full 148, Adv Tuck 111, Tuck 88 | N·m je Schulter (70 kg, 1,75 m, Mann) | [C-01, C-02] | B (Modell) | zur Plausibilisierung; keine Normwerte für Schulterkraft recherchiert |
+| PAR-C-52 | lever_absolute_torque_example | Full 148, Adv Tuck 111, Tuck 88 | N·m je Schulter (70 kg, 1,75 m, Mann) | [C-01, C-02] | B (Modell) | zur Plausibilisierung; Normwerte für Schulterflexion/-extension in Hebelposition fehlen (nur Handdynamometer-Werte [C-77]) |
+| PAR-C-53 | female_relative_shoulder_strength_ratio | 0,80 (0,78–0,83) | Verhältnis Kraft/KG Frau ÷ Mann | [C-77]; stützend [C-78] | B | isometrisch, Handdynamometer (Rotation, Abduktion, Flexion in Bauchlage), College-Sportler; Muskelmasse/KG 30,6 vs. 38,4 % [C-78] |
+| PAR-C-54 | female_lever_relative_demand_factor | 1,24 (1,19–1,27) | Faktor gegenüber Mann, gleiche Stufe | [C-01, C-77] | B (Modell) | nur Prior für Zeitschätzungen, aus Logs nachkalibrieren, nie als Sperre (Heuristik); Übertragung der Handdynamometer-Werte auf Hebelpositionen ungeprüft |
+| PAR-C-55 | muscle_up_ring_vs_bar_emg | BB Zug 0,55 vs. 0,30, Stütz 0,39 vs. 0,12; Unterarmbeuger Zug 1,05 vs. 0,77; TB Stütz 1,70 vs. 1,12 | Anteil manueller Muskeltest | [C-75] | B | n = 10, mit Kipp; begründet muscle_up_ring +1 auf biceps_distal und fingers_forearm gegenüber muscle_up_bar |
+| PAR-C-56 | kipping_emg_shift | BB −26,7; RA +28,7; EO +21,8; Iliopsoas +26,1; TFL +13,5 | Prozentpunkte MVIC (Kipping − strikt) | [C-76] | B | n = 11 (Abstract); Hüftwinkel +48,8°, Kniewinkel +56,5°; Kipping zählt für die Armlast weniger, für Rumpf/Hüfte mehr |
+| PAR-C-57 | wrist_moment_press_handstand | ≈ 0,4 | N·m/kg | [C-17] | B | konstant vom Absprung bis zum Handstand, ähnlich wie im ruhigen Handstand; keine Unterschiede nach Könnensstufe |
+| PAR-C-58 | wrist_extension_dynamic_impact | 95 | Grad | [C-81] | B | Flick-Flack, 8–15-jährige Turnerinnen; statische Winkel (Handstand, Planche, Liegestütz) nicht gemessen, dort bleibt ≈ 90° Heuristik |
+| PAR-C-59 | dynamic_support_force_peak | 1,1–1,5 (Spitzen bis 2,0) | Anteil KG je Hand | [C-83] | B | Pauschenpferd; Analogie für Schwung- und Stützdynamik (bar_swing, Kipping-Transitions) |
+| PAR-C-60 | band_force_ratio_200_vs_100_pct_stretch | 1,33–1,60 | Verhältnis | [C-79] | B | flache Therapiebänder; Kraftsport-Gummibänder kurvilinear [C-80] |
+| PAR-C-61 | band_nominal_force_uncertainty | ± 0,20 | Anteil | [C-79, C-80] | Heuristik | Hersteller überschätzt um 13–44 % [C-79], gleiche Farbe streut 8–19 % [C-80]; `estimated_assist_kg` als Schätzung mit dieser Unsicherheit führen, Kalibrierung per Waage anbieten |
+| PAR-C-62 | band_assist_rom_rule | Assistenz maximal bei maximaler Dehnung (Klimmzug/Dip mit Band am Fuss: unten), minimal am Ende der Bewegung | Regel | [C-85, C-79] | B / Heuristik | Richtung am Kreuzheben belegt [C-85]; Übertragung auf Klimmzug/Dip/Hebelhalte Heuristik |
 
 ## Widersprüche
 
@@ -901,19 +911,53 @@ H = Körpergrösse. «B (Modell)» = eigene Rechnung auf publizierten Daten.
     Selbstauskunft).
 13. **Schultermobilität und Handstand.** Coaching verlangt ≈ 180°
     Schulterflexion [C-69]; standardisierte Schulterfunktionstests sagten die
-    Handstand-Qualität bei Anfängern nicht voraus [C-72].
+    Handstand-Qualität bei Anfängern nicht voraus [C-72]. Dynamisch geht
+    weniger Schulterflexion mit mehr Handgelenkextension einher [C-81]; ob
+    das für den ruhigen Handstand gilt, ist nicht gemessen.
+14. **Balance-Strategie im Handstand.** Kerwin & Trewartha: gute Versuche
+    nutzen Handgelenk- und Schultermoment gemeinsam (gemischte Strategie)
+    [C-70]; das Systematic Review berichtet aus einer Studie eine reine
+    «Wrist Strategy» in über 75 % der Zeit und stellt dies ausdrücklich den
+    früheren Befunden gegenüber [C-82]. Für die App unerheblich, solange das
+    Handgelenk als Hauptträger gilt; ungelöst.
+15. **Bandkraft: Hersteller vs. Messung.** Die gemessenen Kräfte von
+    Therapiebändern liegen 13–44 % unter den Herstellerangaben, bei fünf von
+    sieben Farben signifikant [C-79]; bei Kraftsport-Bändern streuen Bänder
+    gleicher Farbe um 8–19 % [C-80]. Nominalwerte sind darum keine
+    belastbare Eingabe (PAR-C-61).
+16. **Frauen: 52 % oder 80 %?** Absolut erreichten Frauen ≈ 52 % der
+    Oberkörperkraft der Männer [C-84], relativ zum Körpergewicht 78–83 %
+    [C-77]. Kein Datenwiderspruch, sondern verschiedene Normierung; für
+    Körpergewichtsübungen gilt der relative Wert. Zudem sind die Stichproben
+    klein bzw. untrainiert, trainierte Calisthenics-Athletinnen fehlen.
+17. **Instabilität und Schulterblatt-Stabilisatoren.** Die verbreitete
+    Annahme (und die Hypothese der Autoren): Ringe fordern M. serratus
+    anterior und unteren Trapezius stärker. Gemessen wurde beim Muscle-up
+    keine Zunahme dieser Muskeln, nur mehr Arm- und Unterarmaktivität [C-75];
+    die Autoren verweisen selbst auf frühere Befunde, nach denen auf
+    instabiler Unterlage die Schulterblattmuskeln eher weniger und die
+    glenohumeralen Muskeln mehr arbeiten (zitiert in [C-75]). Kleine
+    Stichprobe (n = 10), Kipp-Ausführung; ungelöst. PAR-C-47 erhöht deshalb
+    nur Bizeps- und vordere Schulterlast, nicht die Scapula-Stabilisatoren.
 
 ## Offene Fragen
 
-1. Für Front Lever, Back Lever, Human Flag, Manna, V-Sit, Muscle-up, HSPU und
-   Pseudo-Planche-Liegestütz fehlen EMG-, Kinetik- und Kinematikdaten bei
-   Calisthenics-Athleten; die Profile in Tabelle 2 sind dort Heuristik.
-2. Kraft-Dehnungs-Kurven gängiger Calisthenics-Bänder fehlen; ohne sie bleibt
-   `estimated_assist_kg` eine Nutzerschätzung. Braucht die App eine
-   Band-Kalibrierung (z. B. Waage-Test)?
-3. Handgelenk-Extensionswinkel in Handstand, Planche und Liegestütz wurden in
-   den eingesehenen Quellen nicht gemessen berichtet; der Wert ≈ 90° für den
-   Handstand ist Heuristik.
+1. Für Front Lever, Back Lever, Human Flag, Manna, V-Sit, HSPU, Planche am
+   Boden, Pseudo-Planche- und Planche-Liegestütz, One-Arm Pull-up und Hollow
+   Body fehlen EMG-, Kinetik- und Kinematikdaten (Lauf 2: Europe PMC,
+   Crossref, Websuche; nichts gefunden); die Profile in Tabelle 2 sind dort
+   Heuristik. Für den Muscle-up gibt es nur eine kleine Studie mit Kipp
+   [C-75]; strikte Muscle-ups sind nicht untersucht.
+2. Für die gängigen Calisthenics-Loop-Bänder sind keine frei zugänglichen
+   Kraft-Dehnungs-Werte publiziert; es gibt Messwerte für flache
+   Therapiebänder [C-79] und nur qualitative Angaben (Abstract) für
+   Kraftsport-Gummibänder [C-80]. `estimated_assist_kg` bleibt eine
+   Nutzerschätzung (± 20 %, PAR-C-61). Soll die App eine Band-Kalibrierung
+   per Waage anbieten (Produktentscheidung)?
+3. Handgelenk-Extensionswinkel im statischen Handstand, in der Planche und
+   im Liegestütz sind nicht gemessen; gemessen sind nur 95° beim Aufsetzen im
+   Flick-Flack [C-81] und das Handgelenkmoment im Press [C-17]. Der Wert
+   ≈ 90° für den Handstand bleibt Heuristik.
 4. Wie viel des Straight-Arm-Ellbogenmoments tragen passive Strukturen vs.
    Muskeln, und wie ändert es sich mit Handrotation und Hyperextension? Keine
    Messung gefunden.
@@ -921,23 +965,42 @@ H = Körpergrösse. «B (Modell)» = eigene Rechnung auf publizierten Daten.
    erhöhter Hüfte; eine Validierung per Video-Posenschätzung wäre möglich.
 6. Maltese und Kreuz sind dreidimensional; das sagittale Modell deckt sie
    nicht ab. Messdaten nur für das Kreuz an Ringen [C-06, C-08, C-13].
-7. Frauenspezifische EMG- oder Kraftdaten für Calisthenics-Skills fehlen; das
-   Modell zeigt bei Frauen höhere Tuck-Anteile (64 %).
+7. Frauenspezifische EMG- oder Kraftdaten für Calisthenics-Skills fehlen.
+   Vorhanden sind nur allgemeine Kraft- und Muskelmassedaten [C-77, C-78,
+   C-84] und die Klimmzug-Studie [C-61]; der Faktor 1,24 (PAR-C-54) ist eine
+   Modellableitung. Das Modell zeigt bei Frauen höhere Tuck-Anteile (64 %).
 8. Deutung von «neck band», «wide» und «supi» in P-01 bis P-03 (siehe
    01_pdf_extract §3); sie bestimmt die Hebelwirkung der Assistenz (§5.5).
-9. Normwerte für isometrische Schulterbeuge-/Streckmomente von
-   Freizeitsportlern wurden nicht recherchiert; ohne sie lässt sich das
-   Modellmoment (N·m) nicht direkt in eine Bereitschaftsschätzung übersetzen.
+9. Normwerte für isometrische Schulterbeuge-/Streckmomente in Hebelposition
+   (Arm nahe am Rumpf, gestreckt) fehlen; vorhanden sind nur
+   Handdynamometer-Werte für Rotation, Abduktion und Flexion in Bauchlage
+   [C-77]. Ohne sie lässt sich das Modellmoment (N·m) nicht direkt in eine
+   Bereitschaftsschätzung übersetzen.
 10. Übertragbarkeit der Ringe-Benchmarks (67–94 % KG, [C-09, C-10]) auf Boden-
     und Parallettes-Planche ist ungeprüft.
-11. Die Segmentlängen des Hebelmodells stammen aus einer Sekundärtranskription
-    von de Leva, Tab. 4 [C-01]; ein Abgleich mit der Originaltabelle steht aus
-    (Einfluss laut Sensitivität klein, §5.1).
+11. Wie viel Hilfe ein Band in einem Hebelhalt tatsächlich gibt, hängt von
+    Aufbau und Haltehöhe ab (§5.5); eine einfache Messanleitung für Nutzer
+    (Waage unter Fuss/Hüfte in Arbeitsposition) ist nicht validiert.
+    (Der frühere Punkt «Abgleich der Segmentlängen mit de Leva, Tab. 4» ist
+    in Lauf 2 erledigt: identisch [C-01].)
 12. Die genaue Körperlage des «Inverted Swallow» [C-05] ist im Abstract nicht
     beschrieben; die Nutzung als Analogie für Front Lever und Manna ist daher
     unsicher.
 
 ## Quellen
+
+**Prüfprotokoll (Lauf 2).** Titel und Jahr aller Einträge mit DOI oder
+PubMed-ID wurden gegen Crossref bzw. Europe PMC abgeglichen; alle existieren
+wie angegeben. Wo Crossref ein anderes Jahr nennt (C-30, C-32, C-37, C-39,
+C-48, C-76, C-77), ist es das Jahr der Online-Vorabveröffentlichung; in der
+Tabelle steht das Jahr der Heftausgabe. C-01 wurde im Volltext (Originalartikel,
+Tabelle 4) gegen das Hebelmodell geprüft. In Lauf 2 im *Volltext* gelesen:
+C-01, C-17 (Abschnitte zu Handgelenkwinkel und -moment), C-75 (inkl.
+Tabelle 2 als Bild), C-77 (Tabellen 2–4), C-79 (Tabellen 1–6), C-81
+(PMC-Volltext), C-82, C-85. Nur *Abstract* (Volltext nicht frei zugänglich):
+C-76, C-78, C-80, C-83, C-84, C-86. Für C-05 ist der Verlagsvolltext für
+automatische Abrufe gesperrt; geprüft ist das Abstract. Für die Quellen aus
+Lauf 1 gilt die Prüftiefe des ersten Laufs (§1).
 
 | ID | Titel | Autor(en) | Jahr | URL/DOI | Typ | Evidenz |
 |---|---|---|---|---|---|---|
@@ -1015,3 +1078,15 @@ H = Körpergrösse. «B (Modell)» = eigene Rechnung auf publizierten Daten.
 | C-72 | Are the shoulder joint function, stability, and mobility tests predictive of handstand execution? | Malíř R, Chrudimský J, Provazník A, Třebický V | 2024 | https://doi.org/10.1371/journal.pone.0302922 | Querschnittstudie | B |
 | C-73 | Kinematic and kinetic analysis of push-up exercise | An KN, Korinek SL, Kilpela T, Edis S | 1990 | https://pubmed.ncbi.nlm.nih.gov/2334780/ | Biomechanik-Studie | B |
 | C-74 | Exploring forearm muscle coordination and training applications of various grip positions during maximal isometric finger dead-hangs in rock climbers | Ferrer-Uris B, Arias D, Torrado P, Marina M, Busquets A | 2023 | https://doi.org/10.7717/peerj.15464 | EMG-Studie | B |
+| C-75 | Comparison of Muscle Activity During a Ring Muscle Up and a Bar Muscle Up | Walker CW, Bruenger AJ, Tucker WS, Lee HR | 2023 | https://doi.org/10.70252/fjql7859 (PMID 38288256) | EMG-Studie | B |
+| C-76 | Alterations in kinematics and muscle activation patterns with the addition of a kipping action during a pull-up activity | Dinunzio C, Porter N, Van Scoy J, Cordice D, McCulloch RS | 2019 | https://doi.org/10.1080/14763141.2018.1452971 (PMID 29768093) | EMG-Studie | B |
+| C-77 | Isometric shoulder strength reference values for physically active collegiate males and females | Westrick RB, Duffey ML, Cameron KL, Gerber JP, Owens BD | 2013 | https://doi.org/10.1177/1941738112456280 (PMID 24381696) | Querschnittstudie | B |
+| C-78 | Skeletal muscle mass and distribution in 468 men and women aged 18-88 yr | Janssen I, Heymsfield SB, Wang ZM, Ross R | 2000 | https://doi.org/10.1152/jappl.2000.89.1.81 | Querschnittstudie | B |
+| C-79 | Thera-band elastic band tension: reference values for physical activity | Uchida MC, Nishida MM, Sampaio RA, Moritani T, Arai H | 2016 | https://doi.org/10.1589/jpts.28.1266 (PMID 27190465) | Biomechanik-Studie | B |
+| C-80 | Quantification of rubber and chain-based resistance modes | McMaster DT, Cronin J, McGuigan MR | 2010 | https://doi.org/10.1519/JSC.0b013e3181dc4200 (PMID 20613648) | Biomechanik-Studie | B |
+| C-81 | Impact shoulder angles correlate with impact wrist angles in standing back handsprings in preadolescent and adolescent female gymnasts | McLaren K, Byrd E, Herzog M, Polikandriotis JA, Willimon SC | 2015 | https://pmc.ncbi.nlm.nih.gov/articles/PMC4458921/ (PMID 26075149) | Querschnittstudie | B |
+| C-82 | Biomechanical analyses of the handstand: a systematic review | MacDonald M, Baker JS, Gu Y, Ugbolue UC | 2025 | https://doi.org/10.3389/fspor.2025.1694648 (PMID 41473027) | Systematic Review | A |
+| C-83 | Wrist loading patterns during pommel horse exercises | Markolf KL, Shapiro MS, Mandelbaum BR, Teurlings L | 1990 | https://doi.org/10.1016/0021-9290(90)90315-T (PMID 2229083) | Biomechanik-Studie | B |
+| C-84 | Gender differences in strength and muscle fiber characteristics | Miller AE, MacDougall JD, Tarnopolsky MA, Sale DG | 1993 | https://doi.org/10.1007/BF00235103 (PMID 8477683) | Querschnittstudie | B |
+| C-85 | Acute Effects of Elastic Bands as Resistance or Assistance on EMG, Kinetics, and Kinematics During Deadlift in Resistance-Trained Men | Andersen V, Pedersen H, Fimland MS, Shaw MP, Solstad TEJ, Stien N, Cumming KT, Saeterbakken AH | 2020 | https://doi.org/10.3389/fspor.2020.598284 (PMID 33345180) | EMG-Studie | B |
+| C-86 | Abnormal Wrist Sagittal Kinematics in Gymnasts With Dorsal Wrist Pain: A New Syndrome | Sekiguchi T, Saito S, Ogura T, Tsuchiya A, Shiratsuchi H | 2024 | https://doi.org/10.1177/03635465231204361 (PMID 38164673) | Querschnittstudie | B |
