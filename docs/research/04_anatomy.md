@@ -931,9 +931,11 @@ H = Körpergrösse. «B (Modell)» = eigene Rechnung auf publizierten Daten.
 4. **Latissimus-Aktivierung.** 117–130 % MVIC [C-18] vs. 79,8 % MVC [C-20]
    im selben Übungstyp: Normalisierungsartefakt, keine echte Differenz.
 5. **Anthropometrie.** Simulation: Körpertyp «entscheidend» für die Planche
-   [C-03]; Empirie am Swallow: Proportionen nicht korreliert, relative Kraft
-   erklärt ≈ 90 % [C-11]; eigenes Modell: ±4 % Moment je 3,5 cm
-   Längenverschiebung (**Modell**) – klein gegenüber Kraftunterschieden.
+   [C-03], allerdings nur nach Gleichgewichtsgeometrie ohne Muskelkraft (von
+   den Autoren selbst als Grenze genannt); Empirie am Swallow: Proportionen
+   nicht korreliert, relative Kraft erklärt ≈ 90 % [C-11]; eigenes Modell:
+   ±3–5 % Moment je 3,5 cm Längenverschiebung (**Modell**) – klein gegenüber
+   Kraftunterschieden.
 6. **Back Lever als «Zugübung».** Mechanisch arbeiten im Back Lever die
    Schulter*beuger* in Extensionsstellung (§5.1, **Modell**); das
    Coaching-Buch führt den Back Lever in der Zugtabelle (hintere Deltoidei,
@@ -993,6 +995,15 @@ H = Körpergrösse. «B (Modell)» = eigene Rechnung auf publizierten Daten.
     glenohumeralen Muskeln mehr arbeiten (zitiert in [C-75]). Kleine
     Stichprobe (n = 10), Kipp-Ausführung; ungelöst. PAR-C-47 erhöht deshalb
     nur Bizeps- und vordere Schulterlast, nicht die Scapula-Stabilisatoren.
+18. **Muscle-up: Abstract vs. Ergebnisteil (Audit).** Das Abstract von
+    Walker et al. nennt für die Zugphase eine höhere Aktivität des oberen
+    Trapezius an Ringen als an der Stange; im Ergebnisteil ist der
+    signifikante Post-hoc-Vergleich für den oberen Trapezius aber Zugphase vs.
+    Stützphase an Ringen (p = 0,007), und die Tabelle markiert keinen
+    Unterschied Ringe vs. Stange (0,63 vs. 0,45, SD 0,45–0,48) [C-75].
+    Übernommen wird der Ergebnisteil: Ringe erhöhen beim Muscle-up
+    Unterarmbeuger, Trizeps (Stützphase) und Bizeps (Haupteffekt), nicht
+    belegt den oberen Trapezius.
 
 ## Offene Fragen
 
