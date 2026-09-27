@@ -222,6 +222,10 @@ func (g *gen) skillHold(a *active, reasons []Reason) Item {
 		it.HoldS, it.Sets, it.Reserve, it.Calibration = int(k.T.VolumeHoldMin), int(k.T.MinSets), 2, true
 	} else {
 		h := g.holdFor(d)
+		if capped, ok := g.holdGrowthCap(a.rung, h); ok {
+			h = capped
+			it.Reasons = append(it.Reasons, k.reason(RuleHoldGrowth))
+		}
 		it.HoldS = int(h)
 		it.Sets = int(clamp(math.Round(k.T.TargetTotalHold/h), k.T.MinSets, k.T.MaxSets))
 		it.Reserve = int(math.Floor(d - h))
@@ -233,6 +237,27 @@ func (g *gen) skillHold(a *active, reasons []Reason) Item {
 	it.StopRules = stopRules()
 	it.Reasons = append(it.Reasons, k.reason(RuleDoseMaxHold, "hold_s", it.HoldS, "max_s", math.Floor(d), "sets", it.Sets))
 	return it
+}
+
+// holdGrowthCap applies ADAPT-04: within a rung the set hold grows by at
+// most PAR-B-33 per week over the longest working hold logged on it in the
+// last seven days.
+func (g *gen) holdGrowthCap(ex *Exercise, h float64) (float64, bool) {
+	prev := 0.0
+	for _, sess := range g.s.History {
+		if gap := daysBetween(sess.Date, g.week); gap <= 0 || gap > 7 {
+			continue
+		}
+		for _, set := range sess.Sets {
+			if set.Exercise == ex.Slug && set.Kind == KindWorking && (set.Assist == "" || set.Assist == AssistNone) {
+				prev = math.Max(prev, set.Value)
+			}
+		}
+	}
+	if prev > 0 && h > prev+g.k.T.HoldStepPerWeek {
+		return prev + g.k.T.HoldStepPerWeek, true
+	}
+	return h, false
 }
 
 func (g *gen) skillReps(a *active, reasons []Reason) Item {

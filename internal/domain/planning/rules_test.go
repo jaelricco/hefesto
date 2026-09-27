@@ -316,3 +316,39 @@ func BenchmarkAdapt(b *testing.B) {
 		}
 	}
 }
+
+// ADAPT-04: the set hold of a rung grows by at most 2 s over last week's
+// longest working hold, whatever the estimate says.
+func TestHoldGrowthCap(t *testing.T) {
+	k := kb(t)
+	s, _ := start(t, k, persona2())
+	s.Ladders = map[string]planning.LadderState{}
+	s.Capacities["front-lever-tuck|none"] = planning.Estimate{Mu: 20, Sigma: 2, Origin: planning.OriginLog, At: monday.AddDate(0, 0, -3), N: 5}
+	var sets []planning.LoggedSet
+	for i := range 6 {
+		v := 7.0
+		if i > 0 {
+			v = 6
+		}
+		sets = append(sets, planning.LoggedSet{ID: "a", Exercise: "front-lever-tuck", Kind: planning.KindWorking, Assist: planning.AssistNone, Value: v})
+	}
+	for _, d := range []int{-10, -3} {
+		s.History = append(s.History, planning.LoggedSession{ID: "h" + monday.AddDate(0, 0, d).Format("0102"), Date: monday.AddDate(0, 0, d), Sets: sets})
+	}
+	p, err := planning.Generate(k, s, now, monday)
+	if err != nil {
+		t.Fatal(err)
+	}
+	found := false
+	for _, it := range items(p) {
+		if it.Exercise == "front-lever-tuck" && !it.Offer {
+			found = true
+			if it.HoldS > 9 || !hasRule(it.Reasons, "ADAPT-04") {
+				t.Errorf("tuck front lever %d s (reasons %v), want ≤ 9 s by ADAPT-04", it.HoldS, it.Reasons)
+			}
+		}
+	}
+	if !found {
+		t.Fatal("no tuck front lever planned")
+	}
+}
