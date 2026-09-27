@@ -609,3 +609,4 @@ Quellen, die in mehreren Streams vorkommen, behalten ihre Stream-IDs; die Spalte
 Befunde der automatischen Prüfung (zitiert ↔ gelistet):
 
 - 02_skills_progressions.md: zitiert, aber nicht gelistet: A-72, A-73, A-74, A-75, A-76, A-77, A-78
+- 04_anatomy.md: zitiert, aber nicht gelistet: C-87
