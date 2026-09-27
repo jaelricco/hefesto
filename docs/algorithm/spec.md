@@ -35,7 +35,8 @@
 11. Performance
 12. Tests und Personas
 13. Umsetzung, Migration und Rollout
-14. Offene Entscheidungen
+14. Entscheidungen des Checkpoints nach Phase 4
+15. Umsetzung in Phase 5: Entscheidungen, Abweichungen, Lücken
 - Anhang A: Regelkatalog
 - Anhang B: Spezifikations-Parameter (`PAR-S`)
 - Anhang C: Index der verwendeten Forschungsparameter
@@ -1251,10 +1252,11 @@ Konto. Die Rampe bezieht sich auf das Referenzmittel vor der Pause.
   Stufe Berichte (§8.6). Die Pausen-Rampe gilt nur für die Straight-Arm-Konten
   und `wrist` der Region (`ramp_accounts`, §4.6); die Bent-Arm-Konten folgen
   der linken Spalte.
-- Die Prozentwerte beziehen sich auf die geloggte Referenz vor der Pause. Ohne
-  geloggte Referenz (neue User) gilt stattdessen LOAD-04 (50 % des
-  Zielvolumens), und die Rampenanteile wirken zusätzlich als Obergrenze
-  (§7.2).
+- Die Prozentwerte beziehen sich auf die geloggte Referenz vor der Pause,
+  ohne geloggte Referenz auf das Zielvolumen. Für Straight-Arm- und
+  Handgelenk-Konten ersetzt die Rampe den Wochendeckel in beiden Fällen, die
+  Stufen wechseln zu Wochenbeginn (§15.2 U-13, Review); Bent-Arm-Konten folgen
+  LOAD-02 bzw. LOAD-04 mit den Faktoren oben als Obergrenze.
 
 **Ohne Logs: Pause aus dem Onboarding** (`PAR-S-41`; `onboarding.md` §3.5):
 
@@ -1334,10 +1336,12 @@ der Schmerzregel (§6.9, `PAR-S-40`).
 **Rampen.** Hat ein Rampenkonto eine **geloggte** Referenz vor der Beschwerde
 bzw. Pause, ersetzen die Rampenanteile den Wochendeckel, weil nur auf früher
 toleriertes Niveau zurückgekehrt wird (`05` §6.2). Ohne geloggte Referenz
-(z. B. Beschwerde oder Pause schon im Onboarding) gibt es kein toleriertes
+(z. B. eine Beschwerde schon im Onboarding) gibt es kein toleriertes
 Niveau: Dann gilt LOAD-02 bzw. LOAD-04 unverändert, und der Rampenanteil ×
 Zielvolumen wirkt **zusätzlich** als Obergrenze. Eine Region mit Beschwerde
-wächst so nie schneller als ein beschwerdefreies neues Konto.
+wächst so nie schneller als ein beschwerdefreies neues Konto. Die
+Pausenrampe ohne Beschwerde ersetzt den Deckel dagegen auch ohne geloggte
+Referenz (§6.11, §15.2 U-13).
 
 **Ganze Sätze** (`PAR-S-35`). Der Deckel ist eine Zahl in Belastungseinheiten,
 geplant werden ganze Sätze. Der Anteil eines Satzes, der beim Abrunden
@@ -1470,8 +1474,8 @@ nach jedem Schritt:
 1. Unterstützungs- und Ergänzungssätze, die das Konto belasten;
 2. Balance-, Technik-, Konditions- und belastende Prehab-Sätze;
 3. Volumensätze (bis der Block entfällt);
-4. Kraftsätze auf 2;
-5. Maximalsätze auf 2;
+4. Kraftsätze auf 1 (§15.2 U-15);
+5. Maximalsätze auf 1, danach Angebote (ADAPT-05, ADAPT-10);
 6. Arbeitssprosse eine tiefer (senkt k);
 7. Exposition der Einheit streichen;
 8. Erhaltung (GOAL-03).
@@ -1896,8 +1900,8 @@ Changelog-Eintrag in `ruleset_version`.
 | 1 Anfänger, Outdoor-Park, 2×/Woche, Muscle-up | `outdoor_park`, 2 × 45 min, 0–3 Klimmzüge, 0 Dips, Liegestütz 8–12, `lt_6_months` | 2 volle Ganzkörper-Einheiten (Mo, Do); Zubringer-Leitern Klimmzug (Exzentrik, Rudern am niedrigen Holm, Hang), Dip (Stütz, Exzentrik), Liegestütz; keine Band-Übungen (kein Band); kein Muscle-up-Block, Hinweis 5 + 5 als Minimum (§3.4, §3.5); Straight-Arm-Budget 8; Woche 1 mit 50 % (LOAD-04); lineare Doppelprogression |
 | 2 Fortgeschritten, Gym, 4×/Woche, Planche + Front Lever | `gym`, 4 × 60–90 min, Tuck/Adv-Tuck-Stufen mit Halteklassen, `1_to_4_years` | Planche und Front Lever auf 3 Tagen mit ≥ 48 h Abstand, geblockt (gepaart nur bei Zeitmangel, §7.7); vierter Tag ohne Straight-Arm-Sprossen und ohne harte Zugreize (Beine, Rumpf, Balance, leichte Technik); Budget 12 bzw. 18 nach OG-Band; Pausen 300 s; wellenförmige Kraftarbeit; Kalibrierungssätze in den ersten Einheiten; Volumen startet bei 50 % (LOAD-04, ENT-S-1) |
 | 3 Fortgeschritten, mediale Ellbogenbeschwerden, Ziel Planche | wie 2, Region `elbow_inner` aktuell, Alltagsschmerz 1–2, Training 3–4/10, keine Red Flag | Region `rtt_1` (Start 0.5, ohne geloggte Referenz zusätzlich unter LOAD-04); Planche-Familie M (Regression), Ringe-Straight-Arm X, Klimmzug M (Neutralgriff); 72 h zwischen harten Reizen der Region; Schmerz-Monitoring aktiv; keine Tests und Prüfversuche an der Region; Texte und Belege ohne Diagnose (EXPL-07) |
-| 4 Wiedereinsteiger nach 6 Monaten | `17_to_26_weeks`, `pre_break_level` Adv Tuck Planche, 10 Klimmzüge | Pause aus dem Onboarding (§6.11); Straight-Arm- und Handgelenk-Konten in der Rampe ab Stufe 1 mit 25 %, ohne geloggte Referenz zusätzlich unter LOAD-04; Bent-Arm 50 %, 2 Sprossen unter der Angabe, dann nach Kalibrierung; σ × 1.25; keine Straight-Arm-Tests vor Ende der Rampe; Sprosse höchstens bis Adv Tuck während der Rampe |
-| 5 Anfänger, Full Planche in 8 Wochen | Ziel Full Planche mit Datum, Stufe `none`, Liegestütz 4–7 | Realismus-Check: Untergrenze 48 Wochen, Spanne 105–162 Wochen, Etappenziel die erste Planche-Stufe (Lean; Coaching 0–2 Monate, PAR-A-47), die Tuck Planche mit eigener Spanne danach; Plan ab den Wurzeln (Liegestütz, Stütz, Handgelenk, Hollow); kein Planche-Maximalblock; neutrale Texte |
+| 4 Wiedereinsteiger nach 6 Monaten | `17_to_26_weeks`, `pre_break_level` Adv Tuck Planche, 10 Klimmzüge | Pause aus dem Onboarding (§6.11); Straight-Arm- und Handgelenk-Konten in der Rampe ab Stufe 1 mit 25 % des Zielvolumens, die Rampe ersetzt den Wochendeckel (§15.2 U-13); Bent-Arm 50 %, 2 Sprossen unter der Angabe, dann nach Kalibrierung; σ × 1.25; keine Straight-Arm-Tests vor Ende der Rampe; Sprosse höchstens bis Adv Tuck während der Rampe |
+| 5 Anfänger, Full Planche in 8 Wochen | Ziel Full Planche mit Datum, Stufe `none`, Liegestütz 4–7 | Realismus-Check: Untergrenze 48 Wochen, Spanne 105–162 Wochen, Etappenziel die Tuck Planche mit eigener Spanne (die Lean hat kein OG-Level, §15.2 U-19; Coaching nennt für sie 0–2 Monate, PAR-A-47); Plan ab den Wurzeln (Liegestütz, Stütz, Handgelenk, Hollow); kein Planche-Maximalblock; neutrale Texte |
 | 6 Widersprüchliche Angaben | z. B. `sedentary`, 0 Liegestütze, aber Straddle Planche und Full Front Lever | höchstens 2 Rückfragen; danach Stufe nach R-2/R-3 (plausible Vorstufe), σ × 1.25, niedrige Konfidenz → Kalibrierungssätze; keine stille Übernahme des höheren Werts |
 
 ### 12.5 Szenarien über mehrere Wochen
@@ -1910,7 +1914,7 @@ Changelog-Eintrag in `ruleset_version`.
 | Zwei Einheiten an aufeinanderfolgenden Tagen | Tausch oder Herabstufung beim Start mit Begründung |
 | Eine Woche ohne Training | kein Rückstandshinweis; Deckel gegen die Wochen mit Last |
 | Red Flag RF-10 im Schmerzbericht | Training gestoppt, Plan erst nach Freigabe |
-| Muscle-up-Leiter wird aktiv, sobald Klimmzug und Dip Dosiswert ≥ 5 | `ladder_activated` mit Begründung |
+| Muscle-up-Leiter wird aktiv, sobald ihre Voraussetzungen erreicht sind (5 Klimmzüge, 8 Dips: die Schwellen der Stufen `pull-up/strict-5` und `dip/parallel-bars` aus `02`; die Faustregel «5 + 5» ist der Hinweis GOAL-04) | Leiter mit Rolle `goal` im Plan, mit Begründung |
 
 Phase 5 dokumentiert die erzeugten Pläne je Persona und ihre Plausibilität in
 `docs/algorithm/personas.md`.
@@ -1975,6 +1979,85 @@ Vorschläge angenommen.** Die Umsetzung steht an den genannten Stellen
 | ENT-S-7 | Sicherheitsauflagen ohne Einwilligung (§4.7) | (a) minimale Auflagen (Stopp, Regionen-Ausschluss) ohne Antworten und Werte speichern; (b) ohne Einwilligung kein Plan, sobald eine Sicherheitsfrage greift (Alternative aus OE-2) | **(a)**, vorbehaltlich der rechtlichen Prüfung (ENT-4); sonst (b) |
 | ENT-S-8 | Geplante Ruhetage und der Streak (§5.4) | (a) Ruhetag mit einem Tipp über das bestehende Loggen (ADR 0008 unverändert); (b) geplante Ruhetage zählen am Tagesende automatisch (ADR 0008 ändern) | **(a)** für v1 |
 | ENT-S-9 | Region «Brust» auf der Körperkarte | (a) hinzufügen (RF-01 nennt die Brust; heute nur über `other`); (b) bei `other` bleiben | **(a)**, mit Zuordnung zu `biceps_long_head_anterior_shoulder` und Dip-/Liegestütz-Familien nach fachlicher Prüfung |
+
+## 15. Umsetzung in Phase 5: Entscheidungen, Abweichungen, Lücken
+
+### 15.1 Stand
+
+Umgesetzt nach ENT-S-2 (a): der reine Kern `internal/domain/planning`, die
+Wissensbasis `content/training/` mit JSON-Schemas (`content/schema/training/`),
+Loader und Validierung (`internal/content`, `cmd/contentlint`) sowie der
+Anwendungsdienst `internal/planning` mit den Ports aus §10.1 und
+In-Memory-Adaptern. Nicht umgesetzt: Migration, Store, HTTP-Endpunkte und
+OpenAPI (nach eigenem Review, ADR 0007), `Materialize`.
+
+Tests: sechs Personas als Golden Files (`internal/domain/planning/testdata/`),
+die Eigenschaften I-1 bis I-11 für jeden erzeugten Plan, zwölf simulierte
+Wochen je Persona, die Szenarien aus §12.5, Tabellentests je Regel, ein Test
+je Validierungsprüfung KB-01 bis KB-12, ein Abgleich jedes
+Forschungsparameters mit seiner Tabellenzeile in `docs/research/` und
+Benchmarks (`Generate` 4–8 ms und 1–2 MB, `Adapt` ≈ 25 µs, `Build` ≈ 2.5 ms).
+Die Pläne und ihre Plausibilität stehen in `personas.md`.
+
+### 15.2 Entscheidungen und Abweichungen
+
+Die Personas und die Simulation haben Lücken und Widersprüche dieser
+Spezifikation gezeigt. Die Umsetzung entscheidet sie wie folgt; die mit
+**Review** markierten Punkte ändern Verhalten, das der Checkpoint bestätigen
+sollte.
+
+| Nr. | Stelle | Umsetzung | Grund |
+|---|---|---|---|
+| U-1 | §2.1 | Neun Dateien (`manifest`, `parameters`, `rules`, `sources`, `body`, `exercises`, `skills`, `sessions`, `onboarding`); Übungen und Leitern in `content/training/` statt im `training:`-Block von `content/exercises/` | neue Übungen in `content/exercises/` wären bis zum Inhalts-Import Waisen und liessen `contentlint -strict` scheitern |
+| U-2 | §2.3 | Jeder Parameter trägt `text`, den Wortlaut der Recherche-Tabelle, und `value`/`values`, die gelesene Zahl in der Einheit des Planers (z. B. 10 % → 0.10). Ein Test prüft Schlüssel, Wortlaut und Quellen gegen `docs/research/`. `definition: true` für Skalenbezüge ohne Quelle (PAR-C-08, PAR-C-22) | keine Zahl ohne nachprüfbare Herkunft |
+| U-3 | §2.6 KB-13 | `contentlint` meldet den Entwurfsstatus als Hinweis, nicht als Warnung; die API lehnt Entwürfe im Produktionsmodus ab | der übrige Inhaltsbaum ist ebenfalls Entwurf und wird nicht angemahnt; ENT-10 bleibt Voraussetzung für Produktion |
+| U-4 | §4.3, `PAR-S-31` | Eine Reserve über der Grenze zählt als Untergrenze bis zur Grenze: b = Halt + max(3 s, 0.5 × Halt) bzw. Wdh. + 3 | sonst ergeben Prüfversuche (≤ 5 s, `PAR-S-24`) nie einen Dosiswert ≥ 4 s, und ADAPT-06 ist unerreichbar |
+| U-5 | §4.3 | Die erste Beobachtung einer Übung aktualisiert den abgeleiteten Startwert, den auch die Planung benutzt (`PAR-S-39`); eine Untergrenze ohne jeden Startwert wird Startwert mit σ = 0.35 μ (PAR-F-26) | Planung und Adaption rechnen mit derselben Schätzung |
+| U-6 | §5.4 WEEK-02 | Ein Tag, an dem ausser Aufwärmen und Prehab nichts übrig bleibt, wird geplanter Ruhetag; leichte Leitern bevorzugen weniger belegte Tage | keine «Einheiten» nur aus Prehab |
+| U-7 | §5.5 | Prehab höchstens zwei verschiedene Programme (Schulter, Handgelenk nach PAR-D-01), an PAR-D-37 Einheiten je Woche | zwei Schulterregionen teilen ein Programm |
+| U-8 | §5.6 SEL-09 | Zwischen d < 1 (Exzentrik) und dem Wiederholungsbereich: konzentrisch unter dem Bereich, sobald eine Wdh. mit Ziel-RIR möglich ist (d − RIR ≥ 1); findet keine Sprosse einen Wert, beginnt die Kalibrierung eine Sprosse unter der angegebenen, nicht an der Wurzel | die Lücke war nicht geregelt; wer 1–6 Klimmzüge schafft, übte sonst nur Negative |
+| U-9 | §5.7 DOSE-04 | Konditionshalt ohne Schätzung: Kalibrierungssatz 10 s (untere Grenze PAR-B-76) mit 2 s Reserve | sonst 5 s ohne Reserve |
+| U-10 | §6.3 | Angebote (ADAPT-05, ADAPT-10) auch für Zubringer; bei einer Band-Sprosse ist das Angebot dieselbe Sprosse ohne Band; Angebote gehören zum Maximalblock und werden in LOAD-10 Schritt 5 zuletzt gestrichen | sonst kam kein Band-Nutzer und kein Anfänger je an ein Angebot |
+| U-11 | §6.4 ADAPT-10 | Der erste konzentrische Versuch ist ein Kalibrierungssatz (so viele saubere Wdh. wie die Reserve erlaubt) | ein einzelner Versuch liefert nur eine Untergrenze |
+| U-12 | §6.8 | Deload-Einheiten sind kein Plateau-Beleg; der Abstand von `PAR-S-17` zählt ab der letzten Deload-Einheit | sonst folgte auf jeden Deload ein zweiter |
+| U-13 | §6.11, §7.2 | **Review.** Die Pausenrampe ersetzt für Straight-Arm- und Handgelenk-Konten den Wochendeckel auch ohne geloggte Referenz (wie LOAD-04b); Einheitsdeckel in der Rampe 1.5 × Maximum; die Stufen wechseln zu Wochenbeginn | mit LOAD-02 auf dem nachlaufenden Mittel blieb ein Wiedereinsteiger monatelang bei ≈ 1 Straight-Arm-Satz je Woche; §12.5 erwartet 0.25 → 1.0 in ≥ 7-Tage-Schritten. Der Stand vor der Pause (`pre_break_level`) ist toleriertes Niveau wie bei ENT-S-1 |
+| U-14 | §7.2 | Ein Deckel trägt die Regel, die tatsächlich bindet; der Spielraum-Übertrag (`PAR-S-35`) gilt für LOAD-02 | vorher benannte die Pausenregel auch Deckel, die LOAD-02 setzte, und der Übertrag fiel weg |
+| U-15 | §7.9 LOAD-10 | Untergrenze 1 Satz je Arbeitsübung bis Schritt 7 (statt 2); innerhalb eines Schritts zuerst die Übung mit den meisten Sätzen; Schritt 7 streicht nach Priorität | mit Untergrenze 2 erreichte der halbe Einstieg (LOAD-04) die 50 % nur durch Streichen ganzer Übungen |
+| U-16 | §8.6 | Eine Einheit zählt für die Rampe einer Beschwerde, wenn der Morgenbericht grün ist; ohne jeden Basiswert wird die Morgenregel nicht geprüft, nur die Schwellen | PAR-D-26 fragt nach dem Folgetag; ein fehlender Basiswert machte aus 1/10 eine Verletzung der Schmerzregel |
+| U-17 | §8.7 INJ-08 | Die dritte Verletzung in 14 Tagen erzeugt immer den Verweis-Hinweis, auch wenn ein Timer schon riet | Hinweis zum Anlass |
+| U-18 | §8.3 | Ein Stopp durch eine Red Flag gehört zur Region; ihre Freigabe hebt ihn auf; Belastungssymptome ohne Region brauchen die allgemeine Freigabe | vorher blieb der Plan nach der Freigabe gestoppt |
+| U-19 | §3.6 | Etappenziel ist die erste offene Stufe mit höherem OG-Level (die Lean hat keins); für Persona 5 die Tuck Planche | ohne OG-Stufe gibt es kein Band nach PAR-A-45 |
+| U-20 | `onboarding.md` §5.5 | Offene oder verneinte Rückfragen lösen konservativ auf: R-3 eine Stufe tiefer, danach R-2 bis zur höchsten Stufe mit plausiblen Vorstufen (≥ `PAR-S-46` × Schwelle) | die Regel verlangte die Auflösung, ohne sie zu beziffern |
+| U-21 | §10.1 | `Adapt` gibt den ganzen neuen Snapshot zurück (kein Delta); `SnapshotStore` speichert ihn; ohne `Materialize` und `IDSource` | einfacher und ausreichend, solange es keinen Store gibt |
+| U-22 | §12.3, §11.3 | Golden Files als lesbarer Text; die Benchmark-Grenze ist kein Test (Zeitmessung in CI schwankt) | Reviewbarkeit |
+| U-23 | §5.10 | Der Plan listet je Lastkonto Zielvolumen, geplantes Volumen, Deckel und bindende Regel (`loads`) | Erklärbarkeit; I-3 und I-11 werden damit prüfbar |
+
+### 15.3 Nicht umgesetzt
+
+GOAL-03 (Erhaltungsdosis; es gibt nur den Hinweis WEEK-06), SEL-05
+(Mobilitätsantworten ändern die Auswahl noch nicht), SEL-10 über «eine Sprosse
+tiefer» und Band hinaus (die Wissensbasis hat keine Griff- oder
+Gerätevarianten), SEL-11, SESS-10, SESS-11, ADAPT-08 als eigene Progression je
+Expositionsklasse (DOSE-06 dosiert wellenförmig, die Progression läuft über die
+Kapazität), ADAPT-09, ADAPT-11, ADAPT-17, der Mobilitätsblock und Texte in
+weiteren Sprachen (KB-11). Für die Ellbogen-Regionen gibt es kein Prehab: Die
+Recherche nennt Programme, aber keine übertragbare Übung (`05` §10).
+Minderjährige bekommen keinen Plan (SAFE-07); INJ-09 ist deshalb nicht aktiv.
+
+### 15.4 Befunde für den Review
+
+- **Woche 1 ist kurz.** Mit dem halben Einstieg (LOAD-04, LOAD-04b) dauern die
+  ersten Einheiten 11–30 min bei 45–60 min Budget. Gewollt vorsichtig, nutzt
+  aber die Zeit kaum; Kandidat für Technik- oder Mobilitätsarbeit.
+- **Abgeleitete Startwerte sind Untergrenzen.** Wer eine Tuck Planche 10–19 s
+  hält, beginnt mit 2 × 4 s Lean als Kalibrierung (SEL-08 plus `PAR-S-39`); die
+  erste Einheit korrigiert den Wert.
+- **Die Plateau-Definition ist streng.** Mit `PAR-S-12` (zwei Einheiten ohne
+  Zuwachs) plant die Simulation etwa alle 4–5 Wochen einen Stagnations-Deload,
+  weil Leistung in Wochenschritten statt je Einheit wächst.
+- **Kleine Straight-Arm-Volumina wachsen langsam.** Ausserhalb der Rampen
+  wächst ein Konto mit 1–2 Sätzen unter LOAD-02 um einen Satz in etwa 10–13
+  Wochen (c = 10 %, im Risikofenster f = 0.75).
 
 ## Anhang A: Regelkatalog
 

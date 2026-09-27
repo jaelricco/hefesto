@@ -79,8 +79,9 @@ func (g *gen) buildSessions() {
 			ps.Reasons = append(ps.Reasons, k.reason(RuleLightDay))
 		}
 		if sl.full && prehabLeft > 0 {
-			warm.Items = append(warm.Items, g.prehabItems()...)
-			endB = append(endB, g.loadedPrehab()...)
+			act := g.prehabItems()
+			warm.Items = append(warm.Items, act...)
+			endB = append(endB, g.loadedPrehab(act)...)
 			prehabLeft--
 		}
 		if !sl.full {
@@ -351,9 +352,13 @@ func (g *gen) strength(a *active, idx int, reasons []Reason) Item {
 		reps := ls.RepTarget
 		if reps == 0 || ls.Rung != a.rung.Slug {
 			reps = clamp(math.Floor(d)-k.T.RIRStrength, k.T.NoviceRepsLo, k.T.NoviceRepsHi)
-			if math.Floor(d)-k.T.RIRStrength < k.T.NoviceRepsLo {
-				// Below the range (see SEL-09 fallback): what the reserve
-				// allows, at least one; double progression climbs from here.
+			_, own := g.s.Capacities[CapKey(a.rung.Slug, AssistNone)]
+			if own && math.Floor(d)-k.T.RIRStrength < k.T.NoviceRepsLo {
+				// Below the range on a rung with its own value (SEL-09
+				// fallback, §15.2 U-8): what the reserve allows, at least
+				// one; double progression climbs from here. An easier rung
+				// that only carries a harder rung's value starts at the
+				// bottom of the range as a calibration set.
 				reps = math.Max(1, math.Floor(d)-k.T.RIRStrength)
 			}
 		}
@@ -549,11 +554,16 @@ func (g *gen) prehabItems() []Item {
 	return out
 }
 
-func (g *gen) loadedPrehab() []Item {
+// loadedPrehab adds the loaded prehab of the end block, skipping exercises
+// the warm-up already has.
+func (g *gen) loadedPrehab(warm []Item) []Item {
 	k := g.k
 	var out []Item
 	for _, r := range g.prehabRegions() {
 		for _, slug := range k.prehab[r].Loaded {
+			if slices.ContainsFunc(warm, func(it Item) bool { return it.Exercise == slug }) {
+				continue
+			}
 			ex := k.exercises[slug]
 			if ok, _, _ := g.feasible(ex, ex.OG); !ok {
 				continue

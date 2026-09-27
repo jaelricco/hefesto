@@ -5,7 +5,7 @@ session 1 Mon 28.09. full ~14 min
   warmup (7 min)
     Handgelenk-Vorbereitung                2 × 15       res 2  rest  90s  prehab p99 support  [warm-up]  {DOSE-10}
   strength
-    Liegestütz mit erhöhten Händen         2 × 1        res 2  rest 120s  strength p1 feeder  [calibration]  {GOAL-02 SEL-07 DOSE-05 LOAD-04 LOAD-10}
+    Liegestütz mit erhöhten Händen         2 × 5        res 2  rest 120s  strength p1 feeder  [calibration]  {GOAL-02 SEL-07 DOSE-05 LOAD-04 LOAD-10}
     Unterarmstütz mit gestreckten Armen (Plank) 1 × 10 s     res 2  rest 120s  conditioning p1 support  [calibration]  {GOAL-02 SEL-07 DOSE-04 LOAD-04 LOAD-10 LOAD-03 LOAD-10}
   end
     Handgelenk-Wippen im Vierfüsslerstand  2 × 15       res 2  rest  90s  prehab p99 support  {DOSE-10}
@@ -16,11 +16,11 @@ session 2 Wed 30.09. full ~11 min
     Unterarmstütz mit gestreckten Armen (Plank) 1 × 10 s     res 2  rest 120s  conditioning p1 support  [calibration]  {GOAL-02 SEL-07 DOSE-04 LOAD-04 LOAD-10}
   end
     Handgelenk-Wippen im Vierfüsslerstand  2 × 15       res 2  rest  90s  prehab p99 support  {DOSE-10}
-session 3 Fri 02.10. full ~13 min
+session 3 Fri 02.10. full ~14 min
   warmup (7 min)
     Handgelenk-Vorbereitung                2 × 15       res 2  rest  90s  prehab p99 support  [warm-up]  {DOSE-10}
   strength
-    Liegestütz mit erhöhten Händen         2 × 1        res 2  rest 120s  strength p1 feeder  [calibration]  {GOAL-02 SEL-07 DOSE-05 LOAD-04 LOAD-10}
+    Liegestütz mit erhöhten Händen         2 × 5        res 2  rest 120s  strength p1 feeder  [calibration]  {GOAL-02 SEL-07 DOSE-05 LOAD-04 LOAD-10}
   end
     Handgelenk-Wippen im Vierfüsslerstand  2 × 15       res 2  rest  90s  prehab p99 support  {DOSE-10}
 rest: Tue Thu Sat Sun

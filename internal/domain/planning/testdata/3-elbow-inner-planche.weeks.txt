@@ -1,27 +1,27 @@
-week 1: 4 sessions, 21 sets (4 straight-arm)
+week 1: 4 sessions, 15 sets (4 straight-arm)
   planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
   changes: probe_offered×2
-week 2: 4 sessions, 21 sets (4 straight-arm)
+week 2: 4 sessions, 15 sets (4 straight-arm)
   planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
-week 3: 4 sessions, 21 sets (4 straight-arm)
+week 3: 4 sessions, 15 sets (4 straight-arm)
   planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
-week 4: 4 sessions, 21 sets (4 straight-arm)
+week 4: 4 sessions, 15 sets (4 straight-arm)
   planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
-week 5: 4 sessions, 21 sets (4 straight-arm)
+week 5: 4 sessions, 15 sets (4 straight-arm)
   planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
-week 6: 4 sessions, 17 sets (6 straight-arm), deload planned
+week 6: 4 sessions, 14 sets (6 straight-arm), deload planned
   planche=planche-tuck pull-up=pull-up wrist-conditioning=plank-hold
-week 7: 4 sessions, 24 sets (5 straight-arm)
+week 7: 4 sessions, 18 sets (5 straight-arm)
   planche=planche-tuck pull-up=pull-up wrist-conditioning=plank-hold
   changes: region_state
-week 8: 4 sessions, 22 sets (5 straight-arm)
+week 8: 4 sessions, 16 sets (5 straight-arm)
   planche=planche-tuck pull-up=pull-up wrist-conditioning=plank-hold
-week 9: 4 sessions, 24 sets (6 straight-arm)
+week 9: 4 sessions, 18 sets (6 straight-arm)
   planche=planche-tuck pull-up=pull-up wrist-conditioning=plank-hold
-week 10: 4 sessions, 24 sets (5 straight-arm)
+week 10: 4 sessions, 18 sets (5 straight-arm)
   planche=planche-tuck pull-up=pull-up wrist-conditioning=plank-hold
   changes: deload_scheduled×2
-week 11: 4 sessions, 18 sets (6 straight-arm), deload stagnation
+week 11: 4 sessions, 15 sets (6 straight-arm), deload stagnation
   planche=planche-tuck pull-up=pull-up wrist-conditioning=plank-hold
-week 12: 4 sessions, 25 sets (6 straight-arm)
+week 12: 4 sessions, 19 sets (6 straight-arm)
   planche=planche-tuck pull-up=pull-up wrist-conditioning=plank-hold
