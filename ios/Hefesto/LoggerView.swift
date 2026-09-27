@@ -160,7 +160,8 @@ struct SetRow: View {
     let number: Int
     let set: SetWithElements
     let exercises: [String: Exercise]
-    let onRepeat: () -> Void
+    /// Nil where the set is only shown, as in history.
+    let onRepeat: (() -> Void)?
 
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 12) {
@@ -182,12 +183,14 @@ struct SetRow: View {
                 }
             }
             Spacer()
-            Button(action: onRepeat) {
-                Image(systemName: "arrow.clockwise.circle.fill").font(.title)
+            if let onRepeat {
+                Button(action: onRepeat) {
+                    Image(systemName: "arrow.clockwise.circle.fill").font(.title)
+                }
+                .buttonStyle(.plain)
+                .frame(minWidth: 56, minHeight: 56)
+                .accessibilityLabel("Repeat this set")
             }
-            .buttonStyle(.plain)
-            .frame(minWidth: 56, minHeight: 56)
-            .accessibilityLabel("Repeat this set")
         }
         .padding(.vertical, 4)
     }

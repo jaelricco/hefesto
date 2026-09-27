@@ -15,113 +15,90 @@ that stands.
 - **Phase 4** — sync, idempotency and media (ADR 0009). Merged in #7. Its open
   questions (the set conflict rule, per-op results, offline bands, media
   retention) still stand.
+- **Phase 5** — the iOS app's foundation and the logger (ADR 0010). Merged in
+  #8. Its open questions (rest-day logging, the bodyweight time zone, wiping
+  the database on sign-out) still stand.
 
-## Current phase: 5 — the iOS app's foundation and the logger (complete, awaiting review)
+## Current phase: 6 — skill map, skill detail, celebration, history and stats (complete, awaiting review)
 
-The app lives in `ios/` (ADR 0010). There is a thin SwiftUI target, generated
-by XcodeGen from `project.yml`, over a local package, `HefestoKit`, which holds
-everything that is not a view:
+The decisions are in ADR 0011. Everything below reads the local database, like
+the logger, so it works offline.
 
-- **HefestoAPI**
-  - The client is generated from `api/openapi.yaml` at build time; no DTO is
-    written by hand.
-  - Timestamps are read with or without fractional seconds, as Go writes them.
-- **HefestoStore**
-  - GRDB tables mirror the sync feed. Every local write queues its outbox op
-    in the same transaction.
-  - A newer put replaces a queued one in place, so parents stay ahead of
-    children.
-  - A batch freezes its payloads under one `Idempotency-Key` until it is
-    settled.
-  - Pull pages skip rows that still have a queued op, and the cursor never
-    moves back.
-  - Views observe streams from the store and never import GRDB.
-- **HefestoAuth**
-  - Email and password, or Sign in with Apple; tokens are kept in the
-    Keychain.
-  - The access token is refreshed once, before it expires or after a 401.
-    Concurrent callers share the refresh.
-  - A middleware adds the token and retries a refused request once.
-- **HefestoSync**
-  - Push, then pull.
-  - A retry after a lost response resends the same bytes under the same key.
-  - `superseded` fetches the server's copy of the session; `rejected` is kept
-    as a problem.
-  - An offline completion reports its unlocks.
-  - The exercise catalogue is refreshed by ETag.
-- **HefestoLogger**
-  - `LoggerModel` is the only way a view changes a session.
-  - A plain set is one element and a combo is several, on the same set path.
-  - Repeat last set takes one tap.
-  - The rest timer is computed from the wall clock, so it is right after the
-    app was backgrounded. The actual rest is recorded on the previous set.
-
-Screens:
-- sign in and register, including Sign in with Apple;
-- **Today**: start a session, log a planned rest day, see the sessions so far
-  and a count of changes waiting to sync;
-- **the logger**:
-  - dark, high contrast, 56 pt targets;
-  - blocks and sets;
-  - a set composer where adding an exercise makes a combo;
-  - repeat;
-  - a rest timer with haptics and a local notification;
-  - finish, with an optional perceived effort;
-- **the unlock celebration** when the completion syncs.
-
-Strings are in a catalog, in English and German. The app syncs on launch, on
-foregrounding, after completing a session, and when the network returns.
-
-One spec change came out of this phase. The generator silently dropped
-`assistance` (and a skill's `map`), because they were written as
-`oneOf: [$ref, null]`. The nullability now sits on the component. The JSON
-Schema is the same, so the server's validation and responses are unchanged,
-and the Go unit and HTTP integration suites are green on it.
+- **The skill map (Skills tab)**
+  - A constellation drawn with SwiftUI `Canvas` at the positions authored in
+    content, with pan and zoom.
+  - Locked skills are dim, skills open to work on are outlined, and unlocked
+    ones glow. A skill in progress shows an arc for how many of its levels are
+    unlocked.
+  - Lines join skills that build on one another and light up from an unlocked
+    level. The first time the map shows a new unlock, its line draws itself;
+    then it counts as seen (a local `seenAt`). A new device does not replay old
+    unlocks.
+  - Every node is a real button, 56 pt, with a VoiceOver label (the skill),
+    value (its standing) and hint (the next level). Motion respects Reduce
+    Motion in the celebration.
+  - XP and the streak sit in the toolbar and show only what was kept.
+- **Skill detail**
+  - Each level with its state, what unlocks it (the criteria DSL in words),
+    the athlete's best, and when it was unlocked (self-attested levels say so).
+  - "I can already do this" self-attests an open level, after a confirmation
+    that explains it earns no XP. Missing prerequisites get a clear message.
+  - Injury notes are fetched and kept for offline reading, and always shown
+    with the disclaimer the API sends. Nothing is presented as medical advice.
+- **The celebration**
+  - An animated star and burst for an unlock, the levels unlocked, XP, newly
+    open levels, and "See it on the map", which switches to the map where the
+    line lights up.
+- **History**
+  - Sessions grouped by ISO week, Monday first. A session opens read-only, and
+    a draft can be continued in the logger.
+  - Each logged exercise shows its bests (most reps, longest hold, longest
+    distance, most added load, with dates) and a Swift Charts bar chart of
+    each day's work. Bests count only full, unassisted repetitions.
+- **Store and sync**
+  - A new local migration, `v2-skill-map`: skills, levels, edges, level states,
+    progress, injury notes.
+  - The app refreshes the map after every sync.
+  - A refresh never moves an unlocked level back.
 
 ### Verification
 
-CI runs on a self-hosted Mac runner (`.github/workflows/ios.yml`). It runs
-`swift test` on HefestoKit and builds the app for the iOS Simulator; it uses
-whatever Xcode the machine has selected and changes nothing outside its
-workspace.
+On the self-hosted Mac runner (run 13):
+- `swift test` passes 47 tests in 13 suites. That is 11 new, covering:
+  - the skill map store: the first refresh counts unlocks as seen, a new
+    unlock stays unseen until shown, unlocks are never revoked, content is
+    replaced only on a new version, and a skill's standing;
+  - ISO weeks across a year boundary;
+  - bests that ignore assisted and partial reps;
+  - stats from logged sets;
+  - map, progress and injury-note sync, and a refused attestation.
+- The app builds for the iOS Simulator (`** BUILD SUCCEEDED **`) under Swift 6
+  strict concurrency.
 
-- On the runner (run 7), `swift test` passes: 36 tests in 10 suites, covering
-  the outbox, pull, sets, UUIDv7, the logger, the rest timer, auth, the auth
-  middleware, push and pull. The app builds for the iOS Simulator with
-  `** BUILD SUCCEEDED **`, under Swift 6 strict concurrency.
-- The Go unit tests, `golangci-lint` and the HTTP integration tests (real
-  PostgreSQL and MinIO) are green on the changed spec.
-
-This container has no Swift toolchain (`download.swift.org` is not reachable),
-so all Swift was compiled and tested on the runner.
+No server code or API spec changed in this phase.
 
 ### Deliberately not in this phase
 
-- **History, the Skill Map and Skill detail**: Phase 6 in the brief, as is the
-  full unlock celebration. This phase shows a plain sheet listing what
-  unlocked. The brief places **Profile** in no phase yet.
-- **The Live Activity** for the rest timer. It needs a widget extension; until
-  it exists, the local notification carries the timer.
-- **Band assistance in the logger.** A band names one of the athlete's bands,
-  and there is no bands screen yet. The other kinds of assistance are there.
-- **Editing a logged set's values in place.** Sets can be deleted and logged
-  again; the model already supports editing (`editSet`).
-- **Media attachments** from the app.
+- **`stale_since`** is stored but not shown. See the open questions.
+- **`GET /v1/me/stats/exercises/{id}`**, from the brief's API list, is not
+  built. Stats are computed on the device (ADR 0011).
+- **Profile and settings screens.** The brief places them in no phase. Sign out
+  stays in Today's menu.
+- **The Live Activity**, band assistance and media in the logger are still
+  open from Phase 5.
 
 ### Open questions for review
 
-1. **Rest-day logging.** "Log a rest day" creates and completes a rest-day
-   session at once, so it counts for the streak. Is that the planned-rest
-   mechanic you want, or should rest days come only from a plan?
-2. **Bodyweight time zone.** The feed does not carry a
-   bodyweight entry's time zone. An entry edited on a device other than the
-   one that created it takes that device's zone. Should `SyncBodyweight` carry
-   `timezone`? That would be an additive spec change.
-3. **Signing out.** Signing out keeps the local database, so the next account
-   on the device would see it. Should signing out wipe it? It would wipe with
-   a warning when changes are still unsynced.
+1. **`stale_since`.** Should the app show that an unlocked skill has not been
+   practised lately, and if so, how, without implying the athlete is falling
+   behind (ADR 0003)? Today it is not shown.
+2. **Self-attestation.** Any open level can be self-attested, not only levels
+   whose criteria the log cannot show. The server allows both. Should the app
+   offer it only for criteria-less levels?
+3. **Stats on the device.** Is computing stats locally acceptable for v1, with
+   the endpoint left for a future web or coach client?
 
-## Next: Phase 6
+## Next: Phase 7
 
-iOS: the skill map constellation, skill detail, the unlock celebration, and
-history and stats.
+Polish: localization, an accessibility pass, a TestFlight build, importing
+the researched seed content, and a load smoke test.

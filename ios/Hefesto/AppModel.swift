@@ -22,6 +22,7 @@ final class AppModel {
     private(set) var isOffline = false
     /// A completion the server evaluated, shown once as the celebration.
     var celebration: Celebration?
+    var tab: AppTab = .today
 
     private var pathMonitor: NWPathMonitor?
 
@@ -68,6 +69,8 @@ final class AppModel {
         do {
             let report = try await sync.sync()
             try? await sync.refreshExercises()
+            // States change when a completion is evaluated; content rarely.
+            try? await sync.refreshSkillMap()
             isOffline = false
             if let done = report.completions.first {
                 celebration = Celebration(sessionId: done.key, result: done.value)
@@ -111,6 +114,10 @@ final class AppModel {
         UserDefaults.standard.set(id, forKey: key)
         return id
     }
+}
+
+enum AppTab: Hashable {
+    case today, history, map
 }
 
 struct Celebration: Identifiable {

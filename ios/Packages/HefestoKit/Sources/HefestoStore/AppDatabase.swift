@@ -158,6 +158,10 @@ public final class AppDatabase: Sendable {
                 t.column("createdAt", .datetime).notNull()
             }
         }
+
+        // Phase 6: the skill map, level states, progress and injury notes.
+        // A new migration, never an edit to one already shipped.
+        m.registerMigration("v2-skill-map") { db in try migrateSkillMap(db) }
         return m
     }
 }
