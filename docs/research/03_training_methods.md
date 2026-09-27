@@ -54,7 +54,7 @@
   [B-40, B-41, B-42]. Für Haltezeiten («Sekunden in Reserve») gibt es keine
   Validierung — nur eine Analogie (**Praxisheuristik**).
 - **Frequenz:** Bei gleichem Volumen beeinflusst die Frequenz die Hypertrophie
-  nicht [B-46, B-49]; Kraft profitiert von höherer Frequenz mit abnehmendem
+  nicht [B-46, B-23]; Kraft profitiert von höherer Frequenz mit abnehmendem
   Grenznutzen [B-23] und ≥ 2 Einheiten/Woche [B-31]. Eine Einheit pro Woche
   genügt zum Erhalt [B-87, B-98]. Für «Greasing the Groove» existiert keine
   direkte Studie; indirekt stützen tägliche Kleinstdosen [B-17, B-18, B-99].
@@ -67,7 +67,7 @@
   noch wenig [B-57]. ACSM 2026 findet keinen Einfluss kurzer vs. langer Pausen
   auf Kraft [B-31] — dokumentierter Widerspruch.
 - **Deload:** Praxis ist 5–7 Tage alle 4–6 (bis 8) Wochen, Volumen und Effort
-  runter, Frequenz und Übungswahl gleich [B-63, B-64]; Konsens: Deload = Phase
+  runter, Frequenz und Übungswahl gleich [B-63, B-64, B-114]; Konsens: Deload = Phase
   reduzierten Trainingsstresses [B-62]. Das einzige RCT fand für eine Woche
   Trainingspause keinen Vorteil, sondern leicht geringere Kraftzuwächse
   [B-65].
@@ -149,7 +149,7 @@ ist eine **Praxisheuristik** in der Mitte dieser Spannen.
 
 | Quelle | Befund | Relevanz für Straight-Arm-Statics |
 |---|---|---|
-| [B-08] Oranchuk 2019 (SR, 26 Studien, ≥ 3 Wochen) | Längere Muskellänge: mehr Hypertrophie (0.86–1.69 %/Woche vs. 0.08–0.83 %/Woche); ballistische Intention: mehr Aktivierung und schnelle Kraft; Hypertrophie und Maximalkraft steigen **unabhängig von der Intensität**; **≥ 70 % MVC nötig für Sehnenstruktur und -funktion**; lange Muskellänge überträgt besser auf dynamische Leistung | Statics sind lange, gestreckte Haltepositionen (Bizeps in Planche/Maltese gedehnt); Sehnenreiz erfordert hohe Intensität |
+| [B-08] Oranchuk 2019 (SR, 26 Studien, ≥ 3 Wochen) | Längere Muskellänge: mehr Hypertrophie (0.86–1.69 %/Woche vs. 0.08–0.83 %/Woche); ballistische Intention: mehr Aktivierung und schnelle Kraft; Hypertrophie und Maximalkraft steigen **unabhängig von der Intensität**; **≥ 70 % MVC nötig für Sehnenstruktur und -funktion**; lange Muskellänge überträgt besser auf dynamische Leistung | Straight-Arm-Statics halten den Bizeps in maximaler Länge [B-114]; Sehnenreiz erfordert hohe Intensität |
 | [B-09] Lum & Barbosa 2019 (Review) | Maximalkraft: 80–100 % MVC, 1–5 s je Kontraktion, 30–90 s Gesamtzeit/Einheit, mehrere oder gezielter Winkel; Hypertrophie: 70–75 % MVC, 3–30 s, > 80–150 s/Einheit über > 36 Einheiten; isometrisches Training ermüdet weniger als dynamisches | Direkte Dosiswerte; Einheit «%MVC» muss für Halte über die Haltezeit geschätzt werden (Abschnitt 3.2) |
 | [B-11] Kubo 2001 | 12 Wochen, 4×/Woche, 70 % MVC: 1-s-Kontraktionen (3×50, 2 s Pause) vs. 20-s-Kontraktionen (4 Sätze, 1 min Pause), gleiches Volumen: MVC +31.8 % vs. +33.9 %, Muskelvolumen +7.4 % vs. +7.6 %; **Sehnensteifigkeit nur bei 20-s-Kontraktionen erhöht** | Längere submaximale Halte ergänzen kurze Maximalhalte für Sehnen |
 | [B-12] Bohm 2015 (MA, 27 Studien) | Sehnen passen sich vor allem an die **Lasthöhe** an, nicht an die Kontraktionsart; Interventionen ≥ 12 Wochen tendenziell wirksamer | Straight-Arm-Belastung früh im Plan niedrig dosieren und über Monate steigern (Details: Stream D) |
@@ -157,7 +157,7 @@ ist eine **Praxisheuristik** in der Mitte dieser Spannen.
 | [B-14] Lanza 2019 | Training bei 65° Kniewinkel: +12 % am Trainingswinkel, +11 % bei 50°, +7 % bei 80°, +5 % bei 35°; robuste Winkelspezifität | Leichtere Varianten mit anderem Schulter-/Hüftwinkel übertragen nur teilweise |
 | [B-15] Ghayomzadeh 2025 (MA, 32 Studien) | Isometrisches Training steigert isometrische Kraft stärker als dynamisches (SMD 0.43), isokinetische gleich | Halte trainieren Halte am besten |
 | [B-16] James 2024 (MA, 11 Studien) | Änderungen isometrischer und dynamischer Kraft sind nur schwach gekoppelt → «getrennte neuromuskuläre Domänen» | Dynamische Kraft (z. B. Pseudo-Planche-Liegestütz) ersetzt nicht das Halten der Zielposition |
-| [B-17] Sato 2022 | Ein einziger 3-s-MVC täglich (5×/Woche, 4 Wochen): exzentrisch +10–13 %; isometrisch nur +7.2 % in exzentrischer Kraft, sonst n. s. | Minimaldosis-Isometrie wirkt schwach |
+| [B-17] Sato 2022 | Ein einziger 3-s-MVC täglich (5×/Woche, 4 Wochen): exzentrische Gruppe +10.2 bis +12.8 % in allen Kraftmodi; isometrische Gruppe nur +7.2 % in exzentrischer Kraft, sonst n. s. | Minimaldosis-Isometrie wirkt schwach |
 | [B-18] Yoshida 2022 | 6 exzentrische MVC täglich 5×/Woche > 30 MVC einmal pro Woche für Kraft; Hypertrophie volumenabhängig | Verteilte Kleinstdosen steigern Kraft (GtG-Analogie, Abschnitt 6) |
 | [B-19] Schärer 2021 | 19 Elite-Turner: Kraftanforderung statischer Ringelemente zwischen 56.66 % (Kreuz invers, konzentrisch) und 94.10 % (Schwalbe, exzentrisch) des Körpergewichts im Konditionstest | Statics lassen sich über Maximalkraft-Benchmarks mit Last/Gegengewicht steuern |
 
@@ -184,7 +184,8 @@ ET = 21.92 · f^−1.98; f = Anteil MVC, ET in s).
 
 **Vorbehalt:** Die Modelle stammen aus ergonomischen Einzelgelenk-Aufgaben;
 Ganzkörper-Halte mit gestreckten Armen sind nicht enthalten. Die Tabelle ist
-ein Plausibilitätsanker, keine Messung (Evidenz B, extrapoliert). Sie erklärt
+ein Plausibilitätsanker, keine Messung (Quelle Evidenz A, Anwendung auf
+Statics extrapoliert). Sie erklärt
 aber, warum die PDF-Programme mit 2–20 s pro Satz arbeiten [P-01 bis P-04]:
 Diese Stufen liegen im Bereich hoher Intensität.
 
@@ -197,8 +198,9 @@ Diese Stufen liegen im Bereich hoher Intensität.
   Versagen gehen, weil das die Qualität der Folgesätze senkt [B-113]
   (Evidenz C).
 - Äquivalenz für die Volumenrechnung: 1 konzentrische Wiederholung ≈ 2 s
-  isometrischer Halt ≈ 3 s exzentrische Wiederholung; Zielvolumen 25–50
-  Wiederholungen (Kraft) bzw. 40–75 (Hypertrophie) [B-113] (Evidenz C).
+  isometrischer Halt ≈ 3 s exzentrische Wiederholung; Zielvolumen je
+  Übung und Einheit 25–50 Wiederholungen (Kraft) bzw. 40–75 (Hypertrophie)
+  [B-113, B-114] (Evidenz C).
 - Exzentrik als Einstieg in eine neue Stufe: 2–3 Sätze à 2–3 Cluster-
   Wiederholungen von 3–5 s, 3 min Pause, gesteigert auf 7–10 s; die erste volle
   konzentrische Wiederholung gelingt meist, wenn 3 × 3 × 7–10 s möglich sind
@@ -349,7 +351,9 @@ Treffer). Indirekte Evidenz:
 *Einordnung:* GtG ist für **Technik- und Balance-Skills** (z. B. Handstand)
 und für submaximale Kraftübungen plausibel, **nicht** aber für hochintensive
 Straight-Arm-Halte, bei denen Sehnen- und Gelenkbelastung zählen (Stream D).
-Für die App: GtG nur als optionale, ermüdungsarme Übung (**Praxisheuristik**).
+Low plant 5–10 min freistehende Handstandarbeit pro Einheit ein [B-114]
+(Evidenz C). Für die App: GtG nur als optionale, ermüdungsarme Übung
+(**Praxisheuristik**).
 
 ### 6.3 Ganzkörper vs. Split
 
@@ -420,8 +424,8 @@ belegt; die Erholungszeit hängt vor allem von der Nähe zum Versagen ab
 [B-58, B-59, B-61]. Für den Planer: harte Einheiten desselben Musters
 (RIR ≤ 1 oder Maximalversuche an der Zielstufe) im Abstand von **≥ 48 h**,
 nicht erschöpfende Einheiten ab **≥ 24 h** (**Praxisheuristik** aus
-[B-58, B-59, B-61]). Sehnen und Bindegewebe können langsamer erholen als der
-Muskel; die Abstände für Straight-Arm-Belastung legt Stream D fest.
+[B-58, B-59, B-61]). Ob Sehnen und Bindegewebe bei Straight-Arm-Belastung
+längere Abstände brauchen, ist hier nicht untersucht; das legt Stream D fest.
 
 ## 9. Deload
 
@@ -507,7 +511,7 @@ Dauer gefunden).
 Steigerungsrate. Die 10 %-Regel ist selbst im Laufen nicht bestätigt [B-77];
 das einzige robuste Signal ist das Risiko **einzelner Spitzen** gegenüber dem
 jüngsten Maximum [B-79] (Evidenz B, Laufen, Analogie). Die Parameter
-PAR-B-52 bis PAR-B-54 sind daher **Praxisheuristiken** mit dieser
+PAR-B-55 bis PAR-B-57 sind daher **Praxisheuristiken** mit dieser
 Begründung.
 
 ## 13. Detraining und Wiedereinstieg (Persona 4: 6 Monate Pause)
@@ -545,11 +549,11 @@ darf stark sinken [B-82].
 Die Rampe ist eine **Praxisheuristik**, verankert an den Zeitverläufen oben.
 Grundsätze: (a) aktuelle Form zählt, nicht der Unlock-Status (ADR 0008);
 (b) nach > 3 Wochen neu testen statt alte Bestwerte übernehmen, weil der
-Verlust individuell und dosisabhängig ist [B-83, B-84]; (c) Sehnen und
-Bindegewebe passen sich langsamer an als die Kraft zurückkehrt
-[B-12, B-88] — die Straight-Arm-Stufe steigt daher langsamer als die
-gemessene Kraft (Details Stream D); (d) die Rampe wird als geplantes Training
-erfasst, nie als «Rückstand» (ADR 0003).
+Verlust individuell und dosisabhängig ist [B-83, B-84]; (c) Sehnenanpassung
+braucht eher Monate [B-12], Kraft kehrt dagegen in Wochen zurück
+[B-88, B-90] — daraus folgt heuristisch, dass die Straight-Arm-Stufe langsamer
+steigt als die gemessene Kraft (Details Stream D); (d) die Rampe wird als
+geplantes Training erfasst, nie als «Rückstand» (ADR 0003).
 
 | Pause | Erste Woche | Steigerung | Rückkehr zum Vorniveau (Erwartung) | Anker |
 |---|---|---|---|---|
@@ -584,7 +588,7 @@ allein ~58–61 min [P-01 bis P-03] (Extrakt §4.9).
 
 | Zeitbudget | Pflichtbausteine | Arbeitssätze gesamt | Rechenbeispiel |
 |---|---|---|---|
-| 30 min | Aufwärmen 5 min (spezifisch); Primärblock (Ziel-Skill oder Hauptübung) 2–3 Sätze; 1–2 Antagonisten-Paare à 2–3 Runden mit 90–120 s zwischen den Sätzen; keine Ergänzungsübungen | 8–12 | 5 + 3 × (10 s + 180 s) ≈ 9.5 + Paar 3 Runden (40 s Arbeit, 90 s Pause) ≈ 11.5 + Wechsel ≈ 2 → ~28 min |
+| 30 min | Aufwärmen 5 min (spezifisch); Primärblock (Ziel-Skill oder Hauptübung) 2–3 Sätze; 1–2 Antagonisten-Paare à 2–3 Runden mit 90–120 s zwischen den Sätzen; keine Ergänzungsübungen | 8–12 | 5 (Aufwärmen) + 9.5 (Primärblock 3 × [10 s + 180 s]) + 11.5 (1 Paar, 3 Runden, 6 × 40 s Arbeit + 5 × 90 s Pause) + 2 (Wechsel) ≈ 28 min |
 | 45 min | Aufwärmen 7 min; Skill-/Balancearbeit 5 min; Primärblock 3–4 Sätze; 2 Antagonisten-Paare; optional 1 Ergänzung | 12–16 | ~45–48 min |
 | 60 min | Aufwärmen 10 min; Skill-Arbeit 8–10 min; Primärblock 3–5 Sätze; Sekundärübung 3–4 Sätze; 1 Paar; 1–2 Ergänzung/Prehab | 15–20 | ~58–60 min |
 | 90 min | PDF-Struktur: 1 Maximalübung (2–3 Sätze, 5 min) → 2 Volumenübungen (je 5 Sätze, 3–5 min) → 1–2 Zubringer (2–3 Sätze, 2–3 min); plus Aufwärmen 12–15 min und Prehab | 12–18 | ~80–90 min |
@@ -626,10 +630,10 @@ Populations-Schwellen und kein ACWR [B-80].
 
 | Quelle | Design | Befund | Bedeutung |
 |---|---|---|---|
-| [B-108] Kotarsky 2018 | RCT, 23 mässig trainierte Männer, 3×/Woche, 4 Wochen | Progressive Liegestütz-Varianten steigerten 1RM-Bankdrücken wie Bankdrücktraining; Liegestütz-Progression stärker | Stufen-Progression mit Körpergewicht wirkt wie Lastprogression |
-| [B-109] Calatayud 2015 | RCT, 30 Trainierte, 5 Wochen | 6RM-Liegestütz mit Band bei gleicher EMG-Aktivität wie 6RM-Bankdrücken → gleiche Kraftzuwächse (Δ 13.65–22.21 %) | Gleiche Anstrengung ≈ gleiche Wirkung |
-| [B-110] Kikuchi 2017 | RCT, 18 Männer, 2×/Woche, 8 Wochen | Liegestütze bei Last ≈ 40 % 1RM-Bankdrücken: gleiche Trizeps- und Brustmuskel-Hypertrophie und 1RM-Zuwächse wie Bankdrücken | Körpergewicht reicht für Hypertrophie |
-| [B-111] Sánchez-Moreno 2020 | RCT, 29 kraftrainierte Männer (15.9 ± 4.9 Klimmzüge), 8 Wochen | Klimmzugsätze mit 25 % Geschwindigkeitsverlust > 50 % für Kraft und Ausdauer; mehr Wiederholungen nach 25 % brachten nichts | Klimmzug-Kraft: Sätze deutlich vor dem Versagen beenden |
+| [B-108] Kotarsky 2018 | RCT, 23 mässig trainierte Männer, 3×/Woche, 4 Wochen | 1RM-Bankdrücken stieg in der Liegestütz-Progressionsgruppe wie in der Bankdrückgruppe signifikant; die Liegestütz-Progression stieg in der Liegestützgruppe stärker; keine Änderung der Muskeldicke (4 Wochen) | Stufen-Progression mit Körpergewicht steigert Kraft wie Lastprogression |
+| [B-109] Calatayud 2015 | RCT, 30 Trainierte, 5 Wochen | 6RM-Liegestütz mit Band bei gleicher EMG-Aktivität wie 6RM-Bankdrücken → gleiche Kraftzuwächse in 1RM und 6RM (Δ 13.65–22.21) | Gleiche Anstrengung ≈ gleiche Wirkung |
+| [B-110] Kikuchi 2017 | RCT, 18 Männer, 2×/Woche, 8 Wochen | Liegestütze bei Last ≈ 40 % 1RM-Bankdrücken: Trizeps- und Brustmuskel-Hypertrophie und 1RM-Zuwachs vergleichbar mit Bankdrücken; Bizepszuwachs nur in der Bankdrückgruppe | Körpergewicht reicht für Hypertrophie der Zielmuskeln |
+| [B-111] Sánchez-Moreno 2020 | RCT, 29 krafttrainierte Männer (15.9 ± 4.9 Klimmzüge), 8 Wochen | Klimmzugsätze mit 25 % Geschwindigkeitsverlust > 50 % für Kraft und Ausdauer; mehr Wiederholungen nach 25 % brachten nichts | Klimmzug-Kraft: Sätze deutlich vor dem Versagen beenden |
 | [B-19] Schärer 2021 | Querschnitt, 19 Elite-Turner | Kraft-Benchmarks für statische Ringelemente in % Körpergewicht | Statics lassen sich über Kraft messen |
 
 Für Straight-Arm-Statics (Planche, Front/Back Lever, Maltese, Iron Cross)

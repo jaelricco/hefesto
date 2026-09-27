@@ -521,7 +521,7 @@ die Deutung von «wide» ist in 01_pdf_extract §3 offen).
 | Muskeldrehmoment (isokinetisch) | ∝ Masse^1 | [C-58] | B (Review) |
 | Tests mit Tragen des eigenen Körpergewichts (Klimmzüge, Kniebeugen) | ∝ Masse^−0,33 bzw. ∝ Grösse^−1 (Hypothese bestätigt, n = 77) | [C-59] | B |
 | Klimmzug-Wiederholungen bei künstlich erhöhter Masse | Exponent −7,91 ± 2,3; +10 % Gesamtmasse → −53 % Wiederholungen (n = 30) | [C-60] | B |
-| Klimmzugzahl bei trainierten Athleten | korreliert mit Latzugkraft relativ zur Körpermasse und negativ mit Körper- und Fettmasse | [C-62] | B |
+| Klimmzugzahl bei trainierten Athleten (n = 25) | korreliert mit Latzug-Wiederholungen bei Last = Körpermasse (r = 0,62), nicht mit Latzug-1RM (r = 0,09); negativ mit Körpermasse (r = −0,55), fettfreier Masse (r = −0,51) und Fettmasse (r = −0,52) | [C-62] | B |
 | Erster Klimmzug bei Frauen | Erfolgreiche hatten höhere 1RM-Kraft, Kraft/Masse und Kraft/fettfreie Masse; Vorhersage über Körperfettanteil + Kraft/fettfreie Masse | [C-61] | B |
 | Liegestütz-Bodenreaktionskraft | Körpergrösse nur bei Händen auf 61 cm relevant (r = 0,63) | [C-26] | B |
 
