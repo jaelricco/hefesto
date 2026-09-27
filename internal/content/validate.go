@@ -201,7 +201,11 @@ func (v *validator) checkLevel(s Skill, l Level) {
 		if e.Role == RolePrimaryTest {
 			primary++
 		}
-		v.useExercise(s.File, where, e.Slug)
+		if ex, ok := v.useExercise(s.File, where, e.Slug); ok && s.Status != StatusDraftPlaceholder && ex.Status == StatusDraftPlaceholder {
+			// A researched skill must not lean on placeholder text: the app
+			// would show researched criteria next to made-up instructions.
+			v.add(warnf(s.File, "%s uses exercise %q, which is still a draft placeholder", where, e.Slug))
+		}
 	}
 	if primary != 1 {
 		v.add(errorf(s.File, "%s must have exactly one primary_test exercise, has %d", where, primary))

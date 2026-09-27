@@ -247,7 +247,50 @@ Removing a band from the catalogue hides it from new logs; old logs keep it.
 7. Level orders run 1..n, and each level has exactly one `primary_test`.
 8. Milestones are on the map, and no two skills share a spot.
 9. Injury entries carry `disclaimer: educational_only`.
+10. A researched skill does not use a placeholder exercise (warning).
 
 Plus: criteria testing an exercise not attached to the level, or a measure
 different from the exercise's default (warnings), and `min_load_kg` above
 `max_load_kg` (error).
+
+## Importing the research
+
+The files in `content/` today are placeholders that prove the pipeline's
+shape. The researched content replaces them. The linter's last line says
+how far that has got:
+
+```
+contentlint: 3 of 3 skills and 7 of 7 exercises are draft placeholders; 0 bands
+```
+
+To import a batch of research:
+
+1. **Keep the slugs that already exist.** Production may already hold these
+   slugs, and athletes' logs and unlocks point at them:
+   - skills `pull-up`, `front-lever` and `handstand`;
+   - levels `pull-up/strict-5`, `front-lever/tuck`,
+     `front-lever/advanced-tuck` and `handstand/wall`;
+   - the seven exercises in `exercises/`.
+
+   Replace their contents, keeping each slug. Removing a skill or an exercise
+   retires it. Removing a level is refused by the seed, so retire the whole
+   skill instead. Adding new slugs is always fine.
+2. **Drop `status: draft_placeholder`** from every file whose numbers now come
+   from the research, and change its summary. A researched skill that still
+   points at a placeholder exercise gets a warning, which fails CI.
+3. **Validate**: `make content-validate` must be clean.
+4. **Preview the import against real data.** Run
+   `DATABASE_URL=… go run ./cmd/seed -dry-run` against a copy of production.
+   It applies the import inside a transaction, prints what would change, and
+   rolls back.
+5. **Open a pull request.** The next deploy imports it, as every deploy does
+   (ADR 0006).
+
+Before content reaches athletes outside the team, such as an external
+TestFlight group or the App Store, run the release check:
+
+```sh
+make content-release-check   # contentlint -strict -release
+```
+
+It fails while any skill or exercise is still a placeholder.

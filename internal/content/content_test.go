@@ -401,3 +401,46 @@ func TestLoadErrors(t *testing.T) {
 		t.Fatalf("expected a missing-schema error, got %v", err)
 	}
 }
+
+func TestPlaceholdersAndRelease(t *testing.T) {
+	placeholder := `slug: fl-tuck
+status: draft_placeholder
+name: Tuck FL
+family: pull
+default_measure: hold_seconds
+`
+	// A researched skill leaning on a placeholder exercise is a warning.
+	tree, issues := lint(t, with(map[string]string{"exercises/fl-tuck.yaml": placeholder}))
+	if content.HasErrors(issues, false) || !content.HasErrors(issues, true) {
+		t.Fatalf("want only warnings, got %v", issues)
+	}
+	if !strings.Contains(issues[0].Msg, `"fl-tuck", which is still a draft placeholder`) {
+		t.Fatalf("issues %v", issues)
+	}
+	r := content.ReadinessOf(tree)
+	if r.Ready() || r.PlaceholderExercises != 1 || r.Exercises != 3 || r.PlaceholderSkills != 0 || r.Skills != 2 {
+		t.Fatalf("readiness %+v", r)
+	}
+	rel := content.ReleaseIssues(tree)
+	if len(rel) != 1 || rel[0].Severity != content.SeverityError || rel[0].File != "exercises/fl-tuck.yaml" {
+		t.Fatalf("release issues %v", rel)
+	}
+
+	// A placeholder skill may use placeholder exercises without a warning,
+	// and researched content has nothing to report for a release.
+	tree, issues = lint(t, with(map[string]string{
+		"exercises/fl-tuck.yaml": placeholder,
+		"skills/front-lever.yaml": strings.Replace(base["skills/front-lever.yaml"],
+			"name: Front Lever\n", "status: draft_placeholder\nname: Front Lever\n", 1),
+	}))
+	if len(issues) != 0 {
+		t.Fatalf("placeholder skill: %v", issues)
+	}
+	if got := len(content.ReleaseIssues(tree)); got != 2 {
+		t.Fatalf("release issues: %d, want 2", got)
+	}
+	tree, _ = lint(t, base)
+	if rel := content.ReleaseIssues(tree); len(rel) != 0 || !content.ReadinessOf(tree).Ready() {
+		t.Fatalf("researched tree: %v", rel)
+	}
+}

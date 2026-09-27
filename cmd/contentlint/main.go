@@ -12,6 +12,10 @@
 //     primary_test exercise
 //  8. map coordinates are present on every milestone skill and do not collide
 //  9. injury entries carry disclaimer: educational_only
+// 10. a researched skill does not use a placeholder exercise — warning
+//
+// With -release, every draft_placeholder skill or exercise is an error too:
+// run it before content ships to athletes outside the team.
 //
 // The checks live in internal/content; this command only reports them.
 // Exit status is 1 on any error, or on any warning with -strict.
@@ -29,9 +33,10 @@ import (
 func main() {
 	dir := flag.String("dir", "./content", "path to the content directory")
 	strict := flag.Bool("strict", false, "treat warnings as errors")
+	release := flag.Bool("release", false, "also fail on draft_placeholder content")
 	flag.Parse()
 
-	ok, err := run(os.Stdout, *dir, *strict)
+	ok, err := run(os.Stdout, *dir, *strict, *release)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "contentlint:", err)
 		os.Exit(2)
@@ -41,7 +46,7 @@ func main() {
 	}
 }
 
-func run(w io.Writer, dir string, strict bool) (bool, error) {
+func run(w io.Writer, dir string, strict, release bool) (bool, error) {
 	tree, issues, err := content.Load(dir)
 	if err != nil {
 		return false, fmt.Errorf("loading %s: %w", dir, err)
@@ -50,6 +55,9 @@ func run(w io.Writer, dir string, strict bool) (bool, error) {
 	// about the files that failed to load.
 	if !content.HasErrors(issues, false) {
 		issues = append(issues, content.Validate(tree)...)
+		if release {
+			issues = append(issues, content.ReleaseIssues(tree)...)
+		}
 	}
 	content.SortIssues(issues)
 
@@ -66,5 +74,6 @@ func run(w io.Writer, dir string, strict bool) (bool, error) {
 	counts := tree.Counts()
 	_, _ = fmt.Fprintf(w, "contentlint: %d skills, %d levels, %d edges, %d exercises, %d bands — %d errors, %d warnings\n",
 		counts["skills"], counts["levels"], counts["edges"], counts["exercises"], counts["bands"], errs, warns)
+	_, _ = fmt.Fprintf(w, "contentlint: %s\n", content.ReadinessOf(tree))
 	return !content.HasErrors(issues, strict), nil
 }

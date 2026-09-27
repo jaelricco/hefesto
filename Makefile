@@ -92,6 +92,10 @@ gen-ios-client: ## Regenerate the Swift client from api/openapi.yaml
 content-validate: ## Schema-check content/, verify slugs, edges and DAG acyclicity
 	go run ./cmd/contentlint -dir ./content
 
+.PHONY: content-release-check
+content-release-check: ## Fail while any content is still a draft placeholder (before an external release)
+	go run ./cmd/contentlint -dir ./content -strict -release
+
 .PHONY: seed
 seed: ## Idempotent upsert of content/ into the database
 	$(COMPOSE) run --rm -e DATABASE_URL="$(DB_URL)" api go run ./cmd/seed -dir ./content
