@@ -2049,7 +2049,7 @@ Evidenz: A–D nach `00_sources.md`; H = Heuristik (Begründung im Abschnitt).
 | LOAD-09 | Schutz neuer Sprossen | §7.8 | PAR-D-06, PAR-S-27 | A/B (Zeitverlauf)/H |
 | LOAD-10 | Kürzen | §7.9 | – | H |
 | LOAD-11 | Keine ACWR-Sperre | §7.10 | PAR-B-58, PAR-D-30, PAR-B-72, 73 | A/B |
-| ADAPT-01–03 | Kapazität, erster Satz, Widerspruch, abgeleitete Startwerte | §4.3, §6.2 | PAR-F-01, 02, 16, 20–26, 28, 32, 33, 41, 55, 68, PAR-E-31, PAR-S-03, 04, 21, 31, 38, 39 | B/H |
+| ADAPT-01–03 | Kapazität, erster Satz, Widerspruch, abgeleitete Startwerte | §4.3, §6.2 | PAR-F-01, 02, 16, 20–26, 28, 32, 33, 41, 55, 68, PAR-E-31, PAR-S-03, 04, 21, 31, 38, 39, 44, 45 | B/H |
 | ADAPT-04 | Haltezeit wächst höchstens +2 s je Woche | §6.3 | PAR-B-33 | H |
 | ADAPT-05 | Prüfsprosse anbieten | §6.3 | PAR-B-05, PAR-B-30, PAR-A-78, PAR-S-24 | B/C/H |
 | ADAPT-06 | Sprosse wechseln | §6.3 | PAR-A-65, PAR-B-57 | C/H |
@@ -2128,6 +2128,8 @@ festgemacht ist.
 | PAR-S-41 | `onboarding_break_mapping` | Tabelle in §6.11 | Klassen aus `onboarding.md` §3.5 auf die Bänder von PAR-B-59–62 und PAR-D-29 gelegt |
 | PAR-S-42 | `pain_entry_and_trend` | neue Beschwerde: ein Wert > 2 oder Werte > 0 an 2 Tagen in 7 Tagen; Trend steigend: Wochenmittel «danach» ≥ 1 Punkt über der Vorwoche | Grenze 2 aus PAR-D-14; Zählweise und 1-Punkt-Schwelle sind Heuristik, damit PAR-D-17 berechenbar wird |
 | PAR-S-43 | `entry_ramp_current_trainers` | 0.5 → 0.75 → 1.0 wöchentlich; Einheitsdeckel in diesen Wochen 1.5 × Vorwochenmaximum | ENT-S-1 (b); Schritte aus PAR-D-25; 1.5 = grösster Schritt (0.5 → 0.75), damit der Einheitsdeckel die Rampe nicht blockiert |
+| PAR-S-44 | `plausibility_widening_factor` | σ × 1.25 | `onboarding.md` §5.2 (Verbreiterung bei widersprüchlichen Angaben, R-2, und nach Pausen ab 7 Wochen); Faktor ist dort als Heuristik festgelegt |
+| PAR-S-45 | `unknown_answer_sigma_frac` | σ ≥ 0.5 × μ | `onboarding.md` §5.2, Zeile «weiss nicht»: Populations-Prior mit breiter Unsicherheit |
 
 ## Anhang C: Index der verwendeten Forschungsparameter
 

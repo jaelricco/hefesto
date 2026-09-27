@@ -11,10 +11,12 @@ import (
 // linter runs with -strict (which CI does).
 type Severity string
 
-// Severities.
+// Severities. A note reports a known state (draft content awaiting review)
+// and never fails a run, not even with -strict.
 const (
 	SeverityError   Severity = "error"
 	SeverityWarning Severity = "warning"
+	SeverityNote    Severity = "note"
 )
 
 // Issue is one problem found in the content tree.
@@ -39,11 +41,11 @@ func warnf(file, format string, args ...any) Issue {
 	return Issue{Severity: SeverityWarning, File: file, Msg: fmt.Sprintf(format, args...)}
 }
 
-// HasErrors reports whether any issue is an error — or, when strict, any issue
-// at all.
+// HasErrors reports whether any issue is an error — or, when strict, any
+// error or warning. Notes never count.
 func HasErrors(issues []Issue, strict bool) bool {
 	return slices.ContainsFunc(issues, func(i Issue) bool {
-		return strict || i.Severity == SeverityError
+		return i.Severity == SeverityError || strict && i.Severity == SeverityWarning
 	})
 }
 

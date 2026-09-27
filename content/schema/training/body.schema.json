@@ -1,0 +1,289 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hefesto.fit/schema/training/body.schema.json",
+  "title": "Body model (content/training/body.yaml)",
+  "description": "Structures, regions, load profiles, complaint matrix, red flags, prehab and language rules.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "structures",
+    "regions",
+    "load_families",
+    "complaint_families",
+    "matrix",
+    "red_flags",
+    "prehab",
+    "disclaimer",
+    "forbidden_phrases"
+  ],
+  "properties": {
+    "structures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "straight_arm_cap": {
+            "type": "boolean"
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "regions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "structures"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "structures": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/id"
+            },
+            "uniqueItems": true
+          },
+          "draft": {
+            "type": "boolean"
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "load_families": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "ratings"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "ratings": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 3
+            }
+          },
+          "ref_torque": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 1
+          },
+          "ref_bw": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 1
+          },
+          "sources": {
+            "$ref": "common.schema.json#/$defs/sources"
+          },
+          "rationale": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "complaint_families": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/id"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "matrix": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "region",
+          "cells"
+        ],
+        "properties": {
+          "region": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "cells": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "enum": [
+                "X",
+                "M",
+                "S",
+                "-"
+              ]
+            }
+          },
+          "sources": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "common.schema.json#/$defs/sources"
+            }
+          },
+          "modifications": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "note": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "red_flags": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "regions",
+          "urgency",
+          "action",
+          "question",
+          "advice"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^RF-[0-9]{2}$"
+          },
+          "regions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^(\\*|[a-z0-9_]+)$"
+            },
+            "uniqueItems": true
+          },
+          "minor_only": {
+            "type": "boolean"
+          },
+          "urgency": {
+            "type": "string",
+            "enum": [
+              "N",
+              "D",
+              "A"
+            ]
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "stop",
+              "lock",
+              "rtt0"
+            ]
+          },
+          "question": {
+            "type": "string",
+            "minLength": 1
+          },
+          "advice": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sources": {
+            "$ref": "common.schema.json#/$defs/sources"
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "prehab": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "region",
+          "activation",
+          "label",
+          "evidence"
+        ],
+        "properties": {
+          "region": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "activation": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/slug"
+            },
+            "minItems": 1
+          },
+          "loaded": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/slug"
+            }
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence": {
+            "type": "string",
+            "enum": [
+              "rct_other_sport",
+              "cohort_other_sport",
+              "coaching_practice"
+            ]
+          },
+          "sources": {
+            "$ref": "common.schema.json#/$defs/sources"
+          }
+        }
+      }
+    },
+    "disclaimer": {
+      "type": "string",
+      "minLength": 1
+    },
+    "forbidden_phrases": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    }
+  }
+}

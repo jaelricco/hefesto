@@ -1,0 +1,222 @@
+# Planning view of the skills (spec §3): each ladder lists its exercises from
+# easiest to hardest; each level names the rung that proves it and the dose
+# value (seconds or reps) at which the planner treats it as met (§3.4).
+# Levels, thresholds and edges are transcribed from research 02 §4–§8:
+# prerequisites weigh 1.0, recommended edges carry the weight of the §8
+# table. Foundation skills are the roots of research 02 §4.
+#
+# Deviations from research 02, all for lack of a load profile or equipment
+# model in phase 5: the frog stand is not a planche rung (no row in the load
+# table), wrist conditioning is prehab rather than a ladder, rows need a low
+# bar, and the ring muscle-up, back lever, HSPU and press are not planned yet.
+skills:
+  - slug: hang-foundation
+    name: Hängen und Schulterblatt
+    foundation: true
+    limiting_factor: strength
+    rungs: [dead-hang, scapular-pull-up, arch-hang]
+    levels:
+      - { slug: dead-hang, exercise: dead-hang, threshold: 30, og_ordinal: 0 }
+      - { slug: scapular-pull, exercise: scapular-pull-up, threshold: 8, og_ordinal: 0 }
+      - { slug: arch-hang, exercise: arch-hang, threshold: 8, og_ordinal: 0 }
+    sources: [A-44, A-45, A-38, A-46]
+
+  - slug: pull-up
+    name: Klimmzug
+    foundation: true
+    limiting_factor: strength
+    rungs: [pull-up-negative, pull-up, pull-up-l-sit]
+    feeders: [row]
+    levels:
+      - slug: strict-5
+        exercise: pull-up
+        threshold: 5
+        og_ordinal: 3
+        prerequisites: [hang-foundation/arch-hang]
+        milestone: true
+      - slug: strict-10
+        exercise: pull-up
+        threshold: 10
+        og_ordinal: 3
+      - slug: l-sit
+        exercise: pull-up-l-sit
+        threshold: 5
+        og_ordinal: 4
+    sources: [A-31, A-44, A-41, A-42]
+
+  - slug: row
+    name: Rudern
+    foundation: true
+    limiting_factor: strength
+    rungs: [row-vertical, row-incline, row-horizontal, row-wide, row-archer]
+    levels:
+      - { slug: vertical, exercise: row-vertical, threshold: 8, og_ordinal: 0 }
+      - { slug: incline, exercise: row-incline, threshold: 8, og_ordinal: 0 }
+      - { slug: horizontal, exercise: row-horizontal, threshold: 8, og_ordinal: 2 }
+      - { slug: wide, exercise: row-wide, threshold: 8, og_ordinal: 3 }
+      - { slug: archer, exercise: row-archer, threshold: 8, og_ordinal: 4 }
+    sources: [A-44, A-45, A-31, A-12]
+
+  - slug: support-hold
+    name: Stütz
+    foundation: true
+    limiting_factor: strength
+    rungs: [support-hold-pb, support-hold-rings, support-hold-rings-rto]
+    levels:
+      - { slug: parallel-bars, exercise: support-hold-pb, threshold: 30, og_ordinal: 1 }
+      - { slug: rings, exercise: support-hold-rings, threshold: 30, og_ordinal: 1 }
+      - { slug: rings-turned-out, exercise: support-hold-rings-rto, threshold: 30, og_ordinal: 2 }
+    sources: [A-44, A-43, A-31]
+
+  - slug: dip
+    name: Dip
+    foundation: true
+    limiting_factor: strength
+    rungs: [dip-negative, dip-pb, dip-rings, dip-rings-l]
+    levels:
+      - slug: parallel-bars
+        exercise: dip-pb
+        threshold: 8
+        og_ordinal: 3
+        prerequisites: [support-hold/parallel-bars]
+        milestone: true
+      - slug: rings
+        exercise: dip-rings
+        threshold: 8
+        og_ordinal: 4
+        prerequisites: [support-hold/rings]
+      - { slug: rings-l, exercise: dip-rings-l, threshold: 5, og_ordinal: 5 }
+    sources: [A-31, A-44, A-45, A-43, A-54]
+
+  - slug: push-up
+    name: Liegestütz
+    foundation: true
+    limiting_factor: strength
+    rungs: [push-up-wall, push-up-incline, push-up, push-up-diamond, push-up-rings, pseudo-planche-push-up]
+    levels:
+      - { slug: wall, exercise: push-up-wall, threshold: 8, og_ordinal: 0 }
+      - { slug: incline, exercise: push-up-incline, threshold: 8, og_ordinal: 0 }
+      - { slug: full, exercise: push-up, threshold: 8, og_ordinal: 1, milestone: true }
+      - { slug: diamond, exercise: push-up-diamond, threshold: 8, og_ordinal: 2 }
+      - { slug: rings, exercise: push-up-rings, threshold: 8, og_ordinal: 4 }
+      - { slug: pseudo-planche, exercise: pseudo-planche-push-up, threshold: 8, og_ordinal: 7 }
+    sources: [A-44, A-45, A-46, A-31, A-05]
+
+  - slug: hollow-body
+    name: Hollow Body
+    foundation: true
+    limiting_factor: strength
+    rungs: [hollow-hold-tuck, hollow-hold]
+    levels:
+      - { slug: tuck, exercise: hollow-hold-tuck, threshold: 30, og_ordinal: 0 }
+      - { slug: full, exercise: hollow-hold, threshold: 60, og_ordinal: 0 }
+    sources: [A-44, A-41, A-40]
+
+  - slug: l-sit
+    name: L-Sitz
+    limiting_factor: strength
+    rungs: [l-sit-tuck, l-sit-one-leg, l-sit, straddle-l-sit, l-sit-rings-rto]
+    levels:
+      - slug: tuck
+        exercise: l-sit-tuck
+        threshold: 30
+        og_ordinal: 1
+        prerequisites: [support-hold/parallel-bars]
+      - { slug: one-leg, exercise: l-sit-one-leg, threshold: 5, og_ordinal: 2 }
+      - { slug: full, exercise: l-sit, threshold: 10, og_ordinal: 3, milestone: true }
+      - { slug: straddle, exercise: straddle-l-sit, threshold: 10, og_ordinal: 4 }
+      - { slug: rings, exercise: l-sit-rings-rto, threshold: 10, og_ordinal: 5 }
+    sources: [A-31, A-44, A-36, A-29]
+
+  - slug: handstand
+    name: Handstand
+    limiting_factor: balance
+    rungs: [wall-handstand-hold, handstand-chest-to-wall, handstand-freestanding]
+    levels:
+      - { slug: wall, exercise: wall-handstand-hold, threshold: 30, og_ordinal: 1 }
+      - { slug: chest-to-wall, exercise: handstand-chest-to-wall, threshold: 60, og_ordinal: 1 }
+      - { slug: free-10s, exercise: handstand-freestanding, threshold: 10, og_ordinal: 4, milestone: true }
+      - { slug: free-30s, exercise: handstand-freestanding, threshold: 30, og_ordinal: 4 }
+      - { slug: free-60s, exercise: handstand-freestanding, threshold: 60, og_ordinal: 5 }
+    sources: [A-31, A-37, A-40, A-58]
+
+  - slug: planche
+    name: Planche
+    limiting_factor: strength
+    rungs: [planche-lean, planche-tuck, planche-advanced-tuck, planche-straddle, planche-half-lay, planche]
+    feeders: [push-up]
+    levels:
+      - slug: lean
+        exercise: planche-lean
+        threshold: 30
+        og_ordinal: 0
+        prerequisites: [push-up/full]
+      - slug: tuck
+        exercise: planche-tuck
+        threshold: 10
+        og_ordinal: 5
+        milestone: true
+        recommended:
+          - { to: hollow-body/full, weight: 0.5 }
+          - { to: handstand/wall, weight: 0.4 }
+          - { to: push-up/pseudo-planche, weight: 0.5 }
+        hint: Coaching-Erfahrung nennt vor der Tuck Planche etwa 60 s Hollow Hold, 3 × 20 Liegestütze und 30 s Handstand an der Wand.
+      - { slug: advanced-tuck, exercise: planche-advanced-tuck, threshold: 10, og_ordinal: 6 }
+      - slug: straddle
+        exercise: planche-straddle
+        threshold: 3
+        og_ordinal: 8
+        milestone: true
+        recommended:
+          - { to: l-sit/straddle, weight: 0.4 }
+          - { to: front-lever/tuck, weight: 0.4 }
+      - { slug: half-lay, exercise: planche-half-lay, threshold: 3, og_ordinal: 9 }
+      - { slug: full, exercise: planche, threshold: 3, og_ordinal: 11, milestone: true }
+    sources: [A-31, A-40, A-29, A-33, A-24, P-01, P-02, P-03]
+
+  - slug: front-lever
+    name: Front Lever
+    limiting_factor: strength
+    rungs: [front-lever-tuck, front-lever-advanced-tuck, front-lever-straddle, front-lever-one-leg, front-lever]
+    feeders: [pull-up]
+    levels:
+      - slug: tuck
+        exercise: front-lever-tuck
+        threshold: 10
+        og_ordinal: 4
+        milestone: true
+        prerequisites: [pull-up/strict-5]
+        recommended:
+          - { to: pull-up/strict-10, weight: 0.6 }
+          - { to: hollow-body/full, weight: 0.5 }
+          - { to: row/horizontal, weight: 0.3 }
+          - { to: hang-foundation/dead-hang, weight: 0.3 }
+        hint: Coaching-Erfahrung nennt als Einstieg etwa 10 strikte Klimmzüge, 30 s Hängen und 60 s Hollow Hold.
+      - { slug: advanced-tuck, exercise: front-lever-advanced-tuck, threshold: 10, og_ordinal: 5 }
+      - { slug: straddle, exercise: front-lever-straddle, threshold: 3, og_ordinal: 6, milestone: true }
+      - { slug: one-leg, exercise: front-lever-one-leg, threshold: 5, og_ordinal: 7 }
+      - { slug: full, exercise: front-lever, threshold: 3, og_ordinal: 8, milestone: true }
+    sources: [A-31, A-41, A-29, A-33, A-63]
+
+  - slug: muscle-up
+    name: Muscle-up
+    limiting_factor: mixed
+    rungs: [muscle-up-negative, muscle-up-bar-kipping, muscle-up-bar-strict, muscle-up-l-sit]
+    feeders: [pull-up, dip]
+    levels:
+      - slug: bar-kipping
+        exercise: muscle-up-bar-kipping
+        threshold: 1
+        og_ordinal: 4
+        milestone: true
+        prerequisites: [pull-up/strict-5, dip/parallel-bars]
+        recommended:
+          - { to: pull-up/strict-10, weight: 0.6 }
+        hint: Als Faustregel aus dem Coaching gelten 5 zügige Klimmzüge und 5 saubere Dips; das ist notwendig, aber nicht hinreichend.
+      - { slug: bar-strict, exercise: muscle-up-bar-strict, threshold: 1, og_ordinal: 7 }
+      - slug: l-sit
+        exercise: muscle-up-l-sit
+        threshold: 1
+        og_ordinal: 8
+        prerequisites: [l-sit/full]
+    sources: [A-31, A-13, A-64, A-10]

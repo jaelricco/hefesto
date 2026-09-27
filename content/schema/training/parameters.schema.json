@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hefesto.fit/schema/training/parameters.schema.json",
+  "title": "Parameter catalogue (content/training/parameters.yaml)",
+  "description": "Every parameter the planner uses (spec §2.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "parameters"
+  ],
+  "properties": {
+    "parameters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "key",
+          "evidence"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/param_id"
+          },
+          "key": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+$"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "value": {
+            "type": "number"
+          },
+          "values": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "number"
+            },
+            "propertyNames": {
+              "pattern": "^[a-z0-9_]+$"
+            }
+          },
+          "unit": {
+            "type": "string"
+          },
+          "sources": {
+            "$ref": "common.schema.json#/$defs/sources"
+          },
+          "evidence": {
+            "type": "string",
+            "minLength": 1
+          },
+          "heuristic": {
+            "type": "boolean"
+          },
+          "definition": {
+            "type": "boolean"
+          },
+          "rationale": {
+            "type": "string"
+          }
+        }
+      },
+      "minItems": 1
+    }
+  }
+}

@@ -1,0 +1,83 @@
+# Answer classes of the onboarding (onboarding.md §3.6) and the exercise each
+# class estimates. Rep classes start at the class midpoint, hold classes at
+# the lower bound, open lower hold classes at half the upper bound (§5.2,
+# PAR-S-38). `handstand_class` names two exercises (wall and free) and is
+# read through the handstand stage question instead.
+questions:
+  - key: push_up_class
+    exercise: push-up
+    classes:
+      - { key: "0", lo: 0, hi: 0 }
+      - { key: "1_3", lo: 1, hi: 3 }
+      - { key: "4_7", lo: 4, hi: 7 }
+      - { key: "8_12", lo: 8, hi: 12 }
+      - { key: "13_20", lo: 13, hi: 20 }
+      - { key: "21_30", lo: 21, hi: 30 }
+      - { key: "gt_30", lo: 30, open: true }
+  - key: pull_up_class
+    exercise: pull-up
+    classes:
+      - { key: "0", lo: 0, hi: 0 }
+      - { key: "1_3", lo: 1, hi: 3 }
+      - { key: "4_7", lo: 4, hi: 7 }
+      - { key: "8_11", lo: 8, hi: 11 }
+      - { key: "12_15", lo: 12, hi: 15 }
+      - { key: "16_20", lo: 16, hi: 20 }
+      - { key: "gt_20", lo: 20, open: true }
+  - key: dead_hang_class
+    exercise: dead-hang
+    classes:
+      - { key: "lt_10", lo: 0, hi: 10 }
+      - { key: "10_30", lo: 10, hi: 30 }
+      - { key: "30_60", lo: 30, hi: 60 }
+      - { key: "gt_60", lo: 60, open: true }
+  - key: row_class
+    exercise: row-incline
+    classes:
+      - { key: "0", lo: 0, hi: 0 }
+      - { key: "1_5", lo: 1, hi: 5 }
+      - { key: "6_10", lo: 6, hi: 10 }
+      - { key: "11_15", lo: 11, hi: 15 }
+      - { key: "gt_15", lo: 15, open: true }
+  - key: dip_class
+    exercise: dip-pb
+    classes:
+      - { key: "0", lo: 0, hi: 0 }
+      - { key: "1_3", lo: 1, hi: 3 }
+      - { key: "4_7", lo: 4, hi: 7 }
+      - { key: "8_12", lo: 8, hi: 12 }
+      - { key: "13_20", lo: 13, hi: 20 }
+      - { key: "gt_20", lo: 20, open: true }
+  - key: support_hold_class
+    exercise: support-hold-pb
+    classes:
+      - { key: "lt_10", lo: 0, hi: 10 }
+      - { key: "10_30", lo: 10, hi: 30 }
+      - { key: "gt_30", lo: 30, open: true }
+  - key: hollow_hold_class
+    exercise: hollow-hold
+    classes:
+      - { key: "lt_15", lo: 0, hi: 15 }
+      - { key: "15_30", lo: 15, hi: 30 }
+      - { key: "30_60", lo: 30, hi: 60 }
+      - { key: "gt_60", lo: 60, open: true }
+# skill_stage_hold_class (onboarding.md §3.6): holds < 4 s · 4–9 s · 10–19 s ·
+# ≥ 20 s; reps 1 · 2–3 · 4–5 · > 5.
+stages:
+  - skill: planche
+    classes: &holds
+      - { key: "lt_4", lo: 0, hi: 4 }
+      - { key: "4_9", lo: 4, hi: 9 }
+      - { key: "10_19", lo: 10, hi: 19 }
+      - { key: "ge_20", lo: 20, open: true }
+  - { skill: front-lever, classes: *holds }
+  - { skill: handstand, classes: *holds }
+  - { skill: l-sit, classes: *holds }
+  - skill: muscle-up
+    classes: &reps
+      - { key: "1", lo: 1, hi: 1 }
+      - { key: "2_3", lo: 2, hi: 3 }
+      - { key: "4_5", lo: 4, hi: 5 }
+      - { key: "gt_5", lo: 5, open: true }
+  - { skill: pull-up, classes: *reps }
+  - { skill: dip, classes: *reps }

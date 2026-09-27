@@ -40,7 +40,7 @@ func Load(dir string) (Tree, []Issue, error) {
 		return Tree{}, nil, fmt.Errorf("content directory: %s is not a directory", dir)
 	}
 
-	schemas, err := compileSchemas(filepath.Join(dir, SchemaDir))
+	schemas, err := compileSchemas(filepath.Join(dir, SchemaDir), schemaBase, []string{"families", "exercise", "bands", "skill"})
 	if err != nil {
 		return Tree{}, nil, err
 	}
@@ -196,7 +196,7 @@ func flatten(ve *jsonschema.ValidationError) []string {
 	return out
 }
 
-func compileSchemas(dir string) (map[string]*jsonschema.Schema, error) {
+func compileSchemas(dir, base string, names []string) (map[string]*jsonschema.Schema, error) {
 	files, err := filepath.Glob(filepath.Join(dir, "*.schema.json"))
 	if err != nil {
 		return nil, fmt.Errorf("listing schemas: %w", err)
@@ -216,13 +216,13 @@ func compileSchemas(dir string) (map[string]*jsonschema.Schema, error) {
 		if err != nil {
 			return nil, fmt.Errorf("parsing schema %s: %w", f, err)
 		}
-		if err := c.AddResource(schemaBase+filepath.Base(f), doc); err != nil {
+		if err := c.AddResource(base+filepath.Base(f), doc); err != nil {
 			return nil, fmt.Errorf("adding schema %s: %w", f, err)
 		}
 	}
 	out := map[string]*jsonschema.Schema{}
-	for _, name := range []string{"families", "exercise", "bands", "skill"} {
-		s, err := c.Compile(schemaBase + name + ".schema.json")
+	for _, name := range names {
+		s, err := c.Compile(base + name + ".schema.json")
 		if err != nil {
 			return nil, fmt.Errorf("compiling %s schema: %w", name, err)
 		}

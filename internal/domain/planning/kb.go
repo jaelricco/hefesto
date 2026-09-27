@@ -4,6 +4,7 @@ import (
 	"cmp"
 	"fmt"
 	"slices"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -25,22 +26,30 @@ type Files struct {
 
 // Manifest carries the ruleset version (spec §2.5).
 type Manifest struct {
-	RulesetVersion string `yaml:"ruleset_version"`
-	Status         string `yaml:"status"`
+	RulesetVersion string   `yaml:"ruleset_version"`
+	Status         string   `yaml:"status"`
+	Files          []string `yaml:"files"`
 }
 
 // Param is one catalogue entry. A research parameter keeps its research ID
 // (PAR-A-… to PAR-F-…); values this specification sets are PAR-S-….
+// Text is the value as the research table states it; Value and Values are
+// the numbers the planner reads from it, in the planner's unit.
 type Param struct {
 	ID        string             `yaml:"id"`
 	Key       string             `yaml:"key"`
+	Text      string             `yaml:"text,omitempty"`
 	Value     *float64           `yaml:"value,omitempty"`
 	Values    map[string]float64 `yaml:"values,omitempty"`
 	Unit      string             `yaml:"unit,omitempty"`
 	Sources   []string           `yaml:"sources,omitempty"`
 	Evidence  string             `yaml:"evidence"`
 	Heuristic bool               `yaml:"heuristic,omitempty"`
-	Rationale string             `yaml:"rationale,omitempty"`
+	// Definition marks a scale reference or a mechanical identity (e.g. a
+	// torque ratio of 1.0 for the full stage); it needs a rationale, not a
+	// source.
+	Definition bool   `yaml:"definition,omitempty"`
+	Rationale  string `yaml:"rationale,omitempty"`
 }
 
 // Rule is one entry of the rule catalogue (spec appendix A). Its logic lives
@@ -58,8 +67,10 @@ type Rule struct {
 type Source struct {
 	ID       string `yaml:"id"`
 	Title    string `yaml:"title"`
+	Authors  string `yaml:"authors,omitempty"`
 	Year     string `yaml:"year,omitempty"`
 	URL      string `yaml:"url,omitempty"`
+	Type     string `yaml:"type,omitempty"`
 	Evidence string `yaml:"evidence"`
 }
 
@@ -96,12 +107,14 @@ type Region struct {
 // LoadFamily is one row of the ordinal load profile (research 04 table 2).
 type LoadFamily struct {
 	ID      string         `yaml:"id"`
+	Label   string         `yaml:"label,omitempty"`
 	Ratings map[string]int `yaml:"ratings"`
 	// RefTorque and RefBW describe the heaviest usual stage the ratings refer
 	// to; lighter rungs scale by their own ratio (PAR-C-44).
 	RefTorque float64  `yaml:"ref_torque,omitempty"`
 	RefBW     float64  `yaml:"ref_bw,omitempty"`
 	Sources   []string `yaml:"sources,omitempty"`
+	Rationale string   `yaml:"rationale,omitempty"`
 }
 
 // MatrixRow maps one region to an action per complaint family (research 05 §8).
@@ -109,6 +122,9 @@ type MatrixRow struct {
 	Region  string              `yaml:"region"`
 	Cells   map[string]string   `yaml:"cells"`
 	Sources map[string][]string `yaml:"sources,omitempty"`
+	// Modifications name the variant a cell M points to (research 05 §8).
+	Modifications map[string]string `yaml:"modifications,omitempty"`
+	Note          string            `yaml:"note,omitempty"`
 }
 
 // Matrix actions.
@@ -129,6 +145,7 @@ type RedFlag struct {
 	Action    string   `yaml:"action"`  // stop, lock or rtt0
 	Question  string   `yaml:"question"`
 	Advice    string   `yaml:"advice"`
+	Sources   []string `yaml:"sources,omitempty"`
 }
 
 // Red-flag urgencies and actions.
@@ -149,6 +166,8 @@ type PrehabEntry struct {
 	Activation []string `yaml:"activation"`
 	Loaded     []string `yaml:"loaded,omitempty"`
 	Label      string   `yaml:"label"`
+	Evidence   string   `yaml:"evidence"` // PAR-D-38 label
+	Sources    []string `yaml:"sources,omitempty"`
 }
 
 // Exercise is a loggable exercise with the metadata the planner needs (spec
@@ -177,6 +196,9 @@ type Exercise struct {
 	Eccentric       bool     `yaml:"eccentric,omitempty"`
 	Restrictions    []string `yaml:"restriction_tags,omitempty"`
 	Sources         []string `yaml:"sources,omitempty"`
+	// Note documents heuristic choices (an OG ordinal read off a range, a
+	// missing torque ratio); it is not shown to the user.
+	Note string `yaml:"note,omitempty"`
 
 	// Filled by Build from the skill that lists the exercise as a rung.
 	Skill string `yaml:"-"`
@@ -248,8 +270,10 @@ type Edge struct {
 
 // SessionConfig holds the session templates and default day patterns.
 type SessionConfig struct {
-	Templates   []Template       `yaml:"templates"`
-	DayPatterns map[int][]string `yaml:"day_patterns"`
+	Templates []Template `yaml:"templates"`
+	// DayPatterns is keyed by the number of sessions ("1" … "7"); YAML keys
+	// stay strings so the files round-trip through JSON Schema.
+	DayPatterns map[string][]string `yaml:"day_patterns"`
 }
 
 // Template is a session layout by available minutes (PAR-B-64–67).
@@ -409,14 +433,14 @@ func (b *builder) catalogues(f Files) {
 		if _, dup := b.kb.params[p.ID]; dup {
 			b.errf("KB-03", "parameters", "duplicate parameter %s", p.ID)
 		}
-		if p.Value == nil && len(p.Values) == 0 {
-			b.errf("KB-03", p.ID, "parameter has neither value nor values")
+		if p.Value == nil && len(p.Values) == 0 && strings.TrimSpace(p.Text) == "" {
+			b.errf("KB-03", p.ID, "parameter has no value, values or text")
 		}
-		if !p.Heuristic && len(p.Sources) == 0 {
-			b.errf("KB-03", p.ID, "parameter has no sources and is not marked heuristic")
+		if !p.Heuristic && !p.Definition && len(p.Sources) == 0 {
+			b.errf("KB-03", p.ID, "parameter has no sources and is not marked heuristic or definition")
 		}
-		if p.Heuristic && strings.TrimSpace(p.Rationale) == "" {
-			b.errf("KB-03", p.ID, "heuristic parameter needs a rationale")
+		if (p.Heuristic || p.Definition) && strings.TrimSpace(p.Rationale) == "" {
+			b.errf("KB-03", p.ID, "heuristic or definition parameter needs a rationale")
 		}
 		b.kb.params[p.ID] = p
 	}
@@ -652,7 +676,7 @@ func (b *builder) sessions(sc SessionConfig) {
 	names := map[string]time.Weekday{"mon": time.Monday, "tue": time.Tuesday, "wed": time.Wednesday,
 		"thu": time.Thursday, "fri": time.Friday, "sat": time.Saturday, "sun": time.Sunday}
 	for n := 1; n <= 7; n++ {
-		days, ok := sc.DayPatterns[n]
+		days, ok := sc.DayPatterns[strconv.Itoa(n)]
 		if !ok || len(days) != n {
 			b.errf("KB-09", "sessions", "day pattern for %d sessions is missing or has the wrong length", n)
 			continue

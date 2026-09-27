@@ -1,0 +1,506 @@
+# Rule catalogue (spec appendix A). The logic of every rule lives in
+# internal/domain/planning; titles, texts, parameters and evidence live here.
+# Texts are shown to the user: no diagnoses, no structure names for a
+# region with a complaint, no wording that implies falling behind (spec §9.3).
+rules:
+- {id: SAFE-01, title: Onboarding zuerst, text: 'Bevor ein Plan entsteht, braucht die App deine Angaben
+    aus dem Onboarding und deine Bestätigung des Hinweises.', evidence: Projektvorgabe}
+- id: SAFE-02
+  title: Kein Plan bis zur Freigabe
+  text: Du hast Anzeichen gemeldet, die vor weiterem Training ärztlich abgeklärt werden sollten. Bis du
+    eine Freigabe bestätigst, plant die App kein Training.
+  params: [PAR-F-45, PAR-D-21]
+  evidence: B
+- id: SAFE-03
+  title: Keine Tests bis zur Freigabe
+  text: Eine Antwort im Gesundheits-Check spricht dafür, vor Maximaltests und Prüfversuchen eine Fachperson
+    zu fragen. Bis du eine Freigabe bestätigst, plant die App keine Tests und keine Prüfversuche.
+  sources: [F-41]
+  evidence: B (F-41) / H
+- id: SAFE-04
+  title: Vorsichtig ohne Gesundheitsangaben
+  text: Ohne Einwilligung zu Gesundheitsangaben steigert der Plan die Belastung vorsichtiger und speichert
+    keine Einschränkungen dauerhaft.
+  params: [PAR-D-02]
+  evidence: H
+- id: SAFE-05
+  title: Region pausiert
+  text: Solange die Angabe für {region} nicht abgeklärt ist, plant die App dort keine Belastung.
+  params: [PAR-D-21, PAR-S-22]
+  evidence: H
+- id: SAFE-06
+  title: Region in der Rampe, Stufe 0
+  text: Für {region} plant die App im Moment nur Übungen mit geringer Last in dieser Region.
+  params: [PAR-S-22]
+  evidence: H
+- {id: SAFE-07, title: Kein Plan für Minderjährige, text: Für Personen unter 18 Jahren erstellt die App
+    in dieser Version keinen Trainingsplan., evidence: Projektvorgabe}
+- {id: GOAL-01, title: Ziel nach Priorität, text: '{skill} ist dein Ziel mit Priorität {priority}; Zeit
+    und Belastung werden in dieser Reihenfolge verteilt.', evidence: H}
+- id: GOAL-02
+  title: Weg zum Ziel
+  text: '{skill} gehört zum Weg zu deinem Ziel und wird deshalb mittrainiert.'
+  params: [PAR-A-62]
+  evidence: C/H
+- id: GOAL-03
+  title: Erhaltung bei wenig Zeit
+  text: Für dieses Ziel reicht die Zeit diese Woche nur für eine Erhaltungsdosis.
+  params: [PAR-B-63, PAR-B-34]
+  evidence: B
+- id: GOAL-04
+  title: Hinweis zur Bereitschaft
+  text: '{skill}: {hint} Das ist ein Hinweis, keine Sperre.'
+  params: [PAR-F-42, PAR-A-52, PAR-A-53, PAR-A-69, PAR-F-62, PAR-F-63, PAR-F-64]
+  evidence: C/D
+- id: GOAL-05
+  title: Realismus-Check
+  text: 'Erfahrungswerte aus dem Coaching, keine Prognose: Bis zu diesem Ziel brauchen viele etwa {from}
+    bis {to} Wochen, kaum jemand weniger als {lower}. Dein Plan richtet sich nach deiner Arbeitsstufe,
+    nicht nach dem Datum.'
+  params: [PAR-A-45, PAR-A-47, PAR-A-51, PAR-S-19]
+  evidence: D/H
+- id: GOAL-06
+  title: Ausgleich der Zugrichtung
+  text: Weil deine Ziele nur in eine Richtung arbeiten, plant die App eine Übung der Gegenrichtung zum
+    Ausgleich.
+  params: [PAR-B-64, PAR-B-65, PAR-B-66]
+  evidence: H
+- id: WEEK-01
+  title: Trainingstage
+  text: Die App verteilt {sessions} Einheiten so, dass zwischen harten Einheiten möglichst viel Abstand
+    liegt.
+  params: [PAR-S-06]
+  evidence: H
+- id: WEEK-02
+  title: Volle und leichte Einheiten
+  text: '{full} volle Einheiten; die übrigen {light} sind leicht (Balance, Technik, Prehab), damit genug
+    Erholung bleibt.'
+  params: [PAR-B-36, PAR-S-20]
+  evidence: B/H
+- id: WEEK-03
+  title: Aufteilung
+  text: Bei {full} vollen Einheiten verteilt die App Druck und Zug auf verschiedene Tage.
+  params: [PAR-B-37]
+  evidence: H (A für Volumengleichheit)
+- id: WEEK-04
+  title: Häufigkeit
+  text: '{skill} ist {planned} Mal geplant statt {target} Mal, weil die Abstände zwischen harten Reizen
+    sonst zu kurz würden.'
+  params: [PAR-B-34, PAR-E-11, PAR-E-12]
+  evidence: A (Übertragung)/H
+- id: WEEK-05
+  title: Verteilung auf die Tage
+  text: Die App verteilt die Übungen so, dass sich gleiche Strukturen erholen können.
+  params: [PAR-B-48, PAR-B-81]
+  evidence: H
+- id: WEEK-06
+  title: Zu wenig Tage
+  text: Für {skill} ist diese Woche kein Tag frei, der die nötigen Abstände einhält. Mehr Trainingstage
+    oder weniger Ziele würden das ändern.
+  params: [PAR-B-63]
+  evidence: B
+- id: WEEK-07
+  title: Entlastungswoche
+  text: 'Diese Woche ist eine Entlastungswoche: weniger Sätze und mehr Reserve. So kann sich der Körper
+    an die Belastung der letzten Wochen anpassen.'
+  params: [PAR-B-03, PAR-B-50, PAR-B-51, PAR-B-52, PAR-B-53, PAR-B-54]
+  evidence: B
+- {id: WEEK-08, title: Neuer Wochenplan, text: Der Wochenplan wurde neu berechnet., evidence: –}
+- id: SESS-01
+  title: Vorlage nach Zeit
+  text: Aufbau für eine Einheit von {minutes} Minuten.
+  params: [PAR-B-64, PAR-B-65, PAR-B-66, PAR-B-67]
+  evidence: H/C
+- id: SESS-02
+  title: Reihenfolge
+  text: 'Reihenfolge: Aufwärmen, Balance und Technik, dann die schwersten Halte, danach Volumen, Kraft
+    und zuletzt belastende Prehab. Schweres kommt, solange du frisch bist.'
+  params: [PAR-B-46, PAR-E-01, PAR-E-02, PAR-E-03]
+  evidence: A
+- id: SESS-03
+  title: Aufwärmen
+  text: Aufwärmen mit allgemeinem Teil, Prehab-Aktivierung und leichten Rampensätzen vor dem ersten schweren
+    Block.
+  params: [PAR-B-69, PAR-B-70, PAR-B-71, PAR-D-01, PAR-D-05, PAR-D-37, PAR-D-38, PAR-E-26, PAR-E-45, PAR-E-46,
+    PAR-E-47]
+  evidence: A/B/H
+- id: SESS-04
+  title: Balanceblock
+  text: Balance übst du früh in der Einheit, weil Ermüdung die Kontrolle verschlechtert.
+  params: [PAR-E-35, PAR-E-36, PAR-E-38, PAR-B-35, PAR-B-74]
+  evidence: A (Analogie)/H
+- id: SESS-05
+  title: Maximalblock
+  text: Alle Sätze eines schweren Halts hintereinander, mit langen Pausen, damit jeder Satz in guter Qualität
+    gelingt.
+  params: [PAR-E-32, PAR-B-81]
+  evidence: H
+- id: SESS-06
+  title: Volumenblock
+  text: Zusätzliches Volumen eine Stufe leichter, damit du Zeit unter Spannung sammelst, ohne an die Grenze
+    zu gehen.
+  params: [PAR-B-10, PAR-B-11, PAR-B-12]
+  evidence: B/C
+- id: SESS-07
+  title: Kraftblock
+  text: Kraftübungen für den Weg zum Ziel und zum Ausgleich; Gegenspieler können abwechselnd trainiert
+    werden.
+  params: [PAR-B-45]
+  evidence: B
+- id: SESS-08
+  title: Abschluss
+  text: Belastende Prehab und Rumpfarbeit kommen ans Ende, damit sie die schweren Übungen nicht vorermüden.
+  params: [PAR-E-01]
+  evidence: H
+- id: SESS-09
+  title: Leichte Einheit
+  text: 'Leichte Einheit: Balance, Technik und Prehab ohne harte Reize, damit du dich von den vollen Einheiten
+    erholst.'
+  params: [PAR-E-12, PAR-E-14]
+  evidence: H
+- id: SESS-10
+  title: Muskelaufbau als Nebenziel
+  text: Zusätzliche Sätze für Muskelaufbau, soweit Zeit und Belastungsgrenzen es erlauben.
+  params: [PAR-B-21, PAR-B-75, PAR-B-79, PAR-C-46]
+  evidence: A/B/H
+- id: SESS-11
+  title: Greasing the Groove
+  text: Kurze, leichte Sätze über den Tag verteilt (in dieser Version nicht aktiv).
+  params: [PAR-B-80, PAR-E-27, PAR-E-48, PAR-E-49]
+  evidence: C/D/H
+- {id: SEL-01, title: Kandidaten, text: Die Übungen kommen aus den Leitern deiner Ziele und ihrer Voraussetzungen.,
+  evidence: –}
+- {id: SEL-02, title: Equipment, text: '{exercise} braucht Ausrüstung, die du nicht angegeben hast.',
+  evidence: –}
+- {id: SEL-03, title: Angaben zu Beschwerden, text: 'Wegen deiner Angabe zu {region} wählt die App hier
+    eine andere Übung oder eine leichtere Variante.', evidence: H}
+- id: SEL-04
+  title: Untergriff mit gestreckten Armen
+  text: Varianten mit Untergriff und gestreckten Armen kommen erst ab einer höheren Stufe in den Plan,
+    weil sie die Beugesehnen am Ellbogen stark belasten.
+  params: [PAR-D-41, PAR-D-12, PAR-A-23]
+  evidence: B/H
+- id: SEL-05
+  title: Beweglichkeit
+  text: Deine Angabe zur Beweglichkeit bestimmt die Variante, zum Beispiel Parallettes statt flacher Hände.
+  params: [PAR-F-53, PAR-C-27]
+  evidence: H
+- id: SEL-06
+  title: Minderjährige
+  text: Für Personen unter 18 Jahren gelten strengere Regeln bei der Auswahl.
+  params: [PAR-D-23]
+  evidence: H
+- id: SEL-07
+  title: Arbeitsstufe
+  text: 'Arbeitsstufe {exercise}: deine geschätzte Leistung ({dose}) lässt Sätze mit Reserve zu.'
+  params: [PAR-B-05, PAR-B-07, PAR-C-13, PAR-C-61]
+  evidence: H
+- {id: SEL-08, title: Einstieg eine Stufe tiefer, text: 'Die ersten Einheiten liegen eine Stufe unter
+    deiner Angabe, bis Logs sie bestätigen.', evidence: H (`onboarding.md` §5.4)}
+- id: SEL-09
+  title: Wiederholungsstufe
+  text: '{exercise}: diese Variante baut die Kraft für die erste saubere Wiederholung auf.'
+  params: [PAR-B-23, PAR-B-16, PAR-B-77]
+  evidence: H/C
+- id: SEL-10
+  title: Ersatzübung
+  text: 'Ersatz in dieser Reihenfolge: leichtere Stufe derselben Leiter, andere Griff- oder Handstellung,
+    Band, verwandte Übung.'
+  params: [PAR-C-27]
+  evidence: H
+- id: SEL-11
+  title: Variation
+  text: Gleichwertige Varianten wechseln zwischen den Einheiten; die Arbeitsstufe bleibt.
+  params: [PAR-E-24, PAR-E-34]
+  evidence: A/B
+- id: DOSE-01
+  title: Dosis Halt
+  text: '{sets} × {hold_s} s: etwa 70 % deiner geschätzten Maximalhaltezeit von {max_s} s, damit Reserve
+    bleibt. Lange Pausen, weil die Qualität der Halte zählt.'
+  params: [PAR-S-01, PAR-S-02, PAR-S-05, PAR-B-08, PAR-B-33, PAR-E-04, PAR-E-05, PAR-E-08]
+  evidence: C/H
+- id: DOSE-02
+  title: Dosis Skill-Wiederholungen
+  text: '{reps} Wiederholungen pro Satz, mindestens eine Wiederholung Reserve.'
+  params: [PAR-E-04, PAR-E-08, PAR-E-18]
+  evidence: C/H
+- id: DOSE-03
+  title: Dosis Volumen
+  text: '{sets} × {hold_s} s an einer leichteren Stufe.'
+  params: [PAR-B-10, PAR-B-11, PAR-B-12, PAR-E-06]
+  evidence: B/C
+- id: DOSE-04
+  title: Dosis Kraftausdauer-Halt
+  text: '{sets} × {hold_s} s als Kraftausdauer-Halt.'
+  params: [PAR-B-76, PAR-E-07]
+  evidence: C
+- id: DOSE-05
+  title: Dosis Einsteiger
+  text: '{reps} Wiederholungen pro Satz mit etwa 2 Wiederholungen Reserve. Wenn alle Sätze die Obergrenze
+    erreichen, geht es eine Stufe weiter.'
+  params: [PAR-A-01, PAR-A-02, PAR-A-03, PAR-A-04, PAR-A-05, PAR-B-01, PAR-B-24, PAR-B-42, PAR-S-29]
+  evidence: A/D
+- id: DOSE-06
+  title: Dosis Trainierte
+  text: '{reps} Wiederholungen (Bereich {range_lo} bis {range_hi}) mit etwa 2 Wiederholungen Reserve;
+    die Wiederholungszahl wechselt zwischen den Einheiten.'
+  params: [PAR-B-02, PAR-B-17, PAR-B-18, PAR-B-19, PAR-B-24, PAR-B-42, PAR-B-43, PAR-S-13, PAR-S-29]
+  evidence: A/H
+- id: DOSE-07
+  title: Dosis Exzentrik
+  text: Langsam absenken, etwa {seconds} s pro Wiederholung. Die Dauer steigt, bis die erste ganze Wiederholung
+    gelingt.
+  params: [PAR-B-16, PAR-B-77]
+  evidence: C
+- id: DOSE-08
+  title: Dosis Balance
+  text: Etwa {minutes} Minuten Balanceübung; Versuche und Pausen richten sich nach deinem Gefühl.
+  params: [PAR-E-35, PAR-E-36, PAR-E-38, PAR-B-74]
+  evidence: A (Analogie)/H
+- id: DOSE-09
+  title: Dosis Technik
+  text: Technikversuche mit {hold_s} s, weit weg von der Grenze.
+  params: [PAR-S-26, PAR-E-14, PAR-E-38]
+  evidence: H
+- id: DOSE-10
+  title: Dosis Prehab
+  text: Prehab für {region}. {label}
+  params: [PAR-B-78, PAR-B-44, PAR-D-37]
+  evidence: B
+- id: DOSE-12
+  title: Dosis Ergänzung
+  text: '{reps} Wiederholungen mit etwa 2 Wiederholungen Reserve.'
+  params: [PAR-B-78, PAR-B-45, PAR-E-07]
+  evidence: B
+- id: DOSE-11
+  title: Zusatzlast
+  text: '{load_kg} kg Zusatzlast, weil alle Sätze die Obergrenze der Wiederholungen erreichen.'
+  params: [PAR-B-23, PAR-B-32]
+  evidence: B
+- id: DOSE-20
+  title: Stopp bei Formverlust
+  text: Beende die Übung, wenn die Form deutlich schlechter wird als im ersten Satz.
+  params: &id001 [PAR-E-15, PAR-E-16, PAR-E-17, PAR-D-15]
+  evidence: H/A (Reha)
+- id: DOSE-21
+  title: Stopp nach Fehlversuchen
+  text: Beende die Übung nach zwei Fehlversuchen in Folge.
+  params: *id001
+  evidence: H/A (Reha)
+- id: DOSE-22
+  title: Stopp bei Leistungsabfall
+  text: Beende die Übung, wenn die Leistung deutlich unter deinem besten Satz der Einheit liegt.
+  params: *id001
+  evidence: H/A (Reha)
+- id: DOSE-23
+  title: Stopp bei Schmerz
+  text: Beende die Übung, wenn Schmerz über 5 von 10 steigt oder deutlich zunimmt.
+  params: *id001
+  evidence: H/A (Reha)
+- id: LOAD-01
+  title: Belastung je Struktur
+  text: Die App schätzt die Belastung jeder Übung für Handgelenk, Ellbogen, Schulter und weitere Strukturen.
+  params: [PAR-C-27, PAR-C-40, PAR-C-44, PAR-C-45, PAR-C-47, PAR-B-79, PAR-S-08, PAR-S-15]
+  evidence: H
+- id: LOAD-02
+  title: Wochengrenze
+  text: Die Belastung steigt pro Woche nur um einen kleinen Anteil über dein Mittel der letzten Wochen,
+    damit sich Sehnen und Gelenke anpassen können.
+  params: [PAR-D-02, PAR-D-04, PAR-D-09, PAR-D-10, PAR-D-11, PAR-D-23, PAR-B-55, PAR-S-14, PAR-S-15, PAR-S-25,
+    PAR-S-35, PAR-S-40]
+  evidence: H
+- id: LOAD-03
+  title: Grenze je Einheit
+  text: Eine einzelne Einheit liegt höchstens knapp über deiner grössten Einheit der letzten 30 Tage.
+  params: [PAR-D-31]
+  evidence: B (Analogie)
+- id: LOAD-04
+  title: Neue Belastung
+  text: Diese Belastung ist für dich neu; die erste Woche startet mit der Hälfte des Zielvolumens.
+  params: [PAR-D-12]
+  evidence: H
+- id: LOAD-04b
+  title: Einstieg in den Plan
+  text: Du trainierst schon, aber die App kennt deine Belastung noch nicht. Deshalb steigt das Volumen
+    in den ersten Wochen schrittweise auf das Ziel.
+  params: [PAR-D-12, PAR-D-25, PAR-S-43]
+  evidence: H
+- id: LOAD-05
+  title: Abstände
+  text: Zwischen harten Reizen für dieselbe Struktur liegen mindestens 48 Stunden.
+  params: [PAR-D-03, PAR-D-08, PAR-D-34, PAR-B-38, PAR-E-13, PAR-E-14, PAR-S-07, PAR-S-30]
+  evidence: B/H
+- id: LOAD-06
+  title: Grenze für gestreckte Arme
+  text: Die Zahl der schweren Sätze mit gestreckten Armen pro Einheit ist begrenzt.
+  params: [PAR-B-47, PAR-A-23, PAR-S-09, PAR-S-23]
+  evidence: H
+- id: LOAD-07
+  title: Gleiche Richtung
+  text: Höchstens zwei schwere Halte derselben Richtung pro Einheit.
+  params: [PAR-B-48]
+  evidence: H
+- id: LOAD-08
+  title: Paarung
+  text: Halte der Gegenrichtung werden abwechselnd trainiert, weil sonst die Zeit nicht reicht.
+  params: [PAR-B-81, PAR-B-45, PAR-E-04, PAR-E-33, PAR-S-10]
+  evidence: H
+- id: LOAD-09
+  title: Neue Stufe
+  text: 'Nach einem Stufenwechsel bleibt das Volumen einige Wochen an der alten Stufe: {exercise}.'
+  params: [PAR-D-06, PAR-S-27]
+  evidence: A/B (Zeitverlauf)/H
+- {id: LOAD-10, title: Gekürzt, text: 'Einzelne Sätze wurden gestrichen, damit Zeit- und Belastungsgrenzen
+    eingehalten werden.', evidence: H}
+- id: LOAD-11
+  title: Keine Sperre nach Lastquotient
+  text: Der Plan sperrt nichts allein wegen eines Lastquotienten; er steuert über Wochen- und Einheitsgrenzen.
+  params: [PAR-B-58, PAR-D-30, PAR-B-72, PAR-B-73]
+  evidence: A/B
+- id: ADAPT-01
+  title: Leistungsschätzung
+  text: Deine Logs aktualisieren die Schätzung deiner Leistung.
+  params: &id002 [PAR-F-01, PAR-F-02, PAR-F-16, PAR-F-20, PAR-F-21, PAR-F-22, PAR-F-23, PAR-F-24, PAR-F-25,
+    PAR-F-26, PAR-F-28, PAR-F-32, PAR-F-33, PAR-F-41, PAR-F-55, PAR-F-68, PAR-E-31, PAR-S-03, PAR-S-04,
+    PAR-S-21, PAR-S-31, PAR-S-38, PAR-S-39, PAR-S-44, PAR-S-45]
+  evidence: B/H
+- id: ADAPT-02
+  title: Erster Satz zählt
+  text: Der erste Arbeitssatz zählt am meisten, weil er frisch ist.
+  params: *id002
+  evidence: B/H
+- id: ADAPT-03
+  title: Abweichung
+  text: Dein Ergebnis bei {exercise} weicht stark von der bisherigen Schätzung ab. Die App übernimmt es
+    ganz, sobald ein zweiter Wert es bestätigt.
+  params: *id002
+  evidence: B/H
+- id: ADAPT-04
+  title: Haltezeit wächst langsam
+  text: Die Haltezeit pro Satz steigt höchstens um 2 s pro Woche.
+  params: [PAR-B-33]
+  evidence: H
+- id: ADAPT-05
+  title: Nächste Stufe probieren
+  text: 'Du hältst die aktuelle Stufe lang genug: kurze Versuche an {exercise} sind möglich, wenn du sie
+    annimmst.'
+  params: [PAR-B-05, PAR-B-30, PAR-A-78, PAR-S-24]
+  evidence: B/C/H
+- id: ADAPT-06
+  title: Stufenwechsel
+  text: Deine Logs zeigen, dass die nächste Stufe jetzt passt.
+  params: [PAR-A-65, PAR-B-57]
+  evidence: C/H
+- id: ADAPT-06a
+  title: Bedingungen für Versuche
+  text: Versuche an der nächsten Stufe gibt es nur ohne aktuelle Beschwerden in der Region und nicht in
+    der ersten Woche einer neuen Belastung.
+  params: [PAR-D-12, PAR-D-29]
+  evidence: H
+- id: ADAPT-07
+  title: Doppelprogression
+  text: Ziel jetzt {reps} Wiederholungen pro Satz; erst wenn alle Sätze die Obergrenze erreichen, kommt
+    die nächste Stufe.
+  params: [PAR-A-01, PAR-A-02, PAR-A-03, PAR-A-04, PAR-A-05, PAR-B-01, PAR-B-23, PAR-S-33]
+  evidence: A/D/H
+- id: ADAPT-08
+  title: Wellenförmige Progression
+  text: Schwere, mittlere und leichte Einheiten wechseln sich ab; jede steigert sich für sich.
+  params: [PAR-B-02, PAR-B-30]
+  evidence: A/B
+- id: ADAPT-09
+  title: Zusatzlast steigt
+  text: Die Zusatzlast steigt um eine kleine Stufe.
+  params: [PAR-B-23, PAR-B-30, PAR-B-32]
+  evidence: B
+- id: ADAPT-10
+  title: Von der Exzentrik zur Wiederholung
+  text: 'Du kontrollierst das Absenken lange genug: jetzt kommt die erste ganze Wiederholung an {exercise}.'
+  params: [PAR-B-16, PAR-B-77, PAR-A-66]
+  evidence: C
+- id: ADAPT-11
+  title: Autoregulation
+  text: Deine Reserve lag zweimal deutlich neben dem Ziel; die Dosis wurde angepasst.
+  params: [PAR-B-28, PAR-B-29, PAR-B-31, PAR-F-25]
+  evidence: A/H
+- id: ADAPT-12
+  title: Leichtere Stufe
+  text: 'Die letzten Sätze zeigen, dass eine leichtere Stufe gerade besser passt: {exercise}. Das ist
+    normal und kein Rückschritt auf der Karte.'
+  params: [PAR-E-15, PAR-E-16, PAR-D-18]
+  evidence: H
+- id: ADAPT-13
+  title: Stillstand
+  text: Bei {exercise} gab es zuletzt keinen Fortschritt; eine Entlastung oder Variation hilft oft weiter.
+  params: [PAR-B-49, PAR-E-20, PAR-E-34, PAR-E-37, PAR-S-12, PAR-S-17]
+  evidence: B/H
+- id: ADAPT-14
+  title: Entlastung
+  text: Eine Entlastungswoche ist eingeplant.
+  params: [PAR-B-03, PAR-B-49, PAR-B-50, PAR-B-51, PAR-B-52, PAR-B-53, PAR-B-54, PAR-D-18, PAR-S-40]
+  evidence: B/H
+- id: ADAPT-15
+  title: Einheiten, die nicht stattfanden
+  text: Eine Einheit, die nicht stattfand, fällt weg; der Plan geht normal weiter.
+  params: [PAR-D-31, PAR-S-16]
+  evidence: H
+- id: ADAPT-16
+  title: Wiedereinstieg
+  text: Nach einer Pause steigt die Belastung schrittweise wieder an, weil sich Sehnen langsamer anpassen
+    als Muskeln.
+  params: [PAR-B-59, PAR-B-60, PAR-B-61, PAR-B-62, PAR-D-29, PAR-D-33, PAR-S-41]
+  evidence: B/H
+- id: ADAPT-17
+  title: Check-in
+  text: Deine Angaben zu Müdigkeit und Schlaf haben die Dosis dieser Einheit angepasst.
+  params: [PAR-E-19, PAR-E-41, PAR-E-42, PAR-E-43, PAR-S-28]
+  evidence: A/H
+- {id: ADAPT-18, title: Freischaltungen, text: 'Freigeschaltete Stufen bleiben freigeschaltet; die Karte
+    zeigt, was du erreicht hast.', evidence: –}
+- id: INJ-01
+  title: Fragen zu Warnzeichen
+  text: Zu deiner Angabe bei {region} stellt die App kurze Fragen zu Warnzeichen.
+  params: &id003 [PAR-D-21]
+  evidence: B/H
+- id: INJ-02
+  title: Warnzeichen
+  text: 'Wegen deiner Antwort ({flag}): {advice}'
+  params: *id003
+  evidence: B/H
+- id: INJ-03
+  title: Stand der Region
+  text: Stand für {region} aktualisiert.
+  params: [PAR-D-14, PAR-D-19, PAR-D-21, PAR-D-24, PAR-D-26, PAR-D-28, PAR-D-29, PAR-D-33, PAR-S-32]
+  evidence: B/H
+- {id: INJ-04, title: Übung pausiert, text: 'Diese Übung ist pausiert, solange du Beschwerden bei {region}
+    meldest.', evidence: H}
+- id: INJ-05
+  title: Übung angepasst
+  text: Wegen deiner Angabe zu {region} plant die App eine angepasste Variante.
+  params: [PAR-C-27, PAR-D-41]
+  evidence: B/H
+- id: INJ-06
+  title: Rampe
+  text: Die Belastung für {region} steigt in Stufen wieder an; die nächste Stufe folgt, wenn Einheiten
+    ohne Zunahme der Beschwerden gelingen.
+  params: [PAR-D-24, PAR-D-25, PAR-D-26, PAR-D-27, PAR-D-33, PAR-D-34]
+  evidence: B/H
+- id: INJ-07
+  title: Schmerzregel
+  text: Deine Angaben zu {region} liegen über der Schmerzregel; die Belastung dort sinkt vorübergehend.
+  params: [PAR-D-13, PAR-D-14, PAR-D-15, PAR-D-16, PAR-D-17, PAR-D-18, PAR-D-28, PAR-D-39, PAR-D-40, PAR-S-34,
+    PAR-S-42]
+  evidence: A (Reha)/H
+- id: INJ-08
+  title: Fachperson
+  text: Deine Beschwerden bei {region} bestehen trotz angepasster Belastung. Eine Abklärung bei einer
+    Fachperson ist sinnvoll.
+  params: [PAR-D-19, PAR-D-20, PAR-D-32]
+  evidence: A/B/H
+- id: INJ-09
+  title: Minderjährige
+  text: Für Personen unter 18 Jahren gelten zusätzliche Fragen und Grenzen.
+  params: [PAR-D-22, PAR-D-23, PAR-D-42]
+  evidence: H
+- {id: INJ-10, title: Vorgaben einer Fachperson, text: 'Die Vorgaben deiner Fachperson für {region} gelten
+    im Plan.', evidence: H}

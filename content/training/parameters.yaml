@@ -1,0 +1,2393 @@
+# Parameter catalogue of the training planner (spec §2.3).
+# Research parameters (PAR-A … PAR-F) are transcribed from the parameter
+# tables in docs/research/02–07: key, text (the value as the table states it),
+# unit, sources, evidence and note (rationale). PAR-S parameters come from
+# docs/algorithm/spec.md appendix B. `value`/`values` are the numbers the
+# planner reads, in the unit given here; internal/content tests check that
+# key, text and sources still match the research tables.
+parameters:
+- id: PAR-A-01
+  key: dynamic_work_sets
+  text: '3'
+  value: 3
+  unit: Sätze
+  sources: [A-44]
+  evidence: D
+  rationale: RR-Standard für Grundübungen
+- id: PAR-A-02
+  key: dynamic_work_rep_range
+  text: 5–8
+  values: {lo: 5, hi: 8}
+  unit: Wdh.
+  sources: [A-44]
+  evidence: D
+  rationale: schwerste saubere Variante
+- id: PAR-A-03
+  key: dynamic_advance_threshold_reps
+  text: 8 (in allen 3 Sätzen, gute Form)
+  unit: Wdh.
+  sources: [A-44]
+  evidence: D
+  rationale: dann nächste Variante mit 3×5 beginnen
+- id: PAR-A-04
+  key: dynamic_restart_reps_after_advance
+  text: '5'
+  value: 5
+  unit: Wdh.
+  sources: [A-44]
+  evidence: D
+  rationale: ''
+- id: PAR-A-05
+  key: dynamic_rep_increment_per_session
+  text: '+1'
+  unit: Wdh. pro Satz und Einheit
+  sources: [A-44, A-46]
+  evidence: D
+  rationale: «Vorwerte schlagen»; ergibt ≥ 4 Einheiten pro Variante (PAR-A-39)
+- id: PAR-A-07
+  key: basic_iso_advance_hold_s
+  text: 30 (in allen 3 Sätzen)
+  unit: s
+  sources: [A-44]
+  evidence: D
+  rationale: Wechsel zur nächsten Stufe
+- id: PAR-A-10
+  key: lever_intermediate_unlock_hold_s
+  text: '10'
+  unit: s
+  sources: [A-40]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Unlock für Tuck/Adv Tuck/One-Leg; Wechselschwelle PAR-A-08 als Unlock übernommen
+- id: PAR-A-11
+  key: terminal_hold_unlock_s
+  text: '3'
+  unit: s
+  sources: [A-33]
+  evidence: C
+  rationale: strengster Wettkampfstandard; FIG und Calisthenics Cup 2 s (PAR-A-12)
+- id: PAR-A-16
+  key: form_quality_angle_map
+  text: '5: ≤ 5° · 4: > 5–15° · 3: > 15–30° · 2: > 30–45° · 1: > 45°'
+  unit: °
+  sources: [A-29, A-33]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Zuordnung eigene; Grenzen aus FIG; nur Form 5 liegt sicher im WSWCF-Band ±7,5° (W-3)
+- {id: PAR-A-17, key: unlock_min_form_quality_statics, text: '4', unit: 1–5, evidence: Heuristik, heuristic: true,
+  rationale: entspricht ≤ 15° (PAR-A-16)}
+- id: PAR-A-18
+  key: unlock_occurrences_default
+  text: '2 (dynamisch ≈ 3×8: 3)'
+  unit: Vorkommen
+  sources: [A-44]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Projektvorgabe ADR 0003; zählt Sätze, nicht Tage (§2.5)
+- {id: PAR-A-19, key: unlock_within_days_statics, text: '28', unit: Tage, evidence: Heuristik, heuristic: true,
+  rationale: '≈ 4 Wochen: genug Einheiten für 2 Vorkommen bei 2–3 Einheiten/Woche'}
+- {id: PAR-A-20, key: unlock_within_days_dynamic, text: '7', unit: Tage, evidence: Heuristik, heuristic: true,
+  rationale: 3 Sätze ≥ 8 innerhalb einer Woche ≈ «3×8»}
+- id: PAR-A-21
+  key: counts_for_unlock
+  text: nur unassistiert, voller Weg, nicht exzentrisch, nicht gescheitert; Kipping nur für Kipping-Slugs
+  unit: —
+  sources: [A-10, A-13]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Assistierte Sätze zählen für die Last (01 §4.4), nie für Unlocks
+- id: PAR-A-22
+  key: difficulty_tier_from_og_level
+  text: ⌈OG-Level × 10 / 16⌉, höchstens 10; Wurzeln = 1
+  unit: Tier 1–10
+  sources: [A-31]
+  evidence: Heuristik
+  heuristic: true
+  rationale: lineare Abbildung auf das Schemafeld; Ordinal 17 (Maltese) ergäbe 11 und wird gekappt
+- id: PAR-A-23
+  key: og_level_bands
+  text: Beginner 1–5 · Intermediate 6–9 · Advanced 10–13 · Elite 14–16
+  values: {beginner_lo: 1, intermediate_lo: 6, advanced_lo: 10, elite_lo: 14, elite_hi: 16}
+  unit: OG-Level
+  sources: [A-30]
+  evidence: C
+  rationale: Einstufung nach Können, nicht Trainingsjahren [A-30 S. 23]
+- id: PAR-A-24
+  key: og_fig_quartiles
+  text: Basic 1–4 · A 5–8 · B 9–12 · C 13–16
+  unit: OG-Level
+  sources: [A-30, A-31]
+  evidence: C
+  rationale: stimmt mit FIG für FL, BL, Straddle PL, Ringe-PL, Manna überein (§3.3)
+- id: PAR-A-25
+  key: og_level_planche_floor
+  text: Frog 3 · SA Frog 4 · Tuck 5 · Adv Tuck 6 · Straddle 8 · Half-Lay/One-Leg 9 · Full 11
+  unit: OG-Level
+  sources: [A-31]
+  evidence: C
+  rationale: Boden/Barren
+- id: PAR-A-26
+  key: og_level_planche_rings
+  text: Frog 4 · SA Frog 5 · Tuck 6 · Adv Tuck 8 · Straddle 10 · Half-Lay 12 · Full 14
+  unit: OG-Level
+  sources: [A-31]
+  evidence: C
+  rationale: ''
+- id: PAR-A-27
+  key: rings_level_offset
+  text: Planche +1…+3; Liegestütz +3 (1 → 4); Dip +1 (3 → 4); L-Sit +2 (3 → 5); HS +2…+3
+  unit: OG-Level
+  sources: [A-31]
+  evidence: C
+  rationale: Ersatzlogik Ringe ↔ Boden/Barren; FIG sieht für die Planche keinen Unterschied (Widersprüche)
+- id: PAR-A-28
+  key: og_level_front_lever
+  text: Tuck 4 · Adv Tuck 5 · Straddle 6 · Half-Lay/One-Leg 7 · Full 8
+  unit: OG-Level
+  sources: [A-31]
+  evidence: C
+  rationale: FIG A [A-29]
+- id: PAR-A-29
+  key: og_level_back_lever
+  text: German Hang 1 · Skin the Cat 2 · Tuck 3 · Adv Tuck 4 · Straddle 5 · Half-Lay/One-Leg 6 · Full
+    7
+  unit: OG-Level
+  sources: [A-31]
+  evidence: C
+  rationale: FIG A [A-29]
+- id: PAR-A-30
+  key: og_level_handstand_hspu
+  text: Wand-HS 1–3 · frei 4–5 · Ring-HS 7 · One-Arm-HS 10; Pike-HeSPU 1 · Box 2 · Wand exz. 3 · Wand-HeSPU
+    4 · Wand-HSPU 5 · frei HeSPU 6 · frei HSPU 7
+  unit: OG-Level
+  sources: [A-31]
+  evidence: C
+  rationale: ''
+- id: PAR-A-31
+  key: og_level_l_v_manna
+  text: Tuck-L 1 · 1-Bein 2 · L 3 · Straddle-L 4 · RTO-L 5 · V45 6 · V75 7 · V100 8 · V120 9 · V140 10
+    · V155 11 · V170 12 · Manna 13
+  unit: OG-Level
+  sources: [A-31]
+  evidence: C
+  rationale: 'FIG: L A, V B, Manna C [A-29]'
+- id: PAR-A-32
+  key: og_level_pull_oac
+  text: 'Sprung 1 · exz. 2 · Klimmzug 3 · L 4 · Pullover 5; Ringe: L 4 · breit 5 · breit-L 6 · Archer
+    7 · OAC exz. 8 · OAC 9 · OAC+6,8 kg 10 · OAC+11,3 kg 11'
+  unit: OG-Level
+  sources: [A-31]
+  evidence: C
+  rationale: 15/25 lb umgerechnet
+- id: PAR-A-33
+  key: og_weighted_pull_up_total_bw
+  text: L3 1,00 · L4 1,18 · L5 1,35 · L6 1,50 · L7 1,65 · L8 1,78 · L9 1,90 · L10 2,00 · L11 2,10
+  unit: × KG
+  sources: [A-31]
+  evidence: C
+  rationale: Wiederholungszahl nicht angegeben
+- id: PAR-A-34
+  key: og_weighted_dip_total_bw
+  text: L3 1,00 · L4 1,20 · L5 1,38 · L6 1,55 · L7 1,70 · L8 1,85 · L9 2,00 · L10 2,13 · L11 2,25
+  unit: × KG
+  sources: [A-31]
+  evidence: C
+  rationale: Wiederholungszahl nicht angegeben
+- id: PAR-A-35
+  key: pull_up_1rm_total_bw_reference
+  text: Männer 1,16 ± 0,15 · Frauen 0,73 ± 0,09
+  unit: × KG
+  sources: [A-11]
+  evidence: B
+  rationale: Studierende; 1RM mit Zusatz- oder Gegengewicht
+- id: PAR-A-36
+  key: og_level_mu_flag_pistol
+  text: 'MU: exz. 3 · Kipping 4 · MU 5 · ohne FG 6 · strikt Stange 7 · L-Sit-MU 8; Flagge: Tuck 5 · Adv
+    6 · Straddle 7 · Full 8; Pistol 4 (mit 1,2× KG 5 … 2,0× KG 11)'
+  unit: OG-Level
+  sources: [A-31]
+  evidence: C
+  rationale: ''
+- id: PAR-A-37
+  key: og_level_push_dip_row
+  text: 'Liegestütz: Standard 1 · Diamond 2 · Ringe 4 · RTO 5 · RTO-PPPU 40° 7; Dips: Barren 3 · L 4 ·
+    45° 5; Ring-Dips: Stütz 1 · RTO-Stütz 2 · exz. 3 · Dip 4; Rudern: exz. 1 · Ringe 2 · breit 3 · Archer
+    4 · einarmig 7'
+  unit: OG-Level
+  sources: [A-31]
+  evidence: C
+  rationale: ''
+- id: PAR-A-38
+  key: maltese_og_level
+  text: 17 (jenseits des Charts)
+  unit: OG-Level
+  sources: [A-31]
+  evidence: C
+  rationale: 'FIG: Boden C = Planche, Ringe D [A-29]'
+- id: PAR-A-43
+  key: strength_explains_skill_r2
+  text: Schwalbe 0,76–0,85 · Stützwaage 0,42–0,59 · Kreuz-HS 0,38–0,48 (2021, nicht signifikant) bzw.
+    0,60 (2025) · Bankdrücken–Kreuz r 0,41
+  unit: R² / r
+  sources: [A-21, A-22, A-23]
+  evidence: B
+  rationale: Kraftbaselines nur `recommended`; Turner (Elite/Junioren bzw. gemischtes Niveau), n = 19–52
+- id: PAR-A-45
+  key: est_weeks_per_og_level_step
+  text: 'Ziel-Level ≤ 4: 2–8 · 5–8: 4–13 · 9–12: 8–26 · ≥ 13: 13–52'
+  values: {le4_lo: 2, le4_hi: 8, le8_lo: 4, le8_hi: 13, le12_lo: 8, le12_hi: 26, top_lo: 13, top_hi: 52}
+  unit: Wochen pro Level
+  sources: [A-41, A-42, A-40]
+  evidence: Heuristik
+  heuristic: true
+  rationale: FL Tuck→Full ergibt 16–52 Wo. (TMA 7–10+ Mo.); BL ab Skin the Cat (OG 2 → 7) 16–55 Wo. (TMA
+    6–12 Mo.); Planche ab 0 ergibt 48–162 Wo. (TMA 24–36 Mo., also eher obere Hälfte); bis Straddle Planche
+    24–84 Wo. vs. TMA 12–24 Mo. und 2–4 Jahre bis alle A-Elemente [A-67] → optimistisch (§3.6, W-19)
+- id: PAR-A-47
+  key: coach_time_planche_cumulative_months
+  text: Lean 0–2 · Tuck 2–6 · Adv Tuck 6–12 · Straddle 12–24 · Full 24–36
+  unit: Monate ab Start
+  sources: [A-40]
+  evidence: D
+  rationale: Praxisindiz; «Full in 1–3 Jahren»
+- id: PAR-A-51
+  key: goal_realism_min_weeks
+  text: Σ Untergrenzen aus PAR-A-45 vom aktuellen zum Ziel-Level; z. B. Anfänger → Full Planche ≥ 48 Wo.
+  unit: Wochen
+  sources: [A-40]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Persona 5 («Full Planche in 8 Wochen») klar unrealistisch; Hinweis ohne Wertung (ADR 0003);
+    für die angezeigte Erwartung die obere Hälfte der Bänder verwenden (W-19)
+- id: PAR-A-52
+  key: prereq_front_lever_entry
+  text: 10 strikte Klimmzüge · 30 s Dead Hang · 60 s Hollow · 15 gestreckte Beinheben
+  unit: Wdh./s
+  sources: [A-41]
+  evidence: D
+  rationale: als `recommended`-Kanten, nicht hart
+- id: PAR-A-53
+  key: prereq_planche_entry
+  text: 60 s Hollow · 3 × 20 Liegestütze · 3 min Handgelenk-Routine · 30 s Wand-HS; Leans ab 30 s Plank
+  unit: Wdh./s/min
+  sources: [A-40, A-35]
+  evidence: D/C
+  rationale: als `recommended`-Kanten
+- id: PAR-A-54
+  key: prereq_back_lever_pull_ups
+  text: 8–10
+  unit: Wdh.
+  sources: [A-42]
+  evidence: D
+  rationale: '`recommended`'
+- id: PAR-A-55
+  key: handstand_free_hold_targets_s
+  text: 10 (für viele Ziele genug) · ~60 (vor One-Arm-HS)
+  unit: s
+  sources: [A-37]
+  evidence: C
+  rationale: Stufen `free-10s`, `free-60s`
+- id: PAR-A-60
+  key: release_elements_auto_unlock
+  text: false (nur Selbstbestätigung)
+  unit: —
+  sources: [A-29, A-33]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Matten/Helfer selbst im Spitzenturnen; App kann Sicherheit nicht prüfen
+- {id: PAR-A-62, key: edge_weight_defaults, text: 'prerequisite 1,0 · recommended 0,3–0,7 · alternative
+    0,5 · antagonist 0,5', unit: Gewicht, evidence: Heuristik, heuristic: true, rationale: Kraftbaselines
+    nie `prerequisite` (PAR-A-43)}
+- id: PAR-A-63
+  key: hold_time_to_relative_intensity_shoulder
+  text: max. Haltezeit 5 s ≈ 99 % · 10 s ≈ 85 % · 20 s ≈ 71 % · 30 s ≈ 63 % · 60 s ≈ 49 %
+  unit: '% der Maximalkraft'
+  sources: [A-49]
+  evidence: 'A (Übertragung: Heuristik)'
+  heuristic: true
+  rationale: Exponentialmodell Schulter ET = 685,46 · e^(−4,97·f); Einzelgelenk-Daten, nicht Ganzkörper-Halte;
+    Potenzmodell unter ~15 s unbrauchbar
+- id: PAR-A-64
+  key: iso_set_hold_fraction_of_max
+  text: '0,60–0,70 laut Text; die Tabelle der 2. Aufl. ergibt ≈ 0,65–0,75 bei 7–30 s Maximalhalt und 0,75–1,0
+    darunter (Sweet Spot: Max 10 s → 5 × 7 s; 20 s → 4 × 14 s; 30 s → 3 × 20 s)'
+  unit: Anteil der Maximalhaltezeit
+  sources: [A-63]
+  evidence: C
+  rationale: OG-Isometrietabelle, 2. Aufl. (Bild auf der Autorenseite, im Audit neu gelesen; Quoten eigene
+    Rechnung); Dosierung gehört zu Stream B
+- id: PAR-A-65
+  key: iso_max_hold_upper_bound_per_stage_s
+  text: '30'
+  value: 30
+  unit: s
+  sources: [A-63, A-44]
+  evidence: C/D
+  rationale: 'RR wechselt bei 3 × 30 s; die OG-Tabelle endet bei 30 s (Deutung als Obergrenze: H) — ab
+    ~30 s maximaler Haltezeit die nächste Stufe trainieren'
+- id: PAR-A-66
+  key: eccentric_to_first_rep_signal
+  text: '3 Sätze × 3 Cluster-Wdh. à 7–10 s Exzentrik; OAC: 3–4 Sätze à 10 s'
+  unit: —
+  sources: [A-63]
+  evidence: C
+  rationale: Signal «konzentrischen Versuch einplanen»; kein Unlock (Exzentrik zählt nie, §2.1); die OAC-Angabe
+    ist ein Selbstbericht des Autors
+- id: PAR-A-67
+  key: weighted_interim_min_load_kg_ref75
+  text: Klimmzug 12,5 · 25 · 37,5 · 57,5 · 75; Dip 15 · 27,5 · 40 · 65 · 85; Pistol 15
+  unit: kg Zusatzlast
+  sources: [A-31, A-52]
+  evidence: Heuristik
+  heuristic: true
+  rationale: 'Referenz 75 kg, auf 2,5 kg gerundet (genau halbe Schritte zur geraden Stufe: 26,25 → 25;
+    41,25 → 40; 63,75 → 65); nur bis `min_load_pct_bw` existiert'
+- id: PAR-A-69
+  key: muscle_up_entry_strength
+  text: 5 zügige Klimmzüge + 5 Dips, voller Weg
+  unit: Wdh.
+  sources: [A-64]
+  evidence: C
+  rationale: notwendig, nicht hinreichend; Kanten in §8
+- id: PAR-A-78
+  key: straight_arm_bend_form_cap
+  text: Armbeugung > 15° → `form_quality` ≤ 3
+  unit: °
+  sources: [A-29]
+  evidence: Heuristik
+  heuristic: true
+  rationale: FIG-Band für Armbeugung auf die Form-Skala übertragen (§2.6)
+- id: PAR-B-01
+  key: periodization_model_novice
+  text: linear (Doppelprogression, keine Wellen)
+  unit: —
+  sources: [B-02, B-31, B-32]
+  evidence: A
+  rationale: Trainingsalter < 6 Monate (Intermediate ≈ 6 Monate nach [B-32]); UP-Vorteil nur bei Trainierten
+    [B-02]
+- id: PAR-B-02
+  key: periodization_model_trained
+  text: weekly_undulating (schwer/mittel/leicht auf die Einheiten derselben Übung verteilt)
+  unit: —
+  sources: [B-02, B-01, B-115]
+  evidence: A
+  rationale: ab Trainingsalter ≥ 6 Monate; UP-Vorteil bei Trainierten knapp (ES 0.61, 95 %-KI 0.00–1.22,
+    p = 0.05) [B-02], in [B-03] LP = UP; Beispiel 15/10/5 Wdh. [B-115] (C)
+- id: PAR-B-03
+  key: mesocycle_length_weeks
+  text: 4–8; Standard 6 (5 Aufbau + 1 Deload)
+  values: {lo: 4, hi: 8, standard: 6}
+  unit: Wochen
+  sources: [B-63, B-64, B-114]
+  evidence: B
+  rationale: Standard 6 ist Heuristik in der Mitte der Praxisspannen
+- id: PAR-B-05
+  key: static_max_stage_window_max_hold_s
+  text: 3–20 (frische Max.-Haltezeit der gewählten Stufe)
+  values: {lo: 3, hi: 20}
+  unit: s
+  sources: [B-10, B-09]
+  evidence: Heuristik
+  heuristic: true
+  rationale: < 3 s → leichtere Stufe oder Band; > 20 s → Stufe liegt nach Schulter-Modell unter ~85 %
+    MVC → schwerere Stufe oder Last; Grenzen eigene Ableitung aus [B-10]
+- id: PAR-B-06
+  key: static_hold_fraction_of_max
+  text: 0.6–0.7
+  unit: Anteil der Max.-Haltezeit
+  sources: [B-113]
+  evidence: C
+  rationale: Satzhaltezeit = Anteil × zuletzt gemessene Max.-Haltezeit
+- id: PAR-B-07
+  key: target_sir_fraction
+  text: 0.3–0.4 der Max.-Haltezeit, mindestens 2 s
+  values: {lo: 0.3, hi: 0.4, min_s: 2}
+  unit: Anteil / s
+  sources: [B-113, B-31]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Analogie zu RIR; SIR = max_hold − set_hold; keine Validierungsstudie
+- id: PAR-B-08
+  key: static_max_sets
+  text: 2–5; Standard 3
+  values: {lo: 2, hi: 5, standard: 3}
+  unit: Sätze
+  sources: [B-113, B-115, P-01, P-02, P-03, P-04]
+  evidence: C
+  rationale: 'PDF Position 1: 2–3 Sätze; Low 4–5 Sätze'
+- id: PAR-B-09
+  key: static_total_hold_per_exercise_s
+  text: 30–90; Standard 40–60
+  unit: s
+  sources: [B-09, B-113]
+  evidence: B
+  rationale: Lum (Kraft) 30–90 s pro Einheit; Low 36–65 s
+- id: PAR-B-10
+  key: static_volume_hold_per_set_s
+  text: 5–20
+  values: {lo: 5, hi: 20}
+  unit: s
+  sources: [B-09, P-01, P-02, P-03]
+  evidence: B
+  rationale: assistiert (Band) oder leichtere Stufe; PDF 5–20 s
+- id: PAR-B-11
+  key: static_volume_sets
+  text: 3–5
+  values: {lo: 3, hi: 5}
+  unit: Sätze
+  sources: [P-01, P-02, P-03, B-113]
+  evidence: C
+  rationale: PDF Positionen 2–3 je 5 Sätze
+- id: PAR-B-12
+  key: static_volume_total_hold_s
+  text: 40–90 je Übung; bei Hypertrophieziel Summe aller Halteübungen einer Einheit ≥ 80–150 (Mindestdosis,
+    keine Obergrenze)
+  unit: s
+  sources: [B-09, B-113]
+  evidence: B
+  rationale: 'Lum: Hypertrophie > 80–150 s/Einheit bei 70–75 % MVC über > 36 Einheiten (Mindestwert);
+    die Obergrenze setzt das Straight-Arm-Satzbudget (PAR-B-47)'
+- id: PAR-B-14
+  key: hold_endurance_model
+  text: Schulter ET = 14.86·f^−1.83; Ellbogen ET = 17.98·f^−2.21; allgemein ET = 21.92·f^−1.98
+  unit: s (f = Anteil MVC)
+  sources: [B-10]
+  evidence: A
+  rationale: Meta-Analyse, aber Übertragung auf Ganzkörperhalte ungeprüft; nur zur Intensitätseinordnung
+    verwenden
+- id: PAR-B-16
+  key: eccentric_rep_duration_s
+  text: 3–5 zu Beginn, Ziel 7–10
+  values: {start_lo: 3, start_hi: 5, target_lo: 7, target_hi: 10}
+  unit: s
+  sources: [B-113]
+  evidence: C
+  rationale: 2–3 Sätze à 2–3 Cluster-Wdh., 180 s Pause; erste volle Wdh. meist ab 3 × 3 × 7–10 s
+- id: PAR-B-17
+  key: dyn_strength_reps
+  text: 1–6; Standard 3–6
+  values: {lo: 1, hi: 6, standard_lo: 3, standard_hi: 6}
+  unit: Wdh.
+  sources: [B-32, B-36, B-30]
+  evidence: A
+  rationale: 'Körpergewicht: Stufe/Zusatzlast so wählen, dass der Bereich getroffen wird'
+- id: PAR-B-18
+  key: dyn_strength_sets_per_exercise
+  text: 2–5; Standard 3
+  values: {lo: 2, hi: 5, standard: 3}
+  unit: Sätze
+  sources: [B-31, B-24, B-117, B-114]
+  evidence: B
+  rationale: 'ACSM 2026: 2–3 Sätze; ~2 direkte Sätze/Einheit genügen für Kraft (Preprint [B-24], Kongress-Abstract
+    [B-117]; keine begutachtete Vollpublikation)'
+- id: PAR-B-19
+  key: dyn_hypertrophy_reps
+  text: 6–15
+  unit: Wdh.
+  sources: [B-95, B-32, B-29, B-36]
+  evidence: A
+  rationale: A gilt für die Lastunabhängigkeit der Hypertrophie bei Sätzen bis zum Versagen [B-29]; die
+    Spanne 6–15 selbst stammt aus [B-95, B-36] (B, Zeiteffizienz)
+- id: PAR-B-21
+  key: weekly_sets_per_muscle_hypertrophy
+  text: 10–20; Start 10
+  unit: Sätze/Woche
+  sources: [B-20, B-22, B-31, B-23]
+  evidence: A
+  rationale: abnehmender Grenznutzen [B-23]; Straight-Arm-Belastung zusätzlich über Stream D begrenzen
+- id: PAR-B-23
+  key: rep_to_load_threshold_reps
+  text: 12–15 saubere Wdh. in allen Arbeitssätzen
+  values: {lo: 12, hi: 15}
+  unit: Wdh.
+  sources: [B-29, B-32]
+  evidence: Heuristik
+  heuristic: true
+  rationale: '> 15 RM ist «leichte Last» mit schwächerem Kraftreiz [B-29] → Zusatzlast oder schwerere
+    Stufe mit Ziel 5–10 Wdh.'
+- id: PAR-B-24
+  key: target_rir_strength
+  text: 1–3; Standard 2
+  values: {lo: 1, hi: 3, standard: 2}
+  unit: RIR
+  sources: [B-36, B-31, B-25]
+  evidence: A
+  rationale: 'Kraft praktisch unabhängig vom RIR [B-25]; ACSM 2026: 2–3 RIR genügen'
+- id: PAR-B-27
+  key: failure_allowed_static_and_skill
+  text: 'false'
+  unit: bool
+  sources: [B-113, B-31, B-51, B-58]
+  evidence: Heuristik
+  heuristic: true
+  rationale: kein Satz ins Versagen bei Straight-Arm-Halten und Skillversuchen (Satzqualität [B-113],
+    Erholung [B-58], Lernen [B-51]); Tests (`kind = test`) ausgenommen
+- id: PAR-B-28
+  key: rir_estimate_uncertainty_reps
+  text: ±1 (systematisch ~1 Wdh. zu niedrig geschätzt)
+  unit: Wdh.
+  sources: [B-37, B-39]
+  evidence: A
+  rationale: 'Halperin: 0.95 Wdh. Unterschätzung, SD 1.45; Trainierte absolut 0.65'
+- id: PAR-B-29
+  key: rir_trust_after_weeks
+  text: 4 (Anfänger protokollieren RIR vorher nur); danach alle 4–6 Wochen Kalibrierung über einen Testsatz
+    (Max.-Wdh. bzw. Max.-Halt, `kind = test`)
+  values: {trust_after: 4, calibrate_every_lo: 4, calibrate_every_hi: 6}
+  unit: Wochen
+  sources: [B-36, B-37, B-44, B-130]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Richtung belegt [B-36]; ob Übung die RIR-Genauigkeit verbessert, ist widersprüchlich [B-44]
+    vs. [B-130] (W-19); Schätzungen nahe am Versagen sind genauer [B-37] → Kalibrierung per Test statt
+    Vertrauen auf Übung; Dauer und Intervall heuristisch
+- id: PAR-B-30
+  key: progression_trigger_sessions
+  text: 2 aufeinanderfolgende Einheiten mit allen Arbeitssätzen an der Obergrenze bei Ziel-RIR/SIR
+  unit: Einheiten
+  sources: [B-132, B-32, B-73]
+  evidence: B
+  rationale: '«2-for-2 rule» in einer multizentrischen Trainingsstudie verwendet (≥ 2 Wdh. über Ziel im
+    letzten Satz in 2 Einheiten → +0.5–2 kg) [B-132]; ACSM: steigern bei 1–2 Wdh. über Ziel [B-32]; Übertragung
+    auf Sekunden bei Halten heuristisch'
+- id: PAR-B-31
+  key: autoreg_adjust_threshold
+  text: Abweichung ≥ 2 RIR bzw. SIR vom Ziel in 2 aufeinanderfolgenden Einheiten → Ziel ±1–2 Wdh., ±1–2
+    s oder Stufenwechsel
+  value: 2
+  values: {sessions: 2}
+  unit: RIR / s
+  sources: [B-40, B-41, B-43]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Autoregulation ≥ fixe Lasten [B-40, B-41]; Schwellen heuristisch
+- id: PAR-B-32
+  key: load_increment_pct
+  text: 2–10; Standard 2.5 % der bewegten Masse (Körpergewicht + Zusatzlast), auf kleinste verfügbare
+    Scheibe aufgerundet
+  values: {lo: 2, hi: 10, standard: 2.5}
+  unit: percent of moved mass
+  sources: [B-32, B-76]
+  evidence: B
+  rationale: Bezug auf Gesamtmasse ist Heuristik; Kleinstschritte kurzfristig gleich wirksam [B-76]
+- id: PAR-B-33
+  key: hold_progression_step_s
+  text: +1–2 s je Satz und Woche innerhalb der Stufe
+  values: {lo: 1, hi: 2}
+  unit: s
+  sources: [B-113, B-73]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Wdh./Zeit-Progression gleichwertig zur Lastprogression [B-73]
+- id: PAR-B-34
+  key: sessions_per_skill_per_week
+  text: 2–3 (Standard 2 Anfänger, 3 Trainierte); min. 1 (Erhalt); max. 4
+  values: {novice: 2, trained: 3, min: 1, max: 4}
+  unit: Einheiten/Woche
+  sources: [B-45, B-30, B-31, B-23, B-114, B-87, B-98]
+  evidence: A
+  rationale: A-Belege betreffen Muskelgruppen- bzw. Übungsfrequenz, nicht Skills (Übertragung); Minimum
+    1 zum Erhalt aus [B-87] (Untrainierte) und [B-98] (B); Maximum 4 ist Heuristik (Sehnen- und Gelenklast,
+    Stream D)
+- id: PAR-B-35
+  key: balance_skill_sessions_per_week
+  text: 3–7, je 5–10 min, ermüdungsarm
+  unit: Einheiten/Woche
+  sources: [B-18, B-99, B-52, B-114, B-120, B-121, B-122]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Handstand-/Balancearbeit; Volumen verteilen ist gleichwertig oder besser [B-120, B-121, B-122];
+    GtG ohne direkte Studie (Abschnitt 6.2); Stream E nennt 3–6, Standard 4 (PAR-E-12)
+- id: PAR-B-36
+  key: sessions_per_week_by_level
+  text: Anfänger 2–3; Fortgeschrittene 3–4; Erfahrene 4–5
+  values: {novice_lo: 2, novice_hi: 3, intermediate_lo: 3, intermediate_hi: 4, advanced_lo: 4, advanced_hi: 5}
+  unit: Einheiten/Woche
+  sources: [B-32]
+  evidence: B
+  rationale: Obergrenze durch User-Verfügbarkeit
+- id: PAR-B-37
+  key: split_threshold_sessions
+  text: Ganzkörper bei ≤ 3; Split (Push/Pull, Ober/Unter oder Straight/Bent) ab 4 Einheiten/Woche
+  value: 4
+  unit: Einheiten/Woche
+  sources: [B-49, B-116]
+  evidence: Heuristik
+  heuristic: true
+  rationale: volumengleich kein Unterschied [B-49] (A); Schwelle heuristisch
+- id: PAR-B-38
+  key: min_hours_between_hard_same_pattern
+  text: 48 nach harter Einheit (RIR ≤ 1 oder Maximalversuche an der Zielstufe); 24 nach nicht erschöpfender
+    Einheit
+  values: {hard: 48, submax: 24}
+  unit: h
+  sources: [B-58, B-59, B-61, B-60]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Versagen verlangsamt die akute Erholung bis 24–48 h [B-58, B-59]; Sätze an der 10-RM-Last
+    an aufeinanderfolgenden Tagen waren über 12 Wochen gleich wirksam [B-61] (W-24); [B-60] misst nur
+    Proteinsynthese nach 36 h; Stream D kann für Straight-Arm-Sehnenlast verlängern
+- id: PAR-B-42
+  key: rest_dyn_strength_s
+  text: Trainierte 180–300; Anfänger 120–180
+  values: {novice_lo: 120, novice_hi: 180, trained_lo: 180, trained_hi: 300}
+  unit: s
+  sources: [B-32, B-53, B-55, B-56]
+  evidence: A
+  rationale: Trainierte > 2 min [B-55], 3 min > 1 min [B-56]; Untrainierten genügen 60–120 s [B-55] →
+    120–180 s ist konservativ; ACSM 2026 fand keinen Pauseneffekt auf Kraft (W-2)
+- id: PAR-B-43
+  key: rest_hypertrophy_s
+  text: 90–180; Standard 120
+  values: {lo: 90, hi: 180, standard: 120}
+  unit: s
+  sources: [B-57, B-56, B-32]
+  evidence: A
+  rationale: '> 90 s kaum Zusatznutzen [B-57]'
+- id: PAR-B-44
+  key: rest_accessory_s
+  text: 60–120
+  unit: s
+  sources: [B-32, P-01, P-02, P-03]
+  evidence: B
+  rationale: Kraftausdauer < 90 s [B-32]
+- id: PAR-B-45
+  key: rest_paired_sets_s
+  text: 120 (Spanne 90–180) zwischen abwechselnden Antagonisten-Sätzen
+  value: 120
+  values: {lo: 90, hi: 180}
+  unit: s
+  sources: [B-126, B-114, B-101, B-124]
+  evidence: B
+  rationale: 1 min senkt das Volumen deutlich (bei höchstem Volumen pro Zeit), 3 min bringt am meisten
+    Volumen, 2 min bzw. selbst gewählt laut Autoren bestes Kosten-Nutzen-Verhältnis [B-126] (akut, Hantelübungen,
+    Freizeittrainierte); Supersätze ohne schlechtere chronische Effekte [B-101]; Paar-Review mit teils
+    uneinheitlicher Evidenz [B-124]; Low 90–120 s [B-114]
+- id: PAR-B-46
+  key: exercise_order
+  text: Balance-/Technikskill → Maximalreiz Zielskill → Volumen → Zubringer/Prehab
+  unit: Reihenfolge
+  sources: [B-50, B-51, B-31, P-01, P-02, P-03]
+  evidence: A
+  rationale: Priorität des Users bestimmt Position 1
+- id: PAR-B-47
+  key: straight_arm_hard_sets_per_session_max
+  text: 8–12 (Anfänger, Intermediate); bis 18 (Fortgeschrittene)
+  unit: Sätze
+  sources: [P-01, P-02, P-03, P-04]
+  evidence: Heuristik
+  heuristic: true
+  rationale: 'PDF: 12–18 Arbeitssätze; Anfänger-Obergrenze abgeleitet'
+- id: PAR-B-48
+  key: same_direction_straight_arm_skills_per_session_max
+  text: 2 mit gemeinsamem Satzbudget
+  unit: Skills
+  sources: [P-01, P-02, P-03, P-04, B-114, B-123]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Planche + Maltese wie PDF-«Mixt»; später platzierte Übungen schaffen weniger Wdh. [B-123];
+    Gegenrichtung (Planche + Front Lever) als Paar (PAR-B-81)
+- id: PAR-B-49
+  key: deload_triggers
+  text: (a) Hauptübung stagniert/fällt in ≥ 2 aufeinanderfolgenden Einheiten; (b) perceived_fatigue ≥
+    8 in ≥ 3 der letzten 5 Einheiten; (c) Gelenkbeschwerden gemeldet; (d) spätestens nach 8 Aufbauwochen
+  values: {stall_sessions: 2, fatigue: 8, fatigue_count: 3, fatigue_window: 5, max_build_weeks: 8}
+  unit: —
+  sources: [B-64, B-107, B-104, B-62]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Auslöserarten aus [B-64]; Schwellen heuristisch
+- id: PAR-B-50
+  key: deload_frequency_weeks
+  text: '4–8; Standard: 6. Woche nach 5 Aufbauwochen'
+  unit: Wochen
+  sources: [B-63, B-64, B-114, B-62]
+  evidence: B
+  rationale: vorgeplant oder autoreguliert [B-62]
+- id: PAR-B-51
+  key: deload_duration_days
+  text: 5–7
+  unit: Tage
+  sources: [B-63, B-64]
+  evidence: B
+  rationale: Rogerson 6.4 ± 1.7 Tage
+- id: PAR-B-52
+  key: deload_volume_factor
+  text: 0.6 (Spanne 0.5–0.7)
+  value: 0.6
+  values: {lo: 0.5, hi: 0.7}
+  unit: Anteil der Sätze
+  sources: [B-63, B-64, B-114, B-62, B-98, B-94]
+  evidence: B
+  rationale: 'Coaches: Volumen −30 bis −50 % [B-63] (Volltext); Low halbiert [B-114] = konservative Untergrenze;
+    Frequenz und Übungswahl bleiben [B-64]'
+- id: PAR-B-53
+  key: deload_rir_increase
+  text: +2 (Spanne +1 bis +3; bei Halten SIR +2 s)
+  value: 2
+  values: {lo: 1, hi: 3}
+  unit: RIR
+  sources: [B-63, B-64]
+  evidence: B
+  rationale: +1 bis +3 RIR je Satz oder Last −10 % [B-63] (Volltext); Umrechnung auf SIR heuristisch
+- id: PAR-B-54
+  key: deload_intensity_rule
+  text: Stufe halten oder 1 Stufe leichter; keine Komplettpause als Standard
+  unit: —
+  sources: [B-65, B-98, B-82]
+  evidence: A
+  rationale: 'A nur für «keine Komplettpause»: eine Woche Pause nach 4 Wochen senkte die Kraftzuwächse
+    [B-65] (Unterkörper, junge Trainierte); «Stufe halten» stützt sich auf [B-98, B-82] (B: Intensität
+    erhält Anpassungen)'
+- id: PAR-B-55
+  key: weekly_volume_increase_max
+  text: +10–20 % Sätze pro Woche bzw. max. +1 Satz je Übung
+  unit: '%/Woche'
+  sources: [B-77, B-78, B-79, B-75]
+  evidence: Heuristik
+  heuristic: true
+  rationale: für Krafttraining keine belegte Obergrenze; 10 %-Regel ohne Wirkung [B-77]; Trainierte erzielten
+    mit +4 bzw. +6 Unterkörper-Wochensätzen je 2 Wochen grössere Kraftzuwächse [B-75] (Verträglichkeit/Verletzungen
+    dort nicht berichtet) — der Planer bleibt darunter, weil Sehnenlast bei Straight-Arm-Arbeit ungeprüft
+    ist (Stream D)
+- id: PAR-B-57
+  key: intensity_step_per_week_max
+  text: 1 Stufenwechsel (Stufe, Band oder Last) je Übung und Woche
+  unit: Stufen/Woche
+  sources: [B-12, B-32]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Sehnen adaptieren langsamer [B-12]
+- id: PAR-B-58
+  key: acwr_enabled
+  text: 'false'
+  unit: bool
+  sources: [B-80, B-79]
+  evidence: B
+  rationale: ACWR ohne Evidenz für Belastungsentscheidungen
+- id: PAR-B-59
+  key: retrain_break_le_2wk
+  text: 90–100 % Volumen, gleiche Stufe, kein Retest
+  values: {lo: 0.9, hi: 1}
+  unit: fraction of the pre-break volume
+  sources: [B-85, B-84]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Kraft bleibt ≤ 2–3 Wochen erhalten [B-84] (A, Elite-Mannschaftssportler) und nach 2 Wochen
+    Pause bei trainierten Männern [B-85] (B); Prozentwerte heuristisch
+- id: PAR-B-60
+  key: retrain_break_1mo
+  text: '3–6 Wochen Pause: Retest; Woche 1 70–80 % Volumen, Stufe nach Test; +10–15 % Volumen/Woche; Rückkehr
+    2–4 Wochen'
+  values: {week1_lo: 0.7, week1_hi: 0.8, growth_lo: 1.1, growth_hi: 1.15}
+  unit: fraction of the pre-break volume; growth as weekly factor
+  sources: [B-84, B-86, B-83]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Verlust beginnt nach ~3 Wochen [B-84]
+- id: PAR-B-61
+  key: retrain_break_3mo
+  text: '7–16 Wochen: Retest; Woche 1 ~60 % Volumen, 1 Stufe leichter oder nach Test; +10–15 %/Woche;
+    Rückkehr 4–8 Wochen'
+  values: {week1: 0.6}
+  unit: fraction of the pre-break volume
+  sources: [B-90, B-84, B-88]
+  evidence: Heuristik
+  heuristic: true
+  rationale: < 8 Wochen bis zur früheren 1RM nach 12 Wochen Pause bei älteren Männern [B-90]; Verlust
+    beschleunigt sich nach 3 Wochen (Elite-Sportler) [B-84]
+- id: PAR-B-62
+  key: retrain_break_6mo
+  text: '≥ 17 Wochen: Volltest; Woche 1 ~50 % Volumen, 1–2 Stufen leichter oder nach Test; höchste Straight-Arm-Stufen
+    erst nach 4 Wochen Basis; +10 %/Woche; Rückkehr 6–12 Wochen'
+  values: {week1: 0.5}
+  unit: fraction of the pre-break volume
+  sources: [B-88, B-89, B-93, B-12]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Kraft sinkt nach 30–32 Wochen nicht auf Vortrainingsniveau (6 Frauen) [B-88]; Muskeldicke
+    nach 20 Wochen zurück [B-89]; Skill-Halbwertszeit 6.5–13 Monate [B-93]
+- id: PAR-B-63
+  key: maintenance_min_dose
+  text: '1 Einheit/Woche, 1–2 Sätze je Übung, gleiche Stufe/Intensität (Ältere: 2 Einheiten, 2–3 Sätze)'
+  unit: —
+  sources: [B-98, B-87, B-96]
+  evidence: B
+  rationale: für Pausen-/Stressphasen statt Komplettpause; [B-98] Übersicht (Jüngere bis 32 Wochen), [B-87]
+    Untrainierte nach 8 Wochen Training (1–2×/Woche); [B-96] betrifft Zuwächse, nicht Erhalt
+- id: PAR-B-64
+  key: session_template_30min
+  text: Aufwärmen 5; Primärblock 2–3 Sätze; 1–2 Antagonisten-Paare × 2–3 Runden; keine Ergänzung; 8–12
+    Arbeitssätze
+  unit: min / Sätze
+  sources: [B-95, B-96, B-101]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Dauer eigene Rechnung (Abschnitt 14.2)
+- id: PAR-B-65
+  key: session_template_45min
+  text: Aufwärmen 7; Skill 5; Primär 3–4; 2 Paare; optional 1 Ergänzung; 12–16 Arbeitssätze
+  unit: min / Sätze
+  sources: [B-95, B-101, B-50]
+  evidence: Heuristik
+  heuristic: true
+  rationale: —
+- id: PAR-B-66
+  key: session_template_60min
+  text: Aufwärmen 10; Skill 8–10; Primär 3–5; Sekundär 3–4; 1 Paar; 1–2 Ergänzung/Prehab; 15–20 Arbeitssätze
+  unit: min / Sätze
+  sources: [B-95, B-50, P-01, P-02, P-03]
+  evidence: Heuristik
+  heuristic: true
+  rationale: —
+- id: PAR-B-67
+  key: session_template_90min
+  text: 1 Maximalübung (2–3 Sätze) + 2 Volumenübungen (je 5) + 1–2 Zubringer (2–3); Aufwärmen 12–15; Prehab;
+    12–18 Arbeitssätze
+  unit: min / Sätze
+  sources: [P-01, P-02, P-03, P-04, B-68]
+  evidence: C
+  rationale: PDF-Struktur
+- id: PAR-B-68
+  key: session_cut_priority
+  text: 'Ergänzung streichen → Volumensätze auf 2–3 → Antagonisten-Paare → Pausen der Nicht-Maximal-Reize
+    kürzen → nie kürzen: Aufwärmen ≥ 5 min und Primärblock'
+  values: {min_warmup: 5}
+  unit: Reihenfolge
+  sources: [B-50, B-23, B-96, B-101, B-57]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Abschnitt 14.2
+- id: PAR-B-69
+  key: warmup_duration_min
+  text: 5 (30 min), 7 (45 min), 10 (60 min), 12–15 (90 min)
+  unit: min
+  sources: [B-67, B-71, B-95]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Nutzen belegt [B-67], Dauer nicht
+- id: PAR-B-70
+  key: warmup_ramp_sets
+  text: 2–3 Rampensätze mit leichteren Stufen/Assistenz vor dem Primärblock, etwa 50 % → 70–75 % der Arbeitsschwierigkeit
+    bei sinkender Wdh.-Zahl
+  unit: Sätze
+  sources: [B-133, B-68, B-71]
+  evidence: B
+  rationale: Muster aus [B-133] (8 Wdh. bei ~50 %, 3 Wdh. bei ~70 % 1RM); schwere dynamische Aufwärmsätze
+    steigern Kraft [B-68]; Übertragung von %1RM auf Stufen/Haltezeit heuristisch
+- id: PAR-B-71
+  key: warmup_static_stretch_max_s
+  text: < 60 je Muskelgruppe
+  unit: s
+  sources: [B-69]
+  evidence: A
+  rationale: '≥ 60 s: −4.6 % Leistung'
+- id: PAR-B-72
+  key: srpe_formula
+  text: session_load = perceived_fatigue (1–10) × Dauer (min); Abfrage ~30 min nach der Einheit
+  unit: AU
+  sources: [B-103, B-106, B-105]
+  evidence: B
+  rationale: Gleichsetzung 1–10 ≈ CR-10 ist Heuristik
+- id: PAR-B-73
+  key: load_monitoring_window_weeks
+  text: 6 (gleitend); Monotonie = Mittel/SD der Tageslast; Strain = Wochenlast × Monotonie; nur individuelle
+    Schwellen
+  value: 6
+  unit: Wochen
+  sources: [B-104, B-107]
+  evidence: B
+  rationale: 'Foster 1998: gleitender 6-Wochen-Schnitt'
+- id: PAR-B-74
+  key: rest_skill_practice_s
+  text: 30–90 nach Bedarf
+  values: {lo: 30, hi: 90}
+  unit: s
+  sources: [B-51]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Technik-/Balanceversuche ermüdungsarm halten [B-51]; keine Pausenstudie für Skillversuche
+- id: PAR-B-75
+  key: max_sets_per_muscle_per_session
+  text: 'Hypertrophie: ~11 «fraktionale» Sätze je Muskel und Einheit (indirekte Sätze zählen halb; darüber
+    kein nachweisbarer Zusatznutzen); Kraft: ~2 direkte Sätze je Übung und Einheit (ACSM: 2–3)'
+  unit: Sätze
+  sources: [B-24, B-117, B-118, B-31]
+  evidence: B
+  rationale: Preprint [B-24] und Kongress-Abstracts [B-117, B-118], keine begutachtete Vollpublikation
+    (Stand 27.09.2026) → B statt A; bei höherem Wochenvolumen auf mehr Einheiten verteilen [B-120]
+- id: PAR-B-76
+  key: static_conditioning_dose
+  text: Haltezeit 10–30 s je Satz, 2–3 Sätze, 30–90 s gesamt je Übung
+  values: {hold_lo: 10, hold_hi: 30, sets_lo: 2, sets_hi: 3, total_lo: 30, total_hi: 90}
+  unit: s / Sätze
+  sources: [B-09, B-114, P-01, P-02, P-03]
+  evidence: C
+  rationale: Leans, Supports, Zubringer mit Max.-Haltezeit > 30 s (Abschnitt 3.4); Pause PAR-B-41
+- id: PAR-B-77
+  key: eccentric_dose
+  text: 2–3 Sätze à 2–3 Cluster-Wdh. (3–10 s je Wdh., PAR-B-16); Pause 180 s
+  values: {sets_lo: 2, sets_hi: 3, clusters_lo: 2, clusters_hi: 3, rest: 180}
+  unit: Sätze / s
+  sources: [B-113, B-119]
+  evidence: C
+  rationale: 'Low [B-113]; Forschungsprotokoll Klimmzug-Negativ: 6 × 3 × 5 s bei 95 % 1RM, 3 min Pause,
+    stärkster 1RM-Zuwachs [B-119]'
+- id: PAR-B-78
+  key: dyn_endurance_accessory_dose
+  text: ≥ 12 Wdh. (12–20), 2–3 Sätze, RIR 1–3; Pause PAR-B-44
+  values: {reps_lo: 12, reps_hi: 20, sets_lo: 2, sets_hi: 3}
+  unit: Wdh. / Sätze
+  sources: [B-36, B-32]
+  evidence: B
+  rationale: Kraftausdauer ≥ 12 Wdh., < 2 min Pause [B-36]; < 90 s [B-32]; Satzzahl Heuristik; [B-36]
+    nennt RIR 0–1, die Spanne RIR 1–3 ist bewusst konservativ (Heuristik)
+- id: PAR-B-79
+  key: assisted_set_counting
+  text: 'Hypertrophie-Wochensätze: 1.0 bei RIR/SIR ≤ 3, sonst 0.5; Maximalkraft-/Progressionstrigger der
+    Zielstufe: 0; Straight-Arm-Satzbudget und Spitzen-Kappung: 1.0'
+  unit: Satz-Gewicht
+  sources: [B-134, B-29, B-109, B-119, B-12, B-25]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Abschnitt 3.5; keine Trainingsstudie zu Band-Assistenz gefunden; [B-109] betrifft Band als
+    Zusatzwiderstand und misst nur Kraft
+- id: PAR-B-80
+  key: gtg_protocol
+  text: optional; nur Grundübungen mit gebeugtem Arm und Balance-Skills; nie Straight-Arm-Statics; nie
+    bis zum Versagen (Grenze ≤ 50 % der Max.-Wdh. wie PAR-E-27); zählt 0 für Hypertrophie-Wochensätze
+  unit: Regel
+  sources: [B-17, B-18, B-25, B-120, B-121, B-122]
+  evidence: Heuristik
+  heuristic: true
+  rationale: keine kontrollierte GtG-Studie (Abschnitt 6.2); Verteilen von Volumen gleichwertig oder besser
+    [B-120, B-121, B-122]; Kraft kaum abhängig von Versagensnähe [B-25]
+- id: PAR-B-81
+  key: skill_pairing_rule
+  text: Straight-Arm-Skills gegensätzlicher Zugrichtung abwechselnd als Paar (Pause PAR-B-45); gleiche
+    Zugrichtung mit gemeinsamem Budget (PAR-B-48) und Priorität zuerst; keine Sperrfrist zwischen zwei
+    verschiedenen Skills
+  unit: Regel
+  sources: [B-114, B-124, B-125, B-126, B-50, B-123, B-128, B-129]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Paar-Befunde nur aus dynamischem Hanteltraining [B-124, B-125, B-126]; Interferenz zwischen
+    Straight-Arm-Skills nicht untersucht (Abschnitt 7)
+- id: PAR-C-03
+  key: stage_torque_ratio_tuck
+  text: 0,60 (0,56–0,69); Frau 0,64
+  unit: Anteil Full
+  sources: [C-01, C-02]
+  evidence: B (Modell)
+  rationale: Spanne aus Hüft-/Kniewinkel und Rumpfneigung 0–30°
+- id: PAR-C-04
+  key: stage_torque_ratio_advanced_tuck
+  text: 0,75 (0,71–0,81); Frau 0,78
+  unit: Anteil Full
+  sources: [C-01, C-02]
+  evidence: B (Modell)
+  rationale: Hüfte 90°, Knie 90–150°
+- id: PAR-C-05
+  key: stage_torque_ratio_one_leg
+  text: 0,88 (0,855–0,906); Frau 0,89
+  unit: Anteil Full
+  sources: [C-01, C-02]
+  evidence: B (Modell)
+  rationale: ein Bein Full, eines Advanced Tuck
+- id: PAR-C-06
+  key: stage_torque_ratio_half_lay
+  text: 0,93 (0,905–0,954)
+  unit: Anteil Full
+  sources: [C-01, C-02]
+  evidence: B (Modell)
+  rationale: Knie 70–110°
+- id: PAR-C-07
+  key: stage_torque_ratio_straddle
+  text: 0,85 (120°) / 0,91 (90°) / 0,96 (60°)
+  unit: Anteil Full
+  sources: [C-01, C-02]
+  evidence: B (Modell)
+  rationale: Gesamtgrätsche; Default 0,91 wenn Breite unbekannt (Heuristik)
+- {id: PAR-C-08, key: stage_torque_ratio_full, text: '1,00', unit: Anteil Full, evidence: Definition,
+  definition: true, rationale: 'Referenzwert der Skala, keine empirische Grösse'}
+- id: PAR-C-09
+  key: hand_offset_behind_shoulder
+  text: Tuck 0,156 H / Adv 0,195 H / Straddle 90° 0,237 H / Full 0,259 H
+  unit: m pro m Grösse
+  sources: [C-01, C-02]
+  evidence: B (Modell)
+  rationale: Armneigung 27° / 35° / 44° / 50°; Formkriterium Hand-/Stangenposition
+- id: PAR-C-10
+  key: lean_torque_ratio_per_arm_degree
+  text: '≈ 0,02 (5°: 0,08; 15°: 0,26; 25°: 0,47; 31°: 0,59; 36°: 0,72)'
+  unit: Anteil Full-Planche pro Grad
+  sources: [C-01, C-02]
+  evidence: B (Modell)
+  rationale: Füsse am Boden, gerader Körper; Lean 31° ≈ Tuck
+- id: PAR-C-13
+  key: band_torque_relief
+  text: (F_band / KG) × (x_a / H) / 0,246
+  unit: Anteil Full-Moment
+  sources: [C-01, C-02]
+  evidence: B (Modell)
+  rationale: F_band aus `estimated_assist_kg`; geteilt durch stage_ratio ergibt Anteil der Stufe
+- id: PAR-C-16
+  key: shoulder_flexor_extensor_capacity_ratio
+  text: 0,72
+  unit: Verhältnis
+  sources: [C-15]
+  evidence: B
+  rationale: 12 erwachsene Turner (Nicht-Sportler signifikant höher), Messposition nicht Hebelposition;
+    daraus Planche ≈ 1,39-mal schwerer als Front Lever bei gleicher Stufe (Modell mit [C-15]; für Freizeitsportler
+    wahrscheinlich kleiner, Heuristik)
+- id: PAR-C-17
+  key: coaching_level_lever_stages
+  text: 'FL: Tuck 4, Adv 5, Straddle 6, Half-Lay/One-Leg 7, Full 8; Planche: 5, 6, 8, 9, 11; Back Lever:
+    3, 4, 5, 6, 7'
+  unit: OG-Level
+  sources: [C-68]
+  evidence: C
+  rationale: zur Plausibilisierung der Modellreihenfolge, nicht linear im Moment
+- id: PAR-C-18
+  key: bw_fraction_push_up_standard
+  text: 0,64 (Spitze) / 0,664 (Anfang) / 0,69 oben–0,75 unten (statisch)
+  unit: Anteil KG
+  sources: [C-26, C-27, C-28, C-29]
+  evidence: B
+  rationale: Default 0,66 (Mittel aus 0,64, 0,664 und 0,69; Heuristik)
+- id: PAR-C-19
+  key: bw_fraction_push_up_knee
+  text: 0,49–0,54 oben / 0,62 unten
+  unit: Anteil KG
+  sources: [C-26, C-28, C-29]
+  evidence: B
+  rationale: Default 0,52 (Mittel aus 0,49, 0,529 und 0,536; Heuristik)
+- id: PAR-C-20
+  key: bw_fraction_push_up_hands_elevated
+  text: '30,5 cm: 0,55; 61 cm: 0,41'
+  unit: Anteil KG
+  sources: [C-26, C-27]
+  evidence: B
+  rationale: Grösse beeinflusst nur bei 61 cm (r = 0,63) [C-26]
+- id: PAR-C-21
+  key: bw_fraction_push_up_feet_elevated
+  text: '30,5 cm: 0,70; 61 cm: 0,74'
+  unit: Anteil KG
+  sources: [C-26, C-27]
+  evidence: B
+  rationale: Widerspruch zu [C-31] für 10–30° (siehe Widersprüche)
+- {id: PAR-C-22, key: bw_fraction_no_foot_contact, text: '1,00', unit: Anteil KG, evidence: Mechanik (zwingend),
+  definition: true, rationale: 'Dip, Klimmzug, Handstand, Planche, Lever, L-Sit, Kreuz; dynamisch zeitweise
+    > 1 [C-73]'}
+- id: PAR-C-27
+  key: neutral_grip_wrist_rating_offset
+  text: −1
+  unit: Stufe (0–3)
+  sources: [C-43, C-16]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Parallettes, Barren, Fäuste; Boden = Basiswert
+- id: PAR-C-32
+  key: lever_relative_demand_height_exponent
+  text: '1'
+  unit: Exponent (H)
+  sources: [C-58, C-59]
+  evidence: B (Modell)
+  rationale: '1,90 m: +9 %, 1,60 m: −9 % gegenüber 1,75 m'
+- id: PAR-C-38
+  key: bent_arm_gate_for_straight_arm
+  text: Bankdrücken notwendig, nicht hinreichend (r = 0,41)
+  unit: Regel
+  sources: [C-12]
+  evidence: B
+  rationale: Bent-Arm-Kraft als Voraussetzung, nicht als Prädiktor verwenden
+- id: PAR-C-40
+  key: pull_up_grip_overhead_modifier
+  text: +1 auf shoulder_overhead für weiten Griff und Untergriff (max. 3)
+  unit: Stufe
+  sources: [C-22, C-21]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Richtung belegt, Grösse der Stufe geschätzt
+- {id: PAR-C-44, key: load_profile_stage_scaling, text: Belastung = Profilwert × stage_torque_ratio (Statik)
+    bzw. × bw_fraction / Referenzanteil (dynamisch), unit: Faktor, evidence: Heuristik, heuristic: true,
+  rationale: 'verknüpft Tabelle 2 mit §5/§7; Tuck = 0,6 × Full-Profil'}
+- {id: PAR-C-45, key: joint_load_rating_scale, text: '0 keine, 1 gering, 2 moderat/endgradig, 3 hoch/limitierend',
+  unit: ordinal, evidence: Heuristik, heuristic: true, rationale: feinste mit der Datenlage vertretbare
+    Stufung (§1)}
+- {id: PAR-C-46, key: muscle_role_weights, text: 'primär 1,0; sekundär 0,5; Stabilisator 0,25', unit: Gewicht,
+  evidence: Heuristik, heuristic: true, rationale: 'für Muskel-Volumenzählung; EMG-Rangfolgen [C-18, C-04]
+    stützen nur die Reihenfolge'}
+- id: PAR-C-47
+  key: ring_stabilizer_rating_offset
+  text: +1 auf biceps_distal und biceps_long_head/anterior_shoulder bei Stützübungen an Ringen
+  unit: Stufe
+  sources: [C-25, C-04, C-33]
+  evidence: Heuristik
+  heuristic: true
+  rationale: 'Hauptbeweger-Last wie stabil (widersprüchlich: [C-34] vs. [C-36, C-32])'
+- {id: PAR-C-49, key: straight_arm_category_rule, text: Ellbogen gestreckt UND Last über den Arm UND (Stufe
+    ≥ Lean mit ≥ 15° Armneigung ODER horizontaler Körper im Hang/Stütz), unit: Regel, evidence: Heuristik,
+  heuristic: true, rationale: 'Schwelle 15° ≈ 26 % Full-Moment (PAR-C-10); Handstand und Stütz ohne Vorlage
+    = «straight_arm_axial» (Ellbogenmoment ≈ 0): zählt für Handgelenk und Überkopf, nicht für die Ellbogen-/Bizeps-Last'}
+- id: PAR-C-54
+  key: female_lever_relative_demand_factor
+  text: Full 1,24; Advanced Tuck 1,27; Tuck 1,32 (Spanne 1,19–1,36)
+  unit: Faktor gegenüber Mann, gleiche Stufe
+  sources: [C-01, C-77]
+  evidence: Heuristik (Modell)
+  heuristic: true
+  rationale: '**Modellableitung**, keine Messung an Athletinnen; nur Prior für Zeitschätzungen, aus Logs
+    nachkalibrieren, nie als Sperre oder Zugangsregel; Übertragung der Handdynamometer-Werte auf Hebelpositionen
+    ungeprüft (Audit: stufenabhängig ergänzt, Evidenz B (Modell) → Heuristik (Modell))'
+- id: PAR-C-61
+  key: band_nominal_force_uncertainty
+  text: ± 0,20
+  unit: Anteil
+  sources: [C-79, C-80]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Hersteller überschätzt um 13–44 % [C-79], gleiche Farbe streut 8–19 % [C-80]; `estimated_assist_kg`
+    als Schätzung mit dieser Unsicherheit führen, Kalibrierung per Waage anbieten
+- id: PAR-C-62
+  key: band_assist_rom_rule
+  text: 'Assistenz maximal bei maximaler Dehnung (Klimmzug/Dip mit Band am Fuss: unten), minimal am Ende
+    der Bewegung'
+  unit: Regel
+  sources: [C-85, C-79]
+  evidence: B / Heuristik
+  heuristic: true
+  rationale: Richtung am Kreuzheben belegt [C-85]; Übertragung auf Klimmzug/Dip/Hebelhalte Heuristik
+- id: PAR-D-01
+  key: injury_region_priority_order
+  text: shoulder > wrist > elbow = lumbar
+  unit: Rangfolge
+  sources: [D-01, D-02, D-14]
+  evidence: B
+  rationale: Schulter 32 %, Handgelenk 15 %, Ellbogen 10 %, Rücken 10 % [D-01]; Schulter auch im Street
+    Workout [D-02] und bei CrossFit-Turnbewegungen [D-14] vorn (Querschnitt, Selbstauskunft). Steuert
+    Prehab-Auswahl und Hinweise.
+- id: PAR-D-02
+  key: prior_injury_increase_cap_factor
+  text: '0.5'
+  value: 0.5
+  unit: Faktor auf die Steigerungsdeckel der Region
+  sources: [D-02, D-09, D-11, D-12, D-13]
+  evidence: Heuristik
+  heuristic: true
+  rationale: 'Richtung belegt (OR 4,08 [D-02]); Betrag nicht belegt: Halbierung ist konservativ und erklärbar.'
+- id: PAR-D-03
+  key: max_sessions_per_day_same_structure
+  text: '1'
+  unit: Einheiten/Tag
+  sources: [D-01, D-41]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Mehrere Einheiten pro Tag mit mehr Verletzungen assoziiert (B) [D-01]; hohe Sehnenlast braucht
+    36–72 h [D-41]. Wert Heuristik.
+- id: PAR-D-04
+  key: elevated_risk_training_age_months
+  text: 6–48
+  values: {lo: 6, hi: 48}
+  unit: Monate Calisthenics-Erfahrung
+  sources: [D-01]
+  evidence: B
+  rationale: In dieser Phase konservativer steigern. Assoziation im Querschnitt (12-Monats-Verletzungen),
+    Referenzkategorie im Abstract nicht genannt. Widerspricht teils D-03, D-04 («Widersprüche» W-2).
+- id: PAR-D-05
+  key: warmup_allows_max_skill_attempts
+  text: 'false'
+  unit: bool
+  sources: [D-01]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Techniktraining als Aufwärmen mit mehr Verletzungen assoziiert (B, keine Kausalität). Aufsteigende
+    submaximale Sätze (PAR-E-26) bleiben erlaubt.
+- id: PAR-D-06
+  key: tendon_adaptation_horizon_weeks
+  text: 12 (Spanne 8–14)
+  value: 12
+  values: {lo: 8, hi: 14}
+  unit: Wochen
+  sources: [D-17, D-18, D-19]
+  evidence: A/B (Zeitverlauf) + Heuristik (Übertragung)
+  heuristic: true
+  rationale: 'Bis dahin gilt eine neue oder deutlich schwerere Straight-Arm-Stufe nicht als voll belastbar.
+    Steifigkeit signifikant erst nach 3 Monaten [D-18, D-19]; Meta-Analyse: ≥ 12 Wochen tendenziell wirksamer
+    (n. s., p = 0,7), einzelne 8-Wochen-Studien schon signifikant [D-17]. Daten: Achilles-/Patellarsehne
+    gesunder Erwachsener (237 von 264 männlich); Übertragung auf Bizepssehne, Ellbogen und Schulter ist
+    Heuristik.'
+- id: PAR-D-08
+  key: min_rest_hours_high_tendon_load_same_structure
+  text: '48'
+  value: 48
+  unit: Stunden
+  sources: [D-20, D-21, D-23, D-41]
+  evidence: B (Zeitverlauf) / Wert Heuristik
+  heuristic: true
+  rationale: 48 h ist ein Wert innerhalb 36–72 h. Netto-Kollagenabbau 24–36 h, Netto-Aufbau 36–72 h (schematische
+    Abbildung) [D-20, D-23]; Synthese bis 72 h erhöht [D-21]; schwere Sehnenlast braucht 36–72 h [D-41].
+    Gilt für Maximal-/Hochlast-Einheiten derselben Struktur; deckt PAR-E-13.
+- id: PAR-D-09
+  key: max_weekly_load_increase_straight_arm_pct
+  text: '10'
+  value: 0.1
+  unit: fraction over the 3-week mean
+  sources: [D-17, D-18, D-27, D-33, D-36]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Straight-Arm-Strukturen (Bizepssehne, Ellbogen medial, vordere Schulter) sind sehnenlimitiert
+    [D-17, D-18]. Die 10-%-Regel ist im RCT nicht belegt [D-33]; < 10 % stützt sich auf unveröffentlichte
+    Daten [D-27]; die Referenzkategorie ≤ 10 % in [D-36] betrifft die Einzel-Einheit, für Wochenquotienten
+    fand D-36 keinen (Woche zu Woche) bzw. einen umgekehrten (ACWR) Zusammenhang. Konservativ gewählt.
+- id: PAR-D-10
+  key: max_weekly_load_increase_bent_arm_pct
+  text: '20'
+  value: 0.2
+  unit: fraction over the 3-week mean
+  sources: [D-34, D-35, D-36]
+  evidence: Heuristik (Richtung B)
+  heuristic: true
+  rationale: 'Signal schwach: 20–60 % vs. < 20 % nur nach 21 Tagen signifikant [D-35]; > 30 % vs. < 10
+    % HR 1,59 (0,96–2,66), n. s., nur distanzbezogene Verletzungen [D-34]; Woche-zu-Woche-Quotient ohne
+    Zusammenhang [D-36]. Laufanfänger/Freizeitläufer (Analogie). Wert gesetzt; mit Stream B abgleichen.'
+- id: PAR-D-11
+  key: max_weekly_load_increase_wrist_extension_pct
+  text: '10'
+  value: 0.1
+  unit: fraction over the 3-week mean
+  sources: [D-06, D-53]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Trainingsintensität und Wochenstunden mit Handgelenkschmerz assoziiert [D-06]; Volumensteigerung
+    als Risikofaktor [D-53]. Betrag Heuristik (wie PAR-D-09).
+- {id: PAR-D-12, key: new_exercise_family_start_fraction, text: '0.5', value: 0.5, unit: Anteil des Zielvolumens
+    in Woche 1, evidence: Heuristik, heuristic: true, rationale: 'Neue Belastungsart ohne 30-Tage-Referenz
+    (entspricht dem nicht berechenbaren Zustand in [D-36]); halbes Volumen ist konservativ.'}
+- id: PAR-D-13
+  key: pain_rating_points
+  text: during, immediately_after, next_morning, weekly_trend
+  unit: Zeitpunkte, NRS 0–10 je Region
+  sources: [D-42, D-43, D-45]
+  evidence: A (Reha-Kontext)
+  rationale: 'Modell aus Reha-Studien (Achilles, Patella, Schulterpatienten); Einsatz bei Trainierenden
+    ist Übertragung. **Datenmodell fehlt**: Das Log kennt heute keinen Schmerzwert (nur `perceived_fatigue`,
+    RPE, RIR, `form_quality`).'
+- id: PAR-D-14
+  key: pain_green_max_nrs
+  text: '2'
+  value: 2
+  unit: NRS 0–10
+  sources: [D-41]
+  evidence: B (Analogie) + Heuristik
+  heuristic: true
+  rationale: 'Bis hier Progression erlaubt (Achillessehnen-Reha, als Progressionsgrenze übertragen). Kriterium
+    vor Rückkehr zu höherer Last: Alltagsschmerz 1–2/10, Hüpftest ≤ 2/10 [D-41]. Strengere Variante ≤
+    3 als Progressionsgrenze [D-46] (W-9).'
+- id: PAR-D-15
+  key: pain_accept_max_nrs
+  text: '5'
+  value: 5
+  unit: NRS 0–10
+  sources: [D-40, D-42, D-43, D-44, D-45]
+  evidence: A (Reha-Kontext)
+  rationale: 'Bis hier Training ohne Progression; darüber Übung für diese Region beenden (Aktion Heuristik).
+    Grenze aus Reha-Programmen bei Sehnen- bzw. Schulterbeschwerden (Kern-RCT D-40: Achillessehne, n =
+    38).'
+- id: PAR-D-16
+  key: pain_next_morning_rule
+  text: Schmerz am nächsten Morgen nicht höher als vor der Einheit
+  unit: Regel
+  sources: [D-42, D-44, D-45]
+  evidence: A
+  rationale: Rückkehr auf Ausgangsniveau bis zum Folgemorgen [D-42] bzw. innerhalb 24 h [D-44] bzw. vor
+    der nächsten Einheit [D-45].
+- id: PAR-D-17
+  key: pain_weekly_trend_rule
+  text: Schmerz und Steifigkeit nehmen von Woche zu Woche nicht zu
+  unit: Regel
+  sources: [D-43]
+  evidence: A
+  rationale: Teil des Modells aus dem RCT [D-40], beschrieben in [D-43].
+- id: PAR-D-18
+  key: pain_breach_action
+  text: 'nächste Einheit: Struktur 1 Stufe Regression, −30 % Volumen, eine Woche halten'
+  values: {volume_factor: 0.7, days: 7, regression_steps: 1}
+  unit: Regel
+  sources: [D-45, D-47]
+  evidence: Heuristik
+  heuristic: true
+  rationale: 'Richtung belegt: Last senken, wenn der Schmerz nicht zurückgeht [D-45]; Reduktion eine Woche
+    halten [D-47]. −30 % und «1 Stufe» sind Heuristik. Wird als Deload erfasst (ADR 0003).'
+- id: PAR-D-19
+  key: referral_persistent_symptom_days
+  text: '28'
+  value: 28
+  unit: Tage ohne Besserung trotz Lastanpassung
+  sources: [D-88, D-73]
+  evidence: A/B + Heuristik
+  heuristic: true
+  rationale: 'LWS-Leitlinien: Überweisung bei fehlender Besserung nach 4 Wochen [D-88]; Schulter: 6 Wochen
+    Physiotherapie vor Eskalation [D-73]. Übertragung auf alle Regionen Heuristik. Obergrenze; früherer
+    Hinweis PAR-D-32.'
+- id: PAR-D-20
+  key: referral_pain_breach_count
+  text: 3 in 14 Tagen
+  values: {count: 3, days: 14}
+  unit: Anzahl
+  evidence: Heuristik
+  heuristic: true
+  rationale: Wiederholte Verletzung der Schmerzregel trotz Anpassung → Fachperson empfehlen.
+- id: PAR-D-21
+  key: red_flag_action
+  text: Struktur sperren, Abklärung mit Dringlichkeit N/D/A empfehlen, Freigabe durch User nötig
+  unit: Regel
+  sources: [D-70, D-73, D-86, D-89, D-92]
+  evidence: B + Heuristik
+  heuristic: true
+  rationale: 'Dringlichkeit belegt für Infekt und nicht reponierte Luxation (gleicher Tag) sowie akuten
+    traumatischen Sehnenriss (dringend) [D-73], Cauda equina als Notfall [D-92]; frühe Versorgung distaler
+    Bizepsrisse bevorzugt [D-70]. «Trauma allgemein: dringend» sowie Sperr- und Freigabelogik sind Heuristik.'
+- id: PAR-D-22
+  key: minor_wrist_pain_referral_days
+  text: '7'
+  unit: Tage
+  sources: [D-06, D-07, D-53]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Risiko bei Heranwachsenden belegt (A–B); späte Vorstellung häufig [D-53]. Frist Heuristik.
+- id: PAR-D-23
+  key: minor_age_threshold_years
+  text: '18'
+  value: 18
+  unit: Jahre
+  sources: [D-06, D-25, D-53]
+  evidence: Heuristik
+  heuristic: true
+  rationale: 'Risikoalter 10–14 [D-06] bzw. 10–16 [D-53]; Muskel-Sehnen-Ungleichgewicht in der Adoleszenz
+    [D-25]. Unter 18: Handgelenk- und Straight-Arm-Steigerung × PAR-D-02. Ob die App Minderjährige zulässt,
+    ist offen.'
+- {id: PAR-D-24, key: rtt_start_volume_fraction, text: '0.5', value: 0.5, unit: Anteil des letzten beschwerdefreien
+    Volumens, evidence: Heuristik, heuristic: true, rationale: Nach leichter Beschwerde ohne Verweis und
+    ohne längere Pause. Nach Verweis oder ≥ 4 Wochen Pause gilt PAR-D-33.}
+- id: PAR-D-25
+  key: rtt_volume_steps
+  text: 0.25 → 0.5 → 0.75 → 1.0 (Start je nach PAR-D-24/33)
+  values: {s1: 0.25, s2: 0.5, s3: 0.75, s4: 1}
+  unit: Anteil
+  sources: [D-53]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Wochenweiser Aufbau wie im Turnprotokoll [D-53]; Schrittgrösse Heuristik.
+- id: PAR-D-26
+  key: rtt_step_advance_criteria
+  text: keine Soreness während/nach/am Folgetag in ≥ 2 Einheiten der Stufe; Schmerzregeln PAR-D-15 bis
+    PAR-D-17 erfüllt; höchstens 1 Stufe pro 7 Tage
+  values: {sessions: 2, min_days: 7}
+  unit: Regel
+  sources: [D-47, D-53]
+  evidence: B + Heuristik
+  heuristic: true
+  rationale: Soreness Rules [D-53]; Steigerung höchstens einmal pro Woche [D-47]. «≥ 2 Einheiten» ist
+    Heuristik.
+- id: PAR-D-27
+  key: rtt_progression_order
+  text: 'Hang/Zug → Stütz ohne Impact → Stütz mit Impact/Maximalversuch; innerhalb: Volumen → Intensität
+    → Maximalversuch'
+  unit: Reihenfolge
+  sources: [D-53]
+  evidence: B + Heuristik
+  heuristic: true
+  rationale: Reihenfolge für Handgelenk aus [D-53] (Protokoll aus Literatur und Expertenmeinung); für
+    andere Regionen übertragen (Heuristik).
+- id: PAR-D-28
+  key: rtt_regress_on_breach
+  text: 'Schmerz > 1 h danach oder am Folgetag: 1 Tag Pause, Stufe wiederholen; Schmerz im Aufwärmen >
+    15 min: stoppen, 2 Tage Pause, 1 Stufe zurück'
+  unit: Regel
+  sources: [D-53, D-54]
+  evidence: B (Expertenprotokoll)
+  rationale: Soreness Rules aus Turn- (Handgelenk junger Turner) und Wurfprotokollen (Baseball).
+- id: PAR-D-29
+  key: layoff_restart_threshold_weeks
+  text: '4'
+  value: 4
+  values: {days: 28}
+  unit: weeks (days = weeks × 7)
+  sources: [D-18, D-19]
+  evidence: B (Richtung) + Heuristik (Schwelle)
+  heuristic: true
+  rationale: Sehnensteifigkeit nach 1–2 Monaten Pause zurück auf Ausgangswert, Kraft nicht [D-18, D-19]
+    (untrainierte junge Männer nach 3 Monaten isometrischem Beintraining, n = 8 bzw. 9). Ab dieser Pause
+    starten Straight-Arm-Strukturen in RTT-Stufe 1 mit PAR-D-33 (Persona 4).
+- id: PAR-D-30
+  key: acwr_hard_rule_enabled
+  text: 'false'
+  unit: bool
+  sources: [D-29, D-30, D-31, D-36]
+  evidence: A/B
+  rationale: 'ACWR nur protokollieren: methodische Artefakte ohne Vorhersagegewinn [D-29, D-30], heterogene
+    Studien [D-31], bei Läufern umgekehrt assoziiert [D-36].'
+- id: PAR-D-31
+  key: max_session_spike_vs_30d_max_pct
+  text: '10'
+  value: 0.1
+  values: {window_days: 30}
+  unit: fraction over the largest session in the window
+  sources: [D-36]
+  evidence: B (Analogie)
+  rationale: 'Einzel-Einheit > 10 % über dem 30-Tage-Maximum: HRR 1,64 (Analogie Laufen; exploratorische
+    Kohorte, Freizeitläufer im Mittel 45,8 Jahre) [D-36]; Übertragung auf Strukturlast Heuristik. Gilt
+    für Volumen, nicht für die Stufe selbst.'
+- {id: PAR-D-32, key: referral_soft_prompt_days, text: '14', value: 14, unit: Tage ohne Besserung trotz
+    Lastanpassung, evidence: Heuristik, heuristic: true, rationale: 'Freundlicher Hinweis auf eine Fachperson
+    vor der Leitlinien-Obergrenze PAR-D-19, weil die App nicht untersucht.'}
+- id: PAR-D-33
+  key: rtt_start_volume_fraction_after_referral
+  text: '0.25'
+  value: 0.25
+  unit: Anteil des früheren Volumens
+  sources: [D-53, D-07]
+  evidence: B (Expertenregel) + Heuristik (Übertragung)
+  heuristic: true
+  rationale: «75-%-Reduktionsregel» für die Rückkehr nach Handgelenkbeschwerden bei Turnern [D-53, D-07];
+    für andere Regionen übertragen.
+- id: PAR-D-34
+  key: min_rest_hours_high_tendon_load_rtt
+  text: '72'
+  value: 72
+  unit: Stunden
+  sources: [D-41, D-54]
+  evidence: B (Analogie)
+  rationale: 'In der Rampe: hohe Aktivitäten mit 3 Erholungstagen [D-41]; Sehnen-/Bandverletzung im Wurfprogramm
+    jeden 3. Tag [D-54].'
+- id: PAR-D-37
+  key: prehab_sessions_per_week
+  text: 3 (Spanne 2–4)
+  unit: Einheiten/Woche
+  sources: [D-75, D-11, D-80]
+  evidence: A (Analogie)
+  rationale: OSTRC 3×/Woche im Aufwärmen [D-75] (Handball); Kletterprogramm 3–4×/Woche [D-11]; Baseball-Kohorte
+    schon ab ≥ 1×/Woche wirksam [D-80].
+- id: PAR-D-38
+  key: prehab_evidence_label
+  text: 'shoulder: `rct_other_sport`; elbow: `rct_other_sport`; wrist, finger: `coaching_practice`'
+  unit: Enum
+  sources: [D-06, D-11, D-75, D-80]
+  evidence: A/B
+  rationale: 'Steuert die Formulierung in der App; keine Schutzversprechen ohne Evidenz. Audit: Ellbogen
+    von `cohort_other_sport` auf `rct_other_sport` korrigiert, weil das Kletter-RCT (ein Kollektiv, via
+    [D-11]) auch Ellbogenverletzungen senkte; dazu Baseball-Kohorte [D-80].'
+- id: PAR-D-39
+  key: pain_relief_claims_allowed
+  text: 'false'
+  unit: bool
+  sources: [D-55, D-56, D-57, D-58, D-59]
+  evidence: A
+  rationale: Isometrie nicht besser als isotonisches Training, Soforteffekt nicht bestätigt [D-56, D-58].
+- id: PAR-D-40
+  key: complete_rest_default_on_pain
+  text: 'false'
+  unit: bool
+  sources: [D-40, D-41]
+  evidence: A/B
+  rationale: 'Ohne Red Flags: reduzieren statt sperren. Weitertrainieren nach Schmerzregel nicht schlechter
+    als Pause [D-40]; vollständige Ruhe kann schaden [D-41].'
+- id: PAR-D-41
+  key: supinated_straight_arm_high_risk
+  text: 'true'
+  unit: bool (Metadatum je Übung)
+  sources: [D-68, D-69]
+  evidence: B
+  rationale: 'Supinierter, fast gestreckter Arm unter isometrischer Last ist die typische Rissposition
+    der distalen Bizepssehne [D-68, D-69] (Video-Fallserien, fast nur Männer, überwiegend Kreuzheben).
+    Solche Varianten: Deckel PAR-D-09, Einstieg PAR-D-12, Matrix Abschnitt 8.'
+- id: PAR-D-42
+  key: minor_back_pain_referral_days
+  text: '7'
+  unit: Tage
+  sources: [D-82, D-84]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Rückenschmerz bei jungen Turnern als Warnzeichen [D-82]; hohe Prävalenz bei jugendlichen
+    Athleten [D-84]. Frist Heuristik (wie PAR-D-22).
+- id: PAR-E-01
+  key: session_block_order
+  text: '`warmup` → `skill_max` → `skill_volume` → `strength_accessory` → `prehab_conditioning`'
+  unit: Reihenfolge
+  sources: [P-01, P-02, P-03, E-26, E-27, E-28, E-60, E-95, E-97]
+  evidence: A/B/C
+  rationale: 'Kraftzuwachs am grössten bei Übungen am Anfang [E-26]; höhere vor niedrigerer Intensität
+    [E-60]; Ermüdung schadet dem Lernen [E-28]; Aufwärmen verbessert Leistung [E-95, E-97]. Die Reihenfolgebefunde
+    stammen aus dem Krafttraining [E-26, E-27, E-60] und einer Labor-Lernaufgabe [E-28]; die Übertragung
+    auf Skill-Blöcke ist Ableitung. Position von Prehab zuletzt: Heuristik.'
+- id: PAR-E-02
+  key: skill_priority_first
+  text: 'true: Der Skill mit der höchsten User-Priorität erhält den ersten Arbeitsblock'
+  unit: Regel
+  sources: [E-26, E-27, E-60]
+  evidence: A/B
+  rationale: Übertragung des Reihenfolgeeffekts auf die Skill-Priorität; E-27 empfiehlt ausdrücklich,
+    Übungen nach der Priorität des Trainingsziels zu ordnen.
+- id: PAR-E-03
+  key: equal_priority_order_rotation
+  text: Bei gleicher Priorität wechselt die Reihenfolge je Einheit
+  unit: Regel
+  sources: [E-26, P-02, P-03]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Verteilt den Vorteil der ersten Position.
+- id: PAR-E-04
+  key: max_effort_min_rest_s
+  text: Default 300, Untergrenze 180
+  values: {default: 300, floor: 180}
+  unit: s
+  sources: [E-81, E-86, E-87, E-88, E-60, P-01, P-02, P-03, P-04]
+  evidence: A/B/C
+  rationale: Literatur 180–300 s für schwere dynamische Sätze (zentral ~2 min, peripher 3–5 min nach kurzer,
+    hochintensiver Belastung [E-81]; 3–5 min bei schweren Lasten [E-60, E-87, E-88]; > 2 min für Trainierte
+    [E-86]); für einzelne Maximalversuche im Testkontext reichen teils 1–2 min, 3–5 min gelten als sicherer
+    [E-87, E-88]. Keine Studie zu isometrischen Straight-Arm-Halten (Übertragung). Praxisquelle ≥ 300
+    s. Default am oberen Literaturende = Praxiswert. Abgleich mit PAR-B-39 (Stream B) nötig.
+- id: PAR-E-05
+  key: max_effort_min_rest_heavy_s
+  text: 420 (Spanne 300–420)
+  value: 420
+  values: {lo: 300, hi: 420}
+  unit: s
+  sources: [P-02, P-03, P-04]
+  evidence: C
+  rationale: Maltese und vergleichbare schwerste Elemente. Literatur nennt für Maximalversuche nichts
+    über 5 min [E-87, E-88].
+- id: PAR-E-06
+  key: skill_volume_rest_s
+  text: 180–300 (Default 240)
+  values: {lo: 180, hi: 300, default: 240}
+  unit: s
+  sources: [P-01, P-02, P-03, E-86, E-87]
+  evidence: A/B/C
+  rationale: Volumensätze derselben Bewegung; 3–5 min erlauben mehr Wiederholungen bei 50–90 % 1RM [E-87].
+    Übertragung aus dynamischem Krafttraining.
+- id: PAR-E-07
+  key: accessory_rest_s
+  text: 120–180
+  values: {lo: 120, hi: 180}
+  unit: s
+  sources: [P-01, P-02, P-03, E-86]
+  evidence: A/C
+  rationale: 60–120 s reichen Untrainierten, > 2 min maximieren Kraft bei Trainierten [E-86].
+- id: PAR-E-08
+  key: max_attempts_per_skill_per_session
+  text: Default 3, Spanne 2–5
+  unit: Sätze/Versuche
+  sources: [P-01, P-02, P-03, P-04, E-25, E-51]
+  evidence: C; A/B nur als Analogie
+  rationale: 'Gilt nur, solange die Stoppregeln (PAR-E-15 bis 17) nicht greifen. Analogie: ≤ 5 1RM-Versuche
+    pro Einheit steigerten den 1RM wie Volumentraining (Untrainierte, Maschinenübungen) [E-25]; beim Spiegelzeichnen
+    brachten 1–3 statt 7 Versuche vor einer 24-h-Pause mehr [E-51]. Für Skills keine direkte Studie. Keine
+    XP für Maximalversuche (ADR 0003).'
+- id: PAR-E-09
+  key: working_sets_per_skill_session
+  text: 12–18
+  unit: Sätze
+  sources: [P-01, P-02, P-03, P-04]
+  evidence: C
+  rationale: Obergrenze aller Arbeitssätze einer Skill-Einheit; Überschneidung mit Stream B.
+- id: PAR-E-11
+  key: strength_skill_sessions_per_week
+  text: Default 3, Spanne 2–4
+  unit: Einheiten/Woche
+  sources: [E-53, E-54, E-55, E-56, E-60, E-08, E-09, E-21, E-22]
+  evidence: A/B (Analogie) + Heuristik
+  heuristic: true
+  rationale: 'Kraft steigt mit der Frequenz, bei gleichem Volumen aber ohne signifikanten Frequenzeffekt
+    [E-53]; neuere Meta-Regression: Frequenzeffekt mit abnehmendem Grenznutzen [E-54]; 3× besser als 1×
+    bei gleichem Volumen (Untrainierte, Beinstrecker) [E-56]; Trainierte ohne klaren Frequenzeffekt [E-55];
+    ACSM 2–3 (Novizen) bis 4–5 (sehr Erfahrene) Trainingstage pro Woche insgesamt, nicht je Muskelgruppe
+    [E-60]; Laborprotokolle mit 3 Einheiten/Woche [E-08, E-09, E-21, E-22]. Alle Daten betreffen Muskelgruppen
+    im Krafttraining, nicht Skills: Übertragung ist Analogie, Default 3 ist Heuristik innerhalb der Spanne.
+    Gilt für `limiting_factor = strength`; Stream D hat Vorrang.'
+- id: PAR-E-12
+  key: balance_skill_sessions_per_week
+  text: Default 4, Spanne 3–6
+  values: {default: 4, lo: 3, hi: 6}
+  unit: Einheiten/Woche
+  sources: [E-59, E-50, E-52]
+  evidence: A (Analogie) + Heuristik
+  heuristic: true
+  rationale: 'Allgemeines Gleichgewichtstraining junger Erwachsener: 3 (mehrere Studien) oder 6 (eine
+    Studie) pro Woche am wirksamsten [E-59]; kurze Einheiten an vielen Tagen [E-50, E-52]. Default 4 ist
+    Heuristik zwischen beiden Werten. Nicht handstand-spezifisch; Handgelenkslast (Stream D) prüfen. Abgleich
+    mit PAR-B-35.'
+- id: PAR-E-13
+  key: same_skill_min_spacing_h_max_effort
+  text: '48'
+  unit: h
+  sources: [E-82, E-83, E-08, E-09, E-21]
+  evidence: B + Heuristik
+  heuristic: true
+  rationale: 'Nach 10 × 5 Kniebeugen mit 80 % 1RM (10 männliche Athleten, akutes Crossover): Aktivierung
+    und Zuckungskraft bis 48 h reduziert, Ermüdung nach 72 h weg [E-82]; ohne Versagen schnellere Erholung
+    (10 Krafttrainierte) [E-83]; Laborprotokolle mit 3 Einheiten/Woche [E-08, E-09, E-21]. Skill-Maxima
+    haben weniger Volumen: 48 h eher konservativ. Übertragung auf Straight-Arm ungeprüft; Stream D (Sehne,
+    PAR-D-08) nennt ebenfalls 48 h.'
+- id: PAR-E-14
+  key: same_skill_min_spacing_h_submax
+  text: '24'
+  unit: h
+  sources: [E-57, E-58, E-59, E-50]
+  evidence: B/A (Analogie) + Heuristik
+  heuristic: true
+  rationale: Tägliche kleine Maximaldosen an 5 Tagen/Woche wirksam (Ellbogenbeuger, junge Untrainierte)
+    [E-57, E-58]; Gleichgewichtstraining bis 6×/Woche [E-59]; aufeinanderfolgende Tage beim Fertigkeitslernen
+    wirksam (chirurgische VR-Simulatoren) [E-50]. Gilt für submaximale Technikarbeit; 24 h ist Heuristik.
+- id: PAR-E-15
+  key: quality_stop_form_drop
+  text: Stopp, wenn `form_quality` ≤ (erster Arbeitssatz − 1) oder < 3
+  values: {drop: 1, min: 3}
+  unit: Formwert 1–5
+  sources: [E-28, E-34]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Beendet den Skill-Block; die Einheit läuft mit Regression bzw. Kraftübungen weiter. Schwellen
+    nicht validiert.
+- {id: PAR-E-16, key: quality_stop_consecutive_failures, text: '2', value: 2, unit: Fehlversuche in Folge,
+  evidence: Heuristik, heuristic: true, rationale: '`failed = true` auf derselben Stufe; danach eine Stufe
+    leichter oder assistiert.'}
+- id: PAR-E-17
+  key: quality_stop_performance_drop_pct
+  text: '20'
+  value: 0.2
+  unit: fraction below the best set of the session
+  sources: [E-89, E-90]
+  evidence: Heuristik (Analogie zu A)
+  heuristic: true
+  rationale: 'Satzabbruch bei 20 % Geschwindigkeitsverlust = gleicher Kniebeugen-Kraftzuwachs wie 40 %
+    (22 junge Männer, 8 Wochen; 40 % brachte mehr Hypertrophie) [E-90]; Verlustschwelle ohne Einfluss
+    auf Kraft [E-89]. Geschwindigkeitsverlust innerhalb eines Satzes ist eine andere Grösse als der Abfall
+    von Haltezeit bzw. Wdh. zwischen Sätzen: Die Zahl 20 ist für Skills Heuristik.'
+- id: PAR-E-18
+  key: skill_sets_to_failure
+  text: false (`target_rir` ≥ 1)
+  unit: Regel
+  sources: [E-28, E-83, E-89, E-101]
+  evidence: A/B/C
+  rationale: 'Versagen verlangsamt die Erholung (Unterschiede bis 24–48 h; 10 Krafttrainierte) [E-83];
+    höhere Geschwindigkeitsverluste (näher am Versagen) brachten keinen zusätzlichen Kraftzuwachs [E-89];
+    Üben unter Ermüdung schadet dem Lernen (Labor-Kraftdosierungsaufgabe) [E-28]; Coaching: 2 Wdh. vor
+    dem Versagen aufhören [E-101]. Tests (`kind = test`) ausgenommen.'
+- id: PAR-E-19
+  key: fatigue_gate_replace_max_attempts
+  text: Bei hohem Ermüdungssignal Maximalversuche durch submaximale Technik ersetzen
+  unit: Regel
+  sources: [E-28, E-70]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Signalquelle offen (`perceived_fatigue` der letzten Einheit oder künftiger Check-in, siehe
+    PAR-E-41).
+- id: PAR-E-20
+  key: early_neural_phase_weeks
+  text: 3–5
+  unit: Wochen
+  sources: [E-11]
+  evidence: B
+  rationale: 'Einzelstudie mit 7 Männern und 8 Frauen, Ellbogenbeuger, 8 Wochen [E-11]. Umstritten: frühe
+    Hypertrophie ab etwa 20 Tagen messbar [E-12], teils Ödem [E-13]. Nur für Erwartung und Texte.'
+- id: PAR-E-24
+  key: target_pattern_exposure_per_session
+  text: ≥ 1 Block mit der Zielbewegung oder ihrer nächsten Regression je Skill-Einheit
+  unit: Blöcke
+  sources: [E-20, E-25, E-45]
+  evidence: A/B
+  rationale: Zubringer allein reichen nicht; das Üben der Aufgabe selbst ist der stärkste spezifische
+    Reiz (Untrainierte bzw. Novizen [E-20, E-25, E-45]); Anwendung auf Skills ist Ableitung.
+- id: PAR-E-25
+  key: isometric_intent_cue
+  text: «Spannung so schnell wie möglich maximal aufbauen, dann halten» für Halte im Kraftblock
+  unit: Hinweistext
+  sources: [E-23]
+  evidence: A + Ableitung
+  rationale: Ballistische Intention steigert Aktivierung und Kraftanstiegsrate, nicht nachweislich die
+    Maximalkraft; Maximalkraft und Hypertrophie stiegen unabhängig von der Intensität [E-23]. Übertragung
+    auf Straight-Arm-Halte ist Ableitung; schnellen Kraftanstieg bei gestrecktem Arm mit Stream D (Sehnenlast)
+    abgleichen.
+- id: PAR-E-26
+  key: pre_max_ramp_sets
+  text: 2–3 (`kind = warmup`, submaximal, steigend; z. B. ~50 % und ~70 % der Zielschwierigkeit)
+  unit: Sätze
+  sources: [E-97, E-95, E-94]
+  evidence: A/B
+  rationale: Zwei spezifische Aufwärmsätze (~50 %, ~70 % des geschätzten 1RM) plus 20 min allgemeines
+    Aufwärmen gaben +8.4 % Beinpressen-1RM gegenüber nur spezifischem Aufwärmen (13 Trainierte, akutes
+    Crossover, B) [E-97]; Aufwärmen verbessert allgemein die Leistung [E-95]. Übertragung von Last-% auf
+    Progressionsstufen ist Heuristik.
+- id: PAR-E-27
+  key: gtg_allowed
+  text: nur Grundübungen mit gebeugtem Arm (Klimmzug, Liegestütz, Dip); nie bis zum Versagen; nie Straight-Arm
+  unit: Regel
+  sources: [E-100, E-101, E-102, E-103, E-57, E-58, E-28]
+  evidence: C/D + B
+  rationale: 'Konzept aus Coaching-Quellen [E-100 bis E-103]; Laboranalogie für kleine tägliche Dosen
+    [E-57, E-58]; keine kontrollierte GTG-Studie. Ausschluss Straight-Arm: Heuristik (Stream D, ADR 0003;
+    vgl. Ausschluss besonders belastender Sprünge [E-100]).'
+- id: PAR-E-28
+  key: skill_limiting_factor
+  text: '`strength` (Planche, Front Lever, Maltese, One-Arm Pull-up) · `balance` (Handstand) · `mixed`
+    (Muscle-up, Press to Handstand)'
+  unit: Metadatum
+  sources: [P-01, P-02, P-03, E-104, E-105]
+  evidence: B/C + Heuristik
+  heuristic: true
+  rationale: Handstand wird über das Handgelenk balanciert [E-104, E-105]; Planche/Maltese als Maximalkraftmuster
+    dosiert [P-01 bis P-03]. Steuert PAR-E-11 vs. PAR-E-12. Zuordnung je Skill durch Stream A bestätigen.
+- id: PAR-E-29
+  key: rationale_excludes_cns_fatigue
+  text: 'true'
+  unit: Regel
+  sources: [E-82, E-81, E-74, E-79, E-85]
+  evidence: B
+  rationale: Mehrtägige Ermüdung nach schwerem Training ist nach den Autoren «nicht primär» zentral (n
+    = 10) [E-82]; zentrale Erholung nach kurzer, hochintensiver Belastung in ~2 min [E-81]; bei kurzen
+    Maximalkontraktionen kann die Aktivierung optimal sein [E-74]; Ortsadjektive vor «Fatigue» vermeiden
+    [E-79]; Übertraining ist etwas anderes [E-85].
+- id: PAR-E-31
+  key: progress_eval_on_first_fresh_set
+  text: 'true: Fortschritt einer Stufe wird am ersten Arbeitssatz der Folgeeinheit gemessen, nicht an
+    späten Sätzen einer Einheit'
+  unit: Regel
+  sources: [E-34, E-28]
+  evidence: B + Heuristik (Anwendung)
+  heuristic: true
+  rationale: Verzögerte Leistung ist der bessere Lernindikator [E-34]; späte Sätze sind durch Ermüdung
+    verzerrt [E-28]. Die Messung am ersten Satz ist die Umsetzung dieses Prinzips, nicht selbst geprüft.
+- id: PAR-E-32
+  key: max_attempt_schedule
+  text: '`blocked` (alle Maximalversuche eines Skills hintereinander)'
+  unit: Regel
+  sources: [E-36, E-37, E-38, E-39, E-45]
+  evidence: A (Begründung) + Heuristik
+  heuristic: true
+  rationale: 'Kein Befund zeigt geblocktes Üben als überlegen. Begründung: CI-Vorteil in angewandten Settings
+    klein bzw. n. s. [E-36, E-37, E-38, E-39], Zielspezifität [E-45], lange Pausen für Maximalversuche
+    (§12). Im Labor begünstigt zufälliges Üben Behalten und Transfer [E-37, E-38].'
+- id: PAR-E-33
+  key: interleave_submax_technique_allowed
+  text: true (optional; Pause je Skill nach PAR-E-04/06 bleibt)
+  unit: Regel
+  sources: [E-41, E-42, E-37]
+  evidence: A/B + Heuristik
+  heuristic: true
+  rationale: Verschachtelung mit Dartwürfen half beim Bankdrücken (n = 24, nicht randomisiert) [E-41];
+    steigende CI für Novizen (Golf-Putten, Basketballpässe) [E-42]; Laboreffekt [E-37]. Anwendung auf
+    Calisthenics ist Heuristik.
+- id: PAR-E-34
+  key: variation_between_sessions
+  text: Varianten wechseln zwischen Einheiten; Zielstufe bleibt in jeder Skill-Einheit
+  unit: Regel
+  sources: [P-01, P-02, P-03, E-44, E-45]
+  evidence: A/B/C
+  rationale: Variabilität fördert Generalisierung [E-44], konstantes Üben am Ziel die Zielleistung [E-45].
+- id: PAR-E-35
+  key: balance_block_minutes
+  text: 11–15
+  unit: min
+  sources: [E-59]
+  evidence: A (Analogie)
+  rationale: Allgemeines Gleichgewichtstraining (16–40 J.); nicht handstand-spezifisch. Abgleich mit PAR-B-35
+    (5–10 min, Heuristik).
+- id: PAR-E-36
+  key: balance_set_duration_s
+  text: 21–40
+  unit: s pro Satz (inkl. Versuche)
+  sources: [E-59]
+  evidence: A (Analogie) + Heuristik
+  heuristic: true
+  rationale: E-59 nennt 21–40 s als Dauer einer einzelnen Gleichgewichtsübung; die Deutung als Satzdauer
+    mit mehreren kurzen Versuchen (Handstand-Anfänger) ist Heuristik. Nicht handstand-spezifisch.
+- id: PAR-E-37
+  key: balance_min_sessions_before_review
+  text: '16'
+  value: 16
+  unit: Einheiten
+  sources: [E-59]
+  evidence: A (Analogie) + Heuristik
+  heuristic: true
+  rationale: Wirksam waren ≥ 16–19 Einheiten [E-59]; der Planer bewertet eine Stufe nicht als «stagnierend»,
+    bevor diese Zahl erreicht ist (Anwendung Heuristik).
+- id: PAR-E-38
+  key: technique_rest_to_work_ratio_min
+  text: 1.0 (Pause ≥ Versuchsdauer)
+  unit: Verhältnis
+  sources: [E-46, E-66, E-67]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Pausen verbessern Leistung bei kontinuierlichen Aufgaben [E-46, E-66, E-67]; das Verhältnis
+    1:1 ist nicht belegt.
+- id: PAR-E-41
+  key: sleep_loss_threshold_h
+  text: ≤ 6
+  value: 6
+  unit: h in 24 h
+  sources: [E-70]
+  evidence: A (Definition)
+  rationale: ≤ 6 h ist die Einschlussdefinition der Meta-Analyse, keine dort ermittelte Schwelle [E-70].
+    Nur aktiv, falls Phase 4 einen Schlaf-Check-in einführt (heute kein Datenfeld).
+- id: PAR-E-42
+  key: sleep_loss_effect_reference_pct
+  text: Skill −20.9; Kraft −2.85; gesamt −7.56
+  unit: '%'
+  sources: [E-70]
+  evidence: A
+  rationale: Nur für Texte und Erwartung. «Skill» = Präzisionsaufgaben aus Ballsportarten (9 Studien,
+    80 % Männer, I² = 94 %); Oberkörperkraft war unbeeinflusst [E-70]. Übertragung auf Calisthenics-Skills
+    ist Analogie.
+- id: PAR-E-43
+  key: sleep_loss_action
+  text: Skill-Maximalversuche → submaximale Technik; Oberkörperkraft unverändert; keine Streak- oder Fortschrittsfolgen
+  unit: Regel
+  sources: [E-70, E-71]
+  evidence: A + Heuristik
+  heuristic: true
+  rationale: 'Wirkung belegt, Aktion Heuristik; ADR 0003: keine Bestrafung.'
+- id: PAR-E-44
+  key: rationale_excludes_sleep_enhancement
+  text: 'true'
+  unit: Regel
+  sources: [E-62, E-64, E-65]
+  evidence: A/B
+  rationale: Keine Regel und kein Text «Schlaf verstärkt den Lerneffekt»; Verteilung über Tage wird mit
+    E-48 bis E-50 begründet.
+- id: PAR-E-45
+  key: static_stretch_max_s_before_max
+  text: < 60 pro Muskelgruppe, danach dynamische Aktivität
+  unit: s
+  sources: [E-96]
+  evidence: A
+  rationale: '≥ 60 s: −4.6 %; < 60 s: −1.1 %, gemessen meist 3–5 min nach dem Dehnen ohne dynamische Folgeaktivität;
+    mit Folgeaktivität kein klarer Effekt [E-96].'
+- id: PAR-E-46
+  key: pap_conditioning_for_holds
+  text: 'false'
+  unit: Regel
+  sources: [E-91, E-92, E-98]
+  evidence: A/B
+  rationale: Maximale Isometrie als Vorbelastung ES −0.09 [E-92]; volle Aktivierung nicht potenzierbar
+    [E-91]; nach vollständigem, aufgabenspezifischem Aufwärmen brachten 3 freie Kniebeugen mit 85 % keine
+    Sprungsteigerung (akutes Crossover, n = 15) [E-98]; der Zusatznutzen nach vollständigem Aufwärmen
+    ist insgesamt unsicher [E-91].
+- id: PAR-E-47
+  key: general_warmup_min
+  text: 5–10
+  unit: min
+  sources: [E-97, E-95]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Getestet wurden 20 min Radfahren [E-97]; 5–10 min sind eine zeitbudgetbedingte Heuristik.
+- id: PAR-E-48
+  key: gtg_reps_pct_of_max
+  text: ≤ 50 (Spanne 40–50)
+  unit: '% der Maximalwiederholungen'
+  sources: [E-103]
+  evidence: D
+  rationale: Einzige gefundene Zahlenangabe («40 bis 50 %», andere Stimmen 50–80 %) [E-103]; konservative
+    Wahl innerhalb der genannten Spannen.
+- id: PAR-E-49
+  key: gtg_min_rir
+  text: '2'
+  unit: Wdh. Reserve
+  sources: [E-101]
+  evidence: C
+  rationale: «2 Wiederholungen vor dem Versagen aufhören» [E-101]; konsistent mit PAR-E-18.
+- id: PAR-F-01
+  key: rep_test_sem_reps
+  text: 2.0 (Spanne 1.1–2.0)
+  unit: Wdh.
+  sources: [F-28, F-20]
+  evidence: B
+  rationale: '2.0 aus Klimmzügen 7- bis 18-jähriger Turner (eigene Rechnung aus Tabelle 5, n = 30; Testleiter
+    erfahrene Turntrainer und Physiotherapeuten ohne testspezifische Schulung); 1.1 aus Bankdrücken Krafttrainierter
+    im Labor. Default für Körpergewichtstests: 2.0; Übertragung auf Erwachsene **Heuristik**.'
+- id: PAR-F-02
+  key: rep_test_sem_reps_low_rep
+  text: 1.0 (gemessen 0.7)
+  value: 1
+  values: {max_reps: 5}
+  unit: Wdh.
+  sources: [F-20]
+  evidence: B
+  rationale: Sätze ≤ 5 Wdh.; 0.7 bei 90 % 1RM im Bankdrücken Krafttrainierter; auf 1.0 aufgerundet wegen
+    Übertragung auf Körpergewichtsübungen (**Heuristik**).
+- id: PAR-F-08
+  key: push_up_bw_fraction
+  text: 0.64–0.75
+  unit: Anteil Körpergewicht
+  sources: [F-25, F-26]
+  evidence: B
+  rationale: 0.64 dynamische Spitzenkraft [F-26]; 0.69 oben / 0.75 unten statisch [F-25].
+- id: PAR-F-09
+  key: knee_push_up_bw_fraction
+  text: 0.49–0.62
+  unit: Anteil KG
+  sources: [F-25, F-26]
+  evidence: B
+  rationale: 0.49 [F-26]; 0.54 oben / 0.62 unten [F-25].
+- id: PAR-F-10
+  key: incline_push_up_bw_fraction
+  text: 0.55 (Hände 30.5 cm); 0.41 (61 cm)
+  unit: Anteil KG
+  sources: [F-26]
+  evidence: B
+  rationale: Andere Höhen nicht ohne Quelle interpolieren.
+- id: PAR-F-11
+  key: decline_push_up_bw_fraction
+  text: 0.70 (Füsse 30.5 cm); 0.74 (61 cm)
+  unit: Anteil KG
+  sources: [F-26]
+  evidence: B
+  rationale: –
+- id: PAR-F-16
+  key: hold_test_sd_frac
+  text: Ausdauerhalte 0.15; Gleichgewichtshalte 0.25; Rumpfbeuger-Halte (Hollow, L-Sit, V-Sit) 0.40
+  values: {endurance: 0.15, balance: 0.25, core: 0.4}
+  unit: Anteil von μ
+  sources: [F-30, F-28, F-59]
+  evidence: B
+  rationale: 'Eigene Rechnung (nachgerechnet): SEM 14 % (Plank), 25 % (Handstand frei, junge Turner),
+    40 % (modifizierter V-Sit; ICC aus Untergruppe n = 10, Näherung). Der Wert 0.40 gilt per Analogie
+    für Hollow Hold und L-Sit (**Heuristik**, bewusst vorsichtig): der McGill-Test war mit > .97 [F-60]
+    und gehaltene Rumpfbeugung laut Übersicht hoch reliabel (starke Evidenz) [F-01].'
+- id: PAR-F-20
+  key: self_report_prior_sd
+  text: max(2 Wdh., 0.30 × μ)
+  values: {frac: 0.3, min: 2}
+  unit: Wdh.
+  sources: [F-13, F-14, F-51, F-52, F-53]
+  evidence: Heuristik
+  heuristic: true
+  rationale: 'Untergrenze belegt: Erinnerte Werte eines offiziellen Tests weichen einzeln um SD ≈ 13–18
+    % ab (eigene Rechnung aus [F-51, F-52]); für geschätzte Werte ohne Test gibt es keine Studie, daher
+    0.30 geschätzt.'
+- id: PAR-F-21
+  key: self_report_recent_count_sd_factor
+  text: '0.75'
+  value: 0.75
+  unit: Faktor
+  sources: [F-51, F-52, F-55]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Für «in den letzten 4 Wochen gezählt»; ergibt 0.225 × μ. Das liegt über dem Fehler erinnerter
+    offizieller Testwerte (13–18 %) [F-51, F-52], weil selbst gezählte Heimtests gegenüber der Videozählung
+    desselben Tests überschätzt wurden (+17.3 %, Paraplegie, n = 33) [F-55].
+- id: PAR-F-22
+  key: test_obs_sd_reps
+  text: = PAR-F-01 (2.0)
+  value: 2
+  unit: Wdh.
+  sources: [F-28]
+  evidence: B (Wert) / Heuristik (Selbstbewertung)
+  heuristic: true
+  rationale: Kein zusätzlicher Faktor für Selbstbewertung. F-28 nutzte erfahrene Trainer und Physiotherapeuten
+    ohne testspezifische Schulung, keine Laien; Selbst- vs. Fremdbewertung ist nicht untersucht. Mit eigenen
+    Daten prüfen.
+- id: PAR-F-23
+  key: log_rir_obs_sd_reps
+  text: '2.0'
+  value: 2
+  values: {max_reps: 12}
+  unit: Wdh.
+  sources: [F-08, F-37, F-38]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Belegte Fehlergrössen 1.45–3.65 Wdh. (8.2); bei 3 RIR lag der Fehler in F-38 bei 3.65 Wdh.
+    (Kniebeuge, ≈ 16 Wdh. pro Satz). 2.0 gilt nur für RIR ≤ 3 und ≤ 12 Wdh. und ist eher optimistisch.
+- id: PAR-F-24
+  key: log_rir_max_usable
+  text: '3'
+  value: 3
+  unit: RIR
+  sources: [F-08, F-38]
+  evidence: Heuristik (gestützt auf B)
+  heuristic: true
+  rationale: Fehler bei 5 RIR ≈ 5 Wdh., bei 3 RIR ≈ 3.7 Wdh. [F-38]; Genauigkeit steigt nahe am Versagen
+    [F-08]. Grenze 3 geschätzt; darüber nur untere Schranke.
+- id: PAR-F-25
+  key: log_rir_bias_correction_reps
+  text: '0'
+  unit: Wdh.
+  sources: [F-08]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Belegt ist eine Unterschätzung um 0.95 Wdh.; bewusst nicht korrigiert (konservativ).
+- id: PAR-F-26
+  key: converted_estimate_sd_frac
+  text: ≥ 0.35
+  value: 0.35
+  unit: Anteil von μ
+  sources: [F-07, F-21]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Streuung zwischen Personen 2.5–4.4 Wdh. bei gleicher relativer Last [F-07]; Betrag geschätzt.
+- {id: PAR-F-28, key: capacity_process_sd_per_week, text: '0.5', value: 0.5, unit: Wdh./Woche, evidence: Heuristik,
+  heuristic: true, rationale: Lässt alte Evidenz verblassen; Stream B soll kalibrieren.}
+- id: PAR-F-30
+  key: confidence_class_cv_thresholds
+  text: hoch < 0.15; mittel 0.15–0.30; niedrig ≥ 0.30
+  values: {high: 0.15, low: 0.3}
+  unit: σ/μ
+  sources: [F-28]
+  evidence: Heuristik
+  heuristic: true
+  rationale: 0.15 knapp unter dem Test-SEM von 17 %; übrige Grenzen geschätzt.
+- id: PAR-F-31
+  key: dose_from_estimate_offset_sd
+  text: hoch 0; mittel 0.5; niedrig 1.0
+  values: {high: 0, mid: 0.5, low: 1}
+  unit: σ
+  evidence: Heuristik
+  heuristic: true
+  rationale: Konservative Dosierung bei unsicherer Schätzung.
+- {id: PAR-F-32, key: contradiction_threshold_sd, text: '2', value: 2, unit: kombinierte σ, evidence: Heuristik,
+  heuristic: true, rationale: Ab dieser Abweichung gilt Evidenz als widersprüchlich.}
+- {id: PAR-F-33, key: contradiction_resolution, text: '`take_lower_with_higher_sd`', unit: enum, evidence: Heuristik,
+  heuristic: true, rationale: Konservativ im Sinne von ADR 0003.}
+- {id: PAR-F-41, key: capacity_evidence_min_form_quality, text: '3', value: 3, unit: Skala 1–5, evidence: Heuristik,
+  heuristic: true, rationale: Schlechte Form zählt nicht als Kapazitätsnachweis.}
+- id: PAR-F-42
+  key: readiness_gate_mode
+  text: '`soft`'
+  unit: enum
+  sources: [F-40]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Kraft erklärt Gleichgewichtselemente nur zu 38–59 %; keine Calisthenics-Schwellen belegt.
+- id: PAR-F-43
+  key: placement_scope
+  text: '`per_skill`'
+  unit: enum
+  sources: [P-01]
+  evidence: C
+  rationale: Niveaus der Praxisquellen sind skillspezifisch [P-01 S. 1–3].
+- id: PAR-F-45
+  key: screening_refer_on
+  text: Symptome oder bekannte Herz-Kreislauf-, Stoffwechsel- oder Nierenerkrankung, vor intensiven Tests
+  unit: Regel
+  sources: [F-41]
+  evidence: B
+  rationale: Screening nach Aktivität, Symptomen/Erkrankung, gewünschter Intensität.
+- id: PAR-F-47
+  key: injury_history_window_months
+  text: '12'
+  unit: Monate
+  sources: [F-15]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Frühere Verletzung erhöht Risiko auch an anderen Stellen [F-15]; Zeitraum geschätzt.
+- id: PAR-F-48
+  key: training_status_scale
+  text: Stufen 0–5 (sesshaft … Weltklasse)
+  unit: Skala
+  sources: [F-45]
+  evidence: B
+  rationale: Participant Classification Framework.
+- id: PAR-F-53
+  key: mobility_used_for_placement
+  text: 'false'
+  unit: bool
+  sources: [F-28, F-63]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Spagat und Schulterflexibilität ohne Zusammenhang mit dem Niveau (r² ≤ 0.01) [F-28]; Schulter-Feldtests
+    sagten den Handstand bei Anfängern nicht voraus [F-63]. Mobilität steuert die Übungsauswahl.
+- id: PAR-F-55
+  key: self_report_recall_bias_frac
+  text: 0.05 (Klassenmitte × 0.95)
+  value: 0.05
+  unit: Anteil
+  sources: [F-51, F-52]
+  evidence: B
+  rationale: Von US-Soldaten erinnerte Liegestützzahlen des 2-min-Armeetests lagen 4.4–6.6 % zu hoch (eigene
+    Rechnung aus Mittelwerten). Anwendung auf Klimmzüge, Dips und auf Calisthenics-Übende ist **Heuristik**;
+    bei Haltezeiten nicht anwenden, dort wurde im Voraus eher unterschätzt [F-54].
+- id: PAR-F-56
+  key: self_report_filmed_sd
+  text: = PAR-F-22 (wie Test)
+  unit: Wdh.
+  sources: [F-55]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Videozählung lag in F-55 17.3 % unter der Selbstzählung desselben Heimtests; der unbeaufsichtigte
+    Heimtest lag aber 15.5 % unter dem beaufsichtigten. Population (Paraplegie, n = 33) nur bedingt übertragbar.
+- id: PAR-F-57
+  key: suspension_row_bw_fraction
+  text: 0.69–0.76 (Körper laut Autoren waagrecht); ≈ 0.58 (Gurt 238 cm, Körper 20.8° zum Boden)
+  unit: Anteil KG
+  sources: [F-66, F-67]
+  evidence: B
+  rationale: Füsse am Boden 0.69–0.73, Füsse in Schlaufen 0.73–0.76 (Tabelle 4, 12 männliche Athleten)
+    [F-66]; 0.58 laut F-66 aus F-67. Längere Gurte → mehr Last an den Armen [F-67].
+- id: PAR-F-58
+  key: suspension_push_up_bw_fraction
+  text: 0.50 (gestreckt) – 0.75 (gebeugt) bei senkrechten Gurten [F-65]; 0.70–0.75 bei laut Autoren waagrechtem
+    Körper [F-66]
+  unit: Anteil KG
+  sources: [F-65, F-66]
+  evidence: B
+  rationale: 'Last hängt stark von Phase und Körperwinkel ab. F-65: 28 männliche Studenten; F-66: 12 männliche
+    Athleten.'
+- id: PAR-F-62
+  key: readiness_hint_muscle_up
+  text: '«bereit zum Üben»: ≥ 8 Klimmzüge und ≥ 8 Dips (+ 20 s False Grip); «erster Versuch ohne Hilfe»:
+    ≥ 12 Klimmzüge (+ 5 tiefe Stangen-Dips, 3 explosive Klimmzüge); Spanne der Quellen 8–18 Klimmzüge,
+    8–25 Dips'
+  unit: Wdh.
+  sources: [F-70, F-71, F-74]
+  evidence: C/D
+  rationale: '**Weicher Hinweis, nie Sperre** (PAR-F-42); nicht validiert. Werte aus F-71 (C); F-70 (C):
+    «decent guidelines but not absolute prerequisites», «Nobody really knows!»; F-74 ist D.'
+- id: PAR-F-63
+  key: readiness_hint_front_lever_start
+  text: ≥ 10 Klimmzüge, ≥ 30 s Totehang, ≥ 60 s Hollow Hold
+  unit: Wdh. / s
+  sources: [F-72]
+  evidence: D
+  rationale: '**Weicher Hinweis, nie Sperre** (PAR-F-42); nicht validiert. Einstieg in die Tuck-Stufe;
+    F-74 (D) nennt 12–18 Klimmzüge.'
+- id: PAR-F-64
+  key: readiness_hint_planche_start
+  text: 3 × 20 Liegestütze, ≥ 60 s Hollow Hold, schmerzfreie Handgelenkvorbereitung
+  unit: Wdh. / s
+  sources: [F-73]
+  evidence: D
+  rationale: '**Weicher Hinweis, nie Sperre** (PAR-F-42); nicht validiert. Einstieg in Lean/Tuck; dieselbe
+    Seite nennt auch «15+» Liegestütze; F-74 (D) nennt 20–30 Dips und 40–60 Liegestütze. Schmerz folgt
+    den Regeln aus Stream D.'
+- id: PAR-F-68
+  key: hold_capacity_error_model
+  text: relativ (Anteil von μ, entspricht Log-Skala)
+  unit: Modell
+  sources: [F-18, F-61]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Klimmzug- und Gleichgewichtswerte rechtsschief [F-18]; Handstand-SD > Mittelwert [F-61].
+- id: PAR-F-70
+  key: training_age_role
+  text: verbreitert Startwerte, bestimmt nicht die Stufe
+  unit: Regel
+  sources: [F-45, F-69]
+  evidence: Heuristik
+  heuristic: true
+  rationale: 'OG2: Trainingsdauer spielt für die Einstufung «almost no consideration» [F-69 S. 23] (C);
+    F-45 nutzt Umfang und Leistung.'
+- {id: PAR-S-01, key: set_hold_fraction_default, text: '0.70', value: 0.7, evidence: Heuristik, heuristic: true,
+  rationale: 'Mitte der abgestimmten Spanne 0.65–0.75 (`08` §4; PAR-A-64, PAR-B-06)'}
+- {id: PAR-S-02, key: static_target_total_hold_s, text: '60', value: 60, unit: s, evidence: Heuristik,
+  heuristic: true, rationale: reproduziert die OG-«Sweet Spots» (PAR-A-64) und liegt in 30–90 s (PAR-B-09)
+    bzw. 40–90 s (PAR-B-12)}
+- {id: PAR-S-03, key: skill_static_obs_noise_frac, text: '0.25', value: 0.25, evidence: Heuristik, heuristic: true,
+  rationale: 'zwischen Ausdauer- (0.15) und Rumpfhalten (0.40), gleich Gleichgewichtshalten (PAR-F-16);
+    keine Reliabilitätsdaten für Hebel-Statics (`08` §6.1 Nr. 3)'}
+- {id: PAR-S-04, key: hold_capacity_drift_frac_per_week, text: 0.05 × μ, value: 0.05, unit: fraction of
+    μ per week, evidence: Heuristik, heuristic: true, rationale: Halte-Gegenstück zu PAR-F-28 (0.5 Wdh.
+    je Woche ≈ 5 % einer Kapazität von 10 Wdh.)}
+- {id: PAR-S-05, key: heaviest_element_min_og_ordinal, text: '14', value: 14, unit: OG level, evidence: Heuristik,
+  heuristic: true, rationale: 'PAR-E-05 nennt die Maltese und «vergleichbare schwerste Elemente»; OG 14
+    = Full Planche an Ringen, darüber Inverted Cross, Maltese (`02` §3.4)'}
+- {id: PAR-S-06, key: default_day_patterns, text: §5.4, evidence: Heuristik, heuristic: true, rationale: grösster
+    kleinster Abstand; PAR-D-08 und PAR-E-13 verlangen 48 h zwischen harten Reizen}
+- {id: PAR-S-07, key: spacing_min_rating, text: '2', value: 2, unit: profile rating 0–3, evidence: Heuristik,
+  heuristic: true, rationale: Profilwert 1 = geringe Last (PAR-C-45); sonst würde fast jede Übung jede
+    andere sperren}
+- {id: PAR-S-08, key: warmup_set_load_weight, text: 0.5; Rampensätze mit höchstens der halben Satzhaltezeit
+    bzw. Ziel-Wdh., value: 0.5, evidence: Heuristik, heuristic: true, rationale: 'Rampensätze sind submaximal
+    (PAR-B-70), laufen aber an Sprossen mit hohem Moment (vgl. `PAR-S-30`); halbe Dauer und halbes Gewicht
+    als vorsichtiger Kompromiss'}
+- id: PAR-S-09
+  key: straight_arm_budget_priority_weights
+  text: '3 : 2 : 1, mindestens 2 Sätze je Maximalblock'
+  values: {p1: 3, p2: 2, p3: 1, min_sets: 2}
+  evidence: Heuristik
+  heuristic: true
+  rationale: Priorität bestimmt die Zuteilung knapper Ressourcen (`onboarding.md` §3.2, PAR-B-81); 2 =
+    Untergrenze von PAR-B-08
+- {id: PAR-S-10, key: paired_block_gap_s, text: 'max(PAR-B-45, Pause des Skills / 2)', evidence: Heuristik,
+  heuristic: true, rationale: vereint PAR-B-81 und PAR-E-33 (§7.7)}
+- id: PAR-S-11
+  key: duration_model
+  text: 3 s je Wdh.; 30 s Wechsel je Übung
+  values: {seconds_per_rep: 3, transition_s: 30}
+  evidence: Heuristik
+  heuristic: true
+  rationale: grobe Zeitschätzung für die Kürzungsregel; im Usability-Test messen
+- {id: PAR-S-12, key: plateau_definition, text: erster Arbeitssatz in 2 Einheiten nicht über dem Wert
+    davor, evidence: Heuristik, heuristic: true, rationale: 'Umsetzung von PAR-B-49 a am ersten, frischen
+    Satz (PAR-E-31)'}
+- id: PAR-S-13
+  key: undulating_rep_ranges
+  text: schwer 3–6, mittel 6–10, leicht 10–15; Reihenfolge schwer, leicht, mittel
+  values: {heavy_lo: 3, heavy_hi: 6, medium_lo: 6, medium_hi: 10, light_lo: 10, light_hi: 15}
+  unit: reps
+  sources: [B-115]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Bereiche aus PAR-B-17 und PAR-B-19, Beispiel 15/10/5 (B-115); Reihenfolge trennt die schweren
+    Tage
+- {id: PAR-S-14, key: reference_week_mean, text: 'bis zu 3 Wochen mit Last > 0, ohne Deload, im 6-Wochen-Fenster',
+  evidence: Heuristik, heuristic: true, rationale: 'PAR-D-09–11 (3-Wochen-Mittel), PAR-B-73 (6 Wochen),
+    PAR-B-59 (kurze Pausen ohne Rampe)'}
+- {id: PAR-S-15, key: load_accounts_and_rates, text: '§4.5, §7.1: alle SA-Konten und `wrist` +10 %, alle
+    BA-Konten +20 %', evidence: Heuristik, heuristic: true, rationale: 'PAR-D-09–11; Konten trennen gestreckte
+    und gebeugte Arme, damit der strengere Deckel nur die Straight-Arm-Last bremst; für SA-Strukturen
+    ausserhalb von PAR-D-09 gilt der strengere Wert (`08` §4)'}
+- {id: PAR-S-16, key: session_queue, text: 'Warteschlange je Woche, kein Nachholen, stilles Verfallen',
+  evidence: Heuristik, heuristic: true, rationale: ADR 0003; Nachholen würde PAR-D-31 verletzen}
+- id: PAR-S-17
+  key: plateau_guards
+  text: ≥ 4 Wochen an der Sprosse; ≥ 3 Wochen zwischen Stagnations-Deloads
+  values: {min_weeks: 4, deload_gap_weeks: 3}
+  evidence: Heuristik
+  heuristic: true
+  rationale: neuronale Frühphase 3–5 Wochen (PAR-E-20); verhindert Deload-Ketten durch Messrauschen (PAR-F-01)
+- id: PAR-S-18
+  key: rounding
+  text: Wdh., Sätze und Sekunden abrunden; Pausen auf 15 s; Laststeigerung auf die kleinste Scheibe aufrunden,
+    mindestens eine Scheibe (PAR-B-32); Übung mit < 1 Satz entfällt, ausser im Deload (mindestens 1, WEEK-07)
+  values: {rest_round: 15}
+  unit: s
+  evidence: Heuristik
+  heuristic: true
+  rationale: Abrunden ist die sichere Richtung (S-2, `08` §2.2); die Laststeigerung rundet PAR-B-32 selbst
+    auf, sonst stiege die Last nie
+- {id: PAR-S-19, key: realism_prior_scaling_enabled, text: 'false', evidence: Heuristik, heuristic: true,
+  rationale: 'dass relative Hebelanforderung (PAR-C-32, PAR-C-54) die Lernzeit proportional verlängert,
+    ist nicht belegt'}
+- {id: PAR-S-20, key: experience_class_mapping, text: §4.2, evidence: Heuristik, heuristic: true, rationale: Grenze
+    6 Monate aus PAR-B-01; `highly_trained` aus PAR-F-48}
+- {id: PAR-S-21, key: contradiction_confirmation, text: 'zweite Abweichung in dieselbe Richtung → Mittel
+    beider Beobachtungen, σ = r', evidence: Heuristik, heuristic: true, rationale: 'verhindert, dass PAR-F-33
+    eine echte Veränderung dauerhaft blockiert'}
+- {id: PAR-S-22, key: exclusion_rating_thresholds, text: '`locked`: ≥ 1; `rtt_0`: ≥ 2', evidence: Heuristik,
+  heuristic: true, rationale: 'Red Flag: jede Last meiden (PAR-D-21); Rampenstufe 0 ohne Red Flag: gezielte
+    Last meiden, geringe Nebenlast erlauben (`05` §6.2 «nicht geplant»)'}
+- id: PAR-S-23
+  key: straight_arm_budget_by_og_band
+  text: 8 / 12 / 18
+  values: {beginner: 8, intermediate: 12, advanced: 18}
+  unit: straight-arm sets per session
+  evidence: Heuristik
+  heuristic: true
+  rationale: Spanne 8–12 und 18 aus PAR-B-47 auf die OG-Bänder (PAR-A-23) gelegt
+- id: PAR-S-24
+  key: probe_attempts
+  text: 2 Versuche à ≤ 5 s
+  values: {attempts: 2, hold_s: 5}
+  sources: [A-35]
+  evidence: Heuristik
+  heuristic: true
+  rationale: GMB testet die nächste Stufe mit 3–5-s-Halten (A-35, C); 2 statt bis zu 8 Sätze wegen des
+    Budgets (PAR-B-47)
+- {id: PAR-S-25, key: risk_window_cap_factor, text: '0.75', value: 0.75, evidence: Heuristik, heuristic: true,
+  rationale: PAR-D-04 verlangt vorsichtigere Steigerung ohne Betrag; zwischen 1 und PAR-D-02 (0.5); ENT-S-5}
+- id: PAR-S-26
+  key: technique_dose
+  text: h = min(0.5 · d, 10 s), 3–5 Versuche
+  values: {fraction: 0.5, max_s: 10, tries_lo: 3, tries_hi: 5}
+  evidence: Heuristik
+  heuristic: true
+  rationale: submaximale Technik (PAR-E-14) mit grosser Reserve; Obergrenze hält sie `leicht`
+- {id: PAR-S-27, key: new_rung_protection, text: 'Volumen an der alten Sprosse, keine übernächste Prüfsprosse,
+    für PAR-D-06 Wochen', evidence: Heuristik, heuristic: true, rationale: Umsetzung von S-2 (`08` §2.2)
+    ohne zusätzliche Zahl}
+- {id: PAR-S-28, key: checkin_fatigue_threshold, text: ≥ 8, value: 8, unit: fatigue 1–10, evidence: Heuristik,
+  heuristic: true, rationale: gleiche Schwelle wie PAR-B-49 b}
+- {id: PAR-S-29, key: rest_lower_bound_choice, text: 'Kraft: Anfänger 120 s, Trainierte schwer 180 s',
+  evidence: Heuristik, heuristic: true, rationale: 'untere Grenzen von PAR-B-42 wegen des Zeitbudgets
+    (PAR-B-68), wie `08` §4 bei Leans'}
+- id: PAR-S-30
+  key: volume_block_counts_as_hard
+  text: 'true'
+  sources: [C-65]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Volumen an der Sprosse unter der Arbeitssprosse hat noch ≈ 80 % des Moments (PAR-C-03–07);
+    Sehnenlast hängt an der Lasthöhe (C-65, S-2)
+- id: PAR-S-31
+  key: lower_bound_observation
+  text: wirkt nur, wenn b > μ, dann wie x = b; Halte zählen voll nur mit SIR ≤ 0.5 × Halt
+  values: {abs_s: 3, frac: 0.5}
+  sources: [F-08]
+  evidence: Heuristik
+  heuristic: true
+  rationale: Sätze mit RIR > 3 sind nur Untergrenzen (PAR-F-24); die Halte-Grenze ist das Gegenstück (grosse
+    Reserve = ungenaue Schätzung, F-08)
+- {id: PAR-S-32, key: rtt5_to_normal_weeks, text: '2 Wochen ohne Regelverletzung; X-Zellen erst ab `normal`,
+    dann als neue Belastungsart', value: 2, unit: weeks, evidence: Heuristik, heuristic: true, rationale: Stufe
+    5 hat keine Weiter-Bedingung in `05` §6.2; 2 Wochen = zwei Durchgänge von PAR-D-26}
+- {id: PAR-S-33, key: novice_next_rung_min_dose_reps, text: '6', value: 6, unit: reps, evidence: Heuristik,
+  heuristic: true, rationale: 5 Wdh. (PAR-A-04) + 1 RIR (PAR-B-24)}
+- {id: PAR-S-34, key: missing_pain_report_policy, text: 'keine Rampen-Progression, sonst keine Folge',
+  evidence: Heuristik, heuristic: true, rationale: konservativ ohne Strafe (ADR 0003); PAR-D-26 verlangt
+    beschwerdefreie Einheiten}
+- {id: PAR-S-35, key: set_headroom_carry, text: Rest-Spielraum je Konto in die Folgewoche übertragen;
+    höchstens +1 Satz je Übung und Woche, evidence: Heuristik, heuristic: true, rationale: 'verhindert,
+    dass ganze Sätze bei kleinen Volumen nie wachsen; +1 Satz aus PAR-B-55'}
+- id: PAR-S-36
+  key: point_values
+  text: Punktwerte der Tabelle in §5.7, SESS-01, SESS-04
+  values: {rest_prehab: 90, accessory_sets: 3, prehab_sets: 2, prehab_reps: 15, technique_tries: 3, balance_min: 12,
+    balance_short_min: 6, balance_floor_min: 5, balance_set_s: 30, balance_short_under_min: 45}
+  evidence: Heuristik
+  heuristic: true
+  rationale: Spannen der Quellen brauchen für einen deterministischen Plan einen Wert; Wahl nach `08`
+    §4 (Sicherheit vorsichtig, sonst Mitte)
+- id: PAR-S-37
+  key: misc_small_values
+  text: 3 min allgemeines Aufwärmen bei 5 min Gesamtdauer; Kantengewicht ≥ 0.5 für Unterstützungsübungen;
+    +1 s je Exzentrik-Wdh. und Einheit; 1.25 kg kleinste Scheibe ohne Angabe
+  values: {general_warmup_short: 3, edge_weight: 0.5, eccentric_step_s: 1, smallest_plate_kg: 1.25}
+  evidence: Heuristik
+  heuristic: true
+  rationale: '3 min: Rest für Rampensätze; 0.5 = Mitte der `recommended`-Gewichte (PAR-A-62); +1 s führt
+    in ≈ 4–7 Einheiten von 3 auf 7–10 s (PAR-B-16); 1.25 kg = übliche kleinste Hantelscheibe'
+- id: PAR-S-38
+  key: estimate_floors
+  text: offene Halteklassen μ = halbe Obergrenze; σ ≥ 3 s bzw. 2 Wdh.; r ≥ 1 s bzw. 1 Wdh.
+  values: {hold_sd: 3, rep_sd: 2, obs_sd: 1}
+  evidence: Heuristik
+  heuristic: true
+  rationale: verhindert σ = 0 und undefinierte Konfidenz bei Nullwerten; 2 Wdh. aus PAR-F-20
+- {id: PAR-S-39, key: derived_rung_prior, text: 'leichtere Sprosse oder Band: μ = μ der schwereren bzw.
+    unassistierten, σ = max(3 s, 0.35 μ); schwerere Sprosse: kein Wert bis zu Prüfversuchen', evidence: Heuristik,
+  heuristic: true, rationale: 'nur die sichere Richtung (leichter ≥ schwerer), keine Umrechnung über Intensitätsmodelle
+    (`08` §4); σ aus PAR-F-26'}
+- {id: PAR-S-40, key: post_pain_deload_cap, text: bis zur ersten grünen Woche Deckel 1.0 × Referenz vor
+    der Verletzung der Schmerzregel, evidence: Heuristik, heuristic: true, rationale: '«reduzieren und
+    halten» (PAR-D-18, `05` §5.4); verhindert den Sprung auf R × 1.1 direkt nach dem Schmerz-Deload'}
+- id: PAR-S-41
+  key: onboarding_break_mapping
+  text: Tabelle in §6.11
+  values: {normal_below_days: 8, mid_from_days: 15, month_from_days: 21, quarter_from_days: 49, half_from_days: 119}
+  evidence: Heuristik
+  heuristic: true
+  rationale: Klassen aus `onboarding.md` §3.5 auf die Bänder von PAR-B-59–62 und PAR-D-29 gelegt
+- id: PAR-S-42
+  key: pain_entry_and_trend
+  text: 'neue Beschwerde: ein Wert > 2 oder Werte > 0 an 2 Tagen in 7 Tagen; Trend steigend: Wochenmittel
+    «danach» ≥ 1 Punkt über der Vorwoche'
+  values: {entry_nrs: 2, entry_count: 2, entry_days: 7, trend_points: 1}
+  evidence: Heuristik
+  heuristic: true
+  rationale: Grenze 2 aus PAR-D-14; Zählweise und 1-Punkt-Schwelle sind Heuristik, damit PAR-D-17 berechenbar
+    wird
+- id: PAR-S-43
+  key: entry_ramp_current_trainers
+  text: 0.5 → 0.75 → 1.0 wöchentlich; Einheitsdeckel in diesen Wochen 1.5 × Vorwochenmaximum
+  values: {step1: 0.5, step2: 0.75, step3: 1, spike: 1.5}
+  evidence: Heuristik
+  heuristic: true
+  rationale: ENT-S-1 (b); Schritte aus PAR-D-25; 1.5 = grösster Schritt (0.5 → 0.75), damit der Einheitsdeckel
+    die Rampe nicht blockiert
+- {id: PAR-S-44, key: plausibility_widening_factor, text: σ × 1.25, value: 1.25, evidence: Heuristik,
+  heuristic: true, rationale: '`onboarding.md` §5.2 (Verbreiterung bei widersprüchlichen Angaben, R-2,
+    und nach Pausen ab 7 Wochen); Faktor ist dort als Heuristik festgelegt'}
+- {id: PAR-S-45, key: unknown_answer_sigma_frac, text: σ ≥ 0.5 × μ, value: 0.5, evidence: Heuristik, heuristic: true,
+  rationale: '`onboarding.md` §5.2, Zeile «weiss nicht»: Populations-Prior mit breiter Unsicherheit'}

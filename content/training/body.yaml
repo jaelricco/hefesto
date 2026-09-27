@@ -1,0 +1,513 @@
+# Body model of the planner: structures and load accounts (spec §4.5), body-map
+# regions (onboarding.md §3.7), the ordinal load profile per exercise family
+# (research 04 §3.8 table 2), the complaint matrix (research 05 §8), red flags
+# (research 05 §9), prehab (research 05 §10, PAR-D-38) and the language rules
+# (spec §9.3). Ratings, matrix cells and red-flag urgencies are transcribed;
+# questions are rephrased in the second person without naming a condition.
+structures:
+- {id: wrist}
+- {id: elbow_medial, straight_arm_cap: true}
+- {id: elbow_lateral}
+- {id: biceps_distal, straight_arm_cap: true}
+- {id: biceps_long_head_anterior_shoulder, straight_arm_cap: true}
+- {id: shoulder_overhead}
+- {id: shoulder_extension}
+- {id: lumbar}
+- {id: knee}
+- {id: fingers_forearm}
+regions:
+- id: shoulder_front
+  name: vorne an der Schulter
+  structures: [biceps_long_head_anterior_shoulder, shoulder_extension]
+- id: shoulder_top_side
+  name: oben oder seitlich an der Schulter
+  structures: [shoulder_overhead]
+- id: wrist_back_extension
+  name: am Handrücken oder beim Strecken des Handgelenks
+  structures: [wrist]
+- id: wrist_pinky_side
+  name: am Handgelenk auf der Kleinfingerseite
+  structures: [wrist]
+- id: elbow_inner
+  name: innen am Ellbogen
+  structures: [elbow_medial]
+- id: elbow_outer
+  name: aussen am Ellbogen
+  structures: [elbow_lateral]
+- id: elbow_crease
+  name: in der Ellenbeuge
+  structures: [biceps_distal]
+- id: lower_back
+  name: am unteren Rücken
+  structures: [lumbar]
+- id: fingers_forearm_inner
+  name: an Fingern oder Unterarm-Innenseite
+  structures: [fingers_forearm]
+- id: chest
+  name: an der Brust
+  structures: [biceps_long_head_anterior_shoulder]
+  draft: true
+- id: knee
+  name: am Knie
+  structures: [knee]
+- id: other
+  name: an einer anderen Stelle
+  structures: []
+load_families:
+- id: push_up
+  label: push_up
+  ratings: {wrist: 2, elbow_medial: 1, elbow_lateral: 1, biceps_distal: 0, biceps_long_head_anterior_shoulder: 1,
+    shoulder_overhead: 0, shoulder_extension: 1, lumbar: 1, knee: 0, fingers_forearm: 1}
+  ref_bw: 0.64
+  sources: [C-42, C-43, C-41, C-38, C-26, C-28]
+  rationale: Handlast 64–75 % KG in Extension [C-26, C-28]; Valgus- und Axiallast gemessen [C-41]; Bizeps
+    kein Hauptbeweger; unten moderate Extension/Horizontalabduktion
+- id: support_hold
+  label: support_hold (Barren, Ringe, Parallettes)
+  ratings: {wrist: 1, elbow_medial: 1, elbow_lateral: 0, biceps_distal: 0, biceps_long_head_anterior_shoulder: 1,
+    shoulder_overhead: 0, shoulder_extension: 1, lumbar: 0, knee: 0, fingers_forearm: 1}
+  ref_bw: 1.0
+  sources: [C-25, C-04]
+  rationale: 100 % KG axial bei gestrecktem, gesichertem Arm, Ellbogenmoment ≈ 0 («straight_arm_axial»,
+    PAR-C-49); Neutralgriff (PAR-C-27); Schulterblatt-Depression mit leichter Extension; an Ringen +1
+    nach PAR-C-47 (Analogie [C-25, C-04])
+- id: pseudo_planche_push_up
+  label: pseudo_planche_push_up
+  ratings: {wrist: 3, elbow_medial: 2, elbow_lateral: 1, biceps_distal: 2, biceps_long_head_anterior_shoulder: 2,
+    shoulder_overhead: 0, shoulder_extension: 2, lumbar: 1, knee: 0, fingers_forearm: 1}
+  sources: [C-04]
+  rationale: Handlast ≈ 80–90 % KG (Lean-Modell §5.4) bei starker Extension; oben Straight-Arm mit Beugerbedarf
+    (Analogie [C-04]); unten Ellbogen hinter dem Rumpf
+- id: planche_low
+  label: planche_low (lean, tuck, adv_tuck)
+  ratings: {wrist: 3, elbow_medial: 2, elbow_lateral: 1, biceps_distal: 2, biceps_long_head_anterior_shoulder: 2,
+    shoulder_overhead: 0, shoulder_extension: 0, lumbar: 1, knee: 0, fingers_forearm: 1}
+  ref_torque: 0.75
+  sources: [C-42, C-43, C-04]
+  rationale: '71–100 % KG auf Händen in starker Extension (Richtung: Extension verlagert Last radial [C-42,
+    C-43]); BIC/DEL dominant in der Full Support Scale an Ringen [C-04], für Lean/Tuck nicht gemessen,
+    Stufe über das Moment herunterskaliert (PAR-C-44); Ellbogenmoment 49–61 N·m (Modell §3.2)'
+- id: planche_high
+  label: planche_high (straddle, half_lay, full, press)
+  ratings: {wrist: 3, elbow_medial: 3, elbow_lateral: 2, biceps_distal: 3, biceps_long_head_anterior_shoulder: 3,
+    shoulder_overhead: 1, shoulder_extension: 0, lumbar: 2, knee: 0, fingers_forearm: 1}
+  ref_torque: 1.0
+  sources: [C-04, C-42, C-43]
+  rationale: Handgelenk wie planche_low (Richtung [C-42, C-43]); BIC/DEL gemessen in der Support Scale
+    an Ringen (Analogie Ringe → Boden) [C-04]; Ellbogenmoment bis ≈ 81 N·m (Modell); Press führt in Überkopfposition;
+    gestreckter Körper verlangt Hüft-/LWS-Streckerkontrolle
+- id: planche_push_up
+  label: planche_push_up (Tuck … Full, gebeugter Arm)
+  ratings: {wrist: 3, elbow_medial: 3, elbow_lateral: 2, biceps_distal: 2, biceps_long_head_anterior_shoulder: 3,
+    shoulder_overhead: 0, shoulder_extension: 1, lumbar: 2, knee: 0, fingers_forearm: 1}
+  rationale: Schultermoment wie die Planche-Stufe (§5), dazu Ellbogenbeugung unter Last; unten Ellbogen
+    hinter dem Rumpf (Analogie Pseudo-Planche); keine Messungen gefunden
+- id: dip_bench
+  label: dip_bench
+  ratings: {wrist: 1, elbow_medial: 1, elbow_lateral: 1, biceps_distal: 0, biceps_long_head_anterior_shoulder: 3,
+    shoulder_overhead: 0, shoulder_extension: 3, lumbar: 0, knee: 0, fingers_forearm: 0}
+  sources: [C-25]
+  rationale: 88° Extension = 101 % Max-ROM, IGHL-Mechanismus (Interpretation der Autoren, keine Lastmessung)
+    [C-25]; Füsse tragen Teil der Last
+- id: dip_bar
+  label: dip_bar
+  ratings: {wrist: 1, elbow_medial: 1, elbow_lateral: 1, biceps_distal: 1, biceps_long_head_anterior_shoulder: 2,
+    shoulder_overhead: 0, shoulder_extension: 2, lumbar: 0, knee: 0, fingers_forearm: 1}
+  ref_bw: 1.0
+  sources: [C-25]
+  rationale: Extension < Bench Dip [C-25]; Neutralgriff, 100 % KG axial
+- id: dip_ring
+  label: dip_ring
+  ratings: {wrist: 1, elbow_medial: 1, elbow_lateral: 1, biceps_distal: 2, biceps_long_head_anterior_shoulder: 2,
+    shoulder_overhead: 0, shoulder_extension: 1, lumbar: 0, knee: 0, fingers_forearm: 1}
+  ref_bw: 1.0
+  sources: [C-25]
+  rationale: 'geringste Extension (62° = 69 % Max-ROM, Barren 88 %), aber PM/LD/BB höher [C-25]; shoulder_extension
+    im Audit von 2 auf 1 gesenkt (Skala: deutlich unter dem Maximum der Familie)'
+- id: pull_up
+  label: pull_up / chin_up
+  ratings: {wrist: 1, elbow_medial: 2, elbow_lateral: 1, biceps_distal: 2, biceps_long_head_anterior_shoulder: 1,
+    shoulder_overhead: 2, shoulder_extension: 1, lumbar: 1, knee: 0, fingers_forearm: 2}
+  ref_bw: 1.0
+  sources: [C-18, C-22]
+  rationale: BB 78–96 % MVIC [C-18]; Überkopf-Kinematik [C-22]; Griff hält 100 % KG über Fingerbeuger
+    mit Ursprung medial (Heuristik)
+- id: one_arm_pull_up
+  label: one_arm_pull_up / archer_pull_up
+  ratings: {wrist: 1, elbow_medial: 3, elbow_lateral: 1, biceps_distal: 3, biceps_long_head_anterior_shoulder: 2,
+    shoulder_overhead: 2, shoulder_extension: 1, lumbar: 1, knee: 0, fingers_forearm: 3}
+  sources: [C-22]
+  rationale: 'ganzes KG an einem Arm: Ellbogenbeuger und Fingerbeuger tragen doppelte Last gegenüber dem
+    Klimmzug (Statik); Überkopf-Kinematik wie Klimmzug [C-22]; Rumpf gegen Rotation'
+- id: kipping_pull_up
+  label: kipping_pull_up / bar_swing
+  ratings: {wrist: 1, elbow_medial: 1, elbow_lateral: 0, biceps_distal: 1, biceps_long_head_anterior_shoulder: 1,
+    shoulder_overhead: 3, shoulder_extension: 2, lumbar: 2, knee: 0, fingers_forearm: 2}
+  sources: [C-76, C-83]
+  rationale: 'Kipp: Bizeps −26,7 Prozentpunkte MVIC, Rumpf/Hüftbeuger höher, Hüftwinkel +48,8° [C-76];
+    endgradige Überkopfposition unter dynamischer Zuglast und dynamischer Griff (Heuristik; Stützkräfte
+    dynamischer Elemente > 1 KG, Analogie [C-83])'
+- id: inverted_row
+  label: inverted_row
+  ratings: {wrist: 1, elbow_medial: 1, elbow_lateral: 1, biceps_distal: 2, biceps_long_head_anterior_shoulder: 1,
+    shoulder_overhead: 0, shoulder_extension: 1, lumbar: 1, knee: 0, fingers_forearm: 1}
+  sources: [C-23, C-24]
+  rationale: BB > 61 % MVIC [C-23]; geringe LWS-Last [C-24]; Füsse tragen Teil der Last
+- id: front_lever
+  label: front_lever (tuck … full)
+  ratings: {wrist: 1, elbow_medial: 2, elbow_lateral: 1, biceps_distal: 2, biceps_long_head_anterior_shoulder: 1,
+    shoulder_overhead: 0, shoulder_extension: 3, lumbar: 2, knee: 0, fingers_forearm: 2}
+  ref_torque: 1.0
+  sources: [C-39]
+  rationale: maximales Schulter-Extensionsmoment = Planche-Moment (Modell §5); Straight-Arm-Ellbogenmoment
+    ≈ 0,55 × Schultermoment (PAR-C-15); Bauch/Hüftbeuger gegen Durchhängen (Analogie [C-39])
+- id: back_lever
+  label: back_lever / german_hang / skin_the_cat
+  ratings: {wrist: 1, elbow_medial: 2, elbow_lateral: 1, biceps_distal: 3, biceps_long_head_anterior_shoulder: 3,
+    shoulder_overhead: 0, shoulder_extension: 3, lumbar: 1, knee: 0, fingers_forearm: 2}
+  sources: [C-25, C-51, C-52]
+  rationale: endgradige Schulterextension unter Last; Bizeps verlängert über Schulter und Ellbogen; IGHL-Mechanismus
+    [C-25] und LHB-Funktion [C-51, C-52] als Analogie
+- id: handstand
+  label: handstand
+  ratings: {wrist: 3, elbow_medial: 1, elbow_lateral: 1, biceps_distal: 0, biceps_long_head_anterior_shoulder: 1,
+    shoulder_overhead: 3, shoulder_extension: 0, lumbar: 1, knee: 0, fingers_forearm: 2}
+  ref_bw: 1.0
+  sources: [C-44, C-45, C-50, C-69, C-16, C-81, C-70, C-82]
+  rationale: 100 % KG in ≈ 90° Extension (Heuristik; dynamisch gemessen 95° [C-81]); wrist gestützt über
+    Epidemiologie (chronischer Handgelenkschmerz häufig [C-44, C-45]), nicht über Lastmessung; Balance
+    über Handgelenkmoment [C-70, C-82]; Überkopf ≈ 180° [C-69]; Schulterschmerz in Handstand-Sportarten
+    häufig (n = 10) [C-50]
+- id: press_handstand
+  label: press_handstand (Straddle-/Pike-Press)
+  ratings: {wrist: 3, elbow_medial: 1, elbow_lateral: 1, biceps_distal: 1, biceps_long_head_anterior_shoulder: 2,
+    shoulder_overhead: 3, shoulder_extension: 0, lumbar: 2, knee: 0, fingers_forearm: 2}
+  sources: [C-17, C-16]
+  rationale: Handgelenkmoment ≈ 0,4 N·m/kg über die ganze Bewegung, Schulter bis ≈ 180° Flexion, weniger
+    Geübte mit grösserem Schulterbeugemoment [C-17]; Hüftbeugung unter Last (Kompression, Heuristik);
+    Handgelenkbeuger für Balance wie Handstand (Analogie [C-16])
+- id: hspu
+  label: hspu / pike_push_up
+  ratings: {wrist: 3, elbow_medial: 1, elbow_lateral: 2, biceps_distal: 0, biceps_long_head_anterior_shoulder: 1,
+    shoulder_overhead: 3, shoulder_extension: 0, lumbar: 1, knee: 0, fingers_forearm: 1}
+  sources: [C-87]
+  rationale: wie Handstand plus Ellbogenbeugung unter Axiallast; keine Gelenkmessungen an Arm und Schulter
+    gefunden; beim Kipping-HSPU trägt der Kopf beim Kip meist > 1 KG [C-87] (Halswirbelsäule ist keine
+    Spalte dieses Profils)
+- id: l_sit
+  label: l_sit / v_sit
+  ratings: {wrist: 2, elbow_medial: 1, elbow_lateral: 1, biceps_distal: 0, biceps_long_head_anterior_shoulder: 1,
+    shoulder_overhead: 0, shoulder_extension: 1, lumbar: 2, knee: 0, fingers_forearm: 1}
+  ref_bw: 1.0
+  sources: [C-39]
+  rationale: 'Handgelenk am Boden extendiert (Parallettes: 1); Hüftbeuger/Psoas-Zug (Analogie [C-39])'
+- id: manna
+  label: manna
+  ratings: {wrist: 3, elbow_medial: 2, elbow_lateral: 1, biceps_distal: 2, biceps_long_head_anterior_shoulder: 3,
+    shoulder_overhead: 0, shoulder_extension: 3, lumbar: 2, knee: 0, fingers_forearm: 1}
+  rationale: Hände hinter dem Körper, maximale Schulter-Hyperextension unter Last
+- id: human_flag
+  label: human_flag
+  ratings: {wrist: 2, elbow_medial: 2, elbow_lateral: 1, biceps_distal: 2, biceps_long_head_anterior_shoulder: 2,
+    shoulder_overhead: 2, shoulder_extension: 1, lumbar: 2, knee: 0, fingers_forearm: 2}
+  rationale: 'asymmetrisch: oberer Arm Zug/Überkopf, unterer Arm Stütz; Seitneigemoment am Rumpf; keine
+    Messungen'
+- id: muscle_up_bar
+  label: muscle_up_bar
+  ratings: {wrist: 2, elbow_medial: 2, elbow_lateral: 1, biceps_distal: 2, biceps_long_head_anterior_shoulder: 3,
+    shoulder_overhead: 2, shoulder_extension: 3, lumbar: 1, knee: 0, fingers_forearm: 2}
+  ref_bw: 1.0
+  sources: [C-22, C-25, C-76, C-75]
+  rationale: Zugphase wie Klimmzug [C-22]; Transition in tiefe Stützposition mit Schulterextension (Analogie
+    Dip [C-25]); Kipp verlagert Arbeit auf Rumpf/Hüfte (Analogie [C-76]); an der Stange geringere Arm-EMG
+    als an Ringen [C-75]
+- id: muscle_up_ring
+  label: muscle_up_ring
+  ratings: {wrist: 3, elbow_medial: 2, elbow_lateral: 1, biceps_distal: 3, biceps_long_head_anterior_shoulder: 3,
+    shoulder_overhead: 2, shoulder_extension: 3, lumbar: 1, knee: 0, fingers_forearm: 3}
+  ref_bw: 1.0
+  sources: [C-75, C-22]
+  rationale: 'Ringe: BB über beide Phasen (Haupteffekt) und Unterarmbeuger in der Zugphase signifikant
+    höher als an der Stange [C-75]; False Grip beugt das Handgelenk unter Last (wrist: Heuristik)'
+- id: pistol_squat
+  label: pistol_squat
+  ratings: {wrist: 0, elbow_medial: 0, elbow_lateral: 0, biceps_distal: 0, biceps_long_head_anterior_shoulder: 0,
+    shoulder_overhead: 0, shoulder_extension: 0, lumbar: 1, knee: 3, fingers_forearm: 0}
+  sources: [C-55, C-54, C-56]
+  rationale: 'ganzes KG auf einem Knie in tiefer Beugung (Mechanik); Richtung: patellofemorale Kraft steigt
+    im einbeinigen Squat jenseits 60° steil [C-55]; Gegenbefund: einbeiniger Squat 60–90° mit weniger
+    PF-Kraft als Wall Squat mit 12-RM-Last [C-54]; tiefe Beugung per se kein Mehrrisiko (beidbeinig) [C-56];
+    LWS-Flexion am tiefsten Punkt'
+- id: iron_cross
+  label: iron_cross (Ringe)
+  ratings: {wrist: 2, elbow_medial: 3, elbow_lateral: 2, biceps_distal: 3, biceps_long_head_anterior_shoulder: 3,
+    shoulder_overhead: 1, shoulder_extension: 1, lumbar: 1, knee: 0, fingers_forearm: 2}
+  sources: [C-08]
+  rationale: 'BB/PM am lastempfindlichsten (Empfindlichkeit, nicht Lasthöhe) [C-08]; Arme seitlich gestreckt:
+    grosser Valgus-Hebel am Ellbogen (Heuristik); Körper senkrecht, daher geringe LWS-Last; Griff am Ring
+    (oft False Grip)'
+- id: maltese
+  label: maltese (Boden, Parallettes, Ringe)
+  ratings: {wrist: 3, elbow_medial: 3, elbow_lateral: 2, biceps_distal: 3, biceps_long_head_anterior_shoulder: 3,
+    shoulder_overhead: 0, shoulder_extension: 0, lumbar: 2, knee: 0, fingers_forearm: 1}
+  sources: [C-04, C-08, P-04]
+  rationale: 'wie planche_high, aber Hände weit seitlich etwa auf Hüfthöhe: zusätzliches Moment in der
+    Frontalebene und grösserer Valgus-Hebel (Heuristik); BB/DEL-Analogie Support Scale [C-04] (Kreuz [C-08]
+    nur als Hinweis auf Lastempfindlichkeit); Boden = Basiswert, Parallettes −1 wrist (PAR-C-27); PDF-Autor
+    trainiert am Boden (P-04 S. 1)'
+- id: hollow_body
+  label: hollow_body / arch_body
+  ratings: {wrist: 0, elbow_medial: 0, elbow_lateral: 0, biceps_distal: 0, biceps_long_head_anterior_shoulder: 0,
+    shoulder_overhead: 1, shoulder_extension: 0, lumbar: 1, knee: 0, fingers_forearm: 0}
+  sources: [C-40]
+  rationale: Bodenhalte ohne Armstütz; Arme über Kopf (Hollow) = leichte Überkopfposition; LWS-Last niedrig
+    bis mässig (Analogie Bauchübungen [C-40])
+- id: hang
+  label: hang / false_grip
+  ratings: {wrist: 1, elbow_medial: 1, elbow_lateral: 0, biceps_distal: 1, biceps_long_head_anterior_shoulder: 0,
+    shoulder_overhead: 2, shoulder_extension: 0, lumbar: 0, knee: 0, fingers_forearm: 2}
+  ref_bw: 1.0
+  sources: [C-22, C-74]
+  rationale: 'Dead Hang = Überkopf-Hang [C-22]; Fingerbeuger griffabhängig [C-74]; False Grip: wrist 2,
+    fingers_forearm 3 (Heuristik)'
+- id: prehab_light
+  label: Aktivierung ohne nennenswerte Last (Heuristik)
+  ratings: {wrist: 0, elbow_medial: 0, elbow_lateral: 0, biceps_distal: 0, biceps_long_head_anterior_shoulder: 0,
+    shoulder_overhead: 0, shoulder_extension: 0, lumbar: 0, knee: 0, fingers_forearm: 0}
+  rationale: Handgelenk-Vorbereitung und Band-Übungen mit geringer Last; Tabelle 2 enthält keine Zeile
+    dafür, sie zählen deshalb nicht in die Lastkonten (Heuristik dieser Spezifikation).
+complaint_families: [handstand_hspu, planche_leans, rings_straight_arm, push_up_dip, pull_up_row, front_lever,
+  back_lever, muscle_up, core_extension, hang_grip]
+matrix:
+- region: shoulder_front
+  cells: {handstand_hspu: M, planche_leans: M, rings_straight_arm: X, push_up_dip: M, pull_up_row: S,
+    front_lever: M, back_lever: X, muscle_up: X, core_extension: M, hang_grip: S}
+  modifications: {push_up_dip: keine tiefen Dips}
+  sources:
+    rings_straight_arm: [D-71]
+- region: shoulder_top_side
+  cells: {handstand_hspu: M, planche_leans: M, rings_straight_arm: M, push_up_dip: M, pull_up_row: M,
+    front_lever: M, back_lever: M, muscle_up: X, core_extension: '-', hang_grip: M}
+  modifications: {pull_up_row: kein breiter Griff, hang_grip: Überkopf}
+  sources:
+    handstand_hspu: [D-72, D-73]
+    pull_up_row: [D-02]
+    muscle_up: [D-02]
+    hang_grip: [D-73]
+- region: wrist_back_extension
+  cells: {handstand_hspu: M, planche_leans: M, rings_straight_arm: M, push_up_dip: M, pull_up_row: S,
+    front_lever: S, back_lever: S, muscle_up: M, core_extension: M, hang_grip: S}
+  modifications: {handstand_hspu: 'Parallettes, Fäuste', planche_leans: Parallettes, push_up_dip: 'Parallettes,
+      Fäuste', muscle_up: kein False Grip, core_extension: Brücke auf Händen, hang_grip: 'zuerst in der
+      Rampe [D-53]'}
+  sources:
+    handstand_hspu: [D-07, D-08, D-53]
+    planche_leans: [D-07, D-08]
+    push_up_dip: [D-02]
+    hang_grip: [D-53]
+- region: wrist_pinky_side
+  cells: {handstand_hspu: M, planche_leans: M, rings_straight_arm: M, push_up_dip: M, pull_up_row: M,
+    front_lever: M, back_lever: M, muscle_up: M, core_extension: M, hang_grip: M}
+  sources:
+    handstand_hspu: [D-08]
+    planche_leans: [D-08]
+    push_up_dip: [D-02]
+- region: elbow_inner
+  cells: {handstand_hspu: S, planche_leans: M, rings_straight_arm: X, push_up_dip: S, pull_up_row: M,
+    front_lever: M, back_lever: M, muscle_up: M, core_extension: '-', hang_grip: M}
+  modifications: {pull_up_row: neutraler Griff}
+  sources:
+    planche_leans: [D-64]
+    rings_straight_arm: [D-63]
+- region: elbow_outer
+  cells: {handstand_hspu: S, planche_leans: S, rings_straight_arm: M, push_up_dip: S, pull_up_row: M,
+    front_lever: M, back_lever: M, muscle_up: M, core_extension: '-', hang_grip: M}
+  sources:
+    pull_up_row: [D-65]
+    hang_grip: [D-63, D-65]
+- region: elbow_crease
+  cells: {handstand_hspu: S, planche_leans: M, rings_straight_arm: X, push_up_dip: S, pull_up_row: M,
+    front_lever: M, back_lever: M, muscle_up: X, core_extension: '-', hang_grip: S}
+  modifications: {pull_up_row: kein Chin-up}
+  sources:
+    planche_leans: [D-68, D-69]
+    rings_straight_arm: [D-68]
+    pull_up_row: [D-68]
+- region: lower_back
+  cells: {handstand_hspu: M, planche_leans: M, rings_straight_arm: M, push_up_dip: S, pull_up_row: S,
+    front_lever: M, back_lever: M, muscle_up: S, core_extension: X, hang_grip: S}
+  modifications: {handstand_hspu: kein Hohlkreuz}
+  sources:
+    core_extension: [D-03, D-82]
+- region: fingers_forearm_inner
+  cells: {handstand_hspu: S, planche_leans: S, rings_straight_arm: M, push_up_dip: S, pull_up_row: M,
+    front_lever: M, back_lever: M, muscle_up: M, core_extension: '-', hang_grip: M}
+  modifications: {push_up_dip: keine Fingerspitzen-Varianten}
+  sources:
+    hang_grip: [D-10, D-11]
+- region: chest
+  cells: {handstand_hspu: M, planche_leans: M, rings_straight_arm: X, push_up_dip: M, pull_up_row: S,
+    front_lever: M, back_lever: X, muscle_up: X, core_extension: M, hang_grip: S}
+  note: wie shoulder_front (ENT-S-9, Heuristik bis zur fachlichen Prüfung)
+- region: knee
+  cells: {handstand_hspu: '-', planche_leans: '-', rings_straight_arm: '-', push_up_dip: '-', pull_up_row: '-',
+    front_lever: '-', back_lever: '-', muscle_up: '-', core_extension: '-', hang_grip: '-'}
+  note: betrifft nur die Bein-Familie, die der Planer in v1 nicht führt (onboarding.md §3.7)
+red_flags:
+- id: RF-01
+  regions: ['*']
+  urgency: D
+  action: lock
+  question: Gab es einen plötzlichen Knall, Ruck oder stechenden Schmerz mit sofortigem Kraftverlust oder
+    sichtbarer Formveränderung, zum Beispiel ein verschobener Muskelbauch am Oberarm oder an der Brust?
+  advice: Lass das in den nächsten Tagen ärztlich abklären. Bis du eine Freigabe bestätigst, plant die
+    App für diese Region keine Belastung.
+  sources: [D-70, D-73, D-90]
+- id: RF-02
+  regions: ['*']
+  urgency: D
+  action: lock
+  question: Hast du Taubheit, Kribbeln, ausstrahlenden Schmerz oder Schwäche in Arm, Hand oder Bein?
+  advice: Lass das in den nächsten Tagen abklären. Bis du eine Freigabe bestätigst, plant die App für
+    diese Region keine Belastung.
+  sources: [D-88]
+- id: RF-03
+  regions: ['*']
+  urgency: D
+  action: lock
+  question: Hast du deutlich Kraft verloren, oder kannst du das Gelenk nicht normal bewegen oder belasten?
+  advice: Lass das in den nächsten Tagen abklären. Bis du eine Freigabe bestätigst, plant die App für
+    diese Region keine Belastung.
+  sources: [D-73, D-70]
+- id: RF-04
+  regions: ['*']
+  urgency: A
+  action: rtt0
+  question: Hast du Schmerzen in Ruhe oder nachts, unabhängig von der Position?
+  advice: Eine Abklärung bei einer Fachperson ist sinnvoll. Bis dahin plant die App für diese Region nur
+    Übungen mit geringer Last.
+  sources: [D-86, D-73]
+- id: RF-05
+  regions: ['*']
+  urgency: D
+  action: lock
+  question: Hast du eine deutliche Schwellung, einen grossen Bluterguss oder eine Formveränderung an einem
+    Gelenk?
+  advice: Lass das in den nächsten Tagen abklären. Wirkt ein Gelenk sichtbar verschoben oder ausgerenkt,
+    such sofort ärztliche Hilfe. Bis du eine Freigabe bestätigst, plant die App für diese Region keine
+    Belastung.
+  sources: [D-73, D-70, D-90]
+- id: RF-06
+  regions: ['*']
+  urgency: D
+  action: lock
+  question: Gab es vor Beginn der Schmerzen einen Sturz, einen Aufprall oder einen anderen Unfall?
+  advice: Lass das in den nächsten Tagen abklären. Bis du eine Freigabe bestätigst, plant die App für
+    diese Region keine Belastung.
+  sources: [D-73, D-86, D-87]
+- id: RF-07
+  regions: ['*']
+  urgency: N
+  action: stop
+  question: Hast du Fieber, ist ein Gelenk gerötet oder überwärmt, oder fühlst du dich allgemein krank?
+  advice: Bitte lass das sofort ärztlich abklären. Die App plant kein Training, bis du eine Freigabe bestätigst.
+  sources: [D-73, D-86]
+- id: RF-08
+  regions: [lower_back]
+  urgency: N
+  action: stop
+  question: Hast du zusammen mit den Rückenschmerzen Probleme mit Blase oder Darm, Taubheit im Gesäss-
+    oder Genitalbereich oder sexuelle Funktionsstörungen?
+  advice: Bitte such sofort ärztliche Hilfe, das ist ein Notfall. Die App plant kein Training, bis du
+    eine Freigabe bestätigst.
+  sources: [D-89, D-92, D-85, D-86]
+- id: RF-09
+  regions: [lower_back]
+  urgency: D
+  action: lock
+  question: Hattest du schon einmal eine Krebserkrankung, oder hast du ungewollt Gewicht verloren?
+  advice: Lass die Rückenschmerzen in den nächsten Tagen ärztlich abklären. Bis du eine Freigabe bestätigst,
+    plant die App für diese Region keine Belastung.
+  sources: [D-86, D-87]
+- id: RF-10
+  regions: ['*']
+  urgency: N
+  action: stop
+  question: Hattest du bei Belastung Brustschmerz, ungewohnte Atemnot, Schwindel oder eine Ohnmacht?
+  advice: Bitte lass das ärztlich abklären, bevor du weiter trainierst. Die App plant kein Training, bis
+    du eine Freigabe bestätigst.
+  sources: [D-91]
+- id: RF-11
+  regions: []
+  urgency: A
+  action: rtt0
+  question: Bestehen deine Beschwerden trotz angepasster Belastung seit mehr als 4 Wochen, oder werden
+    sie schlechter?
+  advice: Eine Abklärung bei einer Fachperson ist sinnvoll. Bis dahin plant die App für diese Region nur
+    Übungen mit geringer Last.
+  sources: [D-88, D-73]
+- id: RF-12
+  regions: [wrist_back_extension, wrist_pinky_side]
+  minor_only: true
+  urgency: A
+  action: rtt0
+  question: Hast du seit mehr als 7 Tagen Schmerzen im Handgelenk, wenn du dich darauf stützt?
+  advice: Lass das bei einer Fachperson anschauen. Bis dahin pausiert die App Übungen, bei denen du dich
+    auf die Hände stützt.
+  sources: [D-06, D-07, D-53]
+- id: RF-13
+  regions: [lower_back]
+  minor_only: true
+  urgency: A
+  action: rtt0
+  question: Hast du seit mehr als 7 Tagen Rückenschmerzen bei Übungen, in denen sich der Rücken nach hinten
+    biegt (zum Beispiel Brücke)?
+  advice: Lass das bei einer Fachperson anschauen. Bis dahin pausiert die App Übungen, bei denen sich
+    der Rücken nach hinten biegt.
+  sources: [D-82, D-84]
+prehab:
+- region: shoulder_front
+  activation: [band-external-rotation, push-up-plus]
+  loaded: [band-external-rotation]
+  label: Übungen nach dem Vorbild eines Programms, das in einer anderen Sportart (Überkopf-Wurfsport)
+    in einer randomisierten Studie weniger Schulterbeschwerden zeigte. Für Calisthenics ist die Wirkung
+    nicht geprüft.
+  evidence: rct_other_sport
+  sources: [D-75]
+- region: shoulder_top_side
+  activation: [band-external-rotation, push-up-plus]
+  loaded: [band-external-rotation]
+  label: Übungen nach dem Vorbild eines Programms, das in einer anderen Sportart (Überkopf-Wurfsport)
+    in einer randomisierten Studie weniger Schulterbeschwerden zeigte. Für Calisthenics ist die Wirkung
+    nicht geprüft.
+  evidence: rct_other_sport
+  sources: [D-75]
+- region: chest
+  activation: [band-external-rotation, push-up-plus]
+  loaded: [band-external-rotation]
+  label: Übungen nach dem Vorbild eines Programms, das in einer anderen Sportart (Überkopf-Wurfsport)
+    in einer randomisierten Studie weniger Schulterbeschwerden zeigte. Für Calisthenics ist die Wirkung
+    nicht geprüft.
+  evidence: rct_other_sport
+  sources: [D-75]
+- region: wrist_back_extension
+  activation: [wrist-prep-routine]
+  loaded: [quadruped-wrist-rock]
+  label: Übliche Vorbereitung aus dem Coaching. Eine vorbeugende Wirkung ist nicht untersucht.
+  evidence: coaching_practice
+  sources: [D-06]
+- region: wrist_pinky_side
+  activation: [wrist-prep-routine]
+  loaded: [quadruped-wrist-rock]
+  label: Übliche Vorbereitung aus dem Coaching. Eine vorbeugende Wirkung ist nicht untersucht.
+  evidence: coaching_practice
+  sources: [D-06]
+disclaimer: Hefesto passt dein Training an und ersetzt keine ärztliche oder physiotherapeutische Beratung.
+  Die App stellt keine Diagnosen und gibt keine Behandlungsempfehlungen. Bei Warnzeichen empfiehlt sie
+  eine Abklärung durch eine Fachperson. Zeitangaben sind Erfahrungswerte, keine Prognosen.
+forbidden_phrases: [Tendinitis, Tendinose, Tendinopathie, Sehnenentzündung, Epikondylitis, Epicondylitis,
+  Golferellbogen, Tennisellbogen, Impingement, Bursitis, Arthrose, Bandscheibenvorfall, Karpaltunnel,
+  Sehnenriss, Ruptur, Luxation, Fraktur, Cauda, Diagnose, diagnostiz, heilt, heilen, lindert, schützt
+    vor, verhindert Verletzungen, ZNS-Ermüdung, CNS-Ermüdung, ZNS-Erschöpfung, Nervensystem ermüdet, Schlaf
+    verstärkt, Rückstand, aufholen, nachholen, verpasst, Countdown, nur noch, garantiert, biceps_, elbow_,
+  shoulder_, wrist_, lumbar, fingers_forearm]
