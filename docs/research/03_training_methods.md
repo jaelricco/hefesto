@@ -20,7 +20,9 @@
 > Europe-PMC-Suche nach Titel und Autoren); es gibt nur zwei
 > Kongress-Abstracts derselben Gruppe (ACSM 2026) mit denselben Kernzahlen
 > [B-117, B-118]. [B-24] bleibt deshalb Nebenbeleg. Quellen ab [B-117] stammen
-> aus diesem Durchgang; wo nur das Abstract gelesen wurde, steht «(Abstract)».
+> aus diesem Durchgang. Im Volltext geprüft: [B-119, B-120, B-132] sowie neu
+> [B-63, B-64]; nur das Abstract lag vor bei [B-117, B-118, B-121 bis B-131,
+> B-133 bis B-135].
 > Zahlen, die aus eigener Rechnung
 > stammen, sind als *eigene Rechnung* markiert. Aussagen ohne Beleg tragen das
 > Label **Praxisheuristik** mit Begründung. Keine Aussage hier ist eine
@@ -123,6 +125,7 @@
 | RPE/RIR | Meta-Analyse zur Schätzgenauigkeit (A) [B-37], Validierungsstudien (B) [B-35, B-38, B-39] | Dynamische Übungen übertragbar; für Halte keine Daten |
 | Deload | Delphi-Konsens, Umfrage, Interviews (B) [B-62, B-63, B-64]; ein RCT (A) [B-65] | Mittel; Kraft- und Physique-Sport |
 | Detraining/Retraining | Meta-Analysen und RCTs (A) [B-83, B-84, B-86, B-87] | Mittel; Skill-Verlust nur aus allgemeiner Motorik-Forschung [B-93] |
+| Band-Assistenz, Greasing the Groove, Interferenz zwischen Skills | Keine direkte Studie; indirekt Meta-Analysen zur Last [B-134, B-29], RCTs zur Verteilung des Volumens [B-120, B-121, B-122], Laborstudien zur motorischen Interferenz [B-127, B-128, B-129] | Gering; die Regeln sind Praxisheuristiken (PAR-B-79 bis PAR-B-81) |
 
 *Folgerung für den Planer:* Zahlen aus der Krafttrainingsforschung werden auf
 Übungen mit Körpergewicht übertragen, indem die **Schwierigkeitsstufe** (bzw.
@@ -953,7 +956,7 @@ Evidenzstufe C), geführt in `01_pdf_extract.md` und `00_sources.md`.
 | B-21 | The Effect of Weekly Set Volume on Strength Gain: A Meta-Analysis | Ralston GW, Kilgore L, Wyatt FB, Baker JS | 2017 | https://doi.org/10.1007/s40279-017-0762-7 | Meta-Analyse | A |
 | B-22 | A Systematic Review of The Effects of Different Resistance Training Volumes on Muscle Hypertrophy | Baz-Valle E, Balsalobre-Fernández C, Alix-Fages C, Santos-Concejero J | 2022 | https://doi.org/10.2478/hukin-2022-0017 | Meta-Analyse | A |
 | B-23 | The Resistance Training Dose Response: Meta-Regressions Exploring the Effects of Weekly Volume and Frequency on Muscle Hypertrophy and Strength Gains | Pelland JC, Remmert JF, Robinson ZP, Hinson SR, Zourdos MC | 2026 | https://doi.org/10.1007/s40279-025-02344-w | Meta-Analyse | A |
-| B-24 | Is There Too Much of a Good Thing? Meta-Regressions of the Effect of Per-Session Volume on Hypertrophy and Strength (Preprint, SportRxiv) | Remmert JF et al. | 2025 | https://sportrxiv.org/index.php/server/preprint/view/537 | Meta-Analyse | A |
+| B-24 | Is There Too Much of a Good Thing? Meta-Regressions of the Effect of Per-Session Volume on Hypertrophy and Strength (Preprint, SportRxiv) | Remmert JF et al. | 2025 | https://doi.org/10.51224/srxiv.537 | Meta-Analyse | A |
 | B-25 | Exploring the Dose-Response Relationship Between Estimated Resistance Training Proximity to Failure, Strength Gain, and Muscle Hypertrophy: A Series of Meta-Regressions | Robinson ZP, Pelland JC, Remmert JF, Refalo MC, Jukic I, Steele J et al. | 2024 | https://doi.org/10.1007/s40279-024-02069-2 | Meta-Analyse | A |
 | B-26 | Influence of Resistance Training Proximity-to-Failure on Skeletal Muscle Hypertrophy: A Systematic Review with Meta-analysis | Refalo MC, Helms ER, Trexler ET, Hamilton DL, Fyfe JJ | 2023 | https://doi.org/10.1007/s40279-022-01784-y | Meta-Analyse | A |
 | B-27 | Effects of resistance training performed to repetition failure or non-failure on muscular strength and hypertrophy: A systematic review and meta-analysis | Grgic J, Schoenfeld BJ, Orazem J, Sabol F | 2022 | https://doi.org/10.1016/j.jshs.2021.01.007 | Meta-Analyse | A |
@@ -1046,3 +1049,22 @@ Evidenzstufe C), geführt in `01_pdf_extract.md` und `00_sources.md`.
 | B-114 | The Fundamentals of Bodyweight Strength Training (aktualisiert 2017 und 2022) | Low S | 2017 | https://stevenlow.org/the-fundamentals-of-bodyweight-strength-training/ | Coaching-Artikel | C |
 | B-115 | How to program for advanced isometric movements after a plateau | Low S | 2018 | https://stevenlow.org/how-to-program-for-advanced-isometric-movements-after-a-plateau/ | Coaching-Artikel | C |
 | B-116 | Split routines tend to be sub-optimal for beginners | Low S | 2017 | https://stevenlow.org/split-routines-tend-to-be-sub-optimal-for-beginners/ | Coaching-Artikel | C |
+| B-117 | Is There Too Much Of A Good Thing? Effects Of Per-session Volume On Strength Gain (Kongress-Abstract, ACSM 2026) | Dunsmore KA, Remmert JF, Pelland JC, Robinson ZP, Hinson SR, Zourdos MC | 2026 | https://doi.org/10.1249/01.mss.0001259680.21951.ab | Meta-Analyse | B |
+| B-118 | Is There Too Much Of A Good Thing? Effects Of Per-session Volume On Muscle Hypertrophy (Kongress-Abstract, ACSM 2026) | Joachim JM, Remmert JF, Pelland JC, Robinson ZP, Hinson SR, Zourdos MC | 2026 | https://doi.org/10.1249/01.mss.0001259712.79343.1b | Meta-Analyse | B |
+| B-119 | Pull-Up Performance Is Affected Differently by the Muscle Contraction Regimens Practiced during Training among Climbers | Vigouroux L, Devise M | 2024 | https://doi.org/10.3390/bioengineering11010085 | RCT | A |
+| B-120 | High-frequency resistance training improves maximal lower-limb strength more than low frequency | Pedersen H, Iversen VM, Vereide PF, Stien N, Saeterbakken AH, Fimland MS et al. | 2024 | https://doi.org/10.1002/ejsc.12055 | RCT | A |
+| B-121 | Resistance Training Frequencies of 3 and 6 Times Per Week Produce Similar Muscular Adaptations in Resistance-Trained Men | Saric J, Lisica D, Orlic I, Grgic J, Krieger JW, Vuk S et al. | 2019 | https://doi.org/10.1519/jsc.0000000000002909 | RCT | A |
+| B-122 | Training Volume, Not Frequency, Indicative of Maximal Strength Adaptations to Resistance Training | Colquhoun RJ, Gai CM, Aguilar D, Bove D, Dolan J, Vargas A et al. | 2018 | https://doi.org/10.1519/jsc.0000000000002414 | RCT | A |
+| B-123 | Exercise Order in Resistance Training | Simão R, de Salles BF, Figueiredo T, Dias I, Willardson JM | 2012 | https://doi.org/10.2165/11597240-000000000-00000 | Narratives Review | B |
+| B-124 | Agonist-Antagonist Paired Set Resistance Training: A Brief Review | Robbins DW, Young WB, Behm DG, Payne WR | 2010 | https://doi.org/10.1519/jsc.0b013e3181f00bfc | Narratives Review | B |
+| B-125 | Volume Load and Neuromuscular Fatigue During an Acute Bout of Agonist-Antagonist Paired-Set vs. Traditional-Set Training | Paz GA, Robbins DW, de Oliveira CG, Bottaro M, Miranda H | 2017 | https://doi.org/10.1519/jsc.0000000000001059 | RCT | B |
+| B-126 | The Effect of Different Rest Intervals Between Agonist-Antagonist Paired Sets on Training Performance and Efficiency | Behenck C, Sant'Ana H, Pinto de Castro JB, Willardson JM, Miranda H | 2022 | https://doi.org/10.1519/jsc.0000000000003648 | Kohortenstudie | B |
+| B-127 | Consolidation in human motor memory | Brashers-Krug T, Shadmehr R, Bizzi E | 1996 | https://doi.org/10.1038/382252a0 | Kohortenstudie | B |
+| B-128 | Failure to Consolidate the Consolidation Theory of Learning for Sensorimotor Adaptation Tasks | Caithness G, Osu R, Bays P, Chase H, Klassen J, Kawato M et al. | 2004 | https://doi.org/10.1523/jneurosci.2214-04.2004 | Kohortenstudie | B |
+| B-129 | High contextual interference improves retention in motor learning: systematic review and meta-analysis | Czyż SH, Wójcik AM, Solarská P, Kiper P | 2024 | https://doi.org/10.1038/s41598-024-65753-3 | Meta-Analyse | A |
+| B-130 | Changes in Intraset Repetitions in Reserve Prediction Accuracy During Six Weeks of Bench Press Training in Trained Men | Remmert JF, Robinson ZP, Pelland JC, John TA, Dinh S, Hinson SR et al. | 2023 | https://doi.org/10.1177/00315125231189098 | Kohortenstudie | B |
+| B-131 | Movement Velocity as Indicator of Relative Intensity and Level of Effort Attained During the Set in Pull-Up Exercise | Sánchez-Moreno M, Rodríguez-Rosell D, Pareja-Blanco F, Mora-Custodio R, González-Badillo JJ | 2017 | https://doi.org/10.1123/ijspp.2016-0791 | Querschnittstudie | B |
+| B-132 | Progression of volume load and muscular adaptation during resistance exercise | Peterson MD, Pistilli E, Haff GG, Hoffman EP, Gordon PM | 2011 | https://doi.org/10.1007/s00421-010-1735-9 | Kohortenstudie | B |
+| B-133 | Combination of General and Specific Warm-Ups Improves Leg-Press One Repetition Maximum Compared With Specific Warm-Up in Trained Individuals | Abad CC, Prado ML, Ugrinowitsch C, Tricoli V, Barroso R | 2011 | https://doi.org/10.1519/jsc.0b013e3181e8611b | RCT | B |
+| B-134 | Strength and Hypertrophy Adaptations Between Low- vs. High-Load Resistance Training: A Systematic Review and Meta-analysis | Schoenfeld BJ, Grgic J, Ogborn D, Krieger JW | 2017 | https://doi.org/10.1519/jsc.0000000000002200 | Meta-Analyse | A |
+| B-135 | Muscle memory in humans: evidence for myonuclear permanence and long-term transcriptional regulation after strength training | Cumming KT, Reitzner SM, Hanslien M, Skilnand K, Seynnes OR, Horwath O et al. | 2024 | https://doi.org/10.1113/jp285675 | Kohortenstudie | B |

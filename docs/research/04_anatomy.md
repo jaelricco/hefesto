@@ -48,7 +48,7 @@
   der Hüfte (P-03 S. 2) erhöhen das Full-Moment eines 70-kg-Athleten um ≈ 9 %
   bzw. ≈ 7 % (**Modell**). Die Bandkraft selbst ist unsicher: Therapiebänder
   liefern 13–44 % weniger als vom Hersteller angegeben, doppelte Dehnung
-  bringt nur das 1,33- bis 1,60-Fache der Kraft [C-79]; Loop-Bänder gleicher
+  bringt nur das 1,33- bis 1,60-Fache der Kraft [C-79]; Kraftsport-Gummibänder gleicher
   Farbe streuen um 8–19 % [C-80].
 - **Körpermasse:** Leistungen, bei denen das eigene Gewicht getragen wird,
   skalieren mit Masse^−0,33 bzw. Grösse^−1 (Evidenz B) [C-59]; Kraft mit
@@ -398,7 +398,9 @@ Barren über PAR-C-27.
 | muscle_up_bar | 2 H | 2 H | 1 H | 2 H | 3 H | 2 [C-22] | 3 H | 1 H | 0 H | 2 H | Zugphase wie Klimmzug [C-22]; Transition in tiefe Stützposition mit Schulterextension (Analogie Dip [C-25]); Kipp verlagert Arbeit auf Rumpf/Hüfte (Analogie [C-76]); an der Stange geringere Arm-EMG als an Ringen [C-75] |
 | muscle_up_ring | 3 H | 2 H | 1 H | 3 [C-75] | 3 H | 2 [C-22] | 3 H | 1 H | 0 H | 3 [C-75] | Ringe: BB in Zug- und Stützphase, Unterarmbeuger in der Zugphase signifikant höher als an der Stange [C-75]; False Grip beugt das Handgelenk unter Last (wrist: Heuristik) |
 | pistol_squat | 0 H | 0 H | 0 H | 0 H | 0 H | 0 H | 0 H | 1 H | 3 [C-54, C-55, C-56] | 0 H | ganzes KG auf einem Knie in tiefer Beugung; LWS-Flexion am tiefsten Punkt |
-| iron_cross / maltese | 3 H | 3 H | 2 H | 3 [C-06, C-08] | 3 H | 1 H | 2 H | 2 H | 0 H | 2 H | BB/PM am lastempfindlichsten [C-08]; weiter Stütz vergrössert Valgus-Hebel (Heuristik) |
+| iron_cross (Ringe) | 2 H | 3 H | 2 H | 3 [C-06, C-08] | 3 H | 1 H | 1 H | 1 H | 0 H | 2 H | BB/PM am lastempfindlichsten [C-08]; Arme seitlich gestreckt: grosser Valgus-Hebel am Ellbogen (Heuristik); Körper senkrecht, daher geringe LWS-Last; Griff am Ring (oft False Grip) |
+| maltese (Boden, Parallettes, Ringe) | 3 H | 3 H | 2 H | 3 [C-04, C-08] | 3 [C-04] | 0 H | 0 H | 2 H | 0 H | 1 H | wie planche_high, aber Hände weit seitlich etwa auf Hüfthöhe: zusätzliches Moment in der Frontalebene und grösserer Valgus-Hebel (Heuristik); BB/DEL-Analogie Support Scale [C-04] und Kreuz [C-08]; Boden = Basiswert, Parallettes −1 wrist (PAR-C-27); PDF-Autor trainiert am Boden (P-04 S. 1) |
+| hollow_body / arch_body | 0 H | 0 H | 0 H | 0 H | 0 H | 1 H | 0 H | 1 H | 0 H | 0 H | Bodenhalte ohne Armstütz; Arme über Kopf (Hollow) = leichte Überkopfposition; LWS-Last niedrig bis mässig (Analogie Bauchübungen [C-40]) |
 | hang / false_grip | 1 H | 1 H | 0 H | 1 H | 0 H | 2 [C-22] | 0 H | 0 H | 0 H | 2 [C-74] | Dead Hang = Überkopf-Hang [C-22]; Fingerbeuger griffabhängig [C-74]; False Grip: wrist 2, fingers_forearm 3 (Heuristik) |
 
 ## 4. Straight-Arm vs. Bent-Arm
@@ -460,10 +462,15 @@ Kriterium siehe PAR-C-49 (**Heuristik**, gestützt auf die Tabelle oben).
   4,33 %, 43,4 cm, 44,6 %; Fuss 1,37 %; Oberarm 2,71 %, 28,2 cm; Unterarm 1,62 %,
   26,9 cm; Hand 0,61 %. Die Cervicale liegt 7,1 cm kranial der Suprasternale
   (Differenz der beiden Rumpfdefinitionen Cervicale–Hüftmitte 60,3 cm und
-  Suprasternale–Hüftmitte 53,2 cm). Massen und Schwerpunktlagen sind in den
-  BMClab-Tabellen eingesehen [C-02]; die Segment*längen* stammen aus einer
-  Sekundärtranskription von de Leva, Tab. 4 (Originaltabelle nicht
-  eingesehen). Eine Verschiebung von 3,5 cm zwischen Rumpf und Beinen ändert
+  Suprasternale–Hüftmitte 53,2 cm). Massen, Schwerpunktlagen und Längen
+  wurden in Lauf 2 gegen die Originaltabelle 4 (de Leva 1996, S. 1228)
+  geprüft und sind für beide Geschlechter identisch mit den im Modell
+  verwendeten Werten [C-01]; Referenzpersonen dort: Frauen 61,9 kg/1,735 m,
+  Männer 73,0 kg/1,741 m [C-01]. Der Unterschenkel ist als Kniegelenkzentrum
+  bis Malleolus lateralis definiert (43,4 cm); die Alternative bis zum
+  Sprunggelenkzentrum ist 0,6 cm länger [C-01], was die Anteile um weniger
+  als 0,1 Prozentpunkte verschiebt (**Modell**). Eine Verschiebung von 3,5 cm
+  zwischen Rumpf und Beinen ändert
   das Full-Moment um ±4 % und den Tuck-Anteil um ±3,5 Prozentpunkte
   (**Modell**), die Ergebnisse sind also robust gegenüber kleinen
   Längenfehlern.
@@ -575,10 +582,27 @@ Knöcheln (P-03 S. 2, als Gesamtlast gelesen) +9 % auf Full; +4 kg an der Hüfte
 (P-03 S. 2) +7 % auf Full; +10 kg Weste (P-02 S. 3) +8 % auf Full bzw. +13 %
 auf Tuck. Ob «neck band» in P-01 bis P-03 am Hals ansetzt, ist offen
 (01_pdf_extract §3); falls ja, entlastet es fast nur die Hände, kaum die
-Schulter (**Modell**). Die Bandkraft selbst hängt von Banddehnung und
--typ ab; publizierte Kraftwerte für Calisthenics-Bänder wurden nicht
-gefunden. Die App nutzt deshalb `set_element_assistance.estimated_assist_kg`
-als Eingabe (codebase_notes §2).
+Schulter (**Modell**).
+
+**Bandkraft: was gemessen ist.**
+
+| Befund | Quelle | Evidenz |
+|---|---|---|
+| Flache Therapiebänder (Thera-Band, 8 Farben, Ruhelänge 0,3 m): 1,1–5,7 kgf bei 100 % und 1,6–7,6 kgf bei 200 % Dehnung; im Bereich 25–250 % nahezu linear (r² > 0,95); doppelte Dehnung (200 vs. 100 %) = 1,33- bis 1,60-fache Kraft | [C-79] (Volltext) | B |
+| Herstellerangaben überschätzen die gemessene Kraft um 13–44 % (Mittel je Farbe), am stärksten bei den stärksten Bändern | [C-79] | B |
+| Gummibänder aus dem Kraftsport (14–67 mm breit; Bauart im Abstract nicht beschrieben, Breiten wie bei Loop-Bändern): kurvilineare Kraft-Dehnungs-Kurve (Polynom 2. Grades, R ≥ 0,99); 3,5–5,2 % Unterschied der Ruhelänge ergeben 8–19 % Kraftunterschied bei Bändern gleicher Farbe | [C-80] (Abstract; Messwerte nicht frei zugänglich) | B |
+| Bänder als Assistenz wirken am stärksten, wo sie am meisten gedehnt sind; die Hilfe nimmt über die Bewegung ab | [C-85] (Volltext, Kreuzheben) | B |
+
+**Folgerungen (Heuristik).** (1) Im Klimmzug und Dip mit Band am Fuss oder
+Knie ist die Hilfe unten (maximale Dehnung) am grössten und oben am
+kleinsten; der schwerste Punkt der Bewegung wird also am wenigsten
+unterstützt (Richtung belegt [C-85, C-79], Übertragung auf Klimmzug
+Heuristik). (2) In einem Hebelhalt hängt die Bandkraft von der Haltehöhe ab;
+dieselbe Bandfarbe kann je nach Aufbau sehr unterschiedlich helfen. (3)
+Nominalwerte der Hersteller sind keine verlässliche Eingabe für
+`estimated_assist_kg`; die App nutzt den Wert daher als Nutzerschätzung mit
+±20 % Unsicherheit (PAR-C-61) und bietet eine Kalibrierung per
+Personenwaage in Arbeitsposition an (codebase_notes §2).
 
 ### 5.6 Planche gegen Front Lever
 
@@ -678,6 +702,30 @@ Elite-Turner im Mittel klein sind [C-03].
 3. Proportionen sind in der Simulation relevant [C-03], empirisch aber
    schwächer als relative Kraft [C-11]: Proportionen nur als kleiner
    Korrekturfaktor, nicht als Ausschluss.
+4. Das Geschlecht verschiebt die erwartete relative Schwierigkeit von Hebel-
+   und Zugelementen (§6.5, PAR-C-53, PAR-C-54); es ist ein Prior für
+   Zeitschätzungen, keine Zugangsregel.
+
+### 6.5 Frauen: Kraft relativ zum Körpergewicht
+
+| Befund | Wert | Quelle | Evidenz |
+|---|---|---|---|
+| Isometrische Schulterkraft relativ zum Körpergewicht (Handdynamometer; 546 Männer, 73 Frauen, College-Sportler; dominante Seite) | Aussenrotation 0,16 vs. 0,20; Innenrotation 0,21 vs. 0,27; Abduktion 0,29 vs. 0,35; Flexion in Bauchlage 0,10 vs. 0,12; Frauen damit 78–83 % der Männer | [C-77] (Volltext, Tab. 3) | B |
+| Skelettmuskelmasse (MRT, 468 Erwachsene) | Männer 38,4 %, Frauen 30,6 % der Körpermasse; Geschlechtsunterschied oben 40 %, unten 33 % | [C-78] (Abstract) | B |
+| Absolute Kraft (8 Männer, 8 Frauen) | Frauen ≈ 52 % (Oberkörper) bzw. 66 % (Unterkörper) der Männer; Männer auch relativ zur fettfreien Masse stärker; Kraft pro Muskelquerschnitt gleich | [C-84] (Abstract) | B |
+| Erster Klimmzug bei Frauen | Erfolg hing von Kraft/Masse und Körperfettanteil ab | [C-61] | B |
+| Hebelmodell (de-Leva-Frauendaten) | Full-Moment 0,240 H statt 0,246 H; Tuck 64 % statt 60 % des Full-Moments | [C-01, C-02] | B (Modell) |
+
+**Folgerung (Modell mit [C-01, C-77]).** Bedarf und Kapazität skalieren beide
+mit der Körpergrösse (Hebel ∝ H, Kraftarm ∝ Armlänge ∝ H; Armlänge/H bei
+de Leva: Frauen 0,311, Männer 0,316 [C-01]). Die relative Anforderung einer
+Hebelstufe ist für Frauen daher (0,240/0,246) / (0,80 × 0,311/0,316) ≈ 1,24,
+Spanne 1,19–1,27 für ein Kraftverhältnis von 0,83–0,78. Einschränkungen
+(**Heuristik**): Die Handdynamometer-Tests messen weder Schulterflexion noch
+-extension in Hebelposition; Trainierte können vom Mittel stark abweichen;
+Frauen haben zudem höhere Tuck-Anteile (64 %), die Stufenabstände sind also
+kleiner. Der Faktor dient nur als Startwert für Zeitschätzungen (Stream A) und
+wird aus den Logs nachkalibriert; er begründet keine Sperre einer Stufe.
 
 ## 7. Körpergewichtsanteile je Übung
 
@@ -700,6 +748,7 @@ Elite-Turner im Mittel klein sind [C-03].
 | Pseudo-Planche-Liegestütz (oben) | ≈ 80–90 % | wie Lean mit 15–30 cm Vorlage | **Modell** | Heuristik |
 | Dip, Klimmzug, Handstand, Planche, Front/Back Lever, L-Sit, Kreuz (statisch) | 100 % | kein Fusskontakt | Statik (Kräftegleichgewicht) | Mechanik (zwingend) |
 | Dynamische Wiederholungen | > 100 % in Beschleunigungsphasen | Tempo erhöht die Trägheitslast | [C-73, C-30] | B/A |
+| Dynamische Stützelemente (Analogie Pauschenpferd) | 110–150 % je Hand (Mittel der Spitzen), einzelne Spitzen 200 % | Kraftmessung am Pausch, 17 Elite-Turner | [C-83] | B |
 
 Die Intensität von Liegestützen lässt sich über Ausgangsposition,
 Handstellung, Hand-/Fusshöhe, Tempo, Unterlage und Bewegungsumfang steuern
@@ -717,6 +766,7 @@ Handstellung, Hand-/Fusshöhe, Tempo, Unterlage und Bewegungsumfang steuern
 | Scoping-Review Liegestütz | global: instabil 49,6, Standard 38,2, Suspension 36,7, Push-up plus 30,1 % MVIC | [C-32] | B |
 | Ring Dip vs. Barren-Dip | ähnliche Spitzenaktivität; PM, LD, BB höher; geringste Schulterextension | [C-25] | B |
 | Suspension-/Handtuch-Klimmzug vs. Stange | LD, BB, PD unverändert; MT beim Handtuch niedriger | [C-20] | B |
+| Muscle-up Ringe vs. Stange (n = 10, mit Kipp) | Ringe: BB (Zug und Stütz), Unterarmbeuger und oberer Trapezius (Zug), TB (Stütz) höher; Schulterblatt-Stabilisatoren (SA, LT) und LD, PM unverändert | [C-75] | B |
 | Handstand Boden vs. Barren vs. Ringe | Handgelenkbeuger 61 → 44 bzw. 46 % NRMS; übrige Muskeln an Ringen höher; Trizeps unverändert | [C-16] | B |
 | Support Scale an Ringen | Pectoralis kompensiert Instabilität durch die Seillänge (Interpretation der Autoren) | [C-04] | B |
 | Liegestütz Handgelenk extendiert vs. Faust/neutral | höherer radioskaphoidaler Spitzendruck in Extension | [C-43] | B |
@@ -726,7 +776,8 @@ Stabilisatoren (Pectoralis, Latissimus, Bizeps, Rumpf), weniger die der
 Hauptbeweger; für die Belastungssteuerung zählt ein Ring-Satz wie der
 entsprechende stabile Satz, mit +1 Stufe auf biceps_distal und
 biceps_long_head/anterior_shoulder bei Stützübungen (Begründung: [C-25, C-04,
-C-33]). (2) Parallettes/Barren senken die Handgelenkextension und die
+C-33]); der Ring-Muscle-up bestätigt die Richtung für Bizeps und Unterarm,
+nicht aber für die Schulterblatt-Stabilisatoren [C-75]. (2) Parallettes/Barren senken die Handgelenkextension und die
 Beugeraktivität im Handstand [C-16, C-43]: −1 Stufe auf wrist. (3) Ringe
 reduzieren beim Dip die Schulterextension [C-25]; die Fallgefahr bei
 Ermüdung spricht nach den Autoren für den Barren bei Anfängern [C-25].
