@@ -93,11 +93,14 @@ Heil- oder Schutzversprechen; der Disclaimer steht im API-Payload.
 ### 8. Einbindung ins Log
 
 Eine geplante Einheit wird beim Start als `draft`-Session mit
-`is_planned`-Sätzen im bestehenden Log-Modell angelegt; die IDs der
-Satz-Einträge sind die Item-IDs des Plans. Der Abschluss bleibt der
-bestehende Endpunkt und liefert zusätzlich `plan_changes[]`. Schema-
-Änderungen sind additiv: neue Tabellen, `workout_sessions.planned_session_id`
-und `set_entries.sir_s`.
+`is_planned`-Sätzen im bestehenden Log-Modell angelegt; jeder Satz-Eintrag
+verweist über `set_entries.planned_item_id` auf sein Plan-Item. Der Abschluss
+bleibt der bestehende Endpunkt und liefert zusätzlich `plan_changes[]`. Der
+Planer schreibt weder Unlocks noch XP noch `user_training_days`: Geplante
+Ruhetage werden über das bestehende Ruhetag-Loggen erfasst, Deload-Tage beim
+Abschluss der Einheit (ADR 0008 unverändert). Schema-Änderungen sind additiv:
+neue Tabellen, `workout_sessions.planned_session_id`, `set_entries.sir_s` und
+`set_entries.planned_item_id`.
 
 ### 9. Übernommene Checkpoint-Entscheidungen
 
@@ -123,4 +126,9 @@ in v1 (OE-6).
 - Neue Tabellen mit Gesundheitsdaten brauchen vor dem öffentlichen Betrieb
   eine rechtliche Prüfung (Einwilligung, Aufbewahrung, Löschung,
   Minderjährige, Screening-Wortlaut).
-- Offene Entscheidungen: spec §14 (ENT-S-1 bis ENT-S-6).
+- Sicherheitsauflagen (Trainingsstopp, gesperrte Regionen) werden als minimale
+  Auflage ohne Antworten gespeichert, damit sie auch ohne Einwilligung für
+  Gesundheitsdaten wirken; das ist Teil der rechtlichen Prüfung (ENT-S-7).
+- Ein unabhängiger Review der Spezifikation (3 kritische, 19 wichtige, 21
+  kleinere Befunde) ist eingearbeitet.
+- Offene Entscheidungen: spec §14 (ENT-S-1 bis ENT-S-9).

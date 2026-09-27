@@ -354,7 +354,7 @@ konservative Auflösung.
 | 2 | Untergrenze = Summe der Untergrenzen je OG-Schritt aus PAR-A-45 [PAR-A-51]; angezeigte Erwartung = Summe aus der **oberen Hälfte** jedes Bands, bis eigene Logs vorliegen | PAR-A-45 ist am optimistischen Ende der Coaching-Angaben (`02` §3.6, PAR-A-51); Coaching-Werte [A-40, A-41, A-42, A-67] (Evidenz D) |
 | 3 | Optional mit Prior-Faktoren skalieren: Hebel-Skills × relative Anforderung nach Grösse [PAR-C-32] und, falls angegeben, Geschlecht [PAR-C-54] | Modellwerte (Grösse B-Modell, Geschlecht Heuristik), nur Prior, nie Sperre |
 | 4 | Liegt `target_date` vor der Untergrenze: Spanne anzeigen und ein erreichbares Zwischenziel vorschlagen | Beispiel: Anfänger → Full Planche ≥ 48 Wochen Untergrenze [PAR-A-51]; Coaching: Full nach 24–36 Monaten [A-40] |
-| 5 | Formulierung ohne Wertung, ohne Druck: «Laut Coaching-Erfahrung dauert der Weg zur Full Planche meist 2–3 Jahre. Bis zu deinem Datum ist die Tuck Planche ein realistisches Etappenziel. Willst du das als Zwischenziel setzen?» | ADR 0003 §3; O-8 |
+| 5 | Formulierung ohne Wertung, ohne Druck: «Laut Coaching-Erfahrung dauert der Weg zur Full Planche meist 2–3 Jahre. Als nächstes Etappenziel schlagen wir die erste Planche-Stufe vor; die Tuck Planche folgt danach und braucht erfahrungsgemäss mehrere Monate. Willst du das als Zwischenziel setzen?» | ADR 0003 §3; O-8 |
 
 Das Ziel wird nie abgelehnt; der Plan richtet sich nach der aktuellen Stufe,
 nicht nach dem Datum. Zeitangaben sind als Coaching-Erfahrungswerte
@@ -409,7 +409,7 @@ Gesundheitsangaben brauchen eine eigene Aufbewahrungs- und Löschregel (OE-2).
 | 2 Fortgeschritten, Gym, 4×/Woche, Planche + Front Lever | beide Ziele mit Priorität, Stufen und Halteklassen, `gym` | zwei Straight-Arm-Skills gegensätzlicher Richtung als Paar [PAR-B-81]; Split ab 4 Einheiten [PAR-B-37]; gemeinsames Straight-Arm-Budget [PAR-B-47] |
 | 3 Mediale Ellbogenbeschwerden, Ziel Planche | `elbow_inner` (aktuell), NRS, Dauer, Verdacht, Red Flags | Matrix: Planche-Familie M, Ringe-Straight-Arm X [D-63, D-64]; Rampe; Schmerz-Monitoring; keine Tests an der Region (§4.3) |
 | 4 Wiedereinsteiger nach 6 Monaten | `last_regular_training = 17_to_26_weeks`, `pre_break_level` | Rampe PAR-B-62; Straight-Arm in RTT-Stufe 1 mit 25 % [PAR-D-29, PAR-D-33]; keine Straight-Arm-Tests bis nach der Rampe (§4.3); σ × 1.25 |
-| 5 Full Planche in 8 Wochen als Anfänger | Ziel + Datum, Stufe `none` | Realismus-Check (§6), Zwischenziel Tuck Planche; Plan ab Wurzeln |
+| 5 Full Planche in 8 Wochen als Anfänger | Ziel + Datum, Stufe `none` | Realismus-Check (§6), Etappenziel erste Planche-Stufe (Lean), danach Tuck Planche mit eigener Spanne (`spec.md` §3.6); Plan ab Wurzeln |
 | 6 Widersprüchliche Angaben | Plausibilitätsregeln | höchstens zwei Rückfragen, danach konservativ (§5.5) |
 
 ## 10. Entscheidungen

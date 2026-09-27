@@ -141,7 +141,9 @@ internal/http/handlers_plan.go ── ruft internal/planning; OpenAPI-first (ADR
 
 - `internal/domain/planning` importiert nur die Standardbibliothek,
   `github.com/google/uuid` und `internal/domain/progress` (für die Unlock-DSL).
-  `internal/domain/arch_test.go` gilt unverändert. Der Kern bekommt einen
+  `internal/domain/arch_test.go` bekommt `internal/planning` und
+  `internal/content` als zusätzliche verbotene Importe (der Test prüft nur
+  direkte Importe; `internal/content` benutzt `os`). Der Kern bekommt einen
   fertigen Zustands-Snapshot und gibt Pläne, Zustandsänderungen und
   Begründungen zurück; er liest und schreibt nichts selbst.
 - `internal/planning` definiert die Ports (Interfaces) für Zustand, Logs,
@@ -157,8 +159,9 @@ internal/http/handlers_plan.go ── ruft internal/planning; OpenAPI-first (ADR
 | Regel | Inhalt |
 |---|---|
 | Sortierung | Jede Auswahl endet mit einem vollständigen Tie-Break: Priorität, dann Leiterrang, dann Slug (lexikografisch). |
-| Zahlen | Rechnung in `float64`; Ausgabewerte werden am Ende einmal gerundet: Wdh. und Sätze abgerundet (`PAR-S-18`), Haltezeiten auf ganze Sekunden abgerundet, Pausen auf 15 s gerundet, Lasten auf die kleinste verfügbare Scheibe abgerundet (PAR-B-32). |
+| Zahlen | Rechnung in `float64`; jedes Produkt, das in eine Summe eingeht, wird ausdrücklich als `float64(a*b)` geschrieben, damit der Compiler auf arm64 keine FMA-Anweisung erzeugt (sonst unterscheiden sich Ergebnisse zwischen Architekturen). Ausgabewerte werden am Ende einmal gerundet nach `PAR-S-18`: Wdh., Sätze und Haltezeiten abgerundet, Pausen auf 15 s, Laststeigerungen auf die kleinste verfügbare Scheibe **auf**gerundet (PAR-B-32). |
 | Zeit | Der Kern kennt nur `now` und die Zeitzone des Users (IANA, wie `workout_sessions.timezone`); Wochen beginnen am Montag (ISO, wie ADR 0011). |
+| Hash | `input_hash` = SHA-256 über die kanonische JSON-Form (RFC 8785, JCS) von Snapshot, `now`, `week_start`, `ruleset_version` und `content_version_id`. |
 | IDs | UUIDv7 werden ausserhalb des Kerns erzeugt und als Generator-Interface injiziert; Tests nutzen einen deterministischen Generator. |
 | Versionen | Ein Plan ist an `ruleset_version` und `content_version_id` gebunden. Ändert sich eine davon, wird der laufende Plan zu Wochenbeginn neu erzeugt, nie mitten in der Woche (`WEEK-08`). |
 
@@ -224,7 +227,7 @@ Der Block ist additiv; Übungen ohne ihn plant der Planer nicht.
   evidence: heuristic
   rationale_key: par.d09.rationale      # Text in docs/research/05, Anmerkung
 - id: PAR-S-02
-  key: static_max_block_target_total_hold_s
+  key: static_target_total_hold_s
   value: 60
   unit: s
   sources: [A-63, B-09]
@@ -280,7 +283,7 @@ Laden erneut. Befunde folgen dem bestehenden `content.Issue`-Modell.
 | KB-02 | Referenzen: jede Übung, Leiter, Struktur, Region, Familie, Regel, Parameter- und Quellen-ID existiert | Fehler |
 | KB-03 | Jeder im Code benutzte Parameter existiert im Katalog; jeder Katalog-Parameter hat Quellen oder `heuristic: true` mit Begründung | Fehler |
 | KB-04 | Zyklenfreiheit: Skill-Graph inklusive impliziter Vorstufen (wie `progress.topoSort`) und jede Leiter | Fehler |
-| KB-05 | Leitern sind monoton: `torque_ratio`, `bw_fraction` bzw. `og_ordinal` fallen nicht mit steigendem Rang | Fehler |
+| KB-05 | Leitern sind monoton im `og_ordinal` (fällt nicht mit steigendem Rang). `torque_ratio` und `bw_fraction` dürfen dokumentiert abweichen, weil das OG-Level nicht linear im Moment ist (PAR-C-17; z. B. One-Leg 0.88 nach Straddle 0.91, PAR-C-05, PAR-C-07) | Fehler bzw. Warnung ohne Dokumentation |
 | KB-06 | Matrix vollständig: jede Region × Beschwerdefamilie hat einen Eintrag | Fehler |
 | KB-07 | Jede Übung mit `training:`-Block hat `load_family`, `pattern`, `straight_arm`, `complaint_family`, `requires` | Fehler |
 | KB-08 | Jede Stufe eines Ziel-Skills ist über ihren Primärtest einer Leitersprosse zugeordnet | Fehler |
@@ -384,17 +387,18 @@ mit Arbeitsstufe und Rolle.
 4. Die Leiter von `t` selbst wird erst aktiv (Rolle `goal`), wenn alle harten
    Vorfahren ihrer ersten unerfüllten Stufe erfüllt sind; ihre Arbeitssprosse
    folgt §5.6.
-5. `recommended`-Kanten mit Gewicht ≥ 0.5 zu unerfüllten Stufen erzeugen
-   **Zubringer-Übungen** im Kraft-/Zubringerblock (Rolle `support`), nie
-   Sperren (PAR-A-62, PAR-F-42).
+5. `recommended`-Kanten mit Gewicht ≥ 0.5 (`PAR-S-37`) zu unerfüllten Stufen
+   erzeugen **Zubringer-Übungen** im Kraft-/Zubringerblock (Rolle `support`),
+   nie Sperren (PAR-A-62, PAR-F-42).
 
 Beispiel Persona 1 (Muscle-up, 0–3 Klimmzüge, 0 Dips): Vorfahren
 `pull-up/strict-5` und `dip/parallel-bars` (hart, `02` §8) und deren
 Vorfahren (`hang-foundation/arch-hang`, `support-hold/parallel-bars`) sind
 unerfüllt → Zubringer-Leitern Hang, Klimmzug (ab Exzentrik), Stütz und Dip,
 alle als Grundlagenleitern parallel; die Muscle-up-Leiter wird erst aktiv,
-wenn Klimmzug und Dip Dosiswerte ≥ 5 haben (die 5-plus-5-Regel als Minimum
-für erste Versuche, `08` §5).
+wenn Klimmzug und Dip Dosiswerte ≥ 5 haben. Das folgt aus den harten Kanten
+`pull-up/strict-5` und `dip/parallel-bars` → Muscle-up (`02` §8, PAR-A-69);
+die höheren Coaching-Schwellen bleiben weiche Hinweise (`08` §5).
 
 ### 3.5 Weiche Bereitschaftshinweise (`GOAL-04`)
 
@@ -460,10 +464,10 @@ Die Felder stehen in `onboarding.md` §3 und §7. Abgeleitet werden:
 
 | Ableitung | Regel | Grundlage |
 |---|---|---|
-| `is_minor` | Alter < 18 aus `birth_year` | PAR-D-23 |
-| Erfahrungsklasse | `novice`: Trainingsalter `lt_6_months` oder Niveau `sedentary`; `advanced`: `gt_4_years` und `highly_trained`; sonst `intermediate` | `PAR-S-20`; Grenzen PAR-B-01 (6 Monate), PAR-F-48 |
+| `is_minor` | laufendes Jahr − `birth_year` ≤ 18 (nur das Jahr ist bekannt; die Regel zählt im Zweifel als minderjährig) | PAR-D-23 |
+| Erfahrungsklasse | `novice`: Trainingsalter `lt_6_months` oder Niveau `sedentary`; `advanced`: `gt_4_years` und `highly_trained`; sonst `intermediate`. Das Trainingsalter wächst ab dem Onboarding um jeden Monat mit ≥ 4 geloggten Einheiten (untere Klassengrenze als Start) | `PAR-S-20`; Grenzen PAR-B-01 (6 Monate), PAR-F-48 |
 | Periodisierungsmodell | `novice` → lineare Doppelprogression; sonst wochenweise wellenförmig | PAR-B-01, PAR-B-02 |
-| Risikofenster | Trainingsalter `6_to_12_months` oder `1_to_4_years` | PAR-D-04 |
+| Risikofenster | fortgeschriebenes Trainingsalter 6–48 Monate | PAR-D-04 |
 | Equipment-Menge | Auswahl plus implizite Geräte (`outdoor_park`, `gym`) | `onboarding.md` §3.4 |
 | Volle Einheiten je Woche | höchstens 3 (`novice`), 4 (`intermediate`), 5 (`advanced`); weitere Tage werden leichte Einheiten oder geplante Ruhe | PAR-B-36 (Obergrenzen der Spannen), `onboarding.md` §3.3 |
 
@@ -480,7 +484,22 @@ getrennte Schätzungen; sie zählen nie für die unassistierte Kapazität
 **Startwerte** aus dem Onboarding nach `onboarding.md` §5.2 (Klassenmitte
 × 0.95 für erinnerte Wdh., PAR-F-55; untere Klassengrenze für Halte; σ nach
 PAR-F-20, PAR-F-21, PAR-F-56; Umrechnungen mit σ ≥ 0.35 μ, PAR-F-26;
-Verbreiterung × 1.25 in den dort genannten Fällen).
+Verbreiterung × 1.25 in den dort genannten Fällen). Für nach unten offene
+Halteklassen («< 4 s», «< 10 s», «< 15 s») ist μ die halbe Obergrenze; für
+alle Halte gilt σ ≥ 3 s, für Wdh. σ ≥ 2 Wdh. (PAR-F-20), und jeder
+Beobachtungsfehler r ≥ 1 s bzw. 1 Wdh. (`PAR-S-38`). Eine Kapazität von 0
+(z. B. 0 Klimmzüge) ist gültig; ihre Konfidenzklasse ist «niedrig».
+
+**Abgeleitete Startwerte für nie beobachtete Sprossen** (`PAR-S-39`). Eine
+Umrechnung zwischen Hebelstufen über Haltezeit-Intensitäts-Modelle ist
+ausgeschlossen (`08` §4). Der Planer nutzt nur die sichere Richtung:
+- Eine **leichtere** Sprosse oder die **Band-Variante** derselben Sprosse
+  bekommt μ = μ der schwereren bzw. unassistierten Sprosse (Untergrenze),
+  σ = max(3 s, 0.35 μ) (PAR-F-26), Herkunft `derived`; der erste Satz ist ein
+  Kalibrierungssatz. Ist auch diese Kapazität 0, beginnt der Kalibrierungssatz
+  mit 5 s (Untergrenze von PAR-B-10) bzw. 3 Wdh.
+- Eine **schwerere** Sprosse hat keinen Startwert; sie wird erst über
+  Prüfversuche (ADAPT-05) beobachtet und ist bis dahin nie Arbeitssprosse.
 
 **Fortschreibung** als eindimensionaler Kalman-Filter (`07` §8.1–8.3;
 **Heuristik**, kein für Trainingsdaten validiertes Verfahren):
@@ -492,11 +511,17 @@ Verbreiterung × 1.25 in den dort genannten Fällen).
 
 | Beobachtung | x | r | Grundlage |
 |---|---|---|---|
-| Test (`kind = test`) oder Satz mit `failed = true` | geschaffte Wdh. bzw. Sekunden | 2.0 Wdh.; ≤ 5 Wdh.: 1.0 | PAR-F-01, 02, 22 |
-| Log-Satz, Wdh., RIR ≤ 3 und ≤ 12 Wdh. | Wdh. + RIR (ohne Bias-Korrektur) | 2.0 Wdh. | PAR-F-23, 24, 25 |
-| Log-Satz, Halt, SIR angegeben und ≤ 0.5 × Halt (`PAR-S-31`) | Halt + SIR | Anteil von μ: Skill-Statics 0.25 (`PAR-S-03`), Gleichgewicht 0.25, Rumpfbeuger 0.40, Ausdauerhalte 0.15 | PAR-F-16, PAR-F-68 |
-| Log-Satz ohne RIR/SIR, mit RIR/SIR > 3 bzw. > 0.5 × Halt, oder nicht der erste Arbeitssatz der Übung in der Einheit | nur **Untergrenze** b (Wdh. bzw. Halt) | – | PAR-F-24; PAR-E-31 |
+Die Zeilen gelten **in dieser Reihenfolge**; die erste zutreffende gewinnt.
+
+| Beobachtung | x | r | Grundlage |
+|---|---|---|---|
 | Form < 3, assistiert (für den `none`-Schlüssel), partiell, nur exzentrisch | keine Beobachtung | – | PAR-F-41; `07` §8.2 |
+| nicht der erste Arbeitssatz der Übung in der Einheit (auch wenn gescheitert) | nur **Untergrenze** b | – | PAR-E-31, E-28 |
+| Test (`kind = test`) oder Satz mit `failed = true` | geschaffte Wdh. bzw. Sekunden | Wdh.: 2.0; ≤ 5 Wdh.: 1.0. Halt: Anteil von μ wie unten | PAR-F-01, 02, 16, 22 |
+| Log-Satz, Wdh., RIR ≤ 3 und ≤ 12 Wdh. | Wdh. + RIR (ohne Bias-Korrektur) | 2.0 Wdh. | PAR-F-23, 24, 25 |
+| Log-Satz, Wdh., RIR ≤ 3 und > 12 Wdh. | nur Untergrenze b = Wdh. + RIR | – | PAR-F-23 (gilt nur bis 12 Wdh.) |
+| Log-Satz, Halt, SIR ≤ max(3 s, 0.5 × Halt) | Halt + SIR | Anteil von μ: Skill-Statics 0.25 (`PAR-S-03`), Gleichgewicht 0.25, Rumpfbeuger 0.40, Ausdauerhalte 0.15 | PAR-F-16, PAR-F-68, `PAR-S-31` |
+| alle übrigen (ohne RIR/SIR, RIR > 3, grössere SIR) | nur Untergrenze b | – | PAR-F-24 |
 
 3. *Update*: K = σ² / (σ² + r²); μ ← μ + K · (x − μ); σ² ← (1 − K) · σ².
    Eine Untergrenze b wirkt nur, wenn b > μ: dann wie eine Beobachtung x = b
@@ -508,7 +533,10 @@ Verbreiterung × 1.25 in den dort genannten Fällen).
    Mittel beider Beobachtungen mit σ = r zurückgesetzt (`PAR-S-21`).
 5. Nur der **erste Arbeitssatz** einer Übung in einer Einheit ist eine volle
    Beobachtung; spätere Sätze sind ermüdet und liefern nur Untergrenzen
-   (PAR-E-31, E-28).
+   (PAR-E-31, E-28). Mit der SIR-Grenze max(3 s, 0.5 × Halt) sind auch die
+   kurzen Sätze an der Grenze des Arbeitsfensters (h = d − 2 bei d < 6 s) und
+   Kalibrierungssätze mit SIR 2–3 volle Beobachtungen; die Schätzung friert
+   dort nicht ein.
 
 **Messung von Reserve bei Halten.** Das Log kennt heute nur `rir` (0–10,
 Wiederholungen). Für Halte braucht der Planer Sekunden in Reserve (SIR,
@@ -536,7 +564,7 @@ u(e, s) = w_kind(e) · min(3, r_eff(e, s) · k(e)) / 3
 |---|---|---|
 | `r_eff(e, s)` | Profilwert 0–3 der Lastfamilie der Übung (`04` Tabelle 2), plus Modifikatoren: Neutralgriff/Parallettes −1 Handgelenk, Ringe +1 Bizeps und vordere Schulter bei Stützübungen, weiter Griff oder Untergriff +1 Überkopf; gekappt auf 0–3 | PAR-C-27, 40, 44, 45, 47 |
 | `k(e)` | Statik: Momentverhältnis der Sprosse ÷ Momentverhältnis der Referenzsprosse der Familie (die Tabelle gilt für die schwerste übliche Stufe); dynamisch: KG-Anteil ÷ Referenz-KG-Anteil × (KG + Zusatzlast) / KG; ohne Daten 1.0 | PAR-C-03–10, 18–22, 44; `04` §3.8 |
-| `w_kind(e)` | 1.0 für `working`, `test`, `backoff`, `cluster`, `drop`; 0 für `warmup` | `PAR-S-08` |
+| `w_kind(e)` | 1.0 für `working`, `test`, `backoff`, `cluster`, `drop`; 0.5 für `warmup` (Rampensätze haben höchstens die halbe Satzhaltezeit bzw. Ziel-Wdh., SESS-03) | `PAR-S-08` |
 | Assistenz | zählt voll (keine Minderung durch das Band) | PAR-B-79, H-3 (`08` §3) |
 | Kombination | jedes Element eines `set_entry` trägt seine Last | CLAUDE.md (ein Codepfad) |
 
@@ -544,6 +572,12 @@ Die Last ist **satzbasiert** wie in `05` §5.4 («Summe der Arbeitssätze ×
 Strukturgewicht»); die Haltedauer geht nicht ein. Innerhalb des Arbeitsfensters
 von 4–20 s (`08` §4) ist das vertretbar, weil die Satzzahl begrenzt ist
 (§7.6); als Schwäche vermerkt (§14).
+
+**Bewusste Abweichung:** PAR-D-31 gilt laut `05` für das Volumen, «nicht für
+die Stufe». Hier geht die Sprosse über k in die Last ein; ein Sprossenwechsel
+zählt damit als Laststeigerung und kann über die Deckel Sätze kosten. Das ist
+strenger als `05` und setzt S-2 um (neue Stufen sind nicht sofort voll
+belastbar, PAR-D-06).
 
 **Lastkonten.** Für den Wochendeckel wird jede Struktur ausser `wrist` in zwei
 Konten geführt: `s/SA` (Beiträge von Übungen mit `straight_arm` oder
@@ -556,12 +590,14 @@ Bent-Arm-Arbeit an derselben Struktur mit auszubremsen (§7.2).
 | Aggregat | Definition | Grundlage |
 |---|---|---|
 | `W(a, w)` | Summe von u über alle Sätze des Kontos `a` in ISO-Woche `w` | `05` §5.4 |
-| `R(a)` | Mittel von `W` über die letzten bis zu 3 abgeschlossenen Wochen **mit Last > 0, ohne Deload-Wochen**, innerhalb der letzten 6 Wochen | PAR-D-09–11 (3-Wochen-Mittel), PAR-B-73, `PAR-S-14` |
+| `R(a)` | Mittel von `W` über die letzten bis zu 3 abgeschlossenen Wochen **mit Last > 0, ohne geplante, Stagnations- und Ermüdungs-Deloads**, innerhalb der letzten 6 Wochen; Wochen mit Schmerz-Deload zählen (§7.2) | PAR-D-09–11 (3-Wochen-Mittel), PAR-B-73, `PAR-S-14` |
 | `M(s)` | grösste Einheitslast der Struktur `s` (Summe beider Konten) in den letzten 30 Tagen | PAR-D-31 |
 | neu | `R(a)` bzw. `M(s)` = 0 oder nicht bestimmbar | PAR-D-12 |
 
-Deload-Wochen fallen aus `R` heraus, weil ein Deload eine gewollte, zeitweise
-Senkung ist (`08` Rang 12) und sonst jeden folgenden Deckel senken würde.
+Geplante Deload-Wochen fallen aus `R` heraus, weil ein Deload eine gewollte,
+zeitweise Senkung ist (`08` Rang 12) und sonst jeden folgenden Deckel senken
+würde. Ein Schmerz-Deload dagegen senkt die Last, weil die vorherige Last nicht
+vertragen wurde; er bleibt in `R` (§7.2).
 Wochen ohne Last fallen heraus, weil Pausen eigene Regeln haben (§6.11); eine
 einzelne ausgelassene Woche soll nicht wie ein Wiedereinstieg wirken
 (PAR-B-59: bis 2 Wochen Pause 90–100 % Volumen).
@@ -574,8 +610,9 @@ Je Region (`onboarding.md` §3.7):
 |---|---|---|
 | `state` | `normal` · `rtt_0` … `rtt_5` · `locked` | `05` §6.2, PAR-D-21 |
 | `entered_via` | `onboarding` · `pain_report` · `red_flag` · `break` · `clearance` | – |
-| `start_fraction` | 0.5 (leichte Beschwerde) oder 0.25 (nach Verweis, Sehnenbefund oder Pause ≥ 4 Wochen) | PAR-D-24, PAR-D-33, PAR-D-29 |
-| `reference_volume` | `R(a)` der Konten der Region vor der Beschwerde; ohne Historie das Zielvolumen des Planers | `05` §6.2 |
+| `ramp_accounts` | Lastkonten, für die die Rampe gilt: bei Beschwerde und Red Flag alle Konten der Strukturen der Region; bei `break` nur die Straight-Arm-Konten und `wrist` | §6.11, PAR-D-29 |
+| `start_fraction`, `ramp_step` | Startanteil 0.5 (leichte Beschwerde) oder 0.25 (nach Verweis, Sehnenbefund oder Pause ≥ 4 Wochen); aktueller Schritt der Reihe 0.25 → 0.5 → 0.75 → 1.0 | PAR-D-24, PAR-D-25, PAR-D-33, PAR-D-29 |
+| `reference_volume` | `R(a)` der Rampenkonten vor der Beschwerde bzw. Pause, **nur wenn geloggt**; ohne geloggte Historie gibt es keine Referenz, und die Rampe wirkt nur als zusätzliche Obergrenze auf LOAD-02/LOAD-04 (§7.2) | `05` §6.2 («nur auf früher toleriertes Niveau») |
 | `prior_injury` | Verletzung in den letzten 12 Monaten | PAR-F-47, PAR-D-02 |
 | `restrictions` | Bewegungskategorien einer Fachperson | `onboarding.md` §3.7 |
 | Schmerzverlauf | Berichte (NRS 0–10) je Zeitpunkt, Regelverletzungen der letzten 14 Tage, Beginn der Beschwerde | PAR-D-13–20, 32 |
@@ -593,21 +630,30 @@ Zuordnung Region → Strukturen (`structures.yaml`, `PAR-S-15`):
 | `fingers_forearm_inner` | `fingers_forearm` |
 | `lower_back` | `lumbar` |
 | `knee` | `knee` |
-| `other` | keine; der User schliesst Übungen selbst aus |
+| `other` | keine Struktur. Beschwerde ohne Red Flag: der User schliesst Übungen selbst aus. Red Flag N/D oder Selbsteinschätzung «ernst»: Planung pausiert, bis der User betroffene Übungen ausgeschlossen oder eine Freigabe bestätigt hat (INJ-02) |
 
 ### 4.7 Trainingsphase
 
 Mesozyklus-Woche (1–6), Datum und Art des letzten Deloads (`planned`,
 `stagnation`, `fatigue`, `pain`), Pausendauer je Lastkonto (Tage seit der
-letzten Einheit mit Last > 0), fällige Kalibrierungen je Kapazität.
+letzten Einheit mit Last > 0; ohne Logs aus `last_regular_training`, §6.11),
+fällige Kalibrierungen je Kapazität, nicht verbrauchter Satz-Spielraum je
+Konto (`PAR-S-35`, §7.2).
+
+**Minimale Planungsauflagen** (`planning_constraints`): Stopps und
+Regionen-Ausschlüsse, die aus Sicherheitsfragen folgen, werden als Auflage
+ohne Antworten und ohne Schmerzwerte gespeichert (Art, Region, Zeitpunkt,
+aufgehoben am). So wirken sie auch ohne Einwilligung für Gesundheitsdaten
+weiter (SAFE-02, SAFE-04); ob das ohne Einwilligung zulässig ist, ist Teil der
+rechtlichen Prüfung (ENT-4, ENT-S-7).
 
 ### 4.8 Konfidenz und Dosiswert
 
 | Klasse | σ / μ | Dosiswert d | Zusatz | Grundlage |
 |---|---|---|---|---|
-| hoch | < 0.15 | μ | – | PAR-F-30, PAR-F-31 |
-| mittel | 0.15–0.30 | μ − 0.5 σ | – | PAR-F-30, PAR-F-31 |
-| niedrig | ≥ 0.30 | μ − σ | erster Arbeitssatz ist ein Kalibrierungssatz mit RIR/SIR 2–3 | PAR-F-30, PAR-F-31; `onboarding.md` §4.1 |
+| hoch | σ/μ < 0.15 | μ | – | PAR-F-30, PAR-F-31 |
+| mittel | 0.15 ≤ σ/μ < 0.30 | μ − 0.5 σ | – | PAR-F-30, PAR-F-31 |
+| niedrig | σ/μ ≥ 0.30 oder μ ≤ 0 | μ − σ | erster Arbeitssatz ist ein Kalibrierungssatz mit RIR/SIR 2–3 | PAR-F-30, PAR-F-31; `onboarding.md` §4.1 |
 
 d wird bei 0 abgeschnitten. Die Klasse erscheint in den Begründungen («Dein
 Wert ist noch geschätzt, deshalb beginnen wir vorsichtig»).
@@ -626,8 +672,9 @@ Client offline schreibt. Die DDL entsteht als eigene, additive Migration
 | `user_equipment` | (`user_id`, `equipment_key`) | Client/API | ja | – |
 | `user_bands` | Bezeichnung, Herstellerangabe kg, `estimated_assist_kg` | Client/API | ja | – |
 | `user_region_status` | (`user_id`, `region`), `state`, `since`, `entered_via`, `start_fraction`, `reference_volume` (jsonb), `prior_injury`, `restrictions` (text[] mit CHECK) | Server | nur lesen | ja |
-| `user_pain_reports` | `region`, `timepoint` (`during`, `after`, `next_morning`, `daily`), `nrs` (0–10), `session_id` (optional), `reported_at`, `local_date` | Client | ja | ja |
-| `user_red_flag_answers` | `region`, `flag_id` (`RF-01` … `RF-13`), `answer`, `answered_at` | API | nein | ja (ohne Einwilligung nicht gespeichert, `onboarding.md` §3.1) |
+| `user_pain_reports` | `region`, `timepoint` (`before_session`, `warmup`, `during`, `after`, `next_morning`, `daily`), `nrs` (0–10), `lasted_over_1h` (bei `after`), `persisted_over_15min` (bei `warmup`), `sudden_sharp` (Bool), `session_id` (optional), `reported_at`, `local_date` | Client | ja | ja |
+| `user_red_flag_answers` | `region`, `flag_id` (`RF-01` … `RF-13`), `answer`, `answered_at` | Client/API | ja | ja (ohne Einwilligung nicht gespeichert, `onboarding.md` §3.1) |
+| `planning_constraints` | `kind` (`plan_stopped`, `region_locked`, `region_excluded`), `region`, `created_at`, `cleared_at`; keine Antworten, keine Werte | Server | nur lesen | nein (Auflage, ENT-S-7) |
 | `user_screening` | Frage, Antwort, Zeitpunkt, `clearance_confirmed_at` | API | nein | ja |
 | `user_capacity_estimates` | (`user_id`, `exercise_id`, `measure`, `assistance_key`), `mu`, `sigma`, `origin`, `observed_at`, `n_obs`, `pending_contradiction` (jsonb) | Server | nur lesen | – |
 | `user_ladder_states` | (`user_id`, `ladder`), `rung_exercise_id`, `status`, `since`, `probe_exercise_id`, `exposures` | Server | nur lesen | – |
@@ -636,7 +683,7 @@ Client offline schreibt. Die DDL entsteht als eigene, additive Migration
 | `plan_decisions` | `occurred_at`, `trigger`, `source_id` (z. B. Session-ID; eindeutig mit `trigger` für Idempotenz), `rule_id`, `payload` (jsonb: vorher/nachher, Reasons), `plan_id` | Server | nur lesen | – |
 | `planner_knowledge` | `content_version_id` (PK), `ruleset_version`, `document` (jsonb), `checksum` | Seed | – | – |
 | `workout_sessions` | **neu**: `planned_session_id` (optional, FK über `(id, user_id)`) | Client/API | ja | – |
-| `set_entries` | **neu**: `sir_s` (optional, 0–60) | Client | ja | – |
+| `set_entries` | **neu**: `sir_s` (optional, 0–60), `planned_item_id` (optional; Verweis auf das Plan-Item, §10.2) | Client | ja | – |
 
 Gesundheitsangaben (Tabellen mit «ja» in der Spalte Einwilligung) werden beim
 Widerruf der Einwilligung gelöscht und mit dem Konto kaskadiert. Aufbewahrung
@@ -669,11 +716,12 @@ die Schleife (§11).
 | Regel | Bedingung | Folge | Grundlage |
 |---|---|---|---|
 | SAFE-01 | Onboarding unvollständig oder Hinweis nicht bestätigt | kein Plan; Problem `onboarding-required` | `onboarding.md` §3.1 |
-| SAFE-02 | Belastungssymptome «ja» oder aktive Red Flag mit Dringlichkeit N (RF-05 bei sichtbar verschobenem Gelenk, RF-07, RF-08, RF-10) | kein Plan; ärztliche Abklärung empfehlen; Plan erst nach bestätigter Freigabe; Problem `training-stopped` | S-1 (`08` §2.2), PAR-F-45, PAR-D-21, `05` §9 |
+| SAFE-02 | Belastungssymptome «ja» (im Onboarding oder jederzeit über «Symptome beim Training melden») oder aktive Red Flag mit Dringlichkeit N (RF-05 bei sichtbar verschobenem Gelenk, RF-07, RF-08, RF-10) | kein Plan; ärztliche Abklärung empfehlen; die betroffene Region zusätzlich `locked`; Auflage `plan_stopped`; Plan erst nach bestätigter Freigabe; Problem `training-stopped` | S-1 (`08` §2.2), PAR-F-45, PAR-D-21, `05` §9 |
 | SAFE-03 | Screening mit «ja» ohne bestätigte Freigabe | Plan ohne Tests und Prüfversuche; Abklärung empfehlen | `onboarding.md` §3.7, F-41 |
-| SAFE-04 | keine Einwilligung für Gesundheitsdaten | Plan ohne Tests und Prüfversuche; alle Steigerungsdeckel × 0.5; Hinweis, dass Beschwerden nicht berücksichtigt werden können | `onboarding.md` §3.1, PAR-D-02 |
+| SAFE-04 | keine Einwilligung für Gesundheitsdaten | Plan ohne Tests und Prüfversuche; alle Steigerungsdeckel × 0.5; eine gemeldete aktuelle Beschwerde schliesst die Region wie `rtt_0` aus (Auflage `region_excluded`), weil ohne Einwilligung kein Schmerz-Monitoring möglich ist; Hinweis darauf | `onboarding.md` §3.1, PAR-D-02 |
 | SAFE-05 | Region `locked` | Übungen mit `r_eff` ≥ 1 auf einer Struktur der Region sind ausgeschlossen | PAR-D-21, `PAR-S-22` |
 | SAFE-06 | Region `rtt_0` | Übungen mit `r_eff` ≥ 2 auf einer Struktur der Region sind ausgeschlossen | `05` §6.2, `PAR-S-22` |
+| SAFE-07 | `is_minor` | kein Plan, solange nicht entschieden ist, ob Minderjährige zugelassen werden (ENT-3, OE-1); danach §8.8 | ENT-3 |
 
 «Maximalversuch» meint in dieser Spezifikation Tests (`kind = test`) und
 Prüfversuche einer Stufe (`onboarding.md` §4.3). Die Sätze des Maximalblocks
@@ -702,8 +750,11 @@ kleinsten Abstand zwischen Einheiten.
 wie die Erfahrungsklasse erlaubt (§4.2); gewählt wird die Teilmenge mit dem
 grössten kleinsten Abstand (bei Gleichstand die früheste). Übrige Tage werden
 `light`-Einheiten, wenn ein Balance-Skill geplant ist oder Mobilitätsbedarf
-besteht, sonst **geplante Ruhe**. Geplante Ruhe setzt
-`user_training_days.planned_rest` und hält den Streak (ADR 0003 §1).
+besteht, sonst **geplante Ruhe**. Der Planer schreibt `user_training_days`
+nicht selbst (ADR 0008 bleibt unverändert): Die App zeigt den Tag als
+geplanten Ruhetag und bietet das bestehende Ruhetag-Loggen mit einem Tipp an;
+so hält er den Streak (ADR 0003 §1). Ob geplante Ruhetage automatisch zählen
+sollen, ist ENT-S-8.
 
 **Split (WEEK-03).** Bis 3 volle Einheiten Ganzkörper; ab 4 ergibt sich die
 Aufteilung aus den Abstandsregeln (§7.5): Straight-Arm-Skills und die
@@ -717,7 +768,7 @@ ist die Aufteilung ohne Einfluss, B-49).
 |---|---|---|
 | `limiting_factor = strength` oder `mixed` | `novice` 2, sonst 3; höchstens 4 | PAR-B-34, PAR-E-11, `08` §4 |
 | `limiting_factor = balance` | 4 (auch in `light`-Einheiten) | PAR-E-12, `08` §4 |
-| Zubringer (Bent-Arm) | 2–3 wie Kraft | PAR-B-34 |
+| Zubringer (Bent-Arm) | wie Kraft: `novice` 2, sonst 3 | PAR-B-34 |
 | Erhaltung (GOAL-03) | 1 | PAR-B-63 |
 
 **Verteilung (WEEK-05), deterministisch und gierig.**
@@ -741,9 +792,11 @@ ist die Aufteilung ohne Einfluss, B-49).
 
 **Deload-Woche (WEEK-07).** In Mesozyklus-Woche 6 oder nach einem Auslöser
 (§6.9) sind alle Einheiten `deload`: gleiche Tage, Übungen und Frequenz;
-Sätze × 0.6 (abgerundet, mindestens 1); Reserve +2 (RIR bzw. SIR); Sprosse
-halten oder eine leichter (PAR-B-50–54, PAR-B-03). `user_training_days.deload`
-wird für diese Tage gesetzt; der Streak zählt sie (ADR 0003).
+Sätze × 0.6 (abgerundet, mindestens 1 — Ausnahme von `PAR-S-18`, weil die
+Übungen gleich bleiben, PAR-B-54); Reserve +2 (RIR bzw. SIR); Sprosse halten
+(eine leichter nur beim Schmerz-Deload) (PAR-B-50–54, PAR-B-03). Eine im
+Deload abgeschlossene Einheit wird beim Abschluss als Deload-Tag erfasst
+(`user_training_days.deload`); der Streak zählt sie (ADR 0003).
 
 **Neu erzeugen (WEEK-08).** Zu Wochenbeginn, bei Profil- oder Zieländerung
 (ab der nächsten nicht begonnenen Einheit), nach Freigabe einer Region und bei
@@ -763,6 +816,12 @@ Einheiten bleiben unverändert.
 | 60 | 10 min | Skill 8–10 min; Primär 3–5; Sekundär 3–4; 1 Paar; 1–2 Ergänzung/Prehab | 15–20 | PAR-B-66 |
 | 75 | 10 min | wie 60, plus eine Volumenposition | 15–20 | Interpolation (**Heuristik**) |
 | 90+ | 12–15 min | 1 Maximalübung (2–3) + 2 Volumenübungen (je 5) + 1–2 Zubringer (2–3); Prehab | 12–18 | PAR-B-67 |
+
+Punktwerte innerhalb der Spannen: Aufwärmen 12 min bei 90+; Minutenangaben
+der Vorlagen sind Startwerte für die Zeitschätzung (§5.8). Ist ein
+Balance-Skill ein **Ziel**, gilt für den Balanceblock der abgestimmte Wert aus
+`08` §4 (SESS-04) statt des «Skill»-Platzes der Vorlage; das Zeitbudget kürzt
+ihn nach §5.8 bis auf 5 min.
 
 **Reihenfolge (SESS-02).** Aufwärmen (mit Prehab-Aktivierung und Rampensätzen)
 → Balance-/Technikblock (ermüdungsarm) → Maximalblöcke der Straight-Arm-Skills
@@ -784,24 +843,25 @@ nicht vorermüdet (E-28).
 | Teil | Regel | Grundlage |
 |---|---|---|
 | Dauer | nach Vorlage; nie unter 5 min | PAR-B-69, PAR-B-68 |
-| Allgemein | 5–10 min Anteil (bei 5 min Gesamtdauer 3 min), steigend | PAR-E-47 (**Heuristik**) |
+| Allgemein | 5–10 min Anteil (bei 5 min Gesamtdauer 3 min, `PAR-S-37`), steigend | PAR-E-47 (**Heuristik**) |
 | Prehab-Aktivierung | in 3 Einheiten je Woche (bei weniger Einheiten in jeder); Regionen in der Rangfolge Schulter > Handgelenk > Ellbogen = Rücken, Regionen mit Vorverletzung zuerst; Evidenzlabel je Region | PAR-D-37, PAR-D-01, PAR-D-38, `onboarding.md` §3.7 |
 | Handgelenk-Vorbereitung | wenn eine Übung mit `r_eff(wrist)` ≥ 2 geplant ist | `02` §4.1, A-39 (C) |
 | Mobilität | nach den Mobilitäts-Checks (§5.6, SEL-05) | `onboarding.md` §3.6, PAR-F-53 |
 | Statisches Dehnen | < 60 s je Muskelgruppe | PAR-B-71, PAR-E-45 |
 | Verboten | Maximalversuche, maximale Isometrie zur Potenzierung | PAR-D-05, PAR-E-46 |
-| Rampensätze | 2–3 vor dem ersten Maximalblock: zwei Sprossen unter der Arbeitssprosse, dann eine Sprosse darunter (oder mit Band), jeweils mit der Satzhaltezeit bzw. der Hälfte der Ziel-Wdh.; `kind = warmup` | PAR-B-70, PAR-E-26 (Übertragung von %1RM auf Sprossen: **Heuristik**) |
+| Rampensätze | 2 vor dem ersten Maximalblock (3 bei OG ≥ 10): zwei Sprossen unter der Arbeitssprosse, dann eine Sprosse darunter (oder mit Band), jeweils mit der halben Satzhaltezeit bzw. der Hälfte der Ziel-Wdh.; `kind = warmup`, Last-Gewicht 0.5 (`PAR-S-08`) | PAR-B-70, PAR-E-26 (Übertragung von %1RM auf Sprossen: **Heuristik**) |
 
-**Balanceblock (SESS-04).** 11–15 min; in Einheiten unter 45 min 5–10 min
-(`08` §4, PAR-E-35, PAR-B-35). Sätze à 21–40 s inklusive Versuche
-(PAR-E-36), Pause mindestens so lang wie der Versuch (PAR-E-38), 30–90 s
-(PAR-B-74). Die Zahl der Sätze ergibt sich aus der Blockdauer. Balance zählt
+**Balanceblock (SESS-04).** 11–15 min (Punktwert 12 min); in Einheiten unter
+45 min 5–10 min (Punktwert 6 min) (`08` §4, PAR-E-35, PAR-B-35). Sätze à
+21–40 s inklusive Versuche (Punktwert 30 s, PAR-E-36), Pause mindestens so
+lang wie der Versuch (PAR-E-38), 30–90 s (PAR-B-74). Die Zahl der Sätze ergibt sich aus der Blockdauer. Balance zählt
 voll in den Handgelenk-Deckel (`08` §4 Zeile «Greasing the Groove»).
 
 **Maximal- und Volumenblöcke (SESS-05, SESS-06).** Je Straight-Arm-Leiter der
-Einheit ein Maximalblock mit allen Sätzen hintereinander (PAR-E-32);
-Gegenrichtungen als Paar abwechselnd (PAR-B-81, §7.7); danach die
-Volumenblöcke in derselben Reihenfolge. Dosierung §5.7.
+Einheit ein Maximalblock mit allen Sätzen hintereinander (PAR-E-32); nur wenn
+das Zeitbudget sonst nicht reicht, werden Skills der Gegenrichtung als Paar
+abgewechselt (PAR-B-81, §7.7); danach die Volumenblöcke in derselben
+Reihenfolge. Dosierung §5.7.
 
 **Kraftblock (SESS-07).** Zubringer- und Unterstützungsleitern, danach
 Antagonisten-Paare als Supersätze mit 120 s zwischen den abwechselnden Sätzen
@@ -821,6 +881,12 @@ fraktionale Sätze je Muskel und Einheit (PAR-B-75); Muskelrollen primär 1.0,
 sekundär 0.5, Stabilisator 0.25 (PAR-C-46); assistierte Sätze nach PAR-B-79.
 Die Deckel (§7) gelten unverändert.
 
+**Greasing the Groove (SESS-11, optional, in v1 aus).** Nur Übungen mit
+`gtg_allowed` (Bent-Arm-Grundübungen; Balance nur innerhalb des
+Handgelenk-Deckels); je Satz ≤ 50 % der Maximal-Wdh. und RIR ≥ 2; nie
+Straight-Arm-Statics; zählt in die Belastungseinheiten, nicht als
+Hypertrophie-Satz (PAR-B-80, PAR-E-27, PAR-E-48, PAR-E-49, `08` Rang 20).
+
 ### 5.6 Übungsauswahl
 
 **Kandidaten (SEL-01).** Sprossen der aktiven Leiter und ihre `alternative`-
@@ -832,7 +898,7 @@ Kanten, jeweils nur Übungen mit `training:`-Block und ohne `status: retired`.
 |---|---|---|
 | SEL-02 | Equipment: `requires` ⊆ Equipment-Menge | `onboarding.md` §3.4 |
 | SEL-03 | Regionen: SAFE-05/06; Matrix `X` für Regionen mit aktueller Beschwerde; `M` → Modifikation (SEL-10); `S` → erlaubt mit Schmerz-Monitoring (§8.6); Einschränkungen einer Fachperson über die `restriction_tags` der Übung | `05` §8, `onboarding.md` §3.7 |
-| SEL-04 | Supinierte Straight-Arm-Varianten nur, wenn die Arbeitssprosse der Leiter mindestens OG 6 (Intermediate) erreicht; bei Ellenbeugen-Beschwerde ausgeschlossen; Einstieg mit 50 % in den ersten 2 Wochen | PAR-D-41, PAR-A-23, PAR-D-12, `08` §3 |
+| SEL-04 | Supinierte Straight-Arm-Varianten nur, wenn die Arbeitssprosse der Leiter mindestens OG 6 (Intermediate) erreicht; bei Ellenbeugen-Beschwerde ausgeschlossen, bis die Region `normal` ist; Einstieg als neue Belastungsart mit 50 % in Woche 1 | PAR-D-41, PAR-A-23, PAR-D-12, `08` §3 |
 | SEL-05 | Mobilität: Handgelenk `no`/`partly` → Neutralgriff-Varianten (Parallettes, Fäuste) bevorzugen; Schulter → Brust-zur-Wand-Varianten im Handstand; Sprunggelenk → erhöhte Ferse bei Pistol-Regressionen; Kompression → Kompressionsleiter | `onboarding.md` §3.6, PAR-C-27, PAR-F-53 |
 | SEL-06 | Minderjährige: Deckel nach §7.2; RF-12/RF-13 aktiv | PAR-D-23, `05` §9 |
 
@@ -850,13 +916,16 @@ Grenze 4 s aus `08` §4 (Satzhaltezeit ≥ 2 s plus Reserve ≥ 2 s; PAR-B-05,
 PAR-B-07).
 
 **Einstieg nach dem Onboarding (SEL-08).** In den ersten zwei Einheiten eines
-Musters arbeitet der Planer eine Sprosse unter der angegebenen Stufe oder mit
-Band; der erste Arbeitssatz ist ein Kalibrierungssatz. Ein Prüfversuch der
-angegebenen Stufe nur nach `onboarding.md` §4.3.
+Musters ist die Arbeitssprosse das Minimum aus dem Ergebnis von SEL-07 und
+der Sprosse unter der angegebenen Stufe (bzw. der angegebenen Stufe mit Band);
+es wird also nie zweimal abgestuft. Der erste Arbeitssatz ist ein
+Kalibrierungssatz. Ein Prüfversuch der angegebenen Stufe nur nach
+`onboarding.md` §4.3.
 
 **Arbeitssprosse bei Wiederholungen (SEL-09).** Die höchste Sprosse, an der
 `floor(d) − RIR_Ziel` in den Wiederholungsbereich der Periodisierung fällt
-(§5.7). Liegt es an der obersten Sprosse über 12–15 (PAR-B-23): Zusatzlast,
+(§5.7). Liegt es an der obersten Sprosse über 12 (untere Grenze von
+PAR-B-23): Zusatzlast,
 wenn `loadable` und Gewichte vorhanden, sonst bleibt die Sprosse mit höherem
 Bereich. Ist an der Wurzel d < 1 (z. B. 0 Klimmzüge): exzentrische Variante
 (PAR-B-16, PAR-B-77), Band-Variante falls vorhanden, dazu die Zubringer der
@@ -873,7 +942,11 @@ Reihenfolge:
    Struktur;
 5. streichen, mit Begründung.
 
-`M` bedeutet ausserdem: Volumen der Familie × Rampenanteil der Region (§8.5).
+`M` bedeutet ausserdem, dass die Familie unter den Rampenanteil der Region
+fällt (§8.5); der Anteil wird je Konto genau einmal angewandt.
+
+**Übungen ohne Matrix-Familie.** Hat eine Übung `complaint_family: none`, aber
+`r_eff` ≥ 2 auf einer Struktur einer Region mit Beschwerde, gilt sie als `M`.
 
 **Variation (SEL-11).** Gibt es gleichwertige Varianten derselben Sprosse,
 wechseln sie zwischen den Einheiten; die Arbeitssprosse bleibt in jeder
@@ -889,31 +962,40 @@ d = Dosiswert (§4.8).
 |---|---|---|---|---|---|---|
 | `skill_max`, Halt (DOSE-01) | Arbeitssprosse | `clamp(round(60 / h), 2, 5)` | h = min(0.70 · d, d − 2), ≥ 2 s; Anstieg ≤ +2 s je Woche | ≥ 2 s (folgt aus h) | 300 s (≥ 180); OG ≥ 14: 420 s | `08` §4; `PAR-S-01`, `PAR-S-02`, `PAR-S-05`; PAR-B-08, PAR-B-33, PAR-E-04, PAR-E-05, PAR-E-08 |
 | `skill_max`, Wdh. (DOSE-02; Press, HSPU, Muscle-up, einarmiger Klimmzug) | Arbeitssprosse | 3 (2–5) | floor(d) − 1; bei d < 2 leichtere Sprosse, Band oder Exzentrik (SEL-09) | RIR ≥ 1 | 300 s | PAR-E-08, PAR-E-18, PAR-E-04 |
-| `skill_volume` (DOSE-03) | Arbeitssprosse − 1 oder Band an der Arbeitssprosse | `clamp(round(60 / h), 3, 5)` | h = min(0.70 · d', d' − 2), auf 5–20 s begrenzt; unter 5 s entfällt der Block | wie oben | 240 s (180–300) | PAR-B-10–12, PAR-E-06, `08` §4 |
+| `skill_volume` (DOSE-03) | Arbeitssprosse − 1; Band an der Arbeitssprosse nur, wenn es keine tiefere Sprosse gibt oder sie ausgeschlossen ist | `clamp(round(60 / h), 3, 5)` | h = min(0.70 · d', d' − 2), auf 5–20 s begrenzt; unter 5 s entfällt der Block | wie oben | 240 s (180–300) | PAR-B-10–12, PAR-E-06, `08` §4 |
 | `conditioning` (DOSE-04; Leans, Stütz, Rumpfhalte, Sprossen mit d > 30 s) | Arbeitssprosse | 3, bei > 90 s Gesamtzeit 2 | h = min(0.70 · d, d − 2), auf 10–30 s begrenzt | wie oben | 120 s (120–180) | PAR-B-76, PAR-E-07, `08` §4 |
 | `strength`, `novice` (DOSE-05) | nach SEL-09 | 3 | 5–8, lineare Doppelprogression (§6.4) | RIR ≥ 1, Ziel 2 | 120 s | PAR-A-01–05, PAR-B-01, PAR-B-24, PAR-B-42 (untere Grenze wegen Zeitbudget, `PAR-S-29`) |
 | `strength`, trainiert (DOSE-06) | nach SEL-09 | 3 | wellenförmig je Exposition: schwer 3–6, mittel 6–10, leicht 10–15; Ziel = min(Obergrenze, floor(d) − 2) | RIR 2 | schwer 180 s, sonst 120 s | PAR-B-02, PAR-B-17–19, PAR-B-24, PAR-B-42, PAR-B-43, `PAR-S-13`, `PAR-S-29` |
-| `eccentric` (DOSE-07) | exzentrische Variante | 2–3 | 2–3 Cluster-Wdh. à 3–5 s, steigend bis 7–10 s | – | 180 s | PAR-B-16, PAR-B-77 |
+| `eccentric` (DOSE-07) | exzentrische Variante | 2 (bis 3) | 3 Cluster-Wdh. à 3 s zu Beginn, steigend bis 7–10 s (ADAPT-10) | – | 180 s | PAR-B-16, PAR-B-77 |
 | `balance` (DOSE-08) | Handstand-Leiter | nach Blockdauer | 21–40 s Satzdauer | – | ≥ Versuchsdauer, 30–90 s | PAR-E-35, 36, 38, PAR-B-74 |
-| `technique` (DOSE-09) | Arbeitssprosse − 1 | 3–5 Versuche | h = min(0.5 · d, 10 s) | ≥ 50 % | ≥ Versuchsdauer, 30–90 s | `PAR-S-26`; PAR-E-14, PAR-E-38, PAR-B-74 |
-| `prehab`, `accessory` (DOSE-10) | Prehab-Liste bzw. Unterstützung | 2–3 | 12–20 Wdh. | RIR 1–3 | 60–120 s; Paar 120 s | PAR-B-78, PAR-B-44, PAR-B-45, PAR-D-37 |
+| `technique` (DOSE-09) | Arbeitssprosse − 1 | 3 Versuche (bis 5) | h = min(0.5 · d, 10 s) | ≥ 50 % | ≥ Versuchsdauer, 30–90 s | `PAR-S-26`; PAR-E-14, PAR-E-38, PAR-B-74 |
+| `prehab` (DOSE-10) | Prehab-Liste der Region | 2 | 15 Wdh. (12–20) | RIR 2 (1–3) | 90 s (60–120) | PAR-B-78, PAR-B-44, PAR-D-37 |
+| `accessory` (DOSE-12; Zubringer, Unterstützung, Antagonisten) | Unterstützungsleiter | 3 | 12 Wdh. (12–20) | RIR 2 | 120 s; im Paar 120 s zwischen den abwechselnden Sätzen | PAR-B-78, `08` §4 (Zubringer 120 s), PAR-E-07, PAR-B-45 |
 | `weighted` (DOSE-11) | oberste Sprosse + Zusatzlast | 3 | Bereich wie `strength` | RIR 2 | wie `strength` | PAR-B-23, PAR-B-32 |
 
 Erläuterungen:
 
-- **Satzzahl im Maximalblock.** `round(60 / h)` reproduziert die «Sweet
-  Spots» der OG-Tabelle (Maximalhalt 10 s → 5 × 7 s; 20 s → 4 × 14 s; 30 s →
-  3 × 20 s; PAR-A-64) und liegt in der Gesamtzeit von 30–90 s (PAR-B-09). Die
-  Zahl 60 ist `PAR-S-02`.
+- **Satzzahl im Maximalblock.** `round(60 / h)` trifft die «Sweet Spots» der
+  OG-Tabelle (Maximalhalt 10 s → 5 × 7 s; 20 s → 4 × 14 s; 30 s → 3 × 21 s
+  statt 3 × 20 s; PAR-A-64). Ab d ≈ 10 s liegt die Gesamtzeit in 30–90 s
+  (PAR-B-09); darunter ist sie kürzer (d = 6 s: 5 × 4 s = 20 s), weil
+  höchstens 5 Sätze geplant werden (PAR-B-08) — bewusst vorsichtig. Die Zahl
+  60 ist `PAR-S-02`.
+- **Punktwerte.** Wo eine Quelle eine Spanne nennt, steht der Punktwert in der
+  Tabelle; die Spanne in Klammern ist der Rahmen für die Autoregulation
+  (`PAR-S-36`). Die Wahl folgt der Regel aus `08` §4: bei Sicherheitsgrössen
+  die vorsichtigere Seite, sonst die Mitte.
 - **Maximalhalt < 4 s** ergibt h < 2 s; dann gilt SEL-07 (leichtere Sprosse
   oder Band).
 - **Wellenförmig (DOSE-06).** Bei 2 Expositionen je Woche schwer und mittel,
   bei 3 schwer, leicht, mittel in dieser Reihenfolge (`PAR-S-13`, Beispiel
   15/10/5 in B-115).
 - **Zusatzlast (DOSE-11).** Einstieg, wenn alle Sätze an der obersten Sprosse
-  12–15 saubere Wdh. erreichen (PAR-B-23): Last = 2.5 % der bewegten Masse
-  (KG + Zusatzlast), auf die kleinste verfügbare Scheibe abgerundet
-  (PAR-B-32), höchstens `max_added_load_kg` (`onboarding.md` §3.8).
+  12 saubere Wdh. erreichen (untere Grenze von PAR-B-23): Last = 2.5 % der
+  bewegten Masse (KG + Zusatzlast), auf die kleinste verfügbare Scheibe
+  **auf**gerundet, mindestens eine kleinste Scheibe (PAR-B-32), höchstens
+  `max_added_load_kg` (`onboarding.md` §3.8). Ohne Angabe der Scheiben gilt
+  1.25 kg (`PAR-S-37`).
 - **Tempo.** Vorgegeben nur für Exzentrik (PAR-B-16). Für Halte im Maximalblock
   zeigt die App den Hinweis «Spannung schnell aufbauen, dann halten»
   (PAR-E-25; Hinweis, keine Zahl). Für dynamische Grundübungen gibt die
@@ -926,7 +1008,11 @@ Erläuterungen:
 - **Kalibrierungssatz.** Erster Arbeitssatz einer Hauptübung bei niedriger
   Konfidenz, nach einem Widerspruch, nach Pausen (§6.11) und alle 4–6 Wochen
   (PAR-B-29): Ziel RIR/SIR 2–3; die App fragt die Reserve ausdrücklich ab
-  (`onboarding.md` §4.1).
+  (`onboarding.md` §4.1). Grenze: Ein Satz mit RIR 2–3 kalibriert die
+  **Kapazität**, nicht die Genauigkeit der RIR-Schätzung, die PAR-B-29 mit
+  einem Testsatz prüfen will. Ohne freiwilligen Test (§4.3 in
+  `onboarding.md`) verlässt sich der Planer dafür auf den Fehler r = 2 Wdh.
+  im Filter (§4.3).
 - **Deload** überschreibt die Tabelle: Sätze × 0.6, Reserve +2 (WEEK-07).
 
 ### 5.8 Zeitbudget
@@ -940,7 +1026,8 @@ kürzt der Planer in dieser Reihenfolge (PAR-B-68):
 2. Volumensätze auf 2–3;
 3. Antagonisten-Paare zu Supersätzen, dann streichen;
 4. Pausen der Nicht-Maximal-Reize auf die Untergrenze ihrer Spanne
-   (Volumen 180 s, Kraft 120 s, Zubringer 60 s; PAR-E-06, PAR-B-42, PAR-B-44);
+   (Volumen 180 s; Kraft 120 s bei `novice`, sonst 180 s; Zubringer 120 s;
+   PAR-E-06, PAR-B-42, `08` §4);
 5. Balanceblock auf 5 min (`08` §4);
 6. Volumenblock des Skills mit der niedrigsten Priorität streichen, dann
    dessen Maximalblock (Erhaltung, GOAL-03).
@@ -958,7 +1045,7 @@ während der Einheit anzeigt; die Logs zeigen später, ob sie gegriffen haben.
 | DOSE-20 | Form ≤ Form des ersten Arbeitssatzes − 1 oder < 3 | Block beenden; weiter mit Regression bzw. Kraftblock | PAR-E-15 |
 | DOSE-21 | 2 Fehlversuche in Folge an derselben Sprosse | Block beenden; eine Sprosse leichter oder assistiert | PAR-E-16 |
 | DOSE-22 | Leistung > 20 % unter dem besten Satz der Einheit | Block beenden | PAR-E-17 |
-| DOSE-23 | Schmerz > 5/10 in einer beobachteten Region | Übung beenden; Schmerzbericht | PAR-D-15 |
+| DOSE-23 | Schmerz > 5/10 in einer beobachteten Region oder plötzlicher, stechender Schmerz in **irgendeiner** Region | Übung beenden; Schmerzbericht mit Red-Flag-Fragen (§8.2); bei einer N-Antwort Einheit beenden (auch offline, §10.5) | PAR-D-15, `05` §9 |
 
 ### 5.10 Ausgabe
 
@@ -992,7 +1079,9 @@ Kombination bleibt ein Satz-Eintrag mit mehreren Elementen (CLAUDE.md).
   }],
   "exclusions": [{ "exercise": "planche-rings-tuck", "region": "elbow_inner",
                    "rule_id": "SEL-03", "matrix": "X", "sources": ["D-63"] }],
-  "hints": [ … ], "realism": [ … ]
+  "hints": [ … ], "realism": [ … ],
+  "disclaimer": { "key": "planner.disclaimer",
+                  "text": "Hefesto plant Training. Es ersetzt keine ärztliche oder physiotherapeutische Abklärung." }
 }
 ```
 
@@ -1025,9 +1114,9 @@ Nachkalibrierung ändert nie den Unlock-Status (ADR 0008).
 | Regel | Inhalt | Grundlage |
 |---|---|---|
 | ADAPT-04 | Innerhalb der Sprosse folgt h dem aktualisierten Dosiswert, höchstens +2 s je Satz und Woche | PAR-B-33 |
-| ADAPT-05 | **Prüfsprosse anbieten**, wenn der erste Arbeitssatz der Arbeitssprosse in 2 aufeinanderfolgenden Einheiten x = Halt + SIR ≥ 20 s mit Form ≥ 4 ergibt: Am Anfang des Maximalblocks stehen dann 2 kurze Versuche (≤ 5 s) an der nächsten Sprosse; der User kann sie überspringen | PAR-B-05, PAR-B-30, PAR-A-78; kurze Probehalte an der nächsten Stufe [A-35]; `PAR-S-24` |
-| ADAPT-06 | **Wechseln**, sobald der Dosiswert der nächsten Sprosse ≥ 4 s ist; spätestens, wenn x an der Arbeitssprosse ≥ 30 s erreicht (dann mit Band, falls d < 4 s). Höchstens ein Sprossenwechsel je Leiter und Woche. Die alte Sprosse wandert in den Volumen- bzw. Konditionsblock | `08` §4 («Stufenfenster»), PAR-A-65, PAR-B-57 |
-| ADAPT-06a | Prüfversuche nur, wenn die Region `normal` ist, keine Wiedereinstiegsrampe der Straight-Arm-/Handgelenk-Konten läuft, nicht in Woche 1 einer neuen Belastungsart, und SAFE-03/04 nicht greifen | `onboarding.md` §4.3, PAR-D-12, PAR-D-29 |
+| ADAPT-05 | **Prüfsprosse anbieten**, wenn der erste Arbeitssatz der Arbeitssprosse in 2 aufeinanderfolgenden Einheiten x = Halt + SIR ≥ 20 s mit Form ≥ 4 ergibt: Der Plan enthält dann ein **Angebot** für 2 kurze Versuche (≤ 5 s) an der nächsten Sprosse am Anfang des Maximalblocks. Die Versuche finden nur statt, wenn der User das Angebot aktiv annimmt (keine Voreinstellung) | PAR-B-05, PAR-B-30, PAR-A-78; kurze Probehalte an der nächsten Stufe [A-35]; `PAR-S-24`; `onboarding.md` §4.3 |
+| ADAPT-06 | **Wechseln**, sobald die Prüfversuche für die nächste Sprosse einen Dosiswert ≥ 4 s ergeben (eine schwerere Sprosse hat vorher keinen Wert, §4.3); spätestens, wenn x an der Arbeitssprosse ≥ 30 s erreicht (dann mit Band, falls d < 4 s). Höchstens ein Sprossenwechsel je Leiter und Woche. Die alte Sprosse wandert in den Volumen- bzw. Konditionsblock | `08` §4 («Stufenfenster»), PAR-A-65, PAR-B-57 |
+| ADAPT-06a | Prüfversuche und erste konzentrische Versuche (ADAPT-10) nur, wenn die Region `normal` ist, keine Rampe auf einem betroffenen Konto läuft, nicht in Woche 1 einer neuen Belastungsart, und SAFE-03/04 nicht greifen | `onboarding.md` §4.3, PAR-D-12, PAR-D-29 |
 
 Die 2 × 5 s der Prüfversuche zählen voll ins Straight-Arm-Budget (§7.6).
 
@@ -1035,10 +1124,10 @@ Die 2 × 5 s der Prüfversuche zählen voll ins Straight-Arm-Budget (§7.6).
 
 | Regel | Inhalt | Grundlage |
 |---|---|---|
-| ADAPT-07 | **`novice`, lineare Doppelprogression**: Start mit max(5, min(8, floor(d) − 2)) Wdh. × 3; hat eine Einheit alle Sätze mit RIR ≥ 1 geschafft, +1 Wdh. je Satz; bei 3 × 8 nächste Sprosse mit 3 × 5. Liegt der Dosiswert der nächsten Sprosse unter 6, bleibt die alte Sprosse (bis 12 Wdh.) und die neue erscheint einmal je Woche als Kalibrierungssatz am Blockanfang | PAR-A-01–05, PAR-B-01, PAR-B-23, `PAR-S-33` |
+| ADAPT-07 | **`novice`, lineare Doppelprogression**: Start mit max(5, min(8, floor(d) − 2)) Wdh. × 3; hat eine Einheit alle Sätze mit RIR ≥ 1 geschafft, +1 Wdh. je Satz; bei 3 × 8 nächste Sprosse mit 3 × 5. Liegt der Dosiswert der nächsten Sprosse unter 6 (ohne Beobachtung: abgeleiteter Wert nach §4.3), bleibt die alte Sprosse (bis 12 Wdh., untere Grenze von PAR-B-23) und die neue erscheint einmal je Woche als Kalibrierungssatz am Blockanfang | PAR-A-01–05, PAR-B-01, PAR-B-23, `PAR-S-33` |
 | ADAPT-08 | **Trainiert, wellenförmig**: Ziele je Expositionsklasse aus dem Dosiswert (DOSE-06); die Sprosse einer Klasse steigt erst, wenn deren letzte 2 Expositionen alle Sätze an der Obergrenze bei Ziel-RIR hatten | PAR-B-02, PAR-B-30 |
 | ADAPT-09 | **Zusatzlast**: Einstieg nach DOSE-11; Steigerung um 2.5 % der bewegten Masse, wenn die Obergrenze in 2 Einheiten erreicht ist | PAR-B-23, PAR-B-30, PAR-B-32 |
-| ADAPT-10 | **Exzentrik → erste Wiederholung**: +1 s je Wdh. und Einheit bis 7–10 s; bei 3 × 3 Cluster-Wdh. à 7–10 s einen konzentrischen Versuch in den nächsten Maximalblock einplanen | PAR-B-16, PAR-B-77, PAR-A-66 |
+| ADAPT-10 | **Exzentrik → erste Wiederholung**: +1 s je Wdh. und Einheit (`PAR-S-37`) bis 7–10 s; bei 3 × 3 Cluster-Wdh. à 7–10 s einen konzentrischen Versuch im nächsten Maximalblock **anbieten** (aktive Annahme, ADAPT-06a) | PAR-B-16, PAR-B-77, PAR-A-66 |
 
 ### 6.5 Balance-Skills
 
@@ -1051,8 +1140,9 @@ Handgelenk-Deckel (§7.2).
 
 In den ersten 4 Wochen gehen RIR/SIR nur in die Kapazität ein; danach steuern
 sie die Ziele (PAR-B-29). Weicht die gemeldete Reserve in 2 aufeinanderfolgenden
-Einheiten um ≥ 2 vom Ziel ab, ändert der Planer das Ziel um ±1–2 Wdh. bzw.
-±1–2 s oder die Sprosse (PAR-B-31). RIR wird im Mittel um ≈ 1 Wdh.
+Einheiten um ≥ 2 vom Ziel ab, ändert der Planer das Ziel um ±1 Wdh. bzw.
+±1 s (Punktwert aus ±1–2); verlässt das neue Ziel den Bereich der Sprosse,
+wechselt er die Sprosse nach SEL-07/SEL-09 (PAR-B-31). RIR wird im Mittel um ≈ 1 Wdh.
 unterschätzt (PAR-B-28); der Planer korrigiert das nicht (PAR-F-25), sondern
 setzt alle 4–6 Wochen einen Kalibrierungssatz (PAR-B-29).
 
@@ -1077,8 +1167,10 @@ Steigerungen), wenn
   Reserve) in den letzten 2 Einheiten nicht über dem Wert der Einheit davor
   lag («stagniert oder fällt in ≥ 2 aufeinanderfolgenden Einheiten»,
   PAR-B-49 a). Balance-Leitern: erst nach 16 Einheiten (PAR-E-37).
-- **Antwort, in dieser Reihenfolge:** (1) Deload der nächsten Woche, wenn der
-  letzte Deload ≥ 3 Wochen zurückliegt (`PAR-S-17`); (2) sonst Variation
+- **Antwort, in dieser Reihenfolge:** (1) Deload der nächsten Woche, wenn das
+  Plateau die Ziel-Leiter mit Priorität 1 betrifft («Hauptübung», PAR-B-49 a)
+  und der letzte Deload ≥ 3 Wochen zurückliegt (`PAR-S-17`); (2) sonst und
+  bei allen anderen Leitern Variation
   zwischen den Einheiten (PAR-E-34) und eine Unterstützungsübung aus einer
   `recommended`-Kante mit Gewicht ≥ 0.3 (z. B. gewichteter Klimmzug für den
   Front Lever, `02` §8); (3) nie mehr Sätze über die Deckel hinaus.
@@ -1099,9 +1191,15 @@ Steigerungen), wenn
 | Höchstdauer | 8 Aufbauwochen ohne Deload | nächste Woche | PAR-B-49 d |
 | Schmerz | Schmerzregel verletzt | ab der nächsten Einheit für 7 Tage: betroffene Strukturen 1 Sprosse leichter, Volumen −30 % | PAR-B-49 c, PAR-D-18 |
 
-Jeder Deload setzt den Mesozyklus zurück, wird in `user_training_days.deload`
-erfasst und zählt im Streak (ADR 0003). Deload-Wochen fallen aus dem
-Referenzmittel der Deckel heraus (§4.5).
+Geplante, Stagnations-, Ermüdungs- und Höchstdauer-Deloads setzen den
+Mesozyklus zurück und fallen aus dem Referenzmittel der Deckel heraus (§4.5).
+Der Schmerz-Deload wirkt nur auf die betroffenen Strukturen, setzt den
+Mesozyklus nicht zurück und bleibt im Referenzmittel; danach gilt für diese
+Konten bis zur ersten grünen Woche (§8.6) ein Deckel von 1.0 × dem
+Referenzmittel vor der Verletzung der Schmerzregel, erst dann wieder LOAD-02
+(`PAR-S-40`; «reduzieren und halten», PAR-D-18, `05` §5.4). Alle Deloads
+werden beim Abschluss der Einheiten als Deload-Tage erfasst und zählen im
+Streak (ADR 0003).
 
 ### 6.10 Verpasste Einheiten (ADAPT-15)
 
@@ -1126,11 +1224,12 @@ Konto. Die Rampe bezieht sich auf das Referenzmittel vor der Pause.
 
 | Pause | Bent-Arm, Beine, Rumpf | Straight-Arm- und Handgelenk-Konten | Grundlage |
 |---|---|---|---|
-| < 15 Tage | normal (Deckel gegen R) | normal | PAR-B-59 (bis 2 Wochen 90–100 %) |
+| < 8 Tage | normal (LOAD-02) | normal | – |
+| 8–14 Tage | Woche 1: höchstens 100 % von R, gleiche Sprosse | wie links | PAR-B-59 (bis 2 Wochen 90–100 %, obere Grenze) |
 | 15–20 Tage | Woche 1: 90 %, gleiche Sprosse | wie links | PAR-B-59 (untere Grenze), B-84 |
 | 21–48 Tage | Woche 1: 70 %, Sprosse nach Kalibrierungssatz; danach je Woche × 1.1 bis zur Referenz | ab 28 Tagen: Rampe (§8.6) ab Stufe 1 mit 25 % | PAR-B-60 (untere Grenzen), PAR-D-29, PAR-D-33 |
 | 49–118 Tage | Woche 1: 60 %, eine Sprosse leichter oder nach Kalibrierung; je Woche × 1.1 | Rampe ab Stufe 1 mit 25 % | PAR-B-61, PAR-D-29, PAR-D-33 |
-| ≥ 119 Tage | Woche 1: 50 %, 1–2 Sprossen leichter; je Woche × 1.1; die höchsten Straight-Arm-Sprossen erst nach 4 Wochen Basis | Rampe ab Stufe 1 mit 25 % | PAR-B-62, PAR-D-29, PAR-D-33 |
+| ≥ 119 Tage | Woche 1: 50 %, 2 Sprossen leichter (vorsichtige Seite von «1–2»), danach Sprosse nach Kalibrierung und SEL-07; je Woche × 1.1; die höchsten Straight-Arm-Sprossen erst nach 4 Wochen Basis | Rampe ab Stufe 1 mit 25 % | PAR-B-62, PAR-D-29, PAR-D-33 |
 
 - Wo Stream B eine Spanne nennt (70–80 %, +10–15 %), nimmt der Planer die
   untere Grenze (Sicherheitsgrösse, `08` §4). Mit × 1.1 je Woche ist die
@@ -1147,7 +1246,28 @@ Konto. Die Rampe bezieht sich auf das Referenzmittel vor der Pause.
   zusätzlich σ × 1.25 (`onboarding.md` §5.2).
 - Eine Rampe nach einer Pause ohne Beschwerde (`entered_via = break`) wertet
   fehlende Schmerzberichte als schmerzfrei; bei einer Beschwerde braucht jede
-  Stufe Berichte (§8.6).
+  Stufe Berichte (§8.6). Die Pausen-Rampe gilt nur für die Straight-Arm-Konten
+  und `wrist` der Region (`ramp_accounts`, §4.6); die Bent-Arm-Konten folgen
+  der linken Spalte.
+- Die Prozentwerte beziehen sich auf die geloggte Referenz vor der Pause. Ohne
+  geloggte Referenz (neue User) gilt stattdessen LOAD-04 (50 % des
+  Zielvolumens), und die Rampenanteile wirken zusätzlich als Obergrenze
+  (§7.2).
+
+**Ohne Logs: Pause aus dem Onboarding** (`PAR-S-41`; `onboarding.md` §3.5):
+
+| `last_regular_training` | behandelt wie | Straight-Arm- und Handgelenk-Konten |
+|---|---|---|
+| `current_or_lt_3_weeks` | keine Pause | normal (LOAD-04) |
+| `3_to_6_weeks` | 21–48 Tage | Rampe ab Stufe 1 mit 25 % (die Klasse beginnt bei 3 Wochen; die strengere Regel gilt, `onboarding.md` §3.5) |
+| `7_to_16_weeks` | 49–118 Tage | Rampe ab Stufe 1 mit 25 % |
+| `17_to_26_weeks`, `gt_26_weeks` | ≥ 119 Tage | Rampe ab Stufe 1 mit 25 % |
+| `never` | neue Belastungsart (LOAD-04) | neue Belastungsart |
+
+`pre_break_level` ist die **angegebene Stufe** für SEL-08 (Arbeitssprosse
+darunter bzw. nach der Tabelle oben) und die **Obergrenze** der Sprosse
+während der Rampe; der Startwert der Dosierung bleibt die Kapazität mit
+σ × 1.25 (`onboarding.md` §3.5, §5.2).
 
 ### 6.12 Check-in (ADAPT-17, optional)
 
@@ -1191,8 +1311,8 @@ Arten: `rung_up`, `rung_down`, `probe_offered`, `target_changed`,
 | Konto | Wochensteigerung c | Grundlage |
 |---|---|---|
 | `wrist` | +10 % | PAR-D-11 |
-| `elbow_medial/SA`, `biceps_distal/SA`, `biceps_long_head_anterior_shoulder/SA`, `shoulder_extension/SA` | +10 % | PAR-D-09 (Bizepssehne, Ellbogen medial, vordere Schulter); `shoulder_extension` zusätzlich (**Heuristik**, endgradige Streckung unter Last, `04` §3.4) |
-| alle übrigen Konten (`…/BA`; `SA`-Konten von `elbow_lateral`, `shoulder_overhead`, `lumbar`, `knee`, `fingers_forearm`) | +20 % | PAR-D-10 |
+| alle `…/SA`-Konten | +10 % | PAR-D-09; für Strukturen ausserhalb der in PAR-D-09 genannten (Bizepssehne, Ellbogen medial, vordere Schulter) gilt der strengere Wert nach `08` §4 («Sicherheitsgrösse → strengerer Wert») und S-2 |
+| alle `…/BA`-Konten | +20 % | PAR-D-10 |
 
 ### 7.2 Wochendeckel (LOAD-02)
 
@@ -1204,11 +1324,27 @@ f(a) ist das Minimum der zutreffenden Faktoren (sie multiplizieren sich
 nicht): 0.5 bei Vorverletzung der Region in den letzten 12 Monaten
 (PAR-D-02), 0.5 für Handgelenk- und Straight-Arm-Konten bei Minderjährigen
 (PAR-D-23), 0.5 ohne Einwilligung (SAFE-04), 0.75 im Risikofenster
-6–48 Monate Trainingsalter (PAR-D-04, Betrag `PAR-S-25`), sonst 1.
+6–48 Monate Trainingsalter (PAR-D-04, Betrag `PAR-S-25`, vorläufig bis zur
+Entscheidung ENT-S-5), sonst 1. Nach einem Schmerz-Deload gilt für die
+betroffenen Konten bis zur ersten grünen Woche W ≤ 1.0 × R vor der Verletzung
+der Schmerzregel (§6.9, `PAR-S-40`).
 
-Innerhalb einer Rampe (§6.11, §8.6) gilt der Wochendeckel nicht; es gelten die
-Rampenanteile, weil nur auf früher toleriertes Niveau zurückgekehrt wird
-(`05` §6.2).
+**Rampen.** Hat ein Rampenkonto eine **geloggte** Referenz vor der Beschwerde
+bzw. Pause, ersetzen die Rampenanteile den Wochendeckel, weil nur auf früher
+toleriertes Niveau zurückgekehrt wird (`05` §6.2). Ohne geloggte Referenz
+(z. B. Beschwerde oder Pause schon im Onboarding) gibt es kein toleriertes
+Niveau: Dann gilt LOAD-02 bzw. LOAD-04 unverändert, und der Rampenanteil ×
+Zielvolumen wirkt **zusätzlich** als Obergrenze. Eine Region mit Beschwerde
+wächst so nie schneller als ein beschwerdefreies neues Konto.
+
+**Ganze Sätze** (`PAR-S-35`). Der Deckel ist eine Zahl in Belastungseinheiten,
+geplant werden ganze Sätze. Der Anteil eines Satzes, der beim Abrunden
+übrig bleibt, wird je Konto als Spielraum in die nächste Woche übertragen;
+erreicht der Spielraum einen ganzen Satz, wird dieser Satz geplant (höchstens
++1 Satz je Übung und Woche, PAR-B-55). So wächst auch ein kleines Volumen im
+Mittel mit der Rate des Deckels, statt beim Abrunden stehen zu bleiben; eine
+einzelne Woche kann dabei bis zu einem Satz über dem rechnerischen Deckel
+liegen.
 
 ### 7.3 Einheitsdeckel (LOAD-03)
 
@@ -1217,7 +1353,8 @@ S_geplant(s, Einheit) ≤ M(s) · 1.10
 ```
 
 je Struktur (beide Konten zusammen) (PAR-D-31, `08` §4). In der Rampe bezieht
-sich M auf das beschwerdefreie Maximum vor der Beschwerde (`05` §6.2).
+sich M auf das geloggte beschwerdefreie Maximum vor der Beschwerde (`05`
+§6.2); gibt es keins, gilt LOAD-04.
 
 ### 7.4 Neue Belastungsart (LOAD-04)
 
@@ -1237,7 +1374,9 @@ verlängern).
 Die Intensität (Sprosse) ist davon nicht betroffen, nur die Satzzahl; Kraft
 sättigt mit dem Volumen früh (`08` §3 H-6), deshalb ist der Verlust klein.
 Für Trainierte, die gerade regelmässig trainieren, ist das trotzdem sehr
-vorsichtig. §14 schlägt eine Alternative vor.
+vorsichtig. §14 schlägt eine Alternative vor. Die Rechnung gilt für ganze
+Sätze nur dank des Spielraum-Übertrags (`PAR-S-35`); ohne ihn blieben kleine
+Straight-Arm-Volumen beim Abrunden dauerhaft stehen.
 
 ### 7.5 Abstände (LOAD-05)
 
@@ -1245,7 +1384,8 @@ vorsichtig. §14 schlägt eine Alternative vor.
 |---|---|---|---|
 | hart | `skill_max`, `skill_volume` an Straight-Arm-Sprossen, `test`, Prüfversuche, `eccentric`, jeder Satz mit Ziel-RIR ≤ 1 | 48 h; in der Rampe 72 h | PAR-D-08, PAR-D-34, PAR-B-38, PAR-E-13; `skill_volume` als hart: `PAR-S-30` |
 | mittel | `strength`, `weighted`, Hypertrophie (RIR ≥ 2) | 24 h | PAR-B-38, PAR-E-14 |
-| leicht | `balance`, `technique`, `conditioning` ohne Straight-Arm, `prehab`, `mobility`, Aufwärmen | kein Mindestabstand ausser einer Einheit je Tag und Struktur | PAR-D-03 |
+| mittel (Technik) | `technique` an einer Straight-Arm-Sprosse mit `r_eff` ≥ 2; in einer Region mit Rampe hart | 24 h (Rampe 72 h) | `08` §4 («24 h nach submaximaler Technik»), PAR-E-14, PAR-D-34 |
+| leicht | `balance`, übrige `technique`, `conditioning` ohne Straight-Arm, `prehab`, `mobility`, Aufwärmen | kein Mindestabstand ausser einer Einheit je Tag und Struktur | PAR-D-03 |
 
 Geprüft werden nur Strukturen mit `r_eff` ≥ 2 in beiden Einheiten
 (`PAR-S-07`): Ein Profilwert 1 bedeutet geringe Last (PAR-C-45). Massgeblich
@@ -1264,7 +1404,9 @@ Aufwärmsätze; Band-Sätze zählen voll, PAR-B-79):
 
 Die Zuordnung der Spanne von PAR-B-47 zu den OG-Bändern ist `PAR-S-23`. Das
 Budget wird nach Priorität im Verhältnis 3 : 2 : 1 verteilt, mit mindestens 2
-Sätzen je Maximalblock (`PAR-S-09`; PAR-B-08 Untergrenze 2). Reicht das Budget
+Sätzen je Maximalblock (`PAR-S-09`; PAR-B-08 Untergrenze 2); Reste beim
+Runden gehen nach dem Verfahren der grössten Reste, bei Gleichstand an die
+höhere Priorität. Reicht das Budget
 nicht für alle Maximalblöcke, fällt der Block mit der niedrigsten Priorität in
 die Erhaltung (GOAL-03).
 
@@ -1273,20 +1415,24 @@ die Erhaltung (GOAL-03).
 | Konflikt | Regel | Grundlage |
 |---|---|---|
 | Zwei Straight-Arm-Skills gleicher Richtung (z. B. Planche + Maltese) | höchstens 2 je Einheit, gemeinsames Budget, Priorität zuerst | PAR-B-48 |
-| Gegenrichtung (Planche + Front Lever) | als Paar im selben Maximalblock abwechselnd; zwischen A- und B-Satz max(120 s, Pause des Skills / 2), sodass zwischen zwei Sätzen desselben Skills seine volle Pause liegt (300 s) | PAR-B-81, PAR-B-45, PAR-E-04, PAR-E-33, `PAR-S-10` |
+| Gegenrichtung (Planche + Front Lever) | Standard: zwei Maximalblöcke nacheinander (geblockt, PAR-E-32). Nur wenn das Zeitbudget sonst nicht reicht: als Paar abwechselnd; zwischen A- und B-Satz max(120 s, Pause des Skills / 2), sodass zwischen zwei Sätzen desselben Skills seine volle Pause liegt (300 s) | PAR-E-32, PAR-B-81, PAR-B-45, PAR-E-04, `PAR-S-10` |
 | Gemeinsame Strukturen (Planche und Front Lever belasten beide `elbow_medial`, `biceps_distal`; `04` Tabelle 2) | Sie landen auf **denselben** Tagen, nicht auf aufeinanderfolgenden: Die Abstandsregel (§7.5) verbietet Planche am Montag und Front Lever am Dienstag | §7.5; «keine Sperrfrist zwischen zwei verschiedenen Skills» (PAR-B-81) gilt nur, solange keine Struktur verletzt wird |
 | Handstand + Planche/HSPU | beide belasten das Handgelenk mit 3; Balance ist `leicht` (kein Abstand), zählt aber voll in den Handgelenk-Deckel | `04` Tabelle 2, `08` §4 (GtG), PAR-D-11 |
 | Front Lever + Back Lever | beide `shoulder_extension` 3: gleiche Tage; Budget gemeinsam | `04` Tabelle 2 |
 | Muscle-up + Klimmzug/Dip | Muscle-up-Versuche im Maximalblock, Klimmzug/Dip im Kraftblock derselben Einheit | PAR-B-46 |
 
-*Auflösung eines Widerspruchs:* PAR-B-81 nennt für Paare die Pause PAR-B-45
-(120 s), PAR-E-33 verlangt, dass die Pause je Skill nach PAR-E-04 bleibt. Beide
-gelten mit `PAR-S-10`: 150 s zwischen den abwechselnden Sätzen ergeben 300 s je
-Skill. Die Leistungsgrösse folgt dem besser belegten Wert (E), wie in `08` §4.
+*Auflösung eines Widerspruchs:* PAR-E-32 verlangt, alle Maximalversuche eines
+Skills hintereinander zu legen; PAR-B-81 paart Skills der Gegenrichtung
+abwechselnd mit der Pause PAR-B-45 (120 s). Beide sind Heuristik (`08` Rang 21
+bzw. `03` §7). Der Planer blockt standardmässig und paart nur zur Zeitersparnis.
+Beim Paaren bleibt die Pause je Skill nach PAR-E-04 erhalten (`PAR-S-10`: 150 s
+zwischen den abwechselnden Sätzen ergeben 300 s je Skill), damit die
+Leistungsgrösse dem besser belegten Wert folgt (`08` §4).
 
 **Beispiel Persona 2** (Planche und Front Lever, 4 Einheiten, keine bevorzugten
-Tage → Mo, Di, Do, Sa): Beide Skills kommen gepaart auf Mo, Do, Sa (Abstände
-72 h, 48 h, 48 h); Di trägt Beine, Rumpf, Balance und leichte Technik. So
+Tage → Mo, Di, Do, Sa): Beide Skills kommen auf Mo, Do, Sa (Abstände 72 h,
+48 h, 48 h), geblockt nacheinander, gepaart nur bei Zeitmangel; Di trägt
+Beine, Rumpf, Balance und leichte Technik ohne Straight-Arm-Sprossen. So
 bekommt jeder Skill 3 Einheiten (PAR-B-34 für Trainierte), ohne dass eine
 Struktur innerhalb von 48 h zweimal hart belastet wird.
 
@@ -1305,12 +1451,13 @@ deterministisch, jeweils zuerst bei der niedrigsten Priorität und neu prüfend
 nach jedem Schritt:
 
 1. Unterstützungs- und Ergänzungssätze, die das Konto belasten;
-2. Volumensätze (bis der Block entfällt);
-3. Kraftsätze auf 2;
-4. Maximalsätze auf 2;
-5. Arbeitssprosse eine tiefer (senkt k);
-6. Exposition der Einheit streichen;
-7. Erhaltung (GOAL-03).
+2. Balance-, Technik-, Konditions- und belastende Prehab-Sätze;
+3. Volumensätze (bis der Block entfällt);
+4. Kraftsätze auf 2;
+5. Maximalsätze auf 2;
+6. Arbeitssprosse eine tiefer (senkt k);
+7. Exposition der Einheit streichen;
+8. Erhaltung (GOAL-03).
 
 Jeder Schritt senkt die Last mindestens eines Kontos; die Schleife endet, weil
 Satzzahl und Sprossen nach unten begrenzt sind (§11). Jede Kürzung erzeugt
@@ -1338,21 +1485,31 @@ Disclaimer im API-Payload (CLAUDE.md).
 ### 8.2 Red Flags (INJ-01, INJ-02)
 
 **Wann gefragt:** im Onboarding für jede Region mit aktueller Beschwerde; bei
-einem Schmerzbericht für eine neue Region oder beim ersten Überschreiten von
-5/10 während/nach bzw. 2/10 im Alltag (PAR-D-15, PAR-D-14); RF-11 automatisch
-über die Fristen (§8.7). **Welche:** ortsabhängig nach `onboarding.md` §3.7
+**jedem** Schmerzbericht über 5/10 während/nach, über 2/10 im Alltag
+(PAR-D-15, PAR-D-14), mit `sudden_sharp` oder für eine neue Region
+(«bei jeder Beschwerdemeldung», S-1, `05` §9); RF-11 automatisch über die
+Fristen (§8.7). Belastungssymptome (RF-10) kann der User jederzeit über
+«Symptome beim Training melden» angeben, unabhängig von einer Region. Die
+Fragen, Dringlichkeiten und N-Aktionen liegen im Plan-Payload, damit der
+Client sie offline auswerten und eine Einheit stoppen kann (§10.5). **Welche:** ortsabhängig nach `onboarding.md` §3.7
 (RF-01 bis RF-07 und RF-10 überall; RF-08, RF-09 nur Rücken; RF-12 nur
 Handgelenk und minderjährig; RF-13 nur Rücken und minderjährig).
 
 | Dringlichkeit | Flags | Aktion |
 |---|---|---|
-| N (sofort) | RF-05 (Gelenk sichtbar verschoben), RF-07, RF-08, RF-10 | **Training insgesamt stoppen** (SAFE-02), sofortige ärztliche Abklärung empfehlen; Plan erst nach bestätigter Freigabe |
+| N (sofort) | RF-05 (Gelenk sichtbar verschoben), RF-07, RF-08, RF-10 | **Training insgesamt stoppen** (SAFE-02) und Region `locked`; sofortige ärztliche Abklärung empfehlen; Plan erst nach bestätigter Freigabe |
 | D (in den nächsten Tagen) | RF-01, RF-02, RF-03, RF-05 (Schwellung, Bluterguss), RF-06, RF-09 | Region `locked`, zeitnahe Abklärung empfehlen, Freigabe nötig (PAR-D-21) |
 | A (Abklärung empfehlen) | RF-04, RF-11, RF-12, RF-13 | Region `rtt_0`; Hinweis auf Fachperson; RF-12/RF-13: Stütz- bzw. Extensionselemente pausieren |
 
 Eigene Einschätzung «ernsthafte Verletzung» (`suspected_serious = yes`) oder
 Befund «Riss oder Verdacht» wirken wie eine D-Flag; `unsure` bzw. eine
 laufende Abklärung setzen `rtt_0` mit Hinweis (`onboarding.md` §3.7).
+
+**Region `other`.** Sie hat keine Strukturen, auf die ein Ausschluss wirken
+könnte (z. B. Brust bei RF-01). Eine N- oder D-Flag bzw. «ernst» in `other`
+pausiert deshalb die Planung (Auflage `plan_stopped`), bis der User die
+betroffenen Übungen ausgeschlossen oder die Freigabe bestätigt hat (INJ-02).
+Eine eigene Region «Brust» ist ENT-S-9.
 
 ### 8.3 Zustandsautomat je Region (INJ-03)
 
@@ -1361,13 +1518,14 @@ laufende Abklärung setzen `rtt_0` mit Hinweis (`onboarding.md` §3.7).
 | `normal` | Beschwerde ohne Red Flag, Alltagsschmerz ≤ 2 | `rtt_1` mit Start 0.5 (0.25 nach Sehnenbefund/Verweis) | PAR-D-14, PAR-D-24, PAR-D-33 |
 | `normal` | Beschwerde ohne Red Flag, Alltagsschmerz > 2 | `rtt_0` | PAR-D-14 |
 | `normal` | Pause ≥ 28 Tage auf Straight-Arm-/Handgelenk-Konten der Region | `rtt_1` mit 0.25 (`entered_via = break`) | PAR-D-29, PAR-D-33 |
+| beliebig | Red Flag N | `locked` und SAFE-02 (Training gestoppt) | PAR-D-21, `05` §9 (RF-05 «Region sperren»), `onboarding.md` §3.7 |
 | beliebig | Red Flag D oder Selbsteinschätzung «ernst» | `locked` | PAR-D-21 |
 | beliebig | Red Flag A oder Beschwerde > 28 Tage ohne Besserung (RF-11) | `rtt_0` | `05` §9, PAR-D-19 |
-| `locked` | User bestätigt Freigabe durch eine Fachperson | `rtt_1` mit 0.25 | `05` §6.2 (Stufe 0 nach Verweis), PAR-D-33 |
+| `locked` | User bestätigt Freigabe durch eine Fachperson (`POST /v1/me/regions/{region}/clearance`; nach einem N-Stopp hebt `POST /v1/me/screening/clearance` den Stopp auf und setzt gesperrte Regionen auf `rtt_1`) | `rtt_1` mit 0.25 | `05` §6.2 (Stufe 0 nach Verweis), PAR-D-33 |
 | `rtt_0` | Alltagsschmerz ≤ 2 und Red-Flag-Fragen negativ | `rtt_1` | `05` §6.2 |
-| `rtt_n` (1–4) | PAR-D-26 erfüllt (≥ 2 Einheiten der Stufe ohne Beschwerden während, nach und am Folgetag; Schmerzregeln eingehalten; ≥ 7 Tage seit dem letzten Wechsel) | `rtt_{n+1}` | PAR-D-26 |
-| `rtt_n` (1–5) | Schmerz > 1 h danach oder am Folgetag | Stufe wiederholen, 1 Tag Pause der Struktur | PAR-D-28 |
-| `rtt_n` (1–5) | Schmerz im Aufwärmen, der > 15 min anhält | eine Stufe zurück, 2 Tage Pause der Struktur | PAR-D-28 |
+| `rtt_n` (1–4) | PAR-D-26 erfüllt (≥ 2 Einheiten der Stufe ohne Beschwerden während, nach und am Folgetag; Schmerzregeln eingehalten; ≥ 7 Tage seit dem letzten Wechsel) | nächster Volumenschritt; ist der Schritt 0.75 der Stufe 2 erreicht und erfüllt, `rtt_{n+1}` | PAR-D-25, PAR-D-26 |
+| `rtt_n` (1–5) | Schmerz > 1 h danach (`lasted_over_1h`) oder am Folgetag höher als vor der Einheit | Stufe bzw. Schritt wiederholen, 1 Tag Pause der Struktur | PAR-D-28 |
+| `rtt_n` (1–5) | Schmerz im Aufwärmen, der > 15 min anhält (`persisted_over_15min`) | eine Stufe zurück, 2 Tage Pause der Struktur | PAR-D-28 |
 | `rtt_5` | 2 Wochen ohne Regelverletzung | `normal` (normale Deckel gegen die dann gültige Referenz) | **Heuristik** (`PAR-S-32`) |
 
 ### 8.4 Matrix anwenden (INJ-04)
@@ -1375,8 +1533,9 @@ laufende Abklärung setzen `rtt_0` mit Hinweis (`onboarding.md` §3.7).
 Für jede Region mit aktueller Beschwerde (`rtt_1`–`rtt_4`) bestimmt die Zelle
 Region × `complaint_family` der Übung die Aktion (`05` §8): **X** nicht planen;
 **M** modifizieren (§8.5); **S** erlaubt, solange die Schmerzregeln halten
-(§8.6); **–** nicht betroffen. In `rtt_5` gelten X-Zellen nicht mehr, M-Zellen
-als S (**Heuristik**: Stufe 5 ist in `05` §6.2 die Rückkehr zur Leistung). Die Matrix-Aktionen sind **Heuristik**; die Quelle einer Zelle belegt
+(§8.6); **–** nicht betroffen. In `rtt_5` gelten M-Zellen als S; X-Zellen
+bleiben X, bis die Region `normal` ist, und kommen dann als neue
+Belastungsart (LOAD-04, 50 %) zurück (**Heuristik**, `PAR-S-32`). Die Matrix-Aktionen sind **Heuristik**; die Quelle einer Zelle belegt
 den Mechanismus, nicht die Aktion (`05` §8). `knee` wirkt nur auf die
 Bein-Familie (Tiefe begrenzen, Pistol-Stufen M), `other` hat keine
 automatische Regel (`onboarding.md` §3.7).
@@ -1395,18 +1554,33 @@ Ellenbeugen-Beschwerde immer X (PAR-D-41).
 |---|---|---|---|
 | 0 | nicht geplant (SAFE-06) | 0 | `05` §6.2 |
 | 1 | Regression; bei Handgelenk und Ellbogen zuerst Hang/Zug | Startanteil 0.5 bzw. 0.25 | PAR-D-24, PAR-D-27, PAR-D-33 |
-| 2 | Regression; Stütz ohne Impact | die auf den Startanteil folgenden Schritte der Reihe 0.25 → 0.5 → 0.75, je Schritt ≥ 7 Tage | PAR-D-25, PAR-D-26 |
+| 2 | Regression; Stütz ohne Impact | die auf den Startanteil folgenden Schritte der Reihe 0.25 → 0.5 → 0.75 (`ramp_step`), je Schritt ≥ 7 Tage und PAR-D-26 | PAR-D-25, PAR-D-26 |
 | 3 | Regression | 1.0 | `05` §6.2 |
 | 4 | Arbeitssprosse submaximal (Technik-Dosierung, Band erlaubt) | 1.0 | `05` §6.2 |
-| 5 | Maximalblöcke und Progression; Prüfversuche wieder erlaubt | normale Deckel | `05` §6.2, `onboarding.md` §4.3 |
+| 5 | Maximalblöcke und Progression; Prüfversuche erst ab `normal` (ADAPT-06a) | normale Deckel | `05` §6.2, `onboarding.md` §4.3 |
+
+Der Rampenanteil gilt für die `ramp_accounts` der Region (§4.6) und wird je
+Konto genau einmal angewandt, auch wenn eine Übung zusätzlich eine M-Zelle
+hat.
 
 Harte Reize der Region liegen in der Rampe ≥ 72 h auseinander (PAR-D-34).
 
 **Schmerz-Monitoring.** Beobachtet werden Regionen in `rtt_1`–`rtt_5` und
-Regionen, deren S-Zellen in der Einheit vorkommen. Nach der Einheit fragt die
-App NRS «während» und «danach», am nächsten Morgen «heute früh»; täglicher
-Alltagsschmerz optional (PAR-D-13). Die Fragen sind neutral, freiwillig und
-ohne Streak-Folgen.
+Regionen, deren S-Zellen in der Einheit vorkommen. Vor der Einheit fragt die
+App kurz nach dem aktuellen Wert (`before_session`), im Aufwärmen nur, wenn
+Schmerz auftritt (`warmup`, mit «hält länger als 15 min an»), nach der Einheit
+«während» und «danach» (mit «hielt länger als 1 h an»), am nächsten Morgen
+«heute früh»; täglicher Alltagsschmerz optional (PAR-D-13). Die Fragen sind
+neutral, freiwillig und ohne Streak-Folgen.
+
+- **Neue Beschwerde** (Übergang aus `normal`): ein Bericht über 2/10 oder
+  Berichte über 0 an 2 verschiedenen Tagen innerhalb von 7 Tagen (PAR-D-14;
+  Zählweise `PAR-S-42`).
+- **Morgenregel:** «heute früh» ist nicht höher als `before_session`; fehlt
+  dieser Wert, gilt der letzte Morgen- bzw. Alltagswert vor der Einheit
+  (PAR-D-16).
+- **Wochentrend steigend:** Mittel der Werte «danach» der laufenden ISO-Woche
+  ≥ 1 Punkt über dem Mittel der Vorwoche (PAR-D-17; Schwelle `PAR-S-42`).
 
 | Regel | Bedingung | Folge | Grundlage |
 |---|---|---|---|
@@ -1475,6 +1649,14 @@ Eigenschaftstest §12.1).
   stark», B «Einzelstudien», C «Coaching-Literatur», D «Praxisberichte»,
   Heuristik «Faustregel dieser App, wird aus Daten nachgeschärft»); Titel und
   Link aus `GET /v1/planner/sources`.
+- **Keine Diagnose durch Belege (EXPL-07).** Reasons, die an eine Region mit
+  Beschwerde oder Red Flag gebunden sind (SEL-03, INJ-*, SAFE-02/05/06),
+  zeigen dem User nur die Evidenzstufe, keine Quellentitel: Titel wie die von
+  D-64, D-68 oder D-89 nennen Erkrankungen und wären neben einer Beschwerde
+  eine Verdachtsdiagnose (`05` §8, §9). Texte nennen die Region in den Worten
+  der Körperkarte («innen am Ellbogen»), nie die Struktur dahinter
+  (`biceps_distal` usw.). Die vollständigen IDs bleiben in `plan_decisions`
+  und in der Entscheidungsspur für den User selbst.
 - **«Was hat sich geändert?»** nach jeder Einheit aus `plan_changes[]`.
 - **«Nicht im Plan»** aus `exclusions[]`, z. B. «Planche an Ringen ist
   pausiert, solange du Beschwerden innen am Ellbogen meldest.»
@@ -1485,7 +1667,7 @@ Eigenschaftstest §12.1).
 
 | Verboten | Grund |
 |---|---|
-| Diagnosebegriffe und Verdachtsdiagnosen (z. B. Namen von Sehnen- oder Gelenkerkrankungen) in Texten an den User | keine Diagnosen (`05` §8, §9) |
+| Diagnosebegriffe und Verdachtsdiagnosen (z. B. Namen von Sehnen- oder Gelenkerkrankungen) in Texten an den User, auch in angezeigten Quellentiteln und Platzhaltern | keine Diagnosen (`05` §8, §9); EXPL-07 |
 | «heilt», «lindert», «schützt vor» | PAR-D-38, PAR-D-39; Prehab-Texte nutzen das Evidenzlabel der Region |
 | «ZNS-/CNS-Ermüdung» als Begründung | PAR-E-29 |
 | «Schlaf verstärkt den Lerneffekt» | PAR-E-44 |
@@ -1552,11 +1734,10 @@ Eingaben zurück (z. B. Snapshot verweist auf unbekannte Übung), nie `panic`.
   Satz-Einträge mit `is_planned = true`, `kind`, `rest_after_planned_s`,
   Elemente mit den Zielwerten in `reps` bzw. `hold_seconds`, `load_kg` und
   Assistenz; `workout_sessions.planned_session_id` verweist auf die geplante
-  Einheit. Die IDs der Satz-Einträge **sind** die Item-IDs des Plans; so
-  ordnet die Adaption Ist zu Soll zu, ohne neue Spalte. Wird eine Einheit nach
-  einem Abbruch neu gestartet, bekommen die Einträge neue IDs, und die Adaption
-  ordnet über Übung und Reihenfolge zu. Der Start ist idempotent (bestehender
-  Draft wird zurückgegeben).
+  Einheit. Jeder Satz-Eintrag bekommt eine neue UUIDv7 und in
+  `set_entries.planned_item_id` die Item-ID des Plans; so ordnet die Adaption
+  Ist zu Soll zu, auch wenn zwei Geräte dieselbe Einheit offline starten.
+  Der Start ist idempotent (bestehender Draft wird zurückgegeben).
 - **Ausführen** läuft unverändert über die Log-API bzw. den Sync (ADR 0007,
   0009): Aus einem geplanten Satz wird ein ausgeführter (`is_planned = false`,
   `completed_at`, Istwerte). Zielwerte bleiben im Plan erhalten.
@@ -1566,8 +1747,10 @@ Eingaben zurück (z. B. Snapshot verweist auf unbekannte Übung), nie `panic`.
   denselben Pfad aus.
 - **Schmerzberichte** sind Client-Zeilen (`user_pain_reports`) mit Sync; nach
   dem Commit wertet der Dienst sie aus (§8.6).
-- **Geplante Ruhe und Deload** setzen `user_training_days.planned_rest` bzw.
-  `deload`; die bestehende Streak-Logik zählt sie (ADR 0003, ADR 0008).
+- **Geplante Ruhe und Deload.** Der Planer schreibt `user_training_days` nicht
+  selbst. Ein geplanter Ruhetag wird über das bestehende Ruhetag-Loggen
+  erfasst (ein Tipp in der App); eine im Deload abgeschlossene Einheit setzt
+  beim Abschluss `deload` (ADR 0003, ADR 0008 unverändert; ENT-S-8).
 
 ### 10.3 Endpunkte (Tag `planning`, OpenAPI zuerst)
 
@@ -1582,6 +1765,7 @@ Eingaben zurück (z. B. Snapshot verweist auf unbekannte Übung), nie `panic`.
 | `POST /v1/me/plan/sessions/{id}/start` | Draft-Session erzeugen (§10.2); optional Check-in (ADAPT-17) | gibt `WorkoutSession` im bestehenden Schema zurück |
 | `GET /v1/me/plan/decisions` | Änderungsprotokoll | Cursor-Paginierung |
 | `POST /v1/me/pain-reports`, `GET /v1/me/pain-reports` | Schmerzberichte (auch über Sync) | nur mit Einwilligung gespeichert |
+| `POST /v1/me/symptoms` | «Symptome beim Training melden» (Belastungssymptome, RF-10) | wirkt sofort (SAFE-02); ohne Einwilligung nur als Auflage gespeichert |
 | `GET /v1/me/regions` | Zustand je Region mit Texten und Disclaimer | – |
 | `POST /v1/me/regions/{region}/red-flags` | Antworten auf die Red-Flag-Fragen | ohne Einwilligung nur flüchtig ausgewertet |
 | `POST /v1/me/regions/{region}/clearance`, `POST /v1/me/screening/clearance` | User bestätigt die Freigabe durch eine Fachperson | Zustandswechsel §8.3 |
@@ -1607,9 +1791,12 @@ prüfen Routen und Antworten (ADR 0007). Planungs-Antworten tragen
   wie die Skill-Karte (ADR 0011). Server-Tabellen des Planers sind für den
   Client nur lesbar.
 - Offline startet der Client eine geplante Einheit selbst nach demselben
-  Materialisierungsschema (§10.2, Item-IDs als Satz-Eintrag-IDs); der Sync
-  lädt sie hoch, der Server adaptiert nach dem Commit.
-- Schmerzberichte werden offline erfasst und synchronisiert.
+  Materialisierungsschema (§10.2, neue IDs, `planned_item_id`); der Sync lädt
+  sie hoch, der Server adaptiert nach dem Commit.
+- Schmerzberichte und Red-Flag-Antworten werden offline erfasst und
+  synchronisiert. Der Plan-Payload enthält die Red-Flag-Fragen der Regionen
+  mit Dringlichkeit und Aktion; eine N-Antwort beendet die Einheit auch
+  offline, bevor der Server davon weiss.
 
 ### 10.6 Clients (ENT-1)
 
@@ -1624,7 +1811,7 @@ klären (ENT-1).
 
 | Grösse | Richtwert |
 |---|---|
-| Wissensbasis | ≈ 40 Skills, ≈ 200 Stufen, ≈ 300 Übungen, ≈ 30 Leitern, 10 Strukturen, 11 Regionen, 9 Beschwerdefamilien, ≈ 300 Parameter (davon 258 aus der Recherche und 34 `PAR-S`), ≈ 115 Regeln, 572 Quellen |
+| Wissensbasis | ≈ 40 Skills, ≈ 200 Stufen, ≈ 300 Übungen, ≈ 30 Leitern, 10 Strukturen, 11 Regionen, 9 Beschwerdefamilien, ≈ 300 Parameter (davon 262 aus der Recherche und 42 `PAR-S`), ≈ 120 Regeln, 572 Quellen |
 | Snapshot | ≤ 42 Tage Logs (PAR-B-73): ≤ ≈ 40 Einheiten × 40 Satz-Elemente ≈ 1 600 Elemente; ≤ ≈ 100 Kapazitäten |
 | Plan | ≤ 7 Einheiten, ≤ ≈ 40 Sätze je Einheit (P ≤ 280) |
 
@@ -1669,13 +1856,14 @@ Geprüft über alle Personas und über zusätzlich erzeugte gültige Snapshots
 | I-7 | Kein Text verletzt §9.3 |
 | I-8 | Geschätzte Dauer ≤ `session_minutes`, oder die Einheit ist auf Aufwärmen + Primärblock gekürzt und begründet |
 | I-9 | Equipment: jede Übung ist mit dem Equipment des Users ausführbar |
-| I-10 | Der Planer schreibt nie Unlocks, XP oder Streaks; Deload- und Ruhetage sind markiert |
+| I-10 | Der Planer schreibt nie Unlocks, XP, Streaks oder `user_training_days`; Deload- und Ruhetage sind im Plan markiert |
+| I-11 | Keine Region mit Beschwerde wächst schneller als ein beschwerdefreies neues Konto (§7.2) |
 
 ### 12.2 Tabellengetriebene Tests je Regel
 
 Jede Regel in Anhang A hat eine Testtabelle mit Grenzfällen, z. B. DOSE-01:
-d = 3.9 s → Sprosse tiefer; d = 4 s → h = 2 s; d = 10 → 5 × 7 s; d = 20 →
-4 × 14 s; d = 30 → 3 × 20 s. LOAD-02: R = 0, Woche 1; Deload-Woche im Fenster;
+d = 3.9 s → Sprosse tiefer; d = 4 s → h = 2 s (5 Sätze); d = 10 → 5 × 7 s;
+d = 20 → 4 × 14 s; d = 30 → 3 × 21 s. LOAD-02: R = 0, Woche 1; Deload-Woche im Fenster;
 Vorverletzung und Minderjährigkeit gleichzeitig (Faktor 0.5, nicht 0.25).
 
 ### 12.3 Golden Files
@@ -1689,17 +1877,17 @@ Changelog-Eintrag in `ruleset_version`.
 | Persona | Eingaben (Kurzform) | Erwartete Eigenschaften |
 |---|---|---|
 | 1 Anfänger, Outdoor-Park, 2×/Woche, Muscle-up | `outdoor_park`, 2 × 45 min, 0–3 Klimmzüge, 0 Dips, Liegestütz 8–12, `lt_6_months` | 2 volle Ganzkörper-Einheiten (Mo, Do); Zubringer-Leitern Klimmzug (Exzentrik, Rudern am niedrigen Holm, Hang), Dip (Stütz, Exzentrik), Liegestütz; keine Band-Übungen (kein Band); kein Muscle-up-Block, Hinweis 5 + 5 als Minimum (§3.4, §3.5); Straight-Arm-Budget 8; Woche 1 mit 50 % (LOAD-04); lineare Doppelprogression |
-| 2 Fortgeschritten, Gym, 4×/Woche, Planche + Front Lever | `gym`, 4 × 60–90 min, Tuck/Adv-Tuck-Stufen mit Halteklassen, `1_to_4_years` | Planche und Front Lever gepaart auf 3 Tagen mit ≥ 48 h Abstand (§7.7), vierter Tag leicht; Budget 12 bzw. 18 nach OG-Band; Pausen 300 s bzw. 150 s zwischen Paar-Sätzen; wellenförmige Kraftarbeit; Kalibrierungssätze in den ersten Einheiten |
-| 3 Fortgeschritten, mediale Ellbogenbeschwerden, Ziel Planche | wie 2, Region `elbow_inner` aktuell, Alltagsschmerz 1–2, Training 3–4/10, keine Red Flag | Region `rtt_1` (Start 0.5); Planche-Familie M (Regression, Volumen × 0.5), Ringe-Straight-Arm X, Klimmzug M (Neutralgriff); 72 h zwischen harten Reizen der Region; Schmerz-Monitoring aktiv; keine Tests und Prüfversuche an der Region; Texte ohne Diagnose |
-| 4 Wiedereinsteiger nach 6 Monaten | `17_to_26_weeks`, `pre_break_level` Adv Tuck Planche, 10 Klimmzüge | Straight-Arm- und Handgelenk-Konten in der Rampe ab Stufe 1 mit 25 %; Bent-Arm Woche 1 50 %, 1–2 Sprossen leichter, +10 % je Woche; σ × 1.25; Kalibrierungssätze; keine Straight-Arm-Tests vor Ende der Rampe; höchste Stufen erst nach 4 Wochen |
-| 5 Anfänger, Full Planche in 8 Wochen | Ziel Full Planche mit Datum, Stufe `none`, Liegestütz 4–7 | Realismus-Check: Untergrenze 48 Wochen, Spanne 105–162 Wochen, Etappenziel erste Planche-Stufe; Plan ab den Wurzeln (Liegestütz, Stütz, Handgelenk, Hollow); kein Planche-Maximalblock; neutrale Texte |
+| 2 Fortgeschritten, Gym, 4×/Woche, Planche + Front Lever | `gym`, 4 × 60–90 min, Tuck/Adv-Tuck-Stufen mit Halteklassen, `1_to_4_years` | Planche und Front Lever auf 3 Tagen mit ≥ 48 h Abstand, geblockt (gepaart nur bei Zeitmangel, §7.7); vierter Tag ohne Straight-Arm-Sprossen und ohne harte Zugreize (Beine, Rumpf, Balance, leichte Technik); Budget 12 bzw. 18 nach OG-Band; Pausen 300 s; wellenförmige Kraftarbeit; Kalibrierungssätze in den ersten Einheiten; Volumen startet bei 50 % (LOAD-04, ENT-S-1) |
+| 3 Fortgeschritten, mediale Ellbogenbeschwerden, Ziel Planche | wie 2, Region `elbow_inner` aktuell, Alltagsschmerz 1–2, Training 3–4/10, keine Red Flag | Region `rtt_1` (Start 0.5, ohne geloggte Referenz zusätzlich unter LOAD-04); Planche-Familie M (Regression), Ringe-Straight-Arm X, Klimmzug M (Neutralgriff); 72 h zwischen harten Reizen der Region; Schmerz-Monitoring aktiv; keine Tests und Prüfversuche an der Region; Texte und Belege ohne Diagnose (EXPL-07) |
+| 4 Wiedereinsteiger nach 6 Monaten | `17_to_26_weeks`, `pre_break_level` Adv Tuck Planche, 10 Klimmzüge | Pause aus dem Onboarding (§6.11); Straight-Arm- und Handgelenk-Konten in der Rampe ab Stufe 1 mit 25 %, ohne geloggte Referenz zusätzlich unter LOAD-04; Bent-Arm 50 %, 2 Sprossen unter der Angabe, dann nach Kalibrierung; σ × 1.25; keine Straight-Arm-Tests vor Ende der Rampe; Sprosse höchstens bis Adv Tuck während der Rampe |
+| 5 Anfänger, Full Planche in 8 Wochen | Ziel Full Planche mit Datum, Stufe `none`, Liegestütz 4–7 | Realismus-Check: Untergrenze 48 Wochen, Spanne 105–162 Wochen, Etappenziel die erste Planche-Stufe (Lean; Coaching 0–2 Monate, PAR-A-47), die Tuck Planche mit eigener Spanne danach; Plan ab den Wurzeln (Liegestütz, Stütz, Handgelenk, Hollow); kein Planche-Maximalblock; neutrale Texte |
 | 6 Widersprüchliche Angaben | z. B. `sedentary`, 0 Liegestütze, aber Straddle Planche und Full Front Lever | höchstens 2 Rückfragen; danach Stufe nach R-2/R-3 (plausible Vorstufe), σ × 1.25, niedrige Konfidenz → Kalibrierungssätze; keine stille Übernahme des höheren Werts |
 
 ### 12.5 Szenarien über mehrere Wochen
 
 | Szenario | Erwartung |
 |---|---|
-| Persona 3 meldet nach Einheit 2 Schmerz 6/10 | nächste Einheit: 1 Sprosse leichter, −30 %, 7 Tage, als Deload erfasst; dritte Verletzung in 14 Tagen → Verweis-Hinweis |
+| Persona 3 meldet nach Einheit 2 Schmerz 6/10 | Red-Flag-Fragen; ohne Red Flag Rückschritt nach den Soreness Rules der Rampe (PAR-D-28), als Schmerz-Deload erfasst; dritte Verletzung in 14 Tagen → Verweis-Hinweis |
 | Persona 4 über 8 Wochen ohne Beschwerden | Rampe 0.25 → 0.5 → 0.75 → 1.0, je Stufe ≥ 7 Tage; danach normale Deckel |
 | Plateau an einer Sprosse | Deload der Folgewoche, danach Variation; kein zusätzliches Volumen über die Deckel |
 | Zwei Einheiten an aufeinanderfolgenden Tagen | Tausch oder Herabstufung beim Start mit Begründung |
@@ -1724,8 +1912,9 @@ Phase 5 dokumentiert die erzeugten Pläne je Persona und ihre Plausibilität in
 
 ### 13.2 Migration
 
-- Nur additive Änderungen: neue Tabellen, zwei neue optionale Spalten
-  (`workout_sessions.planned_session_id`, `set_entries.sir_s`). Keine
+- Nur additive Änderungen: neue Tabellen, drei neue optionale Spalten
+  (`workout_sessions.planned_session_id`, `set_entries.sir_s`,
+  `set_entries.planned_item_id`). Keine
   bestehende Spalte wird umbenannt oder gelöscht; die laufende API bleibt
   während eines Deploys kompatibel (CLAUDE.md, «Expand, deploy, contract»).
 - Inhalte kommen nie über Migrationen, sondern über den Seed (CLAUDE.md).
@@ -1764,6 +1953,9 @@ Fragen auf:
 | ENT-S-4 | Reserve bei Halten loggen | (a) neue Spalte `set_entries.sir_s`; (b) `rir` für Halte als Sekunden deuten | **(a)**: eindeutige Semantik, `rir` bleibt Wiederholungen |
 | ENT-S-5 | Risikofenster 6–48 Monate (PAR-D-04) | (a) Deckelfaktor 0.75 (`PAR-S-25`); (b) kein zusätzlicher Faktor, weil die Deckel schon konservativ sind | **(a)**, aber nur zusammen mit ENT-S-1 (b); sonst (b) |
 | ENT-S-6 | Belastungseinheit ohne Haltedauer (§4.5) | (a) satzbasiert wie `05` §5.4; (b) Sätze × Haltedauer relativ zur Maximalhaltezeit | **(a)** für v1; mit Logs prüfen |
+| ENT-S-7 | Sicherheitsauflagen ohne Einwilligung (§4.7) | (a) minimale Auflagen (Stopp, Regionen-Ausschluss) ohne Antworten und Werte speichern; (b) ohne Einwilligung kein Plan, sobald eine Sicherheitsfrage greift (Alternative aus OE-2) | **(a)**, vorbehaltlich der rechtlichen Prüfung (ENT-4); sonst (b) |
+| ENT-S-8 | Geplante Ruhetage und der Streak (§5.4) | (a) Ruhetag mit einem Tipp über das bestehende Loggen (ADR 0008 unverändert); (b) geplante Ruhetage zählen am Tagesende automatisch (ADR 0008 ändern) | **(a)** für v1 |
+| ENT-S-9 | Region «Brust» auf der Körperkarte | (a) hinzufügen (RF-01 nennt die Brust; heute nur über `other`); (b) bei `other` bleiben | **(a)**, mit Zuordnung zu `biceps_long_head_anterior_shoulder` und Dip-/Liegestütz-Familien nach fachlicher Prüfung |
 
 ## Anhang A: Regelkatalog
 
@@ -1777,6 +1969,7 @@ Evidenz: A–D nach `00_sources.md`; H = Heuristik (Begründung im Abschnitt).
 | SAFE-04 | Ohne Einwilligung konservativ | §5.2 | PAR-D-02 | H |
 | SAFE-05 | Gesperrte Region: nichts mit Last ≥ 1 | §5.2 | PAR-D-21, PAR-S-22 | H |
 | SAFE-06 | Rampenstufe 0: nichts mit Last ≥ 2 | §5.2 | PAR-S-22 | H |
+| SAFE-07 | Minderjährige: kein Plan bis zur Entscheidung ENT-3 | §5.2 | – | Projektvorgabe |
 | GOAL-01 | Bis 3 Ziele nach Priorität | §5.3 | – | H |
 | GOAL-02 | Pfad, Zubringer, Unterstützung | §3.4 | PAR-A-62 | C/H |
 | GOAL-03 | Erhaltungsdosis bei Zeitmangel | §5.3 | PAR-B-63, PAR-B-34 | B |
@@ -1801,6 +1994,7 @@ Evidenz: A–D nach `00_sources.md`; H = Heuristik (Begründung im Abschnitt).
 | SESS-08 | Belastende Prehab am Ende | §5.5 | PAR-E-01 | H |
 | SESS-09 | Leichte Einheit | §5.5 | PAR-E-12, PAR-E-14 | H |
 | SESS-10 | Hypertrophie als Nebenziel | §5.5 | PAR-B-21, 75, 79, PAR-C-46 | A/B/H |
+| SESS-11 | Greasing the Groove (optional, v1 aus) | §5.5 | PAR-B-80, PAR-E-27, 48, 49 | C/D/H |
 | SEL-01 | Kandidaten | §5.6 | – | – |
 | SEL-02 | Equipment | §5.6 | – | – |
 | SEL-03 | Regionen, Matrix, Vorgaben | §5.6, §8.4 | `05` §8 | H |
@@ -1821,11 +2015,12 @@ Evidenz: A–D nach `00_sources.md`; H = Heuristik (Begründung im Abschnitt).
 | DOSE-07 | Exzentrik | §5.7 | PAR-B-16, PAR-B-77 | C |
 | DOSE-08 | Balance | §5.7 | PAR-E-35, 36, 38, PAR-B-74 | A (Analogie)/H |
 | DOSE-09 | Technik | §5.7 | PAR-S-26, PAR-E-14, PAR-E-38 | H |
-| DOSE-10 | Prehab und Zubringer | §5.7 | PAR-B-78, PAR-B-44, PAR-B-45, PAR-D-37 | B |
+| DOSE-10 | Prehab | §5.7 | PAR-B-78, PAR-B-44, PAR-D-37 | B |
+| DOSE-12 | Zubringer, Unterstützung, Antagonisten | §5.7 | PAR-B-78, PAR-B-45, PAR-E-07 | B |
 | DOSE-11 | Zusatzlast | §5.7 | PAR-B-23, PAR-B-32 | B |
 | DOSE-20–23 | Stoppregeln | §5.9 | PAR-E-15–17, PAR-D-15 | H/A (Reha) |
 | LOAD-01 | Belastungseinheit | §4.5 | PAR-C-27, 40, 44, 45, 47, PAR-B-79, PAR-S-08, PAR-S-15 | H |
-| LOAD-02 | Wochendeckel | §7.2 | PAR-D-02, 04, 09–11, 23, PAR-S-14, 15, 25 | H |
+| LOAD-02 | Wochendeckel, Rampen, ganze Sätze | §7.2 | PAR-D-02, 04, 09–11, 23, PAR-B-55, PAR-S-14, 15, 25, 35, 40 | H |
 | LOAD-03 | Einheitsdeckel | §7.3 | PAR-D-31 | B (Analogie) |
 | LOAD-04 | Neue Belastungsart | §7.4 | PAR-D-12 | H |
 | LOAD-05 | Abstände | §7.5 | PAR-D-03, 08, 34, PAR-B-38, PAR-E-13, 14, PAR-S-07, PAR-S-30 | B/H |
@@ -1835,7 +2030,7 @@ Evidenz: A–D nach `00_sources.md`; H = Heuristik (Begründung im Abschnitt).
 | LOAD-09 | Schutz neuer Sprossen | §7.8 | PAR-D-06, PAR-S-27 | A/B (Zeitverlauf)/H |
 | LOAD-10 | Kürzen | §7.9 | – | H |
 | LOAD-11 | Keine ACWR-Sperre | §7.10 | PAR-B-58, PAR-D-30, PAR-B-72, 73 | A/B |
-| ADAPT-01–03 | Kapazität, erster Satz, Widerspruch | §4.3, §6.2 | PAR-F-01, 02, 16, 20–26, 28, 32, 33, 41, 55, 68, PAR-E-31, PAR-S-03, 04, 21, 31 | B/H |
+| ADAPT-01–03 | Kapazität, erster Satz, Widerspruch, abgeleitete Startwerte | §4.3, §6.2 | PAR-F-01, 02, 16, 20–26, 28, 32, 33, 41, 55, 68, PAR-E-31, PAR-S-03, 04, 21, 31, 38, 39 | B/H |
 | ADAPT-04 | Haltezeit wächst höchstens +2 s je Woche | §6.3 | PAR-B-33 | H |
 | ADAPT-05 | Prüfsprosse anbieten | §6.3 | PAR-B-05, PAR-B-30, PAR-A-78, PAR-S-24 | B/C/H |
 | ADAPT-06 | Sprosse wechseln | §6.3 | PAR-A-65, PAR-B-57 | C/H |
@@ -1847,9 +2042,9 @@ Evidenz: A–D nach `00_sources.md`; H = Heuristik (Begründung im Abschnitt).
 | ADAPT-11 | Autoregulation | §6.6 | PAR-B-28, 29, 31, PAR-F-25 | A/H |
 | ADAPT-12 | Regression | §6.7 | PAR-E-15, 16, PAR-D-18 | H |
 | ADAPT-13 | Plateau | §6.8 | PAR-B-49, PAR-E-20, 34, 37, PAR-S-12, PAR-S-17 | B/H |
-| ADAPT-14 | Deload geplant und ausgelöst | §6.9 | PAR-B-03, 49–54, PAR-D-18 | B/H |
+| ADAPT-14 | Deload geplant und ausgelöst | §6.9 | PAR-B-03, 49–54, PAR-D-18, PAR-S-40 | B/H |
 | ADAPT-15 | Verpasste Einheiten | §6.10 | PAR-D-31, PAR-S-16 | H |
-| ADAPT-16 | Pausen und Wiedereinstieg | §6.11 | PAR-B-59–62, PAR-D-29, 33 | B/H |
+| ADAPT-16 | Pausen und Wiedereinstieg, Pause aus dem Onboarding | §6.11 | PAR-B-59–62, PAR-D-29, 33, PAR-S-41 | B/H |
 | ADAPT-17 | Check-in | §6.12 | PAR-E-19, 41–43, PAR-S-28 | A/H |
 | ADAPT-18 | Unlocks und Profiländerungen | §6.13 | – | – |
 | INJ-01, INJ-02 | Red Flags: wann, welche, Aktion | §8.2 | PAR-D-21, RF-01–RF-13 | B/H |
@@ -1857,11 +2052,11 @@ Evidenz: A–D nach `00_sources.md`; H = Heuristik (Begründung im Abschnitt).
 | INJ-04 | Matrix | §8.4 | `05` §8 | H |
 | INJ-05 | Modifikation und Ersatz | §8.5 | PAR-C-27, PAR-D-41 | B/H |
 | INJ-06 | Rampe | §8.6 | PAR-D-24–27, 33, 34 | B/H |
-| INJ-07 | Schmerz-Monitoring | §8.6 | PAR-D-13–18, 28, 39, 40, PAR-S-34 | A (Reha)/H |
+| INJ-07 | Schmerz-Monitoring | §8.6 | PAR-D-13–18, 28, 39, 40, PAR-S-34, PAR-S-42 | A (Reha)/H |
 | INJ-08 | Verweise | §8.7 | PAR-D-19, 20, 32 | A/B/H |
 | INJ-09 | Minderjährige | §8.8 | PAR-D-22, 23, 42 | H |
 | INJ-10 | Vorgaben von Fachpersonen | §8.9 | – | H |
-| EXPL-01–06 | Reasons, IDs, Protokoll, Sprachregeln, Spur, Sprachmodell | §9 | PAR-D-38, 39, PAR-E-29, 44 | – |
+| EXPL-01–07 | Reasons, IDs, Protokoll, Sprachregeln, Spur, Sprachmodell, keine Diagnose durch Belege | §9 | PAR-D-38, 39, PAR-E-29, 44 | – |
 | KB-01–13 | Validierung der Wissensbasis | §2.6 | – | – |
 
 ## Anhang B: Spezifikations-Parameter (`PAR-S`)
@@ -1878,17 +2073,17 @@ festgemacht ist.
 | PAR-S-05 | `heaviest_element_min_og_ordinal` | 14 | PAR-E-05 nennt die Maltese und «vergleichbare schwerste Elemente»; OG 14 = Full Planche an Ringen, darüber Inverted Cross, Maltese (`02` §3.4) |
 | PAR-S-06 | `default_day_patterns` | §5.4 | grösster kleinster Abstand; PAR-D-08 und PAR-E-13 verlangen 48 h zwischen harten Reizen |
 | PAR-S-07 | `spacing_min_rating` | 2 | Profilwert 1 = geringe Last (PAR-C-45); sonst würde fast jede Übung jede andere sperren |
-| PAR-S-08 | `warmup_set_load_weight` | 0 | Aufwärm- und Rampensätze sind per Definition submaximal (PAR-B-70); zählen sie, verzerren sie das 30-Tage-Maximum |
+| PAR-S-08 | `warmup_set_load_weight` | 0.5; Rampensätze mit höchstens der halben Satzhaltezeit bzw. Ziel-Wdh. | Rampensätze sind submaximal (PAR-B-70), laufen aber an Sprossen mit hohem Moment (vgl. `PAR-S-30`); halbe Dauer und halbes Gewicht als vorsichtiger Kompromiss |
 | PAR-S-09 | `straight_arm_budget_priority_weights` | 3 : 2 : 1, mindestens 2 Sätze je Maximalblock | Priorität bestimmt die Zuteilung knapper Ressourcen (`onboarding.md` §3.2, PAR-B-81); 2 = Untergrenze von PAR-B-08 |
 | PAR-S-10 | `paired_block_gap_s` | max(PAR-B-45, Pause des Skills / 2) | vereint PAR-B-81 und PAR-E-33 (§7.7) |
 | PAR-S-11 | `duration_model` | 3 s je Wdh.; 30 s Wechsel je Übung | grobe Zeitschätzung für die Kürzungsregel; im Usability-Test messen |
 | PAR-S-12 | `plateau_definition` | erster Arbeitssatz in 2 Einheiten nicht über dem Wert davor | Umsetzung von PAR-B-49 a am ersten, frischen Satz (PAR-E-31) |
 | PAR-S-13 | `undulating_rep_ranges` | schwer 3–6, mittel 6–10, leicht 10–15; Reihenfolge schwer, leicht, mittel | Bereiche aus PAR-B-17 und PAR-B-19, Beispiel 15/10/5 (B-115); Reihenfolge trennt die schweren Tage |
 | PAR-S-14 | `reference_week_mean` | bis zu 3 Wochen mit Last > 0, ohne Deload, im 6-Wochen-Fenster | PAR-D-09–11 (3-Wochen-Mittel), PAR-B-73 (6 Wochen), PAR-B-59 (kurze Pausen ohne Rampe) |
-| PAR-S-15 | `load_accounts_and_rates` | §4.5, §7.1 | PAR-D-09–11; Konten trennen gestreckte und gebeugte Arme, damit der strengere Deckel nur die Straight-Arm-Last bremst |
+| PAR-S-15 | `load_accounts_and_rates` | §4.5, §7.1: alle SA-Konten und `wrist` +10 %, alle BA-Konten +20 % | PAR-D-09–11; Konten trennen gestreckte und gebeugte Arme, damit der strengere Deckel nur die Straight-Arm-Last bremst; für SA-Strukturen ausserhalb von PAR-D-09 gilt der strengere Wert (`08` §4) |
 | PAR-S-16 | `session_queue` | Warteschlange je Woche, kein Nachholen, stilles Verfallen | ADR 0003; Nachholen würde PAR-D-31 verletzen |
 | PAR-S-17 | `plateau_guards` | ≥ 4 Wochen an der Sprosse; ≥ 3 Wochen zwischen Stagnations-Deloads | neuronale Frühphase 3–5 Wochen (PAR-E-20); verhindert Deload-Ketten durch Messrauschen (PAR-F-01) |
-| PAR-S-18 | `rounding` | Wdh., Sätze und Sekunden abrunden; Pausen auf 15 s; Last auf die kleinste Scheibe abrunden; Übung mit < 1 Satz entfällt | Abrunden ist die sichere Richtung (S-2, `08` §2.2) |
+| PAR-S-18 | `rounding` | Wdh., Sätze und Sekunden abrunden; Pausen auf 15 s; Laststeigerung auf die kleinste Scheibe aufrunden, mindestens eine Scheibe (PAR-B-32); Übung mit < 1 Satz entfällt, ausser im Deload (mindestens 1, WEEK-07) | Abrunden ist die sichere Richtung (S-2, `08` §2.2); die Laststeigerung rundet PAR-B-32 selbst auf, sonst stiege die Last nie |
 | PAR-S-19 | `realism_prior_scaling_enabled` | false | dass relative Hebelanforderung (PAR-C-32, PAR-C-54) die Lernzeit proportional verlängert, ist nicht belegt |
 | PAR-S-20 | `experience_class_mapping` | §4.2 | Grenze 6 Monate aus PAR-B-01; `highly_trained` aus PAR-F-48 |
 | PAR-S-21 | `contradiction_confirmation` | zweite Abweichung in dieselbe Richtung → Mittel beider Beobachtungen, σ = r | verhindert, dass PAR-F-33 eine echte Veränderung dauerhaft blockiert |
@@ -1902,9 +2097,17 @@ festgemacht ist.
 | PAR-S-29 | `rest_lower_bound_choice` | Kraft: Anfänger 120 s, Trainierte schwer 180 s | untere Grenzen von PAR-B-42 wegen des Zeitbudgets (PAR-B-68), wie `08` §4 bei Leans |
 | PAR-S-30 | `volume_block_counts_as_hard` | true | Volumen an der Sprosse unter der Arbeitssprosse hat noch ≈ 80 % des Moments (PAR-C-03–07); Sehnenlast hängt an der Lasthöhe (C-65, S-2) |
 | PAR-S-31 | `lower_bound_observation` | wirkt nur, wenn b > μ, dann wie x = b; Halte zählen voll nur mit SIR ≤ 0.5 × Halt | Sätze mit RIR > 3 sind nur Untergrenzen (PAR-F-24); die Halte-Grenze ist das Gegenstück (grosse Reserve = ungenaue Schätzung, F-08) |
-| PAR-S-32 | `rtt5_to_normal_weeks` | 2 Wochen ohne Regelverletzung | Stufe 5 hat keine Weiter-Bedingung in `05` §6.2; 2 Wochen = zwei Durchgänge von PAR-D-26 |
+| PAR-S-32 | `rtt5_to_normal_weeks` | 2 Wochen ohne Regelverletzung; X-Zellen erst ab `normal`, dann als neue Belastungsart | Stufe 5 hat keine Weiter-Bedingung in `05` §6.2; 2 Wochen = zwei Durchgänge von PAR-D-26 |
 | PAR-S-33 | `novice_next_rung_min_dose_reps` | 6 | 5 Wdh. (PAR-A-04) + 1 RIR (PAR-B-24) |
 | PAR-S-34 | `missing_pain_report_policy` | keine Rampen-Progression, sonst keine Folge | konservativ ohne Strafe (ADR 0003); PAR-D-26 verlangt beschwerdefreie Einheiten |
+| PAR-S-35 | `set_headroom_carry` | Rest-Spielraum je Konto in die Folgewoche übertragen; höchstens +1 Satz je Übung und Woche | verhindert, dass ganze Sätze bei kleinen Volumen nie wachsen; +1 Satz aus PAR-B-55 |
+| PAR-S-36 | `point_values` | Punktwerte der Tabelle in §5.7, SESS-01, SESS-04 | Spannen der Quellen brauchen für einen deterministischen Plan einen Wert; Wahl nach `08` §4 (Sicherheit vorsichtig, sonst Mitte) |
+| PAR-S-37 | `misc_small_values` | 3 min allgemeines Aufwärmen bei 5 min Gesamtdauer; Kantengewicht ≥ 0.5 für Unterstützungsübungen; +1 s je Exzentrik-Wdh. und Einheit; 1.25 kg kleinste Scheibe ohne Angabe | 3 min: Rest für Rampensätze; 0.5 = Mitte der `recommended`-Gewichte (PAR-A-62); +1 s führt in ≈ 4–7 Einheiten von 3 auf 7–10 s (PAR-B-16); 1.25 kg = übliche kleinste Hantelscheibe |
+| PAR-S-38 | `estimate_floors` | offene Halteklassen μ = halbe Obergrenze; σ ≥ 3 s bzw. 2 Wdh.; r ≥ 1 s bzw. 1 Wdh. | verhindert σ = 0 und undefinierte Konfidenz bei Nullwerten; 2 Wdh. aus PAR-F-20 |
+| PAR-S-39 | `derived_rung_prior` | leichtere Sprosse oder Band: μ = μ der schwereren bzw. unassistierten, σ = max(3 s, 0.35 μ); schwerere Sprosse: kein Wert bis zu Prüfversuchen | nur die sichere Richtung (leichter ≥ schwerer), keine Umrechnung über Intensitätsmodelle (`08` §4); σ aus PAR-F-26 |
+| PAR-S-40 | `post_pain_deload_cap` | bis zur ersten grünen Woche Deckel 1.0 × Referenz vor der Verletzung der Schmerzregel | «reduzieren und halten» (PAR-D-18, `05` §5.4); verhindert den Sprung auf R × 1.1 direkt nach dem Schmerz-Deload |
+| PAR-S-41 | `onboarding_break_mapping` | Tabelle in §6.11 | Klassen aus `onboarding.md` §3.5 auf die Bänder von PAR-B-59–62 und PAR-D-29 gelegt |
+| PAR-S-42 | `pain_entry_and_trend` | neue Beschwerde: ein Wert > 2 oder Werte > 0 an 2 Tagen in 7 Tagen; Trend steigend: Wochenmittel «danach» ≥ 1 Punkt über der Vorwoche | Grenze 2 aus PAR-D-14; Zählweise und 1-Punkt-Schwelle sind Heuristik, damit PAR-D-17 berechenbar wird |
 
 ## Anhang C: Index der verwendeten Forschungsparameter
 
@@ -1948,7 +2151,7 @@ Evidenz stehen gekürzt; massgeblich ist die Stream-Datei.
 | PAR-A-38 | `maltese_og_level` | 17 (jenseits des Charts) OG-Level | C | 2, 3 |
 | PAR-A-43 | `strength_explains_skill_r2` | Schwalbe 0,76–0,85 · Stützwaage 0,42–0,59 · Kreuz-HS 0,38–0,48 (2021,… | B | 3 |
 | PAR-A-45 | `est_weeks_per_og_level_step` | Ziel-Level ≤ 4: 2–8 · 5–8: 4–13 · 9–12: 8–26 · ≥ 13: 13–52 Wochen pro… | Heuristik | 3, A |
-| PAR-A-47 | `coach_time_planche_cumulative_months` | Lean 0–2 · Tuck 2–6 · Adv Tuck 6–12 · Straddle 12–24 · Full 24–36 Mon… | D | 3, A |
+| PAR-A-47 | `coach_time_planche_cumulative_months` | Lean 0–2 · Tuck 2–6 · Adv Tuck 6–12 · Straddle 12–24 · Full 24–36 Mon… | D | 3, 12, A |
 | PAR-A-51 | `goal_realism_min_weeks` | Σ Untergrenzen aus PAR-A-45 vom aktuellen zum Ziel-Level; z. B. Anfän… | Heuristik | 3, A |
 | PAR-A-52 | `prereq_front_lever_entry` | 10 strikte Klimmzüge · 30 s Dead Hang · 60 s Hollow · 15 gestreckte B… | D | 2, 3, A |
 | PAR-A-53 | `prereq_planche_entry` | 60 s Hollow · 3 × 20 Liegestütze · 3 min Handgelenk-Routine · 30 s Wa… | D/C | 2, 3, A |
@@ -1971,7 +2174,7 @@ Evidenz stehen gekürzt; massgeblich ist die Stream-Datei.
 | PAR-B-07 | `target_sir_fraction` | 0.3–0.4 der Max.-Haltezeit, mindestens 2 s Anteil / s | Heuristik | 5, A |
 | PAR-B-08 | `static_max_sets` | 2–5; Standard 3 Sätze | C | 5, 7, A |
 | PAR-B-09 | `static_total_hold_per_exercise_s` | 30–90; Standard 40–60 s | B | 2, 5, A |
-| PAR-B-10 | `static_volume_hold_per_set_s` | 5–20 s | B | 5, A |
+| PAR-B-10 | `static_volume_hold_per_set_s` | 5–20 s | B | 4, 5, A |
 | PAR-B-11 | `static_volume_sets` | 3–5 Sätze | C | 5, A |
 | PAR-B-12 | `static_volume_total_hold_s` | 40–90 je Übung; bei Hypertrophieziel Summe aller Halteübungen einer E… | B | 5, A |
 | PAR-B-14 | `hold_endurance_model` | Schulter ET = 14.86·f^−1.83; Ellbogen ET = 17.98·f^−2.21; allgemein E… | A | 5 |
@@ -2007,6 +2210,7 @@ Evidenz stehen gekürzt; massgeblich ist die Stream-Datei.
 | PAR-B-52 | `deload_volume_factor` | 0.6 (Spanne 0.5–0.7) Anteil der Sätze | B | 5, A |
 | PAR-B-53 | `deload_rir_increase` | +2 (Spanne +1 bis +3; bei Halten SIR +2 s) RIR | B | 5, A |
 | PAR-B-54 | `deload_intensity_rule` | Stufe halten oder 1 Stufe leichter; keine Komplettpause als Standard | A | 5, A |
+| PAR-B-55 | `weekly_volume_increase_max` | +10–20 % Sätze pro Woche bzw. max. +1 Satz je Übung %/Woche | Heuristik | 7, A |
 | PAR-B-57 | `intensity_step_per_week_max` | 1 Stufenwechsel (Stufe, Band oder Last) je Übung und Woche Stufen/Woc… | Heuristik | 6, A |
 | PAR-B-58 | `acwr_enabled` | false bool | B | 7, A |
 | PAR-B-59 | `retrain_break_le_2wk` | 90–100 % Volumen, gleiche Stufe, kein Retest | Heuristik | 4, 6, A |
@@ -2030,7 +2234,7 @@ Evidenz stehen gekürzt; massgeblich ist die Stream-Datei.
 | PAR-B-77 | `eccentric_dose` | 2–3 Sätze à 2–3 Cluster-Wdh. (3–10 s je Wdh., PAR-B-16); Pause 180 s… | C | 5, 6, A |
 | PAR-B-78 | `dyn_endurance_accessory_dose` | ≥ 12 Wdh. (12–20), 2–3 Sätze, RIR 1–3; Pause PAR-B-44 Wdh. / Sätze | B | 5, A |
 | PAR-B-79 | `assisted_set_counting` | Hypertrophie-Wochensätze: 1.0 bei RIR/SIR ≤ 3, sonst 0.5; Maximalkraf… | Heuristik | 4, 5, 7, A |
-| PAR-B-80 | `gtg_protocol` | optional; nur Grundübungen mit gebeugtem Arm und Balance-Skills; nie… | Heuristik | 2 |
+| PAR-B-80 | `gtg_protocol` | optional; nur Grundübungen mit gebeugtem Arm und Balance-Skills; nie… | Heuristik | 2, 5, A |
 | PAR-B-81 | `skill_pairing_rule` | Straight-Arm-Skills gegensätzlicher Zugrichtung abwechselnd als Paar… | Heuristik | 2, 5, 7, A |
 | PAR-C-03 | `stage_torque_ratio_tuck` | 0,60 (0,56–0,69); Frau 0,64 Anteil Full | B (Modell) | 2, 3, 4, A |
 | PAR-C-04 | `stage_torque_ratio_advanced_tuck` | 0,75 (0,71–0,81); Frau 0,78 Anteil Full | B (Modell) | 2, 3, 4, A |
@@ -2042,6 +2246,7 @@ Evidenz stehen gekürzt; massgeblich ist die Stream-Datei.
 | PAR-C-10 | `lean_torque_ratio_per_arm_degree` | ≈ 0,02 (5°: 0,08; 15°: 0,26; 25°: 0,47; 31°: 0,59; 36°: 0,72) Anteil… | B (Modell) | 2, 4 |
 | PAR-C-13 | `band_torque_relief` | (F_band / KG) × (x_a / H) / 0,246 Anteil Full-Moment | B (Modell) | 2, 5, A |
 | PAR-C-16 | `shoulder_flexor_extensor_capacity_ratio` | 0,72 Verhältnis | B | 3 |
+| PAR-C-17 | `coaching_level_lever_stages` | FL: Tuck 4, Adv 5, Straddle 6, Half-Lay/One-Leg 7, Full 8; Planche: 5… | C | 2 |
 | PAR-C-18 | `bw_fraction_push_up_standard` | 0,64 (Spitze) / 0,664 (Anfang) / 0,69 oben–0,75 unten (statisch) Ante… | B | 2, 3, 4 |
 | PAR-C-19 | `bw_fraction_push_up_knee` | 0,49–0,54 oben / 0,62 unten Anteil KG | B | 2, 3, 4 |
 | PAR-C-20 | `bw_fraction_push_up_hands_elevated` | 30,5 cm: 0,55; 61 cm: 0,41 Anteil KG | B | 2, 3, 4 |
@@ -2064,7 +2269,7 @@ Evidenz stehen gekürzt; massgeblich ist die Stream-Datei.
 | PAR-D-03 | `max_sessions_per_day_same_structure` | 1 Einheiten/Tag | Heuristik | 7, A |
 | PAR-D-04 | `elevated_risk_training_age_months` | 6–48 Monate Calisthenics-Erfahrung | B | 4, 7, 14, A |
 | PAR-D-05 | `warmup_allows_max_skill_attempts` | false bool | Heuristik | 5, A |
-| PAR-D-06 | `tendon_adaptation_horizon_weeks` | 12 (Spanne 8–14) Wochen | A/B (Zeitverlauf) + Heur… | 7, A |
+| PAR-D-06 | `tendon_adaptation_horizon_weeks` | 12 (Spanne 8–14) Wochen | A/B (Zeitverlauf) + Heur… | 4, 7, A |
 | PAR-D-08 | `min_rest_hours_high_tendon_load_same_structure` | 48 Stunden | B (Zeitverlauf) / Wert H… | 7, A |
 | PAR-D-09 | `max_weekly_load_increase_straight_arm_pct` | 10 % gegenüber Mittel der letzten 3 Wochen | Heuristik | 2, 4, 7, A |
 | PAR-D-10 | `max_weekly_load_increase_bent_arm_pct` | 20 % gegenüber Mittel der letzten 3 Wochen | Heuristik (Richtung B) | 2, 4, 7, A |
@@ -2082,10 +2287,10 @@ Evidenz stehen gekürzt; massgeblich ist die Stream-Datei.
 | PAR-D-22 | `minor_wrist_pain_referral_days` | 7 Tage | Heuristik | 8, A |
 | PAR-D-23 | `minor_age_threshold_years` | 18 Jahre | Heuristik | 2, 4, 5, 7, 8, A |
 | PAR-D-24 | `rtt_start_volume_fraction` | 0.5 Anteil des letzten beschwerdefreien Volumens | Heuristik | 4, 8, A |
-| PAR-D-25 | `rtt_volume_steps` | 0.25 → 0.5 → 0.75 → 1.0 (Start je nach PAR-D-24/33) Anteil | Heuristik | 8, A |
+| PAR-D-25 | `rtt_volume_steps` | 0.25 → 0.5 → 0.75 → 1.0 (Start je nach PAR-D-24/33) Anteil | Heuristik | 4, 8, A |
 | PAR-D-26 | `rtt_step_advance_criteria` | keine Soreness während/nach/am Folgetag in ≥ 2 Einheiten der Stufe; S… | B + Heuristik | 8, A |
 | PAR-D-27 | `rtt_progression_order` | Hang/Zug → Stütz ohne Impact → Stütz mit Impact/Maximalversuch; inner… | B + Heuristik | 8, A |
-| PAR-D-28 | `rtt_regress_on_breach` | Schmerz > 1 h danach oder am Folgetag: 1 Tag Pause, Stufe wiederholen… | B (Expertenprotokoll) | 8, A |
+| PAR-D-28 | `rtt_regress_on_breach` | Schmerz > 1 h danach oder am Folgetag: 1 Tag Pause, Stufe wiederholen… | B (Expertenprotokoll) | 8, 12, A |
 | PAR-D-29 | `layoff_restart_threshold_weeks` | 4 Wochen Pause der Struktur | B (Richtung) + Heuristik… | 4, 6, 8, A |
 | PAR-D-30 | `acwr_hard_rule_enabled` | false bool | A/B | 7, A |
 | PAR-D-31 | `max_session_spike_vs_30d_max_pct` | 10 % über der grössten Einheit derselben Struktur in 30 Tagen | B (Analogie) | 4, 6, 7, A |
@@ -2120,12 +2325,12 @@ Evidenz stehen gekürzt; massgeblich ist die Stream-Datei.
 | PAR-E-24 | `target_pattern_exposure_per_session` | ≥ 1 Block mit der Zielbewegung oder ihrer nächsten Regression je Skil… | A/B | 5, A |
 | PAR-E-25 | `isometric_intent_cue` | «Spannung so schnell wie möglich maximal aufbauen, dann halten» für H… | A + Ableitung | 5 |
 | PAR-E-26 | `pre_max_ramp_sets` | 2–3 (`kind = warmup`, submaximal, steigend; z. B. ~50 % und ~70 % der… | A/B | 5, A |
-| PAR-E-27 | `gtg_allowed` | nur Grundübungen mit gebeugtem Arm (Klimmzug, Liegestütz, Dip); nie b… | C/D + B | 2 |
+| PAR-E-27 | `gtg_allowed` | nur Grundübungen mit gebeugtem Arm (Klimmzug, Liegestütz, Dip); nie b… | C/D + B | 2, 5, A |
 | PAR-E-28 | `skill_limiting_factor` | `strength` (Planche, Front Lever, Maltese, One-Arm Pull-up) · `balanc… | B/C + Heuristik | 2 |
 | PAR-E-29 | `rationale_excludes_cns_fatigue` | true Regel | B | 9, A |
 | PAR-E-31 | `progress_eval_on_first_fresh_set` | true: Fortschritt einer Stufe wird am ersten Arbeitssatz der Folgeein… | B + Heuristik (Anwendung) | 4, A |
-| PAR-E-32 | `max_attempt_schedule` | `blocked` (alle Maximalversuche eines Skills hintereinander) Regel | A (Begründung) + Heurist… | 5, A |
-| PAR-E-33 | `interleave_submax_technique_allowed` | true (optional; Pause je Skill nach PAR-E-04/06 bleibt) Regel | A/B + Heuristik | 7, A |
+| PAR-E-32 | `max_attempt_schedule` | `blocked` (alle Maximalversuche eines Skills hintereinander) Regel | A (Begründung) + Heurist… | 5, 7, A |
+| PAR-E-33 | `interleave_submax_technique_allowed` | true (optional; Pause je Skill nach PAR-E-04/06 bleibt) Regel | A/B + Heuristik | A |
 | PAR-E-34 | `variation_between_sessions` | Varianten wechseln zwischen Einheiten; Zielstufe bleibt in jeder Skil… | A/B/C | 5, 6, A |
 | PAR-E-35 | `balance_block_minutes` | 11–15 min | A (Analogie) | 5, A |
 | PAR-E-36 | `balance_set_duration_s` | 21–40 s pro Satz (inkl. Versuche) | A (Analogie) + Heuristik | 5, A |
@@ -2138,6 +2343,8 @@ Evidenz stehen gekürzt; massgeblich ist die Stream-Datei.
 | PAR-E-45 | `static_stretch_max_s_before_max` | < 60 pro Muskelgruppe, danach dynamische Aktivität s | A | 5, A |
 | PAR-E-46 | `pap_conditioning_for_holds` | false Regel | A/B | 5, A |
 | PAR-E-47 | `general_warmup_min` | 5–10 min | Heuristik | 5, A |
+| PAR-E-48 | `gtg_reps_pct_of_max` | ≤ 50 (Spanne 40–50) % der Maximalwiederholungen | D | 5, A |
+| PAR-E-49 | `gtg_min_rir` | 2 Wdh. Reserve | C | 5, A |
 | PAR-F-01 | `rep_test_sem_reps` | 2.0 (Spanne 1.1–2.0) Wdh. | B | 4, 6, A |
 | PAR-F-02 | `rep_test_sem_reps_low_rep` | 1.0 (gemessen 0.7) Wdh. | B | 4, A |
 | PAR-F-08 | `push_up_bw_fraction` | 0.64–0.75 Anteil Körpergewicht | B | 2 |
