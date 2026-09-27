@@ -19,26 +19,42 @@ that stands.
   #8. Its open questions (rest-day logging, the bodyweight time zone, wiping
   the database on sign-out) still stand.
 
-## Parallel track: training-plan algorithm (specification, stage 4 of 5, awaiting review)
+## Parallel track: training-plan algorithm (stage 5 of 5, implementation, awaiting review)
 
-A separate track, with its own five-stage plan, researches and specifies a
-planner that turns an onboarding and the logs into individual training plans.
-It is developed on `claude/busy-babbage-fqio1j` (PR #10). Its documents are in
-German.
+A separate track, with its own five-stage plan, researches, specifies and
+implements a planner that turns an onboarding and the logs into individual
+training plans. It is developed on `claude/busy-babbage-fqio1j` (PR #10). Its
+documents are in German.
 
-- **Done:** stage 1 (PDF extract, codebase notes, research plan), stage 2
-  (six research streams with coverage checks and citation audits, 572 sources
-  in `docs/research/00_sources.md`), stage 3 (`docs/research/08_synthesis.md`,
-  `docs/algorithm/onboarding.md`; all checkpoint proposals accepted) and
-  stage 4 (`docs/algorithm/spec.md`, ADR 0012, a clarification in
-  `docs/CONTENT_AUTHORING.md`).
-- **Next, after review:** stage 5, the Go implementation with persona
-  scenario tests and an independent review.
-- **Open decisions** for this checkpoint are in `spec.md` §14 (ENT-S-1 to
-  ENT-S-6). Legal questions from the earlier checkpoint (minors, health data,
-  screening wording) stay open until before a public release.
-
-No code, schema or API changed in this track so far.
+- **Stages 1–4:** research (572 sources in `docs/research/00_sources.md`),
+  synthesis, onboarding design, `docs/algorithm/spec.md` and ADR 0012. All
+  checkpoint proposals were accepted.
+- **Stage 5 (this checkpoint):**
+  - `internal/domain/planning`: the pure, deterministic core (`Build`,
+    `Start`, `Generate`, `Adapt`). Every decision carries a reason with rule,
+    parameter and source IDs.
+  - `content/training/`: the knowledge base as YAML with JSON schemas. It is
+    validated by `contentlint` in CI and at start-up. A test checks every
+    research parameter against its row in `docs/research/`.
+  - `internal/planning`: the application service with ports and in-memory
+    adapters. With an invalid knowledge base only planning answers
+    "unavailable".
+  - Tests: rule tables, the knowledge-base checks KB-01 to KB-12, six personas
+    as golden files, twelve simulated weeks per persona, the multi-week
+    scenarios from spec §12.5, and plan invariants I-1 to I-11 on every
+    generated plan.
+  - `docs/algorithm/personas.md`: the persona plans and their plausibility.
+    Spec §15 records the implementation decisions (U-1 to U-23) and findings.
+- **Open for review:**
+  - U-13: the break ramp replaces the weekly cap. This is a behaviour change.
+  - The findings in spec §15.4.
+  - The independent review of spec and persona plans (stage 5 closing).
+- **Not yet built:** the migration, the Postgres store, the HTTP endpoints and
+  the OpenAPI spec. They follow after this review (ADR 0007).
+- **Still blocking production:**
+  - The content review of the knowledge base (ENT-10). Until then it stays
+    `draft_placeholder`, and production refuses it.
+  - The legal questions on minors, health data and screening wording.
 
 ## Current phase: 6 — skill map, skill detail, celebration, history and stats (complete, awaiting review)
 

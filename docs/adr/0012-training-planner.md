@@ -1,6 +1,7 @@
 # ADR 0012 — Trainingsplaner: deterministischer Kern, Wissensbasis als Daten
 
-- Status: accepted (Checkpoint nach Stufe 4, 27.09.2026)
+- Status: accepted (Checkpoint nach Stufe 4, 27.09.2026); Nachtrag zur
+  Umsetzung in Stufe 5 am Ende
 - Date: 2026-09-27
 - Deciders: Jaelricco
 
@@ -132,3 +133,37 @@ in v1 (OE-6).
 - Ein unabhängiger Review der Spezifikation (3 kritische, 19 wichtige, 21
   kleinere Befunde) ist eingearbeitet.
 - Die Entscheidungen ENT-S-1 bis ENT-S-9 (spec §14) sind angenommen.
+
+## Nachtrag: Umsetzung in Stufe 5 (27.09.2026)
+
+Umgesetzt sind der reine Kern (`internal/domain/planning`), die Wissensbasis
+unter `content/training/` mit JSON-Schemas und Validierung (`internal/content`,
+`contentlint`) und der Anwendungsdienst `internal/planning` mit In-Memory-
+Adaptern. Migration, Store, HTTP und OpenAPI folgen nach eigenem Review
+(ADR 0007). Die Abweichungen von der Spezifikation stehen einzeln in
+`spec.md` §15.2 (U-1 bis U-23); die folgenden betreffen dieses ADR:
+
+- **Schichten (Entscheidung 2).** Die Kernfunktionen heissen `Build` (Laden
+  und Prüfen der Wissensbasis), `Start`, `Generate` und `Adapt`. `Adapt` gibt
+  den ganzen neuen Snapshot zurück; `Materialize` und ein ID-Port entfallen,
+  bis es einen Store gibt (U-21). `arch_test.go` verbietet dem Kern jetzt auch
+  `internal/planning` und `internal/content`.
+- **Wissensbasis (Entscheidung 3).** Neun Dateien unter `content/training/`
+  statt eines `training:`-Blocks in `content/exercises/`, damit bis zum
+  Inhalts-Import keine verwaisten Übungen entstehen (U-1). Der Entwurfsstatus
+  (KB-13) ist in `contentlint` ein Hinweis; im Produktionsmodus lehnt die API
+  Entwürfe ab, solange ENT-10 offen ist (U-3).
+- **Belege (Entscheidung 4).** Jeder Forschungsparameter trägt den Wortlaut
+  seiner Tabellenzeile; ein Test vergleicht Wortlaut, Schlüssel und Quellen
+  mit `docs/research/` (U-2). Neue Heuristiken: `PAR-S-44` bis `PAR-S-46`.
+- **Belastung (Entscheidung 6).** Der Plan nennt je Konto Ziel, geplantes
+  Volumen, Deckel und die bindende Regel (U-23). Die Pausenrampe ersetzt für
+  Straight-Arm- und Handgelenk-Konten den Wochendeckel auch ohne geloggte
+  Referenz (U-13). Das ist eine Verhaltensänderung und **muss am Checkpoint
+  bestätigt werden**; mit der Regel vorher blieb ein Wiedereinsteiger
+  monatelang bei einem Straight-Arm-Satz je Woche.
+
+Folgen: Die sechs Personas laufen als Golden Files und als zwölfwöchige
+Simulation; jeder erzeugte Plan erfüllt I-1 bis I-11. Ihre Plausibilität und
+die Befunde stehen in `docs/algorithm/personas.md` und `spec.md` §15.4. Die
+Wissensbasis bleibt `draft_placeholder` bis zur fachlichen Abnahme (ENT-10).
