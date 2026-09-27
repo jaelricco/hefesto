@@ -1007,11 +1007,12 @@ H = Körpergrösse. «B (Modell)» = eigene Rechnung auf publizierten Daten.
 
 ## Offene Fragen
 
-1. Für Front Lever, Back Lever, Human Flag, Manna, V-Sit, HSPU, Planche am
+1. Für Front Lever, Back Lever, Human Flag, Manna, V-Sit, Planche am
    Boden, Pseudo-Planche- und Planche-Liegestütz, One-Arm Pull-up und Hollow
    Body fehlen EMG-, Kinetik- und Kinematikdaten (Lauf 2: Europe PMC,
    Crossref, Websuche; nichts gefunden); die Profile in Tabelle 2 sind dort
-   Heuristik. Für den Muscle-up gibt es nur eine kleine Studie mit Kipp
+   Heuristik. Für den HSPU gibt es nur die Kopf-Kraftmessung beim
+   Kipping-HSPU [C-87] (im Audit gefunden), keine Daten zu Arm und Schulter. Für den Muscle-up gibt es nur eine kleine Studie mit Kipp
    [C-75]; strikte Muscle-ups sind nicht untersucht.
 2. Für die gängigen Calisthenics-Loop-Bänder sind keine frei zugänglichen
    Kraft-Dehnungs-Werte publiziert; es gibt Messwerte für flache
@@ -1029,7 +1030,8 @@ H = Körpergrösse. «B (Modell)» = eigene Rechnung auf publizierten Daten.
 5. Validität des Starrkörpermodells für Tuck-Stufen mit rundem Rücken und
    erhöhter Hüfte; eine Validierung per Video-Posenschätzung wäre möglich.
 6. Maltese und Kreuz sind dreidimensional; das sagittale Modell deckt sie
-   nicht ab. Messdaten nur für das Kreuz an Ringen [C-06, C-08, C-13].
+   nicht ab. Messdaten nur für das Kreuz: EMG an Ringen bzw. Herdos [C-06,
+   C-08] und Kraftmessung am simulierten Kreuz [C-13].
 7. Frauenspezifische EMG- oder Kraftdaten für Calisthenics-Skills fehlen.
    Vorhanden sind nur allgemeine Kraft- und Muskelmassedaten [C-77, C-78,
    C-84] und die Klimmzug-Studie [C-61]; der Faktor 1,24 (PAR-C-54) ist eine
