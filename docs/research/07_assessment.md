@@ -9,20 +9,27 @@
 > und verweist an Fachpersonen.
 >
 > **Prüftiefe:** Titel, Autoren, Jahr und Abstract jeder Quelle wurden über
-> Europe PMC, Crossref, PMC oder die Verlags-/Repository-Seite geprüft. Volltexte
-> wurden gelesen, wo frei verfügbar (F-02, F-07, F-11, F-18, F-20, F-26 in der
-> Tagungsfassung, F-28, F-40). Die Zahlen von F-16 stammen aus dem
-> Suchmaschinen-Auszug des Abstracts, weil die Verlagsseite gesperrt war. Eine
-> gezielte Suche in Europe PMC nach L-Sit, Hollow Hold, Pistol Squat, Muscle-up,
-> Front Lever und Planche ergab keine verwertbaren Studien.
+> Europe PMC, Crossref, PMC, OpenAlex oder die Verlags-/Repository-Seite
+> geprüft. Volltexte wurden gelesen, wo frei verfügbar (F-02, F-07, F-11, F-18,
+> F-20, F-26 in der Tagungsfassung, F-28, F-40, F-54, F-55 (Abstract und
+> Diskussion), F-61, F-66). Nur das Abstract war verfügbar für F-51, F-52, F-53,
+> F-56–F-60, F-62–F-65, F-67, F-77. F-16 ist jetzt über das vollständige
+> Abstract (OpenAlex) geprüft; die Zahlen stimmen. Coaching-Quellen (F-68–F-76)
+> wurden direkt abgerufen: die OG2-Charts als gerenderte PDF-Seiten, die
+> OG2-Leseprobe S. 21–25, die übrigen als Webseiten. Eine gezielte Suche in
+> Europe PMC nach L-Sit, Hollow Hold, Stütz, Wand-Handstand und Pistol Squat
+> ergab keine Reliabilitätsstudien; zu Muscle-up und Planche fanden sich nur
+> EMG- und Modellstudien, keine Prädiktoren. Schwellen für diese Skills stammen
+> deshalb aus Coaching-Quellen (Evidenz C/D) und sind so gekennzeichnet.
 
 ## Kurzfassung
 
-- **Evidenzbasis:** 50 Quellen (15 × Evidenz A, 35 × Evidenz B) plus die
-  Praxisquellen P-01 bis P-04 (Evidenz C). Gut belegt: Kraft- und Haltetests,
-  Mobilitätstests, Genauigkeit der RIR-Schätzung, Wiederholungen je %1RM.
-  Keine Daten: L-Sit, Hollow Hold, Pistol Squat, Schwellen für
-  Calisthenics-Skills [F-01, F-07, F-08, F-10].
+- **Evidenzbasis:** 77 Quellen (16 × Evidenz A, 52 × B, 6 × C, 3 × D) plus
+  die Praxisquellen P-01 bis P-04 (Evidenz C). Gut belegt: Kraft- und
+  Haltetests, Mobilitätstests, Genauigkeit der RIR-Schätzung, Wiederholungen je
+  %1RM, Genauigkeit erinnerter Testwerte. Keine Studien: Reliabilität von
+  L-Sit, Hollow Hold, Stütz, Wand-Handstand und Pistol Squat; validierte
+  Schwellen für Calisthenics-Skills [F-01, F-07, F-08, F-10, F-51, F-52].
 - **Klimmzug und Liegestütz sind reliabel, aber absolut unscharf:** Bei
   Erwachsenen gibt es moderate Evidenz für moderate bis hohe Reliabilität von
   Klimmzug und Beugehang [F-01] (Evidenz A); der Liegestütz-Test erreichte
@@ -43,7 +50,9 @@
   [F-01], Einzelstudien fanden ICC 0.915 [F-30] und 0.99 nach einem
   Gewöhnungsversuch [F-31]. Der freie Handstand auf dem Barren hatte bei jungen
   Turnern ICC 0.91, aber einen SEM von rund 25 % des Mittelwerts (eigene
-  Rechnung aus [F-28]).
+  Rechnung aus [F-28]). Beugehang mit 90° Ellbogen: ICC 0.98 [F-57]; ein
+  modifizierter V-Sit (Analogie zum Hollow Hold) nur ICC 0.71, SEM ≈ 40 % des
+  Mittels (eigene Rechnung aus [F-59]).
 - **Mobilität:** Weight-Bearing Lunge Test ICC 0.65–0.99, MDC 4.6–4.7° bzw.
   1.6–1.9 cm [F-10] (Evidenz A); Smartphone-Apps reichen für die Mehrzahl der
   Gelenkmessungen, beim absoluten Fehler schwächer [F-11]; Schulterflexion mit
@@ -53,11 +62,12 @@
   Evidenz) [F-01], moderate Validität für die Hamstrings (rp 0.46–0.67), niedrige
   für die LWS (0.16–0.35) [F-12]; die Erwachsenen-Übersicht wertet ihn als nicht
   valide [F-02].
-- **Umrechnung Liegestütz:** Standard 64–75 % des Körpergewichts, Knie
-  49–62 %, Hände 30.5/61 cm erhöht 55/41 %, Füsse 30.5/61 cm erhöht 70/74 %
-  [F-25, F-26].
-- **Umrechnung Zug/Druck:** Klimmzug-1RM (Körper + Zusatzlast) ≈ 1.25 ×
-  Latzug-1RM bei Männern [F-22]; Dip-1RM ≈ 1.11 × Klimmzug-1RM [F-19].
+- **Last in % Körpergewicht:** Liegestütz 64–75 %, Knie 49–62 %, Hände
+  30.5/61 cm erhöht 55/41 %, Füsse 30.5/61 cm erhöht 70/74 % [F-25, F-26];
+  Ring-/Suspension-Rudern mit fast waagrechtem Körper 69–76 % [F-66],
+  Suspension-Liegestütz 50–75 % [F-65, F-66]. Umrechnung Zug/Druck:
+  Klimmzug-1RM ≈ 1.25 × Latzug-1RM bei Männern [F-22]; Dip-1RM ≈ 1.11 ×
+  Klimmzug-1RM [F-19]. Für Pike-Liegestütz fanden sich keine Messdaten.
 - **Wiederholungen ↔ Maximalkraft streuen individuell stark:** Bei 80 % 1RM
   beträgt die Streuung zwischen Personen 2.5 Wiederholungen, bei 60 % 1RM
   4.4 [F-07] (Evidenz A); lineare 1RM-Formeln sind nur bis 10 Wiederholungen
@@ -68,15 +78,24 @@
   Trainingserfahrung verbesserte die Genauigkeit in der Meta-Analyse [F-08]
   und in einer Einzelstudie [F-39] nicht, in einer anderen tendenziell schon
   [F-37].
-- **Selbstauskunft ordnet, misst aber nicht:** Selbstberichtete und gemessene
-  Aktivität korrelierten von −0.71 bis 0.96 ohne einheitliche Richtung [F-13];
-  die Fitness-Selbsteinschätzung IFIS ordnet Personen korrekt, Test-Retest
-  0.40–0.99 [F-14, F-36, F-50]. Folge: Selbstauskunft ist ein breiter Startwert.
+- **Selbstauskunft ordnet, misst aber nicht:** Erinnerte Liegestützzahlen
+  eines offiziellen Tests lagen im Mittel 4–7 % zu hoch (r 0.82–0.86); die
+  Einzelabweichung betrug SD ≈ 13–18 % des Mittels (eigene Rechnung aus
+  [F-51, F-52]). Zu Hause selbst getestete Klimmzüge stimmten von allen
+  Selbstauskünften am besten mit der Messung überein, die Übereinstimmung der
+  Klassen blieb aber schwach bis mässig (κ ≤ 0.34) [F-53]. Selbst gezählte
+  Heim-Liegestütze lagen 17 % über der Videozählung [F-55]; Haltezeiten wurden
+  im Voraus eher unterschätzt [F-54]. Folge: Selbstauskunft ist ein breiter
+  Startwert [F-13, F-14].
 - **Skill-Bereitschaft:** Spezifische Kraft erklärte 76–85 % der Maximalkraft
-  in der Schwalbe an den Ringen, aber nur 42–59 % in der Stützwaage; der Rest
-  ist Gleichgewicht und Technik [F-40]. Schwellen für Muscle-up, Front Lever
-  oder Planche fanden sich in Europe PMC nicht; der Planer nutzt Kraftwerte
-  deshalb nur als weiche Empfehlung (**Heuristik**, Abschnitt 6).
+  in der Schwalbe an den Ringen, aber nur 42–59 % in der Stützwaage [F-40].
+  Validierte Schwellen für Muscle-up, Front Lever oder Planche gibt es nicht.
+  Coaching-Quellen nennen für den Muscle-up 8–15 Klimmzüge und 8–20 Dips
+  [F-70, F-71, F-74] (Evidenz C/D) und für den Start in Front Lever und Planche
+  10 Klimmzüge bzw. 3 × 20 Liegestütze plus 60 s Hollow Hold [F-72, F-73]
+  (Evidenz C). OG2 setzt den vollen Front Lever gleich mit einem
+  Klimmzug-1RM von 1.78 × KG [F-68] (Evidenz C). Der Planer nutzt diese Werte
+  nur als weiche Empfehlung (**Heuristik**, Abschnitt 6).
 - **Screening:** PAR-Q+ besteht aus 7 Gesundheitsfragen mit Folgefragen bei
   «Ja» [F-43]; ACSM screent nach Aktivitätsniveau, Symptomen/Erkrankung und
   gewünschter Intensität [F-41]. Beschwerdefragen dürfen nicht nur
