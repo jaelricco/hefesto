@@ -76,10 +76,16 @@
   patellofemorale Kraft jenseits 60° Kniebeugung steiler als die
   Patellarsehnenkraft [C-55]; tiefe Beugung erhöht bei Gesunden das Risiko für
   passive Strukturen nicht per se [C-56].
+- **Frauen:** Schulterkraft relativ zum Körpergewicht ≈ 80 % (78–83 %) der
+  Männer [C-77], Skelettmuskelmasse 30,6 vs. 38,4 % des Körpergewichts [C-78].
+  Bei fast gleichem Hebel (0,240 vs. 0,246 H) ist eine Hebelstufe für Frauen
+  relativ ≈ 1,2-mal so anspruchsvoll (**Modell** mit [C-01, C-77]); nur als
+  Prior für Zeitschätzungen, nie als Sperre (**Heuristik**).
 - **Datenlücken:** Für Front Lever, Back Lever, Human Flag, Manna, V-Sit,
-  Muscle-up und HSPU fand sich in Europe PMC keine EMG- oder Kinetikstudie
-  (Stand Recherche). Ihre Profile sind **Heuristik** aus Mechanik und
-  Analogie-Studien.
+  Pseudo-Planche-Liegestütz und HSPU fand sich weder in Europe PMC, Crossref
+  noch per Websuche eine EMG- oder Kinetikstudie (Stand 2026-09). Für den
+  Muscle-up gibt es eine EMG-Studie (Ringe vs. Stange) [C-75]. Die übrigen
+  Profile sind **Heuristik** aus Mechanik und Analogie-Studien.
 
 ## 1. Methodik und Lesehilfe
 
@@ -90,6 +96,18 @@ nach Dempster/Winter) [C-02]. Einige Abstracts wurden zunächst über ein
 öffentliches Archiv von PubMed-Abstracts eingesehen und anschliessend gegen
 Europe PMC geprüft; alle IDs in der Quellentabelle sind mit DOI oder stabiler
 URL verifiziert.
+
+**Lauf 2 (Vollständigkeitsprüfung, 2026-09-27).** Titel und Jahr aller DOIs
+wurden erneut gegen Crossref bzw. Europe PMC abgeglichen (alle vorhanden;
+Abweichungen nur zwischen Online- und Druckjahr). Die Originalarbeit von de
+Leva (1996) wurde im Volltext eingesehen; ihre Tabelle 4 stimmt in allen im
+Modell verwendeten Werten mit der bisher genutzten Transkription überein, das
+Hebelmodell wurde neu gerechnet und liefert unverändert die Werte aus §5.
+Gezielt nachgesucht wurden EMG-/Kinetikdaten für Front Lever, Back Lever,
+HSPU, Muscle-up, Human Flag, Pseudo-Planche und Ringelemente, gemessene
+Handgelenkwinkel, Kraft-Dehnungs-Daten von Bändern und frauenspezifische
+Kraftdaten. Neu: C-75 bis C-86; Prüftiefe je Quelle im Prüfprotokoll unter
+«Quellen».
 
 **EMG lesen.** %MVIC-Werte sind nur innerhalb einer Studie vergleichbar;
 Rohwerte in µV (z. B. [C-04]) gar nicht zwischen Studien. Verschiedene
@@ -127,12 +145,14 @@ EMG-Studien.
 | Inverted Row | M. latissimus dorsi, M. biceps brachii, M. deltoideus posterior, M. trapezius pars ascendens (alle > 61 % MVIC) | M. trapezius pars descendens/transversa, M. multifidus (41–60 %) | M. erector spinae thoracis, M. rectus abdominis (21–40 %) | 2 Studien; höchste LD-Aktivität aller Ruder-Varianten | [C-23, C-24] |
 | Front Lever (Tuck … Full) | Schulterstrecker: M. latissimus dorsi, M. teres major, M. deltoideus posterior, M. triceps brachii (Caput longum) | M. pectoralis major (Pars sternalis), Mm. rhomboidei, M. biceps brachii (Ellbogen) | M. rectus abdominis, Mm. obliqui, Hüftbeuger (Anti-Extension) | keine FL-Studie gefunden; Analogie Inverted Swallow: hinterer Deltamuskel und langer Trizepskopf dominieren | [C-67, C-05, C-68]; Rumpf Heuristik mit Analogie [C-39] |
 | Back Lever / German Hang / Skin the Cat | mechanisch Schulter*beuger* in Extensionsstellung: M. pectoralis major, M. deltoideus anterior, M. biceps brachii (verlängert) | M. coracobrachialis, Rotatorenmanschette | Hüft- und Rückenstrecker, Scapula-Retraktoren | keine Studie gefunden | **Modell** (§5.1), [C-67]; Coaching-Zuordnung zur Zugtabelle [C-68] |
-| Handstand | M. deltoideus anterior, M. trapezius pars descendens, M. triceps brachii | M. pectoralis major, M. latissimus dorsi, M. biceps brachii | Unterarmbeuger (Balance über Handgelenkmoment; 61 % NRMS am Boden), Rumpf | 2 Studien (EMG, Kinetik) | [C-16, C-70, C-68] |
+| Handstand | M. deltoideus anterior, M. trapezius pars descendens, M. triceps brachii | M. pectoralis major, M. latissimus dorsi, M. biceps brachii | Unterarmbeuger (Balance über Handgelenkmoment; 61 % NRMS am Boden), Rumpf | Systematic Review (21 Studien, davon 2 mit EMG): Handgelenkbeuger am aktivsten, «Wrist Strategy» dominiert | [C-16, C-70, C-82, C-68] |
+| Stütz (Support Hold: Barren, Ringe, Parallettes) | M. triceps brachii (Ellbogen gesichert), M. deltoideus anterior, M. pectoralis major | M. latissimus dorsi, M. trapezius pars ascendens, M. pectoralis minor (Schulterblatt-Depression) | M. biceps brachii (an Ringen), Rumpf | keine eigene Studie; Ringe erhöhen die Stabilisatoren (Analogie Ring Dip, Support Scale) | [C-67]; Analogie [C-25, C-04]; Rest Heuristik |
 | HSPU / Pike-Liegestütz | M. deltoideus (Pars clavicularis/acromialis), M. triceps brachii | M. trapezius pars descendens, M. serratus anterior (Aufwärtsrotation) | Rumpf, Unterarmbeuger | keine EMG gefunden; Press-to-Handstand: Schulterbeugemoment bei weniger Geübten grösser | [C-17, C-67, C-68]; Rest Heuristik |
 | L-Sit / V-Sit | Hüftbeuger (M. iliopsoas, M. rectus femoris), M. rectus abdominis | Mm. obliqui, M. triceps brachii (Stütz) | Schultergürtel-Depressoren (M. latissimus dorsi, M. trapezius pars ascendens, M. pectoralis minor) | keine L-Sit-Studie; Analogie Hanging Straight Leg Raise: RA > 130 % MVC, EO 88 % | [C-39, C-67]; Rest Heuristik |
 | Manna | M. deltoideus posterior, M. triceps brachii (Caput longum), M. latissimus dorsi (Schulter-Hyperextension unter Last), Hüftbeuger | Rumpfbeuger, M. rhomboideus | Handgelenk- und Fingerbeuger | keine; Coaching: L-Sit→Manna betont hintere Deltoidei und Rücken | [C-68, C-05]; Rest Heuristik |
 | Human Flag | oberer Arm: M. latissimus dorsi, M. teres major; unterer Arm: M. deltoideus, M. triceps brachii | M. biceps brachii (oberer Arm), M. serratus anterior | Mm. obliqui, M. quadratus lumborum, Hüftabduktoren | keine gefunden | Heuristik; Progressionsstufen [C-68] |
-| Muscle-up (Stange, Ringe) | Zugphase: M. latissimus dorsi, M. biceps brachii; Stützphase: M. triceps brachii, M. pectoralis major | M. deltoideus anterior (Transition), Unterarmbeuger (False Grip) | Rumpf, Scapula-Stabilisatoren | keine gefunden | Heuristik aus [C-18] + [C-25] |
+| Muscle-up (Stange, Ringe) | Zugphase: M. latissimus dorsi, M. biceps brachii; Stützphase: M. triceps brachii, M. pectoralis major | M. deltoideus anterior (Transition), Unterarmbeuger (False Grip), M. trapezius pars descendens | Rumpf, Scapula-Stabilisatoren (M. serratus anterior, M. trapezius pars ascendens) | 1 EMG-Studie (n = 10, mit Kipp, normiert auf manuellen Muskeltest): Ringe gegenüber Stange in der Zugphase BB, Unterarmbeuger und oberer Trapezius höher, in der Stützphase TB und BB höher; SA, LT, LD, PM ohne Unterschied | [C-75]; Rollen Zug/Stütz [C-18, C-25] |
+| One-Arm Pull-up / Archer Pull-up | M. latissimus dorsi, M. biceps brachii, M. brachialis (einarmig) | M. brachioradialis, Unterarmbeuger, M. teres major | Mm. obliqui und M. quadratus lumborum (Anti-Rotation), Gegenarm (Archer) | keine Studie gefunden | Heuristik mit [C-18, C-67] |
 | Pistol Squat | M. quadriceps femoris, M. gluteus maximus | M. gluteus medius (frontale Kniekontrolle), Adduktoren, Wadenmuskulatur | Hamstrings (Ko-Kontraktion), Rumpf | einbeinige Kniebeuge rekrutiert anders als beidbeinige | [C-57, C-67] |
 | Iron Cross / Maltese | Kreuz: M. pectoralis major, M. latissimus dorsi, M. teres major | M. biceps brachii, M. triceps brachii | M. serratus anterior, M. trapezius, M. infraspinatus | Kreuz: 3 Studien; PM und BB reagieren am stärksten auf Lastbedingungen; Maltese: keine | [C-06, C-08, C-13]; Maltese Analogie [C-04, C-07] |
 | Hängen / False Grip | Fingerbeuger (M. flexor digitorum profundus/superficialis), Handgelenkbeuger (M. flexor carpi radialis/ulnaris) | M. brachioradialis | Schultergürtel (Depression) | Analogie Kletter-Dead-Hang: FDP, FDS, FCR aktiv, griffabhängig | [C-67, C-19]; Analogie [C-74] |
@@ -150,9 +170,21 @@ Hinweise zu Tabelle 1:
   latissimus relativ aktiver, schulterbreiter Obergriff: Bizeps/Brachialis,
   Untergriff: relativ höhere Rotatorenmanschetten-Aktivität [C-21]. Handtuch-
   und Schlaufen-Klimmzüge ändern die Hauptbeweger nicht [C-20].
+- **Kipping:** Im Kipping-Klimmzug sinkt die Bizepsaktivität um 26,7
+  Prozentpunkte MVIC, Rumpf- und Hüftbeuger steigen (M. rectus abdominis
+  +28,7, M. obliquus externus +21,8, M. iliopsoas +26,1, M. tensor fasciae
+  latae +13,5 Prozentpunkte); maximaler Hüftwinkel +48,8°, Kniewinkel +56,5°
+  (n = 11) [C-76]. Kipping verlagert Arbeit vom Arm auf Rumpf und Hüfte.
 - **Planche an Ringen:** Nur die Übung «Support Scale mit abgestützten
   Füssen» erreicht eine Bizepsaktivität ohne signifikanten Unterschied zur
   Support Scale; alle anderen Vorbereitungsübungen liegen darunter [C-04].
+- **Muscle-up Ringe vs. Stange (Anteil des manuellen Muskeltests, Mittel):**
+  Zugphase BB 0,55 vs. 0,30, Unterarmbeuger 1,05 vs. 0,77, oberer Trapezius
+  0,63 vs. 0,45; Stützphase TB 1,70 vs. 1,12, BB 0,39 vs. 0,12 [C-75]. Die
+  Autoren führen die höhere Unterarmbeuger-Aktivität auf den False Grip zurück
+  und empfehlen die Stange als erste Variante [C-75]. Die Normierung auf einen
+  nicht sicher isometrischen Muskeltest erlaubt nur Vergleiche innerhalb der
+  Studie (Werte bis 4–5 beim unteren Trapezius) [C-75].
 
 ## 3. Gelenk- und Sehnenbelastung
 
@@ -174,9 +206,30 @@ Hinweise zu Tabelle 1:
 - Im Handstand tragen Handgelenk- und Schultermomente die Balance guter
   Versuche, in vielen Versuchen dominiert das Handgelenkmoment [C-70]; die
   Handgelenkbeuger arbeiten am Boden mit 61 ± 28 % NRMS, am Barren mit
-  44 ± 25 % und an Ringen mit 46 ± 32 % [C-16].
+  44 ± 25 % und an Ringen mit 46 ± 32 % [C-16]. Ein Systematic Review (21
+  Studien) bestätigt die «Wrist Strategy» als vorherrschende
+  Balance-Strategie; der Druckmittelpunkt wandert Richtung Handgelenk, was
+  den Druck unter dem Handgelenk erhöht (Evidenz A/B) [C-82].
+- **Handgelenkmoment im Press:** ≈ 0,4 N·m/kg über die ganze Bewegung vom
+  Absprung bis zum Handstand, ähnlich wie im ruhigen Handstand, ohne
+  Unterschied zwischen besser und weniger gut ausgebildeten Turnern [C-17].
+- **Gemessene Winkel (nur dynamisch):** Beim Aufsetzen der Hände im
+  Flick-Flack lag die Handgelenkextension bei 8- bis 15-jährigen Turnerinnen
+  im Mittel bei 95°; weniger Schulterflexion beim Aufsetzen ging mit mehr
+  Handgelenkextension einher, mehr Trainingsjahre mit weniger (n = 50,
+  Volltext) [C-81]. Turner mit dorsalem Handgelenkschmerz zeigten bei 90°
+  Extension eine veränderte Stellung von Lunatum und Capitatum (MRT) [C-86].
+  Für den statischen Handstand, die Planche und den Liegestütz fand sich keine
+  Winkelmessung.
+- **Dynamische Stützkräfte:** Am Pauschenpferd lagen die mittleren
+  Spitzenkräfte je Hand bei 1,1–1,5 KG, einzelne Spitzen bei 2,0 KG, mit
+  Belastungsraten wie beim Fersenaufsatz im Laufen [C-83].
 - **Folgerung (Heuristik):** Handgelenklast ≈ Handlast (% Körpergewicht, §7)
-  × Extensionswinkel. Parallettes, Barren und Fäuste reduzieren die Extension
+  × Extensionswinkel. Eingeschränkte Schulterflexion vergrössert die
+  Handgelenkextension (dynamisch gemessen [C-81]); im Handstand ist deshalb
+  die Schultermobilität auch ein Handgelenk-Faktor (Übertragung vom
+  Flick-Flack auf den statischen Handstand: Heuristik). Parallettes, Barren
+  und Fäuste reduzieren die Extension
   und damit die radioskaphoidale Spitzenlast [C-43]; im Belastungsmodell zählt
   eine Neutralgriff-Variante eine Stufe weniger (Begründung: [C-43, C-16]).
 
@@ -300,8 +353,12 @@ gleichaltriger Nicht-Sportler [C-15].
   exzentrischen [C-19]; Handtuch-Klimmzüge wurden subjektiv als schwerste
   Variante bewertet [C-20].
 - Handstand: Handgelenkbeuger 61 % NRMS am Boden [C-16].
-- **Heuristik:** Der False Grip an Ringen hängt das Körpergewicht an
-  gebeugte Handgelenke; publizierte Messungen fehlen.
+- **False Grip:** Im Ring-Muscle-up (mit False Grip) war die
+  Unterarmbeuger-Aktivität in der Zugphase signifikant höher als im
+  Stangen-Muscle-up (1,05 vs. 0,77 des Muskeltests); die Autoren führen das
+  auf die gebeugte Handgelenkstellung zurück [C-75]. Kräfte oder Winkel im
+  False Grip wurden nicht gemessen; die Einstufung «hoch» für Handgelenk und
+  Unterarm bleibt **Heuristik**.
 
 ### 3.8 Belastungsprofil je Übungsfamilie
 
@@ -309,27 +366,37 @@ gleichaltriger Nicht-Sportler [C-15].
 genannte Quelle (direkte Messung oder Analogie, Art in der letzten Spalte);
 Zahl mit «H» = Heuristik, Begründung in der letzten Spalte. Die Werte gelten für die
 schwerste übliche Stufe der Familie; leichtere Stufen werden über §5 und §7
-skaliert (PAR-C-44).
+skaliert (PAR-C-44). Gewichtete Varianten (`weighted-pull-up`,
+`weighted-dip`) haben keine eigene Zeile: Basisprofil × (KG + Zusatzlast) / KG
+nach PAR-C-44, gedeckelt bei 3 (**Heuristik**). Griffvarianten des Klimmzugs
+über PAR-C-40, Ring-Varianten von Stützübungen über PAR-C-47, Parallettes und
+Barren über PAR-C-27.
 
 | Familie (slug) | wrist | elbow_medial | elbow_lateral | biceps_distal | biceps_long_head / anterior_shoulder | shoulder_overhead | shoulder_extension | lumbar | knee | fingers_forearm | Begründung |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | push_up | 2 [C-42, C-43] | 1 [C-41] | 1 [C-41] | 0 H | 1 H | 0 H | 1 H | 1 [C-38] | 0 H | 1 H | Handlast 64–75 % KG in Extension [C-26, C-28]; Valgus- und Axiallast gemessen [C-41]; Bizeps kein Hauptbeweger; unten moderate Extension/Horizontalabduktion |
+| support_hold (Barren, Ringe, Parallettes) | 1 H | 1 H | 0 H | 0 H | 1 H | 0 H | 1 H | 0 H | 0 H | 1 H | 100 % KG axial bei gestrecktem, gesichertem Arm, Ellbogenmoment ≈ 0 («straight_arm_axial», PAR-C-49); Neutralgriff (PAR-C-27); Schulterblatt-Depression mit leichter Extension; an Ringen +1 nach PAR-C-47 (Analogie [C-25, C-04]) |
 | pseudo_planche_push_up | 3 H | 2 H | 1 H | 2 H | 2 H | 0 H | 2 H | 1 H | 0 H | 1 H | Handlast ≈ 80–90 % KG (Lean-Modell §5.4) bei starker Extension; oben Straight-Arm mit Beugerbedarf (Analogie [C-04]); unten Ellbogen hinter dem Rumpf |
 | planche_low (lean, tuck, adv_tuck) | 3 [C-42, C-43, C-44] | 2 H | 1 H | 2 [C-04] | 2 [C-04] | 0 H | 0 H | 1 H | 0 H | 1 H | 100 % KG auf Händen in Extension; BIC/DEL dominant [C-04]; Ellbogenmoment 49–61 N·m (Modell §3.2) |
 | planche_high (straddle, half_lay, full, press) | 3 [C-42, C-43] | 3 H | 2 H | 3 [C-04] | 3 [C-04] | 1 H | 0 H | 2 H | 0 H | 1 H | Ellbogenmoment bis ≈ 81 N·m (Modell); Press führt in Überkopfposition; gestreckter Körper verlangt Hüft-/LWS-Streckerkontrolle |
+| planche_push_up (Tuck … Full, gebeugter Arm) | 3 H | 3 H | 2 H | 2 H | 3 H | 0 H | 1 H | 2 H | 0 H | 1 H | Schultermoment wie die Planche-Stufe (§5), dazu Ellbogenbeugung unter Last; unten Ellbogen hinter dem Rumpf (Analogie Pseudo-Planche); keine Messungen gefunden |
 | dip_bench | 1 H | 1 H | 1 H | 0 H | 3 [C-25] | 0 H | 3 [C-25] | 0 H | 0 H | 0 H | 88° Extension = 101 % Max-ROM, IGHL-Mechanismus [C-25]; Füsse tragen Teil der Last |
 | dip_bar | 1 H | 1 H | 1 H | 1 [C-25] | 2 [C-25] | 0 H | 2 [C-25] | 0 H | 0 H | 1 H | Extension < Bench Dip [C-25]; Neutralgriff, 100 % KG axial |
 | dip_ring | 1 H | 1 H | 1 H | 2 [C-25] | 2 [C-25] | 0 H | 2 [C-25] | 0 H | 0 H | 1 H | geringste Extension, aber PM/LD/BB höher [C-25] |
 | pull_up / chin_up | 1 H | 2 H | 1 H | 2 [C-18] | 1 H | 2 [C-22] | 1 H | 1 H | 0 H | 2 H | BB 78–96 % MVIC [C-18]; Überkopf-Kinematik [C-22]; Griff hält 100 % KG über Fingerbeuger mit Ursprung medial (Heuristik) |
+| one_arm_pull_up / archer_pull_up | 1 H | 3 H | 1 H | 3 H | 2 H | 2 [C-22] | 1 H | 1 H | 0 H | 3 H | ganzes KG an einem Arm: Ellbogenbeuger und Fingerbeuger tragen doppelte Last gegenüber dem Klimmzug (Statik); Überkopf-Kinematik wie Klimmzug [C-22]; Rumpf gegen Rotation |
+| kipping_pull_up / bar_swing | 1 H | 1 H | 0 H | 1 [C-76] | 1 H | 3 H | 2 H | 2 H | 0 H | 2 H | Kipp: Bizeps −26,7 Prozentpunkte MVIC, Rumpf/Hüftbeuger höher, Hüftwinkel +48,8° [C-76]; endgradige Überkopfposition unter dynamischer Zuglast und dynamischer Griff (Heuristik; Stützkräfte dynamischer Elemente > 1 KG, Analogie [C-83]) |
 | inverted_row | 1 H | 1 H | 1 H | 2 [C-23] | 1 H | 0 H | 1 H | 1 [C-24] | 0 H | 1 H | BB > 61 % MVIC [C-23]; geringe LWS-Last [C-24]; Füsse tragen Teil der Last |
 | front_lever (tuck … full) | 1 H | 2 H | 1 H | 2 H | 1 H | 0 H | 3 H | 2 H | 0 H | 2 H | maximales Schulter-Extensionsmoment = Planche-Moment (Modell §5); Straight-Arm-Ellbogenmoment ≈ 0,52 × Schultermoment; Bauch/Hüftbeuger gegen Durchhängen (Analogie [C-39]) |
 | back_lever / german_hang / skin_the_cat | 1 H | 2 H | 1 H | 3 H | 3 H | 0 H | 3 H | 1 H | 0 H | 2 H | endgradige Schulterextension unter Last; Bizeps verlängert über Schulter und Ellbogen; IGHL-Mechanismus [C-25] und LHB-Funktion [C-51, C-52] als Analogie |
-| handstand | 3 [C-44, C-45] | 1 H | 1 H | 0 H | 1 H | 3 [C-50, C-69] | 0 H | 1 H | 0 H | 2 [C-16] | 100 % KG in ≈ 90° Extension (Heuristik); Balance über Handgelenkmoment [C-70]; Überkopf ≈ 180° [C-69] |
+| handstand | 3 [C-44, C-45] | 1 H | 1 H | 0 H | 1 H | 3 [C-50, C-69] | 0 H | 1 H | 0 H | 2 [C-16] | 100 % KG in ≈ 90° Extension (Heuristik; dynamisch gemessen 95° [C-81]); Balance über Handgelenkmoment [C-70, C-82]; Überkopf ≈ 180° [C-69] |
+| press_handstand (Straddle-/Pike-Press) | 3 [C-17] | 1 H | 1 H | 1 H | 2 [C-17] | 3 [C-17] | 0 H | 2 H | 0 H | 2 H | Handgelenkmoment ≈ 0,4 N·m/kg über die ganze Bewegung, Schulter bis ≈ 180° Flexion, weniger Geübte mit grösserem Schulterbeugemoment [C-17]; Hüftbeugung unter Last (Kompression, Heuristik); Handgelenkbeuger für Balance wie Handstand (Analogie [C-16]) |
 | hspu / pike_push_up | 3 H | 1 H | 2 H | 0 H | 1 H | 3 H | 0 H | 1 H | 0 H | 1 H | wie Handstand plus Ellbogenbeugung unter Axiallast; keine Messungen gefunden |
 | l_sit / v_sit | 2 H | 1 H | 1 H | 0 H | 1 H | 0 H | 1 H | 2 H | 0 H | 1 H | Handgelenk am Boden extendiert (Parallettes: 1); Hüftbeuger/Psoas-Zug (Analogie [C-39]) |
 | manna | 3 H | 2 H | 1 H | 2 H | 3 H | 0 H | 3 H | 2 H | 0 H | 1 H | Hände hinter dem Körper, maximale Schulter-Hyperextension unter Last |
 | human_flag | 2 H | 2 H | 1 H | 2 H | 2 H | 2 H | 1 H | 2 H | 0 H | 2 H | asymmetrisch: oberer Arm Zug/Überkopf, unterer Arm Stütz; Seitneigemoment am Rumpf; keine Messungen |
-| muscle_up | 2 H | 2 H | 1 H | 2 H | 3 H | 2 [C-22] | 3 H | 1 H | 0 H | 2 H | Zugphase wie Klimmzug [C-22]; Transition in tiefen Dip (Analogie [C-25]); Ringe mit False Grip: fingers_forearm 3, wrist 3 |
+| muscle_up_bar | 2 H | 2 H | 1 H | 2 H | 3 H | 2 [C-22] | 3 H | 1 H | 0 H | 2 H | Zugphase wie Klimmzug [C-22]; Transition in tiefe Stützposition mit Schulterextension (Analogie Dip [C-25]); Kipp verlagert Arbeit auf Rumpf/Hüfte (Analogie [C-76]); an der Stange geringere Arm-EMG als an Ringen [C-75] |
+| muscle_up_ring | 3 H | 2 H | 1 H | 3 [C-75] | 3 H | 2 [C-22] | 3 H | 1 H | 0 H | 3 [C-75] | Ringe: BB in Zug- und Stützphase, Unterarmbeuger in der Zugphase signifikant höher als an der Stange [C-75]; False Grip beugt das Handgelenk unter Last (wrist: Heuristik) |
 | pistol_squat | 0 H | 0 H | 0 H | 0 H | 0 H | 0 H | 0 H | 1 H | 3 [C-54, C-55, C-56] | 0 H | ganzes KG auf einem Knie in tiefer Beugung; LWS-Flexion am tiefsten Punkt |
 | iron_cross / maltese | 3 H | 3 H | 2 H | 3 [C-06, C-08] | 3 H | 1 H | 2 H | 2 H | 0 H | 2 H | BB/PM am lastempfindlichsten [C-08]; weiter Stütz vergrössert Valgus-Hebel (Heuristik) |
 | hang / false_grip | 1 H | 1 H | 0 H | 1 H | 0 H | 2 [C-22] | 0 H | 0 H | 0 H | 2 [C-74] | Dead Hang = Überkopf-Hang [C-22]; Fingerbeuger griffabhängig [C-74]; False Grip: wrist 2, fingers_forearm 3 (Heuristik) |

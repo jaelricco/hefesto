@@ -860,7 +860,7 @@ Anmerkung. Datenfelder beziehen sich auf `codebase_notes.md` §2.
 | W-7 | Genauigkeit der RIR-Schätzung | Imperfekt: 0.95 Wdh. Unterschätzung, I² 97.9 % [B-37] | Trainierte sehr genau (0.65 Wdh.) [B-39] | ±1 Wdh. Unsicherheit einplanen (PAR-B-28) |
 | W-8 | Einfluss der Erfahrung auf RIR | Erfahrene genauer [B-35, B-36] | Trainingsstatus ohne Einfluss [B-37, B-38] | Anfänger zunächst nur protokollieren (PAR-B-29) — konservativ gegenüber beiden |
 | W-9 | Deload | Praxis: nahezu alle Athleten deloaden alle ~4–6 Wochen [B-63, B-64]; Delphi-Konsens [B-62] | Einziges RCT: 1 Woche Pause ohne Vorteil, leicht geringere Kraftzuwächse [B-65]; wiederholte 3-Wochen-Pausen ohne Nachteil [B-86] | Deload als Volumenreduktion, nicht als Komplettpause (PAR-B-52 bis PAR-B-54); Wirkung unbewiesen |
-| W-10 | Aufwärmen und Leistung | 79 % der Kriterien verbessert [B-67]; schwere dynamische Aufwärmsätze steigern Kraft [B-68] | Kein Effekt auf Wiederholungen bei 80 % 1RM [B-72] | Kurzes spezifisches Aufwärmen beibehalten (PAR-B-69, PAR-B-70) |
+| W-10 | Aufwärmen und Leistung | 79 % der Kriterien verbessert [B-67]; schwere dynamische Aufwärmsätze steigern Kraft [B-68]; allgemeiner + spezifischer Teil +8.4 % 1RM gegenüber nur spezifisch [B-133] | Kein Effekt auf Wiederholungen bei 80 % 1RM [B-72] | Kurzes spezifisches Aufwärmen beibehalten (PAR-B-69, PAR-B-70) |
 | W-11 | Aufwärmen und Verletzungen | Aufwärmprogramme −36 % Verletzungsrate (Kinder/Jugendliche) [B-70] | Kein Beleg für akuten Verletzungsschutz [B-71]; keine Studie am Oberkörper [B-68] | Keine Verletzungsschutz-Aussage in der App |
 | W-12 | 10 %-Regel | Verbreitete Faustregel (Grundlage des Interventionsprogramms in [B-77]) | Keine Wirkung im RCT [B-77]; Risiko eher bei > 30 % [B-78] bzw. bei Einzelsession-Spitzen > 10 % [B-79]; ACWR unbrauchbar [B-80] | Heuristische Obergrenzen mit Fokus auf Einzelsession-Spitzen (PAR-B-55, PAR-B-56) |
 | W-13 | Muskelgedächtnis | Epigenetisches Gedächtnis der Hypertrophie [B-92]; schnelle Rückkehr der Kraft [B-88, B-90] | Kein schnellerer Wiederaufbau im vorher trainierten Bein [B-89] | Rampe an gemessener Leistung ausrichten, nicht an vermutetem Gedächtnis |
@@ -869,6 +869,10 @@ Anmerkung. Datenfelder beziehen sich auf `codebase_notes.md` §2.
 | W-16 | Split für Anfänger | Splits für Anfänger suboptimal (Frequenz) [B-116] | Split = Ganzkörper bei gleichem Volumen [B-49] | Ganzkörper bis 3 Einheiten/Woche (PAR-B-37) |
 | W-17 | ACSM 2009 vs. 2026 | 3–5 min Pausen, Periodisierung, 8–12 RM für Anfänger [B-32] | Pausen und Periodisierung ohne konsistenten Effekt; ≥ 80 % 1RM für Kraft [B-31, B-30] | Neuere Übersicht [B-31] hat Vorrang, ältere Werte als Praxisrahmen |
 | W-18 | PDF vs. Literatur | «MAX»-Sätze und 5–7 min Pausen [P-04 S. 1; P-02 S. 4] | Versagen unnötig [B-31]; Pausenlänge ohne Einfluss auf Kraft [B-31] | MAX-Sätze nicht als Standard; lange Pausen nur für Maximalversuche |
+| W-19 | Verbessert Übung die RIR-Schätzung? | RIR-Schätzung wird mit Übung genauer [B-44] | Über 18 Einheiten in 6 Wochen keine Verbesserung des absoluten Fehlers, eher mehr Unterschätzung [B-130] | Nicht auf Lerneffekt vertrauen; regelmässige Kalibrierung per Testsatz (PAR-B-29) |
+| W-20 | Motorische Interferenz zwischen zwei Aufgaben | Zweite, gegensätzliche Aufgabe kurz nach der ersten stört die Konsolidierung, nach 4 h nicht mehr [B-127] | Störung auch nach 24 h bis 1 Woche, keine schützende Konsolidierungsphase [B-128]; Nutzen verschränkten Übens im angewandten Umfeld kaum messbar [B-129] | Keine Sperrfrist zwischen verschiedenen Skills; Konflikte über Priorität, Reihenfolge und Satzbudget lösen (PAR-B-81) |
+| W-21 | Volumen auf viele Einheiten verteilen | 4 kurze > 1 lange Einheit für 1RM bei Trainierten [B-120]; tägliche Kleinstdosen > wöchentliche Sammeldosis [B-18] | 6× = 3× pro Woche bei gleichem Volumen [B-121, B-122]; Frequenzeffekt volumengleich n. s. [B-47, B-48] | Verteilen erlaubt, nicht verlangt; Frequenz folgt Verfügbarkeit (PAR-B-34), GtG optional (PAR-B-80) |
+| W-22 | Tiefe des Deloads | Volumen halbieren [B-114] | Coaches: Volumen −30 bis −50 %, teils > 50 % [B-63]; Taper-Literatur −30 bis −70 % bei gehaltener Intensität [B-64] | Standard −40 %, Spanne −30 bis −50 % (PAR-B-52) |
 
 ## Offene Fragen
 
@@ -881,11 +885,17 @@ Anmerkung. Datenfelder beziehen sich auf `codebase_notes.md` §2.
    Kraftmessung (z. B. Gegengewicht/Zusatzlast wie in [B-19]) fehlt.
 3. **Sekunden in Reserve:** Genauigkeit subjektiver SIR-Schätzungen ist
    unbekannt; bis dahin gemessene Max.-Haltezeiten verwenden.
-4. **Band-Assistenz als Volumen:** Wie zählen band-assistierte Sätze in das
-   Wochenvolumen und die Sehnenlast? Die PDFs zählen sie voll
-   [P-01 bis P-03]; Umrechnung der Assistenz in % Körpergewicht klärt Stream C.
+4. **Band-Assistenz als Volumen:** Eine vorläufige Zählregel steht
+   (Abschnitt 3.5, PAR-B-79), beruht aber nur auf indirekten Befunden; eine
+   Trainingsstudie zu band-assistierten Sätzen wurde nicht gefunden. Offen
+   bleiben die Sehnenlast assistierter Straight-Arm-Sätze (Stream D) und die
+   Kalibrierung der Bandkraft (Stream C, PAR-C-13). Die PDFs zählen
+   assistierte Sätze voll [P-01 bis P-03].
 5. **Interferenz zwischen Skills:** Keine Daten, ob Planche- und Front-Lever-
-   Training sich hemmen oder fördern; Carryover-Fragen gehören zu Stream A.
+   Training sich hemmen oder fördern; belegt sind nur Reihenfolge-Effekte
+   [B-50, B-123], Antagonisten-Paare im Hanteltraining [B-124, B-125, B-126]
+   und umstrittene Laborbefunde zur motorischen Interferenz [B-127, B-128].
+   Carryover-Fragen gehören zu Stream A.
 6. **Deload:** Ob ein reduzierter (statt aufgehobener) Deload Vorteile bringt,
    ist nicht experimentell geprüft [B-65, B-66]; ebenso seine Frequenz im
    Skill-Training.
@@ -900,12 +910,17 @@ Anmerkung. Datenfelder beziehen sich auf `codebase_notes.md` §2.
    der Abfragezeitpunkt (~30 min nach der Einheit [B-106]) sind noch nicht
    produktseitig festgelegt; ebenso, ob RIR/RPE pro Satz erhoben wird.
 10. **Greasing the Groove:** Keine kontrollierte Studie; ob tägliches
-    submaximales Üben von Kraftskills (z. B. Klimmzug) wirkt, ist offen.
+    submaximales Üben von Kraftskills (z. B. Klimmzug) weit weg vom Versagen
+    wirkt, ist offen. Belegt ist nur, dass Verteilen desselben Volumens nicht
+    schadet und teils hilft [B-18, B-120, B-121, B-122]. Die Blog-Dosierungen
+    (z. B. 40–60 % der Max.-Wdh.) sind unverifiziert.
 11. **Validierung der Zeitvorlagen (PAR-B-64 bis PAR-B-67):** Die Dauer ist
     gerechnet, nicht gemessen; reale Wechsel- und Aufbauzeiten (Ringe, Bänder)
     sollten aus `started_at`/`ended_at` der Logs nachkalibriert werden.
-12. **Remmert 2025 [B-24]** ist ein Preprint; die Zahlen pro Einheit sollten
-    nach Peer-Review erneut geprüft werden.
+12. **Remmert 2025 [B-24]** ist weiterhin ein Preprint; bis 27.09.2026 gibt
+    es nur Kongress-Abstracts mit denselben Schwellen [B-117, B-118]. Nach
+    einer begutachteten Vollpublikation PAR-B-18, PAR-B-20 und PAR-B-75
+    erneut prüfen.
 
 ## Quellen
 

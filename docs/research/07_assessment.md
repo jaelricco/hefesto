@@ -686,7 +686,9 @@ Korrektur nach oben erlauben. Der Planer verzichtet bewusst darauf
 Ein sauberer Test ersetzt eine Selbstauskunft zu rund zwei Dritteln; im
 laufenden Betrieb verschiebt eine einzelne Einheit die Schätzung nur um rund
 ein Fünftel bis ein Drittel der Abweichung. Das ist die gewünschte Trägheit
-gegen Tagesform.
+gegen Tagesform. Die Beispiele setzen die Selbstauskunft von 10 Klimmzügen als
+Wert nach der Korrektur um −5 % an (PAR-F-55); aus der unkorrigierten
+Klassenmitte wird also 10 / 0.95 ≈ 10.5 angegeben.
 
 ### 8.5 Wie viele Beobachtungen eine Schätzung braucht
 
