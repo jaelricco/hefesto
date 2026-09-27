@@ -62,8 +62,8 @@ unlock_criteria:
   6RM-Intensität brachten in 5 Wochen gleiche Kraftzuwächse [A-02]; auf 40 % 1RM
   angepasste (Knie-/Schräg-)Liegestütze wirkten in 8 Wochen wie Bankdrücken
   [A-56]. Klimmzug-Training mit Satzabbruch bei 25 % Geschwindigkeitsverlust
-  verbesserte Kraft und Wiederholungen, Training bis nahe ans Versagen (50 %)
-  nicht [A-52].
+  verbesserte Kraft und Wiederholungen, Sätze bis 50 % Geschwindigkeitsverlust
+  (näher am Versagen) nicht [A-52].
 - **Eine durchgehende Schwierigkeitsskala existiert:** Overcoming Gravity (OG)
   ordnet alle Leitern in 16 Level, abgeleitet aus dem FIG Code of Points;
   Beginner 1–5, Intermediate 6–9, Advanced 10–13, Elite 14–16 [A-30 S. 22,
@@ -91,7 +91,9 @@ unlock_criteria:
   markieren also sehr verschiedene Kraftreserven.
 - **Unlock-Vorlage (Vorschlag):** Zwischenstufen der Hebel-Statics ≥ 10 s,
   Endstufen ≥ 3 s (strengster Wettkampfstandard [A-33]), jeweils Form ≥ 4 und
-  ≥ 2 Vorkommen; dynamisch ≈ 3×8 (§2.4).
+  ≥ 2 Vorkommen; dynamisch ≈ 3×8 (§2.4). Jede Stufe hat ein DSL-Kriterium; §2.6
+  zeigt je Stufe, ob die Schwelle belegt, aus der Vorlage übernommen (V) oder
+  Heuristik ist.
 - **Kraft ist notwendig, aber nicht hinreichend (Evidenz B):** Konditionierungs-
   kraft erklärt 76–85 % der Schwalbe-Leistung, 42–59 % der Stützwaage und
   38–48 % des Kreuz-Handstands [A-21]; Bankdrücken–Kreuz r = 0,41 mit
@@ -130,15 +132,19 @@ unlock_criteria:
   Hefesto sollte Dauern aus den eigenen Logs lernen.
 - **DSL-Lücken:** `occurrences` zählt Sätze, nicht Tage; `min_load_kg` ist absolut
   (keine %-KG-Standards); exzentrische und assistierte Elemente zählen nie →
-  Negativ- und Band-Stufen können keine automatisch freischaltbaren Levels sein
-  (§2.5).
+  Negativ- und Band-Stufen können keine automatisch freischaltbaren Levels sein;
+  die vorige Stufe eines Skills ist implizit Pflicht (`states.go`) — deshalb
+  stehen Stangen- und Ring-Muscle-up, Maltese-Halt und -Press in getrennten
+  Skills (§2.5).
 - **Muscle-up und einarmiger Klimmzug sind kaum erforscht:** Coaching-Faustregel
   vor dem ersten strikten Ring-MU sind je 5 saubere Klimmzüge und Dips, die aber
   nicht hinreichen [A-64] (C); in einer Gruppe fortgeschrittener Kletterer
   (5RM-Zusatzlast im Klimmzug im Mittel 42 % KG) schafften nur 2 von 14 den
   einarmigen Klimmzug für 4–5 unassistierte Wiederholungen, die übrigen
-  brauchten ein Band [A-53] (B). Frauen erreichen den ersten Klimmzug
-  abhängig von Kraft-zu-Masse und Körperfett [A-50, A-51] (B).
+  brauchten ein Band [A-53] (B). Ob Frauen nach einem Trainingsprogramm den
+  ersten Klimmzug schaffen, hing von Kraft-zu-Magermasse und Körperfett ab
+  [A-50]; bei trainierten Männern sinkt die Klimmzugzahl mit der Körpermasse
+  (r = −0,55) [A-51] (beide B).
 - **PDF-Kürzel:** `supi` = supinierte/aussenrotierte Handstellung (hoch: Schwalbe
   an Ringen [A-21], FIG «hands turned out» [A-29 S. 62], Maltese-Coaching dreht
   die Hände schrittweise bis 90° aus [A-68]). **`Zanetti` ist geklärt:** FIG-Element
@@ -156,6 +162,7 @@ unlock_criteria:
 | Prüftiefe | Studienzahlen wurden, wo Open Access, im Volltext geprüft (z. B. Tabelle 3 in [A-21], Push-up-Tabelle in der Proceedings-Fassung [A-32]); sonst am Abstract. Die Prüftiefe steht je Quelle in der Quellentabelle. |
 | Evidenzstufen | A = SR/MA/RCT; B = Einzelstudien, FIG-Regelwerk als Expertenkonsens; C = Coaching-Bücher/-Seiten, Street-Workout-Regelwerk; D = Community-Wikis, App-Marketingseiten, Einzel-Event-Regeln. |
 | r/bodyweightfitness | **D** (Community-Wiki), aber seit Jahren kuratiert und breit genutzt; nur für Reihenfolgen und Wechselregeln der Grundübungen verwendet. |
+| Street-Workout-Coaching-Seiten (Coverage-Pass) | Caliathletics [A-68], Calisteniapp [A-66], The Bodyweight Tribe [A-67], Nick-E [A-70]: **D** — kommerzielle bzw. Einzelpersonen-Seiten ohne offengelegte Methodik; nur als Praxisindiz und für Begriffsklärungen. Die OG-Autorenseite [A-63] ist **C**, weil sie Buchinhalt (Isometrietabelle der 2. Auflage) wiedergibt; GMB bleibt **C** wie in der ersten Fassung. Wikipedia [A-71] ist **D** und stützt nur die Namensherkunft «Zanetti». |
 | Overcoming Gravity | **C**. Charts laut Autor aus dem FIG Code of Points konstruiert [A-47]; Level-Definition in Kap. 3 [A-30 S. 21–25]. Das Chart nennt **keine Haltezeiten oder Wiederholungen** pro Level. |
 | The Movement Athlete (TMA) | **D**: kommerzielle App-Seiten mit Marketing-Aussagen (z. B. «research shows 10 seconds …» ohne Beleg [A-40]). Einzige gefundene Quelle mit stufenweisen Zeitangaben; nur als Praxisindiz verwendet. |
 | Nicht verwendet | Sommer, *Building the Gymnastic Body* (2008): Existenz über den Goodreads-Eintrag geprüft (195 S.), Inhalt nicht zugänglich — nicht als Beleg verwendet. Frühere Such-Auszüge zu OG-Levels und FIG-Werten wurden durch die Originale ersetzt. |
@@ -198,8 +205,9 @@ geloggt wird (`CONTENT_AUTHORING.md`).
 | Obergrenze vor dem Wechsel (r/bwf-FAQ) | mehr als 3 × 8–12 → schwerere Variante | [A-69] | D |
 
 *Einordnung:* Die OG-Tabelle endet bei 30 s Maximalhaltezeit [A-63]; die RR
-wechselt bei 3 × 30 s [A-44]. Beide Regeln setzen damit ≈ 30 s als Obergrenze
-für sinnvolles Isometrie-Training einer Stufe. Nach dem Modell der
+wechselt bei 3 × 30 s [A-44]. Beide legen ≈ 30 s als praktische Obergrenze für
+das Isometrie-Training einer Stufe nahe (Deutung, H: OG sagt nicht ausdrücklich,
+dass ab 30 s gewechselt wird). Nach dem Modell der
 Meta-Analyse entspricht eine Stufe, die nur ~10 s gehalten wird, rund 85 % der
 Maximalkraft, eine 30-s-Stufe rund 63 % [A-49] (Heuristik: Das Modell stammt aus
 Einzelgelenk-Tests, nicht aus Ganzkörper-Halten).
@@ -425,7 +433,7 @@ Einstiegswurzeln unter OG-Level 1 erhalten Ordinal 0 und Tier 1.
 | 14 | 9 | Full Planche an Ringen (FIG C); Full-Planche-Liegestütz | [A-31]; FIG [A-29] |
 | 16 | 10 | Inverted Cross an Ringen | [A-31] |
 | 17 | 10 | Maltese (OG-Vermerk «L17»); an Ringen FIG D | [A-31]; FIG [A-29] |
-| > 17 | 10 | Victorian (FIG E) | (H) über FIG-Wert [A-29] |
+| > 17 | 10 | Victorian (FIG E); Zanetti = Back Lever → Schwalbe/Stützwaage (FIG F) | (H) über FIG-Wert [A-29 S. 67, 69] |
 
 ### 3.5 Relative Last innerhalb der Liegestütz-Leiter (Evidenz B)
 
@@ -767,15 +775,15 @@ Standard-Schultertests sagen die Handstandqualität bei Novizen nicht voraus
 Senkrechte gezählt); fünf Einheiten in drei Wochen mit expliziter
 Handgelenk-Strategie verbesserten nur die schwächere Hälfte [A-58] (B). Die
 Koordination im Handstand hängt von der allgemeinen Turn-Expertise ab, nicht nur
-von der Beherrschung des Handstands selbst [A-59] (B). Turnstudien nutzen 10-s-
-Handstände als Standardtest; Erwachsene balancierten besser als Jugendliche
-[A-57].
+von der Beherrschung des Handstands selbst [A-59] (B). In einer Turnstudie
+dienten drei 10-s-Handstände als Testaufgabe; erwachsene Turner balancierten
+besser als jugendliche [A-57].
 
 | Stufe | Slug-Vorschlag | Beschreibung | Formkriterien | Unlock-Kriterium | Dauer bis nächste Stufe | Quellen |
 |---|---|---|---|---|---|---|
 | 1 | `handstand/wall` (existiert) · `wall-handstand-hold` | Handstand an der Wand | Arme gestreckt, Kopf neutral bis leicht im Nacken [A-03] | `wall-handstand-hold hold ≥ 30 s · occ 3 · 14 d` | 2–8 Wo. (H-DUR) | OG 1–3 [A-31]; 30 s Wand-HS als Planche-Voraussetzung [A-40] |
 | 2 | `handstand/chest-to-wall` · `handstand-chest-to-wall` | Bauch zur Wand | Schultern voll geöffnet (Arme an den Ohren), Becken aufgerichtet, Beine gestreckt, Fussspitzen gestreckt [A-03] | `handstand-chest-to-wall hold ≥ 60 s · form≥4 · occ 2 · 14 d` | 2–8 Wo. (H-DUR) | «1-minute stamina hold» an der Wand [A-37] |
-| 3 | `handstand/free-10s` · `handstand-freestanding` | freistehend 10 s | wie 2; Korrektur über Finger/Handgelenk, nicht über die Hüfte [A-14, A-15] | `handstand-freestanding hold ≥ 10 s · form≥4 · occ 3 · 14 d` | 4–26 Wo. (H-DUR; GMB: «viele Monate» [A-37]; Ausgangswert von Novizen 0,4–1,1 s [A-58]) | OG 4–5 [A-31]; 10 s genügt für viele Ziele [A-37]; 10 s = Standard-Testdauer in Turnstudien [A-57] |
+| 3 | `handstand/free-10s` · `handstand-freestanding` | freistehend 10 s | wie 2; Korrektur über Finger/Handgelenk, nicht über die Hüfte [A-14, A-15] | `handstand-freestanding hold ≥ 10 s · form≥4 · occ 3 · 14 d` | 4–26 Wo. (H-DUR; GMB: «viele Monate» [A-37]; Ausgangswert von Novizen 0,4–1,1 s [A-58]) | OG 4–5 [A-31]; 10 s genügt für viele Ziele [A-37]; 10-s-Handstand als Testaufgabe in einer Turnstudie [A-57] |
 | 4 | `handstand/free-30s` · `handstand-freestanding` | freistehend 30 s | wie 3 | `handstand-freestanding hold ≥ 30 s · form≥4 · occ 3 · 14 d` (H-UNL) | 4–13 Wo. (H-DUR) | (H) |
 | 5 | `handstand/free-60s` · `handstand-freestanding` | freistehend 60 s | wie 3 | `handstand-freestanding hold ≥ 60 s · form≥4 · occ 2 · 28 d` | — | ~60 s bequem vor One-Arm-HS-Training [A-37] |
 | P1 | `press-handstand/straddle-stand` · `press-handstand-straddle` | Press aus dem Grätschstand, gestreckte Arme | kein Sprung; Arme gestreckt (FIG-Abzug ab 0–15° Beugung [A-29 S. 19]) | `press-handstand-straddle reps ≥ 1 · form≥4 · occ 2 · 28 d` (V) | 4–13 Wo. (H-DUR) | OG 7 [A-31] |
@@ -1290,7 +1298,14 @@ Hinweis «Referenzwert» in der UI.
 
 Gewichte (Vorschlag, H): `prerequisite` 1,0 (hart); `recommended` 0,3–0,7 je nach
 Stärke des Belegs; `alternative` 0,5; `antagonist` 0,5. «Kraftbaselines» sind
-wegen [A-21, A-23, A-24] nie `prerequisite`.
+wegen [A-21, A-23, A-24] nie `prerequisite`; gemeint sind Kraftwerte ausserhalb
+des Skill-Graphen (z. B. %-KG-Tests). Skill-Levels mit Wiederholungszahl wie
+`pull-up/strict-5` gelten als Fertigkeit und dürfen `prerequisite` sein, wenn
+die Bewegung Teil der Zielbewegung ist (z. B. Muscle-up = Klimmzug + Dip
+[A-13, A-64]). Coverage-Pass: Kanten mit dem Kriterium in §2.6 abgeglichen;
+alle Slugs der Tabelle existieren in den Stufentabellen, der
+Voraussetzungsgraph ist inklusive impliziter Stufenketten zyklenfrei (eigene
+Prüfung per Skript).
 
 | Von (Skill/Level) | Nach (Skill/Level) | Relation | Gewicht | Begründung | Quelle / Evidenz |
 |---|---|---|---|---|---|
@@ -1445,7 +1460,7 @@ Street-Workout-Glossare (Coaching-Seiten, D) sowie eine gezielte Websuche
 | PAR-A-62 | `edge_weight_defaults` | prerequisite 1,0 · recommended 0,3–0,7 · alternative 0,5 · antagonist 0,5 | Gewicht | Heuristik | Heuristik | Kraftbaselines nie `prerequisite` (PAR-A-43) |
 | PAR-A-63 | `hold_time_to_relative_intensity_shoulder` | max. Haltezeit 5 s ≈ 99 % · 10 s ≈ 85 % · 20 s ≈ 71 % · 30 s ≈ 63 % · 60 s ≈ 49 % | % der Maximalkraft | [A-49]; Umrechnung eigene | A (Übertragung: Heuristik) | Exponentialmodell Schulter ET = 685,46 · e^(−4,97·f); Einzelgelenk-Daten, nicht Ganzkörper-Halte; Potenzmodell unter ~15 s unbrauchbar |
 | PAR-A-64 | `iso_set_hold_fraction_of_max` | 0,60–0,70 (Sweet Spot: Max 10 s → 5 × 7 s; 20 s → 4 × 14 s; 30 s → 3 × 20 s) | Anteil der Maximalhaltezeit | [A-63] | C | OG-Isometrietabelle, 2. Aufl.; Dosierung gehört zu Stream B |
-| PAR-A-65 | `iso_max_hold_upper_bound_per_stage_s` | 30 | s | [A-63, A-44] | C/D | OG-Tabelle endet bei 30 s, RR wechselt bei 3 × 30 s: ab ~30 s maximaler Haltezeit die nächste Stufe trainieren |
+| PAR-A-65 | `iso_max_hold_upper_bound_per_stage_s` | 30 | s | [A-63, A-44] | C/D | RR wechselt bei 3 × 30 s; die OG-Tabelle endet bei 30 s (Deutung als Obergrenze: H) — ab ~30 s maximaler Haltezeit die nächste Stufe trainieren |
 | PAR-A-66 | `eccentric_to_first_rep_signal` | 3 Sätze × 3 Cluster-Wdh. à 7–10 s Exzentrik; OAC: 3–4 Sätze à 10 s | — | [A-63] | C | Signal «konzentrischen Versuch einplanen»; kein Unlock (Exzentrik zählt nie, §2.1) |
 | PAR-A-67 | `weighted_interim_min_load_kg_ref75` | Klimmzug 12,5 · 25 · 37,5 · 57,5 · 75; Dip 15 · 27,5 · 40 · 65 · 85; Pistol 15 | kg Zusatzlast | Last in × KG [A-31]; Referenzmasse [A-52] | Heuristik | Referenz 75 kg, auf 2,5 kg gerundet; nur bis `min_load_pct_bw` existiert |
 | PAR-A-68 | `rep_hold_eccentric_equivalence` | 1 Wdh. ≈ 2 s Halt ≈ 3 s Exzentrik | — | [A-63]; 1 Wdh. = 2 s [A-70] | C/D | Volumenvergleich zwischen Übungstypen |
@@ -1591,3 +1606,26 @@ Street-Workout-Glossare (Coaching-Seiten, D) sowie eine gezielte Websuche
 | A-46 | Reddit's Bodyweight Routine (Programmseite) [VT] | Fitloop | o. J. | https://fitloop.app/programs/reddit-recommended-routine | Forum/Wiki | D |
 | A-47 | Overcoming Gravity 2nd Edition & Progression Charts (Autorenseite) [VT] | Low S | o. J. | https://stevenlow.org/overcoming-gravity/ | Coaching-Artikel | C |
 | A-48 | Performance Optimization in Streetlifting: The Combined Role of Nutrition, Lean Mass, and Sleep [Abs.] | Stranieri C, Bulbarelli A, Lonati E, Palestini P, Cazzaniga E | 2025 | https://doi.org/10.3390/nu18010105 | Narratives Review | B |
+| A-49 | Endurance time is joint-specific: a modelling and meta-analysis investigation [VT, Tabelle 2] | Frey Law LA, Avin KG | 2010 | https://doi.org/10.1080/00140130903389068 | Meta-Analyse | A |
+| A-50 | Training college-age women to perform the pull-up exercise [Abs.] | Flanagan SP, Vanderburgh PM, Borchers SG, Kohstall CD | 2003 | https://doi.org/10.1080/02701367.2003.10609064 | Kohortenstudie | B |
+| A-51 | Determinant factors of pull-up performance in trained athletes [Abs.] | Sanchez-Moreno M, Pareja-Blanco F, Diaz-Cueli D, González-Badillo JJ | 2016 | https://pubmed.ncbi.nlm.nih.gov/26176615/ | Querschnittstudie | B |
+| A-52 | Effects of Velocity Loss During Body Mass Prone-Grip Pull-up Training on Strength and Endurance Performance [Abs.] | Sánchez-Moreno M, Cornejo-Daza PJ, González-Badillo JJ, Pareja-Blanco F | 2020 | https://doi.org/10.1519/JSC.0000000000003500 | RCT | A |
+| A-53 | Acute Effects of Post-Activation Performance Enhancement of 5RM Weighted Pull-Ups and One Arm Pull-Ups on Specific Upper Body Climbing Performance [VT] | Sas-Nowosielski K, Kandzia K | 2022 | https://doi.org/10.2478/hukin-2022-0097 | Querschnittstudie | B |
+| A-54 | Bench, Bar, and Ring Dips: Do Kinematics and Muscle Activity Differ? [VT] | McKenzie A, Crowley-McHattan Z, Meir R, Whitting J, Volschenk W | 2022 | https://doi.org/10.3390/ijerph192013211 | EMG-Studie | B |
+| A-55 | Relative balance of serratus anterior and upper trapezius muscle activity during push-up exercises [Abs.] | Ludewig PM, Hoff MS, Osowski EE, Meschke SA, Rundquist PJ | 2004 | https://doi.org/10.1177/0363546503258911 | EMG-Studie | B |
+| A-56 | Low-load bench press and push-up induce similar muscle hypertrophy and strength gain [VT] | Kikuchi N, Nakazato K | 2017 | https://doi.org/10.1016/j.jesf.2017.06.003 | RCT | A |
+| A-57 | Relationship between postural control and muscle activity during a handstand in young and adult gymnasts [Abs.] | Kochanowicz A, Niespodziński B, Marina M, Mieszkowski J, Biskup L, Kochanowicz K | 2018 | https://doi.org/10.1016/j.humov.2018.02.007 | EMG-Studie | B |
+| A-58 | Efficacy of Wrist Strategy Coaching on Handstand Performances in Novices: Inverting Explicit and Implicit Learning of Skill-Related Motor Tasks [VT] | Rohleder J, Vogt T | 2019 | https://doi.org/10.52165/sgj.11.2.209-222 | Kohortenstudie | B |
+| A-59 | Dynamics of expertise level: Coordination in handstand [Abs.] | Gautier G, Marin L, Leroy D, Thouvarecq R | 2009 | https://doi.org/10.1016/j.humov.2008.05.003 | Biomechanik-Studie | B |
+| A-60 | The Wrist as a Weightbearing Joint in Adult Handstand Practitioners: A Cross-Sectional Survey of Chronic Pain and Training-Related Factors [Abs.] | Martonovich N, Maman D, Mahamid A, Alfandari L, Behrbalk E | 2025 | https://doi.org/10.3390/jfmk10040372 | Querschnittstudie | B |
+| A-61 | Benefits of Training the Iron Cross With Herdos Devices and External Load Added to Body Weight for Young Nonachiever Gymnasts [Abs.] | Marina M, Torrado P, Ferrer-Uris B, Busquets A | 2023 | https://doi.org/10.1123/ijspp.2023-0183 | EMG-Studie | B |
+| A-62 | Surface electromyography of nine shoulder muscles in two iron cross conditions in gymnastics [Abs.] | Bernasconi S, Tordi N, Parratte B, Rouillon JD, Monnier G | 2004 | https://pubmed.ncbi.nlm.nih.gov/15756161/ | EMG-Studie | B |
+| A-63 | Prilepin tables for bodyweight strength isometric and eccentric exercises (mit der Isometrietabelle aus Overcoming Gravity, 2. Aufl.) [VT] | Low S | 2017 | https://stevenlow.org/prilepin-tables-for-bodyweight-strength-isometric-and-eccentric-exercises/ | Coaching-Artikel | C |
+| A-64 | How To Do A Strict Rings Muscle-Up [VT] | Hurst R (GMB Fitness) | 2023 | https://gmb.io/muscle-up/ | Coaching-Artikel | C |
+| A-65 | Pistol Squat Progression That Works – Bottom-Up Method [VT] | Hurst R (GMB Fitness) | 2026 | https://gmb.io/pistol-squat/ | Coaching-Artikel | C |
+| A-66 | All Calisthenics Static Holds Explained + Full Diagram [VT] | Belt A (Calisteniapp) | 2025 | https://calisteniapp.com/articles/calisthenics-statics | Coaching-Artikel | D |
+| A-67 | This is a realistic time frame for you to unlock calisthenics skills [VT] | Refael (The Bodyweight Tribe) | 2024 | https://www.thebodyweighttribe.com/blog/this-is-how-long-unlocking-calisthenics-skills-will-take-for-you | Coaching-Artikel | D |
+| A-68 | How to train maltese [VT] | Sampaoli M (Caliathletics) | 2019 | https://caliathletics.com/knowledge/how-to-train-maltese/ | Coaching-Artikel | D |
+| A-69 | Frequently Asked Questions (r/bodyweightfitness-FAQ, GitHub-Pages-Spiegel) [VT] | r/bodyweightfitness-Community | o. J. | https://asdjflk.github.io/r/bodyweightfitness/wiki/faq.html | Forum/Wiki | D |
+| A-70 | Bodyweight Strength Foundation (BWSF) Routine: Info Hub [VT] | Nick-E | o. J. | https://nick-e.com/exercise-library/routines/bwsf/ | Coaching-Artikel | D |
+| A-71 | Arthur Zanetti (Wikipedia; Infobox «Eponymous skills: Zanetti (Still rings)») [VT] | Wikipedia-Autorinnen und -Autoren | 2026 | https://en.wikipedia.org/wiki/Arthur_Zanetti | Forum/Wiki | D |
