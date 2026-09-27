@@ -1153,3 +1153,115 @@ PDF-Kontext.
 | PAR-A-60 | `release_elements_auto_unlock` | false (nur Selbstbestätigung) | — | [A-29 S. 6; A-33 S. 6]; Heuristik | Heuristik | Matten/Helfer selbst im Spitzenturnen; App kann Sicherheit nicht prüfen |
 | PAR-A-61 | `release_valid_catch` | beidhändig, ohne Bodenkontakt | — | [A-33 S. 6] | C | Formkriterium Releases |
 | PAR-A-62 | `edge_weight_defaults` | prerequisite 1,0 · recommended 0,3–0,7 · alternative 0,5 · antagonist 0,5 | Gewicht | Heuristik | Heuristik | Kraftbaselines nie `prerequisite` (PAR-A-43) |
+
+## Widersprüche
+
+| # | Thema | Position 1 | Position 2 | Einordnung / Umgang |
+|---|---|---|---|---|
+| W-1 | Mindesthaltedauer | FIG 2 s [A-29 S. 20]; Calisthenics Cup 2 s [A-34] | WSWCF 3 s [A-33 S. 5] | Unlock nutzt den strengeren Wert (3 s, PAR-A-11); nicht aufgelöst, da Regelwerke verschiedene Zwecke haben. |
+| W-2 | Zählt eine Tuck-Stufe als Halt? | WSWCF nennt einen Tuck-Planche-Halt (3 s) als Kombinationsbeispiel [A-33 S. 8] | Calisthenics Cup wertet Tuck/Adv-Tuck-Planche und -Front-Lever nicht [A-34] | Für Hefesto irrelevant für die Bewertung, relevant für Schwellen: Zwischenstufen bekommen eigene, höhere Schwelle (10 s). |
+| W-3 | Winkeltoleranz | FIG: bis 20° nur kleiner Fehler, bis 45° anerkannt [A-29 S. 19–20] | WSWCF: max. 15° (Planche ±7,5°) [A-33 S. 5] | Form ≥ 4 = ≤ 15° liegt zwischen beiden; bewusst strenger als FIG. |
+| W-4 | Wechselschwelle Statics | RR: 3 × 30 s [A-44] | TMA: 10 s in 3 Sätzen [A-40]; GMB: 5 × 20 s [A-35]; TMA-FL: 5 s Tuck, 10 s Adv Tuck, 5 s Straddle [A-41] | Die Quellen meinen verschiedene Übungsklassen (Grund-Isometrie vs. Hebel). Hefesto trennt beide Klassen (§2.4); die genaue Hebel-Schwelle bleibt offen. |
+| W-5 | Planche am Boden vs. an Ringen | FIG: beide C [A-29 S. 29, 67] | OG: Boden Level 11, Ringe Level 14 [A-31] | OG ist für Trainingsplanung konkreter; FIG bewertet Wettkampfwert, nicht Lernaufwand. Hefesto nutzt OG für die Schwierigkeit. |
+| W-6 | Maltese am Boden vs. Planche | FIG: am Boden gleicher Wert (C) [A-29 S. 29] | OG: Maltese Level 17 vs. Full Planche 11 [A-31]; Konditionierungskraft Schwalbe > Stützwaage [A-21] | Hefesto setzt die Maltese deutlich über die Planche (OG, Kraftdaten). |
+| W-7 | Maltese Boden vs. Ringe | FIG: Ringe D > Boden C [A-29] | PDF-Autor setzt den Maltese-Press **am Boden** an die Spitze [P-04 S. 1] | Mögliche Erklärung: Press ≠ Halt, andere Handposition. Nicht aufgelöst; beide Stufen getrennt. |
+| W-8 | Muscle-up: was ist leichter? | Walker: Stangen-MU zuerst lernen (mit Schwung gemessen) [A-13] | OG: Muscle-up (Ringe, False Grip) Level 5, strikter Stangen-MU Level 7 [A-31] | Kein echter Widerspruch: Walker misst Kipping-MUs, OG bewertet strikte. Hefesto: Kipping-Stange → Ringe → strikte Stange. |
+| W-9 | Last im Standard-Liegestütz | 64 % KG (Spitzen-GRF, dynamisch) [A-05, A-32] | 69–75 % KG (statisch, oben/unten) [A-06] *(S)* | Messmethode (dynamisch vs. statisch). Für Relativvergleiche [A-05]. |
+| W-10 | Wie gut sagt Kraft Statics voraus? | Schwalbe 76–85 % erklärt [A-21] | Stützwaage ≤ 59 %, Kreuz-HS 38–48 % (2021) [A-21]; Kreuz-HS 60 % (2025, andere Tests) [A-22]; Bankdrücken–Kreuz r = 0,41 [A-23] | Übungs- und testabhängig; Coaching-Seiten setzen Kraftwerte als harte Einstiegsbedingung (z. B. 10 Klimmzüge [A-41]). Hefesto: nur `recommended`. |
+| W-11 | Back Lever vs. Front Lever | FIG: beide A [A-29 S. 67] | OG: Full BL 7, Full FL 8 [A-31] | OG differenziert feiner; Hefesto nutzt OG. |
+| W-12 | Einbeiniger Back Lever | OG: eigene Stufe (Level 6) [A-31] | Calisthenics Cup: kein Halt [A-34] | Trainingsstufe ≠ Wettkampfelement; Stufe bleibt, mit Zwischenstufen-Schwelle. |
+| W-13 | Handstand-Balancestrategie | Review: gemischte Strategie, wenn die Handgelenksstrategie versagt [A-03] | Blenkinsop: gemischte Strategie nur ~2 % der Zeit [A-15]; Kerwin: Hüftmomente vor allem bei schwachen Balancen [A-14] | Konsistent im Kern (Handgelenk dominant); Formhinweis entsprechend. |
+| W-14 | Planche-Dauer | TMA-Tabelle: Full nach 24–36 Monaten [A-40] | gleiche Seite: «Full Planche in 1–3 Jahren» [A-40] | Innerer Widerspruch der Quelle; Spanne 12–36 Monate als Praxisindiz. |
+| W-15 | Wo steht die Full Planche? | OG-Level 11 = «Advanced» [A-31] | OG-Text: Iron Cross und Full Planche sind im Turnen «Intermediate»-Elemente [A-30 S. 23] | Perspektive (Freizeitathlet vs. Turner); Hefesto nutzt die Level-Zahl. |
+| W-16 | Stützhalt-Dosis RR | RR-Wiki: 30 s im Aufwärmen, 10–30 s-Regel [A-44] | Boostcamp-Fassung: Barren-Stütz 3 × 60 s als Dip-Stufe 1 [A-45] | App-Fassung weicht ab; Hefesto folgt dem Wiki. |
+| W-17 | Begründung der 10-s-Regel | TMA: «research shows 10 seconds …» [A-40] | keine Studie gefunden | Als Praxisheuristik behandelt. |
+
+## Offene Fragen
+
+1. **OG-Level ohne Mengenangabe:** Das Chart nennt keine Haltezeiten oder
+   Wiederholungen pro Level [A-31]; auch für die gewichteten Spalten fehlt die
+   Wiederholungszahl. Buch Kap. 10 («Methods of Progression») und Kap. 23 sind nicht
+   eingesehen — Beschaffung des Buchs empfohlen.
+2. **Zeit bis zur nächsten Stufe:** Keine Studie gefunden; nur Coaching-Angaben (D)
+   und Elite-Trainingsstudien (B). Vorschlag: `est_weeks_from_prev` aus
+   Hefesto-Logs schätzen (Zeit zwischen Unlock n und n+1, nach Frequenz
+   normalisiert), PAR-A-45 als Prior.
+3. **r/bodyweightfitness-Übungsseiten** (Pull-up, Dip, Row, Push-up, Squat, Planche,
+   Front Lever, Handstand, Muscle-up) waren nicht abrufbar; die Leitern stammen aus
+   dem RR-Spiegel und App-Fassungen [A-44 bis A-46].
+4. **Daï-Long Huynhs eigenes Material** zur Klärung von `fake supi`, `neck band`,
+   `Zanetti`, `Dead Planche`, `Elevator` und `KICKS` (Instagram/YouTube nicht
+   erreichbar) — direkt beim Rechteinhaber oder in seinen Videos prüfen.
+5. **Muscle-up, Human Flag, Pistol, One-Arm-Pull-up:** ausser OG-Level [A-31] und
+   einer EMG-Studie [A-13] keine Quellen zu Schwellen und Dauern.
+6. **DSL-Erweiterungen:** `min_distinct_days` und `min_load_pct_bw` (§2.5) — Entscheid
+   in der Spezifikation (Phase 4).
+7. **Reihenfolge bestehender Levels:** Dürfen neue Levels vor `pull-up/strict-5` und
+   `handstand/wall` eingefügt werden (Änderung von `order`), oder müssen Wurzeln
+   eigene Skills bleiben?
+8. **Maltese-Endstufen:** Ist der unassistierte Halt schwerer als der unassistierte
+   Press? Die PDFs zeigen nur den Press ohne Band.
+9. **Geschlechtsspezifische Normen:** 1RM-Klimmzug Männer 1,16× vs. Frauen 0,73× KG
+   [A-11]; OG unterscheidet nicht. Sollen gewichtete Standards/Voraussetzungen nach
+   Geschlecht skaliert werden (Onboarding-Frage, Stream F)?
+10. **Anthropometrie:** Körperproportionen beeinflussen die Planche [A-28]; die
+    Übertragung auf individuelle Dauern gehört zu Stream C. Gruppenmerkmale wie
+    Herkunft sollen nicht als Prädiktor dienen (H: Fairness, fehlende Kausalität).
+11. **Schwung/Release-Umfang:** Sollen Releases überhaupt in v1 (nur Selbstbestätigung)
+    oder erst mit einem eigenen Sicherheitskonzept kommen?
+12. **Sommer (*Building the Gymnastic Body*)** und weitere Coaching-Bücher wurden nicht
+    eingesehen; eine im Umlauf befindliche Zahl zur Bindegewebsanpassung (~200 Tage)
+    konnte nicht verifiziert werden und wird nicht verwendet (→ Stream D).
+
+## Quellen
+
+| ID | Titel | Autor(en) | Jahr | URL/DOI | Typ | Evidenz |
+|---|---|---|---|---|---|---|
+| A-01 | Effect of Progressive Calisthenic Push-up Training on Muscle Strength and Thickness [Abs.] | Kotarsky CJ, Christensen BK, Miller JS, Hackney KJ | 2018 | https://doi.org/10.1519/JSC.0000000000002345 | RCT | A |
+| A-02 | Bench press and push-up at comparable levels of muscle activity results in similar strength gains [Abs.] | Calatayud J, Borreani S, Colado JC, Martin F, Tella V, Andersen LL | 2015 | https://doi.org/10.1519/JSC.0000000000000589 | RCT | A |
+| A-03 | Biomechanical analyses of the handstand: a systematic review [VT] | MacDonald M, Baker JS, Gu Y, Ugbolue UC | 2025 | https://doi.org/10.3389/fspor.2025.1694648 | Systematic Review | A |
+| A-04 | A Systematic Review of Dynamic, Kinematic, and Muscle Activity during Gymnastic Still Rings Elements [Abs.] | Malíř R, Chrudimský J, Šteffl M, Stastny P | 2023 | https://doi.org/10.3390/sports11030050 | Systematic Review | A |
+| A-05 | Kinetic analysis of several variations of push-ups [Abs.] | Ebben WP, Wurm B, VanderZanden TL, Spadavecchia ML, Durocher JJ, Bickham CT, Petushek EJ | 2011 | https://doi.org/10.1519/JSC.0b013e31820c8587 | Biomechanik-Studie | B |
+| A-06 | The effect of position on the percentage of body mass supported during traditional and modified push-up variants [Abs.; Zahlen (S)] | Suprak DN, Dawes J, Stephenson MD | 2011 | https://doi.org/10.1519/JSC.0b013e3181bde2cf | Biomechanik-Studie | B |
+| A-07 | An electromyographical analysis of the scapular stabilizing synergists during a push-up progression [Abs.] | Lear LJ, Gross MT | 1998 | https://doi.org/10.2519/jospt.1998.28.3.146 | EMG-Studie | B |
+| A-08 | Surface electromyographic activation patterns and elbow joint motion during a pull-up, chin-up, or perfect-pullup rotational exercise [Abs.] | Youdas JW, Amundson CL, Cicero KS, Hahn JJ, Harezlak DT, Hollman JH | 2010 | https://doi.org/10.1519/JSC.0b013e3181f1598c | EMG-Studie | B |
+| A-09 | Avoiding high-risk rotator cuff loading: Muscle force during three pull-up techniques [Abs.] | Urbanczyk CA, Prinold JAI, Reilly P, Bull AMJ | 2020 | https://doi.org/10.1111/sms.13780 | Biomechanik-Studie | B |
+| A-10 | Alterations in kinematics and muscle activation patterns with the addition of a kipping action during a pull-up activity [Abs.] | Dinunzio C, Porter N, Van Scoy J, Cordice D, McCulloch RS | 2019 | https://doi.org/10.1080/14763141.2018.1452971 | Biomechanik-Studie | B |
+| A-11 | Relationship of lat-pull repetitions and pull-ups to maximal lat-pull and pull-up strength in men and women [Abs.] | Johnson D, Lynch J, Nash K, Cygan J, Mayhew JL | 2009 | https://doi.org/10.1519/JSC.0b013e3181a2d7f5 | Querschnittstudie | B |
+| A-12 | Activation of spinal stabilizers and shoulder complex muscles during an inverted row using a portable pull-up device and body weight resistance [Abs.] | Youdas JW, Keith JM, Nonn DE, Squires AC, Hollman JH | 2016 | https://doi.org/10.1519/JSC.0000000000001210 | EMG-Studie | B |
+| A-13 | Comparison of Muscle Activity During a Ring Muscle Up and a Bar Muscle Up [VT] | Walker CW, Bruenger AJ, Tucker WS, Lee HR | 2023 | https://doi.org/10.70252/FJQL7859 | EMG-Studie | B |
+| A-14 | Strategies for maintaining a handstand in the anterior-posterior direction [Abs.] | Kerwin DG, Trewartha G | 2001 | https://doi.org/10.1097/00005768-200107000-00016 | Biomechanik-Studie | B |
+| A-15 | Balance control strategies during perturbed and unperturbed balance in standing and handstand [Abs.] | Blenkinsop GM, Pain MTG, Hiley MJ | 2017 | https://doi.org/10.1098/rsos.161018 | Biomechanik-Studie | B |
+| A-16 | Changes in the Muscle Activity of Gymnasts During a Handstand on Various Apparatus [Abs.] | Kochanowicz A, Niespodziński B, Mieszkowski J, Marina M, Kochanowicz K, Zasada M | 2019 | https://doi.org/10.1519/JSC.0000000000002124 | EMG-Studie | B |
+| A-17 | Kinematics and joints moments profile during straight arm press to handstand in male gymnasts [Abs.] | Mizutori H, Kashiwagi Y, Hakamada N, Tachibana Y, Funato K | 2021 | https://doi.org/10.1371/journal.pone.0253951 | Biomechanik-Studie | B |
+| A-18 | How does fatigue affect handstand balance? A non-linear approach to study fatigue influence in handstand performance [Abs.] | Sabido R, García-Aguilar F, Caballero C, Moreno FJ | 2024 | https://doi.org/10.1186/s12984-024-01442-6 | Biomechanik-Studie | B |
+| A-19 | Are the shoulder joint function, stability, and mobility tests predictive of handstand execution? [Abs.] | Malíř R, Chrudimský J, Provazník A, Třebický V | 2024 | https://doi.org/10.1371/journal.pone.0302922 | Querschnittstudie | B |
+| A-20 | Relationship between swallow, support scale and iron cross on rings and their specific preconditioning strengthening exercises [Abs.] | Hübner K, Schärer C | 2015 | https://doi.org/10.52165/sgj.7.3.59-68 | Querschnittstudie | B |
+| A-21 | Maximum Strength Benchmarks for Difficult Static Elements on Rings in Male Elite Gymnastics [VT] | Schärer C, Huber S, Bucher P, Capelli C, Hübner K | 2021 | https://doi.org/10.3390/sports9060078 | Querschnittstudie | B |
+| A-22 | Preparatory Strength Benchmarks for "Inverted Cross on Rings" in Male Elite and Junior Artistic Gymnasts [VT] | Schärer C, Yusof E, Capelli C | 2025 | https://doi.org/10.3390/sports13050146 | Querschnittstudie | B |
+| A-23 | Relationship Between Bench Press and Iron Cross Maximal Isometric Contraction – How to Develop the Strength to Perform the Iron Cross on Rings [Abs.] | Lecocq T, Gouelle A, Schärer C, Mochizuki L, Tordi N | 2025 | https://doi.org/10.1002/ejsc.70002 | Querschnittstudie | B |
+| A-24 | Electromyographic Analysis of the Support Scale in Gymnastics and Its Related Preconditioning Strengthening Exercises [VT] | Rosaci G, Nigro F, Cortesi M, Ciacci S, Bartolomei S, Fantozzi S | 2025 | https://doi.org/10.1519/JSC.0000000000005074 | EMG-Studie | B |
+| A-25 | Can shoulder muscle coordination during the support scale at ring height be replicated during training exercises in gymnastics? [Abs.] | Bernasconi SM, Tordi NR, Parratte BM, Rouillon JD | 2009 | https://doi.org/10.1519/JSC.0b013e3181bac69f | EMG-Studie | B |
+| A-26 | Specific Eccentric-Isokinetic Cluster Training Improves Static Strength Elements on Rings for Elite Gymnasts [Abs.] | Schärer C, Tacchelli L, Göpfert B, Gross M, Lüthy F, Taube W, Hübner K | 2019 | https://doi.org/10.3390/ijerph16224571 | Kohortenstudie | B |
+| A-27 | Combined Eccentric-Isokinetic and Isoinertial Training Leads to Large Ring-Specific Strength Gains in Elite Gymnasts [Abs.] | Schärer C, Bucher P, Lüthy F, Hübner K | 2022 | https://doi.org/10.3390/sports10040049 | Kohortenstudie | B |
+| A-28 | Insights from a Nine-Segment Biomechanical Model and Its Simulation for Anthropometrical Influence on Individualized Planche Learning and Training in Gymnastics [VT] | Wang X, Shan G | 2023 | https://doi.org/10.3390/bioengineering10070761 | Biomechanik-Studie | B |
+| A-29 | Men's Artistic Gymnastics – 2025-2028 Code of Points [VT] | Fédération Internationale de Gymnastique (FIG) | 2025 | https://www.gymnastics.sport/publicdir/rules/files/en_1.1%20-%20MAG%20Code%20of%20Points%202025-2028.pdf | Positionspapier/Konsensus | B |
+| A-30 | Overcoming Gravity: A Systematic Approach to Gymnastics and Bodyweight Strength, 2nd ed. [Leseprobe Kap. 1–3, S. 21–25 gelesen] | Low S | 2016 | https://stevenlow.org/wp-content/uploads/2018/09/OG2-preview-TOC-Intro-Ch1-3.pdf | Coaching-Buch | C |
+| A-31 | Overcoming Gravity 2nd Edition Exercise Charts [VT] | Low S | 2016 | https://docs.google.com/spreadsheets/d/19l4tVfdTJLheLMwZBYqcw1oeEBPRh8mxngqrCz2YnVg | Coaching-Buch | C |
+| A-32 | Kinetic analysis of several variations of push-ups (ISBS-Proceedings-Fassung) [VT] | Wurm B, VanderZanden TL, Spadavecchia M, Durocher J, Bickham C, Petushek EJ, Ebben WP | 2010 | https://ojs.ub.uni-konstanz.de/cpa/article/view/4457 | Biomechanik-Studie | B |
+| A-33 | WSWCF Calisthenics Freestyle World Championship – Official Competition Rules [VT] | World Street Workout & Calisthenics Federation (WSWCF) | 2024 | https://wswcf.org/wp-content/uploads/2024/11/WSWCF_FREESTYLE-WORLD-CHAMPIONSHIP-RULES.pdf | Positionspapier/Konsensus | C |
+| A-34 | Freestyle Calisthenics Rules [VT] | Calisthenics Cup | o. J. | https://calisthenics-cup.com/freestyle-calisthenics-rules/ | Positionspapier/Konsensus | D |
+| A-35 | How To Train For The Planche: Tuck To Straddle Progression [VT] | Hurst R (GMB Fitness) | o. J. | https://gmb.io/planche/ | Coaching-Artikel | C |
+| A-36 | L-Sit Progression: 6 Steps To A Rock Solid Core [VT] | Hurst R (GMB Fitness) | o. J. | https://gmb.io/l-sit/ | Coaching-Artikel | C |
+| A-37 | How To Do A Handstand – Best Progression [VT] | GMB Fitness | o. J. | https://gmb.io/handstand/ | Coaching-Artikel | C |
+| A-38 | How To Build Up To Pull-Ups: A 3-Step Bodyweight Progression [VT] | GMB Fitness | o. J. | https://gmb.io/pull-ups/ | Coaching-Artikel | C |
+| A-39 | 12 Wrist Mobility And Strength Exercises [VT] | Ilano J (GMB Fitness) | o. J. | https://gmb.io/wrists/ | Coaching-Artikel | C |
+| A-40 | How To Achieve A Planche – The Most Effective Planche Progression [VT] | The Movement Athlete | 2025 | https://themovementathlete.com/planche-progression-training/ | Coaching-Artikel | D |
+| A-41 | The Most Effective Front Lever Progression: Master This Elite Skill in 12 Months (2025 Guide) [VT] | The Movement Athlete | 2025 | https://themovementathlete.com/front-lever-progression/ | Coaching-Artikel | D |
+| A-42 | Master the Back Lever: Complete Step-by-Step Progression Guide (2025 Edition) [VT] | The Movement Athlete | 2025 | https://themovementathlete.com/back-lever-progressions/ | Coaching-Artikel | D |
+| A-43 | Ring Dip Guide [VT] | The Movement Athlete | o. J. | https://themovementathlete.com/ring-dip-guide/ | Coaching-Artikel | D |
+| A-44 | Recommended Routine (r/bodyweightfitness-Wiki, GitHub-Spiegel) [VT] | r/bodyweightfitness-Community | o. J. | https://github.com/redditbwf/redditbwf.github.io/blob/master/wiki/recommended_routine.md | Forum/Wiki | D |
+| A-45 | Reddit's Bodyweight Fitness Recommended Routine (App-Programmseite) [VT; vollständige Leitern nur (S)] | Boostcamp | o. J. | https://www.boostcamp.app/coaches/r-bodyweightfitness/r-bodyweight-recommended-routine | Forum/Wiki | D |
+| A-46 | Reddit's Bodyweight Routine (Programmseite) [VT] | Fitloop | o. J. | https://fitloop.app/programs/reddit-recommended-routine | Forum/Wiki | D |
+| A-47 | Overcoming Gravity 2nd Edition & Progression Charts (Autorenseite) [VT] | Low S | o. J. | https://stevenlow.org/overcoming-gravity/ | Coaching-Artikel | C |
+| A-48 | Performance Optimization in Streetlifting: The Combined Role of Nutrition, Lean Mass, and Sleep [Abs.] | Stranieri C, Bulbarelli A, Lonati E, Palestini P, Cazzaniga E | 2025 | https://doi.org/10.3390/nu18010105 | Narratives Review | B |
