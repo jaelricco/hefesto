@@ -16,6 +16,16 @@
 > Reddit (die r/bodyweightfitness-Routine wurde über einen GitHub-Spiegel
 > gelesen, die Übungsseiten nicht) und die Kanäle von Daï-Long Huynh. Werte, die
 > nur aus einem Such-Auszug stammen, tragen *(S)*.
+>
+> **Vollständigkeitsprüfung (Coverage-Pass).** Nachträglich ergänzt: Quellen
+> A-49 bis A-71 (u. a. eine Meta-Analyse zur isometrischen Haltezeit, zwei
+> weitere RCTs, Studien zu Klimmzug-Determinanten, Dips, Handstand-Novizen,
+> einarmigem Klimmzug und Kreuz-Hilfsgeräten), die OG-Isometrie-Tabelle von der
+> Autorenseite, die Herkunft jeder Unlock-Schwelle (§2.6), eine Korrektur der
+> WSWCF-Toleranz (±7,5°, §2.3/§2.4), Scapula-Push- und Kompressionswurzeln
+> (§4.10, §4.9), fehlende Kanten (§8) und die Klärung von «Zanetti» im FIG-Code
+> (§9). Geprüft wurde, soweit Open Access, im Volltext; sonst am Abstract
+> (vermerkt in der Quellentabelle).
 
 **Legende**
 
@@ -31,6 +41,7 @@
 | (H-PRE) | Kante aus Bewegungsverwandtschaft abgeleitet; keine Studie |
 | (H-EQ) | Equipment-Effekt mechanisch begründet; nicht gemessen |
 | (H-FAULT) | Häufiger Fehler = Umkehrung des Formkriteriums; keine Quelle |
+| (V) | Schwelle aus der Vorlage §2.4 übernommen: die Klasse ist belegt (Quellen dort), die Anwendung auf genau diese Stufe ist Heuristik; Herkunft je Stufe in §2.6 |
 
 DSL-Kurzschreibweise in den Stufentabellen:
 `<exercise> <measure> ≥ <value> · <assistance> · form≥<n> · occ <n> · <within_days> d`.
@@ -48,7 +59,11 @@ unlock_criteria:
 - **Leitern über schwerere Varianten sind als Überlastung belegt (Evidenz A):**
   4 Wochen progressives Liegestütz-Training (3×/Woche) steigerten das
   Bankdrück-1RM signifikant [A-01]; Band-Liegestütz und Bankdrücken bei gleicher
-  6RM-Intensität brachten in 5 Wochen gleiche Kraftzuwächse [A-02].
+  6RM-Intensität brachten in 5 Wochen gleiche Kraftzuwächse [A-02]; auf 40 % 1RM
+  angepasste (Knie-/Schräg-)Liegestütze wirkten in 8 Wochen wie Bankdrücken
+  [A-56]. Klimmzug-Training mit Satzabbruch bei 25 % Geschwindigkeitsverlust
+  verbesserte Kraft und Wiederholungen, Training bis nahe ans Versagen (50 %)
+  nicht [A-52].
 - **Eine durchgehende Schwierigkeitsskala existiert:** Overcoming Gravity (OG)
   ordnet alle Leitern in 16 Level, abgeleitet aus dem FIG Code of Points;
   Beginner 1–5, Intermediate 6–9, Advanced 10–13, Elite 14–16 [A-30 S. 22,
@@ -61,12 +76,19 @@ unlock_criteria:
   Manna C; Mindesthaltedauer 2 s [A-29 S. 20, 28–29, 67].
 - **Formqualität lässt sich an Wettkampfregeln koppeln:** FIG wertet
   Halteabweichungen > 5–20° als kleinen, > 20–45° als mittleren Fehler und
-  erkennt > 45° nicht an [A-29 S. 19–20]; WSWCF akzeptiert höchstens 15° (Planche
-  ±7,5°) und verlangt ≥ 3 s [A-33 S. 5]. Vorschlag: `form_quality` 4 = ≤ 15°;
-  Unlock von Statics verlangt ≥ 4.
+  erkennt > 45° nicht an [A-29 S. 19–20]; WSWCF erlaubt ein 15°-Band, also
+  ±7,5° um die Idealposition, und verlangt ≥ 3 s [A-33 S. 5]. Vorschlag:
+  `form_quality` 5 = ≤ 5° (FIG abzugsfrei, WSWCF-gültig), 4 = ≤ 15° (FIG kleiner
+  Fehler); Unlock von Statics verlangt ≥ 4 — strenger als FIG, lockerer als WSWCF
+  (Widerspruch W-3).
 - **Wechselregeln (Evidenz C/D):** dynamisch 3×5–8, bei 3×8 sauber nächste
   Variante [A-44]; Grund-Isometrie Wechsel bei 3×30 s [A-44]; Planche-Stufen
-  5×20 s (GMB) [A-35] bzw. 10 s in 3 Sätzen (TMA) [A-40].
+  5×20 s (GMB) [A-35] bzw. 10 s in 3 Sätzen (TMA) [A-40]. OG dosiert Halte mit
+  60–70 % der Maximalhaltezeit (Tabelle bis 30 s Maximum) [A-63]. Eine
+  Meta-Analyse (Evidenz A) ordnet Haltezeiten an der Schulter Intensitäten zu:
+  maximal ~10 s ≈ 85 %, 30 s ≈ 63 %, 60 s ≈ 49 % der Maximalkraft (eigene
+  Rechnung aus dem Exponentialmodell) [A-49] — 10-s- und 30-s-Schwellen
+  markieren also sehr verschiedene Kraftreserven.
 - **Unlock-Vorlage (Vorschlag):** Zwischenstufen der Hebel-Statics ≥ 10 s,
   Endstufen ≥ 3 s (strengster Wettkampfstandard [A-33]), jeweils Form ≥ 4 und
   ≥ 2 Vorkommen; dynamisch ≈ 3×8 (§2.4).
@@ -100,19 +122,31 @@ unlock_criteria:
 - **Dauer bis zur nächsten Stufe ist nur auf Coaching-Niveau belegt (C/D):**
   Front Lever je Stufe 2–4 Monate, gesamt 12–18 Monate ab 10 Klimmzügen [A-41];
   Planche kumuliert Tuck nach 2–6, Straddle nach 12–24, Full nach 24–36 Monaten
-  [A-40]; Back Lever 6–12 Monate [A-42]. Elite-Turner steigern spezifische
-  Ringkraft in 3–4 Wochen um 3,6–8,7 % [A-26, A-27]. Studien zu Lernzeiten
-  fehlen; Hefesto sollte Dauern aus den eigenen Logs lernen.
+  [A-40]; Back Lever 6–12 Monate [A-42]; ein Coach nennt 1–2 Jahre Basis plus
+  1–2 Jahre bis zu den FIG-A-Elementen [A-67] (D). Elite-Turner steigern
+  spezifische Ringkraft in 3–4 Wochen um 3,6–8,7 % [A-26, A-27]; Sportstudierende
+  balancierten den freien Handstand vor einer 3-wöchigen Intervention im Mittel
+  nur 0,4–1,1 s [A-58] (B). Studien zu Lernzeiten bis zur nächsten Stufe fehlen;
+  Hefesto sollte Dauern aus den eigenen Logs lernen.
 - **DSL-Lücken:** `occurrences` zählt Sätze, nicht Tage; `min_load_kg` ist absolut
   (keine %-KG-Standards); exzentrische und assistierte Elemente zählen nie →
   Negativ- und Band-Stufen können keine automatisch freischaltbaren Levels sein
   (§2.5).
-- **PDF-Kürzel:** `supi` ist mit hoher Wahrscheinlichkeit die supinierte
-  (aussenrotierte) Handstellung — sie ist die Handstellung der Schwalbe an Ringen
-  [A-21], und FIG nennt «hands turned out» und «slightly wide» als wertneutrale
-  Varianten der Stützwaage [A-29 S. 62]. `Elevator` existiert als Elementname in
-  OG (Level 17) ohne Definition [A-31]. `fake supi`, `neck band`, `Zanetti` und
-  `Dead Planche` bleiben **unklar** (§9).
+- **Muscle-up und einarmiger Klimmzug sind kaum erforscht:** Coaching-Faustregel
+  vor dem ersten strikten Ring-MU sind je 5 saubere Klimmzüge und Dips, die aber
+  nicht hinreichen [A-64] (C); in einer Gruppe fortgeschrittener Kletterer
+  (5RM-Zusatzlast im Klimmzug im Mittel 42 % KG) schafften nur 2 von 14 den
+  einarmigen Klimmzug für 4–5 unassistierte Wiederholungen, die übrigen
+  brauchten ein Band [A-53] (B). Frauen erreichen den ersten Klimmzug
+  abhängig von Kraft-zu-Masse und Körperfett [A-50, A-51] (B).
+- **PDF-Kürzel:** `supi` = supinierte/aussenrotierte Handstellung (hoch: Schwalbe
+  an Ringen [A-21], FIG «hands turned out» [A-29 S. 62], Maltese-Coaching dreht
+  die Hände schrittweise bis 90° aus [A-68]). **`Zanetti` ist geklärt:** FIG-Element
+  «aus dem Back Lever Press in die Schwalbe (auch in die Stützwaage)», Wert F
+  [A-29 S. 69, Nr. 72; A-71]. `Dead Planche` = Planche mit ~0° Schulterbeugung,
+  Arme neben dem Körper (D) [A-66]. `Elevator` heisst an Ringen der inverted
+  Muscle-up [A-67, A-31] (D/C); die Bedeutung im PDF bleibt unsicher. `fake supi`
+  und `neck band` bleiben **unklar** (§9).
 
 ## 1. Methodik und Grenzen
 
@@ -125,6 +159,8 @@ unlock_criteria:
 | Overcoming Gravity | **C**. Charts laut Autor aus dem FIG Code of Points konstruiert [A-47]; Level-Definition in Kap. 3 [A-30 S. 21–25]. Das Chart nennt **keine Haltezeiten oder Wiederholungen** pro Level. |
 | The Movement Athlete (TMA) | **D**: kommerzielle App-Seiten mit Marketing-Aussagen (z. B. «research shows 10 seconds …» ohne Beleg [A-40]). Einzige gefundene Quelle mit stufenweisen Zeitangaben; nur als Praxisindiz verwendet. |
 | Nicht verwendet | Sommer, *Building the Gymnastic Body* (2008): Existenz über den Goodreads-Eintrag geprüft (195 S.), Inhalt nicht zugänglich — nicht als Beleg verwendet. Frühere Such-Auszüge zu OG-Levels und FIG-Werten wurden durch die Originale ersetzt. |
+| Coverage-Pass | Systematische Europe-PMC-Suchen (Titelsuche) zu Muscle-up, Front/Back Lever, Planche, Kreuz, Stützwaage, Schwalbe, Handstand (57 Treffer gesichtet), Klimmzug (Leistung, Geschlecht, Training), Dips, Liegestütz-RCTs, Pistol/Einbein-Kniebeuge, einarmigem Klimmzug und isometrischer Haltezeit; Crossref-Suche für das *Science of Gymnastics Journal* und SportRxiv. Ergebnis: **keine** Studie zu Stufenleitern, Lernzeiten oder Unlock-Schwellen von Front Lever, Back Lever, Planche, Human Flag, Pistol oder Muscle-up; Studien existieren zu Determinanten und Muskelaktivität (§4–§7). Die FIG-Wertetabellen wurden als Bild gerendert, weil Elementnamen nicht im Textlayer stehen (§9). |
+| Nicht erreichbar (Coverage-Pass) | r/bodyweightfitness-Übungsseiten (Reddit verlangt Login; GitHub-Spiegel enthält nur RR und README, ein weiterer Spiegel nur das FAQ [A-69]); TMA-Leitfäden zu Muscle-up, Human Flag, Pistol und One-Arm-Pull-up (nur E-Mail-Formulare); Daï-Long Huynhs eigene Kanäle. |
 
 ## 2. Übergreifende Regeln für Stufen, Unlocks und Wechsel
 
@@ -154,6 +190,19 @@ geloggt wird (`CONTENT_AUTHORING.md`).
 | L-Sit (GMB) | einbeinig mind. 5 s pro Seite, dann voller L-Sit; Halte 5–30 s, 3–5 Sätze | [A-36] | C |
 | Tuck → Straddle Planche (GMB) | zwei Übungen ≥ 3 Wochen, dann neu bewerten; die nächste Stufe laufend testen | [A-35] | C |
 | Untrainierte Anfänger (OG) | zuerst höhere Wiederholungszahlen (Gewöhnung des Bindegewebes); trainierte Anfänger 5–15 Wdh. | [A-30 S. 24] | C |
+| Isometrie-Dosis (OG-Tabelle, 2. Aufl.) | Haltezeit pro Satz ≈ 60–70 % der aktuellen Maximalhaltezeit; Gesamtzeit je nach Maximum 7–68 s; «Sweet Spot» z. B. Max 10 s → 5 × 7 s, Max 20 s → 4 × 14 s, Max 30 s → 3 × 20 s; die Tabelle endet bei 30 s Maximalhaltezeit | [A-63] | C |
+| Exzentrik → erste Wiederholung (OG) | 2–3 Sätze à 2–3 Cluster-Wdh. mit 3–5 s Exzentrik; steigern auf 7–10 s; «die meisten» schaffen die erste konzentrische Wiederholung, sobald 3 × 3 Cluster à 7–10 s gelingen (Klimmzug, Dip, einarmiger Klimmzug) | [A-63] | C |
+| Äquivalenz Wdh./Halt/Exzentrik | 1 konzentrische Wdh. ≈ 2 s Halt ≈ 3 s Exzentrik | [A-63]; 1 Wdh. = 2 s auch bei [A-70] | C/D |
+| Haltezeit → relative Intensität (Schulter) | Exponentialmodell der Meta-Analyse: maximale Haltezeit 5 s ≈ 99 %, 10 s ≈ 85 %, 20 s ≈ 71 %, 30 s ≈ 63 %, 60 s ≈ 49 % der Maximalkraft; das Potenzmodell liefert ab 30 s ähnliche Werte (68 % bzw. 47 %), unter ~15 s aber > 100 % (unbrauchbar) | [A-49]; Werte eigene Rechnung | A (Übertragung auf Calisthenics-Halte: Heuristik) |
+| Grundübungen, Wiederholungsbereiche (Community-Coach) | Pike-Liegestütz und Klimmzug 3 × 5–8; Liegestütz und Rudern 3 × 8–12; Kniebeuge 3 × 8–15; Wechsel am oberen Ende mit der nächsten Variante am unteren Ende | [A-70] | D |
+| Obergrenze vor dem Wechsel (r/bwf-FAQ) | mehr als 3 × 8–12 → schwerere Variante | [A-69] | D |
+
+*Einordnung:* Die OG-Tabelle endet bei 30 s Maximalhaltezeit [A-63]; die RR
+wechselt bei 3 × 30 s [A-44]. Beide Regeln setzen damit ≈ 30 s als Obergrenze
+für sinnvolles Isometrie-Training einer Stufe. Nach dem Modell der
+Meta-Analyse entspricht eine Stufe, die nur ~10 s gehalten wird, rund 85 % der
+Maximalkraft, eine 30-s-Stufe rund 63 % [A-49] (Heuristik: Das Modell stammt aus
+Einzelgelenk-Tests, nicht aus Ganzkörper-Halten).
 
 *Ableitung (RR-Mindestdauer):* Von 3×5 bis 3×8 mit +1 Wdh. pro Satz und
 Einheit braucht es mindestens 4 Einheiten (5→6→7→8) [A-44]; bei 3 Einheiten pro
@@ -165,7 +214,7 @@ eine **Untergrenze**, keine typische Dauer.
 | Standard | FIG MAG 2025–2028 | WSWCF Freestyle | Calisthenics Cup |
 |---|---|---|---|
 | Mindesthaltedauer | 2 s ab vollständigem Stillstand [A-29 S. 20] | 3 s; länger bringt keine Punkte [A-33 S. 5] | 2 s ab Stillstand [A-34] |
-| Winkeltoleranz Halteposition | > 5–20° klein (−0,1), > 20–45° mittel (−0,3), > 45° gross (−0,5) und nicht anerkannt [A-29 S. 19–22] | max. 15° im Hauptgelenk, Planche ±7,5° zur Horizontalen; sonst Punktabzug [A-33 S. 5] | bessere Form = höhere Bewertung; keine Gradangabe [A-34] |
+| Winkeltoleranz Halteposition | > 5–20° klein (−0,1), > 20–45° mittel (−0,3), > 45° gross (−0,5) und nicht anerkannt [A-29 S. 19–22] | 15°-Band im Hauptgelenk, d. h. ±7,5° um die Idealposition (Beispiel Planche: ±7,5° zur Horizontalen); grössere Abweichungen und gebeugte Knie/Hüfte/Ellbogen, runder oder überstreckter Rücken = Punktabzug [A-33 S. 5] | bessere Form = höhere Bewertung; keine Gradangabe [A-34] |
 | Armbeugung bei Halten/Pressen | 0–15° klein, > 15–30° mittel, > 30–45° gross, > 45° nicht anerkannt [A-29 S. 19] | gebeugte Ellbogen = Abzug [A-33 S. 5] | gebeugte Arme = schlechtere Bewertung [A-34] |
 | Nicht als Halt gewertet | Positionen > 45° neben der Sollposition, z. B. Stützwaage mit > 45° Hüftbeugung [A-29 S. 61] | — (ein Tuck-Planche-Halt von 3 s erscheint als Kombinationsbeispiel) [A-33 S. 8] | Tuck/Adv-Tuck-Planche; Tuck/Adv-Tuck/45°-Straddle-Front-Lever; gehockter V-Sit; einbeiniger Back Lever [A-34] |
 | Gerät | Werte teils geräteabhängig (§3.3) | — | p-Bars, Stange und Boden werden unterschiedlich bewertet [A-34] |
@@ -182,15 +231,18 @@ Unterschieden werden **Unlock** (Karte, «erreicht», nie zurückgenommen) und
 | Zwischenstufe Hebel-Static (Tuck, Adv Tuck, One-Leg) | `hold ≥ 10 s · none · form≥4 · occ 2 · 28 d` | 10 s in 3 Sätzen [A-40] bzw. 5×20 s [A-35] | 10 s [A-40]; Zwischenstufen zählen im Wettkampf teils nicht [A-34] |
 | Endstufe (Straddle, Half-Lay, Full) | `hold ≥ 3 s · none · form≥4 · occ 2 · 28 d` | ≥ 10 s sauber, bevor die nächste Stufe Haupttraining wird | 3 s = strengster Wettkampfstandard [A-33]; 10 s [A-40] |
 | Press/Kraftskill mit Wdh. | `reps ≥ 1 · none · form≥4 · occ 2 · 28 d`, danach Wdh.-Stufen (3, 5) | 3×3–5 sauber | (H-UNL); die PDFs dosieren Maximalpressen mit 1–3 Wdh. [P-01 S. 2–3; P-02 S. 2] |
-| Gewichtete Stufe | `reps ≥ 1 · min_load_kg X · occ 2 · 28 d` | — | OG in Vielfachen des KG [A-31]; % KG in der DSL nicht ausdrückbar (§2.5) |
+| Gewichtete Stufe | `reps ≥ 1 · min_load_kg X · occ 2 · 28 d`; X bis zur DSL-Erweiterung aus einer Referenzmasse von 75 kg (PAR-A-67) | — | OG in Vielfachen des KG [A-31]; % KG in der DSL nicht ausdrückbar (§2.5); 75 kg ≈ mittlere Körpermasse trainierter Männer in [A-51, A-52] (H) |
+| Schwung-/Release-Element | nur Selbstbestätigung; das DSL-Kriterium wird als Nachweisvorschlag angezeigt, schaltet aber nicht automatisch frei | — | Sicherheitsvorbehalt (PAR-A-60) |
 
 **`form_quality`-Zuordnung (Vorschlag):** 5 = ≤ 5° Abweichung (bei FIG
-abzugsfrei [A-29 S. 20]); 4 = > 5–15° (innerhalb der WSWCF-Toleranz
-[A-33 S. 5]); 3 = > 15–30°; 2 = > 30–45°; 1 = > 45° (bei FIG nicht anerkannt
-[A-29 S. 19–20]). Die Grenzen 15/30/45° folgen der FIG-Skala für Armbeugung
+abzugsfrei [A-29 S. 20], innerhalb des WSWCF-Bands von ±7,5° [A-33 S. 5]);
+4 = > 5–15° (bei FIG kleiner Fehler; nur bis 7,5° WSWCF-gültig); 3 = > 15–30°;
+2 = > 30–45°; 1 = > 45° (bei FIG nicht anerkannt [A-29 S. 19–20]). Die Grenzen 15/30/45° folgen der FIG-Skala für Armbeugung
 [A-29 S. 19]. Statics verlangen für den Unlock ≥ 4. Für dynamische
 Grundübungen wird `min_form_quality` weggelassen (H-UNL: ein gesetztes
 `min_form_quality` schliesst unbewertete Elemente aus, `evaluate.go`).
+Haltezeiten sollen wie bei FIG ab dem vollständigen Stillstand gezählt werden
+[A-29 S. 20]; die App sollte das im Logging-Hinweis sagen (H).
 
 ### 2.5 Gefundene Grenzen der DSL
 
@@ -201,6 +253,7 @@ Grundübungen wird `min_form_quality` weggelassen (H-UNL: ein gesetztes
 | `min_form_quality` schliesst Elemente ohne Formbewertung aus. | Wer Form nie bewertet, schaltet Statics nie frei. | UI fordert Formbewertung bei Unlock-relevanten Sätzen an. |
 | Exzentrische und (bei `none`) assistierte Elemente zählen nie. | Negativ-/Band-Stufen können nicht automatisch freischalten. | Als `progression`-Übungen führen (§2.1). |
 | Kein Merkmal «mit/ohne Schwung». | Kipping und strikt nur über getrennte Slugs trennbar. | Getrennte Exercise-Slugs [A-10, A-13]. |
+| Die vorige Stufe desselben Skills ist **implizite Voraussetzung** (`internal/domain/progress/states.go`: «including the implicit previous level of its own skill»). | Jede Stufenfolge ist eine harte Kette. Folgen: (a) im Muscle-up-Skill müsste der strikte Stangen-MU auf den Ring-MU warten — für Parkathleten ohne Ringe falsch; (b) der Maltese-Halt müsste auf den Maltese-Press warten, obwohl offen ist, was schwerer ist; (c) die Typewriter-Stufe (nur H) würde zum Pflichtschritt vor dem einarmigen Klimmzug. | Geräte- und Varianten-Stufen als eigene Skills mit `recommended`-Kanten führen (§6.1, §5.6, §7.1). |
 
 ## 3. Relative Schwierigkeit: eine gemeinsame Ordinalskala
 
@@ -647,7 +700,7 @@ Dead Hang, 60 s Hollow Hold, 15 gestreckte Beinheben und als Wechselpunkte
 |---|---|---|---|---|---|---|
 | 1 | `front-lever/tuck` (existiert) · `front-lever-tuck` | Knie zur Brust, Rumpf waagrecht | Arme gestreckt, Schultern depressiert, Rumpf waagrecht ≤ 15° (§2.4) (H-FORM) | `front-lever-tuck hold ≥ 10 s · none · form≥4 · occ 2 · 28 d` | ab 10 Klimmzügen 2–3 Mo. bis Adv Tuck [A-41] | OG 4 [A-31]; Platzhalter nennt 15 s |
 | 2 | `front-lever/advanced-tuck` (existiert) · `front-lever-advanced-tuck` | Rücken flach, Hüfte offen, Knie gebeugt | flacher Rücken (H-FORM) | `front-lever-advanced-tuck hold ≥ 10 s · none · form≥4 · occ 2 · 28 d` | 2–3 Mo. [A-41] | OG 5 [A-31]; 10 s Adv Tuck vor Straddle [A-41] |
-| 3 | `front-lever/straddle` · `front-lever-straddle` | Beine gestreckt, gegrätscht | Körper waagrecht ±7,5–15°, Beine gestreckt | `front-lever-straddle hold ≥ 3 s · none · form≥4 · occ 2 · 28 d` | 3–4 Mo. bis Full [A-41] | OG 6 [A-31]; 3 s [A-33] |
+| 3 | `front-lever/straddle` · `front-lever-straddle` | Beine gestreckt, gegrätscht | Körper waagrecht (Form 4: ≤ 15°; WSWCF-gültig: ±7,5°), Beine gestreckt | `front-lever-straddle hold ≥ 3 s · none · form≥4 · occ 2 · 28 d` | 3–4 Mo. bis Full [A-41] | OG 6 [A-31]; 3 s [A-33] |
 | 4 | `front-lever/one-leg` · `front-lever-one-leg` (Alt. `front-lever-half-lay`) | ein Bein gestreckt / Knie halb | Hüfte gestreckt, waagrecht (H-FORM) | `front-lever-one-leg hold ≥ 5 s · none · form≥4 · occ 2 · 28 d` (H-UNL) | 4–13 Wo. (H-DUR) | OG 7 [A-31] |
 | 5 | `front-lever/full` · `front-lever` | Full Front Lever | gestreckt, waagrecht, Arme gestreckt | `front-lever hold ≥ 3 s · none · form≥4 · occ 2 · 28 d` | — | OG 8 [A-31]; FIG A [A-29]; 3 s [A-33] |
 | (Übungen) | `front-lever-row-tuck` (OG 5), `band-assisted-tuck-fl` (existiert), `front-lever-negative` | Rows, Band, Negative | — | Rolle `progression` | — | [A-31] |
@@ -719,7 +772,7 @@ beeinflussen die Planche-Eignung deutlich [A-28].
 | 1 | `planche/frog-stand` · `frog-stand` | Knie auf den Ellbogen | Füsse frei, kontrolliert (H-FORM) | `frog-stand hold ≥ 30 s · occ 3 · 7 d` | 2–8 Wo. (H-DUR) | OG 3 [A-31] |
 | 2 | `planche/tuck` · `planche-tuck` | Tuck, Arme gestreckt | Arme gestreckt; Hüfte auf Schulterhöhe ≤ 15°; Hände etwa senkrecht unter der Hüfte; Scapula abduziert [A-24] | `planche-tuck hold ≥ 10 s · none · form≥4 · occ 2 · 28 d` | ≈ 4–6 Mo. bis Adv Tuck (abgeleitet [A-40]) | OG 5 [A-31]; 10 s [A-40]; PDF-Ziel 5–10 s [P-01 S. 1] |
 | 3 | `planche/advanced-tuck` · `planche-advanced-tuck` | Rücken waagrecht, Knie vom Körper weg | Rücken parallel zum Boden [A-40] | `planche-advanced-tuck hold ≥ 10 s · none · form≥4 · occ 2 · 28 d` | ≈ 6–12 Mo. bis Straddle (abgeleitet [A-40]) | OG 6 [A-31]; «10 s Adv Tuck» vor Straddle [A-40] |
-| 4 | `planche/straddle` · `planche-straddle` | Beine gestreckt, gegrätscht | waagrecht ±7,5–15°, Arme gestreckt | `planche-straddle hold ≥ 3 s · none · form≥4 · occ 2 · 28 d` | ≈ 12 Mo. bis Full (abgeleitet [A-40]) | OG 8 [A-31]; FIG A [A-29]; 3 s [A-33]; PDF 2–4 s [P-01 S. 2] |
+| 4 | `planche/straddle` · `planche-straddle` | Beine gestreckt, gegrätscht | waagrecht (Form 4: ≤ 15°; WSWCF-gültig: ±7,5°), Arme gestreckt | `planche-straddle hold ≥ 3 s · none · form≥4 · occ 2 · 28 d` | ≈ 12 Mo. bis Full (abgeleitet [A-40]) | OG 8 [A-31]; FIG A [A-29]; 3 s [A-33]; PDF 2–4 s [P-01 S. 2] |
 | 5 | `planche/half-lay` · `planche-half-lay` (Alt. `planche-one-leg`) | Knie halb gebeugt / ein Bein | wie 4 | `planche-half-lay hold ≥ 3 s · none · form≥4 · occ 2 · 28 d` | 8–26 Wo. (H-DUR) | OG 9 [A-31] |
 | 6 | `planche/full` · `planche` | Full Planche | gestreckt, waagrecht, Arme gestreckt | `planche hold ≥ 3 s · none · form≥4 · occ 2 · 28 d` | — | OG 11 [A-31]; FIG C [A-29]; TMA-Ziel ≥ 5 s [A-40] |
 | R | `planche/rings` · `planche-rings` | Full Planche an Ringen | Schultern ganz über den Ringen [A-29 S. 61] | `planche-rings hold ≥ 3 s · none · form≥4 · occ 2 · 28 d` | — | OG 14 [A-31]; FIG C [A-29] |
@@ -1108,7 +1161,7 @@ PDF-Kontext.
 | PAR-A-12 | `competition_min_hold_s` | FIG 2 · Calisthenics Cup 2 · WSWCF 3 | s | [A-29 S. 20; A-34; A-33 S. 5] | B | ab vollständigem Stillstand |
 | PAR-A-13 | `fig_hold_deviation_bands_deg` | ≤ 5 abzugsfrei · > 5–20 klein · > 20–45 mittel · > 45 nicht anerkannt | ° | [A-29 S. 19–22] | B | Haltepositionen; Abzüge 0,1/0,3/0,5 |
 | PAR-A-14 | `fig_arm_bend_bands_deg` | 0–15 klein · > 15–30 mittel · > 30–45 gross · > 45 nicht anerkannt | ° | [A-29 S. 19] | B | Halte und Pressen |
-| PAR-A-15 | `wswcf_max_deviation_deg` | 15 (Planche ±7,5 zur Horizontalen) | ° | [A-33 S. 5] | C | strenger als FIG |
+| PAR-A-15 | `wswcf_max_deviation_deg` | 15°-Band = ±7,5 um die Idealposition | ° | [A-33 S. 5] | C | strenger als FIG und als `form_quality` 4; nur Form 5 (≤ 5°) liegt sicher innerhalb |
 | PAR-A-16 | `form_quality_angle_map` | 5: ≤ 5° · 4: > 5–15° · 3: > 15–30° · 2: > 30–45° · 1: > 45° | ° | [A-29 S. 19–20; A-33 S. 5] | Heuristik | Zuordnung eigene; Grenzen aus FIG/WSWCF |
 | PAR-A-17 | `unlock_min_form_quality_statics` | 4 | 1–5 | Heuristik | Heuristik | entspricht ≤ 15° (PAR-A-16) |
 | PAR-A-18 | `unlock_occurrences_default` | 2 (dynamisch ≈ 3×8: 3) | Vorkommen | ADR 0003 §5; [A-44] | Heuristik | Projektvorgabe ADR 0003; zählt Sätze, nicht Tage (§2.5) |
@@ -1163,7 +1216,7 @@ PDF-Kontext.
 |---|---|---|---|---|
 | W-1 | Mindesthaltedauer | FIG 2 s [A-29 S. 20]; Calisthenics Cup 2 s [A-34] | WSWCF 3 s [A-33 S. 5] | Unlock nutzt den strengeren Wert (3 s, PAR-A-11); nicht aufgelöst, da Regelwerke verschiedene Zwecke haben. |
 | W-2 | Zählt eine Tuck-Stufe als Halt? | WSWCF nennt einen Tuck-Planche-Halt (3 s) als Kombinationsbeispiel [A-33 S. 8] | Calisthenics Cup wertet Tuck/Adv-Tuck-Planche und -Front-Lever nicht [A-34] | Für Hefesto irrelevant für die Bewertung, relevant für Schwellen: Zwischenstufen bekommen eigene, höhere Schwelle (10 s). |
-| W-3 | Winkeltoleranz | FIG: bis 20° nur kleiner Fehler, bis 45° anerkannt [A-29 S. 19–20] | WSWCF: max. 15° (Planche ±7,5°) [A-33 S. 5] | Form ≥ 4 = ≤ 15° liegt zwischen beiden; bewusst strenger als FIG. |
+| W-3 | Winkeltoleranz | FIG: bis 20° nur kleiner Fehler, bis 45° anerkannt [A-29 S. 19–20] | WSWCF: 15°-Band, also ±7,5° um das Ideal [A-33 S. 5]; Novizen-Studie misst Handstand-Balance in einem ±15°-Korridor [A-58] | Form ≥ 4 = ≤ 15° liegt zwischen beiden: strenger als FIG, lockerer als WSWCF (Korrektur im Coverage-Pass: die frühere Angabe «innerhalb der WSWCF-Toleranz» traf nur bis 7,5° zu). Grund für die lockere Wahl: Selbsteinschätzung von Winkeln ist ungenau (Stream F); Wettkampfnähe über Form 5 abbilden. |
 | W-4 | Wechselschwelle Statics | RR: 3 × 30 s [A-44] | TMA: 10 s in 3 Sätzen [A-40]; GMB: 5 × 20 s [A-35]; TMA-FL: 5 s Tuck, 10 s Adv Tuck, 5 s Straddle [A-41] | Die Quellen meinen verschiedene Übungsklassen (Grund-Isometrie vs. Hebel). Hefesto trennt beide Klassen (§2.4); die genaue Hebel-Schwelle bleibt offen. |
 | W-5 | Planche am Boden vs. an Ringen | FIG: beide C [A-29 S. 29, 67] | OG: Boden Level 11, Ringe Level 14 [A-31] | OG ist für Trainingsplanung konkreter; FIG bewertet Wettkampfwert, nicht Lernaufwand. Hefesto nutzt OG für die Schwierigkeit. |
 | W-6 | Maltese am Boden vs. Planche | FIG: am Boden gleicher Wert (C) [A-29 S. 29] | OG: Maltese Level 17 vs. Full Planche 11 [A-31]; Konditionierungskraft Schwalbe > Stützwaage [A-21] | Hefesto setzt die Maltese deutlich über die Planche (OG, Kraftdaten). |
