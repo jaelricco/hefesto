@@ -13,7 +13,10 @@
 > **Methodik-Hinweis:** Jede Quelle wurde mindestens über Titel, Autoren, Jahr,
 > DOI/PMID und Abstract geprüft (Europe PMC / PubMed-Datensatz), bei Open-Access-
 > Artikeln zusätzlich im Volltext (markiert mit «Volltext»). Coaching-Quellen
-> wurden auf der Originalseite gelesen. Zahlen, die aus eigener Rechnung
+> wurden auf der Originalseite gelesen. Ausnahme: Der Preprint [B-24] war
+> während der Recherche nicht direkt erreichbar; geprüft wurde nur die
+> Zusammenfassung der Preprint-Landingpage (Suchergebnis), deshalb dient er
+> nur als Nebenbeleg. Zahlen, die aus eigener Rechnung
 > stammen, sind als *eigene Rechnung* markiert. Aussagen ohne Beleg tragen das
 > Label **Praxisheuristik** mit Begründung. Keine Aussage hier ist eine
 > medizinische Empfehlung; der Planer steuert Training, nicht Behandlung.
@@ -409,6 +412,12 @@ Für **isometrische Maximalhalte** gibt es keine Pausenstudie; die PDF-Werte
 (5–7 min) liegen am oberen Rand der Spannen aus der dynamischen Forschung
 [B-53, B-55] und sind als Praxisindiz plausibel (Evidenz C).
 
+Für **Technik- und Balancearbeit** (z. B. Handstand-Versuche) wurde keine
+Pausenstudie gesucht bzw. gefunden; sie ist wenig ermüdend, und Ermüdung
+soll beim Üben vermieden werden [B-51]. Pausen von 30–90 s nach Bedarf sind
+eine **Praxisheuristik** (Begründung: Versuch frisch, aber ohne lange
+Leerlaufzeit); die Übungsverteilung selbst behandelt Stream E.
+
 ### 8.2 Pausen zwischen Einheiten (die «48–72 h»-Regel)
 
 | Quelle | Befund |
@@ -723,7 +732,7 @@ Anmerkung. Datenfelder beziehen sich auf `codebase_notes.md` §2.
 | PAR-B-56 | session_spike_cap_pct | geplante Einheit ≤ 110–120 % des grössten Volumens desselben Musters der letzten 28 Tage | % | B-79 | Heuristik | Analogie aus dem Laufen (Einzelsession-Spitzen > 10 % riskant) |
 | PAR-B-57 | intensity_step_per_week_max | 1 Stufenwechsel (Stufe, Band oder Last) je Übung und Woche | Stufen/Woche | B-12, B-32 | Heuristik | Sehnen adaptieren langsamer [B-12] |
 | PAR-B-58 | acwr_enabled | false | bool | B-80, B-79 | B | ACWR ohne Evidenz für Belastungsentscheidungen |
-| PAR-B-59 | retrain_break_le_2wk | 90–100 % Volumen, gleiche Stufe, kein Retest | — | B-85, B-84 | A | Kraft bleibt ≤ 2–3 Wochen erhalten; Werte heuristisch |
+| PAR-B-59 | retrain_break_le_2wk | 90–100 % Volumen, gleiche Stufe, kein Retest | — | B-85, B-84 | Heuristik | gestützt auf A-Befunde: Kraft bleibt ≤ 2–3 Wochen erhalten [B-84, B-85]; Prozentwerte heuristisch |
 | PAR-B-60 | retrain_break_1mo | 3–6 Wochen Pause: Retest; Woche 1 70–80 % Volumen, Stufe nach Test; +10–15 % Volumen/Woche; Rückkehr 2–4 Wochen | — | B-84, B-86, B-83 | Heuristik | Verlust beginnt nach ~3 Wochen [B-84] |
 | PAR-B-61 | retrain_break_3mo | 7–16 Wochen: Retest; Woche 1 ~60 % Volumen, 1 Stufe leichter oder nach Test; +10–15 %/Woche; Rückkehr 4–8 Wochen | — | B-90, B-84, B-88 | Heuristik | < 8 Wochen bis zur früheren 1RM nach 12 Wochen Pause [B-90] |
 | PAR-B-62 | retrain_break_6mo | ≥ 17 Wochen: Volltest; Woche 1 ~50 % Volumen, 1–2 Stufen leichter oder nach Test; höchste Straight-Arm-Stufen erst nach 4 Wochen Basis; +10 %/Woche; Rückkehr 6–12 Wochen | — | B-88, B-89, B-93, B-12 | Heuristik | Kraft sinkt nach 30–32 Wochen nicht auf Vortrainingsniveau [B-88]; Muskeldicke nach 20 Wochen zurück [B-89]; Skill-Halbwertszeit 6.5–13 Monate [B-93] |
@@ -738,6 +747,8 @@ Anmerkung. Datenfelder beziehen sich auf `codebase_notes.md` §2.
 | PAR-B-71 | warmup_static_stretch_max_s | < 60 je Muskelgruppe | s | B-69 | A | ≥ 60 s: −4.6 % Leistung |
 | PAR-B-72 | srpe_formula | session_load = perceived_fatigue (1–10) × Dauer (min); Abfrage ~30 min nach der Einheit | AU | B-103, B-106, B-105 | B | Gleichsetzung 1–10 ≈ CR-10 ist Heuristik |
 | PAR-B-73 | load_monitoring_window_weeks | 6 (gleitend); Monotonie = Mittel/SD der Tageslast; Strain = Wochenlast × Monotonie; nur individuelle Schwellen | Wochen | B-104, B-107 | B | Foster 1998: gleitender 6-Wochen-Schnitt |
+| PAR-B-74 | rest_skill_practice_s | 30–90 nach Bedarf | s | B-51 | Heuristik | Technik-/Balanceversuche ermüdungsarm halten [B-51]; keine Pausenstudie für Skillversuche |
+| PAR-B-75 | max_sets_per_muscle_per_session | ~10–12 (darüber kein nachweisbarer Zusatznutzen für Hypertrophie); Kraft: ~2–3 direkte Sätze je Übung | Sätze | B-24, B-31 | A | Preprint [B-24]; bei höherem Wochenvolumen auf mehr Einheiten verteilen |
 
 ## Widersprüche
 

@@ -24,13 +24,14 @@
 - **Planche = Bizeps + vorderer Deltamuskel:** In der Support Scale an Ringen
   sind M. deltoideus anterior (2043 µV) und M. biceps brachii (1738 µV) am
   aktivsten, der Trizeps fast stumm (154 µV) (Evidenz B) [C-04]. Das Modell
-  erklärt es: Bei gestrecktem Arm beträgt das Ellbogenmoment ≈ 52 % des
-  Schultermoments (**Modell** [C-01, C-02]).
+  passt dazu: Bei gestrecktem Arm beträgt das Ellbogenmoment ≈ 52 % des
+  Schultermoments (**Modell** [C-01, C-02]), das bei nach vorn zeigender
+  Ellenbeuge von den Beugern gebremst wird (**Heuristik**).
 - **Straight-Arm ist eine eigene Belastungskategorie:** Bankdrückkraft ist
   für das Kreuz notwendig, aber nicht hinreichend (r = 0,41) [C-12];
   Vorbereitungsübungen reproduzieren die Muskelkoordination der
   Ringelemente nicht [C-04, C-05, C-06, C-07, C-08]; Sehnen reagieren vor
-  allem auf hohe Last und adaptieren anders und langsamer als Muskeln
+  allem auf die Lasthöhe und adaptieren mit anderem Zeitverlauf als Muskeln
   (Evidenz A/B) [C-65, C-66].
 - **Liegestütz-Last in % Körpergewicht:** 41 % (Hände 61 cm erhöht), 49 %
   (Knie), 55 % (Hände 30,5 cm), 64 % (Standard), 70 % (Füsse 30,5 cm), 74 %
@@ -118,7 +119,7 @@ EMG-Studien.
 | Inverted Row | M. latissimus dorsi, M. biceps brachii, M. deltoideus posterior, M. trapezius pars ascendens (alle > 61 % MVIC) | M. trapezius pars descendens/transversa, M. multifidus (41–60 %) | M. erector spinae thoracis, M. rectus abdominis (21–40 %) | 2 Studien; höchste LD-Aktivität aller Ruder-Varianten | [C-23, C-24] |
 | Front Lever (Tuck … Full) | Schulterstrecker: M. latissimus dorsi, M. teres major, M. deltoideus posterior, M. triceps brachii (Caput longum) | M. pectoralis major (Pars sternalis), Mm. rhomboidei, M. biceps brachii (Ellbogen) | M. rectus abdominis, Mm. obliqui, Hüftbeuger (Anti-Extension) | keine FL-Studie gefunden; Analogie Inverted Swallow: hinterer Deltamuskel und langer Trizepskopf dominieren | [C-67, C-05, C-68]; Rumpf Heuristik mit Analogie [C-39] |
 | Back Lever / German Hang / Skin the Cat | mechanisch Schulter*beuger* in Extensionsstellung: M. pectoralis major, M. deltoideus anterior, M. biceps brachii (verlängert) | M. coracobrachialis, Rotatorenmanschette | Hüft- und Rückenstrecker, Scapula-Retraktoren | keine Studie gefunden | **Modell** (§5.1), [C-67]; Coaching-Zuordnung zur Zugtabelle [C-68] |
-| Handstand | M. deltoideus anterior, M. trapezius pars descendens, M. triceps brachii | M. pectoralis major, M. latissimus dorsi, M. biceps brachii | Unterarmbeuger (Balance über Handgelenkmoment; 61 % NRMS am Boden), Rumpf | 2 Studien (EMG, Kinetik) | [C-16, C-68] |
+| Handstand | M. deltoideus anterior, M. trapezius pars descendens, M. triceps brachii | M. pectoralis major, M. latissimus dorsi, M. biceps brachii | Unterarmbeuger (Balance über Handgelenkmoment; 61 % NRMS am Boden), Rumpf | 2 Studien (EMG, Kinetik) | [C-16, C-70, C-68] |
 | HSPU / Pike-Liegestütz | M. deltoideus (Pars clavicularis/acromialis), M. triceps brachii | M. trapezius pars descendens, M. serratus anterior (Aufwärtsrotation) | Rumpf, Unterarmbeuger | keine EMG gefunden; Press-to-Handstand: Schulterbeugemoment bei weniger Geübten grösser | [C-17, C-67, C-68]; Rest Heuristik |
 | L-Sit / V-Sit | Hüftbeuger (M. iliopsoas, M. rectus femoris), M. rectus abdominis | Mm. obliqui, M. triceps brachii (Stütz) | Schultergürtel-Depressoren (M. latissimus dorsi, M. trapezius pars ascendens, M. pectoralis minor) | keine L-Sit-Studie; Analogie Hanging Straight Leg Raise: RA > 130 % MVC, EO 88 % | [C-39, C-67]; Rest Heuristik |
 | Manna | M. deltoideus posterior, M. triceps brachii (Caput longum), M. latissimus dorsi (Schulter-Hyperextension unter Last), Hüftbeuger | Rumpfbeuger, M. rhomboideus | Handgelenk- und Fingerbeuger | keine; Coaching: L-Sit→Manna betont hintere Deltoidei und Rücken | [C-68, C-05]; Rest Heuristik |
@@ -132,8 +133,9 @@ Hinweise zu Tabelle 1:
 
 - **Push-up-Handposition:** Eine hüftnahe («posteriore») Handposition erhöht
   die Pectoralis- und senkt die Trizeps-Aktivität [C-29]. Eng gesetzte Hände
-  aktivieren den Trizeps stärker als weite [C-32]. Die Handposition relativ
-  zur Schulter bestimmt die Gelenklasten mit [C-73].
+  erhöhen das Ellbogen-Beugemoment, das der Trizeps halten muss (71 % statt
+  56 % des maximalen Streckmoments; weit: 29 %) [C-41]. Die Handposition
+  relativ zur Schulter bestimmt die Gelenklasten mit [C-73].
 - **Klimmzug-Griff:** Chin-up: Pectoralis und Bizeps höher, Pull-up: unterer
   Trapezius höher [C-18]; Pronation: M. trapezius pars transversa höher als
   Neutralgriff (Peak 60,1 vs. 37,1 % MVIC) [C-19]; weiter Griff: M.
@@ -293,9 +295,9 @@ Beuger/Strecker-Verhältnis des glenohumeralen isometrischen Spitzenmoments
 
 ### 3.8 Belastungsprofil je Übungsfamilie
 
-**Tabelle 2 — Ordinalprofil 0–3.** Zahl ohne Zusatz mit ID = gestützt durch
-die genannte Quelle (direkte Messung oder Analogie, Art in der letzten Spalte);
-«H» = Heuristik, Begründung in der letzten Spalte. Die Werte gelten für die
+**Tabelle 2 — Ordinalprofil 0–3.** Zahl mit Quellen-ID = gestützt durch die
+genannte Quelle (direkte Messung oder Analogie, Art in der letzten Spalte);
+Zahl mit «H» = Heuristik, Begründung in der letzten Spalte. Die Werte gelten für die
 schwerste übliche Stufe der Familie; leichtere Stufen werden über §5 und §7
 skaliert (PAR-C-44).
 
@@ -353,8 +355,8 @@ bzw. -strecker und die Ellbogenbeuger mit ihren Sehnen, nicht der Trizeps
 | Mindest-1RM im «Swallow supine» (gestreckte Arme, Rückenlage): 67,4 % KG für Support Scale, 73,4 % KG für Swallow | quantifizierbare Einstiegsschwelle für Planche an Ringen | [C-10] | B |
 | Relative Kraft erklärt ≈ 90 % der Haltezeit im Swallow | Kraft/KG ist der dominante Faktor | [C-11] | B |
 | Hohe Trainingslast bei Ringelementen; Hilfsgeräte reduzieren Last | Assistenz ist ein Last-Regler | [C-14] | A |
-| Sehnensteifigkeit reagiert vor allem auf die Lasthöhe, nicht auf die Kontraktionsform; Effekte tendenziell grösser ab ≥ 12 Wochen | Straight-Arm-Belastung erfordert langsamere Steigerung als Muskelkraft | [C-65] | A |
-| Muskel und Sehne adaptieren mit unterschiedlichem Zeitverlauf; Ungleichgewicht als Risikofaktor diskutiert | eigene, konservativere Progressionsrate für sehnenlastige Kategorien | [C-66] | B |
+| Sehnensteifigkeit reagiert vor allem auf die Lasthöhe, nicht auf die Kontraktionsform; Effekte tendenziell grösser ab ≥ 12 Wochen | hohe Gelenk-/Sehnenlast pro Satz ist der relevante Reiz und das relevante Risiko; spricht für eine vorsichtigere Steigerung (Heuristik) | [C-65] | A |
+| Muskel und Sehne adaptieren mit unterschiedlichem Zeitverlauf und reagieren unterschiedlich auf Reizarten; Ungleichgewicht als Risikofaktor diskutiert | eigene, konservativere Progressionsrate für sehnenlastige Kategorien (Heuristik; Raten in Stream D) | [C-66] | B |
 | Programme des PDF-Autors dosieren Straight-Arm-Halte mit 2–20 s und langen Pausen | Praxis behandelt Straight-Arm getrennt | [P-01 S. 1–3, P-02 S. 1–4, P-03 S. 1–4] | C |
 
 **Folgerung.** Straight-Arm-Arbeit wird als eigene Volumen- und
@@ -379,7 +381,15 @@ Kriterium siehe PAR-C-49 (**Heuristik**, gestützt auf die Tabelle oben).
   50,0 % ab Vertex; Rumpf (Suprasternale–Hüftmitte) 43,46 %, 53,2 cm,
   Schwerpunkt 44,9 %; Oberschenkel 14,16 %, 42,2 cm, 41,0 %; Unterschenkel
   4,33 %, 43,4 cm, 44,6 %; Fuss 1,37 %; Oberarm 2,71 %, 28,2 cm; Unterarm 1,62 %,
-  26,9 cm; Hand 0,61 %.
+  26,9 cm; Hand 0,61 %. Die Cervicale liegt 7,1 cm kranial der Suprasternale
+  (Differenz der beiden Rumpfdefinitionen Cervicale–Hüftmitte 60,3 cm und
+  Suprasternale–Hüftmitte 53,2 cm). Massen und Schwerpunktlagen sind in den
+  BMClab-Tabellen eingesehen [C-02]; die Segment*längen* stammen aus einer
+  Sekundärtranskription von de Leva, Tab. 4 (Originaltabelle nicht
+  eingesehen). Eine Verschiebung von 3,5 cm zwischen Rumpf und Beinen ändert
+  das Full-Moment um ±4 % und den Tuck-Anteil um ±3,5 Prozentpunkte
+  (**Modell**), die Ergebnisse sind also robust gegenüber kleinen
+  Längenfehlern.
 - **Annahmen (Heuristik):** Schultergelenkzentrum auf Höhe Suprasternale
   (Sensitivität ± 3 cm); Rumpf horizontal und gerade; Fuss gestreckt in
   Verlängerung des Unterschenkels, Schwerpunkt 23 % der Fusslänge distal des
@@ -651,8 +661,8 @@ H = Körpergrösse. «B (Modell)» = eigene Rechnung auf publizierten Daten.
 | PAR-C-15 | elbow_to_shoulder_moment_ratio_straight_arm | 0,52 | Verhältnis | [C-01, C-02] | B (Modell) | senkrechte Stützkraft; Full Planche 70 kg ≈ 81 N·m je Ellbogen |
 | PAR-C-16 | shoulder_flexor_extensor_capacity_ratio | 0,72 | Verhältnis | [C-15] | B | Planche ≈ 1,39-mal schwerer als Front Lever bei gleicher Stufe (Modell mit [C-15]) |
 | PAR-C-17 | coaching_level_lever_stages | FL: Tuck 4, Adv 5, Straddle 6, Half-Lay/One-Leg 7, Full 8; Planche: 5, 6, 8, 9, 11; Back Lever: 3, 4, 5, 6, 7 | OG-Level | [C-68] | C | zur Plausibilisierung der Modellreihenfolge, nicht linear im Moment |
-| PAR-C-18 | bw_fraction_push_up_standard | 0,64 (Spitze) / 0,664 (Anfang) / 0,69 oben–0,75 unten (statisch) | Anteil KG | [C-26, C-27, C-28, C-29] | B | Default 0,66 (Mittel der dynamischen Werte, Heuristik) |
-| PAR-C-19 | bw_fraction_push_up_knee | 0,49–0,54 oben / 0,62 unten | Anteil KG | [C-26, C-28, C-29] | B | Default 0,52 (Heuristik: Mittel) |
+| PAR-C-18 | bw_fraction_push_up_standard | 0,64 (Spitze) / 0,664 (Anfang) / 0,69 oben–0,75 unten (statisch) | Anteil KG | [C-26, C-27, C-28, C-29] | B | Default 0,66 (Mittel aus 0,64, 0,664 und 0,69; Heuristik) |
+| PAR-C-19 | bw_fraction_push_up_knee | 0,49–0,54 oben / 0,62 unten | Anteil KG | [C-26, C-28, C-29] | B | Default 0,52 (Mittel aus 0,49, 0,529 und 0,536; Heuristik) |
 | PAR-C-20 | bw_fraction_push_up_hands_elevated | 30,5 cm: 0,55; 61 cm: 0,41 | Anteil KG | [C-26, C-27] | B | Grösse beeinflusst nur bei 61 cm (r = 0,63) [C-26] |
 | PAR-C-21 | bw_fraction_push_up_feet_elevated | 30,5 cm: 0,70; 61 cm: 0,74 | Anteil KG | [C-26, C-27] | B | Widerspruch zu [C-31] für 10–30° (siehe Widersprüche) |
 | PAR-C-22 | bw_fraction_no_foot_contact | 1,00 | Anteil KG | Statik | — | Dip, Klimmzug, Handstand, Planche, Lever, L-Sit, Kreuz; dynamisch zeitweise > 1 [C-73] |
@@ -682,7 +692,175 @@ H = Körpergrösse. «B (Modell)» = eigene Rechnung auf publizierten Daten.
 | PAR-C-46 | muscle_role_weights | primär 1,0; sekundär 0,5; Stabilisator 0,25 | Gewicht | Heuristik | Heuristik | für Muskel-Volumenzählung; EMG-Rangfolgen [C-18, C-04] stützen nur die Reihenfolge |
 | PAR-C-47 | ring_stabilizer_rating_offset | +1 auf biceps_distal und biceps_long_head/anterior_shoulder bei Stützübungen an Ringen | Stufe | [C-25, C-04, C-33] | Heuristik | Hauptbeweger-Last wie stabil (widersprüchlich: [C-34] vs. [C-36, C-32]) |
 | PAR-C-48 | unstable_push_up_effect_sizes | AD −0,63; PM +0,28; TB +0,81 | SMD | [C-33] | A | Meta-Analyse, hohe Heterogenität (I² bis 91 %) |
-| PAR-C-49 | straight_arm_category_rule | Ellbogen gestreckt UND Last über den Arm UND (Stufe ≥ Lean mit ≥ 15° Armneigung ODER horizontaler Körper im Hang/Stütz) | Regel | Heuristik, gestützt auf §4 | Heuristik | Schwelle 15° ≈ 26 % Full-Moment (PAR-C-10) |
+| PAR-C-49 | straight_arm_category_rule | Ellbogen gestreckt UND Last über den Arm UND (Stufe ≥ Lean mit ≥ 15° Armneigung ODER horizontaler Körper im Hang/Stütz) | Regel | Heuristik, gestützt auf §4 | Heuristik | Schwelle 15° ≈ 26 % Full-Moment (PAR-C-10); Handstand und Stütz ohne Vorlage = «straight_arm_axial» (Ellbogenmoment ≈ 0): zählt für Handgelenk und Überkopf, nicht für die Ellbogen-/Bizeps-Last |
 | PAR-C-50 | handstand_wrist_pain_prevalence | 0,567 | Anteil Befragte | [C-44] | B | Selbstauskunft, Selektionsbias möglich; nur als Prior für Hinweise |
 | PAR-C-51 | handstand_shoulder_flexion_requirement | ≈ 180 | Grad | [C-69] | C | Coaching-Angabe |
 | PAR-C-52 | lever_absolute_torque_example | Full 148, Adv Tuck 111, Tuck 88 | N·m je Schulter (70 kg, 1,75 m, Mann) | [C-01, C-02] | B (Modell) | zur Plausibilisierung; keine Normwerte für Schulterkraft recherchiert |
+
+## Widersprüche
+
+1. **Suspension-/Ring-Liegestütz.** Snarr & Esco fanden für alle drei
+   Hauptbeweger höhere EMG-Werte als am Boden [C-34]; Youdas et al. keine
+   höhere Aktivität der Hauptbeweger, nur des Rumpfs [C-36]; Calatayud et al.
+   für Pectoralis und vorderen Deltamuskel bessere Werte unter stabilen
+   Bedingungen [C-35]; das Scoping-Review zeigt global Suspension 36,7 vs.
+   Standard 38,2 % MVIC [C-32]; das Systematic Review meldet meist höhere
+   Aktivierung mit Suspension [C-37]; die Meta-Analyse findet für instabile
+   Unterlagen Deltoideus ↓, Pectoralis/Trizeps ↑ [C-33]. Erklärbar durch
+   Gerätetyp (Pulley, Schlaufen, Ringe), Ort der Instabilität (Hände vs.
+   Füsse) und Normalisierung; ungelöst. Konsens nur für die Rumpfmuskulatur.
+2. **Füsse erhöht.** Ebben: erhöhte Füsse erzeugen mehr Bodenreaktionskraft
+   als alle anderen Varianten (70 bzw. 74 % KG) [C-26, C-27]; Wu et al.:
+   Maximalkraft sinkt von 10° zu 30° Neigung (666,7 → 595,6 N) [C-31].
+   Unterschiedliche Messgrösse (Spitze vs. Regressionsmodell), Tempo-Vorgaben
+   und Winkeldefinition; ungelöst. PAR-C-21 nutzt Ebben.
+3. **Pull-up vs. Chin-up.** Youdas et al.: Pectoralis und Bizeps im Chin-up
+   höher, unterer Trapezius im Pull-up höher [C-18]; Dickie et al.: über die
+   ganze Wiederholung ähnliche Aktivierung unabhängig vom Griff [C-19];
+   Snarr et al. zitieren Youdas als «keine Unterschiede der Hauptbeweger»
+   [C-20], was dem Youdas-Abstract [C-18] widerspricht.
+4. **Latissimus-Aktivierung.** 117–130 % MVIC [C-18] vs. 79,8 % MVC [C-20]
+   im selben Übungstyp: Normalisierungsartefakt, keine echte Differenz.
+5. **Anthropometrie.** Simulation: Körpertyp «entscheidend» für die Planche
+   [C-03]; Empirie am Swallow: Proportionen nicht korreliert, relative Kraft
+   erklärt ≈ 90 % [C-11]; eigenes Modell: ±4 % Moment je 3,5 cm
+   Längenverschiebung (**Modell**) – klein gegenüber Kraftunterschieden.
+6. **Back Lever als «Zugübung».** Mechanisch arbeiten im Back Lever die
+   Schulter*beuger* in Extensionsstellung (§5.1, **Modell**); das
+   Coaching-Buch führt den Back Lever in der Zugtabelle (hintere Deltoidei,
+   Rücken, Bizeps) [C-68]. Für die App: Muskel-Metadaten nach Mechanik,
+   Kategorie «Zug» nur für Equipment/Session-Aufbau.
+7. **Straddle-Einstufung.** Coaching: Straddle vor Half-Lay/One-Leg [C-68];
+   Modell: nur eine weite Grätsche (≈ 120°) liegt unter One-Leg, eine enge
+   (60–90°) darüber (**Modell**).
+8. **Moment vs. Schwierigkeit.** Tuck = 60 % des Full-Moments (**Modell**),
+   aber sechs Coaching-Level Abstand in der Planche [C-68]. Kein
+   Datenwiderspruch, aber ein Interpretationskonflikt: Das Moment ist kein
+   linearer Schwierigkeitsmassstab.
+9. **Trizeps in der Planche.** EMG an Ringen: Trizeps fast inaktiv [C-04];
+   Coaching-Tabelle nennt Trizeps unter den betonten Muskeln der
+   Stütz-Progressionen [C-68]. Möglich: Unterschiede Boden vs. Ringe,
+   Handstellung (Ellenbeuge vorn/hinten) oder Press-Anteile; ungelöst.
+10. **Knie in tiefer Beugung.** Einbeiniger Squat mit weniger
+    patellofemoraler Kraft als Wall Squat zwischen 60–90° [C-54]; im
+    Decline-Squat steigt sie jenseits 60° steil [C-55]; Review: Maximum bei
+    ≈ 90°, tiefer wieder niedriger [C-56]. Konsistent ist nur: 60–90° ist die
+    Zone hoher patellofemoraler Last.
+11. **Lange Bizepssehne.** Kadavermodell: Beitrag zur vorderen Stabilität
+    [C-52]; EMG: bei kontrolliertem Ellbogen keine Aktivität [C-51];
+    Scoping-Review: geringe Rolle bei Gesunden [C-53]. Die Belastung in
+    Straight-Arm-Elementen ist daher abgeleitet, nicht gemessen.
+12. **Dosis-Wirkung am Handgelenk.** Plausibel wäre mehr Schmerz bei mehr
+    Training; die Handstand-Befragung fand keinen Zusammenhang mit
+    Wochenstunden, Aufwärmen oder Hilfsmitteln [C-44] (Querschnitt,
+    Selbstauskunft).
+13. **Schultermobilität und Handstand.** Coaching verlangt ≈ 180°
+    Schulterflexion [C-69]; standardisierte Schulterfunktionstests sagten die
+    Handstand-Qualität bei Anfängern nicht voraus [C-72].
+
+## Offene Fragen
+
+1. Für Front Lever, Back Lever, Human Flag, Manna, V-Sit, Muscle-up, HSPU und
+   Pseudo-Planche-Liegestütz fehlen EMG-, Kinetik- und Kinematikdaten bei
+   Calisthenics-Athleten; die Profile in Tabelle 2 sind dort Heuristik.
+2. Kraft-Dehnungs-Kurven gängiger Calisthenics-Bänder fehlen; ohne sie bleibt
+   `estimated_assist_kg` eine Nutzerschätzung. Braucht die App eine
+   Band-Kalibrierung (z. B. Waage-Test)?
+3. Handgelenk-Extensionswinkel in Handstand, Planche und Liegestütz wurden in
+   den eingesehenen Quellen nicht gemessen berichtet; der Wert ≈ 90° für den
+   Handstand ist Heuristik.
+4. Wie viel des Straight-Arm-Ellbogenmoments tragen passive Strukturen vs.
+   Muskeln, und wie ändert es sich mit Handrotation und Hyperextension? Keine
+   Messung gefunden.
+5. Validität des Starrkörpermodells für Tuck-Stufen mit rundem Rücken und
+   erhöhter Hüfte; eine Validierung per Video-Posenschätzung wäre möglich.
+6. Maltese und Kreuz sind dreidimensional; das sagittale Modell deckt sie
+   nicht ab. Messdaten nur für das Kreuz an Ringen [C-06, C-08, C-13].
+7. Frauenspezifische EMG- oder Kraftdaten für Calisthenics-Skills fehlen; das
+   Modell zeigt bei Frauen höhere Tuck-Anteile (64 %).
+8. Deutung von «neck band», «wide» und «supi» in P-01 bis P-03 (siehe
+   01_pdf_extract §3); sie bestimmt die Hebelwirkung der Assistenz (§5.5).
+9. Normwerte für isometrische Schulterbeuge-/Streckmomente von
+   Freizeitsportlern wurden nicht recherchiert; ohne sie lässt sich das
+   Modellmoment (N·m) nicht direkt in eine Bereitschaftsschätzung übersetzen.
+10. Übertragbarkeit der Ringe-Benchmarks (67–94 % KG, [C-09, C-10]) auf Boden-
+    und Parallettes-Planche ist ungeprüft.
+
+## Quellen
+
+| ID | Titel | Autor(en) | Jahr | URL/DOI | Typ | Evidenz |
+|---|---|---|---|---|---|---|
+| C-01 | Adjustments to Zatsiorsky-Seluyanov's segment inertia parameters | de Leva P | 1996 | https://doi.org/10.1016/0021-9290(95)00178-6 | Biomechanik-Studie | B |
+| C-02 | Body segment parameters (Notebook und Datentabellen BSPmale/BSPfemale_ZdeLeva, BSP_DempsterWinter) | Duarte M (BMClab, Federal University of ABC) | o. J. (abgerufen 2026) | https://github.com/BMClab/BMC/blob/master/notebooks/BodySegmentParameters.ipynb | Lehrbuch | B |
+| C-03 | Insights from a Nine-Segment Biomechanical Model and Its Simulation for Anthropometrical Influence on Individualized Planche Learning and Training in Gymnastics | Wang X, Shan G | 2023 | https://doi.org/10.3390/bioengineering10070761 | Biomechanik-Studie | B |
+| C-04 | Electromyographic Analysis of the Support Scale in Gymnastics and Its Related Preconditioning Strengthening Exercises | Rosaci G, Nigro F, Cortesi M, Ciacci S, Bartolomei S, Fantozzi S | 2025 | https://doi.org/10.1519/JSC.0000000000005074 | EMG-Studie | B |
+| C-05 | The Inverted Swallow in Artistic Gymnastics and Its Related Preconditioning Strengthening Exercises: Electromyographic Analysis, Muscle Synergies and Training Implications | Rosaci G, Bartolomei S, Fantozzi S, Schärer C | 2025 | https://doi.org/10.3390/app15137537 | EMG-Studie | B |
+| C-06 | Surface electromyography of nine shoulder muscles in two iron cross conditions in gymnastics | Bernasconi S, Tordi N, Parratte B, Rouillon JD, Monnier G | 2004 | https://pubmed.ncbi.nlm.nih.gov/15756161/ | EMG-Studie | B |
+| C-07 | Can shoulder muscle coordination during the support scale at ring height be replicated during training exercises in gymnastics? | Bernasconi SM, Tordi NR, Parratte BM, Rouillon JD | 2009 | https://doi.org/10.1519/JSC.0b013e3181bac69f | EMG-Studie | B |
+| C-08 | Benefits of Training the Iron Cross With Herdos Devices and External Load Added to Body Weight for Young Nonachiever Gymnasts | Marina M, Torrado P, Ferrer-Uris B, Busquets A | 2023 | https://doi.org/10.1123/ijspp.2023-0183 | EMG-Studie | B |
+| C-09 | Maximum Strength Benchmarks for Difficult Static Elements on Rings in Male Elite Gymnastics | Schärer C, Huber S, Bucher P, Capelli C, Hübner K | 2021 | https://doi.org/10.3390/sports9060078 | Querschnittstudie | B |
+| C-10 | Relationship between swallow, support scale and iron cross on rings and their specific preconditioning strengthening exercises | Hübner K, Schärer C | 2015 | https://doi.org/10.52165/sgj.7.3.59-68 | Querschnittstudie | B |
+| C-11 | Relative strength requirement for swallow element proper execution: a predictive test | Gorosito MA | 2013 | https://doi.org/10.52165/sgj.5.3.59-67 | Querschnittstudie | B |
+| C-12 | Relationship Between Bench Press and Iron Cross Maximal Isometric Contraction - How to Develop the Strength to Perform the Iron Cross on Rings | Lecocq T et al. | 2025 | https://doi.org/10.1002/ejsc.70002 | Querschnittstudie | B |
+| C-13 | Strength Performance Assessment in a Simulated Men's Gymnastics Still Rings Cross | Dunlavy JK, Sands WA, McNeal JR, Stone MH, Smith SL, Jemni M, Haff GG | 2007 | https://pubmed.ncbi.nlm.nih.gov/24149230/ | Querschnittstudie | B |
+| C-14 | A Systematic Review of Dynamic, Kinematic, and Muscle Activity during Gymnastic Still Rings Elements | Malíř R, Chrudimský J, Šteffl M, Stastny P | 2023 | https://doi.org/10.3390/sports11030050 | Systematic Review | A |
+| C-15 | The effect of gymnastic training on muscle strength and co-activation during isometric elbow and glenohumeral flexion/extension | Kochanowicz A, Niespodziński B, Mieszkowski J, Kochanowicz K, Sawczyn S | 2018 | https://doi.org/10.23736/S0022-4707.17.06916-X | Querschnittstudie | B |
+| C-16 | Changes in the Muscle Activity of Gymnasts During a Handstand on Various Apparatus | Kochanowicz A, Niespodziński B, Mieszkowski J, Marina M, Kochanowicz K, Zasada M | 2019 | https://doi.org/10.1519/JSC.0000000000002124 | EMG-Studie | B |
+| C-17 | Kinematics and joints moments profile during straight arm press to handstand in male gymnasts | Mizutori H, Kashiwagi Y, Hakamada N, Tachibana Y, Funato K | 2021 | https://doi.org/10.1371/journal.pone.0253951 | Biomechanik-Studie | B |
+| C-18 | Surface electromyographic activation patterns and elbow joint motion during a pull-up, chin-up, or perfect-pullup rotational exercise | Youdas JW, Amundson CL, Cicero KS, Hahn JJ, Harezlak DT, Hollman JH | 2010 | https://doi.org/10.1519/JSC.0b013e3181f1598c | EMG-Studie | B |
+| C-19 | Electromyographic analysis of muscle activation during pull-up variations | Dickie JA, Faulkner JA, Barnes MJ, Lark SD | 2017 | https://doi.org/10.1016/j.jelekin.2016.11.004 | EMG-Studie | B |
+| C-20 | Electromyographical Comparison of a Traditional, Suspension Device, and Towel Pull-Up | Snarr RL, Hallmark AV, Casey JC, Esco MR | 2017 | https://doi.org/10.1515/hukin-2017-0068 | EMG-Studie | B |
+| C-21 | Avoiding high-risk rotator cuff loading: Muscle force during three pull-up techniques | Urbanczyk CA, Prinold JAI, Reilly P, Bull AMJ | 2020 | https://doi.org/10.1111/sms.13780 | Biomechanik-Studie | B |
+| C-22 | Scapula kinematics of pull-up techniques: Avoiding impingement risk with training changes | Prinold JA, Bull AM | 2016 | https://doi.org/10.1016/j.jsams.2015.08.002 | Biomechanik-Studie | B |
+| C-23 | Activation of Spinal Stabilizers and Shoulder Complex Muscles During an Inverted Row Using a Portable Pull-up Device and Body Weight Resistance | Youdas JW, Keith JM, Nonn DE, Squires AC, Hollman JH | 2016 | https://doi.org/10.1519/JSC.0000000000001210 | EMG-Studie | B |
+| C-24 | Comparison of different rowing exercises: trunk muscle activation and lumbar spine motion, load, and stiffness | Fenwick CM, Brown SH, McGill SM | 2009 | https://doi.org/10.1519/JSC.0b013e3181b07334 | EMG-Studie | B |
+| C-25 | Bench, Bar, and Ring Dips: Do Kinematics and Muscle Activity Differ? | McKenzie A, Crowley-McHattan Z, Meir R, Whitting J, Volschenk W | 2022 | https://doi.org/10.3390/ijerph192013211 | EMG-Studie | B |
+| C-26 | Kinetic analysis of several variations of push-ups | Ebben WP, Wurm B, VanderZanden TL, Spadavecchia ML, Durocher JJ, Bickham CT, Petushek EJ | 2011 | https://doi.org/10.1519/JSC.0b013e31820c8587 | Biomechanik-Studie | B |
+| C-27 | The Biomechanics of the Push-up: Implications for Resistance Training Programs | Contreras B, Schoenfeld BJ, Mike J, Tiryaki-Sonmez G, Cronin JB, Vaino E | 2012 | https://doi.org/10.1519/SSC.0b013e31826d877b | Narratives Review | B |
+| C-28 | The effect of position on the percentage of body mass supported during traditional and modified push-up variants | Suprak DN, Dawes J, Stephenson MD | 2011 | https://doi.org/10.1519/JSC.0b013e3181bde2cf | Biomechanik-Studie | B |
+| C-29 | Dynamic and electromyographical analysis in variants of push-up exercise | Gouvali MK, Boudolos K | 2005 | https://doi.org/10.1519/14733.1 | Biomechanik-Studie | B |
+| C-30 | Kinetic analysis of push-up exercises: a systematic review with practical recommendations | Dhahbi W, Chaabene H, Chaouachi A, Padulo J, Behm DG, Cochrane J, Burnett A, Chamari K | 2022 | https://doi.org/10.1080/14763141.2018.1512149 | Systematic Review | A |
+| C-31 | A predictive model for vertical ground reaction force during incline push-ups | Wu H, Zhai H, Ma R, Wei H | 2025 | https://doi.org/10.1038/s41598-025-28012-7 | Biomechanik-Studie | B |
+| C-32 | Shoulder electromyography activity during push-up variations: a scoping review | Kowalski KL, Connelly DM, Jakobi JM, Sadi J | 2022 | https://doi.org/10.1177/17585732211019373 | Systematic Review | B |
+| C-33 | Electromyography of shoulder muscles in individuals without scapular dyskinesis during closed kinetic chain exercises on stable and unstable surfaces: a systematic review and meta-analysis | Arghadeh R, Alizadeh MH, Minoonejad H, Sheikhhoseini R, Asgari M, Jaitner T | 2024 | https://doi.org/10.3389/fspor.2024.1385693 | Meta-Analyse | A |
+| C-34 | Electromyographic comparison of traditional and suspension push-ups | Snarr RL, Esco MR | 2013 | https://doi.org/10.2478/hukin-2013-0070 | EMG-Studie | B |
+| C-35 | Muscle Activation during Push-Ups with Different Suspension Training Systems | Calatayud J, Borreani S, Colado JC, Martín FF, Rogers ME, Behm DG, Andersen LL | 2014 | https://pubmed.ncbi.nlm.nih.gov/25177174/ | EMG-Studie | B |
+| C-36 | Recruitment of Shoulder Prime Movers and Torso Stabilizers During Push-Up Exercises Using a Suspension Training System | Youdas JW, Baartman HE, Gahlon BJ, Kohnen TJ, Sparling RJ, Hollman JH | 2020 | https://doi.org/10.1123/jsr.2019-0381 | EMG-Studie | B |
+| C-37 | Muscle activation in suspension training: a systematic review | Aguilera-Castells J, Buscà B, Fort-Vanmeerhaeghe A, Montalvo AM, Peña J | 2020 | https://doi.org/10.1080/14763141.2018.1472293 | Systematic Review | A |
+| C-38 | Quantifying muscle patterns and spine load during various forms of the push-up | Freeman S, Karpowicz A, Gray J, McGill S | 2006 | https://doi.org/10.1249/01.mss.0000189317.08635.1b | Biomechanik-Studie | B |
+| C-39 | Muscle activity and spine load during anterior chain whole body linkage exercises: the body saw, hanging leg raise and walkout from a push-up | McGill S, Andersen J, Cannon J | 2015 | https://doi.org/10.1080/02640414.2014.946437 | Biomechanik-Studie | B |
+| C-40 | Low back loads over a variety of abdominal exercises: searching for the safest abdominal challenge | Axler CT, McGill SM | 1997 | https://doi.org/10.1097/00005768-199706000-00011 | Biomechanik-Studie | B |
+| C-41 | Hand position affects elbow joint load during push-up exercise | Donkers MJ, An KN, Chao EY, Morrey BF | 1993 | https://doi.org/10.1016/0021-9290(93)90026-B | Biomechanik-Studie | B |
+| C-42 | Load transmission through the wrist in the extended position | Majima M, Horii E, Matsuki H, Hirata H, Genda E | 2008 | https://doi.org/10.1016/j.jhsa.2007.10.018 | Biomechanik-Studie | B |
+| C-43 | Effect of Push-Up Position on Wrist Joint Pressures in the Intact Wrist and Following Scapholunate Interosseous Ligament Sectioning | Daly BT, Werner FW, Cavallaro SM, Tucci ER, Harley BJ | 2018 | https://doi.org/10.1016/j.jhsa.2017.10.019 | Biomechanik-Studie | B |
+| C-44 | The Wrist as a Weightbearing Joint in Adult Handstand Practitioners: A Cross-Sectional Survey of Chronic Pain and Training-Related Factors | Martonovich N, Maman D, Mahamid A, Alfandari L, Behrbalk E | 2025 | https://doi.org/10.3390/jfmk10040372 | Querschnittstudie | B |
+| C-45 | Wrist pain, distal radial physeal injury, and ulnar variance in the young gymnast | DiFiori JP, Caine DJ, Malina RM | 2006 | https://doi.org/10.1177/0363546505284848 | Narratives Review | B |
+| C-46 | Chronic stress injuries of the elbow in young gymnasts | Chan D, Aldridge MJ, Maffulli N, Davies AM | 1991 | https://doi.org/10.1259/0007-1285-64-768-1113 | Fallserie | B |
+| C-47 | Comparative study of elbow disorders in young high-performance gymnasts | Dexel J, Marschner K, Beck H, Platzek I, Wasnik S, Schuler M, Nasreddin A, Kasten P | 2014 | https://doi.org/10.1055/s-0034-1371835 | Querschnittstudie | B |
+| C-48 | Evaluation of Men's and Women's Gymnastics Injuries: A 10-Year Observational Study | Westermann RW, Giblin M, Vaske A, Grosso K, Wolf BR | 2015 | https://doi.org/10.1177/1941738114559705 | Kohortenstudie | B |
+| C-49 | Injury Profile Among Street Workout Practitioners | Ngo JK, Solis-Urra P, Sanchez-Martinez J | 2021 | https://doi.org/10.1177/2325967121990926 | Querschnittstudie | B |
+| C-50 | Exploring handstand walking biomechanics and shoulder pain | Angioi M, Hinds N, Twycross-Lewis R, Farmer C, Birn-Jeffery AV | 2026 | https://doi.org/10.1038/s41598-026-51612-w | Biomechanik-Studie | B |
+| C-51 | Function of the long head of the biceps at the shoulder: electromyographic analysis | Levy AS, Kelly BT, Lintner SA, Osbahr DC, Speer KP | 2001 | https://doi.org/10.1067/mse.2001.113087 | EMG-Studie | B |
+| C-52 | The role of the long head of the biceps muscle and superior glenoid labrum in anterior stability of the shoulder | Rodosky MW, Harner CD, Fu FH | 1994 | https://doi.org/10.1177/036354659402200119 | Biomechanik-Studie | B |
+| C-53 | The long head of biceps at the shoulder: a scoping review | Diplock B, Hing W, Marks D | 2023 | https://doi.org/10.1186/s12891-023-06346-5 | Systematic Review | B |
+| C-54 | Patellofemoral joint force and stress during the wall squat and one-leg squat | Escamilla RF, Zheng N, Macleod TD, Edwards WB, Imamura R, Hreljac A, Fleisig GS, Wilk KE, Moorman CT, Andrews JR | 2009 | https://doi.org/10.1249/MSS.0b013e31818e7ead | Biomechanik-Studie | B |
+| C-55 | Biomechanical analysis of the single-leg decline squat | Zwerver J, Bredeweg SW, Hof AL | 2007 | https://doi.org/10.1136/bjsm.2006.032482 | Biomechanik-Studie | B |
+| C-56 | Analysis of the load on the knee joint and vertebral column with changes in squatting depth and weight load | Hartmann H, Wirth K, Klusemann M | 2013 | https://doi.org/10.1007/s40279-013-0073-6 | Narratives Review | B |
+| C-57 | Comparison of lower extremity EMG between the 2-leg squat and modified single-leg squat in female athletes | McCurdy K, O'Kelley E, Kutz M, Langford G, Ernest J, Torres M | 2010 | https://doi.org/10.1123/jsr.19.1.57 | EMG-Studie | B |
+| C-58 | Muscle strength testing: use of normalisation for body size | Jaric S | 2002 | https://doi.org/10.2165/00007256-200232100-00002 | Narratives Review | B |
+| C-59 | Movement performance and body size: the relationship for different groups of tests | Markovic G, Jaric S | 2004 | https://doi.org/10.1007/s00421-004-1076-7 | Querschnittstudie | B |
+| C-60 | The Effect of Experimental Alterations in Excess Mass on Pull-up Performance in Fit Young Men | Vanderburgh PM, Edmonds T | 1997 | https://journals.lww.com/nsca-jscr/abstract/1997/11000/the_effect_of_experimental_alterations_in_excess.5.aspx | Querschnittstudie | B |
+| C-61 | Training college-age women to perform the pull-up exercise | Flanagan SP, Vanderburgh PM, Borchers SG, Kohstall CD | 2003 | https://doi.org/10.1080/02701367.2003.10609064 | Kohortenstudie | B |
+| C-62 | Determinant factors of pull-up performance in trained athletes | Sánchez-Moreno M, Pareja-Blanco F, Díaz-Cueli D, González-Badillo JJ | 2016 | https://pubmed.ncbi.nlm.nih.gov/26176615/ | Querschnittstudie | B |
+| C-63 | Morphological Differences of Street Workout Athletes According to the Training Experience | Sanchez-Martinez J, Hernández-Jaña S | 2022 | https://www.intjmorphol.com/wp-content/uploads/2022/04/art_06_402.pdf | Querschnittstudie | B |
+| C-64 | Muscular strength and anthropometry in calisthenics athletes (Preprint, nicht begutachtet) | Lozada-Medina JL | 2024 | https://sportrxiv.org/index.php/server/preprint/view/449 | Querschnittstudie | B |
+| C-65 | Human tendon adaptation in response to mechanical loading: a systematic review and meta-analysis of exercise intervention studies on healthy adults | Bohm S, Mersmann F, Arampatzis A | 2015 | https://doi.org/10.1186/s40798-015-0009-9 | Meta-Analyse | A |
+| C-66 | Imbalances in the Development of Muscle and Tendon as Risk Factor for Tendinopathies in Youth Athletes: A Review of Current Evidence and Concepts of Prevention | Mersmann F, Bohm S, Arampatzis A | 2017 | https://doi.org/10.3389/fphys.2017.00987 | Narratives Review | B |
+| C-67 | Anatomy and Physiology 2e, Kapitel 11.4–11.6 (Muskeln von Rumpf, Schultergürtel/Arm, Becken/Bein) | Betts JG, Young KA, Wise JA, Johnson E, Poe B, Kruse DH, Korol O, Johnson JE, Womble M, DeSaix P | 2022 | https://openstax.org/books/anatomy-and-physiology-2e/pages/11-5-muscles-of-the-pectoral-girdle-and-upper-limbs | Lehrbuch | B |
+| C-68 | Overcoming Gravity, 2. Auflage: Progression Charts (Buchseiten 30–33) | Low S | 2017 | https://stevenlow.org/wp-content/uploads/2017/02/OG2ChartsPrint.pdf | Coaching-Buch | C |
+| C-69 | Comprehensive Handstand Tutorial | Antranik (antranik.org) | o. J. | https://antranik.org/comprehensive-handstand-tutorial/ | Coaching-Artikel | C |
+| C-70 | Strategies for maintaining a handstand in the anterior-posterior direction | Kerwin DG, Trewartha G | 2001 | https://doi.org/10.1097/00005768-200107000-00016 | Biomechanik-Studie | B |
+| C-71 | Distal Biceps Tendon Ruptures: An Epidemiological Analysis Using a Large Population Database | Kelly MP, Perkinson SG, Ablove RH, Tueting JL | 2015 | https://doi.org/10.1177/0363546515587738 | Kohortenstudie | B |
+| C-72 | Are the shoulder joint function, stability, and mobility tests predictive of handstand execution? | Malíř R, Chrudimský J, Provazník A, Třebický V | 2024 | https://doi.org/10.1371/journal.pone.0302922 | Querschnittstudie | B |
+| C-73 | Kinematic and kinetic analysis of push-up exercise | An KN, Korinek SL, Kilpela T, Edis S | 1990 | https://pubmed.ncbi.nlm.nih.gov/2334780/ | Biomechanik-Studie | B |
+| C-74 | Exploring forearm muscle coordination and training applications of various grip positions during maximal isometric finger dead-hangs in rock climbers | Ferrer-Uris B, Arias D, Torrado P, Marina M, Busquets A | 2023 | https://doi.org/10.7717/peerj.15464 | EMG-Studie | B |
