@@ -163,9 +163,10 @@ Hinweise zu Tabelle 1:
   (Modellstudie, Evidenz B) [C-42]. Ein Liegestütz mit extendiertem
   Handgelenk erzeugt einen signifikant höheren Spitzendruck in der Fossa
   radioscaphoidea als die Knöchel-/Neutralposition (Kadaverstudie) [C-43].
-- Im Handstand dominiert in guten Balancen das Handgelenkmoment die
-  Schwerpunktkontrolle [C-70]; die Handgelenkbeuger arbeiten am Boden mit
-  61 ± 28 % NRMS, am Barren mit 44 ± 25 % und an Ringen mit 46 ± 32 % [C-16].
+- Im Handstand tragen Handgelenk- und Schultermomente die Balance guter
+  Versuche, in vielen Versuchen dominiert das Handgelenkmoment [C-70]; die
+  Handgelenkbeuger arbeiten am Boden mit 61 ± 28 % NRMS, am Barren mit
+  44 ± 25 % und an Ringen mit 46 ± 32 % [C-16].
 - **Folgerung (Heuristik):** Handgelenklast ≈ Handlast (% Körpergewicht, §7)
   × Extensionswinkel. Parallettes, Barren und Fäuste reduzieren die Extension
   und damit die radioskaphoidale Spitzenlast [C-43]; im Belastungsmodell zählt
@@ -248,13 +249,14 @@ Verletzten) [C-49].
 
 **Beuger vs. Strecker.** Erwachsene Turner hatten das niedrigste
 Beuger/Strecker-Verhältnis des glenohumeralen isometrischen Spitzenmoments
-(0,72) mit ≈ 30 % höheren Streckmomenten [C-15].
+(0,72); ihre glenohumeralen Streckmomente lagen ≈ 30 % über denen
+gleichaltriger Nicht-Sportler [C-15].
 
 ### 3.5 Lendenwirbelsäule
 
-- Einarmiger Liegestütz: höchste Wirbelsäulenkompression unter zwölf
-  Varianten; ballistische Varianten mehr Last, labile Bälle nur mässig mehr
-  [C-38].
+- Einarmiger Liegestütz: höchste Wirbelsäulenkompression unter den
+  untersuchten Varianten; ballistische Varianten mehr Last, labile Bälle nur
+  mässig mehr [C-38].
 - Hanging Straight Leg Raise: ≈ 3000 N Kompression, M. rectus abdominis
   > 130 % MVC, M. obliquus externus 88 % MVC [C-39]. Keine einzelne
   Bauchübung trainiert alle Bauchmuskeln bei minimaler Wirbelsäulenlast [C-40].
@@ -483,7 +485,7 @@ m_z · g · x_a (**Modell**, Statik). Relativ zum Full-Moment (0,246 H · KG):
 Reduktion bzw. Zunahme = (F/KG bzw. m_z/KG) × (x_a/H) / 0,246.
 
 **Tabelle 5 — Änderung des Schultermoments je 10 % KG Band- bzw.
-Zusatzlast (Mann, Modell)**
+Zusatzlast (Mann, Modell mit Daten aus [C-01, C-02])**
 
 | Angriffspunkt | x_a / H | bezogen auf Tuck | bezogen auf Advanced Tuck | bezogen auf Straddle 90° | bezogen auf Full |
 |---|---|---|---|---|---|
@@ -520,6 +522,23 @@ Momentreihenfolge des Modells, sofern «wide straddle» eine weite Grätsche
 meint. Eine weite *Handstellung* würde das sagittale Moment nicht verändern,
 wohl aber die Schulterarbeit in die Horizontalebene verlagern (**Heuristik**;
 die Deutung von «wide» ist in 01_pdf_extract §3 offen).
+
+### 5.8 Rechenweg (reproduzierbar)
+
+Koordinate x entlang der Körperachse ab Schultergelenkzentrum (positiv
+Richtung Füsse), Rumpf horizontal. Für jedes Segment i: Masse mᵢ (Anteil KG)
+und horizontale Schwerpunktlage xᵢ. Rumpf: x = 0,4486 × 0,5319 m; Kopf:
+x = −(0,6033 − 0,5319) − (1 − 0,5002) × 0,2429 m; Hüfte bei 0,5319 m; Beine
+mit Hüftbeugung φ und Kniebeugung κ: Oberschenkel-Richtung cos φ,
+Unterschenkel-Richtung cos(φ − κ), bei Grätsche zusätzlich × cos(Abduktion
+je Bein). Moment pro KG: M = Σ mᵢ · xᵢ (ohne Arme). Hand-/Stangenposition:
+x_Hand = M / (1 − 0,0988 × 0,5), da die Arme (9,88 % KG) ihren Schwerpunkt
+etwa auf halber Strecke Schulter–Hand haben. Lean: Körper als Gerade von der
+Schulter (Höhe √(L_Arm² − d²)) bis zum Fusskontakt (1,488 m entlang der
+Körperachse); Handkraft aus dem Momentengleichgewicht um den Fusskontakt,
+Schultermoment = Handkraft × d − Armgewicht × d/2. Alle Längen in m für den
+Referenzmann (1,741 m); für andere Grössen × H/1,741 (**Modell** mit Daten
+aus [C-01, C-02]).
 
 ## 6. Körpermasse, Grösse und Proportionen
 
@@ -604,7 +623,7 @@ Elite-Turner im Mittel klein sind [C-03].
 | Liegestütz, Füsse 10–30° erhöht | Maximalkraft sinkt mit dem Winkel (666,7 N bei 10°, 595,6 N bei 30°) | Regressionsmodell mit Masse, Winkel, Geschwindigkeit; Übereinstimmungsgrenzen ± 104–206 N | [C-31] | B |
 | Planche-Lean | 71–93 % | nach Vorlage, Tabelle 4 | **Modell** [C-01, C-02] | B (Modell) |
 | Pseudo-Planche-Liegestütz (oben) | ≈ 80–90 % | wie Lean mit 15–30 cm Vorlage | **Modell** | Heuristik |
-| Dip, Klimmzug, Handstand, Planche, Front/Back Lever, L-Sit, Kreuz (statisch) | 100 % | kein Fusskontakt, Statik | Mechanik | — |
+| Dip, Klimmzug, Handstand, Planche, Front/Back Lever, L-Sit, Kreuz (statisch) | 100 % | kein Fusskontakt | Statik (Kräftegleichgewicht) | Mechanik (zwingend) |
 | Dynamische Wiederholungen | > 100 % in Beschleunigungsphasen | Tempo erhöht die Trägheitslast | [C-73, C-30] | B/A |
 
 Die Intensität von Liegestützen lässt sich über Ausgangsposition,
@@ -651,7 +670,7 @@ H = Körpergrösse. «B (Modell)» = eigene Rechnung auf publizierten Daten.
 | PAR-C-05 | stage_torque_ratio_one_leg | 0,88 (0,855–0,906); Frau 0,89 | Anteil Full | [C-01, C-02] | B (Modell) | ein Bein Full, eines Advanced Tuck |
 | PAR-C-06 | stage_torque_ratio_half_lay | 0,93 (0,905–0,954) | Anteil Full | [C-01, C-02] | B (Modell) | Knie 70–110° |
 | PAR-C-07 | stage_torque_ratio_straddle | 0,85 (120°) / 0,91 (90°) / 0,96 (60°) | Anteil Full | [C-01, C-02] | B (Modell) | Gesamtgrätsche; Default 0,91 wenn Breite unbekannt (Heuristik) |
-| PAR-C-08 | stage_torque_ratio_full | 1,00 | Anteil Full | Definition | — | Referenz |
+| PAR-C-08 | stage_torque_ratio_full | 1,00 | Anteil Full | Definition | Definition | Referenzwert der Skala, keine empirische Grösse |
 | PAR-C-09 | hand_offset_behind_shoulder | Tuck 0,156 H / Adv 0,195 H / Straddle 90° 0,237 H / Full 0,259 H | m pro m Grösse | [C-01, C-02] | B (Modell) | Armneigung 27° / 35° / 44° / 50°; Formkriterium Hand-/Stangenposition |
 | PAR-C-10 | lean_torque_ratio_per_arm_degree | ≈ 0,02 (5°: 0,08; 15°: 0,26; 25°: 0,47; 31°: 0,59; 36°: 0,72) | Anteil Full-Planche pro Grad | [C-01, C-02] | B (Modell) | Füsse am Boden, gerader Körper; Lean 31° ≈ Tuck |
 | PAR-C-11 | lean_hand_load_fraction | 0,71 (0°) … 0,93 (36°) | Anteil KG | [C-01, C-02] | B (Modell) | Modell überschätzt Messwerte um 2–9 Prozentpunkte (PAR-C-23) |
@@ -665,7 +684,7 @@ H = Körpergrösse. «B (Modell)» = eigene Rechnung auf publizierten Daten.
 | PAR-C-19 | bw_fraction_push_up_knee | 0,49–0,54 oben / 0,62 unten | Anteil KG | [C-26, C-28, C-29] | B | Default 0,52 (Mittel aus 0,49, 0,529 und 0,536; Heuristik) |
 | PAR-C-20 | bw_fraction_push_up_hands_elevated | 30,5 cm: 0,55; 61 cm: 0,41 | Anteil KG | [C-26, C-27] | B | Grösse beeinflusst nur bei 61 cm (r = 0,63) [C-26] |
 | PAR-C-21 | bw_fraction_push_up_feet_elevated | 30,5 cm: 0,70; 61 cm: 0,74 | Anteil KG | [C-26, C-27] | B | Widerspruch zu [C-31] für 10–30° (siehe Widersprüche) |
-| PAR-C-22 | bw_fraction_no_foot_contact | 1,00 | Anteil KG | Statik | — | Dip, Klimmzug, Handstand, Planche, Lever, L-Sit, Kreuz; dynamisch zeitweise > 1 [C-73] |
+| PAR-C-22 | bw_fraction_no_foot_contact | 1,00 | Anteil KG | Statik (Kräftegleichgewicht) | Mechanik (zwingend) | Dip, Klimmzug, Handstand, Planche, Lever, L-Sit, Kreuz; dynamisch zeitweise > 1 [C-73] |
 | PAR-C-23 | lever_model_hand_load_bias | +0,02 bis +0,09 | Anteil KG | [C-26, C-28, C-29] vs. Modell | B | Modell-Validierung am Liegestütz; für absolute Handlast Messwerte verwenden |
 | PAR-C-24 | elbow_axial_force_push_up | 0,45 | Anteil KG | [C-41] | B | Beugemoment 56 % des max. Streckmoments; weit 29 %, eng 71 % |
 | PAR-C-25 | elbow_valgus_one_arm_push_up_factor | 1,42 | Faktor | [C-41] | B | Valgus steigt zudem bei kopfwärts gesetzten Händen |
@@ -785,6 +804,12 @@ H = Körpergrösse. «B (Modell)» = eigene Rechnung auf publizierten Daten.
    Modellmoment (N·m) nicht direkt in eine Bereitschaftsschätzung übersetzen.
 10. Übertragbarkeit der Ringe-Benchmarks (67–94 % KG, [C-09, C-10]) auf Boden-
     und Parallettes-Planche ist ungeprüft.
+11. Die Segmentlängen des Hebelmodells stammen aus einer Sekundärtranskription
+    von de Leva, Tab. 4 [C-01]; ein Abgleich mit der Originaltabelle steht aus
+    (Einfluss laut Sensitivität klein, §5.1).
+12. Die genaue Körperlage des «Inverted Swallow» [C-05] ist im Abstract nicht
+    beschrieben; die Nutzung als Analogie für Front Lever und Manna ist daher
+    unsicher.
 
 ## Quellen
 
@@ -858,7 +883,7 @@ H = Körpergrösse. «B (Modell)» = eigene Rechnung auf publizierten Daten.
 | C-66 | Imbalances in the Development of Muscle and Tendon as Risk Factor for Tendinopathies in Youth Athletes: A Review of Current Evidence and Concepts of Prevention | Mersmann F, Bohm S, Arampatzis A | 2017 | https://doi.org/10.3389/fphys.2017.00987 | Narratives Review | B |
 | C-67 | Anatomy and Physiology 2e, Kapitel 11.4–11.6 (Muskeln von Rumpf, Schultergürtel/Arm, Becken/Bein) | Betts JG, Young KA, Wise JA, Johnson E, Poe B, Kruse DH, Korol O, Johnson JE, Womble M, DeSaix P | 2022 | https://openstax.org/books/anatomy-and-physiology-2e/pages/11-5-muscles-of-the-pectoral-girdle-and-upper-limbs | Lehrbuch | B |
 | C-68 | Overcoming Gravity, 2. Auflage: Progression Charts (Buchseiten 30–33) | Low S | 2017 | https://stevenlow.org/wp-content/uploads/2017/02/OG2ChartsPrint.pdf | Coaching-Buch | C |
-| C-69 | Comprehensive Handstand Tutorial | Antranik (antranik.org) | o. J. | https://antranik.org/comprehensive-handstand-tutorial/ | Coaching-Artikel | C |
+| C-69 | Comprehensive Handstand Tutorial (Text eingesehen über die Archivkopie github.com/benjaminheng/link-archive) | Antranik (antranik.org) | o. J. | https://antranik.org/comprehensive-handstand-tutorial/ | Coaching-Artikel | C |
 | C-70 | Strategies for maintaining a handstand in the anterior-posterior direction | Kerwin DG, Trewartha G | 2001 | https://doi.org/10.1097/00005768-200107000-00016 | Biomechanik-Studie | B |
 | C-71 | Distal Biceps Tendon Ruptures: An Epidemiological Analysis Using a Large Population Database | Kelly MP, Perkinson SG, Ablove RH, Tueting JL | 2015 | https://doi.org/10.1177/0363546515587738 | Kohortenstudie | B |
 | C-72 | Are the shoulder joint function, stability, and mobility tests predictive of handstand execution? | Malíř R, Chrudimský J, Provazník A, Třebický V | 2024 | https://doi.org/10.1371/journal.pone.0302922 | Querschnittstudie | B |

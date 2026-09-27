@@ -1086,3 +1086,70 @@ PDF-Kontext.
 | `WIDE` (Straddle/Planche) | FIG: «leicht weite» Handstellung ist bei der Stützwaage wertneutral [A-29 S. 62]; im PDF v. a. in Maltese-Einheiten [P-02 S. 4; P-03 S. 4] | weite Handstellung als Maltese-Vorstufe; bei «Wide Straddle» könnte zusätzlich die Beinweite gemeint sein | **mittel** |
 | `KICKS` | kein externer Befund | Einschwingen in die Position, Sekunden = Haltezeit nach dem Kick? | **unsicher** (wie in 01) |
 | `BADFORM` | FIG definiert Formfehler über Winkelabweichungen [A-29 S. 19–20] | bewusst unsaubere Form (Hüfte/Arme); als niedrige `form_quality` loggen | **naheliegend** |
+
+## Parameter für den Algorithmus
+
+| Param-ID | Parameter (key, English snake_case) | Wert/Spanne | Einheit | Quelle(n) | Evidenz | Anmerkung |
+|---|---|---|---|---|---|---|
+| PAR-A-01 | `dynamic_work_sets` | 3 | Sätze | [A-44] | D | RR-Standard für Grundübungen |
+| PAR-A-02 | `dynamic_work_rep_range` | 5–8 | Wdh. | [A-44] | D | schwerste saubere Variante |
+| PAR-A-03 | `dynamic_advance_threshold_reps` | 8 (in allen 3 Sätzen, gute Form) | Wdh. | [A-44] | D | dann nächste Variante mit 3×5 beginnen |
+| PAR-A-04 | `dynamic_restart_reps_after_advance` | 5 | Wdh. | [A-44] | D | |
+| PAR-A-05 | `dynamic_rep_increment_per_session` | +1 | Wdh. pro Satz und Einheit | [A-44, A-46] | D | «Vorwerte schlagen»; ergibt ≥ 4 Einheiten pro Variante (PAR-A-39) |
+| PAR-A-06 | `basic_iso_hold_range_s` | 10–30 | s | [A-44] | D | Support-Halt, Tuck FL in der Row-Leiter |
+| PAR-A-07 | `basic_iso_advance_hold_s` | 30 (in allen 3 Sätzen) | s | [A-44] | D | Wechsel zur nächsten Stufe |
+| PAR-A-08 | `lever_advance_hold_s` | 10 (3 Sätze, ohne Gelenkschmerz) | s | [A-40] | D | TMA-«10-Sekunden-Regel»; Studienbeleg dort behauptet, nicht angegeben |
+| PAR-A-09 | `lever_advance_sets_x_hold_gmb` | 5 × 20 | Sätze × s | [A-35] | C | GMB-Alternative zu PAR-A-08 (strenger) |
+| PAR-A-10 | `lever_intermediate_unlock_hold_s` | 10 | s | [A-40]; Heuristik | Heuristik | Unlock für Tuck/Adv Tuck/One-Leg; Wechselschwelle PAR-A-08 als Unlock übernommen |
+| PAR-A-11 | `terminal_hold_unlock_s` | 3 | s | [A-33] | C | strengster Wettkampfstandard; FIG und Calisthenics Cup 2 s (PAR-A-12) |
+| PAR-A-12 | `competition_min_hold_s` | FIG 2 · Calisthenics Cup 2 · WSWCF 3 | s | [A-29 S. 20; A-34; A-33 S. 5] | B | ab vollständigem Stillstand |
+| PAR-A-13 | `fig_hold_deviation_bands_deg` | ≤ 5 abzugsfrei · > 5–20 klein · > 20–45 mittel · > 45 nicht anerkannt | ° | [A-29 S. 19–22] | B | Haltepositionen; Abzüge 0,1/0,3/0,5 |
+| PAR-A-14 | `fig_arm_bend_bands_deg` | 0–15 klein · > 15–30 mittel · > 30–45 gross · > 45 nicht anerkannt | ° | [A-29 S. 19] | B | Halte und Pressen |
+| PAR-A-15 | `wswcf_max_deviation_deg` | 15 (Planche ±7,5 zur Horizontalen) | ° | [A-33 S. 5] | C | strenger als FIG |
+| PAR-A-16 | `form_quality_angle_map` | 5: ≤ 5° · 4: > 5–15° · 3: > 15–30° · 2: > 30–45° · 1: > 45° | ° | [A-29 S. 19–20; A-33 S. 5] | Heuristik | Zuordnung eigene; Grenzen aus FIG/WSWCF |
+| PAR-A-17 | `unlock_min_form_quality_statics` | 4 | 1–5 | Heuristik | Heuristik | entspricht ≤ 15° (PAR-A-16) |
+| PAR-A-18 | `unlock_occurrences_default` | 2 (dynamisch ≈ 3×8: 3) | Vorkommen | ADR 0003 §5; [A-44] | Heuristik | Projektvorgabe ADR 0003; zählt Sätze, nicht Tage (§2.5) |
+| PAR-A-19 | `unlock_within_days_statics` | 28 | Tage | Heuristik | Heuristik | ≈ 4 Wochen: genug Einheiten für 2 Vorkommen bei 2–3 Einheiten/Woche |
+| PAR-A-20 | `unlock_within_days_dynamic` | 7 | Tage | Heuristik | Heuristik | 3 Sätze ≥ 8 innerhalb einer Woche ≈ «3×8» |
+| PAR-A-21 | `counts_for_unlock` | nur unassistiert, voller Weg, nicht exzentrisch, nicht gescheitert; Kipping nur für Kipping-Slugs | — | `evaluate.go`; [A-10, A-13] | Heuristik | Assistierte Sätze zählen für die Last (01 §4.4), nie für Unlocks |
+| PAR-A-22 | `difficulty_tier_from_og_level` | ⌈OG-Level × 10 / 16⌉; Wurzeln = 1 | Tier 1–10 | [A-31]; Heuristik | Heuristik | lineare Abbildung auf das Schemafeld |
+| PAR-A-23 | `og_level_bands` | Beginner 1–5 · Intermediate 6–9 · Advanced 10–13 · Elite 14–16 | OG-Level | [A-30 S. 22] | C | Einstufung nach Können, nicht Trainingsjahren [A-30 S. 23] |
+| PAR-A-24 | `og_fig_quartiles` | Basic 1–4 · A 5–8 · B 9–12 · C 13–16 | OG-Level | [A-30 S. 22; A-31] | C | stimmt mit FIG für FL, BL, Straddle PL, Ringe-PL, Manna überein (§3.3) |
+| PAR-A-25 | `og_level_planche_floor` | Frog 3 · SA Frog 4 · Tuck 5 · Adv Tuck 6 · Straddle 8 · Half-Lay/One-Leg 9 · Full 11 | OG-Level | [A-31] | C | Boden/Barren |
+| PAR-A-26 | `og_level_planche_rings` | Frog 4 · SA Frog 5 · Tuck 6 · Adv Tuck 8 · Straddle 10 · Half-Lay 12 · Full 14 | OG-Level | [A-31] | C | |
+| PAR-A-27 | `rings_level_offset` | Planche +1…+3; Liegestütz +3 (1 → 4); Dip +1 (3 → 4); L-Sit +2 (3 → 5); HS +2…+3 | OG-Level | [A-31] | C | Ersatzlogik Ringe ↔ Boden/Barren; FIG sieht für die Planche keinen Unterschied (Widersprüche) |
+| PAR-A-28 | `og_level_front_lever` | Tuck 4 · Adv Tuck 5 · Straddle 6 · Half-Lay/One-Leg 7 · Full 8 | OG-Level | [A-31] | C | FIG A [A-29] |
+| PAR-A-29 | `og_level_back_lever` | German Hang 1 · Skin the Cat 2 · Tuck 3 · Adv Tuck 4 · Straddle 5 · Half-Lay/One-Leg 6 · Full 7 | OG-Level | [A-31] | C | FIG A [A-29] |
+| PAR-A-30 | `og_level_handstand_hspu` | Wand-HS 1–3 · frei 4–5 · Ring-HS 7 · One-Arm-HS 10; Pike-HeSPU 1 · Box 2 · Wand exz. 3 · Wand-HeSPU 4 · Wand-HSPU 5 · frei HeSPU 6 · frei HSPU 7 | OG-Level | [A-31] | C | |
+| PAR-A-31 | `og_level_l_v_manna` | Tuck-L 1 · 1-Bein 2 · L 3 · Straddle-L 4 · RTO-L 5 · V45 6 · V75 7 · V100 8 · V120 9 · V140 10 · V155 11 · V170 12 · Manna 13 | OG-Level | [A-31] | C | FIG: L A, V B, Manna C [A-29] |
+| PAR-A-32 | `og_level_pull_oac` | Sprung 1 · exz. 2 · Klimmzug 3 · L 4 · Pullover 5; Ringe: L 4 · breit 5 · breit-L 6 · Archer 7 · OAC exz. 8 · OAC 9 · OAC+6,8 kg 10 · OAC+11,3 kg 11 | OG-Level | [A-31] | C | 15/25 lb umgerechnet |
+| PAR-A-33 | `og_weighted_pull_up_total_bw` | L3 1,00 · L4 1,18 · L5 1,35 · L6 1,50 · L7 1,65 · L8 1,78 · L9 1,90 · L10 2,00 · L11 2,10 | × KG | [A-31] | C | Wiederholungszahl nicht angegeben |
+| PAR-A-34 | `og_weighted_dip_total_bw` | L3 1,00 · L4 1,20 · L5 1,38 · L6 1,55 · L7 1,70 · L8 1,85 · L9 2,00 · L10 2,13 · L11 2,25 | × KG | [A-31] | C | Wiederholungszahl nicht angegeben |
+| PAR-A-35 | `pull_up_1rm_total_bw_reference` | Männer 1,16 ± 0,15 · Frauen 0,73 ± 0,09 | × KG | [A-11] | B | Studierende; 1RM mit Zusatz- oder Gegengewicht |
+| PAR-A-36 | `og_level_mu_flag_pistol` | MU: exz. 3 · Kipping 4 · MU 5 · ohne FG 6 · strikt Stange 7 · L-Sit-MU 8; Flagge: Tuck 5 · Adv 6 · Straddle 7 · Full 8; Pistol 4 (mit 1,2× KG 5 … 2,0× KG 11) | OG-Level | [A-31] | C | |
+| PAR-A-37 | `og_level_push_dip_row` | Liegestütz: Standard 1 · Diamond 2 · Ringe 4 · RTO 5 · RTO-PPPU 40° 7; Dips: Barren 3 · L 4 · 45° 5; Ring-Dips: Stütz 1 · RTO-Stütz 2 · exz. 3 · Dip 4; Rudern: exz. 1 · Ringe 2 · breit 3 · Archer 4 · einarmig 7 | OG-Level | [A-31] | C | |
+| PAR-A-38 | `maltese_og_level` | 17 (jenseits des Charts) | OG-Level | [A-31] | C | FIG: Boden C = Planche, Ringe D [A-29] |
+| PAR-A-39 | `min_sessions_per_dynamic_variant` | 4 | Einheiten | [A-44] (abgeleitet) | D | 5→6→7→8 Wdh.; Untergrenze |
+| PAR-A-40 | `pushup_load_fraction_bw` | Hände 61 cm 0,41 · Knie 0,49 · Hände 30 cm 0,55 · Standard 0,64 · Füsse 30 cm 0,70 · Füsse 61 cm 0,74 | × KG | [A-05] | B | Spitzen-GRF; statisch 0,69–0,75 bzw. 0,54–0,62 [A-06] *(S)* |
+| PAR-A-41 | `rings_conditioning_benchmark_pct_bw` | Schwalbe kon. 63,05 / exz. 94,10 · Stützwaage 60,37 / 86,79 · Kreuz-HS 56,66 / 70,86 | % KG | [A-21] | B | Konditionierungsmessung am Seilzuggerät; Elite-Turner |
+| PAR-A-42 | `swallow_supine_1rm_benchmark_pct_bw` | Schwalbe 73,4 · Stützwaage 67,4 | % KG | [A-20] | B | 1RM «Schwalbe in Rückenlage»; n = 10 |
+| PAR-A-43 | `strength_explains_skill_r2` | Schwalbe 0,76–0,85 · Stützwaage 0,42–0,59 · Kreuz-HS 0,38–0,48 (2021) bzw. 0,60 (2025) · Bankdrücken–Kreuz r 0,41 | R² / r | [A-21, A-22, A-23] | B | Kraftbaselines nur `recommended` |
+| PAR-A-44 | `elite_specific_strength_gain` | +3,6–4,1 % in 4 Wo.; +8,3–8,7 % in 3 Wo. | % | [A-26, A-27] | B | Schwalbe/Stützwaage, exzentrisches Spezialtraining |
+| PAR-A-45 | `est_weeks_per_og_level_step` | Ziel-Level ≤ 4: 2–8 · 5–8: 4–13 · 9–12: 8–26 · ≥ 13: 13–52 | Wochen pro Level | Heuristik, geeicht an [A-41, A-42, A-40] | Heuristik | FL Tuck→Full ergibt 16–52 Wo. (TMA 7–10+ Mo.); BL 16–55 Wo. (TMA 6–12 Mo.); Planche ab 0 ergibt 48–162 Wo. (TMA 24–36 Mo., also eher obere Hälfte) |
+| PAR-A-46 | `coach_time_front_lever_months` | Fundament→Tuck 3–4 · Tuck→Adv 2–3 · Adv→Straddle 2–3 · Straddle→Full 3–4 · Full 3–6; gesamt 12–18 ab 10 Klimmzügen | Monate | [A-41] | D | Praxisindiz |
+| PAR-A-47 | `coach_time_planche_cumulative_months` | Lean 0–2 · Tuck 2–6 · Adv Tuck 6–12 · Straddle 12–24 · Full 24–36 | Monate ab Start | [A-40] | D | Praxisindiz; «Full in 1–3 Jahren» |
+| PAR-A-48 | `coach_time_back_lever_weeks` | Vorbereitung 4–8 · Tuck/Pike 8–12 · Full 12–24; je Stufe 4–8 | Wochen | [A-42] | D | gesamt 6–12 Monate |
+| PAR-A-49 | `coach_time_first_ring_dip_weeks` | 4–12 (Ø 6–8) | Wochen | [A-43] | D | ab 30 s Ring-Stütz und 15 Barren-Dips |
+| PAR-A-50 | `coach_time_first_pull_up_months` | 2–6 | Monate | [A-46] | D | ab Dead Hang |
+| PAR-A-51 | `goal_realism_min_weeks` | Σ Untergrenzen aus PAR-A-45 vom aktuellen zum Ziel-Level; z. B. Anfänger → Full Planche ≥ 48 Wo. | Wochen | PAR-A-45; [A-40] | Heuristik | Persona 5 («Full Planche in 8 Wochen») klar unrealistisch; Hinweis ohne Wertung (ADR 0003) |
+| PAR-A-52 | `prereq_front_lever_entry` | 10 strikte Klimmzüge · 30 s Dead Hang · 60 s Hollow · 15 gestreckte Beinheben | Wdh./s | [A-41] | D | als `recommended`-Kanten, nicht hart |
+| PAR-A-53 | `prereq_planche_entry` | 60 s Hollow · 3 × 20 Liegestütze · 3 min Handgelenk-Routine · 30 s Wand-HS; Leans ab 30 s Plank | Wdh./s/min | [A-40, A-35] | D/C | als `recommended`-Kanten |
+| PAR-A-54 | `prereq_back_lever_pull_ups` | 8–10 | Wdh. | [A-42] | D | `recommended` |
+| PAR-A-55 | `handstand_free_hold_targets_s` | 10 (für viele Ziele genug) · ~60 (vor One-Arm-HS) | s | [A-37] | C | Stufen `free-10s`, `free-60s` |
+| PAR-A-56 | `l_sit_one_leg_before_full_s` | 5 | s je Seite | [A-36] | C | Halte allgemein 5–30 s, 3–5 Sätze |
+| PAR-A-57 | `handstand_wrist_flexor_nrms_by_apparatus` | Boden 61 % · Barren 44 % · Ringe 46 % | % NRMS | [A-16] | B | Ersatzlogik bei Handgelenkbeschwerden: Barren/Parallettes (Detail Stream C/D) |
+| PAR-A-58 | `handstand_wrist_strategy_share` | > 75 % der Zeit; gemischt ~2 % | % | [A-15] | B | Formhinweis «über Finger/Handgelenk korrigieren» |
+| PAR-A-59 | `skill_practice_frequency_coach` | HS 2–4/Wo · L-Sit 2–4/Wo · Planche ≤ 3/Wo (+1 nach 2 Mo.) · FL 2–3/Wo · BL ≤ 3–4/Wo · Handgelenk-Routine 2–3/Wo | Einheiten/Woche | [A-37, A-36, A-35, A-41, A-42, A-39] | C/D | gehört inhaltlich zu Stream B; hier als Coaching-Konsens |
+| PAR-A-60 | `release_elements_auto_unlock` | false (nur Selbstbestätigung) | — | [A-29 S. 6; A-33 S. 6]; Heuristik | Heuristik | Matten/Helfer selbst im Spitzenturnen; App kann Sicherheit nicht prüfen |
+| PAR-A-61 | `release_valid_catch` | beidhändig, ohne Bodenkontakt | — | [A-33 S. 6] | C | Formkriterium Releases |
+| PAR-A-62 | `edge_weight_defaults` | prerequisite 1,0 · recommended 0,3–0,7 · alternative 0,5 · antagonist 0,5 | Gewicht | Heuristik | Heuristik | Kraftbaselines nie `prerequisite` (PAR-A-43) |
