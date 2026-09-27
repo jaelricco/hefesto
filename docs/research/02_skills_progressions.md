@@ -492,7 +492,7 @@ Ring-Dips 6, RTO 45° 7 [A-31].
 | (Vorst.) | `support-hold/parallel-bars` (§4.4) | Stütz | — | §4.4 | — | [A-44] |
 | (Übung) | `dip-negative` (Rolle `progression`) | Absenken | kontrolliert | kein Level | — | OG 2 [A-31] |
 | 1 | `dip/parallel-bars` · `dip-pb` | Barren-Dip | oben gestreckt, unten Oberarm mind. parallel, Schultern nicht hochgezogen (H-FORM) | `dip-pb reps ≥ 8 · occ 3 · 7 d` | 4–12 Wo. bis Ring-Dip [A-43] | OG 3 [A-31] |
-| 2 | `dip/rings` · `dip-rings` | Ring-Dip | wie 1, Ringe nah, oben stabiler Stütz (H-FORM) | `dip-rings reps ≥ 8 · occ 3 · 7 d` | 4–13 Wo. je Folgelevel (H-DUR) | OG 4 [A-31]; TMA-Standards: 1–5 Wdh. Anfänger, 6–15 Fortgeschritten [A-43] |
+| 2 | `dip/rings` · `dip-rings` | Ring-Dip | wie 1, Ringe nah, oben stabiler Stütz (H-FORM) | `dip-rings reps ≥ 8 · occ 3 · 7 d` | 4–13 Wo. je Folgelevel (H-DUR) | OG 4 [A-31]; TMA-Standards: 1–5 Wdh. Beginner, 6–15 Intermediate [A-43] |
 | 3 | `dip/rings-l-sit` · `dip-rings-l` | Ring-Dip im L-Sit | Beine waagrecht | `dip-rings-l reps ≥ 5 · occ 2 · 28 d` (H-UNL) | — | OG 5 [A-31] |
 | (weiter) | Weighted Dips §7.4 | | | | | [A-31] |
 
@@ -1082,9 +1082,9 @@ PDF-Kontext.
 |---|---|---|---|
 | `supi floor`, `supi bar` | Die Schwalbe an Ringen wird mit supinierten (90° aussenrotierten) Händen ausgeführt [A-21]; FIG nennt «ausgedrehte Hände» als wertneutrale Variante der Stützwaage [A-29 S. 62]; die PDFs nutzen `supi` bei Leans, Pseudo-Liegestützen, Wide-Planche- und Maltese-Übungen [P-01 bis P-04] | supinierte/aussenrotierte Handstellung (Finger nach aussen/hinten) am Boden bzw. an einer Stange; als Brücke zur Maltese plausibel | **mittel–hoch** (gestützt, im PDF nicht erklärt) |
 | `fake supi bar` | kein externer Befund; einmalig bei Straddle-Planche-Liegestützen [P-03 S. 3] | eine nachgeahmte supinierte Stellung an einer Stange? | **unklar** |
-| `neck band` | kein externer Befund; stets als Alternative zu `elastic` bei schweren Varianten [P-01 S. 2–3; P-02; P-03] | Band als Assistenz, anders befestigt (Nacken/oberer Rücken?) | **unklar** |
+| `neck band` | kein externer Befund; tritt in den `Hard`- und `Type A`-Varianten an die Stelle von `elastic` [P-01 S. 2–3; P-02 S. 1–3; P-03 S. 1–3] | Band als Assistenz, anders befestigt (Nacken/oberer Rücken?) | **unklar** |
 | `ZANETTI (vertical, elastic)` | nicht im Text des FIG CoP 2025–2028 gefunden (Elementnamen der Ringe-Seiten geprüft) [A-29]; im PDF 3–8 Wdh. mit Band in Maltese-Einheiten [P-03 S. 1, 4] | dynamisches Element der Maltese-Familie, wohl nach einer Person benannt (nicht verifiziert) | **unklar** |
-| `DEAD PLANCHE` (Push-ups, Hold) | kein externer Befund; im PDF auf Position 1 (Maximalintensität) mit Band, 2–4 Wdh. bzw. 5–10 s [P-03 S. 3–4] | eine Variante, die schwerer ist als Full-Planche-Liegestütze | **unklar** |
+| `DEAD PLANCHE` (Push-ups, Hold) | kein externer Befund; im PDF als Push-ups auf Position 1 (Maximalintensität, 2–4 Wdh., mit Band) und als Halt auf Position 4 (5–10 s, mit Band) [P-03 S. 3–4] | eine Variante, die schwerer ist als Full-Planche-Liegestütze | **unklar** |
 | `ELEVATOR` (Lean Maltese / Maltese) | OG führt «(L17) Elevator» als Element jenseits von Level 16 in der Muscle-up-Spalte, ohne Definition [A-31]; im PDF in Wiederholungen dosiert (2–8) [P-02 S. 4; P-03 S. 4; P-04 S. 1] | der Begriff ist als Elementname etabliert; im PDF wohl eine dynamische Auf-ab-Bewegung in der Maltese-Position (H) | **unsicher** |
 | `WIDE` (Straddle/Planche) | FIG: «leicht weite» Handstellung ist bei der Stützwaage wertneutral [A-29 S. 62]; im PDF v. a. in Maltese-Einheiten [P-02 S. 4; P-03 S. 4] | weite Handstellung als Maltese-Vorstufe; bei «Wide Straddle» könnte zusätzlich die Beinweite gemeint sein | **mittel** |
 | `KICKS` | kein externer Befund | Einschwingen in die Position, Sekunden = Haltezeit nach dem Kick? | **unsicher** (wie in 01) |
