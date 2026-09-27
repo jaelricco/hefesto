@@ -43,7 +43,8 @@
   Armsehnen **Heuristik**) [C-65, C-66].
 - **Liegestütz-Last in % Körpergewicht:** 41 % (Hände 61 cm erhöht), 49 %
   (Knie), 55 % (Hände 30,5 cm), 64 % (Standard), 70 % (Füsse 30,5 cm), 74 %
-  (Füsse 61 cm) [C-26, C-27]; oben 69 %, unten 75 % [C-28]. Halte ohne
+  (Füsse 61 cm) [C-26, C-27]; statisch oben 69 %, unten 75 % (28
+  krafttrainierte Männer) [C-27, C-28]. Halte ohne
   Fusskontakt (Stütz, Hang, Planche, Lever) tragen 100 % (Statik).
 - **Planche-Lean:** Das Schultermoment wächst um ≈ 2 Prozentpunkte des
   Full-Planche-Moments pro Grad Armneigung; bei 30° liegt es auf Tuck-Niveau
@@ -59,7 +60,7 @@
 - **Körpermasse:** Leistungen, bei denen das eigene Gewicht getragen wird,
   skalieren mit Masse^−0,33 bzw. Grösse^−1 (Evidenz B) [C-59]; Kraft mit
   Masse^0,67, Drehmoment mit Masse^1 [C-58]. +10 % Zusatzmasse senken die
-  Klimmzugzahl um 53 % [C-60]. Für Hebelelemente folgt: relative Anforderung
+  Klimmzugzahl um 53 % (30 fitte junge Männer) [C-60]. Für Hebelelemente folgt: relative Anforderung
   ∝ H (**Modell**).
 - **Handgelenk:** Extension verlagert die Kraft radial (Anteil Fossa scaphoidea
   52 → 62 %) [C-42]; Liegestütz in Extension erhöht den radioskaphoidalen
@@ -84,8 +85,8 @@
   Kniebeuge folgert, dass tiefe Beugung bei Gesunden mit erlernter Technik
   das Risiko für passive Strukturen nicht per se erhöht (Evidenz B; Übertragung
   auf den Pistol **Heuristik**) [C-56].
-- **Frauen:** Schulterkraft relativ zum Körpergewicht ≈ 80 % (78–83 %) der
-  Männer [C-77], Skelettmuskelmasse 30,6 vs. 38,4 % des Körpergewichts [C-78].
+- **Frauen:** Isometrische Schulterkraft (Handdynamometer: Rotation,
+  Abduktion) relativ zum Körpergewicht ≈ 80 % (78–83 %) der Männer [C-77], Skelettmuskelmasse 30,6 vs. 38,4 % des Körpergewichts [C-78].
   Bei fast gleichem Hebel (0,240 vs. 0,246 H) ist eine Hebelstufe für Frauen
   relativ ≈ 1,24-mal (Full) bis ≈ 1,32-mal (Tuck) so anspruchsvoll. Das ist
   eine **Modellableitung** aus Segmentdaten und Handdynamometer-Werten
@@ -982,10 +983,13 @@ H = Körpergrösse. «B (Modell)» = eigene Rechnung auf publizierten Daten.
     gleicher Farbe um 8–19 % [C-80]. Nominalwerte sind darum keine
     belastbare Eingabe (PAR-C-61).
 16. **Frauen: 52 % oder 80 %?** Absolut erreichten Frauen ≈ 52 % der
-    Oberkörperkraft der Männer [C-84], relativ zum Körpergewicht 78–83 %
-    [C-77]. Kein Datenwiderspruch, sondern verschiedene Normierung; für
-    Körpergewichtsübungen gilt der relative Wert. Zudem sind die Stichproben
-    klein bzw. untrainiert, trainierte Calisthenics-Athletinnen fehlen.
+    Ellbogenbeugerkraft der Männer [C-84], relativ zum Körpergewicht bei
+    Schulterrotation und -abduktion 78–83 % [C-77]. Kein Datenwiderspruch,
+    sondern verschiedene Normierung und verschiedene Muskelgruppen; für
+    Körpergewichtsübungen gilt der relative Wert. Zudem ist die eine
+    Stichprobe klein (n = 16) [C-84], die andere nicht calisthenics-spezifisch
+    (körperlich aktive Studierende) [C-77]; trainierte Calisthenics-
+    Athletinnen fehlen.
 17. **Instabilität und Schulterblatt-Stabilisatoren.** Die verbreitete
     Annahme (und die Hypothese der Autoren): Ringe fordern M. serratus
     anterior und unteren Trapezius stärker. Gemessen wurde beim Muscle-up
@@ -1034,8 +1038,9 @@ H = Körpergrösse. «B (Modell)» = eigene Rechnung auf publizierten Daten.
    C-08] und Kraftmessung am simulierten Kreuz [C-13].
 7. Frauenspezifische EMG- oder Kraftdaten für Calisthenics-Skills fehlen.
    Vorhanden sind nur allgemeine Kraft- und Muskelmassedaten [C-77, C-78,
-   C-84] und die Klimmzug-Studie [C-61]; der Faktor 1,24 (PAR-C-54) ist eine
-   Modellableitung. Das Modell zeigt bei Frauen höhere Tuck-Anteile (64 %).
+   C-84] und die Klimmzug-Studie [C-61]; der Faktor 1,24 (Full) bis 1,32
+   (Tuck) (PAR-C-54) ist eine Modellableitung. Das Modell zeigt bei Frauen
+   höhere Tuck-Anteile (64 %).
 8. Deutung von «neck band», «wide» und «supi» in P-01 bis P-03 (siehe
    01_pdf_extract §3); sie bestimmt die Hebelwirkung der Assistenz (§5.5).
 9. Normwerte für isometrische Schulterbeuge-/Streckmomente in Hebelposition
@@ -1082,7 +1087,7 @@ Lauf 1 gilt die Prüftiefe des ersten Laufs (§1).
 | C-09 | Maximum Strength Benchmarks for Difficult Static Elements on Rings in Male Elite Gymnastics | Schärer C, Huber S, Bucher P, Capelli C, Hübner K | 2021 | https://doi.org/10.3390/sports9060078 | Querschnittstudie | B |
 | C-10 | Relationship between swallow, support scale and iron cross on rings and their specific preconditioning strengthening exercises | Hübner K, Schärer C | 2015 | https://doi.org/10.52165/sgj.7.3.59-68 | Querschnittstudie | B |
 | C-11 | Relative strength requirement for swallow element proper execution: a predictive test | Gorosito MA | 2013 | https://doi.org/10.52165/sgj.5.3.59-67 | Querschnittstudie | B |
-| C-12 | Relationship Between Bench Press and Iron Cross Maximal Isometric Contraction - How to Develop the Strength to Perform the Iron Cross on Rings | Lecocq T et al. | 2025 | https://doi.org/10.1002/ejsc.70002 | Querschnittstudie | B |
+| C-12 | Relationship Between Bench Press and Iron Cross Maximal Isometric Contraction - How to Develop the Strength to Perform the Iron Cross on Rings | Lecocq T, Gouelle A, Schärer C, Mochizuki L, Tordi N | 2025 | https://doi.org/10.1002/ejsc.70002 | Querschnittstudie | B |
 | C-13 | Strength Performance Assessment in a Simulated Men's Gymnastics Still Rings Cross | Dunlavy JK, Sands WA, McNeal JR, Stone MH, Smith SL, Jemni M, Haff GG | 2007 | https://pubmed.ncbi.nlm.nih.gov/24149230/ | Querschnittstudie | B |
 | C-14 | A Systematic Review of Dynamic, Kinematic, and Muscle Activity during Gymnastic Still Rings Elements | Malíř R, Chrudimský J, Šteffl M, Stastny P | 2023 | https://doi.org/10.3390/sports11030050 | Systematic Review | A |
 | C-15 | The effect of gymnastic training on muscle strength and co-activation during isometric elbow and glenohumeral flexion/extension | Kochanowicz A, Niespodziński B, Mieszkowski J, Kochanowicz K, Sawczyn S | 2018 | https://doi.org/10.23736/S0022-4707.17.06916-X | Querschnittstudie | B |
@@ -1130,16 +1135,16 @@ Lauf 1 gilt die Prüftiefe des ersten Laufs (§1).
 | C-57 | Comparison of lower extremity EMG between the 2-leg squat and modified single-leg squat in female athletes | McCurdy K, O'Kelley E, Kutz M, Langford G, Ernest J, Torres M | 2010 | https://doi.org/10.1123/jsr.19.1.57 | EMG-Studie | B |
 | C-58 | Muscle strength testing: use of normalisation for body size | Jaric S | 2002 | https://doi.org/10.2165/00007256-200232100-00002 | Narratives Review | B |
 | C-59 | Movement performance and body size: the relationship for different groups of tests | Markovic G, Jaric S | 2004 | https://doi.org/10.1007/s00421-004-1076-7 | Querschnittstudie | B |
-| C-60 | The Effect of Experimental Alterations in Excess Mass on Pull-up Performance in Fit Young Men | Vanderburgh PM, Edmonds T | 1997 | https://journals.lww.com/nsca-jscr/abstract/1997/11000/the_effect_of_experimental_alterations_in_excess.5.aspx | Querschnittstudie | B |
+| C-60 | The Effect of Experimental Alterations in Excess Mass on Pull-up Performance in Fit Young Men | Vanderburgh PM, Edmonds T | 1997 | https://doi.org/10.1519/00124278-199711000-00005 | Querschnittstudie | B |
 | C-61 | Training college-age women to perform the pull-up exercise | Flanagan SP, Vanderburgh PM, Borchers SG, Kohstall CD | 2003 | https://doi.org/10.1080/02701367.2003.10609064 | Kohortenstudie | B |
 | C-62 | Determinant factors of pull-up performance in trained athletes | Sánchez-Moreno M, Pareja-Blanco F, Díaz-Cueli D, González-Badillo JJ | 2016 | https://pubmed.ncbi.nlm.nih.gov/26176615/ | Querschnittstudie | B |
 | C-63 | Morphological Differences of Street Workout Athletes According to the Training Experience | Sanchez-Martinez J, Hernández-Jaña S | 2022 | https://www.intjmorphol.com/wp-content/uploads/2022/04/art_06_402.pdf | Querschnittstudie | B |
-| C-64 | Muscular strength and anthropometry in calisthenics athletes (Preprint, nicht begutachtet) | Lozada-Medina JL | 2024 | https://sportrxiv.org/index.php/server/preprint/view/449 | Querschnittstudie | B |
+| C-64 | Muscular strength and anthropometry in calisthenics athletes (Preprint, nicht begutachtet) | Lozada-Medina JL, Martelo-Sierra E, Hoyos-Espitia C | 2024 | https://doi.org/10.51224/SRXIV.449 | Querschnittstudie | B |
 | C-65 | Human tendon adaptation in response to mechanical loading: a systematic review and meta-analysis of exercise intervention studies on healthy adults | Bohm S, Mersmann F, Arampatzis A | 2015 | https://doi.org/10.1186/s40798-015-0009-9 | Meta-Analyse | A |
 | C-66 | Imbalances in the Development of Muscle and Tendon as Risk Factor for Tendinopathies in Youth Athletes: A Review of Current Evidence and Concepts of Prevention | Mersmann F, Bohm S, Arampatzis A | 2017 | https://doi.org/10.3389/fphys.2017.00987 | Narratives Review | B |
 | C-67 | Anatomy and Physiology 2e, Kapitel 11.4–11.6 (Muskeln von Rumpf, Schultergürtel/Arm, Becken/Bein) | Betts JG, Young KA, Wise JA, Johnson E, Poe B, Kruse DH, Korol O, Johnson JE, Womble M, DeSaix P | 2022 | https://openstax.org/books/anatomy-and-physiology-2e/pages/11-5-muscles-of-the-pectoral-girdle-and-upper-limbs | Lehrbuch | B |
-| C-68 | Overcoming Gravity, 2. Auflage: Progression Charts (Buchseiten 30–33) | Low S | 2017 | https://stevenlow.org/wp-content/uploads/2017/02/OG2ChartsPrint.pdf | Coaching-Buch | C |
-| C-69 | Comprehensive Handstand Tutorial (Text eingesehen über die Archivkopie github.com/benjaminheng/link-archive) | Antranik (antranik.org) | o. J. | https://antranik.org/comprehensive-handstand-tutorial/ | Coaching-Artikel | C |
+| C-68 | Overcoming Gravity, 2. Auflage: Progression Charts (Buchseiten 30–33; Buch 2016, Chart-PDF 2017) | Low S | 2016 | https://stevenlow.org/wp-content/uploads/2017/02/OG2ChartsPrint.pdf | Coaching-Buch | C |
+| C-69 | Comprehensive Handstand Tutorial (Text eingesehen über die Archivkopie github.com/benjaminheng/link-archive) | Kizirian A (antranik.org) | o. J. | https://antranik.org/comprehensive-handstand-tutorial/ | Coaching-Artikel | C |
 | C-70 | Strategies for maintaining a handstand in the anterior-posterior direction | Kerwin DG, Trewartha G | 2001 | https://doi.org/10.1097/00005768-200107000-00016 | Biomechanik-Studie | B |
 | C-71 | Distal Biceps Tendon Ruptures: An Epidemiological Analysis Using a Large Population Database | Kelly MP, Perkinson SG, Ablove RH, Tueting JL | 2015 | https://doi.org/10.1177/0363546515587738 | Kohortenstudie | B |
 | C-72 | Are the shoulder joint function, stability, and mobility tests predictive of handstand execution? | Malíř R, Chrudimský J, Provazník A, Třebický V | 2024 | https://doi.org/10.1371/journal.pone.0302922 | Querschnittstudie | B |
@@ -1157,3 +1162,38 @@ Lauf 1 gilt die Prüftiefe des ersten Laufs (§1).
 | C-84 | Gender differences in strength and muscle fiber characteristics | Miller AE, MacDougall JD, Tarnopolsky MA, Sale DG | 1993 | https://doi.org/10.1007/BF00235103 (PMID 8477683) | Querschnittstudie | B |
 | C-85 | Acute Effects of Elastic Bands as Resistance or Assistance on EMG, Kinetics, and Kinematics During Deadlift in Resistance-Trained Men | Andersen V, Pedersen H, Fimland MS, Shaw MP, Solstad TEJ, Stien N, Cumming KT, Saeterbakken AH | 2020 | https://doi.org/10.3389/fspor.2020.598284 (PMID 33345180) | EMG-Studie | B |
 | C-86 | Abnormal Wrist Sagittal Kinematics in Gymnasts With Dorsal Wrist Pain: A New Syndrome | Sekiguchi T, Saito S, Ogura T, Tsuchiya A, Shiratsuchi H | 2024 | https://doi.org/10.1177/03635465231204361 (PMID 38164673) | Querschnittstudie | B |
+| C-87 | Characterization of Axial Forces to the Head During Kipping Handstand Push-ups | Bove G | 2025 | https://doi.org/10.58524/jcss.v4i2.623 | Querschnittstudie | B |
+
+## Prüfprotokoll
+
+Das Prüfprotokoll des Coverage-Laufs (Lauf 2) steht unverändert als Absatz
+über der Quellentabelle. Die folgende Prüfung ist davon getrennt.
+
+### Audit
+
+Adversariale Zitationsprüfung vom 2026-09-27. Metadaten: Crossref und Europe
+PMC für alle Quellen per Skript, abweichende Zeilen und Quellen ohne DOI
+einzeln nachgeprüft. Aussagen: Volltext (PMC, Verlag, PDF), wo frei
+zugänglich, sonst Abstract (PubMed). Welche Quellen nur über den Abstract
+geprüft wurden, steht in der letzten Zeile. Die Modellskripte des Streams
+(`lever.py`, `lean_band.py`) wurden neu ausgeführt und um Nachrechnungen für
+Dempster-Spalte, Ellbogenmoment, Bandtabelle, Proportionen und Frauenfaktor
+ergänzt (Arbeitsverzeichnis, nicht im Repository).
+
+| Prüfung | Ergebnis | Änderung |
+|---|---|---|
+| Existenz und Metadaten, 86 Quellen | Alle 86 existieren. 74 Zeilen waren im Vorabgleich unauffällig. C-01, C-41, C-83: «DOI nicht gefunden» ist ein Parser-Artefakt (Klammern); alle drei DOIs lösen in Crossref auf, Titel/Autoren/Jahr stimmen. C-30 (2022) und C-37 (2020): Crossref nennt das Online-Jahr 2018, PubMed das Druckjahr; Druckjahr bleibt. Ohne DOI geprüft: C-02 (BMClab-Notebook von Duarte, Datentabellen de Leva und Dempster/Winter), C-63 (PDF, Int J Morphol 40(2):320–326), C-67 (OpenStax A&P 2e, 2022, Autorenliste bestätigt), C-68 (Chart-PDF gesichtet), C-69 (Live-Seite und Archivkopie). | C-12 «Lecocq T et al.» → vollständige Autorenliste. C-60: DOI 10.1519/00124278-199711000-00005 statt Verlags-URL (Verlagsseite blockiert, DOI in Crossref bestätigt). C-64: DOI 10.51224/SRXIV.449 und Koautoren laut Crossref ergänzt. C-68: Jahr 2017 → 2016 (Buch, 2. Auflage; Chart-PDF 2017). C-69: Autor → Kizirian A. |
+| Typ und Evidenz | Schema eingehalten. Grenzfälle belassen: C-32 und C-53 sind Scoping-Reviews (Typ «Systematic Review», bewusst Evidenz B); C-07 ist in PubMed als RCT indiziert, aber ein Messwiederholungsvergleich an 6 Turnern (B); C-64 ist ein Preprint (im Titel vermerkt); C-02 ist ein Lehr-Notebook mit Datentabellen (Typ «Lehrbuch»). | PAR-C-54: B (Modell) → Heuristik (Modell). PAR-C-43: B/A → B (Dosierung stammt aus einem narrativen Review). |
+| Entfernte Quellen | keine: keine Quelle erfunden oder unauffindbar | – |
+| Neue Quelle | Die Aussage «für den HSPU keine Kinetikstudie» war falsch: Bove 2025 (Kraftmessung am Kopf beim Kipping-HSPU, n = 16; Abstract von Preprint und Zeitschriftenfassung) | C-87 ergänzt; Kurzfassung, Tabelle 1, Tabelle 2 (hspu, nur Begründung), Offene Fragen 1 angepasst. Weitere Lücken-Aussagen per Titelsuche in Europe PMC und einer Websuche (Front Lever, Back Lever, Human Flag, L-Sit, Planche) bestätigt. |
+| Modell: Skripte neu gerechnet | Tabelle 3 (alle Zellen de Leva Mann/Frau, Sensitivitäten, Handposition, Armneigung), Tabelle 4 (8 Zeilen), Absolutmomente, Höhenskalierung, Liegestütz-Validierung (71 % bzw. 58 % KG) und Frauenfaktor 1,24 stimmen mit der Skriptausgabe überein. de-Leva-Tabelle 4 im Original-PDF gegen die Skriptwerte geprüft: identisch (inkl. Kopf VERT–CERV, Rumpf CERV–MIDH, Referenzpersonen). Dempster-Spalte nur reproduzierbar mit Dempster-Massen **und** -Schwerpunktlagen (Oberschenkel/Unterschenkel 0,433, Rumpf 0,5) auf de-Leva-Längen; dann exakt 61,8/76,1/88,1/92,2/85,3/91,4/96,1 % und 0,234 H. | Spaltenkopf und Kurzfassung präzisiert; nicht genannte Annahmen aus den Skripten in §5.1 ergänzt (Armhebel + 4 cm bis Stützpunkt, Arm-Schwerpunkt auf halber Strecke, Fusskontakt 10 cm jenseits Sprunggelenk, Knie-Liegestütz mit Drehpunkt Knie, «Brust» = Rumpfschwerpunkt). |
+| Modell: Fehler gefunden | (1) Ellbogenmoment: 0,523 ist das Verhältnis zum Moment der Stützkraft; zum Netto-Schultermoment sind es 0,55 (0,54 mit Unterarmgewicht). Die Beispielwerte 81 und 49 N·m waren richtig und passten nur zu 0,55. (2) Tabelle 5: Knie- und Sprunggelenkzeilen nutzten für Tuck, Advanced Tuck und Straddle den Abstand bei gestreckten Beinen (37/30/24 % bzw. 54/43/35 %). (3) Tuck-Absolutmoment 88,8 N·m war auf 88 abgeschnitten. (4) Proportionen: ±4 % bzw. ±3,5 Prozentpunkte hängen von der nicht genannten Verteilung der Beinlänge ab. | (1) PAR-C-15 0,52 → 0,55; Kurzfassung, §3.2, §4, Tabelle 2 (front_lever) angepasst. (2) Stufengerecht neu: Knie 8/17/21 %, Sprunggelenk 25/26/29 %; PAR-C-12 ergänzt. (3) 88 → 89 (§5.2, PAR-C-52). (4) Spanne ±3–5 % bzw. ±2–5 Prozentpunkte (§5.1, §6.2, PAR-C-34, Widersprüche 5). |
+| Frauen (PAR-C-53/-54) | Eingangswerte stimmen (C-77 Tab. 3: 0,78–0,83; «Flexion in Bauchlage» ist dort der Test des unteren Trapezius). Der Faktor 1,24 gilt nur für Full; wegen der höheren Tuck-Anteile im Frauenmodell ist er für Tuck 1,32 und Advanced Tuck 1,27. Kennzeichnung als Modell war vorhanden; die Evidenzstufe B (Modell) überschätzte die ungeprüfte Übertragung von Handdynamometer-Werten auf Hebelpositionen. | PAR-C-54 stufenabhängig, «Modellableitung», Evidenz Heuristik (Modell), «nie als Sperre oder Zugangsregel»; PAR-C-53 um Population, Testart und «nie als Sperre» ergänzt; Kurzfassung, §6.5, Offene Fragen 7 angepasst. |
+| Parameter PAR-C-01 bis PAR-C-62 | alle 62 geprüft: 19 Modellzeilen gegen Skriptausgabe, 33 quellengestützte Zeilen (A/B/C) gegen Abstract bzw. Volltext, 10 Heuristik-, Definitions- und Statikzeilen auf Begründung und Kennzeichnung | Zahlen korrigiert: PAR-C-15, -34, -52, -54. Einschränkungen ergänzt: PAR-C-12, -16 (12 Turner, Messposition), -25 (einarmiger Liegestütz nur unter simulierter Sturzbedingung), -36 (19 Elite-Turner), -41 (n = 14), -42 (Decline-Squat n = 5, Review beidbeinig), -43 (Achilles-/Patellarsehne, Konzept für Jugendliche), -50 (Rekrutierung, Disziplinen), -53, -55 (oberer Trapezius nicht verwenden). |
+| Belastungstabelle (Tabelle 2) | alle 40 Zellen mit Quellen-ID gegen die Quelle geprüft. 33 gestützt (direkte Messung oder benannte Analogie). 6 Zellen belegten nur die Richtung, nicht die Stufe: planche_low wrist, biceps_distal, biceps_long_head; planche_high wrist; pistol_squat knee (C-54 ist sogar ein Gegenbefund: Wall Squat mit 12-RM-Last > einbeiniger Squat); iron_cross biceps_distal (C-08 zeigt Lastempfindlichkeit, nicht Lasthöhe; C-06 nennt den Bizeps nicht). dip_ring shoulder_extension 2 widersprach C-25 (Ring 69 % vs. Barren 88 % der Max-ROM). | 6 Zellen auf «H» gesetzt, Quellen als Richtung in die Begründung; maltese biceps_distal ohne C-08; dip_ring shoulder_extension 2 → 1 [C-25]; Legende ergänzt. Handstand-wrist als Epidemiologie gekennzeichnet; dip_bench als Autoren-Interpretation. |
+| EMG-Prozentwerte | geprüft: C-18 (LD 117–130, BB 78–96, INF 71–79, LT 45–56, PM 44–57, ES 39–41, EO 31–35 % MVIC), C-19 (60,1 vs. 37,1 %), C-20 (LD 79,8 %), C-23 (> 61 / 41–60 / 21–40 %), C-16 (61 ± 28, 44 ± 25, 46 ± 32 % NRMS), C-32 (49,6/38,2/36,7/30,1 %), C-33 (SMD, I² bis 91 %), C-34, C-35 (37,8 %), C-39 (> 130 %, 88 %), C-76 (alle sechs Differenzen), C-04 (alle sieben µV-Werte), C-75 (Tabelle 2 als Bild) | C-75: Abstract nennt den oberen Trapezius an Ringen höher, der Ergebnisteil nicht (signifikant war nur Zug > Stütz an Ringen) → Tabelle 1, Hinweise, §8, PAR-C-55, neuer Widerspruch 18. C-05: «langer Trizepskopf» steht nicht im Abstract → «M. triceps brachii». Tabelle 1 Handstand: «Handgelenkbeuger am aktivsten» nicht belegt → 61 % NRMS [C-16]. C-04: Rohwerte in µV ohne Normalisierung (n = 7) in der Kurzfassung vermerkt. |
+| Weitere Zahlen der Evidenz A/B (rund 120 Aussagen in §2–§8, Tabellen 1, 4-Befunde, 6, 8, Widersprüche) | Abgleich mit Abstract bzw. Volltext; stimmen bis auf die Korrekturen rechts | C-15: 12 Turner, Nicht-Sportler höher, Messposition (Kurzfassung, §5.6, PAR-C-16). C-65: nur Achilles-/Patellarsehne (Kurzfassung, §4). C-03: Kriterium nur Gleichgewichtsgeometrie ohne Kraft, von den Autoren selbst als Grenze genannt (§6.2, Widersprüche 5). C-13 ist Kraftmessung, keine EMG («Kreuz: 3 Studien» korrigiert, Offene Fragen 6). C-84: «Oberkörper» = Ellbogenbeuger (§6.5, Widersprüche 16). C-44: Rekrutierung und Disziplinen ergänzt. C-54: Wall Squat mit 12-RM-Last. C-63: 12 vs. 25 Athleten. C-28-Werte (69,2/75,0 bzw. 53,6/61,8 %) stehen nicht im Abstract, sind aber über C-27 (Volltext) bestätigt. C-33: Unterlagen allgemein. |
+| Schlüsselaussagen (≥ 15) | 24 geprüft, u. a.: r = 0,41 Bankdrücken/Kreuz (C-12); 67,4/73,4 % KG (C-10); R² 42–85 %, Benchmarks und Exz./Konz. 1,26–1,28 (C-09 Volltext); ≈ 90 % relative Kraft (C-11); 0,4 N·m/kg und ≈ 180° (C-17 Volltext); 88,1° = 101 % Max-ROM, IGHL, Fallrisiko (C-25 Volltext); 45 %, 56/29/71 %, 1241 N·cm, +42 % (C-41); 52 → 62 % (C-42); 56,7 % (C-44); 95° und Schulter-Handgelenk-Zusammenhang (C-81 Volltext); 1,1–1,5 bzw. 2,0 KG (C-83); Thera-Band-Werte, 13–44 %, 1,33–1,60 (C-79 Volltext); 8–19 % (C-80); abnehmende Bandhilfe (C-85 Volltext); −7,91 ± 2,3 und −53 % (C-60); Exponenten (C-58, C-59); Level-Zuordnung FL/Planche/Back Lever und Manna (C-68 Charts); 180° ohne Hohlkreuz (C-69 Archivkopie); Wrist Strategy > 75 % (C-82 Volltext); 2,55/100 000 (C-71) | alle bestätigt; Korrekturen nur wie in den Zeilen darüber |
+| Medizinische Aussagen | keine Diagnose- oder Behandlungsempfehlung gefunden; Verletzungsdaten sind beschreibend, Folgerungen betreffen die Trainingslast. Zwei Sätze lasen sich als allgemeine Sicherheitszusage («tiefe Kniebeugen erhöhen das Risiko nicht», C-56). | Beide als Aussage eines narrativen Reviews zur beidbeinigen Langhantel-Kniebeuge umformuliert, Übertragung auf den Pistol als Heuristik; PAR-C-50 «keine Diagnose». |
+| Interne Konsistenz | vorher: 86 gelistet, alle zitiert, keine Waisen, IDs eindeutig; PAR-C-01–62 eindeutig, alle Verweise definiert | nachher: 87 gelistet (C-87 neu), alle zitiert, keine Waisen (Skriptprüfung); Metadaten-Skript nachher: 77 OK, 5 ohne DOI (C-02, C-63, C-67, C-68, C-69, einzeln bestätigt), 3 Klammer-Artefakte, 2 Online-/Druckjahr. |
+| Prüftiefe in diesem Audit | Volltext bzw. vollständige Seite (21): C-01 (Tabelle 4 im PDF), C-02, C-03, C-04, C-09, C-17, C-20, C-25, C-27, C-31, C-32, C-63, C-67 (Kapitelseite), C-68 (Chart-Seiten), C-69, C-75 (inkl. Tabelle 2), C-77, C-79, C-81, C-82, C-85. Nur Abstract (66): C-05–C-08, C-10–C-16, C-18, C-19, C-21–C-24, C-26, C-28–C-30, C-33–C-62, C-64–C-66, C-70–C-74, C-76, C-78, C-80, C-83, C-84, C-86, C-87. C-60: Verlagsseite blockiert, Zahlen über die Abstract-Wiedergabe der Verlagsseite in der Websuche geprüft. | Aussagen aus Abstract-Quellen wurden auf den Abstract-Inhalt geprüft; was darüber hinausging, ist korrigiert oder als Heuristik/Analogie gekennzeichnet. |
