@@ -12,7 +12,7 @@
 //     primary_test exercise
 //  8. map coordinates are present on every milestone skill and do not collide
 //  9. injury entries carry disclaimer: educational_only
-// 10. the planner's knowledge base in content/training (schemas, references,
+//  10. the planner's knowledge base in content/training (schemas, references,
 //     cycles, parameters, rule texts; KB-01 … KB-13 in
 //     docs/algorithm/spec.md §2.6), when the directory exists
 //
