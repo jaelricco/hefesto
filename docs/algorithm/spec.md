@@ -521,7 +521,8 @@ Die Zeilen gelten **in dieser Reihenfolge**; die erste zutreffende gewinnt.
 | Log-Satz, Wdh., RIR ≤ 3 und ≤ 12 Wdh. | Wdh. + RIR (ohne Bias-Korrektur) | 2.0 Wdh. | PAR-F-23, 24, 25 |
 | Log-Satz, Wdh., RIR ≤ 3 und > 12 Wdh. | nur Untergrenze b = Wdh. + RIR | – | PAR-F-23 (gilt nur bis 12 Wdh.) |
 | Log-Satz, Halt, SIR ≤ max(3 s, 0.5 × Halt) | Halt + SIR | Anteil von μ: Skill-Statics 0.25 (`PAR-S-03`), Gleichgewicht 0.25, Rumpfbeuger 0.40, Ausdauerhalte 0.15 | PAR-F-16, PAR-F-68, `PAR-S-31` |
-| alle übrigen (ohne RIR/SIR, RIR > 3, grössere SIR) | nur Untergrenze b | – | PAR-F-24 |
+| RIR > 3 bzw. SIR über der Grenze der Zeile davor | nur Untergrenze b = Wdh. + 3 bzw. Halt + max(3 s, 0.5 × Halt): die Reserve zählt bis zu ihrer glaubwürdigen Grenze | – | PAR-F-24, `PAR-S-31` |
+| alle übrigen (ohne RIR/SIR) | nur Untergrenze b = Wdh. bzw. Halt | – | PAR-F-24 |
 
 3. *Update*: K = σ² / (σ² + r²); μ ← μ + K · (x − μ); σ² ← (1 − K) · σ².
    Eine Untergrenze b wirkt nur, wenn b > μ: dann wie eine Beobachtung x = b
@@ -2115,7 +2116,7 @@ festgemacht ist.
 | PAR-S-28 | `checkin_fatigue_threshold` | ≥ 8 | gleiche Schwelle wie PAR-B-49 b |
 | PAR-S-29 | `rest_lower_bound_choice` | Kraft: Anfänger 120 s, Trainierte schwer 180 s | untere Grenzen von PAR-B-42 wegen des Zeitbudgets (PAR-B-68), wie `08` §4 bei Leans |
 | PAR-S-30 | `volume_block_counts_as_hard` | true | Volumen an der Sprosse unter der Arbeitssprosse hat noch ≈ 80 % des Moments (PAR-C-03–07); Sehnenlast hängt an der Lasthöhe (C-65, S-2) |
-| PAR-S-31 | `lower_bound_observation` | wirkt nur, wenn b > μ, dann wie x = b; Halte zählen voll nur mit SIR ≤ 0.5 × Halt | Sätze mit RIR > 3 sind nur Untergrenzen (PAR-F-24); die Halte-Grenze ist das Gegenstück (grosse Reserve = ungenaue Schätzung, F-08) |
+| PAR-S-31 | `lower_bound_observation` | wirkt nur, wenn b > μ, dann wie x = b; Halte zählen voll nur mit SIR ≤ max(3 s, 0.5 × Halt); grössere Reserven zählen als Untergrenze bis zu dieser Grenze (Wdh.: bis RIR 3) | Sätze mit RIR > 3 sind nur Untergrenzen (PAR-F-24); die Halte-Grenze ist das Gegenstück (grosse Reserve = ungenaue Schätzung, F-08) |
 | PAR-S-32 | `rtt5_to_normal_weeks` | 2 Wochen ohne Regelverletzung; X-Zellen erst ab `normal`, dann als neue Belastungsart | Stufe 5 hat keine Weiter-Bedingung in `05` §6.2; 2 Wochen = zwei Durchgänge von PAR-D-26 |
 | PAR-S-33 | `novice_next_rung_min_dose_reps` | 6 | 5 Wdh. (PAR-A-04) + 1 RIR (PAR-B-24) |
 | PAR-S-34 | `missing_pain_report_policy` | keine Rampen-Progression, sonst keine Folge | konservativ ohne Strafe (ADR 0003); PAR-D-26 verlangt beschwerdefreie Einheiten |

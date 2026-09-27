@@ -1,0 +1,27 @@
+week 1: 4 sessions, 21 sets (4 straight-arm)
+  planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
+  changes: probe_offered×2
+week 2: 4 sessions, 21 sets (4 straight-arm)
+  planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
+week 3: 4 sessions, 21 sets (4 straight-arm)
+  planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
+week 4: 4 sessions, 21 sets (4 straight-arm)
+  planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
+week 5: 4 sessions, 21 sets (4 straight-arm)
+  planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
+week 6: 3 sessions, 10 sets (2 straight-arm), deload planned
+  planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
+  changes: deload_scheduled×2
+week 7: 3 sessions, 10 sets (2 straight-arm), deload stagnation
+  planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
+week 8: 4 sessions, 20 sets (3 straight-arm)
+  planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
+week 9: 4 sessions, 20 sets (3 straight-arm)
+  planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
+week 10: 4 sessions, 20 sets (3 straight-arm)
+  planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
+week 11: 4 sessions, 20 sets (3 straight-arm)
+  planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
+week 12: 3 sessions, 17 sets (2 straight-arm)
+  hollow-body=hollow-hold planche=planche-lean push-up=push-up
+  changes: probe_offered

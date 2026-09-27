@@ -9,7 +9,7 @@ session 1 Mon 28.09. full ~18 min
   warmup (10 min)
     Handgelenk-Vorbereitung                2 × 15       res 2  rest  90s  prehab p99 support  [warm-up]  {DOSE-10}
   strength
-    Liegestütz mit erhöhten Händen         2 × 5        res 2  rest 120s  strength p1 feeder  [calibration]  {GOAL-02 SEL-07 DOSE-05 LOAD-04 LOAD-10}
+    Liegestütz mit erhöhten Händen         2 × 1        res 2  rest 120s  strength p1 feeder  [calibration]  {GOAL-02 SEL-07 DOSE-05 LOAD-04 LOAD-10}
     Unterarmstütz mit gestreckten Armen (Plank) 1 × 10 s     res 2  rest 120s  conditioning p1 support  [calibration]  {GOAL-02 SEL-07 DOSE-04 LOAD-04 LOAD-10 LOAD-03 LOAD-10}
     Negativer Klimmzug                     1 × 3 à 3 s  res 0  rest 180s  eccentric p2 feeder  {GOAL-02 SEL-09 DOSE-07 LOAD-04 LOAD-10}
     Hollow Hold, gehockt                   1 × 10 s     res 2  rest 120s  conditioning p2 support  [calibration]  {GOAL-02 SEL-07 DOSE-04 LOAD-04 LOAD-10 LOAD-03 LOAD-10}
@@ -29,7 +29,7 @@ session 3 Fri 02.10. full ~18 min
   warmup (10 min)
     Handgelenk-Vorbereitung                2 × 15       res 2  rest  90s  prehab p99 support  [warm-up]  {DOSE-10}
   strength
-    Liegestütz mit erhöhten Händen         2 × 5        res 2  rest 120s  strength p1 feeder  [calibration]  {GOAL-02 SEL-07 DOSE-05 LOAD-04 LOAD-10}
+    Liegestütz mit erhöhten Händen         2 × 1        res 2  rest 120s  strength p1 feeder  [calibration]  {GOAL-02 SEL-07 DOSE-05 LOAD-04 LOAD-10}
     Dead Hang                              1 × 4 s      res 2  rest 120s  conditioning p2 feeder  [calibration]  {GOAL-02 SEL-07 SEL-08 DOSE-04 LOAD-04b LOAD-10}
     Negativer Klimmzug                     1 × 3 à 3 s  res 0  rest 180s  eccentric p2 feeder  {GOAL-02 SEL-09 DOSE-07 LOAD-04 LOAD-10}
     Rudern, fast aufrecht                  1 × 5        res 2  rest 120s  accessory p2 support  [calibration]  {SEL-09 SEL-07 DOSE-12 LOAD-04 LOAD-10}

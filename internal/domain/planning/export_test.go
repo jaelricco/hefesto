@@ -206,3 +206,22 @@ func WeekFactor(k *Knowledge, s Snapshot, account string) float64 {
 func SetLoad(k *Knowledge, exercise string, bw float64) map[string]float64 {
 	return k.setLoad(k.exercises[exercise], KindWorking, 0, bw)
 }
+
+// ProbesAllowedWhy reports which ADAPT-06a condition blocks probes.
+func ProbesAllowedWhy(k *Knowledge, s Snapshot, week time.Time, exercise string) string {
+	g := &gen{k: k, s: s, week: week}
+	g.hist = k.history(s, week)
+	ex := k.exercises[exercise]
+	if s.Screening.AnyYes && !s.Screening.Cleared || !s.Profile.HealthConsent {
+		return "screening/consent"
+	}
+	if s.Break != nil && ex.StraightArm != ArmNone {
+		return "break"
+	}
+	for acc := range k.setLoad(ex, KindWorking, 0, s.Profile.BodyweightKg) {
+		if ref, _ := k.reference(g.hist, acc, week); ref == 0 {
+			return "no reference for " + acc
+		}
+	}
+	return ""
+}

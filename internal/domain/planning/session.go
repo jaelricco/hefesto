@@ -57,6 +57,7 @@ func (g *gen) buildSessions() {
 			case !sl.full:
 				continue
 			case a.role == RoleGoal && (a.stim == StimSkill || a.stim == StimSkillReps || a.stim == StimConditioning || a.stim == StimEccentric || a.stim == StimStrength):
+				maxB = append(maxB, g.nextRungCalibration(a, idx)...)
 				maxB = append(maxB, g.primary(a, idx, reasons)...)
 				if tpl.VolumeBlocks && a.stim == StimSkill {
 					if v, ok := g.volumeItem(a); ok {
@@ -64,6 +65,8 @@ func (g *gen) buildSessions() {
 					}
 				}
 			default:
+				strB = append(strB, g.probeItems(a)...)
+				strB = append(strB, g.nextRungCalibration(a, idx)...)
 				strB = append(strB, g.secondary(a, idx, reasons))
 			}
 		}
@@ -113,14 +116,7 @@ func (g *gen) rest(v float64) int {
 
 // primary doses the first block of a goal ladder.
 func (g *gen) primary(a *active, idx int, reasons []Reason) []Item {
-	k := g.k
-	var out []Item
-	if a.probe != nil {
-		p := g.baseItem(a, a.probe, StimSkill, []Reason{k.reason(RuleProbe, "exercise", a.probe.Name), k.reason(RuleProbeGate)})
-		p.Sets, p.HoldS, p.Offer, p.RestS = int(k.T.ProbeAttempts), int(k.T.ProbeHold), true, g.rest(k.T.RestMax)
-		p.StopRules = stopRules()
-		out = append(out, p)
-	}
+	out := g.probeItems(a)
 	switch a.stim {
 	case StimSkill:
 		out = append(out, g.skillHold(a, reasons))
@@ -134,6 +130,57 @@ func (g *gen) primary(a *active, idx int, reasons []Reason) []Item {
 		out = append(out, g.strength(a, idx, reasons))
 	}
 	return out
+}
+
+// probeItems is the offer of ADAPT-05 or ADAPT-10: two short attempts at
+// the next rung (or the first concentric repetition), only on acceptance.
+func (g *gen) probeItems(a *active) []Item {
+	k := g.k
+	if a.probe == nil {
+		return nil
+	}
+	rule := RuleProbe
+	if a.stim == StimEccentric {
+		rule = RuleEccToConc
+	}
+	p := g.baseItem(a, a.probe, StimSkill, []Reason{k.reason(rule, "exercise", a.probe.Name), k.reason(RuleProbeGate)})
+	p.Assist, p.Calibration, p.Offer = "", false, true
+	p.Sets, p.RestS, p.Reserve = int(k.T.ProbeAttempts), g.rest(k.T.RestMax), 1
+	if a.probe.Measure == MeasureHold {
+		p.HoldS = int(k.T.ProbeHold)
+	} else {
+		// The first concentric attempt (ADAPT-10) is a calibration set: as
+		// many clean repetitions as the reserve allows, at least one.
+		p.Stimulus, p.Reps, p.Calibration, p.Sets = StimSkillReps, 1, true, 1
+		p.Reserve = int(k.T.RIRStrength)
+	}
+	p.StopRules = stopRules()
+	return []Item{p}
+}
+
+// nextRungCalibration is the weekly calibration set at the next rung while a
+// novice ladder waits at 3 × 8 for that rung's value to reach PAR-S-33
+// (ADAPT-07).
+func (g *gen) nextRungCalibration(a *active, idx int) []Item {
+	k := g.k
+	ls := g.s.Ladders[a.skill.Slug]
+	if idx != 0 || g.exp != ExpNovice || a.stim != StimStrength || ls.Rung != a.rung.Slug || ls.RepTarget < k.T.NoviceRepsHi {
+		return nil
+	}
+	next := g.nextRung(a.rung)
+	if next == nil {
+		return nil
+	}
+	if ok, _, _ := g.feasible(next, next.OG); !ok {
+		return nil
+	}
+	if e, ok := g.capacity(next, AssistNone); ok && k.Dose(e) >= k.T.NextRungMinDose {
+		return nil
+	}
+	it := g.baseItem(a, next, StimStrength, []Reason{k.reason(RuleDoubleProg, "reps", k.T.NoviceRestart)})
+	it.Sets, it.Reps, it.Reserve, it.Calibration = 1, int(k.T.NoviceRestart), int(k.T.RIRStrength), true
+	it.RestS = g.rest(k.T.RestStrengthNovice)
+	return []Item{it}
 }
 
 // secondary doses feeder and support ladders in the strength block.
@@ -279,6 +326,11 @@ func (g *gen) strength(a *active, idx int, reasons []Reason) Item {
 		reps := ls.RepTarget
 		if reps == 0 || ls.Rung != a.rung.Slug {
 			reps = clamp(math.Floor(d)-k.T.RIRStrength, k.T.NoviceRepsLo, k.T.NoviceRepsHi)
+			if math.Floor(d)-k.T.RIRStrength < k.T.NoviceRepsLo {
+				// Below the range (see SEL-09 fallback): what the reserve
+				// allows, at least one; double progression climbs from here.
+				reps = math.Max(1, math.Floor(d)-k.T.RIRStrength)
+			}
 		}
 		it.Reps, it.Sets = int(reps), int(k.T.NoviceSets)
 		it.RestS = g.rest(k.T.RestStrengthNovice)

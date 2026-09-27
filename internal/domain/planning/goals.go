@@ -222,13 +222,18 @@ func (k *Knowledge) antagonist(s Snapshot, dir string) string {
 // capacity returns the estimate for an exercise now: observed, or derived
 // from the nearest harder rung of its skill (PAR-S-39).
 func (g *gen) capacity(ex *Exercise, assist string) (Estimate, bool) {
-	k := g.k
-	if e, ok := g.s.Capacities[CapKey(ex.Slug, assist)]; ok {
-		return k.predict(e, ex, g.now), true
+	return g.k.capacityAt(g.s, ex, assist, g.now)
+}
+
+// capacityAt is capacity for any snapshot and time; Adapt uses it as the
+// prior of an exercise's first observation.
+func (k *Knowledge) capacityAt(s Snapshot, ex *Exercise, assist string, now time.Time) (Estimate, bool) {
+	if e, ok := s.Capacities[CapKey(ex.Slug, assist)]; ok {
+		return k.predict(e, ex, now), true
 	}
 	if assist == AssistBand {
-		if e, ok := g.capacity(ex, AssistNone); ok {
-			return k.derivedPrior(e, ex, g.now), true
+		if e, ok := k.capacityAt(s, ex, AssistNone, now); ok {
+			return k.derivedPrior(e, ex, now), true
 		}
 		return Estimate{}, false
 	}
@@ -241,8 +246,8 @@ func (g *gen) capacity(ex *Exercise, assist string) (Estimate, bool) {
 		if harder.Measure != ex.Measure || harder.Eccentric {
 			continue
 		}
-		if e, ok := g.s.Capacities[CapKey(harder.Slug, AssistNone)]; ok {
-			return k.derivedPrior(k.predict(e, harder, g.now), ex, g.now), true
+		if e, ok := s.Capacities[CapKey(harder.Slug, AssistNone)]; ok {
+			return k.derivedPrior(k.predict(e, harder, now), ex, now), true
 		}
 	}
 	return Estimate{}, false
@@ -295,7 +300,10 @@ func (g *gen) selectRung(a *active) {
 			a.calib = true
 		}
 	}
-	if g.s.Break != nil && g.s.Break.Days >= k.T.BreakHalf && ls.CapRung != "" {
+	// §6.11: after the longest breaks the first week starts two rungs under
+	// the pre-break level; afterwards calibration and SEL-07 decide, capped
+	// by that level.
+	if b := g.s.Break; b != nil && b.Days >= k.T.BreakHalf && ls.CapRung != "" && !g.week.After(b.Since) {
 		if e := k.exercises[ls.CapRung]; e != nil {
 			claimCap = min(claimCap, max(e.Rung-2, 0))
 		}
@@ -336,6 +344,28 @@ func (g *gen) selectRung(a *active) {
 		}
 		d := k.Dose(e)
 		if ex.Measure == MeasureHold && d >= lo || ex.Measure == MeasureReps && math.Floor(d)-k.T.RIRStrength >= repLo {
+			// ADAPT-06: at x > 30 s the stage window is left; the next rung
+			// takes over, with a band while it has no value of its own.
+			if next := g.nextRung(ex); next != nil && ex.Measure == MeasureHold && ex.HoldClass == HoldSkill &&
+				d > k.T.StageSwitch && next.Rung <= top {
+				if ok, _, v := g.feasible(next, next.OG); ok {
+					ne, has := g.capacity(next, AssistNone)
+					if !has || k.Dose(ne) < lo {
+						if g.hasBands && next.Assistable {
+							if eb, okb := g.capacity(next, AssistBand); okb {
+								ne = eb
+							}
+							a.assist = AssistBand
+							g.setRung(a, next, ne, v)
+						} else {
+							g.setRung(a, next, ne, v)
+						}
+						a.hasCap, a.calib = has, true
+						a.reasons = append(a.reasons, k.reason(RuleRungUp))
+						return
+					}
+				}
+			}
 			g.setRung(a, ex, e, verdict)
 			a.reasons = append(a.reasons, k.reason(RuleHoldRung, "exercise", ex.Name, "dose", d))
 			if a.calib {
@@ -349,14 +379,25 @@ func (g *gen) selectRung(a *active) {
 	// always win; the rung just below the lowest one the user reported is the
 	// calibration start instead (SEL-08 spirit), unless that estimate is
 	// under one repetition, where the eccentric variant takes over (SEL-09).
-	if fallback != nil && fallback.Measure == MeasureReps && known > 0 {
-		if e, ok := g.s.Capacities[CapKey(sk.Rungs[known], AssistNone)]; ok && k.Dose(e) >= 1 || ecc == nil {
+	if fallback != nil && fallback.Measure == MeasureReps && known >= 0 {
+		e, ok := g.s.Capacities[CapKey(sk.Rungs[known], AssistNone)]
+		concentric := ok && k.Dose(e)-k.T.RIRStrength >= 1
+		if concentric || ecc == nil {
 			for _, ex := range feasibleRungs {
 				if ex.Rung < known {
 					fallback = ex
 					ecc = nil
 					break
 				}
+			}
+		}
+		// SEL-09 names only d < 1 (eccentric) and the rep range. In between,
+		// a rung where one repetition with the target reserve is possible is
+		// trained concentrically below the range (DOSE-05 start), rather than
+		// eccentrically until the full range is reached.
+		if concentric && ecc != nil {
+			if kr := k.exercises[sk.Rungs[known]]; slices.Contains(feasibleRungs, kr) {
+				fallback, ecc = kr, nil
 			}
 		}
 	}
@@ -376,8 +417,8 @@ func (g *gen) selectRung(a *active) {
 			if eb, ok := g.capacity(fallback, AssistBand); ok {
 				e, has = eb, true
 			}
-			g.setRung(a, fallback, e, verdicts[fallback.Slug])
 			a.assist = AssistBand
+			g.setRung(a, fallback, e, verdicts[fallback.Slug])
 		} else {
 			g.setRung(a, fallback, e, verdicts[fallback.Slug])
 		}
@@ -424,10 +465,16 @@ func (g *gen) setRung(a *active, ex *Exercise, e Estimate, v regionVerdict) {
 			a.reasons = append(a.reasons, a.region)
 		}
 	}
-	// Probe offer (ADAPT-05) when the ladder earned it and ADAPT-06a allows.
+	// Probe offer (ADAPT-05, ADAPT-10) when the ladder earned it and
+	// ADAPT-06a allows: the next rung, or for a band-assisted rung the same
+	// rung without the band.
 	ls := g.s.Ladders[a.skill.Slug]
 	if ls.ProbeOffer && g.probesAllowed(ex) {
-		if next := g.nextRung(ex); next != nil {
+		next := g.nextRung(ex)
+		if a.assist == AssistBand {
+			next = ex
+		}
+		if next != nil {
 			if ok, _, _ := g.feasible(next, next.OG); ok {
 				a.probe = next
 			}

@@ -78,12 +78,19 @@ func (g *gen) weekFactor(a string) float64 {
 	return f
 }
 
-// weekCap is the weekly cap of an account and the rule that set it.
+// weekCap is the weekly cap of an account and the rule that set it. A later
+// rule only names the cap when it is the tighter one, so the headroom carry
+// (PAR-S-35) follows the rule that actually binds.
 func (g *gen) weekCap(a string, target float64) (float64, string) {
 	k := g.k
 	R, _ := k.reference(g.hist, a, g.week)
 	var cp float64
 	rule := RuleWeekCap
+	tighten := func(v float64, r string) {
+		if v < cp {
+			cp, rule = v, r
+		}
+	}
 	switch {
 	case g.s.Entry[a] && g.weekIdx < 3:
 		steps := []float64{k.T.EntryStep1, k.T.EntryStep2, k.T.EntryStep3}
@@ -93,6 +100,25 @@ func (g *gen) weekCap(a string, target float64) (float64, string) {
 		cp, rule = float64(k.T.NewTypeFraction*target), RuleNewLoad
 	default:
 		cp = float64(R*(1+float64(k.capRate(a)*g.weekFactor(a)))) + g.s.Headroom[a]
+	}
+	// Break ramp (§6.11). For straight-arm and wrist accounts the ramp
+	// fractions replace the weekly cap, as LOAD-04b does for current
+	// trainers: the pre-break level is the tolerated level, and a trailing
+	// mean over the first ramp weeks would otherwise hold the volume near
+	// 25 % for months. Bent-arm accounts follow the stream-B factors as an
+	// upper bound.
+	if b := g.s.Break; b != nil {
+		weeks := math.Max(0, math.Floor(daysBetween(b.Since, g.week)/7))
+		base := target
+		if b.Logged && R > 0 {
+			base = R
+		}
+		if isStraightAccount(a) && b.Days >= k.T.LayoffDays {
+			steps := []float64{k.T.RampStep1, k.T.RampStep2, k.T.RampStep3, k.T.RampStep4}
+			cp, rule = float64(steps[min(b.Step, 3)]*base), RuleBreak
+		} else if f := g.breakFactor(b.Days); f < 1 {
+			tighten(math.Min(1, float64(f*math.Pow(k.T.BreakGrowth, weeks)))*base, RuleBreak)
+		}
 	}
 	for _, r := range k.regionsOf(a) {
 		rs, ok := g.s.Regions[r]
@@ -105,7 +131,7 @@ func (g *gen) weekCap(a string, target float64) (float64, string) {
 				ref = v
 			}
 			if ref > 0 {
-				cp, rule = math.Min(cp, ref), RulePain
+				tighten(ref, RulePain)
 			}
 		}
 		st := rttStage(rs.State)
@@ -114,23 +140,10 @@ func (g *gen) weekCap(a string, target float64) (float64, string) {
 		}
 		frac := k.rampFraction(rs)
 		if ref := rs.Reference[a]; ref > 0 {
+			// A logged pre-complaint level: the ramp replaces the cap (§7.2).
 			cp, rule = float64(frac*ref), RuleRamp
 		} else {
-			cp, rule = math.Min(cp, float64(frac*target)), RuleRamp
-		}
-	}
-	if b := g.s.Break; b != nil {
-		weeks := math.Max(0, math.Floor(daysBetween(b.Since, g.week)/7))
-		base := target
-		if b.Logged && R > 0 {
-			base = R
-		}
-		if isStraightAccount(a) && b.Days >= k.T.LayoffDays {
-			steps := []float64{k.T.RampStep1, k.T.RampStep2, k.T.RampStep3, k.T.RampStep4}
-			cp, rule = math.Min(cp, float64(steps[min(b.Step, 3)]*base)), RuleBreak
-		} else if f := g.breakFactor(b.Days); f < 1 {
-			grown := math.Min(1, float64(f*math.Pow(k.T.BreakGrowth, weeks)))
-			cp, rule = math.Min(cp, float64(grown*base)), RuleBreak
+			tighten(float64(frac*target), RuleRamp)
 		}
 	}
 	return cp, rule
@@ -177,6 +190,11 @@ func (g *gen) sessionCap(structure string, target float64) float64 {
 		if accountStructure(a) == structure && g.weekIdx < 3 {
 			return float64(m * k.T.EntrySpike)
 		}
+	}
+	// The break ramp steps like the entry ramp, so its session cap is the
+	// same (PAR-S-43).
+	if b := g.s.Break; b != nil && b.Days >= k.T.LayoffDays && b.Step < 3 {
+		return float64(m * k.T.EntrySpike)
 	}
 	return float64(m * (1 + k.T.SpikeCap))
 }
@@ -312,7 +330,8 @@ func (g *gen) cutStep(it *Item, block string) (int, int) {
 	case it.Kind == KindWarmup:
 		return 1, 0
 	case it.Offer:
-		return 1, 0
+		// Offers belong to the max block (ADAPT-05) and go last in it.
+		return 5, 0
 	case it.Role == RoleSupport && it.Stimulus != StimPrehab:
 		return 1, 1
 	case it.Stimulus == StimBalance || it.Stimulus == StimTechnique || it.Stimulus == StimPrehab:

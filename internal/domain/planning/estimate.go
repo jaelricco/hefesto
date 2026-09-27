@@ -121,6 +121,10 @@ func (k *Knowledge) classify(set LoggedSet, ex *Exercise, first bool, mu float64
 		return Observation{X: set.Value, LowerBound: true}, true
 	}
 	res := *set.Reserve
+	// A reserve above the usable limit is imprecise, but the athlete has at
+	// least the limit in hand: the lower bound counts the reserve up to it
+	// (PAR-S-31). Otherwise a short probe attempt (≤ 5 s, PAR-S-24) could
+	// never lift the next rung to the 4 s of ADAPT-06.
 	if ex.Measure == MeasureReps {
 		if res <= k.T.RIRMaxUsable {
 			x := set.Value + res
@@ -129,13 +133,14 @@ func (k *Knowledge) classify(set LoggedSet, ex *Exercise, first bool, mu float64
 			}
 			return Observation{X: x, LowerBound: true}, true
 		}
-		return Observation{X: set.Value, LowerBound: true}, true
+		return Observation{X: set.Value + k.T.RIRMaxUsable, LowerBound: true}, true
 	}
-	if res <= math.Max(k.T.SIRUsableAbs, float64(k.T.SIRUsableFrac*set.Value)) {
+	limit := math.Max(k.T.SIRUsableAbs, float64(k.T.SIRUsableFrac*set.Value))
+	if res <= limit {
 		x := set.Value + res
 		return Observation{X: x, R: holdR(x)}, true
 	}
-	return Observation{X: set.Value, LowerBound: true}, true
+	return Observation{X: set.Value + limit, LowerBound: true}, true
 }
 
 // update applies one observation (spec §4.3 steps 3–4). It returns the new

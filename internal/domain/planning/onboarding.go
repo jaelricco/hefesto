@@ -463,13 +463,13 @@ func (k *Knowledge) startRegions(s *Snapshot, a Answers, minor bool, today time.
 		switch {
 		case out.Stop:
 			rs.State = StateLocked
-			s.Constraints = append(s.Constraints, Constraint{Kind: ConstraintStopped, Created: today},
+			s.Constraints = append(s.Constraints, Constraint{Kind: ConstraintStopped, Region: id, Created: today},
 				Constraint{Kind: ConstraintLocked, Region: id, Created: today})
 		case out.Lock || len(k.regions[id].Structures) == 0 && (out.Urgency != "" || serious):
 			rs.State = StateLocked
 			s.Constraints = append(s.Constraints, Constraint{Kind: ConstraintLocked, Region: id, Created: today})
 			if len(k.regions[id].Structures) == 0 {
-				s.Constraints = append(s.Constraints, Constraint{Kind: ConstraintStopped, Created: today})
+				s.Constraints = append(s.Constraints, Constraint{Kind: ConstraintStopped, Region: id, Created: today})
 			}
 		case serious:
 			rs.State = StateLocked

@@ -120,15 +120,24 @@ func (a *adapter) session(sess LoggedSession) {
 		isFirst := !first[key]
 		first[key] = true
 		est, has := s.Capacities[key]
+		if !has {
+			// The first observation of an exercise updates the prior the
+			// plan used: derived from a harder rung or the unassisted value
+			// (PAR-S-39).
+			est, has = k.capacityAt(*s, ex, assist, sess.Date)
+		}
 		o, ok := k.classify(set, ex, isFirst, est.Mu)
 		if !ok {
 			continue
 		}
 		if !has {
+			sd := math.Max(o.R, k.minSD(ex))
 			if o.LowerBound {
-				continue
+				// A lower bound without any prior: the bound itself, as wide
+				// as a derived value (PAR-S-31, PAR-F-26).
+				sd = math.Max(k.minSD(ex), float64(k.T.DerivedFrac*o.X))
 			}
-			s.Capacities[key] = Estimate{Mu: o.X, Sigma: math.Max(o.R, k.minSD(ex)), Origin: OriginLog, At: sess.Date, N: 1}
+			s.Capacities[key] = Estimate{Mu: o.X, Sigma: sd, Origin: OriginLog, At: sess.Date, N: 1}
 			continue
 		}
 		est = k.predict(est, ex, sess.Date)
@@ -177,6 +186,7 @@ func (a *adapter) ladders(sess LoggedSession) {
 			if ls.Rung != top.Slug {
 				ls.Since = sess.Date
 				ls.RepTarget = 0
+				ls.ProbeOffer = false // earned again on the new rung
 			}
 			ls.Rung = top.Slug
 			ls.Status = StatusCalibrated
@@ -404,12 +414,21 @@ func (a *adapter) rampSessions(sess LoggedSession) {
 	}
 	if b := s.Break; b != nil {
 		b.StepSessions++
-		steps := 3
-		if float64(b.StepSessions) >= k.T.RampSessions && daysBetween(b.StepSince, sess.Date) >= k.T.RampMinDays && b.Step < steps {
-			b.Step++
-			b.StepSessions, b.StepSince = 0, sess.Date
-			a.change(Change{Kind: ChangeRamp, To: formatNum([]float64{k.T.RampStep1, k.T.RampStep2, k.T.RampStep3, k.T.RampStep4}[b.Step]), Reasons: []Reason{k.reason(RuleBreak)}})
-		}
+	}
+}
+
+// breakStep advances the break ramp at a week start: at least PAR-D-26
+// sessions on the step and seven days since it began, so each step is one
+// planned week.
+func (a *adapter) breakStep(week time.Time) {
+	k, b := a.k, a.s.Break
+	if b == nil || b.Step >= 3 {
+		return
+	}
+	if float64(b.StepSessions) >= k.T.RampSessions && daysBetween(b.StepSince, week) >= k.T.RampMinDays {
+		b.Step++
+		b.StepSessions, b.StepSince = 0, week
+		a.change(Change{Kind: ChangeRamp, To: formatNum([]float64{k.T.RampStep1, k.T.RampStep2, k.T.RampStep3, k.T.RampStep4}[b.Step]), Reasons: []Reason{k.reason(RuleBreak)}})
 	}
 }
 
@@ -539,7 +558,9 @@ func (a *adapter) breach(rs *RegionState, id string, day time.Time, lasted, pers
 			recent++
 		}
 	}
-	if float64(recent) >= k.T.BreachCount && rs.Referral != "advise" {
+	// INJ-08: reaching the breach count is its own referral message, also
+	// when an earlier timer already advised one.
+	if float64(recent) == k.T.BreachCount {
 		rs.Referral = "advise"
 		a.change(Change{Kind: ChangeReferral, Region: id, Reasons: []Reason{regional(k.reason(RuleReferral, "region", name), id)}})
 	}
@@ -626,7 +647,7 @@ func (a *adapter) redFlags(id string, answers map[string]bool) {
 	switch {
 	case out.Stop || noStructures && out.Urgency != "" && out.Urgency != UrgencyAdvise:
 		rs.State = StateLocked
-		s.Constraints = append(s.Constraints, Constraint{Kind: ConstraintStopped, Created: day},
+		s.Constraints = append(s.Constraints, Constraint{Kind: ConstraintStopped, Region: id, Created: day},
 			Constraint{Kind: ConstraintLocked, Region: id, Created: day})
 		a.change(Change{Kind: ChangeStopped, Region: id, Reasons: out.Reasons})
 	case out.Lock:
@@ -673,7 +694,11 @@ func (a *adapter) clearance(id string) {
 		}
 		return
 	}
-	s.Constraints = slices.DeleteFunc(s.Constraints, func(c Constraint) bool { return c.Kind == ConstraintLocked && c.Region == id })
+	// A stop raised by this region's red flags goes with its clearance; a
+	// stop without a region (exertion symptoms) needs the global one.
+	s.Constraints = slices.DeleteFunc(s.Constraints, func(c Constraint) bool {
+		return (c.Kind == ConstraintLocked || c.Kind == ConstraintStopped) && c.Region == id
+	})
 	unlock(id)
 }
 
@@ -714,6 +739,7 @@ func (a *adapter) week(week time.Time, headroom map[string]float64) {
 			a.change(Change{Kind: ChangeBreak, To: formatNum(days), Reasons: []Reason{k.reason(RuleBreak, "days", days)}})
 		}
 	} else if b := s.Break; b != nil {
+		a.breakStep(week)
 		weeks := math.Floor(daysBetween(b.Since, week) / 7)
 		grown := k.breakFactorFor(b.Days) * math.Pow(k.T.BreakGrowth, weeks)
 		if (b.Step >= 3 || b.Days < k.T.LayoffDays) && grown >= 1 {
