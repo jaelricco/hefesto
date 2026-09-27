@@ -1,6 +1,6 @@
 # ADR 0012 — Trainingsplaner: deterministischer Kern, Wissensbasis als Daten
 
-- Status: proposed (Checkpoint nach Stufe 4 des Planer-Tracks)
+- Status: accepted (Checkpoint nach Stufe 4, 27.09.2026)
 - Date: 2026-09-27
 - Deciders: Jaelricco
 
@@ -131,4 +131,4 @@ in v1 (OE-6).
   Gesundheitsdaten wirken; das ist Teil der rechtlichen Prüfung (ENT-S-7).
 - Ein unabhängiger Review der Spezifikation (3 kritische, 19 wichtige, 21
   kleinere Befunde) ist eingearbeitet.
-- Offene Entscheidungen: spec §14 (ENT-S-1 bis ENT-S-9).
+- Die Entscheidungen ENT-S-1 bis ENT-S-9 (spec §14) sind angenommen.

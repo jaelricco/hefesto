@@ -1,0 +1,488 @@
+package planning
+
+import (
+	"math"
+	"slices"
+	"strings"
+	"time"
+)
+
+// Roles of an active ladder (spec §3.4).
+const (
+	RoleGoal    = "goal"
+	RoleFeeder  = "feeder"
+	RoleSupport = "support"
+)
+
+// active is one ladder the week trains.
+type active struct {
+	skill    *Skill
+	role     string
+	priority int
+	goal     *Goal
+	reasons  []Reason
+
+	rung    *Exercise // working rung
+	assist  string
+	stim    string
+	class   int
+	freq    int
+	cap     Estimate // dose source for the working rung
+	hasCap  bool
+	calib   bool
+	probe   *Exercise
+	monitor bool
+	modify  bool
+	region  Reason
+	days    []int
+}
+
+// Stimulus types (spec §0.3).
+const (
+	StimSkill        = "skill"
+	StimSkillReps    = "skill_reps"
+	StimStrength     = "strength"
+	StimConditioning = "conditioning"
+	StimEccentric    = "eccentric"
+	StimBalance      = "balance"
+	StimTechnique    = "technique"
+	StimPrehab       = "prehab"
+	StimAccessory    = "accessory"
+)
+
+// levelMet reports whether a level counts as met for planning: unlocked, or
+// the dose value of its exercise reaches its threshold (spec §3.4 step 2).
+func (k *Knowledge) levelMet(s Snapshot, ref string) bool {
+	if s.Unlocked[ref] {
+		return true
+	}
+	l := k.level(ref)
+	if l == nil {
+		return false
+	}
+	e, ok := s.Capacities[CapKey(l.Exercise, AssistNone)]
+	return ok && k.Dose(e) >= l.Threshold
+}
+
+// firstUnmet returns the index of the first unmet level of a skill, or
+// len(levels) when all are met.
+func (k *Knowledge) firstUnmet(s Snapshot, sk *Skill) int {
+	for i, l := range sk.Levels {
+		if !k.levelMet(s, sk.Slug+"/"+l.Slug) {
+			return i
+		}
+	}
+	return len(sk.Levels)
+}
+
+// activeLadders derives the ladders of the week from the goals (GOAL-01,
+// GOAL-02, GOAL-06).
+func (g *gen) activeLadders() {
+	k, s := g.k, g.s
+	byskill := map[string]*active{}
+	add := func(skill, role string, prio int, goal *Goal, r Reason) {
+		if a, ok := byskill[skill]; ok {
+			if prio < a.priority || (prio == a.priority && roleRank(role) < roleRank(a.role)) {
+				a.priority, a.role = prio, role
+				if goal != nil {
+					a.goal = goal
+				}
+			}
+			return
+		}
+		a := &active{skill: k.skills[skill], role: role, priority: prio, goal: goal, reasons: []Reason{r}}
+		byskill[skill] = a
+	}
+	var feed func(ref string, prio int, depth int)
+	feed = func(ref string, prio int, depth int) {
+		skill, _, _ := strings.Cut(ref, "/")
+		sk := k.skills[skill]
+		if sk == nil || depth > 8 {
+			return
+		}
+		idx := k.firstUnmet(s, sk)
+		if idx >= len(sk.Levels) {
+			return
+		}
+		var unmet []string
+		for _, p := range sk.Levels[idx].Prerequisites {
+			if !k.levelMet(s, p) {
+				unmet = append(unmet, p)
+			}
+		}
+		if len(unmet) == 0 || sk.Foundation {
+			add(skill, RoleFeeder, prio, nil, k.reason(RuleGoalPath, "skill", sk.Name, "role", RoleFeeder))
+		}
+		for _, p := range unmet {
+			feed(p, prio, depth+1)
+		}
+	}
+	for i := range s.Goals {
+		goal := &s.Goals[i]
+		sk := k.skills[goal.Skill]
+		if sk == nil {
+			continue
+		}
+		idx := k.firstUnmet(s, sk)
+		if idx >= len(sk.Levels) {
+			idx = len(sk.Levels) - 1
+		}
+		lvl := sk.Levels[idx]
+		var unmet []string
+		for _, p := range lvl.Prerequisites {
+			if !k.levelMet(s, p) {
+				unmet = append(unmet, p)
+			}
+		}
+		if len(unmet) == 0 {
+			add(goal.Skill, RoleGoal, goal.Priority, goal, k.reason(RuleGoalOrder, "skill", sk.Name, "priority", goal.Priority))
+		} else {
+			for _, p := range unmet {
+				feed(p, goal.Priority, 0)
+			}
+			if lvl.Hint != "" {
+				g.plan.Hints = append(g.plan.Hints, k.reason(RuleReadiness, "skill", sk.Name, "hint", lvl.Hint))
+			}
+		}
+		for _, e := range lvl.Recommended {
+			if e.Weight < k.T.RecommendedMin || k.levelMet(s, e.To) {
+				continue
+			}
+			skill, _, _ := strings.Cut(e.To, "/")
+			add(skill, RoleSupport, goal.Priority, nil, k.reason(RuleGoalPath, "skill", k.skills[skill].Name, "role", RoleSupport))
+		}
+	}
+	// GOAL-06: if the week only pushes or only pulls, add the other side.
+	dirs := map[string]bool{}
+	for _, a := range byskill {
+		if a.role != RoleSupport {
+			dirs[k.skillDirection(a.skill)] = true
+		}
+	}
+	prio := len(s.Goals) + 1
+	switch {
+	case dirs[DirPush] && !dirs[DirPull]:
+		add(k.antagonist(s, DirPull), RoleSupport, prio, nil, k.reason(RuleAntagonist, "direction", DirPull))
+	case dirs[DirPull] && !dirs[DirPush]:
+		add(k.antagonist(s, DirPush), RoleSupport, prio, nil, k.reason(RuleAntagonist, "direction", DirPush))
+	}
+	for _, id := range sortedKeys(byskill) {
+		if byskill[id].skill != nil {
+			g.ladders = append(g.ladders, byskill[id])
+		}
+	}
+	slices.SortStableFunc(g.ladders, func(x, y *active) int {
+		if x.priority != y.priority {
+			return x.priority - y.priority
+		}
+		if roleRank(x.role) != roleRank(y.role) {
+			return roleRank(x.role) - roleRank(y.role)
+		}
+		return strings.Compare(x.skill.Slug, y.skill.Slug)
+	})
+}
+
+func roleRank(r string) int {
+	switch r {
+	case RoleGoal:
+		return 0
+	case RoleFeeder:
+		return 1
+	default:
+		return 2
+	}
+}
+
+// skillDirection is the direction of a skill's rungs (push, pull or none).
+func (k *Knowledge) skillDirection(sk *Skill) string {
+	for _, r := range sk.Rungs {
+		if d := k.exercises[r].Direction; d != DirNone && d != "" {
+			return d
+		}
+	}
+	return DirNone
+}
+
+// antagonist picks the foundation ladder of a direction: the pull-up or
+// push-up skill, else any foundation skill of that direction.
+func (k *Knowledge) antagonist(s Snapshot, dir string) string {
+	pref := map[string]string{DirPull: "pull-up", DirPush: "push-up"}[dir]
+	if _, ok := k.skills[pref]; ok {
+		return pref
+	}
+	for _, id := range k.skillIDs {
+		sk := k.skills[id]
+		if sk.Foundation && k.skillDirection(sk) == dir {
+			return id
+		}
+	}
+	return pref
+}
+
+// capacity returns the estimate for an exercise now: observed, or derived
+// from the nearest harder rung of its skill (PAR-S-39).
+func (g *gen) capacity(ex *Exercise, assist string) (Estimate, bool) {
+	k := g.k
+	if e, ok := g.s.Capacities[CapKey(ex.Slug, assist)]; ok {
+		return k.predict(e, ex, g.now), true
+	}
+	if assist == AssistBand {
+		if e, ok := g.capacity(ex, AssistNone); ok {
+			return k.derivedPrior(e, ex, g.now), true
+		}
+		return Estimate{}, false
+	}
+	sk := k.skills[ex.Skill]
+	if sk == nil {
+		return Estimate{}, false
+	}
+	for r := ex.Rung + 1; r < len(sk.Rungs); r++ {
+		harder := k.exercises[sk.Rungs[r]]
+		if harder.Measure != ex.Measure || harder.Eccentric {
+			continue
+		}
+		if e, ok := g.s.Capacities[CapKey(harder.Slug, AssistNone)]; ok {
+			return k.derivedPrior(k.predict(e, harder, g.now), ex, g.now), true
+		}
+	}
+	return Estimate{}, false
+}
+
+// feasible reports whether an exercise can be planned: equipment, regions,
+// supinated gate (SEL-02–SEL-04). The reason explains an exclusion.
+func (g *gen) feasible(ex *Exercise, workingOG float64) (bool, Reason, regionVerdict) {
+	k := g.k
+	for _, req := range ex.Requires {
+		if !g.equipment[req] {
+			return false, k.reason(RuleEquipment, "exercise", ex.Name, "equipment", req), regionVerdict{}
+		}
+	}
+	if ex.Supinated && workingOG < k.T.SupinatedMinOG {
+		return false, k.reason(RuleSupinated, "exercise", ex.Name), regionVerdict{}
+	}
+	v := k.judge(g.s, ex)
+	if v.exclude {
+		return false, v.reason, v
+	}
+	return true, Reason{}, v
+}
+
+// selectRung picks the working rung of a ladder (SEL-07–SEL-09).
+func (g *gen) selectRung(a *active) {
+	k := g.k
+	sk := a.skill
+	ls := g.s.Ladders[sk.Slug]
+	top := len(sk.Rungs) - 1
+	if ls.CapRung != "" && g.s.Break != nil {
+		if e := k.exercises[ls.CapRung]; e != nil {
+			top = min(top, e.Rung)
+		}
+	}
+	// PAR-B-57: at most one step up per ladder and week.
+	if cur := k.exercises[ls.Rung]; cur != nil && !ls.LastUp.IsZero() && g.now.Sub(ls.LastUp) < 7*24*time.Hour {
+		top = min(top, cur.Rung)
+	}
+	if ls.CapTo != "" && g.now.Before(ls.CapUntil) {
+		if e := k.exercises[ls.CapTo]; e != nil {
+			top = min(top, e.Rung)
+		}
+	}
+	// SEL-08: in the first two exposures stay one rung under the claim.
+	claimCap := top
+	if ls.Claimed != "" && ls.Exposures < 2 {
+		if e := k.exercises[ls.Claimed]; e != nil {
+			claimCap = max(e.Rung-1, 0)
+			a.calib = true
+		}
+	}
+	if g.s.Break != nil && g.s.Break.Days >= k.T.BreakHalf && ls.CapRung != "" {
+		if e := k.exercises[ls.CapRung]; e != nil {
+			claimCap = min(claimCap, max(e.Rung-2, 0))
+		}
+	}
+	top = min(top, claimCap)
+	lo := k.T.MinSetHold * 2 // 08 §4: set ≥ 2 s plus reserve ≥ 2 s
+	repLo := k.T.HeavyLo
+	if g.exp == ExpNovice {
+		repLo = k.T.NoviceRepsLo
+	}
+	var fallback *Exercise
+	var ecc *Exercise
+	for r := top; r >= 0; r-- {
+		ex := k.exercises[sk.Rungs[r]]
+		ok, why, verdict := g.feasible(ex, ex.OG)
+		if !ok {
+			g.exclude(ex, why)
+			continue
+		}
+		if ex.Eccentric {
+			if ecc == nil {
+				ecc = ex
+			}
+			continue
+		}
+		fallback = ex
+		e, has := g.capacity(ex, AssistNone)
+		if !has {
+			continue
+		}
+		d := k.Dose(e)
+		if ex.Measure == MeasureHold && d >= lo || ex.Measure == MeasureReps && math.Floor(d)-k.T.RIRStrength >= repLo {
+			g.setRung(a, ex, e, verdict)
+			a.reasons = append(a.reasons, k.reason(RuleHoldRung, "exercise", ex.Name, "dose", d))
+			if a.calib {
+				a.reasons = append(a.reasons, k.reason(RuleEntryRung, "exercise", ex.Name))
+			}
+			return
+		}
+	}
+	// Nothing clears the threshold: eccentric (reps), band, or the lowest
+	// feasible rung with a calibration start.
+	if ecc != nil {
+		e, _ := g.capacity(ecc, AssistNone)
+		g.setRung(a, ecc, e, regionVerdict{})
+		a.stim, a.class = StimEccentric, classHard
+		a.reasons = append(a.reasons, k.reason(RuleRepRung, "exercise", ecc.Name))
+		return
+	}
+	if fallback != nil {
+		e, has := g.capacity(fallback, AssistNone)
+		if g.hasBands && fallback.Assistable {
+			if eb, ok := g.capacity(fallback, AssistBand); ok {
+				e, has = eb, true
+			}
+			g.setRung(a, fallback, e, regionVerdict{})
+			a.assist = AssistBand
+		} else {
+			g.setRung(a, fallback, e, regionVerdict{})
+		}
+		a.hasCap = has
+		a.calib = true
+		a.reasons = append(a.reasons, k.reason(RuleHoldRung, "exercise", fallback.Name, "dose", k.Dose(e)))
+	}
+}
+
+// setRung records the working rung and its stimulus.
+func (g *gen) setRung(a *active, ex *Exercise, e Estimate, v regionVerdict) {
+	k := g.k
+	a.rung, a.cap, a.hasCap = ex, e, true
+	a.monitor, a.modify, a.region = v.monitor, v.modify, v.reason
+	if k.Confidence(e) == ConfLow || slices.Contains(g.s.Phase.Calibrate, CapKey(ex.Slug, AssistNone)) {
+		a.calib = true
+	}
+	d := k.Dose(e)
+	switch {
+	case ex.Eccentric:
+		a.stim, a.class = StimEccentric, classHard
+	case ex.Measure == MeasureHold && ex.HoldClass == HoldBalance:
+		a.stim, a.class = StimBalance, classLight
+	case ex.Measure == MeasureHold && ex.HoldClass == HoldSkill && d <= k.T.StageSwitch:
+		a.stim, a.class = StimSkill, classLight
+		if ex.StraightArm == ArmStraight {
+			a.class = classHard
+		}
+	case ex.Measure == MeasureHold:
+		a.stim, a.class = StimConditioning, classLight
+		if ex.StraightArm == ArmStraight {
+			a.class = classModerate
+		}
+	case a.skill.LimitingFactor == LimitMixed:
+		a.stim, a.class = StimSkillReps, classHard
+	default:
+		a.stim, a.class = StimStrength, classModerate
+	}
+	if a.modify && a.stim == StimSkill {
+		// M: one rung lower is the modification (INJ-05).
+		if lower := g.lowerRung(ex); lower != nil {
+			le, _ := g.capacity(lower, AssistNone)
+			a.rung, a.cap = lower, le
+			a.reasons = append(a.reasons, a.region)
+		}
+	}
+	// Probe offer (ADAPT-05) when the ladder earned it and ADAPT-06a allows.
+	ls := g.s.Ladders[a.skill.Slug]
+	if ls.ProbeOffer && g.probesAllowed(ex) {
+		if next := g.nextRung(ex); next != nil {
+			if ok, _, _ := g.feasible(next, next.OG); ok {
+				a.probe = next
+			}
+		}
+	}
+}
+
+// lowerRung returns the next easier non-eccentric rung.
+func (g *gen) lowerRung(ex *Exercise) *Exercise {
+	sk := g.k.skills[ex.Skill]
+	for r := ex.Rung - 1; r >= 0; r-- {
+		c := g.k.exercises[sk.Rungs[r]]
+		if !c.Eccentric && c.Measure == ex.Measure {
+			return c
+		}
+	}
+	return nil
+}
+
+func (g *gen) nextRung(ex *Exercise) *Exercise {
+	sk := g.k.skills[ex.Skill]
+	for r := ex.Rung + 1; r < len(sk.Rungs); r++ {
+		c := g.k.exercises[sk.Rungs[r]]
+		if !c.Eccentric && c.Measure == ex.Measure {
+			return c
+		}
+	}
+	return nil
+}
+
+// probesAllowed applies ADAPT-06a: region normal, no ramp on the accounts,
+// not in the first week of a new load, no screening or consent limits.
+func (g *gen) probesAllowed(ex *Exercise) bool {
+	s := g.s
+	if s.Screening.AnyYes && !s.Screening.Cleared || !s.Profile.HealthConsent {
+		return false
+	}
+	if s.Break != nil && ex.StraightArm != ArmNone {
+		return false
+	}
+	for acc := range g.k.setLoad(ex, KindWorking, 0, s.Profile.BodyweightKg) {
+		for _, r := range g.k.regionsOf(acc) {
+			if rs, ok := s.Regions[r]; ok && rs.State != StateNormal {
+				return false
+			}
+		}
+		if ref, _ := g.k.reference(g.hist, acc, g.week); ref == 0 {
+			return false
+		}
+	}
+	return true
+}
+
+// frequency is the target number of exposures of a ladder (WEEK-04).
+func (g *gen) frequency(a *active) int {
+	k := g.k
+	strength := k.T.FreqTrained
+	if g.exp == ExpNovice {
+		strength = k.T.FreqNovice
+	}
+	f := strength
+	switch {
+	case a.stim == StimBalance:
+		f = k.T.FreqBalance
+	case a.role == RoleSupport:
+		f = math.Min(strength, float64(g.fullCount))
+	}
+	return int(math.Min(f, k.T.FreqMax))
+}
+
+func (g *gen) exclude(ex *Exercise, r Reason) {
+	for _, e := range g.plan.Exclusions {
+		if e.Exercise == ex.Slug {
+			return
+		}
+	}
+	g.plan.Exclusions = append(g.plan.Exclusions, Exclusion{Exercise: ex.Slug, Reason: r})
+}
+
+// dayGap returns hours between two weekday indices going forward.
+func dayGap(from, to time.Weekday) float64 {
+	return float64((int(to)-int(from)+7)%7) * 24
+}

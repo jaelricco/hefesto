@@ -627,6 +627,7 @@ Zuordnung Region → Strukturen (`structures.yaml`, `PAR-S-15`):
 | `elbow_outer` | `elbow_lateral` |
 | `elbow_crease` | `biceps_distal` |
 | `wrist_back_extension`, `wrist_pinky_side` | `wrist` |
+| `chest` | `biceps_long_head_anterior_shoulder` (ENT-S-9; Zuordnung und Matrixzeile wie `shoulder_front`, **Heuristik** bis zur fachlichen Prüfung) |
 | `fingers_forearm_inner` | `fingers_forearm` |
 | `lower_back` | `lumbar` |
 | `knee` | `knee` |
@@ -1374,9 +1375,24 @@ verlängern).
 Die Intensität (Sprosse) ist davon nicht betroffen, nur die Satzzahl; Kraft
 sättigt mit dem Volumen früh (`08` §3 H-6), deshalb ist der Verlust klein.
 Für Trainierte, die gerade regelmässig trainieren, ist das trotzdem sehr
-vorsichtig. §14 schlägt eine Alternative vor. Die Rechnung gilt für ganze
+vorsichtig; dafür gilt LOAD-04b (ENT-S-1). Die Rechnung gilt für ganze
 Sätze nur dank des Spielraum-Übertrags (`PAR-S-35`); ohne ihn blieben kleine
 Straight-Arm-Volumen beim Abrunden dauerhaft stehen.
+
+**Einstieg für aktuell Trainierende (LOAD-04b, ENT-S-1).** Ein Konto bekommt
+statt LOAD-04 die Stufen 50 % → 75 % → 100 % des Zielvolumens in
+wöchentlichen Schritten, wenn alle Bedingungen gelten:
+`last_regular_training = current_or_lt_3_weeks`; der User hat für eine Übung,
+die das Konto belastet, einen Leistungsstand > 0 angegeben (nicht «weiss
+nicht»); die Regionen des Kontos haben weder eine aktuelle Beschwerde noch
+eine Verletzung in den letzten 12 Monaten; der User ist nicht minderjährig.
+Jeder Schritt setzt voraus, dass in der Vorwoche keine Schmerzregel verletzt
+wurde; sonst bleibt der Schritt stehen. Nach 100 % gilt LOAD-02 gegen die dann
+geloggten Wochen. Die Schritte folgen der Reihe PAR-D-25 (ab 0.5, wie
+PAR-D-12), mit derselben Begründung wie die Rampe in `05` §6.2: Rückkehr auf
+ein Niveau, das der User aktuell trägt (`PAR-S-43`). Der Einheitsdeckel
+LOAD-03 gilt in diesen drei Wochen gegen das Maximum der Vorwoche × 1.5, weil
+die Schritte selbst +50 % bzw. +33 % betragen.
 
 ### 7.5 Abstände (LOAD-05)
 
@@ -1939,13 +1955,15 @@ Gesundheitsangaben nur mit Einwilligung, in eigenen Tabellen, gelöscht beim
 Widerruf und mit dem Konto (§4.9). Sicherheitsfragen ohne Einwilligung werden
 flüchtig ausgewertet und nicht gespeichert (ENT-4, rechtlich zu prüfen).
 
-## 14. Offene Entscheidungen
+## 14. Entscheidungen des Checkpoints nach Phase 4
 
 Die Entscheidungen des Checkpoints nach Phase 3 sind umgesetzt (ENT-1 bis
-ENT-10, OE-1 bis OE-9; Stellen in ADR 0012). Diese Spezifikation wirft neue
-Fragen auf:
+ENT-10, OE-1 bis OE-9; Stellen in ADR 0012). Die folgenden Fragen dieser
+Spezifikation hat der Checkpoint nach Phase 4 (27.09.2026) entschieden: **alle
+Vorschläge angenommen.** Die Umsetzung steht an den genannten Stellen
+(ENT-S-1: §7.4 LOAD-04b; ENT-S-9: §4.6, §8.4).
 
-| Nr. | Frage | Optionen | Vorschlag |
+| Nr. | Frage | Optionen | Entscheidung (angenommen) |
 |---|---|---|---|
 | ENT-S-1 | Einstiegsrampe für User, die gerade trainieren (§7.4) | (a) wie spezifiziert: jede Belastungsart startet mit 50 % und wächst über die Deckel (Straight-Arm ≈ 15 Wochen bis 100 %); (b) für Konten, zu denen der User eine aktuelle Stufe angibt, bei `last_regular_training = current_or_lt_3_weeks`, ohne Beschwerde und Vorverletzung: 50 % → 75 % → 100 % in wöchentlichen Schritten, jeweils nur ohne Schmerzregel-Verletzung; danach normale Deckel | **(b)**: Wer die Belastung aktuell trägt, kehrt auf toleriertes Niveau zurück (dieselbe Logik wie `05` §6.2); neue Belastungsarten bleiben bei (a) |
 | ENT-S-2 | Umfang von Phase 5 | (a) Kern, Wissensbasis, Validierung, Ports mit In-Memory-Adaptern, Tests; (b) zusätzlich Migration, Store, HTTP und OpenAPI | **(a)**; API und Schema nach einem eigenen Review, OpenAPI zuerst (ADR 0007) |
@@ -2023,6 +2041,7 @@ Evidenz: A–D nach `00_sources.md`; H = Heuristik (Begründung im Abschnitt).
 | LOAD-02 | Wochendeckel, Rampen, ganze Sätze | §7.2 | PAR-D-02, 04, 09–11, 23, PAR-B-55, PAR-S-14, 15, 25, 35, 40 | H |
 | LOAD-03 | Einheitsdeckel | §7.3 | PAR-D-31 | B (Analogie) |
 | LOAD-04 | Neue Belastungsart | §7.4 | PAR-D-12 | H |
+| LOAD-04b | Einstieg für aktuell Trainierende | §7.4 | PAR-D-12, PAR-D-25, PAR-S-43 | H |
 | LOAD-05 | Abstände | §7.5 | PAR-D-03, 08, 34, PAR-B-38, PAR-E-13, 14, PAR-S-07, PAR-S-30 | B/H |
 | LOAD-06 | Straight-Arm-Budget | §7.6 | PAR-B-47, PAR-A-23, PAR-S-09, PAR-S-23 | H |
 | LOAD-07 | Gleiche Richtung | §7.7 | PAR-B-48 | H |
@@ -2108,6 +2127,7 @@ festgemacht ist.
 | PAR-S-40 | `post_pain_deload_cap` | bis zur ersten grünen Woche Deckel 1.0 × Referenz vor der Verletzung der Schmerzregel | «reduzieren und halten» (PAR-D-18, `05` §5.4); verhindert den Sprung auf R × 1.1 direkt nach dem Schmerz-Deload |
 | PAR-S-41 | `onboarding_break_mapping` | Tabelle in §6.11 | Klassen aus `onboarding.md` §3.5 auf die Bänder von PAR-B-59–62 und PAR-D-29 gelegt |
 | PAR-S-42 | `pain_entry_and_trend` | neue Beschwerde: ein Wert > 2 oder Werte > 0 an 2 Tagen in 7 Tagen; Trend steigend: Wochenmittel «danach» ≥ 1 Punkt über der Vorwoche | Grenze 2 aus PAR-D-14; Zählweise und 1-Punkt-Schwelle sind Heuristik, damit PAR-D-17 berechenbar wird |
+| PAR-S-43 | `entry_ramp_current_trainers` | 0.5 → 0.75 → 1.0 wöchentlich; Einheitsdeckel in diesen Wochen 1.5 × Vorwochenmaximum | ENT-S-1 (b); Schritte aus PAR-D-25; 1.5 = grösster Schritt (0.5 → 0.75), damit der Einheitsdeckel die Rampe nicht blockiert |
 
 ## Anhang C: Index der verwendeten Forschungsparameter
 
