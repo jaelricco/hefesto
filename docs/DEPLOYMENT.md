@@ -152,6 +152,48 @@ Logs are JSON on stdout, capped at 10 MB × 5 files per service by Docker's
 json-file driver. There is no log aggregation yet; when it is needed, that gets
 its own ADR rather than an agent silently added to the box.
 
+## The iOS app on TestFlight
+
+`.github/workflows/testflight.yml` archives the app and uploads it to App
+Store Connect (ADR 0012). It runs on a GitHub-hosted Mac, never on the
+self-hosted runner, because signing writes certificates and provisioning
+profiles.
+
+### One-time setup
+
+1. In App Store Connect, create the app with the bundle id `fit.hefesto.ios`,
+   and enable **Sign in with Apple** on that identifier in the developer
+   portal.
+2. Create an App Store Connect API key with the **Admin** role (Users and
+   Access → Integrations). Admin lets Xcode sign with cloud-managed
+   certificates, so no signing key is ever stored.
+3. Add four repository secrets:
+
+   | Secret | Value |
+   |---|---|
+   | `APPLE_TEAM_ID` | the ten-character team id |
+   | `APP_STORE_CONNECT_KEY_ID` | the key's id |
+   | `APP_STORE_CONNECT_ISSUER_ID` | the issuer id shown above the keys |
+   | `APP_STORE_CONNECT_KEY_P8` | the contents of the downloaded `.p8` file |
+
+### Uploading a build
+
+Run the `testflight` workflow from the Actions tab, or push a tag:
+
+```sh
+git tag -a ios-v0.7.0 -m "iOS 0.7.0" && git push origin ios-v0.7.0
+```
+
+- **Versions.** The build number is the workflow's run number, and the version
+  is `MARKETING_VERSION` in `ios/project.yml`.
+- **Release builds** talk to `https://api.hefesto.fit`, so deploy the API first
+  when a build needs a new endpoint.
+- **Before inviting external testers**, dispatch the workflow with `external`
+  ticked. It then fails while any skill or exercise is still a placeholder
+  (`make content-release-check`).
+- **Before each upload**, dispatch the `ios` workflow with `ui_tests` ticked
+  to run the accessibility audit.
+
 ## What is deliberately not here
 
 - **No blue/green or rolling deploy.** One container is replaced, which means a

@@ -13,10 +13,14 @@ The logger feeds the map. That coupling is the product.
 
 ## Status
 
-**Phase 6 — the skill map**, awaiting review. The iOS app adds the skill map
-constellation, skill detail with injury notes, the unlock celebration, and
-history and stats. These sit on top of the offline-first logger and sync from
-Phase 5, and on the API's logging, unlock engine, sync and media.
+**Phase 7 — polish**, awaiting review. It adds:
+- an accessibility pass and checked localization (English and German);
+- a TestFlight pipeline;
+- a release gate for placeholder content;
+- a load smoke test in CI.
+
+This builds on the iOS logger, sync and skill map from Phases 5–6, and on the
+API's logging, unlock engine, sync and media.
 Current state and open questions: [`STATUS.md`](STATUS.md).
 
 See [`docs/PROJECT_BRIEF.md`](docs/PROJECT_BRIEF.md) for the full plan,
@@ -48,6 +52,24 @@ cd ios/Packages/HefestoKit && swift test   # the logic, no simulator needed
 ```
 
 A Debug build talks to `http://localhost:8080`, which is the API from `make up`.
+
+```sh
+python3 ios/scripts/check-strings.py   # every string in English and German
+```
+
+TestFlight builds come from the `testflight` workflow on a GitHub-hosted Mac.
+Setup is in [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md#the-ios-app-on-testflight).
+
+### Load smoke test
+
+```sh
+make up && make load-smoke                  # 25 athletes for a minute
+make load-smoke args="-athletes 50 -duration 2m"
+```
+
+It reports p50/p95/p99 per route and fails on any error or a p95 over budget.
+CI runs it on every pull request. Never point it at production: it creates
+accounts.
 
 ## Deploying
 

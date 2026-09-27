@@ -1,0 +1,127 @@
+name: testflight
+
+# Archives the app and uploads it to App Store Connect for TestFlight
+# (ADR 0012). Run it by hand, or push a tag like ios-v0.7.0.
+#
+# It runs on a GitHub-hosted Mac, not the self-hosted runner: signing
+# creates certificates and downloads provisioning profiles, and that must not
+# happen on the owner's machine. The hosted machine is thrown away after the
+# run, and nothing is kept.
+#
+# Repository secrets (Settings → Secrets and variables → Actions), never in
+# the repository:
+#   APPLE_TEAM_ID                  the ten-character team id
+#   APP_STORE_CONNECT_KEY_ID       an App Store Connect API key, role Admin
+#   APP_STORE_CONNECT_ISSUER_ID    (Admin lets Xcode manage signing in the
+#   APP_STORE_CONNECT_KEY_P8       cloud); the .p8 file's contents
+on:
+  workflow_dispatch:
+    inputs:
+      external:
+        description: >-
+          For external testers: fail unless every skill and exercise is
+          researched content (make content-release-check).
+        type: boolean
+        default: false
+  push:
+    tags: ["ios-v*"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: testflight
+  cancel-in-progress: false
+
+jobs:
+  upload:
+    name: archive and upload to TestFlight
+    runs-on: macos-15
+    timeout-minutes: 60
+    env:
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      ASC_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+      ASC_KEY_P8: ${{ secrets.APP_STORE_CONNECT_KEY_P8 }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: secrets are configured
+        run: |
+          missing=""
+          for v in APPLE_TEAM_ID ASC_KEY_ID ASC_ISSUER_ID ASC_KEY_P8; do
+            [ -n "${!v}" ] || missing="$missing $v"
+          done
+          if [ -n "$missing" ]; then
+            echo "::error::missing repository secrets:$missing (see the top of this workflow)"
+            exit 1
+          fi
+
+      - uses: actions/setup-go@v5
+        if: ${{ inputs.external }}
+        with:
+          go-version: "1.24"
+          cache: true
+      - name: content is researched (external testers)
+        if: ${{ inputs.external }}
+        run: go run ./cmd/contentlint -dir ./content -strict -release
+
+      - name: toolchain
+        run: |
+          # The newest Xcode on the image; App Store Connect requires a recent SDK.
+          xcode=$(find /Applications -maxdepth 1 -name 'Xcode_*.app' | sort -V | tail -1)
+          sudo xcode-select -s "$xcode"
+          xcodebuild -version
+          brew install xcodegen
+
+      - name: strings are complete
+        run: python3 ios/scripts/check-strings.py
+
+      - name: generate the project
+        working-directory: ios
+        run: xcodegen generate
+
+      - name: API key
+        run: |
+          key="$RUNNER_TEMP/AuthKey_${ASC_KEY_ID}.p8"
+          printf '%s' "$ASC_KEY_P8" > "$key"
+          chmod 600 "$key"
+          echo "ASC_KEY_PATH=$key" >> "$GITHUB_ENV"
+
+      - name: archive
+        working-directory: ios
+        run: |
+          set -o pipefail
+          xcodebuild archive \
+            -project Hefesto.xcodeproj -scheme Hefesto -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath "$RUNNER_TEMP/Hefesto.xcarchive" \
+            -derivedDataPath "$RUNNER_TEMP/derived" \
+            -skipPackagePluginValidation -skipMacroValidation \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$ASC_KEY_PATH" \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
+            DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
+            CURRENT_PROJECT_VERSION="${{ github.run_number }}" 2>&1 | tee archive.log | grep -E 'error:|warning: .*[Ss]ign|ARCHIVE' || true
+          grep -q '\*\* ARCHIVE SUCCEEDED \*\*' archive.log || { grep -B2 -A10 'error:' archive.log | tail -100; exit 1; }
+
+      - name: upload to App Store Connect
+        working-directory: ios
+        run: |
+          set -o pipefail
+          sed "s/TEAM_ID/$APPLE_TEAM_ID/" ExportOptions/testflight.plist > "$RUNNER_TEMP/ExportOptions.plist"
+          xcodebuild -exportArchive \
+            -archivePath "$RUNNER_TEMP/Hefesto.xcarchive" \
+            -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" \
+            -exportPath "$RUNNER_TEMP/export" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$ASC_KEY_PATH" \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID" 2>&1 | tee export.log | grep -E 'error:|Upload|EXPORT' || true
+          grep -q '\*\* EXPORT SUCCEEDED \*\*' export.log || { tail -80 export.log; exit 1; }
+          echo "uploaded build ${{ github.run_number }}; it appears in TestFlight once Apple has processed it"
+
+      - name: remove the API key
+        if: always()
+        run: rm -f "$RUNNER_TEMP"/AuthKey_*.p8

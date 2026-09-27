@@ -18,87 +18,104 @@ that stands.
 - **Phase 5** — the iOS app's foundation and the logger (ADR 0010). Merged in
   #8. Its open questions (rest-day logging, the bodyweight time zone, wiping
   the database on sign-out) still stand.
+- **Phase 6** — skill map, skill detail, celebration, history and stats
+  (ADR 0011). Merged in #9. Its open questions (showing `stale_since`,
+  self-attestation for levels with criteria, stats on the device) still stand.
 
-## Current phase: 6 — skill map, skill detail, celebration, history and stats (complete, awaiting review)
+## Current phase: 7 — polish (complete, awaiting review)
 
-The decisions are in ADR 0011. Everything below reads the local database, like
-the logger, so it works offline.
+The decisions are in ADR 0012.
 
-- **The skill map (Skills tab)**
-  - A constellation drawn with SwiftUI `Canvas` at the positions authored in
-    content, with pan and zoom.
-  - Locked skills are dim, skills open to work on are outlined, and unlocked
-    ones glow. A skill in progress shows an arc for how many of its levels are
-    unlocked.
-  - Lines join skills that build on one another and light up from an unlocked
-    level. The first time the map shows a new unlock, its line draws itself;
-    then it counts as seen (a local `seenAt`). A new device does not replay old
-    unlocks.
-  - Every node is a real button, 56 pt, with a VoiceOver label (the skill),
-    value (its standing) and hint (the next level). Motion respects Reduce
-    Motion in the celebration.
-  - XP and the streak sit in the toolbar and show only what was kept.
-- **Skill detail**
-  - Each level with its state, what unlocks it (the criteria DSL in words),
-    the athlete's best, and when it was unlocked (self-attested levels say so).
-  - "I can already do this" self-attests an open level, after a confirmation
-    that explains it earns no XP. Missing prerequisites get a clear message.
-  - Injury notes are fetched and kept for offline reading, and always shown
-    with the disclaimer the API sends. Nothing is presented as medical advice.
-- **The celebration**
-  - An animated star and burst for an unlock, the levels unlocked, XP, newly
-    open levels, and "See it on the map", which switches to the map where the
-    line lights up.
-- **History**
-  - Sessions grouped by ISO week, Monday first. A session opens read-only, and
-    a draft can be continued in the logger.
-  - Each logged exercise shows its bests (most reps, longest hold, longest
-    distance, most added load, with dates) and a Swift Charts bar chart of
-    each day's work. Bests count only full, unassisted repetitions.
-- **Store and sync**
-  - A new local migration, `v2-skill-map`: skills, levels, edges, level states,
-    progress, injury notes.
-  - The app refreshes the map after every sync.
-  - A refresh never moves an unlocked level back.
+- **Localization**
+  - `ios/scripts/check-strings.py` checks:
+    - every user-facing literal is in the string catalog;
+    - every key has a translated German entry with matching placeholders;
+    - no key is unused;
+    - counts before nouns have plural forms in both languages.
+  - It runs in CI on every push.
+  - The chart axes and the new accessibility strings were the only gaps. There
+    are now 168 keys, all translated.
+- **Accessibility**
+  - The skill map:
+    - respects Reduce Motion;
+    - reads top to bottom with VoiceOver;
+    - keeps locked labels readable (over 4.5:1);
+    - has a **list view** grouped by standing, remembered per device.
+  - Level rows and the rest banner no longer swallow their buttons into one
+    VoiceOver element.
+  - The rest clock scales with Dynamic Type. The effort sheet drops to three
+    columns at accessibility sizes and scrolls.
+  - Chart bars read as "date, value".
+  - Logging a set, a finished rest and sign-in errors are announced.
+  - A UI test target runs Apple's accessibility audit on every main screen, at
+    the default size, the largest accessibility size and in German. It uses a
+    Debug-only offline fixture (`-uiTestFixture`).
+- **TestFlight**
+  - `testflight.yml` runs on a GitHub-hosted Mac: automatic signing with an
+    App Store Connect API key, build number = run number, upload with
+    `xcodebuild -exportArchive`.
+  - The app now has an icon (a generated placeholder), an export-compliance
+    declaration, a privacy manifest, and version 0.7.0.
+  - Setup is in `docs/DEPLOYMENT.md`.
+- **Content import**
+  - `contentlint` reports how much content is still placeholder (today all 3
+    skills and 7 exercises).
+  - It warns when a researched skill uses a placeholder exercise.
+  - `make content-release-check` fails on any placeholder.
+  - `CONTENT_AUTHORING.md` describes the import and the slugs production may
+    already hold.
+- **Load smoke test**
+  - `cmd/loadsmoke`: virtual athletes log sessions through sync batches and
+    REST, pull, and read the map. It fails on any error or a p95 over budget
+    (300 ms reads, 400 ms writes, 1.5 s completion and sync batches).
+  - CI runs 25 athletes for 60 s against the release build on a seeded
+    Postgres.
+  - `HEFESTO_AUTH_PER_MINUTE` makes the auth rate limit configurable. The
+    default is unchanged at 10.
 
 ### Verification
 
-On the self-hosted Mac runner (run 13):
-- `swift test` passes 47 tests in 13 suites. That is 11 new, covering:
-  - the skill map store: the first refresh counts unlocks as seen, a new
-    unlock stays unseen until shown, unlocks are never revoked, content is
-    replaced only on a new version, and a skill's standing;
-  - ISO weeks across a year boundary;
-  - bests that ignore assisted and partial reps;
-  - stats from logged sets;
-  - map, progress and injury-note sync, and a refused attestation.
-- The app builds for the iOS Simulator (`** BUILD SUCCEEDED **`) under Swift 6
-  strict concurrency.
-
-No server code or API spec changed in this phase.
+- **Load smoke, locally.** Release build, Postgres 16, 25 athletes for 30 s:
+  17,322 requests (577/s) with 0 errors.
+  - p95 was 6–44 ms for reads and single writes.
+  - It was 62 ms for completing a session.
+  - It was 228 ms for a whole-session sync batch.
+- **Go unit tests** cover the load smoke's percentiles and pass/fail rules,
+  and the content readiness and release checks. `golangci-lint` is clean.
+- **String check**: 168 keys, 0 problems. It caught every string added in this
+  phase before its translation existed.
+- **Swift** — on the self-hosted Mac runner: VERIFICATION_PENDING
 
 ### Deliberately not in this phase
 
-- **`stale_since`** is stored but not shown. See the open questions.
-- **`GET /v1/me/stats/exercises/{id}`**, from the brief's API list, is not
-  built. Stats are computed on the device (ADR 0011).
-- **Profile and settings screens.** The brief places them in no phase. Sign out
-  stays in Today's menu.
-- **The Live Activity**, band assistance and media in the logger are still
-  open from Phase 5.
+- **The research itself.** It is not in the repository, and nothing may be
+  invented (CLAUDE.md). The import path and the release gate are ready for it.
+- **A TestFlight upload.** The workflow needs the App Store Connect app record
+  and four repository secrets, which only the owner can create. Until then it
+  stops at its first step and names what is missing.
+- **Running the accessibility audit in CI by default.** It boots a simulator,
+  which writes outside the self-hosted runner's workspace, so it runs only
+  when the ios workflow is dispatched with `ui_tests`.
+- **A designed app icon.** The generated one is a placeholder.
 
 ### Open questions for review
 
-1. **`stale_since`.** Should the app show that an unlocked skill has not been
-   practised lately, and if so, how, without implying the athlete is falling
-   behind (ADR 0003)? Today it is not shown.
-2. **Self-attestation.** Any open level can be self-attested, not only levels
-   whose criteria the log cannot show. The server allows both. Should the app
-   offer it only for criteria-less levels?
-3. **Stats on the device.** Is computing stats locally acceptable for v1, with
-   the endpoint left for a future web or coach client?
+1. **The research.** Where is it, and in what form? The import expects YAML per
+   `CONTENT_AUTHORING.md`, keeping today's skill, level and exercise slugs.
+2. **The accessibility audit on the Mac runner.** May the ios workflow boot a
+   simulator on every run? That writes simulator state under
+   `~/Library/Developer/CoreSimulator`. If yes, the audit becomes a regular
+   check instead of an opt-in one.
+3. **TestFlight on a hosted runner.** GitHub-hosted macOS minutes count ten
+   times against the plan's allowance, about 15 minutes per build. Is that
+   acceptable, or should releases use the self-hosted Mac despite the signing
+   state it would leave there?
+4. **Load budgets.** Are 300 ms, 400 ms and 1.5 s the right p95 budgets for
+   reads, writes and completion, and should the smoke test also run against
+   production-sized data?
 
-## Next: Phase 7
+## Next
 
-Polish: localization, an accessibility pass, a TestFlight build, importing
-the researched seed content, and a load smoke test.
+Phase 7 is the last phase in the brief. After review: the open questions
+above and from earlier phases, the research import, and the first TestFlight
+build.
