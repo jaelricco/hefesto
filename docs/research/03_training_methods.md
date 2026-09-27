@@ -410,13 +410,23 @@ verifiziert und werden nicht übernommen. Indirekte Evidenz:
 - Minimaldosis-Strategien wie «Snacks» und «den Test üben» steigern die Kraft
   von Nicht-Trainierenden; Snacks sind ein aufkommendes Konzept mit
   vielversprechenden Ergebnissen [B-99] (Evidenz B).
+- Dasselbe Wochenvolumen auf 4 kurze statt 1 lange Einheit verteilt steigerte
+  bei Trainierten die 1RM stärker [B-120]; 6 statt 3 Einheiten brachten
+  volumengleich weder Vor- noch Nachteil [B-121, B-122] (Evidenz A).
+- Kraft hängt kaum vom Abstand zum Versagen ab, Hypertrophie schon [B-25]:
+  weit vom Versagen entfernte GtG-Sätze sind als Kraft-/Übungsreiz plausibel,
+  als Hypertrophievolumen nicht.
 
-*Einordnung:* GtG ist für **Technik- und Balance-Skills** (z. B. Handstand)
-und für submaximale Kraftübungen plausibel, **nicht** aber für hochintensive
-Straight-Arm-Halte, bei denen Sehnen- und Gelenkbelastung zählen (Stream D).
-Low plant 5–10 min freistehende Handstandarbeit pro Einheit ein [B-114]
-(Evidenz C). Für die App: GtG nur als optionale, ermüdungsarme Übung
-(**Praxisheuristik**).
+*Einordnung:* Das Verteilen von Volumen ist mindestens gleichwertig und
+teilweise überlegen [B-18, B-120, B-121, B-122]; GtG als Extremform davon ist
+für **Technik- und Balance-Skills** (z. B. Handstand) und für submaximale
+Grundübungen mit gebeugtem Arm plausibel, **nicht** aber für hochintensive
+Straight-Arm-Halte, bei denen Sehnen- und Gelenkbelastung zählen (Stream D;
+gleiche Grenze in Stream E, PAR-E-27). Low plant 5–10 min freistehende
+Handstandarbeit pro Einheit ein [B-114] (Evidenz C). Für die App: GtG nur als
+optionale, ermüdungsarme Ergänzung (PAR-B-80, **Praxisheuristik**); GtG-Sätze
+zählen weder als Hypertrophie-Wochensätze noch als Versagensnähe, sondern nur
+als Übungskontakte.
 
 ### 6.3 Ganzkörper vs. Split
 
@@ -434,22 +444,30 @@ Einheiten (**Praxisheuristik**, im Rahmen von [B-49]).
 |---|---|---|
 | Wirkt die Position in der Einheit auf den Kraftzuwachs? | Kraftzuwächse sind am grössten bei Übungen am Anfang der Einheit (MJ zuerst: ES 0.32; SJ zuerst: ES −0.58 für SJ); Hypertrophie unabhängig (ES 0.03) [B-50] (A); ACSM 2026: Kraft profitiert von Platzierung am Beginn [B-31] | Prioritätsskill zuerst |
 | Schadet Ermüdung dem Erlernen einer Fertigkeit? | Muskuläre Ermüdung beeinträchtigt das motorische Lernen, auch an Folgetagen ohne Ermüdung [B-51] (B) | Technik-/Balancearbeit vor ermüdendem Krafttraining (Details Stream E) |
-| Beeinflussen sich zwei Skills gegenseitig? | Keine Studie zu Interferenz zwischen Straight-Arm-Skills gefunden | Nur Heuristik |
+| Beeinflussen sich zwei Skills gegenseitig? | Keine Studie zu Interferenz zwischen zwei Straight-Arm-Skills gefunden (Europe PMC, 27.09.2026). Muskulär: Übungen später in der Einheit schaffen über mehrere Sätze weniger Wiederholungen, unabhängig von der Muskelmasse; Reihenfolge nach Priorität des Ziels [B-123] (B). Motorisch: Das Lernen einer zweiten, **gegensätzlichen** Laboraufgabe kurz nach der ersten störte deren Konsolidierung, nach 4 h nicht mehr [B-127]; drei Labore fanden die Störung auch nach 24 h bis 1 Woche, also keine schützende Konsolidierungsphase [B-128] (B). Verschränktes Üben mehrerer Aufgaben verbessert die Retention im Labor mässig, im angewandten Umfeld kaum [B-129] (A) | Kein Beleg für eine Sperrfrist zwischen zwei verschiedenen Skills; Konflikt entsteht über geteilte Muskulatur und Ermüdung → Priorität und Satzbudget steuern (PAR-B-46, PAR-B-48) |
 | Ist isometrische und dynamische Kraft austauschbar? | Getrennte Domänen, geringe Kopplung [B-16]; isometrisches Training steigert vor allem isometrische Kraft [B-15] | Zielhalt direkt trainieren; dynamische Zubringer ergänzen |
 | Straight-Arm vs. Bent-Arm kombinieren? | Coaching: Push/Pull-Statics im Wechsel mit 90–120 s Pause verkürzt die Einheit etwa um die Hälfte, «dämpft die Zuwächse vielleicht leicht» [B-114]; primär → sekundär → ergänzend [B-115] (C); PDF: 1 Maximalübung → 2 Volumenübungen → 1–2 Zubringer [P-01 bis P-03] | Reihenfolge nach Intensität, nicht nach Straight/Bent |
+| Druck- und Zugübungen im Wechsel (Antagonisten-Paare)? | Review: Paare sind ein wirksamer, zeitsparender Weg zu Kraft und Leistung; akute Leistungssteigerung dagegen kaum [B-124] (B). Bankdrücken/Rudern im Wechsel: mehr Volumenlast in allen Sätzen in kürzerer Zeit als hintereinander, aber mehr Ermüdung [B-125]. Pause zwischen Paar-Durchgängen: 1 min senkt das Volumen deutlich, 2 min oder selbst gewählt am effizientesten, 3 min am meisten Volumen [B-126] (B) | Planche/Front Lever als Paar ist auch ausserhalb der Coaching-Literatur plausibel; Studien nur dynamisch mit Hanteln |
 
 **Praxisheuristiken für die Konfliktauflösung (Persona 2, Planche + Front
 Lever):**
 
 1. Zwei Straight-Arm-Skills **gegensätzlicher Zugrichtung** (Planche = Druck,
    Front Lever = Zug) dürfen in derselben Einheit als Paar abwechseln
-   [B-114] (C).
+   [B-114] (C), gestützt durch die Paar-Befunde aus dem Hanteltraining
+   [B-124, B-125, B-126] (B, Übertragung).
 2. Zwei Straight-Arm-Skills **gleicher Zugrichtung** (Planche + Maltese) teilen
    sich ein gemeinsames Satzbudget; die PDF-«Mixt»-Einheiten kombinieren beide
    in 16–17 Arbeitssätzen [P-01 S. 2; P-02 S. 1; P-03 S. 1; P-04 S. 1] (C).
+   Der zweite Skill erreicht wegen geteilter Ermüdung weniger Leistung
+   [B-123] (B, Übertragung).
 3. Die Skill-Priorität des Users bestimmt Position 1; der zweite Skill folgt
-   auf Position 2–3 oder wird auf eine andere Einheit gelegt [B-50] (A,
-   Übertragung).
+   auf Position 2–3 oder wird auf eine andere Einheit gelegt [B-50, B-123] (A,
+   Übertragung). Bei gleicher Priorität wechselt die Reihenfolge zwischen den
+   Einheiten (Stream E, PAR-E-03).
+4. Eine Sperrfrist zwischen zwei verschiedenen Skills in derselben Einheit
+   oder am selben Tag ist nicht belegt [B-128, B-129]; der Planer verzichtet
+   darauf.
 
 ## 8. Pausen
 
@@ -461,6 +479,7 @@ Lever):**
 | [B-55] Grgic 2018 (SR, 23 Studien, 491 Personen) | Robuste Kraftzuwächse auch mit < 60 s; für maximale Zuwächse bei Trainierten > 2 min; Untrainierte: 60–120 s genügen |
 | [B-54] Grgic 2017 (SR, 6 Studien) | Kurze (≤ 60 s) und lange (> 60 s) Pausen für Hypertrophie nutzbar; bei Trainierten möglicher Vorteil langer Pausen |
 | [B-56] Schoenfeld 2016 (RCT, 21 Trainierte, 8 Wochen) | 3 min > 1 min Pause für 1RM Kniebeuge/Bankdrücken und Oberschenkel-Muskeldicke |
+| [B-126] Behenck 2022 (18 Trainierte, akut, 10 RM; Abstract) | Antagonisten-Paare: 1 min Pause zwischen Paar-Durchgängen → deutlich weniger Gesamtvolumen; 2 min → etwas weniger als 3 min, aber effizienter (Volumen pro Zeit); selbst gewählte Pause ≈ 3 min im Volumen |
 | [B-57] Singer 2024 (Bayes-MA, 9 Studien) | Kleiner Hypertrophievorteil > 60 s; oberhalb 90 s keine erkennbaren Unterschiede |
 | [B-31] ACSM 2026 (Volltext) | Kraft wurde durch kurze (< 1 min) vs. lange (> 1 min) Pausen **nicht** beeinflusst |
 | [B-32] ACSM 2009 | Kraft 3–5 min, Hypertrophie 1–2 min, Kraftausdauer < 90 s |
@@ -501,17 +520,19 @@ längere Abstände brauchen, ist hier nicht untersucht; das legt Stream D fest.
 | Quelle | Befund |
 |---|---|
 | [B-62] Bell 2023 (Delphi, 3 Runden, 34/29/21 Coaches; Volltext) | Definition: «Deloading is a period of reduced training stress designed to mitigate physiological and psychological fatigue, promote recovery, and enhance preparedness for subsequent training»; einhellig: **Volumen senken**; Effort (Nähe zum Versagen) oder Last senken optional; vorgeplant und/oder autoreguliert; Häufigkeit abhängig von Reaktion und Mesozyklus; «minimale effektive Volumendosis» möglich |
-| [B-63] Bell 2022 (Interviews, 18 Coaches) | Deload meist **5–7 Tage alle 4–6 Wochen** (stark variabel); Mittel: weniger Wdh. je Satz und Sätze je Einheit, weniger Effort (mehr RIR) und/oder weniger Last, teils andere Übungen |
-| [B-64] Rogerson 2024 (Umfrage, 246 Athleten) | Deload **6.4 ± 1.7 Tage alle 5.6 ± 2.3 Wochen**; vorgeplant (oft kombiniert mit Autoregulation); Auslöser: stagnierende Leistung, erhöhter Muskelkater, Gelenkbeschwerden; Volumen runter (Wdh./Satz und Sätze/Woche), **Frequenz gleich**, Last runter, Effort runter (mehr RIR), Übungswahl gleich |
+| [B-63] Bell 2022 (Interviews, 18 Coaches; Volltext) | Deload meist **5–7 Tage alle 4–6 Wochen** (stark variabel); Mittel: weniger Wdh. je Satz und Sätze je Einheit, weniger Effort (mehr RIR) und/oder weniger Last, teils andere Übungen. Genannte Volumenreduktion 25 % bis > 50 %; praktische Empfehlung der Autoren: **Volumen −30 bis −50 %** (weniger Wdh. je Satz und/oder weniger Sätze), Effort über **+1 bis +3 RIR** je Satz senken oder Last um ~10 % senken |
+| [B-64] Rogerson 2024 (Umfrage, 246 Athleten; Volltext) | Deload **6.4 ± 1.7 Tage alle 5.6 ± 2.3 Wochen** (Spanne 1–12 Wochen); vorgeplant (oft kombiniert mit Autoregulation); Auslöser: stagnierende Leistung, erhöhter Muskelkater, Gelenkbeschwerden; Volumen runter (Wochensätze bei 78.9 % der Befragten), **Frequenz gleich** (63.0 %), Last runter, Effort runter (mehr RIR; 84.9 % bei Mehrgelenkübungen), Übungswahl (70.3 %) und Bewegungsumfang gleich; die Autoren vergleichen mit Taper-Empfehlungen (Volumen −30 bis −70 % bei gehaltener Intensität) |
 | [B-65] Coleman 2024 (RCT, 39 Trainierte, 9 Wochen) | 1 Woche **vollständige Trainingspause** in der Mitte: keine Unterschiede in Hypertrophie, Kraftausdauer, Leistung; **Kraftzuwächse (isometrisch, dynamisch) geringer** als bei durchgehendem Training |
 | [B-66] Schoenfeld 2024 (Blog zum RCT) | Durchgehendes Training brachte +4.5 kg 1RM-Kniebeuge und +11.5 Nm isometrische Kniestreckung mehr; Einschränkungen: Deload als Komplettpause, nach nur 4 Wochen, junge Teilnehmende (~22 J.) |
 | [B-86] Ogasawara 2013 (RCT, 24 Wochen) | 3 Wochen Pause nach je 6 Wochen Training: gleiche Gesamtzuwächse wie kontinuierliches Training |
 | [B-114] Low (C) | Alle ~4–8 Wochen Erholungswoche; Intensität halten, Volumen halbieren (z. B. Einheiten streichen) oder Isometrien eine Woche weglassen |
 | [B-98] Spiering 2021, [B-94] Bickel 2011 | Kraft und Masse bleiben mit reduziertem Volumen erhalten, solange die Intensität bleibt (Bickel: 1/3-Dosis erhält Hypertrophie bei Jüngeren) |
 
-*Folgerung für die App:* Deload = **Volumen −40 bis −60 %, Frequenz und
-Übungswahl gleich, Stufe halten oder eine Stufe leichter, RIR/SIR um ~2
-erhöhen**; keine Komplettpause als Standard [B-62, B-64, B-65, B-98, B-114].
+*Folgerung für die App:* Deload = **Volumen −30 bis −50 % (Standard −40 %),
+Frequenz und Übungswahl gleich, Stufe halten oder eine Stufe leichter, RIR/SIR
+um 1–3 (Standard 2) erhöhen**; keine Komplettpause als Standard
+[B-62, B-63, B-64, B-65, B-98, B-114]. Low halbiert das Volumen [B-114]; das
+ist die konservative Untergrenze der Spanne.
 Die Deload-Woche wird in `user_training_days.deload` geschrieben und zählt als
 eingehalten (ADR 0003). Auslöser-Schwellen sind **Praxisheuristik** (siehe
 PAR-B-49), die Auslöserarten selbst sind aus [B-64] und [B-104, B-107]
@@ -525,6 +546,7 @@ abgeleitet.
 | [B-68] McCrary 2015 (SR, 31 RCTs, Oberkörper) | Starke Evidenz: **schwere, dynamische Aufwärmübungen steigern Kraft und Leistung**; kurzes statisches Dehnen ohne Effekt auf Leistung; passives Erwärmen weitgehend unwirksam; **keine Studie zur Verletzungsprävention** |
 | [B-69] Behm 2016 (SR) | Statisches Dehnen: −3.7 % Leistung, dosisabhängig (≥ 60 s: −4.6 %; < 60 s: −1.1 %); dynamisches Dehnen kleine bis moderate Verbesserung; kein klarer Effekt von Dehnen auf Verletzungen |
 | [B-72] Ribeiro 2014 (RCT, Crossover) | Spezifisches, aerobes oder kombiniertes Aufwärmen veränderte die Wiederholungszahl bei 80 % 1RM **nicht** |
+| [B-133] Abad 2011 (Crossover, 13 Personen; Abstract) | Spezifisches Aufwärmen = 1 × 8 Wdh. bei ~50 % und 1 × 3 Wdh. bei ~70 % der geschätzten 1RM; mit zusätzlichem 20-min-Ergometer-Aufwärmen (60 % HFmax) lag die Beinpress-1RM um 8.4 % höher als mit dem spezifischen Teil allein |
 | [B-70] Ding 2022 (MA, Kinder/Jugendliche) | Aufwärmprogramme senken die Verletzungsrate (IRR 0.64; −36 %) |
 | [B-71] Boullosa 2026 (Delphi, 23 Experten) | 3-Schichten-Modell: allgemeine Übungen, spezifische Übungen, Konditionierungsreize (PAPE); Vollständigkeit bestimmt die Wirksamkeit; langfristig evtl. weniger Verletzungen, **kein Beleg für akuten Verletzungsschutz** |
 | [B-95] Iversen 2021 | Bei Zeitknappheit: nur übungsspezifisch aufwärmen; Dehnen nur bei Beweglichkeitsziel |
@@ -532,7 +554,11 @@ abgeleitet.
 *Folgerung:* Aufwärmen = kurzer allgemeiner Teil, gelenkspezifische
 Vorbereitung (Handgelenke, Ellbogen, Schultern; Inhalte Stream D) und 2–3
 **spezifische Rampensätze** mit leichteren Stufen der ersten Übung
-[B-68, B-71, B-95]. Die App darf Aufwärmen nicht als Verletzungsschutz
+[B-68, B-71, B-95], etwa nach dem Muster ~50 % → ~70 % der
+Arbeitsschwierigkeit mit abnehmender Wiederholungszahl [B-133]. Ein
+allgemeiner Teil vor dem spezifischen kann die Maximalleistung zusätzlich
+steigern [B-133], ein anderes RCT fand keinen Effekt auf Wiederholungen bei
+80 % 1RM [B-72] (W-10). Die App darf Aufwärmen nicht als Verletzungsschutz
 bewerben [B-71] (Brief §11: keine medizinischen Aussagen). Dauer 5–15 min
 nach Einheitslänge (**Praxisheuristik**; kein Dosis-Wirkungs-Beleg für die
 Dauer gefunden).
@@ -544,7 +570,8 @@ Dauer gefunden).
 | [B-32] ACSM 2009 | Last um **2–10 %** erhöhen, wenn 1–2 Wdh. über der Zielzahl gelingen (kleiner Prozentsatz für kleine, grösserer für grosse Muskelgruppen) |
 | [B-73] Plotkin 2022 (RCT, 43 Trainierte, 8 Wochen) | Wiederholungs-Progression (Last konstant) vs. Last-Progression (Wdh. konstant): ähnliche Hypertrophie (leichter Vorteil Wdh. am Rectus femoris), ähnliche Kraft (leichter Vorteil Last, 2.0 kg) |
 | [B-74] Kassiano 2026 (RCT) | Progressive Überlastung (Last erhöhen bei Obergrenze 8–12 Wdh.) → mehr Trizepswachstum (+21.4 %) als gleichbleibende Last (+11.3 %); auch ohne Progression Wachstum bei Untrainierten |
-| [B-75] Enes 2024 (RCT, 12 Wochen, Trainierte) | Alle 2 Wochen Sätze hinzufügen → grössere Kraftzuwächse als konstantes Volumen |
+| [B-75] Enes 2024 (RCT, 12 Wochen, Trainierte) | Alle 2 Wochen Sätze hinzufügen → grössere Kraftzuwächse als konstantes Volumen; getestet wurden +4 bzw. +6 Unterkörper-Wochensätze je 2 Wochen, +6 > +4 für die 1RM (Abstract; Ausgangsvolumen dort nicht angegeben) |
+| [B-132] Peterson 2011 (multizentrische Trainingsstudie, 83 Personen, 12 Wochen Arm-Training; Volltext) | Laststeigerung um 0.5–2 kg, sobald im letzten Satz in **zwei aufeinanderfolgenden Einheiten** ≥ 2 Wdh. über dem Ziel gelingen («2-for-2 rule»); die so erreichte Volumenlast hing eng mit dem 1RM-Zuwachs zusammen (Männer β 0.66, Frauen β 0.26) |
 | [B-76] Hostler 2001 (RCT) | Kleinstschritte (0.22–0.44 kg) über 8 Wochen gleich wirksam wie 1.1–2.2 kg-Schritte; langfristig möglicherweise schlechter |
 | [B-31] ACSM 2026 (Volltext) | Progression ist für Anfangsgewinne nicht zwingend, aber Voraussetzung für längerfristigen Fortschritt |
 | [B-19] Schärer 2021 | Elite-Turner testen Statics mit Zusatzgewicht oder Gegengewicht; Maximalkraft-Benchmarks in % Körpergewicht |
@@ -603,8 +630,11 @@ Begründung.
 **Muskelgedächtnis:** Menschliche Muskulatur zeigt eine epigenetische
 Erinnerung an frühere Hypertrophie (Hypomethylierung bleibt über 22 Wochen
 Pause) [B-92], aber ein vorher trainiertes Bein reagierte nicht stärker auf
-erneutes Training [B-89]. Gesichert ist der praktische Befund: Kraft kommt
-schneller zurück, als sie aufgebaut wurde [B-88, B-90].
+erneutes Training [B-89]. Nach 10 Wochen Armtraining und 16 Wochen Pause
+blieben die zusätzlichen Myonuklei erhalten, der Zuwachs beim 10-wöchigen
+Retraining war aber nicht grösser als im untrainierten Arm; der praktische
+Nutzen ist laut den Autoren offen [B-135]. Gesichert ist der praktische
+Befund: Kraft kommt schneller zurück, als sie aufgebaut wurde [B-88, B-90].
 
 **Erhalt statt Pause:** Mit 1 Einheit/Woche und 1 Satz je Übung bleiben Kraft
 und Masse bei Jüngeren bis 32 Wochen erhalten, solange die Intensität gleich
@@ -703,6 +733,7 @@ Populations-Schwellen und kein ACWR [B-80].
 | [B-109] Calatayud 2015 | RCT, 30 Trainierte, 5 Wochen | 6RM-Liegestütz mit Band bei gleicher EMG-Aktivität wie 6RM-Bankdrücken → gleiche Kraftzuwächse in 1RM und 6RM (Δ 13.65–22.21) | Gleiche Anstrengung ≈ gleiche Wirkung |
 | [B-110] Kikuchi 2017 | RCT, 18 Männer, 2×/Woche, 8 Wochen | Liegestütze bei Last ≈ 40 % 1RM-Bankdrücken: Trizeps- und Brustmuskel-Hypertrophie und 1RM-Zuwachs vergleichbar mit Bankdrücken; Bizepszuwachs nur in der Bankdrückgruppe | Körpergewicht reicht für Hypertrophie der Zielmuskeln |
 | [B-111] Sánchez-Moreno 2020 | RCT, 29 krafttrainierte Männer (15.9 ± 4.9 Klimmzüge), 8 Wochen | Klimmzugsätze mit 25 % Geschwindigkeitsverlust > 50 % für Kraft und Ausdauer; mehr Wiederholungen nach 25 % brachten nichts | Klimmzug-Kraft: Sätze deutlich vor dem Versagen beenden |
+| [B-119] Vigouroux & Devise 2024 | randomisiert, 30 Kletterer, 5 Wochen, 2×/Woche | Klimmzug-1RM: exzentrisch bei 95 % 1RM +5.0 %, plyometrisch dazwischen, isometrische Lock-offs mit Körpergewicht +2.2 %, Kontrolle −1.5 %; Ausdauer am stärksten durch plyometrische Serien | Halte ohne Zusatzlast sind für Maximalkraft zu leicht, sobald die Stufe lange gehalten werden kann |
 | [B-19] Schärer 2021 | Querschnitt, 19 Elite-Turner | Kraft-Benchmarks für statische Ringelemente in % Körpergewicht | Statics lassen sich über Kraft messen |
 
 Für Straight-Arm-Statics (Planche, Front/Back Lever, Maltese, Iron Cross)
@@ -721,7 +752,7 @@ die Parameter dafür stützen sich auf die Übertragung der Isometrie-Evidenz
 | Schwerstes zuerst, Zubringer zuletzt [P-01 bis P-03] | Übung am Anfang gewinnt am meisten Kraft [B-50]; Ermüdung hemmt Lernen [B-51]; ACSM 2009 empfiehlt hohe vor niedriger Intensität [B-32] | **Gestützt** (A) |
 | Satzschema 2-5-5-3 (Planche), 3-5-2-2 (Maltese) [P-01 bis P-03] | Keine Studie zu solchen Schemata; Kraft: 2–3 Sätze je Übung [B-31] | **Nur Praxis** (C) |
 | 60–90 min pro Einheit (Extrakt §4.9, abgeleitet) | Minimaldosis-Evidenz zeigt Kraftzuwächse mit deutlich weniger [B-96, B-97, B-95] | **Praxis eines Elite-Athleten**, keine Voraussetzung; für 30–45 min kürzen (Abschnitt 14.2) |
-| Assistenz als reguläres Volumen [P-01 bis P-03] | Keine Studie; Band-Liegestütze bei gleicher Anstrengung wirken wie Bankdrücken [B-109] | **Plausibel**; Zählweise ist Praxisheuristik |
+| Assistenz als reguläres Volumen [P-01 bis P-03] | Keine Trainingsstudie zu Band-Assistenz; Band-Liegestütze bei gleicher Anstrengung wirken wie Bankdrücken [B-109]; Hypertrophie lastunabhängig nahe am Versagen, Maximalkraft braucht hohe Last [B-134, B-119] | **Plausibel für Volumen, nicht für Maximalkraft**; Zählweise Abschnitt 3.5 (Praxisheuristik) |
 | Keine Frequenz, keine Deloads, keine RIR-Angaben, «MAX»-Sätze [P-04 S. 1] | Deload-Praxis [B-63, B-64]; Versagen nicht nötig [B-27, B-31] | **Lücke** der PDFs; «MAX»-Sätze sind nicht als Standard zu übernehmen |
 | Zusatzlast nur auf beherrschten leichteren Stufen [P-02 S. 3; P-03 S. 2–3] | Progressive Überlastung nötig für längeren Fortschritt [B-31, B-74] | **Plausibel** (C) |
 
@@ -751,24 +782,24 @@ Anmerkung. Datenfelder beziehen sich auf `codebase_notes.md` §2.
 | PAR-B-15 | angle_transfer_window_deg | ~15 | ° | B-13, B-14 | B | Lanza: +12 % am Trainingswinkel, +7 % bzw. +11 % bei ±15°, +5 % bei −30°; Ersatzstufen mit anderem Gelenkwinkel übertragen nur teilweise |
 | PAR-B-16 | eccentric_rep_duration_s | 3–5 zu Beginn, Ziel 7–10 | s | B-113 | C | 2–3 Sätze à 2–3 Cluster-Wdh., 180 s Pause; erste volle Wdh. meist ab 3 × 3 × 7–10 s |
 | PAR-B-17 | dyn_strength_reps | 1–6; Standard 3–6 | Wdh. | B-32, B-36, B-30 | A | Körpergewicht: Stufe/Zusatzlast so wählen, dass der Bereich getroffen wird |
-| PAR-B-18 | dyn_strength_sets_per_exercise | 2–5; Standard 3 | Sätze | B-31, B-24, B-114 | B | ACSM 2026: 2–3 Sätze; Preprint: ~2 direkte Sätze/Einheit genügen für Kraft |
+| PAR-B-18 | dyn_strength_sets_per_exercise | 2–5; Standard 3 | Sätze | B-31, B-24, B-117, B-114 | B | ACSM 2026: 2–3 Sätze; ~2 direkte Sätze/Einheit genügen für Kraft (Preprint [B-24], Kongress-Abstract [B-117]; keine begutachtete Vollpublikation) |
 | PAR-B-19 | dyn_hypertrophy_reps | 6–15 | Wdh. | B-95, B-32, B-29, B-36 | A | Hypertrophie lastunabhängig [B-29]; 6–15 zeiteffizient [B-36, B-95] |
-| PAR-B-20 | dyn_hypertrophy_sets_per_exercise | 2–4 | Sätze | B-36, B-24 | B | pro Einheit höchstens ~10–11 Sätze je Muskel [B-24] (Preprint) |
+| PAR-B-20 | dyn_hypertrophy_sets_per_exercise | 2–4 | Sätze | B-36, B-24, B-118 | B | pro Einheit höchstens ~10–11 Sätze je Muskel [B-24, B-118] (Preprint bzw. Kongress-Abstract) |
 | PAR-B-21 | weekly_sets_per_muscle_hypertrophy | 10–20; Start 10 | Sätze/Woche | B-20, B-22, B-31, B-23 | A | abnehmender Grenznutzen [B-23]; Straight-Arm-Belastung zusätzlich über Stream D begrenzen |
 | PAR-B-22 | weekly_sets_per_muscle_min | 4 | Sätze/Woche | B-95 | B | Minimum bei Zeitknappheit |
 | PAR-B-23 | rep_to_load_threshold_reps | 12–15 saubere Wdh. in allen Arbeitssätzen | Wdh. | B-29, B-32 | Heuristik | > 15 RM ist «leichte Last» mit schwächerem Kraftreiz [B-29] → Zusatzlast oder schwerere Stufe mit Ziel 5–10 Wdh. |
 | PAR-B-24 | target_rir_strength | 1–3; Standard 2 | RIR | B-36, B-31, B-25 | A | Kraft praktisch unabhängig vom RIR [B-25]; ACSM 2026: 2–3 RIR genügen |
 | PAR-B-25 | target_rir_hypertrophy | 0–2; Standard 1–2, RIR 0 nur im letzten Satz | RIR | B-36, B-25, B-28, B-44 | A | 1–2 RIR ≈ Versagen für Hypertrophie [B-28] |
-| PAR-B-26 | target_rir_bodyweight_pull_strength | 2–4 | RIR | B-111 | Heuristik | Klimmzug: Satzende bei 25 % Geschwindigkeitsverlust > 50 % [B-111]; Umrechnung Geschwindigkeitsverlust → RIR nicht belegt |
+| PAR-B-26 | target_rir_bodyweight_pull_strength | 2–4 | RIR | B-111, B-131 | Heuristik | Klimmzug: Satzende bei 25 % Geschwindigkeitsverlust > 50 % [B-111]; Geschwindigkeitsverlust und Anteil geschaffter Wdh. hängen eng zusammen (R² 0.88) [B-131], die Umrechnungswerte waren nur im nicht zugänglichen Volltext → RIR-Spanne heuristisch |
 | PAR-B-27 | failure_allowed_static_and_skill | false | bool | B-113, B-31, B-51, B-58 | Heuristik | kein Satz ins Versagen bei Straight-Arm-Halten und Skillversuchen (Satzqualität [B-113], Erholung [B-58], Lernen [B-51]); Tests (`kind = test`) ausgenommen |
 | PAR-B-28 | rir_estimate_uncertainty_reps | ±1 (systematisch ~1 Wdh. zu niedrig geschätzt) | Wdh. | B-37, B-39 | A | Halperin: 0.95 Wdh. Unterschätzung, SD 1.45; Trainierte absolut 0.65 |
-| PAR-B-29 | rir_trust_after_weeks | 4 (Anfänger protokollieren RIR vorher nur) | Wochen | B-36 | Heuristik | Richtung belegt [B-36]; Dauer heuristisch |
-| PAR-B-30 | progression_trigger_sessions | 2 aufeinanderfolgende Einheiten mit allen Arbeitssätzen an der Obergrenze bei Ziel-RIR/SIR | Einheiten | B-32, B-73 | Heuristik | ACSM: steigern bei 1–2 Wdh. über Ziel [B-32]; «2 Einheiten» dämpft Tagesform |
+| PAR-B-29 | rir_trust_after_weeks | 4 (Anfänger protokollieren RIR vorher nur); danach alle 4–6 Wochen Kalibrierung über einen Testsatz (Max.-Wdh. bzw. Max.-Halt, `kind = test`) | Wochen | B-36, B-37, B-44, B-130 | Heuristik | Richtung belegt [B-36]; ob Übung die RIR-Genauigkeit verbessert, ist widersprüchlich [B-44] vs. [B-130] (W-19); Schätzungen nahe am Versagen sind genauer [B-37] → Kalibrierung per Test statt Vertrauen auf Übung; Dauer und Intervall heuristisch |
+| PAR-B-30 | progression_trigger_sessions | 2 aufeinanderfolgende Einheiten mit allen Arbeitssätzen an der Obergrenze bei Ziel-RIR/SIR | Einheiten | B-132, B-32, B-73 | B | «2-for-2 rule» in einer multizentrischen Trainingsstudie verwendet (≥ 2 Wdh. über Ziel im letzten Satz in 2 Einheiten → +0.5–2 kg) [B-132]; ACSM: steigern bei 1–2 Wdh. über Ziel [B-32]; Übertragung auf Sekunden bei Halten heuristisch |
 | PAR-B-31 | autoreg_adjust_threshold | Abweichung ≥ 2 RIR bzw. SIR vom Ziel in 2 aufeinanderfolgenden Einheiten → Ziel ±1–2 Wdh., ±1–2 s oder Stufenwechsel | RIR / s | B-40, B-41, B-43 | Heuristik | Autoregulation ≥ fixe Lasten [B-40, B-41]; Schwellen heuristisch |
 | PAR-B-32 | load_increment_pct | 2–10; Standard 2.5 % der bewegten Masse (Körpergewicht + Zusatzlast), auf kleinste verfügbare Scheibe aufgerundet | % | B-32, B-76 | B | Bezug auf Gesamtmasse ist Heuristik; Kleinstschritte kurzfristig gleich wirksam [B-76] |
 | PAR-B-33 | hold_progression_step_s | +1–2 s je Satz und Woche innerhalb der Stufe | s | B-113, B-73 | Heuristik | Wdh./Zeit-Progression gleichwertig zur Lastprogression [B-73] |
 | PAR-B-34 | sessions_per_skill_per_week | 2–3 (Standard 2 Anfänger, 3 Trainierte); min. 1 (Erhalt); max. 4 | Einheiten/Woche | B-45, B-30, B-31, B-23, B-114, B-87, B-98 | A | Maximum 4 ist Heuristik (Sehnen- und Gelenklast, Stream D) |
-| PAR-B-35 | balance_skill_sessions_per_week | 3–7, je 5–10 min, ermüdungsarm | Einheiten/Woche | B-18, B-99, B-52, B-114 | Heuristik | Handstand-/Balancearbeit; GtG ohne direkte Studie (Abschnitt 6.2) |
+| PAR-B-35 | balance_skill_sessions_per_week | 3–7, je 5–10 min, ermüdungsarm | Einheiten/Woche | B-18, B-99, B-52, B-114, B-120, B-121, B-122 | Heuristik | Handstand-/Balancearbeit; Volumen verteilen ist gleichwertig oder besser [B-120, B-121, B-122]; GtG ohne direkte Studie (Abschnitt 6.2); Stream E nennt 5–7 (PAR-E-12) |
 | PAR-B-36 | sessions_per_week_by_level | Anfänger 2–3; Fortgeschrittene 3–4; Erfahrene 4–5 | Einheiten/Woche | B-32 | B | Obergrenze durch User-Verfügbarkeit |
 | PAR-B-37 | split_threshold_sessions | Ganzkörper bei ≤ 3; Split (Push/Pull, Ober/Unter oder Straight/Bent) ab 4 Einheiten/Woche | Einheiten/Woche | B-49, B-116 | Heuristik | volumengleich kein Unterschied [B-49] (A); Schwelle heuristisch |
 | PAR-B-38 | min_hours_between_hard_same_pattern | 48 nach harter Einheit (RIR ≤ 1 oder Maximalversuche an der Zielstufe); 24 nach nicht erschöpfender Einheit | h | B-58, B-59, B-61, B-60 | Heuristik | Stream D kann für Straight-Arm-Sehnenlast verlängern |
@@ -778,17 +809,17 @@ Anmerkung. Datenfelder beziehen sich auf `codebase_notes.md` §2.
 | PAR-B-42 | rest_dyn_strength_s | Trainierte 180–300; Anfänger 120–180 | s | B-32, B-53, B-55, B-56 | A | ACSM 2026 fand keinen Pauseneffekt auf Kraft (siehe Widersprüche) |
 | PAR-B-43 | rest_hypertrophy_s | 90–180; Standard 120 | s | B-57, B-56, B-32 | A | > 90 s kaum Zusatznutzen [B-57] |
 | PAR-B-44 | rest_accessory_s | 60–120 | s | B-32, P-01, P-02, P-03 | B | Kraftausdauer < 90 s [B-32] |
-| PAR-B-45 | rest_paired_sets_s | 90–120 zwischen abwechselnden Antagonisten-Sätzen | s | B-114, B-101 | C | Supersätze ohne schlechtere chronische Effekte [B-101] |
+| PAR-B-45 | rest_paired_sets_s | 120 (Spanne 90–180) zwischen abwechselnden Antagonisten-Sätzen | s | B-126, B-114, B-101, B-124 | B | 1 min senkt das Volumen deutlich, 2 min am effizientesten, 3 min am meisten Volumen [B-126] (akut, Hantelübungen); Paare ohne schlechtere chronische Effekte [B-101, B-124]; Low 90–120 s [B-114] |
 | PAR-B-46 | exercise_order | Balance-/Technikskill → Maximalreiz Zielskill → Volumen → Zubringer/Prehab | Reihenfolge | B-50, B-51, B-31, P-01, P-02, P-03 | A | Priorität des Users bestimmt Position 1 |
 | PAR-B-47 | straight_arm_hard_sets_per_session_max | 8–12 (Anfänger, Intermediate); bis 18 (Fortgeschrittene) | Sätze | P-01, P-02, P-03, P-04 | Heuristik | PDF: 12–18 Arbeitssätze; Anfänger-Obergrenze abgeleitet |
-| PAR-B-48 | same_direction_straight_arm_skills_per_session_max | 2 mit gemeinsamem Satzbudget | Skills | P-01, P-02, P-03, P-04, B-114 | Heuristik | Planche + Maltese wie PDF-«Mixt»; Gegenrichtung (Planche + Front Lever) als Paar |
+| PAR-B-48 | same_direction_straight_arm_skills_per_session_max | 2 mit gemeinsamem Satzbudget | Skills | P-01, P-02, P-03, P-04, B-114, B-123 | Heuristik | Planche + Maltese wie PDF-«Mixt»; später platzierte Übungen schaffen weniger Wdh. [B-123]; Gegenrichtung (Planche + Front Lever) als Paar (PAR-B-81) |
 | PAR-B-49 | deload_triggers | (a) Hauptübung stagniert/fällt in ≥ 2 aufeinanderfolgenden Einheiten; (b) perceived_fatigue ≥ 8 in ≥ 3 der letzten 5 Einheiten; (c) Gelenkbeschwerden gemeldet; (d) spätestens nach 8 Aufbauwochen | — | B-64, B-107, B-104, B-62 | Heuristik | Auslöserarten aus [B-64]; Schwellen heuristisch |
 | PAR-B-50 | deload_frequency_weeks | 4–8; Standard: 6. Woche nach 5 Aufbauwochen | Wochen | B-63, B-64, B-114, B-62 | B | vorgeplant oder autoreguliert [B-62] |
 | PAR-B-51 | deload_duration_days | 5–7 | Tage | B-63, B-64 | B | Rogerson 6.4 ± 1.7 Tage |
-| PAR-B-52 | deload_volume_factor | 0.5 (Spanne 0.4–0.6) | Anteil der Sätze | B-114, B-62, B-98, B-94 | B | Frequenz und Übungswahl bleiben [B-64] |
-| PAR-B-53 | deload_rir_increase | +2 (bzw. SIR +2 s) | RIR | B-64, B-63 | Heuristik | Richtung belegt, Betrag heuristisch |
+| PAR-B-52 | deload_volume_factor | 0.6 (Spanne 0.5–0.7) | Anteil der Sätze | B-63, B-64, B-114, B-62, B-98, B-94 | B | Coaches: Volumen −30 bis −50 % [B-63] (Volltext); Low halbiert [B-114] = konservative Untergrenze; Frequenz und Übungswahl bleiben [B-64] |
+| PAR-B-53 | deload_rir_increase | +2 (Spanne +1 bis +3; bei Halten SIR +2 s) | RIR | B-63, B-64 | B | +1 bis +3 RIR je Satz oder Last −10 % [B-63] (Volltext); Umrechnung auf SIR heuristisch |
 | PAR-B-54 | deload_intensity_rule | Stufe halten oder 1 Stufe leichter; keine Komplettpause als Standard | — | B-65, B-98, B-82 | A | Komplettpause senkte Kraftzuwächse [B-65]; Intensität erhält Anpassungen [B-98, B-82] |
-| PAR-B-55 | weekly_volume_increase_max | +10–20 % Sätze pro Woche bzw. max. +1 Satz je Übung | %/Woche | B-77, B-78, B-79, B-75 | Heuristik | für Krafttraining keine belegte Obergrenze; 10 %-Regel ohne Wirkung [B-77] |
+| PAR-B-55 | weekly_volume_increase_max | +10–20 % Sätze pro Woche bzw. max. +1 Satz je Übung | %/Woche | B-77, B-78, B-79, B-75 | Heuristik | für Krafttraining keine belegte Obergrenze; 10 %-Regel ohne Wirkung [B-77]; Trainierte vertrugen +4 bis +6 Unterkörper-Wochensätze je 2 Wochen mit Kraftvorteil [B-75] — der Planer bleibt darunter, weil Sehnenlast bei Straight-Arm-Arbeit ungeprüft ist (Stream D) |
 | PAR-B-56 | session_spike_cap_pct | geplante Einheit ≤ 110–120 % des grössten Volumens desselben Musters der letzten 28 Tage | % | B-79 | Heuristik | Analogie aus dem Laufen (Einzelsession-Spitzen > 10 % riskant) |
 | PAR-B-57 | intensity_step_per_week_max | 1 Stufenwechsel (Stufe, Band oder Last) je Übung und Woche | Stufen/Woche | B-12, B-32 | Heuristik | Sehnen adaptieren langsamer [B-12] |
 | PAR-B-58 | acwr_enabled | false | bool | B-80, B-79 | B | ACWR ohne Evidenz für Belastungsentscheidungen |
@@ -803,12 +834,18 @@ Anmerkung. Datenfelder beziehen sich auf `codebase_notes.md` §2.
 | PAR-B-67 | session_template_90min | 1 Maximalübung (2–3 Sätze) + 2 Volumenübungen (je 5) + 1–2 Zubringer (2–3); Aufwärmen 12–15; Prehab; 12–18 Arbeitssätze | min / Sätze | P-01, P-02, P-03, P-04, B-68 | C | PDF-Struktur |
 | PAR-B-68 | session_cut_priority | Ergänzung streichen → Volumensätze auf 2–3 → Antagonisten-Paare → Pausen der Nicht-Maximal-Reize kürzen → nie kürzen: Aufwärmen ≥ 5 min und Primärblock | Reihenfolge | B-50, B-23, B-96, B-101, B-57 | Heuristik | Abschnitt 14.2 |
 | PAR-B-69 | warmup_duration_min | 5 (30 min), 7 (45 min), 10 (60 min), 12–15 (90 min) | min | B-67, B-71, B-95 | Heuristik | Nutzen belegt [B-67], Dauer nicht |
-| PAR-B-70 | warmup_ramp_sets | 2–3 Rampensätze mit leichteren Stufen/Assistenz vor dem Primärblock, etwa 50 % → 75 % der Arbeitsschwierigkeit | Sätze | B-68, B-71 | Heuristik | schwere dynamische Aufwärmsätze steigern Kraft [B-68]; Prozentwerte heuristisch |
+| PAR-B-70 | warmup_ramp_sets | 2–3 Rampensätze mit leichteren Stufen/Assistenz vor dem Primärblock, etwa 50 % → 70–75 % der Arbeitsschwierigkeit bei sinkender Wdh.-Zahl | Sätze | B-133, B-68, B-71 | B | Muster aus [B-133] (8 Wdh. bei ~50 %, 3 Wdh. bei ~70 % 1RM); schwere dynamische Aufwärmsätze steigern Kraft [B-68]; Übertragung von %1RM auf Stufen/Haltezeit heuristisch |
 | PAR-B-71 | warmup_static_stretch_max_s | < 60 je Muskelgruppe | s | B-69 | A | ≥ 60 s: −4.6 % Leistung |
 | PAR-B-72 | srpe_formula | session_load = perceived_fatigue (1–10) × Dauer (min); Abfrage ~30 min nach der Einheit | AU | B-103, B-106, B-105 | B | Gleichsetzung 1–10 ≈ CR-10 ist Heuristik |
 | PAR-B-73 | load_monitoring_window_weeks | 6 (gleitend); Monotonie = Mittel/SD der Tageslast; Strain = Wochenlast × Monotonie; nur individuelle Schwellen | Wochen | B-104, B-107 | B | Foster 1998: gleitender 6-Wochen-Schnitt |
 | PAR-B-74 | rest_skill_practice_s | 30–90 nach Bedarf | s | B-51 | Heuristik | Technik-/Balanceversuche ermüdungsarm halten [B-51]; keine Pausenstudie für Skillversuche |
-| PAR-B-75 | max_sets_per_muscle_per_session | ~10–12 (darüber kein nachweisbarer Zusatznutzen für Hypertrophie); Kraft: ~2–3 direkte Sätze je Übung | Sätze | B-24, B-31 | A | Preprint [B-24]; bei höherem Wochenvolumen auf mehr Einheiten verteilen |
+| PAR-B-75 | max_sets_per_muscle_per_session | ~10–12 (darüber kein nachweisbarer Zusatznutzen für Hypertrophie); Kraft: ~2–3 direkte Sätze je Übung | Sätze | B-24, B-117, B-118, B-31 | B | Preprint [B-24] und Kongress-Abstracts [B-117, B-118], keine begutachtete Vollpublikation (Stand 27.09.2026) → B statt A; bei höherem Wochenvolumen auf mehr Einheiten verteilen [B-120] |
+| PAR-B-76 | static_conditioning_dose | Haltezeit 10–30 s je Satz, 2–3 Sätze, 30–90 s gesamt je Übung | s / Sätze | B-09, B-114, P-01, P-02, P-03 | C | Leans, Supports, Zubringer mit Max.-Haltezeit > 30 s (Abschnitt 3.4); Pause PAR-B-41 |
+| PAR-B-77 | eccentric_dose | 2–3 Sätze à 2–3 Cluster-Wdh. (3–10 s je Wdh., PAR-B-16); Pause 180 s | Sätze / s | B-113, B-119 | C | Low [B-113]; Forschungsprotokoll Klimmzug-Negativ: 6 × 3 × 5 s bei 95 % 1RM, 3 min Pause, stärkster 1RM-Zuwachs [B-119] |
+| PAR-B-78 | dyn_endurance_accessory_dose | ≥ 12 Wdh. (12–20), 2–3 Sätze, RIR 1–3; Pause PAR-B-44 | Wdh. / Sätze | B-36, B-32 | B | Kraftausdauer ≥ 12 Wdh., < 2 min Pause [B-36]; < 90 s [B-32]; Satzzahl Heuristik |
+| PAR-B-79 | assisted_set_counting | Hypertrophie-Wochensätze: 1.0 bei RIR/SIR ≤ 3, sonst 0.5; Maximalkraft-/Progressionstrigger der Zielstufe: 0; Straight-Arm-Satzbudget und Spitzen-Kappung: 1.0 | Satz-Gewicht | B-134, B-29, B-109, B-119, B-12, B-25 | Heuristik | Abschnitt 3.5; keine Trainingsstudie zu Band-Assistenz gefunden |
+| PAR-B-80 | gtg_protocol | optional; nur Grundübungen mit gebeugtem Arm und Balance-Skills; nie Straight-Arm-Statics; nie bis zum Versagen (Grenze ≤ 50 % der Max.-Wdh. wie PAR-E-27); zählt 0 für Hypertrophie-Wochensätze | Regel | B-17, B-18, B-25, B-120, B-121, B-122 | Heuristik | keine kontrollierte GtG-Studie (Abschnitt 6.2); Verteilen von Volumen gleichwertig oder besser [B-120, B-121, B-122]; Kraft kaum abhängig von Versagensnähe [B-25] |
+| PAR-B-81 | skill_pairing_rule | Straight-Arm-Skills gegensätzlicher Zugrichtung abwechselnd als Paar (Pause PAR-B-45); gleiche Zugrichtung mit gemeinsamem Budget (PAR-B-48) und Priorität zuerst; keine Sperrfrist zwischen zwei verschiedenen Skills | Regel | B-114, B-124, B-125, B-126, B-50, B-123, B-128, B-129 | Heuristik | Paar-Befunde nur aus dynamischem Hanteltraining [B-124, B-125, B-126]; Interferenz zwischen Straight-Arm-Skills nicht untersucht (Abschnitt 7) |
 
 ## Widersprüche
 

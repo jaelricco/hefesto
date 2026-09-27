@@ -11,8 +11,8 @@
 > **Prüftiefe:** Titel, Autoren, Jahr und Abstract jeder Quelle wurden über
 > Europe PMC, Crossref, PMC, OpenAlex oder die Verlags-/Repository-Seite
 > geprüft. Volltexte wurden gelesen, wo frei verfügbar (F-02, F-07, F-11, F-18,
-> F-20, F-26 in der Tagungsfassung, F-28, F-40, F-54, F-55 (Abstract und
-> Diskussion), F-61, F-66). Nur das Abstract war verfügbar für F-51, F-52, F-53,
+> F-20, F-26 in der Tagungsfassung, F-28, F-40, F-54, F-61, F-66). Nur das
+> Abstract war verfügbar oder wurde geprüft für F-51, F-52, F-53, F-55,
 > F-56–F-60, F-62–F-65, F-67, F-77. F-16 ist jetzt über das vollständige
 > Abstract (OpenAlex) geprüft; die Zahlen stimmen. Coaching-Quellen (F-68–F-76)
 > wurden direkt abgerufen: die OG2-Charts als gerenderte PDF-Seiten, die
@@ -64,7 +64,7 @@
   valide [F-02].
 - **Last in % Körpergewicht:** Liegestütz 64–75 %, Knie 49–62 %, Hände
   30.5/61 cm erhöht 55/41 %, Füsse 30.5/61 cm erhöht 70/74 % [F-25, F-26];
-  Ring-/Suspension-Rudern mit fast waagrechtem Körper 69–76 % [F-66],
+  Suspension-Rudern (TRX) mit laut Autoren waagrechtem Körper 69–76 % [F-66],
   Suspension-Liegestütz 50–75 % [F-65, F-66]. Umrechnung Zug/Druck:
   Klimmzug-1RM ≈ 1.25 × Latzug-1RM bei Männern [F-22]; Dip-1RM ≈ 1.11 ×
   Klimmzug-1RM [F-19]. Für Pike-Liegestütz fanden sich keine Messdaten.
@@ -84,14 +84,15 @@
   [F-51, F-52]). Zu Hause selbst getestete Klimmzüge stimmten von allen
   Selbstauskünften am besten mit der Messung überein, die Übereinstimmung der
   Klassen blieb aber schwach bis mässig (κ ≤ 0.34) [F-53]. Selbst gezählte
-  Heim-Liegestütze lagen 17 % über der Videozählung [F-55]; Haltezeiten wurden
+  Heim-Liegestütze lagen bei Querschnittgelähmten 17 % über der Videozählung
+  [F-55]; Haltezeiten wurden
   im Voraus eher unterschätzt [F-54]. Folge: Selbstauskunft ist ein breiter
   Startwert [F-13, F-14].
 - **Skill-Bereitschaft:** Spezifische Kraft erklärte 76–85 % der Maximalkraft
   in der Schwalbe an den Ringen, aber nur 42–59 % in der Stützwaage [F-40].
   Validierte Schwellen für Muscle-up, Front Lever oder Planche gibt es nicht.
-  Coaching-Quellen nennen für den Muscle-up 8–15 Klimmzüge und 8–20 Dips
-  [F-70, F-71, F-74] (Evidenz C/D) und für den Start in Front Lever und Planche
+  Coaching-Quellen nennen für den Muscle-up 8–18 Klimmzüge und 8–25 Dips
+  (Ring-Muscle-up am oberen Ende) [F-70, F-71, F-74] (Evidenz C/D) und für den Start in Front Lever und Planche
   10 Klimmzüge bzw. 3 × 20 Liegestütze plus 60 s Hollow Hold [F-72, F-73]
   (Evidenz C). OG2 setzt den vollen Front Lever gleich mit einem
   Klimmzug-1RM von 1.78 × KG [F-68] (Evidenz C). Der Planer nutzt diese Werte
@@ -164,7 +165,7 @@ einstuft. Beispiel: Wiederholungen bei 70 % 1RM hatten den besseren ICC
 | 3RM Klimmzug im Untergriff mit Zusatzlast | – | CV 1.7 % (≥ 2 Jahre Krafttraining) / 1.9 % (6–12 Monate) | 25 männliche Nachwuchsathleten, 72 h | F-58 | B |
 | Beugehang, 90° Ellbogenwinkel | Retest ICC 0.98; zwei Bewerter ICC 0.99; Validität für relative isometrische Kraft r = 0.88, für absolute r = 0.10 | – | 31 Studentinnen | F-57 | B |
 | Rumpfbeuger-Halte: modifizierter V-Sit / Unterarmstütz | ICC 0.71 / 0.95 | SEM ≈ 56 s bei Mittel 142 s (40 %) / ≈ 10 s bei 93 s (11 %) (eigene Rechnung, Näherung) | 60 Erwachsene, Retest-Untergruppe n = 10 | F-59 | B |
-| Rumpfbeuger-Test nach McGill (60°-Sitz, Halt bis Abbruch) u. a. | Reliabilitätskoeffizienten > .97 an 5 Tagen und nach 8 Wochen | – | 75 junge Erwachsene | F-60 | B |
+| Haltetests nach McGill (Rumpfbeuger, Rumpfstrecker, Seitstütz; Haltezeit bis Abbruch) | Reliabilitätskoeffizienten > .97 an 5 aufeinanderfolgenden Tagen und nach 8 Wochen | – | 75 junge Erwachsene | F-60 | B |
 | Liegestütz und modifizierter Klimmzug, je 15 s | ICC 0.989 / 0.958 | MDC 2 Wdh. | 46 Erwachsene, ≤ 5 Tage | F-17 | B |
 | Klimmzug (Artisten, Messungen alle 6 Monate) | ICC 0.88 über 18 Monate | weite Übereinstimmungsgrenzen | 238 Artisten | F-18 | B |
 | Klimmzug, Handstand-Liegestütz, Handstand frei, hängende Pikes, Ringe-Halt, Schulterflexibilität, Spagat | ICC 0.89 / 0.96 / 0.91 / 0.83 / 0.75 / 0.90 / 0.97 | SEM (eigene Rechnung): 2.0 Wdh. / 1.8 Wdh. / 11.8 s / 3.8 Wdh. / – / – / – | 30 Turner, 7–18 J., 1 Woche | F-28 | B |
@@ -311,7 +312,7 @@ Selbsttests ist ungeprüft.
 | `ankle_dorsiflexion_wblt` | Ausfallschritt zur Wand | Knie berührt die Wand, Ferse bleibt am Boden; maximaler Fuss-Wand-Abstand | – | F-10 (mehrere Varianten, alle reliabel) |
 | `wrist_extension` | Unterarm aufgelegt, Handgelenk frei | App am Handrücken bzw. an der Handfläche ausgerichtet | – | F-33, F-34 |
 | `push_up_max` | Hochstütz, Hände schulterbreit, Körper gerade | Ellbogen mindestens 90° gebeugt, oben volle Streckung, Hüfte in Linie; Hände bleiben am Boden (keine Hand-Release-Variante) | erste ungültige Wdh., Pause > 2 s oben | **Praxisheuristik** für die Kriterien: Das überarbeitete Protokoll aus F-16 war nur als Abstract einsehbar. Hand-Release-Liegestütze ergeben signifikant mehr Wdh. als Standard-Liegestütze [F-56]; deshalb eine Variante festlegen und beim Retest beibehalten |
-| `bent_arm_hang` | mit Hilfe (Kasten) in den Hang, Obergriff | Ellbogen 90° gebeugt | Winkel geht verloren; Wert in s | F-57 (90°-Variante); Hilfsmittel: **Praxisheuristik** |
+| `bent_arm_hang` | mit Hilfe (Kasten) in den Hang, Obergriff | Ellbogen 90° gebeugt | Winkel geht verloren; Wert in s | F-57 (90°-Variante, nur Abstract); Start- und Endkriterium: **Praxisheuristik** |
 | `dip_max` | Stütz mit gestreckten Armen | Oberarm mindestens parallel zum Boden, oben volle Streckung | erste ungültige Wdh. | **Praxisheuristik** |
 | `plank_hold` | Unterarmstütz | Körperlinie Kopf–Ferse | Abbruch bei Erschöpfung oder wiederholtem Technikverlust | F-30 |
 | `hollow_body_hold`, `l_sit_hold`, Skill-Halte | Position der Stufe | Formkriterien aus Stream A | Verlassen der Position | **Praxisheuristik** |
@@ -447,7 +448,7 @@ zwischen Skills legt Stream A fest.
 | Muscle-up | Beginn des Übergangstrainings: 8–10 strikte Klimmzüge, 8–10 strikte Dips, 20–30 s False-Grip-Hang; erster Stangen-Muscle-up ohne Hilfe: ≥ 12 strikte Klimmzüge und 5 tiefe Dips an der geraden Stange; typisch 3–6 Monate Training | F-71 | C | Engpässe laut Quelle: Zugkraft und False Grip; der Übergang ist eine eigene Fertigkeit |
 | Muscle-up / Ring-Muscle-up | Minimum → ideal: Klimmzüge 10 → 15 / 12 → 18, Dips 15 → 20 / 20 → 25 | F-74 | D | anonyme Website, «community-consensus standards» |
 | Front Lever (Einstieg) | 10 strikte Klimmzüge, 30 s Totehang, 60 s Hollow Hold, 15 Beinheben mit gestreckten Beinen | F-72 | C | kommerzielle Seite; Zeitangaben (12–18 Monate bis Full) ohne Beleg |
-| Front Lever (Einstieg) | Klimmzüge 12 → 18, L-Sit 15 → 30 s, Rudern 15 → 20 | F-74 | D | wie oben |
+| Front Lever (Einstieg) | Klimmzüge 12 → 18, L-Sit 15 → 30 s, Rudern 15 → 20 | F-74 | D | anonyme Website |
 | Front Lever (voll) | Zusatzlast im Klimmzug-1RM: Einzelfall mit +62 % KG (Untergriff) bei gehaltenem Full Front Lever, unter den oft genannten 70–80 %; «there's no answer» | F-76 | D | n = 1, Selbstbericht |
 | Front Lever (voll) | Umfrage in einem Forum: relative Zugkraft (1RM / KG) wirkte wichtiger als absolute; Personen mit Straddle oder mehr waren eher leicht | F-75 | D | anonyme Umfrage, kleine Stichprobe, keine Auswertung publiziert |
 | Planche (Einstieg) | 60 s Hollow Hold plus Plank und Seitstütz, 3 × 20 Liegestütze (Brust zum Boden), 3 min Handgelenkvorbereitung ohne Schmerz; nächste Stufe erst nach 10 s sauberem Halt | F-73 | C | «research shows» für die 10-s-Regel ohne Beleg |
@@ -462,7 +463,7 @@ Stufe gelten als ähnlich schwer, die Einordnung ist ausdrücklich «approximate
 
 | Stufe | Front Lever | Klimmzug-1RM (× KG) | Planche | Dip-1RM (× KG) | Weitere Übungen derselben Stufe |
 |---|---|---|---|---|---|
-| 3 | – | 1.00 | Frog Stand | 1.00 (Dip) | Barren-Dip, Klimmzug |
+| 3 | – | 1.00 | Frog Stand | 1.00 (Dip) | Barren-Dip, Klimmzug, L-Sit, Plank 60 s |
 | 4 | Tuck | 1.18 | einarmiger Frog Stand | 1.20 | Pistol Squat, Kipping-Muscle-up |
 | 5 | Advanced Tuck | 1.35 | Tuck | 1.38 | Muscle-up, Wand-HSPU, Schulterdrücken 0.68 × KG |
 | 6 | Straddle | 1.50 | Advanced Tuck | 1.55 | – |
@@ -514,9 +515,9 @@ Dip-1RM von 1.59 × KG [F-19], College-Männer 1.16 × KG im Klimmzug [F-22].
 | Taugt eine Fitness-Selbsteinschätzung? | IFIS ordnet Jugendliche korrekt nach gemessener Fitness [F-50]; bei jungen Erwachsenen valide und reliabel, Zusammenhänge der Muskelfitness abhängig von absoluter vs. relativer Darstellung [F-36] | F-50, F-36 (B) | Selbstauskunft für die grobe Einordnung nutzen, nicht für Dosierung |
 | Wie reproduzierbar ist die Selbsteinschätzung? | Test-Retest 0.40–0.99, meist ≥ 0.60, hohe Heterogenität | F-14 (A) | breiter Fehler im Startwert |
 | Wie genau erinnern User ihre Wiederholungszahl aus einem offiziellen Test? | Liegestütze: im Mittel 4 Wdh. zu hoch (61 ± 14 gemessen vs. 65 ± 13 erinnert, r 0.83); einzelne Angaben wichen laut Bland-Altman stark ab | F-51 (B) | Verzerrung nach oben; Einzelfehler SD ≈ 13–18 % (eigene Rechnung, 2.3) |
-| | 1047 Soldaten: Männer 63.5 → 66.3, Frauen 37.7 → 40.2 Liegestütze (r 0.82 / 0.86); kein Unterschied zwischen den Geschlechtern | F-52 (B) | Korrektur −5 % auf erinnerte Wdh. (PAR-F-55) |
+| | 1047 Soldaten: Männer 63.5 → 66.3, Frauen 37.7 → 40.2 Liegestütze (r 0.82 / 0.86); Erinnerungsgenauigkeit ohne Unterschied zwischen den Geschlechtern | F-52 (B) | Korrektur −5 % auf erinnerte Wdh. (PAR-F-55) |
 | Wie genau sind selbst durchgeführte Heimtests? | 14 166 junge Erwachsene, Messung 1–18 Monate später: r 0.29–0.82, κ 0.05–0.34 (schwach bis mässig); die höchste Übereinstimmung zeigten Klimmzüge; Frauen überschätzten häufiger als Männer | F-53 (B) | Klimmzüge eignen sich am ehesten zur Selbstauskunft; Klassen trotzdem breit (PAR-F-34) |
-| | Querschnittgelähmte: selbst gezählte Heim-Liegestütze 17.3 % über der Videozählung desselben Tests; der unbeaufsichtigte Heimtest ergab 15.5 % weniger Wdh. als der per Video beaufsichtigte | F-55 (B) | Q14 «gefilmt» senkt den Fehler; Übertragbarkeit auf Gesunde ungeprüft |
+| | Querschnittgelähmte: selbst gezählte Heim-Liegestütze 17.3 % über der Videozählung desselben Tests; beaufsichtigter (live per Video) und unbeaufsichtigter Test unterschieden sich um 15.5 % (Richtung im Abstract nicht eindeutig) | F-55 (B) | Q14 «gefilmt» senkt den Fehler; Übertragbarkeit auf Gesunde ungeprüft |
 | Wie genau schätzen User ihre Haltezeiten oder maximalen Wiederholungen im Voraus, ohne Test? | Haltezeiten (Plank, Hantel-Halten) wurden unterschätzt; die physische Selbstwirksamkeit erklärte 25–36 % der Schätzfehler, das Aktivitätsniveau nicht (31 Studierende) | F-54 (B) | Richtung anders als bei erinnerten Testwerten (Widersprüche); Betrag bleibt Heuristik (PAR-F-20) |
 | Wie genau ist die RIR-Schätzung? | Unterschätzung um 0.95 Wdh., genauer nahe am Versagen, bei ≤ 12 Wdh. und in späteren Sätzen; Trainingsstatus ohne Einfluss | F-08 (A) | RIR-Logs nur nahe am Versagen als Kapazitätsnachweis |
 | | SEM der Vorhersage 2.64–3.38 Wdh.; Tendenz zu besserer Genauigkeit mit Erfahrung | F-37 (B) | |
@@ -806,7 +807,7 @@ erkennen [F-18].
 | PAR-F-58 | `suspension_push_up_bw_fraction` | 0.50 (gestreckt) – 0.75 (gebeugt) bei senkrechten Gurten; 0.70–0.75 bei waagrechtem Körper | Anteil KG | F-65, F-66 | B | Last hängt stark von Phase und Körperwinkel ab. |
 | PAR-F-59 | `no_ground_contact_bw_fraction` | 1.0 | Anteil KG | – | Heuristik | Dip, Klimmzug, Muscle-up, HSPU: Mechanik (ganzes Körpergewicht an den Händen); dynamisch zeitweise mehr. Keine Messung gefunden; Abgleich Stream C. |
 | PAR-F-60 | `pike_push_up_bw_fraction` | unbekannt; Reihenfolge `push_up` < `pike_push_up` < `handstand_push_up` | Reihenfolge | – | Heuristik | Keine Messdaten gefunden; nur für Plausibilitätsregel R-1, nicht für Umrechnungen. |
-| PAR-F-61 | `bent_arm_hang_protocol` | Ellbogen 90°, Ende bei Winkelverlust; Einstiegstest bei 0 Klimmzügen | Protokoll | F-57 | B | ICC 0.98 (Retest), 0.99 (zwei Bewerter); valide für relative isometrische Kraft (r 0.88), nicht für absolute (r 0.10). Nur Frauen untersucht (n = 31). |
+| PAR-F-61 | `bent_arm_hang_protocol` | Ellbogen 90°, Ende bei Winkelverlust; Einstiegstest bei 0 Klimmzügen | Protokoll | F-57 | B | ICC 0.98 (Retest), 0.99 (zwei Bewerter); valide für relative isometrische Kraft (r 0.88), nicht für absolute (r 0.10). Nur Frauen untersucht (n = 31). Endkriterium und Einsatz bei 0 Klimmzügen sind **Heuristik**. |
 | PAR-F-62 | `readiness_hint_muscle_up` | «bereit zum Üben»: ≥ 8 Klimmzüge und ≥ 8 Dips (+ 20 s False Grip); «erster Versuch ohne Hilfe»: ≥ 12 Klimmzüge; Spanne der Quellen 8–18 Klimmzüge, 8–25 Dips | Wdh. | F-70, F-71, F-74 | C | Nur weicher Hinweis (PAR-F-42). F-70: «decent guidelines but not absolute prerequisites»; F-74 ist D. |
 | PAR-F-63 | `readiness_hint_front_lever_start` | ≥ 10 Klimmzüge, ≥ 30 s Totehang, ≥ 60 s Hollow Hold | Wdh. / s | F-72 | C | Einstieg in die Tuck-Stufe; F-74 (D) nennt 12–18 Klimmzüge. Weicher Hinweis. |
 | PAR-F-64 | `readiness_hint_planche_start` | 3 × 20 Liegestütze, ≥ 60 s Hollow Hold, schmerzfreie Handgelenkvorbereitung | Wdh. / s | F-73 | C | Einstieg in Lean/Tuck; F-74 (D) nennt 20–30 Dips und 40–60 Liegestütze. Weicher Hinweis; Schmerz folgt den Regeln aus Stream D. |
@@ -1014,6 +1015,41 @@ erkennen [F-18].
 | F-48 | A Guideline of Selecting and Reporting Intraclass Correlation Coefficients for Reliability Research | Koo TK, Li MY | 2016 | https://doi.org/10.1016/j.jcm.2016.02.012 | Narratives Review | B |
 | F-49 | A Statistical Framework to Interpret Individual Response to Intervention: Paving the Way for Personalized Nutrition and Exercise Prescription | Swinton PA, Hemingway BS, Saunders B, Gualano B, Dolan E | 2018 | https://doi.org/10.3389/fnut.2018.00041 | Narratives Review | B |
 | F-50 | The International Fitness Scale (IFIS): usefulness of self-reported fitness in youth | Ortega FB, Ruiz JR, España-Romero V, et al. | 2011 | https://doi.org/10.1093/ije/dyr039 | Querschnittstudie | B |
+| F-51 | The validity of self-reported physical fitness test scores | Jones SB, Knapik JJ, Sharp MA, Darakjy S, Jones BH | 2007 | https://doi.org/10.7205/milmed.172.2.115 | Querschnittstudie | B |
+| F-52 | Validity of Self-Reported Physical Fitness and Body Mass Index in a Military Population | Martin RC, Grier T, Canham-Chervak M, Anderson MK, Bushman TT, DeGroot DW, Jones BH | 2016 | https://doi.org/10.1519/JSC.0000000000001026 | Querschnittstudie | B |
+| F-53 | Relationship between self-reported and objectively measured physical fitness in young men and women | Aandstad A | 2023 | https://doi.org/10.1080/17461391.2021.2012597 | Querschnittstudie | B |
+| F-54 | How long can you hold on? Physical self-efficacy predicts performance estimation accuracy independent of leisure-time physical activity | Meixner F, Wölfle S, Hawat N | 2025 | https://doi.org/10.3389/fpsyg.2025.1545582 | Querschnittstudie | B |
+| F-55 | Feasibility and validity of the push-up test for synchronous and asynchronous strength tele-assessment in spinal cord injury individuals with paraplegia | Gomes Costa RR, Dorneles JR, Veloso JHCL, Gonçalves CWP, Neto FR | 2024 | https://doi.org/10.1080/10790268.2022.2124651 | Querschnittstudie | B |
+| F-56 | Construct Validity of Two Different Methods of Scoring and Performing Push-ups | Clemons J | 2019 | https://doi.org/10.1519/JSC.0000000000002843 | Querschnittstudie | B |
+| F-57 | Construct validity of a modification of the flexed arm hang test | Clemons JM | 2014 | https://doi.org/10.1519/JSC.0000000000000601 | Querschnittstudie | B |
+| F-58 | The Influence of Resistance Training Experience on the Between-Day Reliability of Commonly Used Strength Measures in Male Youth Athletes | Weakley JJS, Till K, Darrall-Jones J, Roe GAB, Phibbs PJ, Read DB, Jones BL | 2017 | https://doi.org/10.1519/JSC.0000000000001883 | Querschnittstudie | B |
+| F-59 | A comparison of two isometric tests of trunk flexor endurance | Durall CJ, Greene PF, Kernozek TW | 2012 | https://doi.org/10.1519/JSC.0b013e318237ea1c | Querschnittstudie | B |
+| F-60 | Endurance times for low back stabilization exercises: clinical targets for testing and training from a normal database | McGill SM, Childs A, Liebenson C | 1999 | https://doi.org/10.1016/S0003-9993(99)90087-4 | Querschnittstudie | B |
+| F-61 | Preparation For Flight: The Physical Profile of Pre-Professional and Professional Circus Artists in the United States | Greenspan SJ, Stuckey MI | 2024 | https://doi.org/10.26603/001c.116332 | Querschnittstudie | B |
+| F-62 | Visual assessment of movement quality in the single leg squat test: a review and meta-analysis of inter-rater and intrarater reliability | Ressman J, Grooten WJA, Rasmussen Barr E | 2019 | https://doi.org/10.1136/bmjsem-2019-000541 | Meta-Analyse | A |
+| F-63 | Are the shoulder joint function, stability, and mobility tests predictive of handstand execution? | Malíř R, Chrudimský J, Provazník A, Třebický V | 2024 | https://doi.org/10.1371/journal.pone.0302922 | Querschnittstudie | B |
+| F-64 | Relationship between swallow, support scale and iron cross on rings and their specific preconditioning strengthening exercises | Hübner K, Schärer C | 2015 | https://doi.org/10.52165/sgj.7.3.59-68 | Querschnittstudie | B |
+| F-65 | Effects of Angle Variations in Suspension Push-up Exercise | Gulmez I | 2017 | https://doi.org/10.1519/JSC.0000000000001401 | Biomechanik-Studie | B |
+| F-66 | Can different variations of suspension exercises provide adequate loads and muscle activations for upper body training? | Vural F, Erman B, Ranisavljev I, Yuzbasioglu Y, Ćopić N, Aksit T, Dopsaj M, Ozkol MZ | 2023 | https://doi.org/10.1371/journal.pone.0291608 | Biomechanik-Studie | B |
+| F-67 | Evaluation of Training Load During Suspension Exercise | Giancotti GF, Fusco A, Varalda C, Capelli G, Cortis C | 2021 | https://doi.org/10.1519/JSC.0000000000003100 | Biomechanik-Studie | B |
+| F-68 | Overcoming Gravity 2nd Edition: Progression Charts (Druck-PDF, S. 30–33 des Buchs) | Low S | 2016 | https://stevenlow.org/wp-content/uploads/2017/02/OG2ChartsPrint.pdf | Coaching-Buch | C |
+| F-69 | Overcoming Gravity 2nd Edition: Leseprobe (Inhalt, Einleitung, Kap. 1–3; gelesen S. 21–25) | Low S | 2016 | https://stevenlow.org/wp-content/uploads/2018/09/OG2-preview-TOC-Intro-Ch1-3.pdf | Coaching-Buch | C |
+| F-70 | Developing a Muscle-Up (Pro Coach) | CrossFit | o. J. | https://www.crossfit.com/pro-coach/developing-a-muscle-up | Coaching-Artikel | C |
+| F-71 | How to Do a Muscle Up: The Complete Progression | CALIMOVE-Blog (Autorenangabe «El Eggs») | 2026 | https://blog.calimove.com/2026/09/14/muscle-up-progression-guide/ | Coaching-Artikel | C |
+| F-72 | The Most Effective Front Lever Progression | The Movement Athlete | 2025 | https://themovementathlete.com/front-lever-progression/ | Coaching-Artikel | C |
+| F-73 | How To Achieve A Planche – The Most Effective Planche Progression | The Movement Athlete | 2025 | https://themovementathlete.com/planche-progression-training/ | Coaching-Artikel | C |
+| F-74 | Skill prerequisites — what you need before the big seven | bodyproskills (anonym) | 2026 | https://bodyproskills.com/articles/muscle-up-prerequisites/ | Coaching-Artikel | D |
+| F-75 | Mathematical Model - Weighted Pullups to Front Lever (Forumsthread) | StrongFirst-Forum, mehrere Nutzer | 2021 | https://www.strongfirst.com/community/threads/mathematical-model-weighted-pullups-to-front-lever.19107/ | Forum/Wiki | D |
+| F-76 | What YOU NEED To Know About The Front Lever! | Straight Talking Fitness (Blog) | 2018 | https://straighttalkingfitness.com/2018/03/18/what-you-need-to-know-about-the-front-lever/ | Coaching-Artikel | D |
+| F-77 | Validity of Different Velocity-Based Methods and Repetitions-to-Failure Equations for Predicting the 1 Repetition Maximum During 2 Upper-Body Pulling Exercises | Pérez-Castilla A, Suzovic D, Domanovic A, Fernandes JFT, García-Ramos A | 2021 | https://doi.org/10.1519/JSC.0000000000003076 | Querschnittstudie | B |
 
 Die Praxisquellen P-01 bis P-04 sind in `01_pdf_extract.md` beschrieben und
 werden in `00_sources.md` geführt.
+
+**Prüfprotokoll der Ergänzungen:** Volltext gelesen: F-54, F-61, F-66
+(inkl. Tabellen). Nur Abstract: F-51, F-52 (Europe PMC und OpenAlex), F-53
+(PubMed), F-55, F-56–F-60, F-62–F-65, F-67, F-77; F-16 jetzt mit
+vollständigem Abstract (OpenAlex). F-68 als gerenderte PDF-Seiten abgelesen,
+F-69 S. 21–25 gelesen. F-70–F-76 als Webseiten abgerufen (Stand
+27.09.2026). F-74 ist anonym, F-75 ein Forum, F-76 ein Einzelfall-Blog: nur
+Praxisindiz (Evidenz D).
