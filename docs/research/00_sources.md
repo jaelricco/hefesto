@@ -23,8 +23,8 @@
 | C — Anatomie & Biomechanik | `04_anatomy.md` | 6 | 79 | 2 | 0 | 87 |
 | D — Verletzungen & Prehab | `05_injuries_prehab.md` | 37 | 54 | 0 | 1 | 92 |
 | E — CNS & motorisches Lernen | `06_cns_motor_learning.md` | 35 | 66 | 3 | 1 | 105 |
-| F — Leistungsdiagnostik | `07_assessment.md` | 16 | 52 | 6 | 3 | 77 |
-| **Total** | | 168 | 352 | 33 | 19 | 572 |
+| F — Leistungsdiagnostik | `07_assessment.md` | 16 | 52 | 4 | 5 | 77 |
+| **Total** | | 168 | 352 | 31 | 21 | 572 |
 
 Quellen, die in mehreren Streams vorkommen, behalten ihre Stream-IDs; die Spalte
 «Auch als» verweist auf die Duplikate.
@@ -599,8 +599,8 @@ Quellen, die in mehreren Streams vorkommen, behalten ihre Stream-IDs; die Spalte
 | F-69 | Overcoming Gravity 2nd Edition: Leseprobe (Inhalt, Einleitung, Kap. 1–3; gelesen S. 21–25) | Low S | 2016 | https://stevenlow.org/wp-content/uploads/2018/09/OG2-preview-TOC-Intro-Ch1-3.pdf | Coaching-Buch | C |  |
 | F-70 | How To Muscle-Up (Pro-Coach-Artikel, URL «developing-a-muscle-up») | CrossFit | 2024 | https://www.crossfit.com/pro-coach/developing-a-muscle-up | Coaching-Artikel | C |  |
 | F-71 | How to Do a Muscle Up: The Complete Progression | Lorenz A (Byline «El Eggs»), CALI MOVE Blog | 2026 | https://blog.calimove.com/2026/09/14/muscle-up-progression-guide/ | Coaching-Artikel | C |  |
-| F-72 | The Most Effective Front Lever Progression | The Movement Athlete | 2025 | https://themovementathlete.com/front-lever-progression/ | Coaching-Artikel | C |  |
-| F-73 | How To Achieve A Planche – The Most Effective Planche Progression | The Movement Athlete | 2025 | https://themovementathlete.com/planche-progression-training/ | Coaching-Artikel | C |  |
+| F-72 | The Most Effective Front Lever Progression | The Movement Athlete | 2025 | https://themovementathlete.com/front-lever-progression/ | Coaching-Artikel | D |  |
+| F-73 | How To Achieve A Planche – The Most Effective Planche Progression | The Movement Athlete | 2025 | https://themovementathlete.com/planche-progression-training/ | Coaching-Artikel | D |  |
 | F-74 | Skill prerequisites — what you need before the big seven | bodyproskills (anonym) | 2026 | https://bodyproskills.com/articles/muscle-up-prerequisites/ | Coaching-Artikel | D |  |
 | F-75 | Mathematical Model - Weighted Pullups to Front Lever (Forumsthread) | StrongFirst-Forum, Thread von «Yak», Auswertung von «Hung» | 2021 | https://www.strongfirst.com/community/threads/mathematical-model-weighted-pullups-to-front-lever.19107/ | Forum/Wiki | D |  |
 | F-76 | What YOU NEED To Know About The Front Lever! | «JR», Straight Talking Fitness (Blog) | 2018 | https://straighttalkingfitness.com/2018/03/18/what-you-need-to-know-about-the-front-lever/ | Coaching-Artikel | D |  |

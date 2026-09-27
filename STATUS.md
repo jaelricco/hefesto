@@ -19,6 +19,25 @@ that stands.
   #8. Its open questions (rest-day logging, the bodyweight time zone, wiping
   the database on sign-out) still stand.
 
+## Parallel track: training-plan algorithm (research, stage 3 of 5, awaiting review)
+
+A separate track, with its own five-stage plan, researches and specifies a
+planner that turns an onboarding and the logs into individual training plans.
+It is developed on `claude/busy-babbage-fqio1j` (PR #10). Its documents are in
+German.
+
+- **Done:** stage 1 (PDF extract, codebase notes, research plan), stage 2
+  (six research streams with coverage checks and citation audits, 568 sources
+  in `docs/research/00_sources.md`) and stage 3 (`docs/research/08_synthesis.md`,
+  `docs/algorithm/onboarding.md`).
+- **Next, after review:** stage 4, the algorithm specification
+  (`docs/algorithm/spec.md`); stage 5, the Go implementation with persona
+  scenario tests.
+- **Open decisions** are listed in `08_synthesis.md` §6.2 and
+  `onboarding.md` §10.
+
+No code, schema or API changed in this track so far.
+
 ## Current phase: 6 — skill map, skill detail, celebration, history and stats (complete, awaiting review)
 
 The decisions are in ADR 0011. Everything below reads the local database, like

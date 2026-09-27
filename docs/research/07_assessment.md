@@ -96,7 +96,7 @@
   Coaching-Quellen nennen für den Muscle-up 8–18 Klimmzüge und 8–25 Dips
   (Ring-Muscle-up am oberen Ende) [F-70, F-71, F-74] (Evidenz C/D) und für den Start in Front Lever und Planche
   10 Klimmzüge bzw. 3 × 20 Liegestütze plus 60 s Hollow Hold [F-72, F-73]
-  (Evidenz C). OG2 stellt den vollen Front Lever auf dieselbe Stufe wie
+  (Evidenz D, kommerzielle Coaching-Seiten; Stufe angeglichen an A-40/A-41). OG2 stellt den vollen Front Lever auf dieselbe Stufe wie
   gewichtete Klimmzüge mit 1.78 × KG (Systemmasse; als 1RM gelesen, die
   Charts nennen keine Wiederholungszahl) [F-68] (Evidenz C). Der Planer nutzt
   diese Werte nur als weichen Hinweis, nie als Sperre (**Heuristik**,
@@ -465,11 +465,11 @@ verwendet sie nur als **weichen Hinweis «bereit zum Üben», nie als Sperre**
 | Muscle-up | 15 saubere Klimmzüge und 15 saubere Dips («decent guidelines but not absolute prerequisites»; «Nobody really knows!») | F-70 (zitiert Glassman 2002) | C | Die Quelle selbst sagt, dass die Zahl von Person zu Person variiert, u. a. mit Beweglichkeit und Technik |
 | Muscle-up | Beginn des Übergangstrainings: 8–10 strikte Klimmzüge, 8–10 strikte Dips, 20–30 s False-Grip-Hang; erster Stangen-Muscle-up ohne Hilfe: ≥ 12 strikte Klimmzüge, 5 tiefe Dips an der geraden Stange und 3 explosive Klimmzüge; typisch 3–6 Monate Training | F-71 | C | Engpässe laut Quelle: Zugkraft und False Grip; der Übergang ist eine eigene Fertigkeit |
 | Muscle-up / Ring-Muscle-up | Minimum → ideal: Klimmzüge 10 → 15 / 12 → 18, Dips 15 → 20 / 20 → 25 | F-74 | D | anonyme Website, «community-consensus standards» |
-| Front Lever (Einstieg) | 10 strikte Klimmzüge, 30 s Totehang, 60 s Hollow Hold, 15 Beinheben mit gestreckten Beinen | F-72 | C | kommerzielle Seite; Zeitangaben (12–18 Monate bis Full) ohne Beleg |
+| Front Lever (Einstieg) | 10 strikte Klimmzüge, 30 s Totehang, 60 s Hollow Hold, 15 Beinheben mit gestreckten Beinen | F-72 | D | kommerzielle Seite (Stufe D wie A-41, `02` §1); Zeitangaben (12–18 Monate bis Full) ohne Beleg |
 | Front Lever (Einstieg) | Klimmzüge 12 → 18, L-Sit 15 → 30 s, Rudern 15 → 20 | F-74 | D | anonyme Website |
 | Front Lever (voll) | Zusatzlast im Klimmzug-1RM: Einzelfall mit +62 % KG (Untergriff) bei gehaltenem Full Front Lever, unter den oft genannten 70–80 %; «there's no answer» | F-76 | D | n = 1, Selbstbericht |
 | Front Lever (voll) | Umfrage in einem Forum: relative Zugkraft (1RM / KG) wirkte wichtiger als absolute; Personen mit Straddle oder mehr waren eher leicht | F-75 | D | anonyme Umfrage eines Schulprojekts (36 Antworten beim letzten Stand im Thread), Diagramme eines Forumsnutzers, keine Auswertung publiziert |
-| Planche (Einstieg) | 60 s Hollow Hold plus Plank und Seitstütz, 3 × 20 Liegestütze (Brust zum Boden), 3 min Handgelenkvorbereitung ohne Schmerz; nächste Stufe erst nach 10 s sauberem Halt | F-73 | C | «research shows» für die 10-s-Regel ohne Beleg; dieselbe Seite nennt in der Übersicht «15+ perfect push-ups» statt 3 × 20 |
+| Planche (Einstieg) | 60 s Hollow Hold plus Plank und Seitstütz, 3 × 20 Liegestütze (Brust zum Boden), 3 min Handgelenkvorbereitung ohne Schmerz; nächste Stufe erst nach 10 s sauberem Halt | F-73 | D | «research shows» für die 10-s-Regel ohne Beleg; dieselbe Seite nennt in der Übersicht «15+ perfect push-ups» statt 3 × 20 |
 | Planche (Einstieg) | Dips 20 → 30, Liegestütze 40 → 60, L-Sit 20 → 30 s, Handstand 15 → 30 s | F-74 | D | anonyme Website |
 
 ### 6.3 Kraftäquivalente nach Overcoming Gravity (Evidenz C)
@@ -839,8 +839,8 @@ erkennen [F-18].
 | PAR-F-60 | `pike_push_up_bw_fraction` | unbekannt; Reihenfolge `push_up` < `pike_push_up` < `handstand_push_up` | Reihenfolge | – | Heuristik | Keine Messdaten gefunden; nur für Plausibilitätsregel R-1, nicht für Umrechnungen. |
 | PAR-F-61 | `bent_arm_hang_protocol` | Ellbogen 90°, Ende bei Winkelverlust; Einstiegstest bei 0 Klimmzügen | Protokoll | F-57 | B | ICC 0.98 (Retest), 0.99 (zwei Bewerter); valide für relative isometrische Kraft (r 0.88), nicht für absolute (r 0.10). Nur Frauen untersucht (n = 31). Endkriterium und Einsatz bei 0 Klimmzügen sind **Heuristik**. |
 | PAR-F-62 | `readiness_hint_muscle_up` | «bereit zum Üben»: ≥ 8 Klimmzüge und ≥ 8 Dips (+ 20 s False Grip); «erster Versuch ohne Hilfe»: ≥ 12 Klimmzüge (+ 5 tiefe Stangen-Dips, 3 explosive Klimmzüge); Spanne der Quellen 8–18 Klimmzüge, 8–25 Dips | Wdh. | F-70, F-71, F-74 | C/D | **Weicher Hinweis, nie Sperre** (PAR-F-42); nicht validiert. Werte aus F-71 (C); F-70 (C): «decent guidelines but not absolute prerequisites», «Nobody really knows!»; F-74 ist D. |
-| PAR-F-63 | `readiness_hint_front_lever_start` | ≥ 10 Klimmzüge, ≥ 30 s Totehang, ≥ 60 s Hollow Hold | Wdh. / s | F-72 | C | **Weicher Hinweis, nie Sperre** (PAR-F-42); nicht validiert. Einstieg in die Tuck-Stufe; F-74 (D) nennt 12–18 Klimmzüge. |
-| PAR-F-64 | `readiness_hint_planche_start` | 3 × 20 Liegestütze, ≥ 60 s Hollow Hold, schmerzfreie Handgelenkvorbereitung | Wdh. / s | F-73 | C | **Weicher Hinweis, nie Sperre** (PAR-F-42); nicht validiert. Einstieg in Lean/Tuck; dieselbe Seite nennt auch «15+» Liegestütze; F-74 (D) nennt 20–30 Dips und 40–60 Liegestütze. Schmerz folgt den Regeln aus Stream D. |
+| PAR-F-63 | `readiness_hint_front_lever_start` | ≥ 10 Klimmzüge, ≥ 30 s Totehang, ≥ 60 s Hollow Hold | Wdh. / s | F-72 | D | **Weicher Hinweis, nie Sperre** (PAR-F-42); nicht validiert. Einstieg in die Tuck-Stufe; F-74 (D) nennt 12–18 Klimmzüge. |
+| PAR-F-64 | `readiness_hint_planche_start` | 3 × 20 Liegestütze, ≥ 60 s Hollow Hold, schmerzfreie Handgelenkvorbereitung | Wdh. / s | F-73 | D | **Weicher Hinweis, nie Sperre** (PAR-F-42); nicht validiert. Einstieg in Lean/Tuck; dieselbe Seite nennt auch «15+» Liegestütze; F-74 (D) nennt 20–30 Dips und 40–60 Liegestütze. Schmerz folgt den Regeln aus Stream D. |
 | PAR-F-65 | `og2_strength_equivalents` | Front Lever Tuck/Adv. Tuck/Straddle/Full ≈ gewichteter Klimmzug 1.18/1.35/1.50/1.78 × KG; Planche (Barren/Boden) Tuck/Adv. Tuck/Straddle/Full ≈ gewichteter Dip 1.38/1.55/1.85/2.25 × KG | × KG (Systemmasse, als 1RM gelesen) | F-68, F-69 | C | Stufengleichheit der OG2-Charts, ausdrücklich «approximate»; im Audit an S. 31–32 erneut abgelesen, Werte stimmen. Die Charts nennen keine Wiederholungszahl, die 1RM-Lesart ist **Heuristik**. Gegenbeispiel: Full Front Lever mit Klimmzug-1RM (Untergriff) 1.62 × KG [F-76] (D). Nur Startwert und Plausibilitätsregel R-7, niedrige Konfidenz, nie Sperre. |
 | PAR-F-66 | `ring_static_swallow_supine_min_bw_frac` | Stützwaage 0.674; Schwalbe 0.734 | Anteil KG (1RM) | F-64 | B | n = 10 Elite-Turner; nur für Ringe-Statik (Maltese/Planche an Ringen) als weicher Hinweis. |
 | PAR-F-67 | `form_quality_evidence_classes` | 1–2 ungenügend; 3 akzeptabel; 4–5 gut | Klassen | F-62 | A | Skalen mit ≤ 3 Stufen erreichten höhere Übereinstimmung zwischen Bewertern [F-62]; die Grenzen sind **Heuristik**. |
@@ -1071,8 +1071,8 @@ erkennen [F-18].
 | F-69 | Overcoming Gravity 2nd Edition: Leseprobe (Inhalt, Einleitung, Kap. 1–3; gelesen S. 21–25) | Low S | 2016 | https://stevenlow.org/wp-content/uploads/2018/09/OG2-preview-TOC-Intro-Ch1-3.pdf | Coaching-Buch | C |
 | F-70 | How To Muscle-Up (Pro-Coach-Artikel, URL «developing-a-muscle-up») | CrossFit | 2024 | https://www.crossfit.com/pro-coach/developing-a-muscle-up | Coaching-Artikel | C |
 | F-71 | How to Do a Muscle Up: The Complete Progression | Lorenz A (Byline «El Eggs»), CALI MOVE Blog | 2026 | https://blog.calimove.com/2026/09/14/muscle-up-progression-guide/ | Coaching-Artikel | C |
-| F-72 | The Most Effective Front Lever Progression | The Movement Athlete | 2025 | https://themovementathlete.com/front-lever-progression/ | Coaching-Artikel | C |
-| F-73 | How To Achieve A Planche – The Most Effective Planche Progression | The Movement Athlete | 2025 | https://themovementathlete.com/planche-progression-training/ | Coaching-Artikel | C |
+| F-72 | The Most Effective Front Lever Progression | The Movement Athlete | 2025 | https://themovementathlete.com/front-lever-progression/ | Coaching-Artikel | D |
+| F-73 | How To Achieve A Planche – The Most Effective Planche Progression | The Movement Athlete | 2025 | https://themovementathlete.com/planche-progression-training/ | Coaching-Artikel | D |
 | F-74 | Skill prerequisites — what you need before the big seven | bodyproskills (anonym) | 2026 | https://bodyproskills.com/articles/muscle-up-prerequisites/ | Coaching-Artikel | D |
 | F-75 | Mathematical Model - Weighted Pullups to Front Lever (Forumsthread) | StrongFirst-Forum, Thread von «Yak», Auswertung von «Hung» | 2021 | https://www.strongfirst.com/community/threads/mathematical-model-weighted-pullups-to-front-lever.19107/ | Forum/Wiki | D |
 | F-76 | What YOU NEED To Know About The Front Lever! | «JR», Straight Talking Fitness (Blog) | 2018 | https://straighttalkingfitness.com/2018/03/18/what-you-need-to-know-about-the-front-lever/ | Coaching-Artikel | D |
