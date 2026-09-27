@@ -595,14 +595,14 @@ Schulter (**Modell**).
 
 **Folgerungen (Heuristik).** (1) Im Klimmzug und Dip mit Band am Fuss oder
 Knie ist die Hilfe unten (maximale Dehnung) am grössten und oben am
-kleinsten; der schwerste Punkt der Bewegung wird also am wenigsten
-unterstützt (Richtung belegt [C-85, C-79], Übertragung auf Klimmzug
+kleinsten; der obere Teil der Bewegung wird also am wenigsten unterstützt
+(Richtung belegt [C-85, C-79], Übertragung auf Klimmzug
 Heuristik). (2) In einem Hebelhalt hängt die Bandkraft von der Haltehöhe ab;
 dieselbe Bandfarbe kann je nach Aufbau sehr unterschiedlich helfen. (3)
 Nominalwerte der Hersteller sind keine verlässliche Eingabe für
-`estimated_assist_kg`; die App nutzt den Wert daher als Nutzerschätzung mit
-±20 % Unsicherheit (PAR-C-61) und bietet eine Kalibrierung per
-Personenwaage in Arbeitsposition an (codebase_notes §2).
+`estimated_assist_kg`; die App sollte den Wert daher als Nutzerschätzung mit
+±20 % Unsicherheit führen (PAR-C-61) und eine Kalibrierung per
+Personenwaage in Arbeitsposition anbieten (Vorschlag; codebase_notes §2).
 
 ### 5.6 Planche gegen Front Lever
 
@@ -710,7 +710,7 @@ Elite-Turner im Mittel klein sind [C-03].
 
 | Befund | Wert | Quelle | Evidenz |
 |---|---|---|---|
-| Isometrische Schulterkraft relativ zum Körpergewicht (Handdynamometer; 546 Männer, 73 Frauen, College-Sportler; dominante Seite) | Aussenrotation 0,16 vs. 0,20; Innenrotation 0,21 vs. 0,27; Abduktion 0,29 vs. 0,35; Flexion in Bauchlage 0,10 vs. 0,12; Frauen damit 78–83 % der Männer | [C-77] (Volltext, Tab. 3) | B |
+| Isometrische Schulterkraft relativ zum Körpergewicht (Handdynamometer; 546 Männer, 73 Frauen, körperlich aktive Studierende; dominante Seite) | Aussenrotation 0,16 vs. 0,20; Innenrotation 0,21 vs. 0,27; Abduktion 0,29 vs. 0,35; Flexion in Bauchlage 0,10 vs. 0,12; Frauen damit 78–83 % der Männer | [C-77] (Volltext, Tab. 3) | B |
 | Skelettmuskelmasse (MRT, 468 Erwachsene) | Männer 38,4 %, Frauen 30,6 % der Körpermasse; Geschlechtsunterschied oben 40 %, unten 33 % | [C-78] (Abstract) | B |
 | Absolute Kraft (8 Männer, 8 Frauen) | Frauen ≈ 52 % (Oberkörper) bzw. 66 % (Unterkörper) der Männer; Männer auch relativ zur fettfreien Masse stärker; Kraft pro Muskelquerschnitt gleich | [C-84] (Abstract) | B |
 | Erster Klimmzug bei Frauen | Erfolg hing von Kraft/Masse und Körperfettanteil ab | [C-61] | B |
@@ -841,7 +841,7 @@ H = Körpergrösse. «B (Modell)» = eigene Rechnung auf publizierten Daten.
 | PAR-C-50 | handstand_wrist_pain_prevalence | 0,567 | Anteil Befragte | [C-44] | B | Selbstauskunft, Selektionsbias möglich; nur als Prior für Hinweise |
 | PAR-C-51 | handstand_shoulder_flexion_requirement | ≈ 180 | Grad | [C-69] | C | Coaching-Angabe |
 | PAR-C-52 | lever_absolute_torque_example | Full 148, Adv Tuck 111, Tuck 88 | N·m je Schulter (70 kg, 1,75 m, Mann) | [C-01, C-02] | B (Modell) | zur Plausibilisierung; Normwerte für Schulterflexion/-extension in Hebelposition fehlen (nur Handdynamometer-Werte [C-77]) |
-| PAR-C-53 | female_relative_shoulder_strength_ratio | 0,80 (0,78–0,83) | Verhältnis Kraft/KG Frau ÷ Mann | [C-77]; stützend [C-78] | B | isometrisch, Handdynamometer (Rotation, Abduktion, Flexion in Bauchlage), College-Sportler; Muskelmasse/KG 30,6 vs. 38,4 % [C-78] |
+| PAR-C-53 | female_relative_shoulder_strength_ratio | 0,80 (0,78–0,83) | Verhältnis Kraft/KG Frau ÷ Mann | [C-77]; stützend [C-78] | B | isometrisch, Handdynamometer (Rotation, Abduktion, Flexion in Bauchlage), körperlich aktive Studierende; Muskelmasse/KG 30,6 vs. 38,4 % [C-78] |
 | PAR-C-54 | female_lever_relative_demand_factor | 1,24 (1,19–1,27) | Faktor gegenüber Mann, gleiche Stufe | [C-01, C-77] | B (Modell) | nur Prior für Zeitschätzungen, aus Logs nachkalibrieren, nie als Sperre (Heuristik); Übertragung der Handdynamometer-Werte auf Hebelpositionen ungeprüft |
 | PAR-C-55 | muscle_up_ring_vs_bar_emg | BB Zug 0,55 vs. 0,30, Stütz 0,39 vs. 0,12; Unterarmbeuger Zug 1,05 vs. 0,77; TB Stütz 1,70 vs. 1,12 | Anteil manueller Muskeltest | [C-75] | B | n = 10, mit Kipp; begründet muscle_up_ring +1 auf biceps_distal und fingers_forearm gegenüber muscle_up_bar |
 | PAR-C-56 | kipping_emg_shift | BB −26,7; RA +28,7; EO +21,8; Iliopsoas +26,1; TFL +13,5 | Prozentpunkte MVIC (Kipping − strikt) | [C-76] | B | n = 11 (Abstract); Hüftwinkel +48,8°, Kniewinkel +56,5°; Kipping zählt für die Armlast weniger, für Rumpf/Hüfte mehr |
