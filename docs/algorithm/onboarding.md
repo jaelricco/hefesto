@@ -412,16 +412,20 @@ Gesundheitsangaben brauchen eine eigene Aufbewahrungs- und Löschregel (OE-2).
 | 5 Full Planche in 8 Wochen als Anfänger | Ziel + Datum, Stufe `none` | Realismus-Check (§6), Zwischenziel Tuck Planche; Plan ab Wurzeln |
 | 6 Widersprüchliche Angaben | Plausibilitätsregeln | höchstens zwei Rückfragen, danach konservativ (§5.5) |
 
-## 10. Offene Entscheidungen
+## 10. Entscheidungen
 
-| Nr. | Frage | Vorschlag |
-|---|---|---|
-| OE-1 | Mindestalter; sind Minderjährige zugelassen? | Mindestalter rechtlich klären (Einwilligungsalter); wenn zugelassen, gelten PAR-D-23 und RF-12/RF-13. |
-| OE-2 | Gesundheitsdaten: Einwilligung, Speicherort, Aufbewahrung, Löschung; Sicherheitsfragen ohne Einwilligung | Eigene Einwilligung, getrennte Tabellen, Löschung mit dem Konto. Sicherheitsfragen (Belastungssymptome, Red Flags) auch ohne Einwilligung stellen, aber nur flüchtig auswerten und nicht speichern — rechtlich prüfen; Alternative: ohne Einwilligung kein Plan. |
-| OE-3 | PAR-Q+ ist urheberrechtlich geschützt; die Vorabfragen ähneln ihm | Eigene Formulierung nach ACSM-Logik [F-41] und rechtliche Prüfung, ob sie als Bearbeitung gilt; PAR-Q+ nur mit Lizenz. |
-| OE-4 | Geschlecht erfragen? | Optional, nur im Kontext des Realismus-Checks, nur als Prior, mit «keine Angabe». |
-| OE-5 | Sammel-Selbstbestätigung nach dem Onboarding? | Nein (§3.6); der bestehende Weg in der Skill-Detailansicht bleibt. |
-| OE-6 | Testtag in v1? | v1: submaximale Kalibrierung in den ersten Einheiten (§4.1); Testtag als optionaler Ablauf später. |
-| OE-7 | Messgrössen `cm`, Winkel, Verhältnis fehlen im Log (`measure`) | Mobilitäts-Checks und Testtag-Mobilität zunächst im Profil speichern, nicht im Log; Erweiterung in Phase 4 prüfen. |
-| OE-8 | Schmerzwerte im Log | Neue Tabelle `user_pain_reports` statt Feld im Satz; Abfrage nach der Einheit und am nächsten Morgen (PAR-D-13). |
-| OE-9 | Zeitbudget | Im Usability-Test messen; Richtwert < 5 min für den Basispfad (§2). |
+Alle Vorschläge wurden am Checkpoint nach Phase 3 (27.09.2026) angenommen. Die
+Spalte «Umsetzung» nennt die Stelle in `spec.md`; rechtliche Prüfungen bleiben
+offen und sind Voraussetzung für den öffentlichen Betrieb (`spec.md` §13.3).
+
+| Nr. | Frage | Entscheidung (angenommen) | Umsetzung |
+|---|---|---|---|
+| OE-1 | Mindestalter; sind Minderjährige zugelassen? | Mindestalter rechtlich klären (Einwilligungsalter); wenn zugelassen, gelten PAR-D-23 und RF-12/RF-13. | `spec.md` §8.8; rechtlich offen |
+| OE-2 | Gesundheitsdaten: Einwilligung, Speicherort, Aufbewahrung, Löschung; Sicherheitsfragen ohne Einwilligung | Eigene Einwilligung, getrennte Tabellen, Löschung mit dem Konto. Sicherheitsfragen (Belastungssymptome, Red Flags) auch ohne Einwilligung stellen, aber nur flüchtig auswerten und nicht speichern — rechtlich prüfen; Alternative: ohne Einwilligung kein Plan. | `spec.md` §4.9, §5.2 (SAFE-04), §13.4; rechtlich offen |
+| OE-3 | PAR-Q+ ist urheberrechtlich geschützt; die Vorabfragen ähneln ihm | Eigene Formulierung nach ACSM-Logik [F-41] und rechtliche Prüfung, ob sie als Bearbeitung gilt; PAR-Q+ nur mit Lizenz. | §3.7; rechtlich offen |
+| OE-4 | Geschlecht erfragen? | Optional, nur im Kontext des Realismus-Checks, nur als Prior, mit «keine Angabe». | `spec.md` §3.6: Prior in v1 abgeschaltet (`PAR-S-19`), Feld bleibt optional |
+| OE-5 | Sammel-Selbstbestätigung nach dem Onboarding? | Nein (§3.6); der bestehende Weg in der Skill-Detailansicht bleibt. | `spec.md` §6.13 |
+| OE-6 | Testtag in v1? | v1: submaximale Kalibrierung in den ersten Einheiten (§4.1); Testtag als optionaler Ablauf später. | `spec.md` §5.6 (SEL-08), §5.7 (Kalibrierungssatz) |
+| OE-7 | Messgrössen `cm`, Winkel, Verhältnis fehlen im Log (`measure`) | Mobilitäts-Checks und Testtag-Mobilität zunächst im Profil speichern, nicht im Log; Erweiterung in Phase 4 prüfen. | `spec.md` §4.9 (`mobility` im Profil); keine Log-Erweiterung in v1 |
+| OE-8 | Schmerzwerte im Log | Neue Tabelle `user_pain_reports` statt Feld im Satz; Abfrage nach der Einheit und am nächsten Morgen (PAR-D-13). | `spec.md` §4.9, §8.6 |
+| OE-9 | Zeitbudget | Im Usability-Test messen; Richtwert < 5 min für den Basispfad (§2). | offen bis zum Usability-Test |

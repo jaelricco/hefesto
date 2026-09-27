@@ -187,18 +187,23 @@ mit Einwilligung erhobenen Logs ist ein eigener späterer Schritt.
 
 ### 6.2 Entscheidungen für den Checkpoint
 
-| Nr. | Frage | Vorschlag |
-|---|---|---|
-| ENT-1 | Name und Client: Der Auftrag nennt rung.fit mit Svelte; das Repository ist Hefesto mit iOS-Client. | API bleibt client-neutral (OpenAPI); ein Svelte-Client kann generiert werden. Klären, ob rung.fit ein neuer Name ist. |
-| ENT-2 | Wiedereinstieg vs. `CONTENT_AUTHORING.md` («keine Return-to-Training-Ratschläge») | Rampe als Trainingslaststeuerung formulieren, nicht als Rehabilitation; Red Flags → Verweis; Content-Regel um diese Unterscheidung ergänzen (ADR in Phase 4). |
-| ENT-3 | Minderjährige zulassen? | Rechtlich klären; wenn ja, PAR-D-23 und RF-12/13. |
-| ENT-4 | Gesundheitsdaten (Beschwerden, Schmerzwerte, Screening) und Sicherheitsfragen ohne Einwilligung | Eigene Einwilligung, getrennte Tabellen, Löschung mit Konto; Belastungssymptome und Red Flags auch ohne Einwilligung fragen, aber nur flüchtig auswerten (rechtlich prüfen; `onboarding.md` OE-2). |
-| ENT-5 | DSL-Erweiterungen `min_distinct_days`, `min_load_pct_bw` | Additiv in Phase 4 spezifizieren (Golden Files zuerst, ADR 0008). |
-| ENT-6 | Implizite Vorstufe je Skill (`states.go`) | Beibehalten; Geräte- und Varianten-Stufen als eigene Skills mit `recommended`-Kanten (wie in `02` umgesetzt). |
-| ENT-7 | Neue Daten im Log: Schmerzwerte, optional Check-in (Schlaf, Tagesform) | Schmerz ja (`user_pain_reports`); Check-in optional und ohne Streak-Folgen (ADR 0003). |
-| ENT-8 | PAR-Q+ ist urheberrechtlich geschützt | Eigene Formulierung nach ACSM-Logik. |
-| ENT-9 | Gewichtete Stufen bis `min_load_pct_bw` existiert | Übergangsweise absolute Last mit 75-kg-Referenz (PAR-A-67) oder nur Selbstbestätigung. |
-| ENT-10 | Umfang der Wissensbasis für v1 | Alle Skills aus `02`, aber nur mit belegten oder als Heuristik markierten Zahlen; `status: draft_placeholder` bleibt, bis ein Mensch die Einträge abgenommen hat. |
+Alle Vorschläge wurden am Checkpoint nach Phase 3 (27.09.2026) angenommen. Die
+Spalte «Umsetzung» nennt die Stelle in `docs/algorithm/spec.md` bzw. ADR 0012.
+Rechtliche Prüfungen, die ein Vorschlag nennt, bleiben offen und sind
+Voraussetzung für den öffentlichen Betrieb (spec §13.3).
+
+| Nr. | Frage | Entscheidung (angenommen) | Umsetzung |
+|---|---|---|---|
+| ENT-1 | Name und Client: Der Auftrag nennt rung.fit mit Svelte; das Repository ist Hefesto mit iOS-Client. | API bleibt client-neutral (OpenAPI); ein Svelte-Client kann generiert werden. Klären, ob rung.fit ein neuer Name ist. | spec §10.6; Name offen |
+| ENT-2 | Wiedereinstieg vs. `CONTENT_AUTHORING.md` («keine Return-to-Training-Ratschläge») | Rampe als Trainingslaststeuerung formulieren, nicht als Rehabilitation; Red Flags → Verweis; Content-Regel um diese Unterscheidung ergänzen (ADR in Phase 4). | spec §8.1; `CONTENT_AUTHORING.md`; ADR 0012 |
+| ENT-3 | Minderjährige zulassen? | Rechtlich klären; wenn ja, PAR-D-23 und RF-12/13. | spec §8.8; rechtlich offen |
+| ENT-4 | Gesundheitsdaten (Beschwerden, Schmerzwerte, Screening) und Sicherheitsfragen ohne Einwilligung | Eigene Einwilligung, getrennte Tabellen, Löschung mit Konto; Belastungssymptome und Red Flags auch ohne Einwilligung fragen, aber nur flüchtig auswerten (rechtlich prüfen; `onboarding.md` OE-2). | spec §4.9, §5.2 (SAFE-04), §13.4; rechtlich offen |
+| ENT-5 | DSL-Erweiterungen `min_distinct_days`, `min_load_pct_bw` | Additiv in Phase 4 spezifizieren (Golden Files zuerst, ADR 0008). | spec §3.2 |
+| ENT-6 | Implizite Vorstufe je Skill (`states.go`) | Beibehalten; Geräte- und Varianten-Stufen als eigene Skills mit `recommended`-Kanten (wie in `02` umgesetzt). | spec §3.1 |
+| ENT-7 | Neue Daten im Log: Schmerzwerte, optional Check-in (Schlaf, Tagesform) | Schmerz ja (`user_pain_reports`); Check-in optional und ohne Streak-Folgen (ADR 0003). | spec §4.9, §6.12, §8.6 |
+| ENT-8 | PAR-Q+ ist urheberrechtlich geschützt | Eigene Formulierung nach ACSM-Logik. | `onboarding.md` §3.7; Wortlaut rechtlich offen (spec §13.3) |
+| ENT-9 | Gewichtete Stufen bis `min_load_pct_bw` existiert | Übergangsweise absolute Last mit 75-kg-Referenz (PAR-A-67) oder nur Selbstbestätigung. | spec §3.2 |
+| ENT-10 | Umfang der Wissensbasis für v1 | Alle Skills aus `02`, aber nur mit belegten oder als Heuristik markierten Zahlen; `status: draft_placeholder` bleibt, bis ein Mensch die Einträge abgenommen hat. | spec §2.1, §2.6 (KB-13), §13.3; Umfang in Phase 5: ENT-S-3 |
 
 ## 7. Was die Spezifikation (Phase 4) daraus übernehmen muss
 

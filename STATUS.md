@@ -19,7 +19,7 @@ that stands.
   #8. Its open questions (rest-day logging, the bodyweight time zone, wiping
   the database on sign-out) still stand.
 
-## Parallel track: training-plan algorithm (research, stage 3 of 5, awaiting review)
+## Parallel track: training-plan algorithm (specification, stage 4 of 5, awaiting review)
 
 A separate track, with its own five-stage plan, researches and specifies a
 planner that turns an onboarding and the logs into individual training plans.
@@ -27,14 +27,16 @@ It is developed on `claude/busy-babbage-fqio1j` (PR #10). Its documents are in
 German.
 
 - **Done:** stage 1 (PDF extract, codebase notes, research plan), stage 2
-  (six research streams with coverage checks and citation audits, 568 sources
-  in `docs/research/00_sources.md`) and stage 3 (`docs/research/08_synthesis.md`,
-  `docs/algorithm/onboarding.md`).
-- **Next, after review:** stage 4, the algorithm specification
-  (`docs/algorithm/spec.md`); stage 5, the Go implementation with persona
-  scenario tests.
-- **Open decisions** are listed in `08_synthesis.md` §6.2 and
-  `onboarding.md` §10.
+  (six research streams with coverage checks and citation audits, 572 sources
+  in `docs/research/00_sources.md`), stage 3 (`docs/research/08_synthesis.md`,
+  `docs/algorithm/onboarding.md`; all checkpoint proposals accepted) and
+  stage 4 (`docs/algorithm/spec.md`, ADR 0012, a clarification in
+  `docs/CONTENT_AUTHORING.md`).
+- **Next, after review:** stage 5, the Go implementation with persona
+  scenario tests and an independent review.
+- **Open decisions** for this checkpoint are in `spec.md` §14 (ENT-S-1 to
+  ENT-S-6). Legal questions from the earlier checkpoint (minors, health data,
+  screening wording) stay open until before a public release.
 
 No code, schema or API changed in this track so far.
 
