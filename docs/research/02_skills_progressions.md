@@ -615,7 +615,7 @@ Ring-Stütz vor dem ersten Ring-Dip [A-43].
 ### 4.5 Liegestütz (`push-up`, Familie `push`)
 
 Reihenfolge RR: Wand (vertikal) → Schräg → Standard → Diamond → Pseudo-Planche
-[A-44; Leiter bestätigt in A-45, A-46]; OG: Standard 1, Diamond 2, Ringe breit 3,
+[A-46; der RR-Spiegel [A-44] nennt nur Wand-/Schräg-Liegestütz als Einstieg]; OG: Standard 1, Diamond 2, Ringe breit 3,
 Ringe 4, RTO 5, RTO Archer 6, RTO-Pseudo-Planche 40°/60° 7/8 [A-31].
 Lastanteile §3.5 [A-05, A-06]. Progressive Varianten steigern die Kraft
 (**Evidenz A**) [A-01, A-02].
@@ -628,7 +628,7 @@ Lastanteile §3.5 [A-05, A-06]. Progressive Varianten steigern die Kraft
 | 3 | `push-up/full` · `push-up` | Standard-Liegestütz | Körperlinie ohne Durchhängen; Brust nahe Boden; oben gestreckt (H-FORM) | `push-up reps ≥ 8 · occ 3 · 7 d` (V) | 1–4 Wo. (H-DUR) | [A-44]; OG 1 [A-31] |
 | 4 | `push-up/diamond` · `push-up-diamond` | Hände eng | wie 3 (H-FORM) | `push-up-diamond reps ≥ 8 · occ 3 · 7 d` (V) | 2–8 Wo. (H-DUR) | [A-44]; OG 2 [A-31] |
 | 5 | `push-up/rings` · `push-up-rings` | Ring-Liegestütz | Ringe nah, oben gestreckt (H-FORM) | `push-up-rings reps ≥ 8 · occ 3 · 7 d` (V) | 4–16 Wo. (H-DUR) | OG 4 [A-31] |
-| 6 | `push-up/pseudo-planche` · `pseudo-planche-push-up` | Hände auf Hüfthöhe, Schultern vor den Händen | Protraktion, Arme oben gestreckt, Schultern bleiben vor den Händen (H-FORM) | `pseudo-planche-push-up reps ≥ 8 · form≥4 · occ 3 · 7 d` | — | [A-44]; OG 7–8 (Ringe RTO) [A-31]; PDF-Zubringer 5–15 Wdh. [P-01 S. 1; P-03 S. 3] |
+| 6 | `push-up/pseudo-planche` · `pseudo-planche-push-up` | Hände auf Hüfthöhe, Schultern vor den Händen | Protraktion, Arme oben gestreckt, Schultern bleiben vor den Händen (H-FORM) | `pseudo-planche-push-up reps ≥ 8 · form≥4 · occ 3 · 7 d` (V; PDF nennt nur die Dosis) | — | [A-44]; OG 7–8 (Ringe RTO) [A-31]; PDF-Zubringer 5–15 Wdh. [P-01 S. 1; P-03 S. 3] |
 | (Alt.) | `push-up-decline` (Übung) | Füsse erhöht | 70–74 % KG [A-05] | Überlastung zu 3/4 | — | [A-05] |
 
 - **Voraussetzungen:** keine; `wrist-conditioning/prep` empfohlen (H-PRE). TMA
@@ -643,7 +643,7 @@ Lastanteile §3.5 [A-05, A-06]. Progressive Varianten steigern die Kraft
 
 ### 4.6 Dip (`dip`, Familie `push`)
 
-RR: Barren-Stütz → negative Dips → Barren-Dips → Ring-Dips [A-44; A-45 *(S)*];
+RR: Barren-Stütz (= Dip-Stufe 1 [A-45]) → negative Dips [A-44] → Barren-Dips → Ring-Dips (Rest der Reihenfolge nur *(S)*);
 OG: Barren-Dips 3, L-Dips 4, 45°-Dips 5; Ring-Dips 4, Ring-L-Dips 5, breite
 Ring-Dips 6, RTO 45° 7 [A-31].
 
@@ -653,7 +653,7 @@ Ring-Dips 6, RTO 45° 7 [A-31].
 | (Übung) | `dip-negative` (Rolle `progression`) | Absenken | kontrolliert | kein Level | — | OG 2 [A-31] |
 | (Übung) | `dip-bench` (Rolle `progression`) | Bank-Dip, Füsse am Boden | Schulterstreckung nicht über das schmerzfreie Maximum | kein Level | — | geringere Aktivität als Barren-/Ring-Dip, aber grösste Schulterstreckung (101 % des individuellen Maximums) [A-54] |
 | 1 | `dip/parallel-bars` · `dip-pb` | Barren-Dip | oben gestreckt, unten Oberarm mind. parallel, Schultern nicht hochgezogen (H-FORM) | `dip-pb reps ≥ 8 · occ 3 · 7 d` (V) | 4–12 Wo. bis Ring-Dip [A-43] (D) | OG 3 [A-31]; Barren-Dip = sinnvolle Progression nach dem Bank-Dip [A-54] |
-| 2 | `dip/rings` · `dip-rings` | Ring-Dip | wie 1, Ringe nah, oben stabiler Stütz (H-FORM) | `dip-rings reps ≥ 8 · occ 3 · 7 d` | 4–13 Wo. je Folgelevel (H-DUR) | OG 4 [A-31]; TMA-Standards: 1–5 Wdh. Beginner, 6–15 Intermediate [A-43]; höhere Aktivität von Brust-, Latissimus- und Bizepsmuskel als am Barren [A-54] |
+| 2 | `dip/rings` · `dip-rings` | Ring-Dip | wie 1, Ringe nah, oben stabiler Stütz (H-FORM) | `dip-rings reps ≥ 8 · occ 3 · 7 d` (V) | 4–13 Wo. je Folgelevel (H-DUR) | OG 4 [A-31]; TMA-Standards: 1–5 Wdh. Beginner, 6–15 Intermediate [A-43]; höhere Aktivität von Brust-, Latissimus- und Bizepsmuskel als am Barren [A-54] |
 | 3 | `dip/rings-l-sit` · `dip-rings-l` | Ring-Dip im L-Sit | Beine waagrecht | `dip-rings-l reps ≥ 5 · occ 2 · 28 d` (H-UNL) | — | OG 5 [A-31] |
 | (weiter) | Weighted Dips §7.4 | | | | | [A-31] |
 
@@ -673,7 +673,7 @@ Ring-Dips 6, RTO 45° 7 [A-31].
 
 ### 4.7 Australian Row / Rudern (`row`, Familie `pull`)
 
-RR: vertikal → schräg → horizontal → breit → Archer [A-44; A-45 *(S)*]; die RR
+RR: vertikal (= Row-Stufe 1 [A-45]) → schräg → horizontal → breit → Archer (Rest der Reihenfolge nur *(S)*); die RR
 führt den Tuck Front Lever als Isometrie-Stufe der Row-Leiter [A-44]. OG:
 exzentrisch 1, Ringrudern 2, breit 3, Archer 4, Archer-in 5, einarmig 7 [A-31].
 Beim Inverted Row aktivieren Latissimus, Bizeps, unterer Trapez und hinterer
@@ -709,7 +709,7 @@ beidbeinigem Stand [A-12].
 | (Alt.) | `chin-up` (Übung) | Untergriff | wie 1 | Alternative zu 1–2 | — | [A-08, A-09] |
 | (weiter) | Weighted §7.4; One-Arm §7.1 | | | | | [A-31] |
 
-- **Voraussetzungen:** `hang-foundation/arch-hang` (`prerequisite`) [A-44, A-45].
+- **Voraussetzungen:** `hang-foundation/arch-hang` (`prerequisite`; H-PRE: Arch Hangs kommen in der RR nach den Negativen ins Aufwärmen [A-44], die Leiter beginnt mit Scapula-Pulls [A-45]; Dead Hang → Scapula → Negative → assistiert → voll [A-46]).
 - **Determinanten (Evidenz B):** Bei trainierten Männern korrelierte die
   Klimmzugzahl mit Latzug-Wiederholungen bei Körpergewichtslast (r = 0,62),
   nicht mit dem Latzug-1RM (r = 0,09), und negativ mit Körpermasse (r = −0,55),
@@ -759,8 +759,10 @@ den Zug ab. Für den Druck ist der «Push-up plus» (am Ende des Liegestützes d
 Schulterblätter aktiv nach vorn schieben) am besten belegt: Er zeigte die
 höchste Serratus-anterior-Aktivität und das günstigste Verhältnis zum oberen
 Trapez; modifizierte Varianten (Wand, Knie) eignen sich als Progression
-[A-55] (B). Protraktion ist ein Formkriterium der Stützwaage [A-24] und des
-Planche-Leans [A-40].
+[A-55] (B). Protraktion (Scapula-Abduktion) ist ein Formkriterium der
+Stützwaage [A-24]; TMA gibt für die Tuck Planche den Hinweis «Boden wegdrücken,
+oberen Rücken leicht runden» [A-40], GMB empfiehlt Protraktions-Halte als
+Planche-Vorbereitung [A-35].
 
 | Stufe | Slug-Vorschlag | Beschreibung | Formkriterien | Unlock-Kriterium | Dauer bis nächste Stufe | Quellen |
 |---|---|---|---|---|---|---|
@@ -798,7 +800,7 @@ besser als jugendliche [A-57].
 | Stufe | Slug-Vorschlag | Beschreibung | Formkriterien | Unlock-Kriterium | Dauer bis nächste Stufe | Quellen |
 |---|---|---|---|---|---|---|
 | 1 | `handstand/wall` (existiert) · `wall-handstand-hold` | Handstand an der Wand | Arme gestreckt, Kopf neutral bis leicht im Nacken [A-03] | `wall-handstand-hold hold ≥ 30 s · occ 3 · 14 d` | 2–8 Wo. (H-DUR) | OG 1–3 [A-31]; 30 s Wand-HS als Planche-Voraussetzung [A-40] |
-| 2 | `handstand/chest-to-wall` · `handstand-chest-to-wall` | Bauch zur Wand | Schultern voll geöffnet (Arme an den Ohren), Becken aufgerichtet, Beine gestreckt, Fussspitzen gestreckt [A-03] | `handstand-chest-to-wall hold ≥ 60 s · form≥4 · occ 2 · 14 d` | 2–8 Wo. (H-DUR) | «1-minute stamina hold» an der Wand [A-37] |
+| 2 | `handstand/chest-to-wall` · `handstand-chest-to-wall` | Bauch zur Wand | Schultern voll geöffnet (Arme an den Ohren), Becken aufgerichtet, Beine gestreckt, Fussspitzen gestreckt [A-03] | `handstand-chest-to-wall hold ≥ 60 s · form≥4 · occ 2 · 14 d` (H-UNL: Schwelle aus der Trainingsdosis) | 2–8 Wo. (H-DUR) | Dosis «1-minute Stamina Hold × 3» an der Wand [A-37] (C) |
 | 3 | `handstand/free-10s` · `handstand-freestanding` | freistehend 10 s | wie 2; Korrektur über Finger/Handgelenk, nicht über die Hüfte [A-14, A-15] | `handstand-freestanding hold ≥ 10 s · form≥4 · occ 3 · 14 d` | 4–26 Wo. (H-DUR; GMB: «viele Monate» [A-37] (C); Ausgangswert von Novizen 0,4–1,1 s [A-58]) | OG 4–5 [A-31]; 10 s genügt für viele Ziele [A-37]; 10-s-Handstand als Testaufgabe in einer Turnstudie [A-57] |
 | 4 | `handstand/free-30s` · `handstand-freestanding` | freistehend 30 s | wie 3 | `handstand-freestanding hold ≥ 30 s · form≥4 · occ 3 · 14 d` (H-UNL) | 4–13 Wo. (H-DUR) | (H) |
 | 5 | `handstand/free-60s` · `handstand-freestanding` | freistehend 60 s | wie 3 | `handstand-freestanding hold ≥ 60 s · form≥4 · occ 2 · 28 d` | — | ~60 s bequem vor One-Arm-HS-Training [A-37] |
@@ -1020,7 +1022,7 @@ Boden [P-01 S. 2; P-02 S. 1, 4; P-03 S. 1, 4; P-04 S. 1].
 | Stufe | Slug-Vorschlag | Beschreibung | Formkriterien | Unlock-Kriterium | Dauer bis nächste Stufe | Quellen |
 |---|---|---|---|---|---|---|
 | 1 | `maltese/lean` · `maltese-lean` | Lean mit weit seitlich gestellten Händen | Arme gestreckt, Körper gerade (H-FORM) | `maltese-lean hold ≥ 10 s · none · form≥4 · occ 2 · 28 d` | 13–52 Wo. (H-DUR) | PDF frei 5–15 s [P-02 S. 4; P-03 S. 4] |
-| 2 | `maltese/lean-elevator` · `maltese-lean-elevator` | dynamische Lean-Variante mit Wdh. (Deutung §9) | wie 1 | `maltese-lean-elevator reps ≥ 3 · none · form≥4 · occ 2 · 28 d` | 13–52 Wo. (H-DUR) | PDF 2–5 Wdh. [P-02 S. 4; P-03 S. 4] |
+| 2 | `maltese/lean-elevator` · `maltese-lean-elevator` | dynamische Lean-Variante mit Wdh. (Deutung §9) | wie 1 | `maltese-lean-elevator reps ≥ 3 · none · form≥4 · occ 2 · 28 d` (H-UNL: Schwelle aus der Dosis) | 13–52 Wo. (H-DUR) | PDF-Dosis 2–5 Wdh. [P-02 S. 4; P-03 S. 4] |
 | 3 | `maltese/wide-planche` · `planche-wide` | Planche mit weiter Handstellung | waagrecht ≤ 15° | `planche-wide hold ≥ 3 s · none · form≥4 · occ 2 · 28 d` (V) | 13–52 Wo. (H-DUR) | PDF 3–6 s [P-02 S. 1]; FIG: weite Hände wertneutral [A-29 S. 62] |
 | 4 | `maltese/straddle` · `maltese-straddle` | Maltese mit gegrätschten Beinen, unassistiert | wie 5, Beine gestreckt gegrätscht | `maltese-straddle hold ≥ 3 s · none · form≥4 · occ 2 · 28 d` (V) | 13–52 Wo. (H-DUR) | Stufenfolge Tuck → One-Leg → Straddle → Full [A-68] (D); **Erweiterung** |
 | 5 | `maltese/hold` · `maltese` | Maltese-Halt, unassistiert (Boden/Parallettes) | Körper waagrecht auf Handhöhe, Arme weit und gestreckt [A-29 S. 61] | `maltese hold ≥ 3 s · none · form≥4 · occ 2 · 28 d` (V) | — | FIG C (Boden) [A-29]; 3 s [A-33]; **Erweiterung** |
@@ -1325,9 +1327,9 @@ Prüfung per Skript).
 
 | Von (Skill/Level) | Nach (Skill/Level) | Relation | Gewicht | Begründung | Quelle / Evidenz |
 |---|---|---|---|---|---|
-| `hang-foundation/arch-hang` | `pull-up/strict-5` | prerequisite | 1,0 | RR-Leiter Scapula → Arch → Negative → Klimmzug | [A-44, A-45] D |
-| `support-hold/parallel-bars` | `dip/parallel-bars` | prerequisite | 1,0 | RR-Dip-Leiter beginnt mit dem Stütz | [A-45] D |
-| `support-hold/rings` | `dip/rings` | prerequisite | 1,0 | 30 s Ring-Stütz vor dem ersten Ring-Dip | [A-43] D |
+| `hang-foundation/arch-hang` | `pull-up/strict-5` | prerequisite | 1,0 | RR: Scapula-Pulls = Stufe 1 [A-45], Arch Hangs ab Negativen [A-44]; Leiter Dead Hang → Scapula → Negative → Klimmzug [A-46] | (H-PRE); Praxisindiz [A-44–A-46] D |
+| `support-hold/parallel-bars` | `dip/parallel-bars` | prerequisite | 1,0 | RR-Dip-Leiter beginnt mit dem Stütz; Stütz ist Teil der Dip-Endposition | (H-PRE); Praxisindiz [A-45] D |
+| `support-hold/rings` | `dip/rings` | prerequisite | 1,0 | 30 s Ring-Stütz vor dem ersten Ring-Dip; Stütz ist Teil der Dip-Endposition | (H-PRE); Praxisindiz [A-43] D |
 | `dip/parallel-bars` | `dip/rings` | recommended | 0,7 | 15 Barren-Dips vor Ring-Dips; OG 3 → 4 | [A-43] D; [A-31] C |
 | `support-hold/parallel-bars` | `l-sit/tuck` | prerequisite | 1,0 | L-Sit ist ein Stütz mit gehobenen Beinen | (H-PRE) |
 | `push-up/full` | `planche/lean` | prerequisite | 1,0 | Lean = Liegestützposition mit Vorlage | (H-PRE); TMA: 15+ saubere Liegestütze [A-40] D |

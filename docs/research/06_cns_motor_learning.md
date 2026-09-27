@@ -712,15 +712,15 @@ Streak- oder XP-Logik, die Häufigkeit belohnt (ADR 0003).
 |---|---|---|---|---|
 | W-1 | Frühe Kraft: neuronal vs. Hypertrophie | Früher Zuwachs überwiegend neuronal, Hypertrophie dominant ab 3–5 Wochen [E-11]; neuronal früh am grössten [E-14] | Hypertrophie ab etwa 20 Tagen messbar [E-12]; frühe Querschnittszunahme teils Ödem [E-13]; ob Hypertrophie Kraft verursacht, ist strittig [E-15 vs. E-16] | Der Planer nutzt nur die robuste Aussage «frühe Zuwächse sind gross und spezifisch» (PAR-E-21, PAR-E-22), keine Mechanismus-Aussage. |
 | W-2 | Rate Coding | Entladungsrate steigt nach 4 Wochen (HD-EMG) [E-05] | Meta-Analyse: keine signifikante Änderung, I² = 91 % [E-06] | Nicht entscheidbar; keine Planerregel hängt daran. |
-| W-3 | Kortikospinale Erregbarkeit | Moderat und heterogen [E-03] | Sagt den Kraftzuwachs vorher, ausser bei isometrischem Training [E-04] | Für isometrische Skills (Statics) ist der Zusammenhang besonders unsicher [E-04]. |
+| W-3 | Kortikospinale Erregbarkeit | Nur grenzwertiger Anstieg (SMD 0.27) [E-03]; in Ruhe unverändert, unter Kontraktion erhöht [E-02] | Signifikanter Anstieg und Zusammenhang mit dem Kraftzuwachs nur nach metronomgeführtem Training, nicht nach selbstbestimmtem oder isometrischem [E-04] | Für isometrische Skills (Statics) ist der Zusammenhang besonders unsicher [E-04]. |
 | W-4 | Cross-Education | +11.9 % gepoolt [E-19]; +16.2 % [E-08]; als neuronaler Effekt gedeutet [E-11] | Kein Effekt auf der untrainierten Seite [E-20] | Meta-Analyse wiegt schwerer; bleibt reine Information (PAR-E-30). |
 | W-5 | Winkelspezifität: Mechanismus | Neuronaler Mechanismus [E-21] | Winkelspezifität robust, neuronale Ursache nur schwach belegt [E-22] | Der Effekt ist unstrittig, der Mechanismus nicht; PAR-E-23 hängt nur am Effekt. |
-| W-6 | EMG als Marker neuronaler Anpassung | EMG-Anstieg (+34.8 %) parallel zum Kraftzuwachs als Zeichen neuronaler Anpassung [E-12] | +32.8 % MVC ohne IEMG-Änderung [E-08]; Amplituden-Deutung methodisch fragwürdig [E-17]; Synchronisation erhöht die Amplitude [E-10] | EMG-Befunde nicht als Planungsgrundlage verwenden. |
+| W-6 | EMG als Marker neuronaler Anpassung | EMG-Anstieg (+34.8 %) parallel zum Kraftzuwachs (+38.9 %) [E-12] | +32.8 % MVC ohne IEMG-Änderung [E-08]; Amplituden-Deutung methodisch fragwürdig [E-17]; Synchronisation erhöht die Amplitude [E-10] | EMG-Befunde nicht als Planungsgrundlage verwenden. |
 | W-7 | Üben vs. Volumen | Übung des Tests allein bringt 1RM-Kraft ohne messbaren Unterschied zum Volumentraining [E-25]; Kraft als erlernte Koordination [E-20] | Hypertrophie ist eine beitragende Ursache der Kraft [E-16]; Kraft steigt mit dem Volumen [E-54] | Kurzfristig und bei Untrainierten genügt spezifische Übung [E-25]; Volumentraining bringt mehr Muskelzuwachs [E-25], der nach E-16 zur Kraft beiträgt. *Ableitung:* Der Planer braucht beides (PAR-E-24 plus Volumenblöcke). |
 | W-8 | Pausen vor Maximalversuchen | Praxisquelle intern: Position 1 mit 2–3 Sätzen, Pausen fallend, 5–7 min [P-01 S. 1–3; P-02; P-03]; Autor selbst: 5 Sätze, «Max Planche Press» mit nur 1–3 min Pause [P-04 S. 1] | Literatur: 3–5 min bei schweren Lasten [E-60, E-87, E-88]; beim Testen können 1–2 min reichen [E-88], 1 min [E-87]; Erholung nach einer einzelnen Maximalhebung < 1 min [E-91] | Default 300 s, Untergrenze 180 s (PAR-E-04). *Ableitung:* Der Satz mit kurzer Pause in P-04 steht an Position 3 und ist nicht die schwerste Stufe der Einheit. |
 | W-9 | Wo die Anpassung sitzt | Anpassungen der motorischen Einheiten sind gut belegt [E-01, E-05] | Subtil und verteilt über kortikale und subkortikale Ebenen [E-02]; Ort unklar [E-01] | Keine Folge für Regeln. |
 | W-10 | Contextual interference | Mittlerer Vorteil des zufälligen Übens für Behalten (SMD 0.63) und Transfer (0.55), grösser im Labor [E-37, E-38]; E-37 hält eine frühere Gegenanalyse für mangelhaft | Nur 20 % der Ergebnisse folgen dem CI-Muster, kein Langzeitvorteil [E-39]; angewandte Effekte klein und nicht signifikant [E-36, E-37, E-38]; Replik auf die Kritik [E-40] | Für die Praxis ist der Effekt unsicher. Maximalversuche geblockt (PAR-E-32), Verschachtelung nur optional für Technikarbeit (PAR-E-33). |
-| W-11 | Verteilung bei diskreten und komplexen Aufgaben | Diskrete Aufgabe: massiertes Üben besser [E-46]; sehr komplexe Aufgaben: Spacing-Effekt fast null (d = 0.07, beschrieben in [E-52]) | Golf-Putten (diskret): verteiltes Üben besser [E-47]; mikrochirurgische Naht (komplex): verteiltes Üben besser [E-48] | Zwischen Tagen verteilen ist gut gestützt [E-48, E-49, E-50]; der Abstand zwischen Versuchen innerhalb einer Einheit bleibt Heuristik (PAR-E-38). |
+| W-11 | Verteilung bei diskreten und komplexen Aufgaben | Diskrete Aufgabe: massiertes Üben besser [E-46]; sehr komplexe Aufgaben: Spacing-Effekt fast null (d = 0.07, beschrieben in [E-52]) | Golf-Putten (diskret): verteiltes Üben besser [E-47]; mikrochirurgische Naht (komplex): verteiltes Üben besser [E-48] | Zwischen Tagen verteilen ist gut gestützt [E-48, E-49, E-50]. E-52 relativiert d = 0.07: Die dort gepoolten Abstände reichten nur bis 24 h; bei Abständen über Tage war auch eine komplexe Simulationsaufgabe verteilt besser (Arthur et al. 2010, beschrieben in [E-52]). Der Abstand zwischen Versuchen innerhalb einer Einheit bleibt Heuristik (PAR-E-38). |
 | W-12 | Schlaf und Konsolidierung | +20 % nach Schlaf [E-61]; Schlaf nützt den meisten grobmotorischen Aufgaben [E-68]; Schlaf stellt nach Tagesabfall wieder her [E-63] | Nach Kontrolle der Störfaktoren keine Verbesserung durch Schlaf [E-62, E-65]; nur Stabilisierung [E-64]; Mittagsschlaf ohne Nutzen für eine grobmotorische Aufgabe [E-69] | Keine Planerregel auf Basis von «Schlaf verstärkt Lernen» (PAR-E-44). |
 | W-13 | Gewinne in kurzen Pausen | Schnelle Konsolidierung in Sekundenpausen [E-66] | Abklingen reaktiver Hemmung genügt als Erklärung [E-67] | Beide stützen kurze Pausen im Technikblock; die Deutung ist für den Planer unerheblich (PAR-E-38). |
 | W-14 | Frequenz vs. Volumen | Bei gleichem Volumen kein Frequenzeffekt [E-53]; Trainierte ohne klaren Unterschied [E-55] | Kraft steigt mit der Frequenz [E-54]; 3× besser als 1× bei gleichem Volumen [E-56]; tägliche Kleinstdosen besser als wöchentliche Gesamtdosis [E-58] | Default 3×/Woche (PAR-E-11); Verteilung der Wochendosis auf mehr Einheiten schadet nicht und hilft Untrainierten eher. |
@@ -730,14 +730,17 @@ Streak- oder XP-Logik, die Häufigkeit belohnt (ADR 0003).
 | W-18 | Schlafmangel und Kraft | Schlafentzug hat wenig Einfluss auf Kraft [E-71] | Kraft sinkt signifikant um 2.85 % [E-70] | Beides kleine Effekte; der grosse Effekt betrifft Skill-Aufgaben (−20.9 %) [E-70]. PAR-E-43 schont deshalb Kraft und passt nur Skill-Maxima an. |
 | W-19 | Pause nach Vorbelastung (PAPE) | 7–10 min am besten [E-93] | Längere Pausen besser, maximale Isometrie ohne Effekt [E-92]; nach vollständigem Aufwärmen kein Effekt [E-98] | Keine Potenzierungsübung für Halte (PAR-E-46). |
 | W-20 | Frequenz für Balance-Skills | 3 Einheiten/Woche (mehrere Studien, ES 0.72) [E-59] | 6 Einheiten/Woche (eine Studie, ES 1.84) [E-59]; 8 Einheiten in 1 Woche besser als in 2 Wochen (beschrieben in [E-52]) | Default 4, Spanne 3–6 (PAR-E-12); Stream B nennt 3–7 (PAR-B-35). |
-| W-21 | Mechanismus von Greasing the Groove | «Kraft ist eine Fertigkeit», häufiges Üben schleift das Muster ein [E-100, E-103]; Erfahrungsbericht mit grossem Zuwachs [E-102] | Der Frequenzeffekt auf Kraft läuft vor allem über das Volumen [E-53]; das berichtete Programm hat hohes Volumen [E-102] | GTG als Option ohne Mechanismus-Aussage in Texten (PAR-E-27). |
+| W-21 | Mechanismus von Greasing the Groove | «Kraft ist eine Fertigkeit», häufiges Üben schleift das Muster ein [E-103]; Erfahrungsbericht mit grossem Zuwachs [E-102] | Der Frequenzeffekt auf Kraft läuft vor allem über das Volumen [E-53]; das berichtete Programm hat hohes Volumen [E-102] | GTG als Option ohne Mechanismus-Aussage in Texten (PAR-E-27). |
 | W-22 | Rolle von Übungsvariabilität | Variabilität fördert Generalisierung [E-44] | Konstantes Üben am Ziel erzeugt einen Zielvorteil [E-45] | Variation zwischen Einheiten, Zielstufe konstant (PAR-E-34). |
+| W-23 | Intrakortikale Hemmung (SICI) | Abnahme der SICI nach Krafttraining (SMD −1.00) [E-03]; SICI unter Kontraktion verringert [E-02] | SICI in Ruhe unverändert [E-02]; kein signifikanter Effekt in der multivariaten Meta-Analyse [E-04] | Konsistent ist nur die kürzere Silent Period [E-02, E-03, E-04]; keine Planerregel hängt daran. |
+| W-24 | Breite der Winkelspezifität | Zuwachs nur am Trainingswinkel und ±5° daneben (Wade, 6 Frauen) [E-21] | +12 % am Trainingswinkel, aber +5 bis +11 % bis 30° daneben (Knie, n = 13) [E-22] | Nachbarpositionen profitieren teilweise; der Faktor 0.5 in PAR-E-23 bleibt Heuristik. |
 
 ## Offene Fragen
 
 1. **Prüftiefe einzelner Aussagen.** Nicht selbst geprüft, sondern nur über eine
    beschreibende Quelle zitiert: Baddeley & Longman 1978, Donovan & Radosevich
-   1999 und Paik & Ritter 2015 [über E-52], Shea & Morgan 1979 [über E-37].
+   1999, Paik & Ritter 2015 und Arthur et al. 2010 [über E-52], Shea & Morgan
+   1979 [über E-37], Hitchcock 1989, Weir 1994 und Matuszak 2003 [über E-91].
    Der Inhalt von Fitts & Posner 1967 [E-29] ist über die Beschreibung in E-30
    geprüft, der Buchtitel über den Bibliothekseintrag. E-77 (Counterpoint) hat
    kein Abstract; zitiert wird nur die im Titel formulierte Position. Das
@@ -780,14 +783,15 @@ Streak- oder XP-Logik, die Häufigkeit belohnt (ADR 0003).
    Zahlenwerte sind Coaching-Angaben (PAR-E-48 Stufe D, PAR-E-49 Stufe C). Soll
    das Modul in der ersten Version überhaupt angeboten werden?
 10. **Zurückgezogene Vorversion.** Von E-02 existiert eine zurückgezogene
-    frühere Fassung (PubMed 31359349). Bei der Zusammenführung in
+    frühere Fassung (Sports Med 2019, DOI 10.1007/s40279-019-01152-3,
+    PubMed 31359349). Bei der Zusammenführung in
     `00_sources.md` muss klar sein, dass ausschliesslich die Fassung von 2020
     (DOI 10.1007/s40279-020-01258-z) gemeint ist; die Vorversion darf nicht
     zitiert werden.
 
 ## Quellen
 
-**Prüfprotokoll.** Erster Lauf (E-01 bis E-28): Titel, Autoren, Jahr und
+**Prüftiefe bei der Erstellung.** Erster Lauf (E-01 bis E-28): Titel, Autoren, Jahr und
 DOI/URL über Suchmaschinen-Treffer mit Abstract bzw. Landing-Page-Auszug
 geprüft; Volltexte waren damals gesperrt, Zahlen stammen aus Abstracts. Im
 zweiten Lauf wurden E-25 (Abstract) und E-28 (Volltext) nachgeprüft; für
@@ -805,6 +809,8 @@ verwendet, deren Randomisierung nicht geprüft werden konnte.
   über E-30), E-77 (kein Abstract; nur die Titelposition zitiert).
 - **E-103** wurde 2016 erstveröffentlicht und 2022 neu publiziert; zitiert
   wird die Fassung von 2022.
+- Die adversariale Nachprüfung aller Quellen und Parameter steht im Abschnitt
+  «Prüfprotokoll» am Ende.
 
 | ID | Titel | Autor(en) | Jahr | URL/DOI | Typ | Evidenz |
 |---|---|---|---|---|---|---|
@@ -861,7 +867,7 @@ verwendet, deren Randomisierung nicht geprüft werden konnte.
 | E-51 | Spacing practice sessions across days earlier rather than later in training improves performance of a visuomotor skill | Goedert KM, Miller J | 2008 | https://doi.org/10.1007/s00221-008-1414-9 | Kohortenstudie | B |
 | E-52 | Spacing Repetitions Over Long Timescales: A Review and a Reconsolidation Explanation | Smith CD, Scarf D | 2017 | https://doi.org/10.3389/fpsyg.2017.00962 | Narratives Review | B |
 | E-53 | Effect of Resistance Training Frequency on Gains in Muscular Strength: A Systematic Review and Meta-Analysis | Grgic J, Schoenfeld BJ, Davies TB, Lazinica B, Krieger JW, Pedisic Z | 2018 | https://doi.org/10.1007/s40279-018-0872-x | Meta-Analyse | A |
-| E-54 | The Resistance Training Dose Response: Meta-Regressions Exploring the Effects of Weekly Volume and Frequency on Muscle Hypertrophy and Strength Gains | Pelland JC, Remmert JF, Robinson ZP, Hinson SR, Zourdos MC | 2025 | https://doi.org/10.1007/s40279-025-02344-w | Meta-Analyse | A |
+| E-54 | The Resistance Training Dose Response: Meta-Regressions Exploring the Effects of Weekly Volume and Frequency on Muscle Hypertrophy and Strength Gains | Pelland JC, Remmert JF, Robinson ZP, Hinson SR, Zourdos MC | 2026 | https://doi.org/10.1007/s40279-025-02344-w | Meta-Analyse | A |
 | E-55 | Effects of Variations in Resistance Training Frequency on Strength Development in Well-Trained Populations and Implications for In-Season Athlete Training: A Systematic Review and Meta-analysis | Cuthbert M, Haff GG, Arent SM, Ripley N, McMahon JJ, Evans M, Comfort P | 2021 | https://doi.org/10.1007/s40279-021-01460-7 | Meta-Analyse | A |
 | E-56 | Higher Training Frequency Is Important for Gaining Muscular Strength Under Volume-Matched Training | Ochi E, Maruo M, Tsuchiya Y, Ishii N, Miura K, Sasaki K | 2018 | https://doi.org/10.3389/fphys.2018.00744 | Kohortenstudie | B |
 | E-57 | Effect of daily 3-s maximum voluntary isometric, concentric, or eccentric contraction on elbow flexor strength | Sato S, Yoshida R, Murakoshi F, Sasaki Y, Yahata K, Nosaka K, Nakamura M | 2022 | https://doi.org/10.1111/sms.14138 | Kohortenstudie | B |
@@ -889,7 +895,7 @@ verwendet, deren Randomisierung nicht geprüft werden konnte.
 | E-79 | Translating Fatigue to Human Performance | Enoka RM, Duchateau J | 2016 | https://doi.org/10.1249/MSS.0000000000000929 | Narratives Review | B |
 | E-80 | Neural Contributions to Muscle Fatigue: From the Brain to the Muscle and Back Again | Taylor JL, Amann M, Duchateau J, Meeusen R, Rice CL | 2016 | https://doi.org/10.1249/MSS.0000000000000923 | Narratives Review | B |
 | E-81 | Recovery of central and peripheral neuromuscular fatigue after exercise | Carroll TJ, Taylor JL, Gandevia SC | 2017 | https://doi.org/10.1152/japplphysiol.00775.2016 | Narratives Review | B |
-| E-82 | Neuromuscular Fatigue and Recovery after Heavy Resistance, Jump, and Sprint Training | Thomas K, Brownstein CG, Dent J, Parker P, Goodall S, Howatson G | 2018 | https://doi.org/10.1249/MSS.0000000000001733 | RCT | A |
+| E-82 | Neuromuscular Fatigue and Recovery after Heavy Resistance, Jump, and Sprint Training (akutes Crossover-Experiment) | Thomas K, Brownstein CG, Dent J, Parker P, Goodall S, Howatson G | 2018 | https://doi.org/10.1249/MSS.0000000000001733 | RCT | B |
 | E-83 | Time course of recovery following resistance training leading or not to failure | Morán-Navarro R, Pérez CE, Mora-Rodríguez R, de la Cruz-Sánchez E, González-Badillo JJ, Sánchez-Medina L, Pallarés JG | 2017 | https://doi.org/10.1007/s00421-017-3725-7 | Kohortenstudie | B |
 | E-84 | Central fatigue: the serotonin hypothesis and beyond | Meeusen R, Watson P, Hasegawa H, Roelands B, Piacentini MF | 2006 | https://doi.org/10.2165/00007256-200636100-00006 | Narratives Review | B |
 | E-85 | Prevention, diagnosis, and treatment of the overtraining syndrome: joint consensus statement of the European College of Sport Science and the American College of Sports Medicine | Meeusen R, Duclos M, Foster C, Fry A, Gleeson M, Nieman D, Raglin J, Rietjens G, Steinacker J, Urhausen A | 2013 | https://doi.org/10.1249/MSS.0b013e318279a10a | Positionspapier/Konsensus | B |
@@ -904,8 +910,8 @@ verwendet, deren Randomisierung nicht geprüft werden konnte.
 | E-94 | Warm-Up Strategies for Sport and Exercise: Mechanisms and Applications | McGowan CJ, Pyne DB, Thompson KG, Rattray B | 2015 | https://doi.org/10.1007/s40279-015-0376-x | Narratives Review | B |
 | E-95 | Effects of warming-up on physical performance: a systematic review with meta-analysis | Fradkin AJ, Zazryn TR, Smoliga JM | 2010 | https://doi.org/10.1519/JSC.0b013e3181c643a0 | Meta-Analyse | A |
 | E-96 | Acute effects of muscle stretching on physical performance, range of motion, and injury incidence in healthy active individuals: a systematic review | Behm DG, Blazevich AJ, Kay AD, McHugh M | 2016 | https://doi.org/10.1139/apnm-2015-0235 | Systematic Review | A |
-| E-97 | Combination of general and specific warm-ups improves leg-press one repetition maximum compared with specific warm-up in trained individuals | Abad CC, Prado ML, Ugrinowitsch C, Tricoli V, Barroso R | 2011 | https://doi.org/10.1519/JSC.0b013e3181e8611b | RCT | A |
-| E-98 | Variable, but not free-weight, resistance back squat exercise potentiates jump performance following a comprehensive task-specific warm-up | Mina MA, Blazevich AJ, Tsatalas T, Giakas G, Seitz LB, Kay AD | 2019 | https://doi.org/10.1111/sms.13341 | RCT | A |
+| E-97 | Combination of general and specific warm-ups improves leg-press one repetition maximum compared with specific warm-up in trained individuals (akutes Crossover-Experiment) | Abad CC, Prado ML, Ugrinowitsch C, Tricoli V, Barroso R | 2011 | https://doi.org/10.1519/JSC.0b013e3181e8611b | RCT | B |
+| E-98 | Variable, but not free-weight, resistance back squat exercise potentiates jump performance following a comprehensive task-specific warm-up (akutes Crossover-Experiment) | Mina MA, Blazevich AJ, Tsatalas T, Giakas G, Seitz LB, Kay AD | 2019 | https://doi.org/10.1111/sms.13341 | RCT | B |
 | E-99 | Specificity of training for motor skill under physical fatigue | Williams LR, Daniell-Smith JH, Gunson LK | 1976 | https://doi.org/10.1249/00005768-197600830-00005 | RCT | A |
 | E-100 | The Case for Grease-the-Groove Jump Training | Tsatsouline P | 2015 | https://www.strongfirst.com/jump/ | Coaching-Artikel | C |
 | E-101 | Two Powerful Methods for Improving Your Pull-Up | Allen D | 2018 | https://www.strongfirst.com/two-powerful-methods-for-improving-your-pull-up/ | Coaching-Artikel | C |
