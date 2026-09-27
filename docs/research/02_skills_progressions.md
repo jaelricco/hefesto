@@ -25,7 +25,7 @@
 | `[P-0x S. n]` | PDF-Quelle (Daï-Long Huynh), siehe `01_pdf_extract.md` |
 | *(S)* | Wert nur aus einem Such-Auszug; Original nicht eingesehen |
 | **(H)** | **Praxisheuristik** — keine Quelle; Begründung im Code dahinter |
-| (H-DUR) | Dauer-Heuristik: keine Quelle für genau diesen Schritt; Spanne nach PAR-A-45 aus dem OG-Level-Abstand, geeicht an den Coaching-Angaben in §3.6; mit App-Logs zu kalibrieren |
+| (H-DUR) | Dauer-Heuristik: keine Quelle für genau diesen Schritt; orientiert an PAR-A-45 (Wochen pro OG-Level-Schritt, geeicht an den Coaching-Angaben in §3.6), für Grundstufen an PAR-A-39 und [A-46]; mit App-Logs zu kalibrieren |
 | (H-FORM) | Formkriterium = Definition der Position selbst; Winkeltoleranz nach §2.4 |
 | (H-UNL) | Unlock-Schwelle nach der Vorlage in §2.4, ohne stufenspezifische Quelle |
 | (H-PRE) | Kante aus Bewegungsverwandtschaft abgeleitet; keine Studie |
@@ -404,7 +404,7 @@ exzentrisch Level 2, Klimmzug Level 3 [A-31]. Weil `pull-up` bereits mit
 |---|---|---|---|---|---|---|
 | 1 | `hang-foundation/dead-hang` · `dead-hang` | passiver Hang | Arme gestreckt, ohne Bodenkontakt (H-FORM) | `dead-hang hold ≥ 30 s · occ 3 · 7 d` | 1–2 Wo. (H-DUR) | 30 s Isometrie-Regel [A-44]; 30 s Dead Hang als FL-Voraussetzung [A-41] |
 | 2 | `hang-foundation/scapular-pull` · `scapular-pull-up` (existiert) | Schulterblätter aus dem Hang nach unten ziehen | Ellbogen gestreckt, Bewegung nur im Schultergürtel [A-38] | `scapular-pull-up reps ≥ 8 · occ 3 · 7 d` | 1–2 Wo. (H-DUR) | Stufe 1 der RR-Leiter [A-45]; 3×8-Regel [A-44]; [A-38] |
-| 3 | `hang-foundation/arch-hang` · `arch-hang` | Scapula-Zug plus Brust Richtung Stange | Arme gestreckt (H-FORM) | `arch-hang reps ≥ 8 · occ 3 · 7 d` | 2–8 Wo. bis `pull-up/strict-5` (H-DUR) | RR-Aufwärmen 10 Wdh. [A-44] |
+| 3 | `hang-foundation/arch-hang` · `arch-hang` | Scapula-Zug plus Brust Richtung Stange | Arme gestreckt (H-FORM) | `arch-hang reps ≥ 8 · occ 3 · 7 d` | Dead Hang bis erster Klimmzug gesamt ≈ 2–6 Mo. [A-46] | RR-Aufwärmen 10 Wdh. [A-44] |
 | (Übungen) | `pull-up-jump`, `pull-up-negative`, `row-ring` (Rolle `progression` bei `pull-up/strict-5`) | Sprung-, Negativ-Klimmzug, Rudern | kontrolliert | kein Level (§2.5) | — | OG 1–2 [A-31]; GMB [A-38] |
 
 - **Voraussetzungen:** keine.
@@ -720,7 +720,7 @@ beeinflussen die Planche-Eignung deutlich [A-28].
 | 2 | `planche/tuck` · `planche-tuck` | Tuck, Arme gestreckt | Arme gestreckt; Hüfte auf Schulterhöhe ≤ 15°; Hände etwa senkrecht unter der Hüfte; Scapula abduziert [A-24] | `planche-tuck hold ≥ 10 s · none · form≥4 · occ 2 · 28 d` | ≈ 4–6 Mo. bis Adv Tuck (abgeleitet [A-40]) | OG 5 [A-31]; 10 s [A-40]; PDF-Ziel 5–10 s [P-01 S. 1] |
 | 3 | `planche/advanced-tuck` · `planche-advanced-tuck` | Rücken waagrecht, Knie vom Körper weg | Rücken parallel zum Boden [A-40] | `planche-advanced-tuck hold ≥ 10 s · none · form≥4 · occ 2 · 28 d` | ≈ 6–12 Mo. bis Straddle (abgeleitet [A-40]) | OG 6 [A-31]; «10 s Adv Tuck» vor Straddle [A-40] |
 | 4 | `planche/straddle` · `planche-straddle` | Beine gestreckt, gegrätscht | waagrecht ±7,5–15°, Arme gestreckt | `planche-straddle hold ≥ 3 s · none · form≥4 · occ 2 · 28 d` | ≈ 12 Mo. bis Full (abgeleitet [A-40]) | OG 8 [A-31]; FIG A [A-29]; 3 s [A-33]; PDF 2–4 s [P-01 S. 2] |
-| 5 | `planche/half-lay` · `planche-half-lay` (Alt. `planche-one-leg`) | Knie halb gebeugt / ein Bein | wie 4 | `planche-half-lay hold ≥ 3 s · none · form≥4 · occ 2 · 28 d` | 16–52 Wo. (H-DUR) | OG 9 [A-31] |
+| 5 | `planche/half-lay` · `planche-half-lay` (Alt. `planche-one-leg`) | Knie halb gebeugt / ein Bein | wie 4 | `planche-half-lay hold ≥ 3 s · none · form≥4 · occ 2 · 28 d` | 8–26 Wo. (H-DUR) | OG 9 [A-31] |
 | 6 | `planche/full` · `planche` | Full Planche | gestreckt, waagrecht, Arme gestreckt | `planche hold ≥ 3 s · none · form≥4 · occ 2 · 28 d` | — | OG 11 [A-31]; FIG C [A-29]; TMA-Ziel ≥ 5 s [A-40] |
 | R | `planche/rings` · `planche-rings` | Full Planche an Ringen | Schultern ganz über den Ringen [A-29 S. 61] | `planche-rings hold ≥ 3 s · none · form≥4 · occ 2 · 28 d` | — | OG 14 [A-31]; FIG C [A-29] |
 | Pr 1 | `planche-press/straddle` · `planche-straddle-press` | Straddle Planche → Handstand | Arme gestreckt, kein Schwung | `planche-straddle-press reps ≥ 1 · none · form≥4 · occ 2 · 28 d` | — | FIG B [A-29 S. 29]; PDF Beginner 1–3 Wdh. [P-01 S. 2–3] |
@@ -841,7 +841,7 @@ Schwung an Probanden, die je 5 MUs an Stange und Ringen schafften [A-13]). Der
 Ring-MU entspricht einem Stemme-vorwärts-Muster, der Stangen-MU einer Kippe
 [A-13]. Kipping verändert Kinematik und Muskelaktivierung deutlich (maximaler
 Hüftwinkel +48,8°) [A-10]. False Grip = im Handgelenk abgeknickter Griff; an den
-Ringen ist er für Kraft-Halteelemente im Turnen nicht erlaubt [A-29 S. 62], im
+Ringen ist er für Kraft-Halteelemente im Turnen nicht erlaubt [A-29 S. 60], im
 MU erleichtert er den Übergang (OG: MU ohne False Grip ein Level schwerer
 [A-31]).
 
@@ -994,8 +994,8 @@ OG definiert Level über die **Gesamtlast als Vielfaches des Körpergewichts**
 
 Quelle: [A-31]; Zusatzlast = eigene Umrechnung (× KG − 1). Referenzwerte aus
 einer Studie: Studierende erreichten im 1RM-Klimmzug 1,16 ± 0,15× (Männer) bzw.
-0,73 ± 0,09× KG (Frauen) Gesamtlast [A-11] — Männer im Mittel also knapp OG-Level
-4, Frauen unter Level 3. TMA nennt +40 % KG im gewichteten Klimmzug als Mittel
+0,73 ± 0,09× KG (Frauen) Gesamtlast [A-11] — Männer im Mittel knapp unter OG-Level
+4 (1,18×), Frauen unter Level 3 (eigener Vergleich). TMA nennt +40 % KG im gewichteten Klimmzug als Mittel
 gegen ein Front-Lever-Plateau [A-41]. Streetlifting (Maximallast in gewichteten
 Klimmzügen, Dips, Muscle-ups, Kniebeugen) wird vor allem vom Verhältnis Kraft zu
 Körpergewicht bestimmt [A-48].

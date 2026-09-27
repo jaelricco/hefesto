@@ -334,7 +334,7 @@ Satz (`codebase_notes.md` §2).
 
 | Modell / Befund | Kernaussage | Evidenz | Quellen | Folge für den Planer |
 |---|---|---|---|---|
-| Fitts & Posner (1967) | Drei aufeinanderfolgende Stadien: **kognitiv** (Ziel und Handlungsfolge werden festgelegt, explizites Wissen), **assoziativ** (Feinabstimmung von Teilen und Übergängen), **autonom** (routinierte Kontrolle). Die Lernrate unterscheidet sich zwischen den Stadien. | B (Lehrbuch; Inhalt über E-30 geprüft) | E-29, E-30 | Frühe Einheiten einer neuen Stufe brauchen Erklärung und wenige Cues; später tritt das in den Hintergrund. Keine Zahl, keine harte Stadienlogik. |
+| Fitts & Posner (1967) | Drei aufeinanderfolgende Stadien: **kognitiv** (Ziel und Handlungsfolge werden festgelegt, explizites Wissen), **assoziativ** (Feinabstimmung von Teilen und Übergängen), **autonom** (routinierte Kontrolle). Die Lernrate unterscheidet sich zwischen den Stadien. | B (Lehrbuch; Inhalt über E-30 geprüft) | E-29, E-30 | *Ableitung:* Frühe Einheiten einer neuen Stufe brauchen Erklärung und wenige Cues; später tritt das in den Hintergrund. Keine Zahl, keine harte Stadienlogik. |
 | Form der Lernkurve | Über viele Aufgaben zeigt sich eine schnelle Anfangsphase und danach eine deutlich langsamere Phase. | B | E-30 | Stützt PAR-E-21 (frühe Raten nicht hochrechnen). |
 | Schnelles vs. langsames Lernen | Schnelles Lernen findet innerhalb einer Einheit statt, langsames über mehrere Einheiten. Die Dauer ist stark aufgabenabhängig: Die schnelle Phase dauert bei einer Tastensequenz Minuten, bei einem komplexen Musikstück Monate. Verbesserungen entstehen während des Übens und zwischen den Einheiten; Leistung kann automatisch werden. | B | E-31 | Fortschritt wird über Einheiten bewertet, nicht innerhalb einer Einheit. |
 | Konsolidierung zwischen Einheiten | Die Aneignung besteht aus schnellem (in der Einheit) und langsamem Lernen (zwischen Einheiten). Kurz nach dem Training ist die neue Fertigkeit anfällig für Störung durch andere Fertigkeiten; Konsolidierung findet in den Pausen zwischen Einheiten statt. | B | E-32 | *Ableitung:* Direkt nach dem Skill-Maximum keine ähnliche, konkurrierende Bewegung als neuen Lernreiz einplanen. Ohne Zahl, nur Planungshinweis (Heuristik). |
@@ -760,10 +760,12 @@ Streak- oder XP-Logik, die Häufigkeit belohnt (ADR 0003).
 
 ## Quellen
 
-**Prüfprotokoll.** Erster Lauf (E-01 bis E-27): Titel, Autoren, Jahr und
+**Prüfprotokoll.** Erster Lauf (E-01 bis E-28): Titel, Autoren, Jahr und
 DOI/URL über Suchmaschinen-Treffer mit Abstract bzw. Landing-Page-Auszug
-geprüft; Volltexte waren damals gesperrt, Zahlen stammen aus Abstracts. Zweiter
-Lauf (E-28 bis E-105): Metadaten über Europe PMC und/oder Crossref bestätigt.
+geprüft; Volltexte waren damals gesperrt, Zahlen stammen aus Abstracts. Im
+zweiten Lauf wurden E-25 (Abstract) und E-28 (Volltext) nachgeprüft; für
+E-29 bis E-105 wurden die Metadaten über Europe PMC und/oder Crossref
+bestätigt.
 «Kohortenstudie» wird auch für kontrollierte Interventions- und Laborstudien
 verwendet, deren Randomisierung nicht geprüft werden konnte.
 
