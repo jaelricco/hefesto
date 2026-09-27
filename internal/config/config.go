@@ -43,7 +43,7 @@ type Config struct {
 	Argon2Parallelism    uint8
 	AppleClientIDs       []string // accepted `aud` values for Sign in with Apple
 	AccountDeletionGrace time.Duration
-	TrustProxyHeaders    bool // take the client IP from X-Forwarded-For (behind Caddy)
+	TrustProxyHeaders    bool  // take the client IP from X-Forwarded-For (behind Caddy)
 	AuthPerMinute        int32 // credential attempts per client address per minute
 
 	// Object storage for media. Media is off when S3Endpoint is empty, which

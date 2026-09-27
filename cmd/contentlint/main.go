@@ -12,7 +12,7 @@
 //     primary_test exercise
 //  8. map coordinates are present on every milestone skill and do not collide
 //  9. injury entries carry disclaimer: educational_only
-// 10. a researched skill does not use a placeholder exercise — warning
+//  10. a researched skill does not use a placeholder exercise — warning
 //
 // With -release, every draft_placeholder skill or exercise is an error too:
 // run it before content ships to athletes outside the team.
