@@ -1,46 +1,40 @@
 # 02 — Skills & Progressionen
 
-> Stream A der Phase-2-Recherche. Deckt die Progressionsleitern aller Skills ab,
+> Stream A der Phase-2-Recherche. Liefert die Progressionsleitern aller Skills,
 > die der Planer als Knoten des Skill-Graphen braucht: Einstiegswurzeln unter
-> dem PDF-«Beginner», Statics, Dynamics, Kraftskills. Für jede Stufe ein
-> Slug-Vorschlag, Formkriterien, ein Unlock-Kriterium in der bestehenden DSL und
-> eine Dauer bis zur nächsten Stufe. Dazu eine gemeinsame Schwierigkeitsskala,
-> eine Kanten-Tabelle (Voraussetzung / Empfehlung / Alternative / Antagonist)
-> und die Klärung der PDF-Kürzel.
+> dem PDF-«Beginner», Statics, Dynamics und Kraftskills. Für jede Stufe:
+> Slug-Vorschlag, Formkriterien, ein Unlock-Kriterium in der bestehenden DSL
+> und die typische Dauer bis zur nächsten Stufe. Dazu eine gemeinsame
+> Schwierigkeitsskala, eine Kanten-Tabelle (Voraussetzung / Empfehlung /
+> Alternative / Antagonist) und die Klärung der PDF-Kürzel.
 >
-> **Wichtige Einschränkung dieser Fassung (bitte vor der Nutzung lesen):** In
-> dieser Sitzung war der Abruf von Webseiten (WebFetch) für alle
-> Fachverlags-, Datenbank- und Coaching-Hosts gesperrt (u. a. PubMed, PMC,
-> MDPI, Springer, Wiley, ResearchGate, Reddit, Wikipedia, stevenlow.org,
-> gymnastics.sport), und das Websuch-Kontingent der Sitzung war nach rund
-> 45 Suchen dieses Streams erschöpft. Alle Quellen unten wurden deshalb
-> **über die Landing-Page-Auszüge der Suchmaschine** (Titel, Autoren, Jahr,
-> Abstract-Auszüge) bzw. über einen GitHub-Spiegel (r/bodyweightfitness)
-> geprüft, **nicht im Volltext**. Zahlen, die nur aus einem solchen Auszug
-> stammen und im Original noch zu prüfen sind, tragen den Zusatz *(S)*.
-> Viele Stufen-Schwellen und fast alle Dauern sind deshalb
-> **Praxisheuristiken** und als solche markiert. Ein Verifikationsdurchgang
-> mit Volltextzugriff ist nötig, bevor Werte als `status: active` in
-> `content/` landen (siehe «Offene Fragen»).
+> **Prüftiefe.** Studien wurden über Europe PMC/Crossref geprüft, wo Open Access
+> im Volltext, sonst am Abstract (vermerkt in der Spalte «Titel» der
+> Quellentabelle als «[VT]» bzw. «[Abs.]»). Der FIG Code of Points, die
+> WSWCF-Regeln, die Overcoming-Gravity-Charts, die OG-Leseprobe und die
+> Coaching-Seiten wurden direkt im Original gelesen. Nicht erreichbar waren
+> Reddit (die r/bodyweightfitness-Routine wurde über einen GitHub-Spiegel
+> gelesen, die Übungsseiten nicht) und die Kanäle von Daï-Long Huynh. Werte, die
+> nur aus einem Such-Auszug stammen, tragen *(S)*.
 
-**Legende für diese Datei**
+**Legende**
 
 | Kürzel | Bedeutung |
 |---|---|
-| `[A-xx]` | Quelle aus Stream A (Tabelle «Quellen») |
+| `[A-xx]` | Quelle aus Stream A (Tabelle «Quellen»); `[A-xx S. n]` = Seite |
 | `[P-0x S. n]` | PDF-Quelle (Daï-Long Huynh), siehe `01_pdf_extract.md` |
-| *(S)* | Wert nur aus einem Such-Auszug gelesen; Volltext/Original nicht eingesehen |
-| **(H)** | **Praxisheuristik** — keine Quelle gefunden; Begründung im Code dahinter |
-| (H-DUR) | Dauer-Heuristik: keine Daten gefunden; Spanne nach OG-Level-Abstand (PAR-A-40) und RR-Mindestdauer (PAR-A-39); muss aus App-Logs kalibriert werden |
-| (H-FORM) | Formkriterium = Definition der Position selbst (was die Stufe zur Stufe macht); Toleranz an FIG-Winkelabzügen angelehnt [A-04] *(S)* |
-| (H-UNL) | Unlock-Schwelle nach der generischen Vorlage in §2.3 (10 s Zwischenstufe [A-12], 3 s Wettkampfhalt [A-09], 3×8 dynamisch [A-03], ≥ 2 Vorkommen nach ADR 0003); stufenspezifische Anpassung ohne eigene Quelle |
-| (H-PRE) | Voraussetzung/Kante aus Bewegungsverwandtschaft abgeleitet; keine Studie, Coaching-Quelle in dieser Sitzung nicht einsehbar |
-| (H-EQ) | Equipment-Effekt mechanisch begründet (Hebel, Griff, Instabilität); nicht gemessen |
+| *(S)* | Wert nur aus einem Such-Auszug; Original nicht eingesehen |
+| **(H)** | **Praxisheuristik** — keine Quelle; Begründung im Code dahinter |
+| (H-DUR) | Dauer-Heuristik: keine Quelle für genau diesen Schritt; Spanne nach PAR-A-45 aus dem OG-Level-Abstand, geeicht an den Coaching-Angaben in §3.6; mit App-Logs zu kalibrieren |
+| (H-FORM) | Formkriterium = Definition der Position selbst; Winkeltoleranz nach §2.4 |
+| (H-UNL) | Unlock-Schwelle nach der Vorlage in §2.4, ohne stufenspezifische Quelle |
+| (H-PRE) | Kante aus Bewegungsverwandtschaft abgeleitet; keine Studie |
+| (H-EQ) | Equipment-Effekt mechanisch begründet; nicht gemessen |
 | (H-FAULT) | Häufiger Fehler = Umkehrung des Formkriteriums; keine Quelle |
 
 DSL-Kurzschreibweise in den Stufentabellen:
 `<exercise> <measure> ≥ <value> · <assistance> · form≥<n> · occ <n> · <within_days> d`.
-Beispiel `planche-tuck hold ≥ 10 s · none · form≥4 · occ 2 · 28 d` entspricht
+Beispiel: `planche-tuck hold ≥ 10 s · none · form≥4 · occ 2 · 28 d` entspricht
 
 ```yaml
 unlock_criteria:
@@ -51,634 +45,514 @@ unlock_criteria:
 
 ## Kurzfassung
 
-- **Progression über schwerere Varianten ist als Überlastungsmethode belegt
-  (Evidenz A):** 4 Wochen progressives Liegestütz-Training (3×/Woche) brachten
-  gleiche Zuwächse im Bankdrück-1RM und in der Muskeldicke wie Bankdrücken
-  [A-14]. Die Leiter-Logik des Skill-Graphen hat damit eine belastbare Basis.
-- **Die einzige quantitativ belegte Grundleiter ist der Liegestütz:** Wand-/Schräg-
-  (41–55 % KG), Knie- (49 %), Standard- (64 %) und erhöhte Füsse (70–74 %)
-  [A-15]; positionsabhängig 69–75 % bzw. 54–62 % [A-16]. Für Dip, Row, Pull-up
-  gibt es in dieser Fassung nur die Reihenfolge aus der Community-Routine [A-03].
-- **Generische Wechselregeln (Evidenz C/D):** dynamisch 3×5–8, +1 Wdh. pro Satz,
-  bei 3×8 sauber die nächste Variante, dort wieder mit 3×5 beginnen [A-03];
-  Grund-Isometrie 10–30 s, Wechsel bei 3×30 s [A-03]; Hebel-Statics: nächste
-  Stufe erst nach 10 s sauberem Halt [A-12].
-- **Wettkampfstandards liefern die Messlatte für «erreicht»:** FIG verlangt 2 s
-  Halt [A-04] *(S)*, WSWCF mindestens 3 s [A-09]; Tuck/Advanced Tuck gelten im
-  Street-Workout-Wettkampf nicht als Halt [A-10] *(S)*. Vorschlag: Endstufen
-  schalten bei ≥ 3 s (2 Vorkommen, Form ≥ 4) frei, Zwischenstufen bei ≥ 10 s.
-- **Formqualität lässt sich an FIG-Winkelabzüge koppeln:** ≤ 15° Abweichung
-  kleiner Abzug, 15–30° mittel, > 30° gross, > 45° nicht anerkannt [A-04]
-  *(S)* → Vorschlag `form_quality` 4 = ≤ 15°, Unlock verlangt ≥ 4.
-- **Eine gemeinsame Ordinalskala ist über Overcoming Gravity (OG) möglich:**
-  OG-Level 1–16, aus dem FIG-Code abgeleitet [A-01, A-02]. Front Lever Tuck→Full
-  = Level 4→8, Back Lever 3→7, Planche Tuck 5, Straddle 8, Full ≥ 10 [A-02]
-  *(S)*. FIG-Wert A entspricht dabei OG 7–8 (Full BL, Full FL, Straddle
-  Planche), C entspricht ≥ 10 (Full Planche) [A-02, A-05, A-06].
-- **Kraft sagt Statics nur teilweise voraus (Evidenz B):** Vorbereitende
-  Kraftübungen korrelieren mit Ringhalteelementen (r 0,65–0,92 für
-  Schwalbe/Stützwaage) [A-23], erklären beim Kreuz-Handstand aber nur bis 48 %
-  [A-24]; Bankdrücken–Kreuz r = 0,41 mit Schwellencharakter [A-26]; die
-  Muskelaktivität der Stützwaage (Planche) weicht deutlich von ihren
-  Vorübungen ab [A-25]. Folge: Kraftbaselines sind **empfohlene**, keine harten
-  Voraussetzungen; die Zielfigur muss spezifisch geübt werden.
-- **Maltese liegt klar über der Planche:** FIG bewertet die Maltese am Boden C,
-  an den Ringen D [A-07, A-05]; Kraft-Benchmarks für Ringhalteelemente reichen
-  bis 94,1 % Körpergewicht (Schwalbe, exzentrisch) [A-23]. Die PDF-Leiter
-  (Lean Maltese → Elevator → Wide Planche → Maltese mit Band → Press) ist mit
-  diesen Quellen verträglich [P-02 S. 4; P-03 S. 4].
-- **Handstand-Balance ist primär eine Handgelenksstrategie (Evidenz A):**
-  Korrekturen laufen zuerst über die Handgelenke; Augen zu und Nackenflexion
-  verschlechtern die Balance [A-20]. Handgelenk-Konditionierung gehört als
-  Wurzel vor den Handstand.
-- **Kipping ist eine andere Bewegung:** Kipping-Klimmzüge verändern Kinematik
-  und Muskelaktivität deutlich [A-19] → Kipping- und strikte Varianten brauchen
-  getrennte Exercise-Slugs; nur strikte zählen für strikte Stufen.
-- **Typische Dauer bis zur nächsten Stufe: keine belastbaren Daten gefunden.**
-  Alle `est_weeks_from_prev`-Werte in dieser Datei sind Heuristiken (H-DUR). Die
-  einzige ableitbare Untergrenze: Die RR-Regel braucht ≥ 4 Einheiten pro
-  dynamischer Variante [A-03]. Hefesto sollte Dauern aus eigenen Logs lernen.
-- **DSL-Lücken gefunden:** `occurrences` zählt Sätze, nicht Tage (eine Einheit
-  mit 2 Sätzen erfüllt «occ 2»); `min_load_kg` ist absolut, gewichtete Standards
-  in % Körpergewicht sind nicht ausdrückbar; rein exzentrische und assistierte
-  Elemente zählen nie — Negativ- und Band-Stufen können daher keine
-  automatisch freischaltbaren Levels sein (§2.4).
-- **PDF-Kürzel:** Mangels Zugriff auf Daï-Long Huynhs eigene Kanäle bleiben
-  `supi`, `fake supi`, `neck band`, `Zanetti`, `Dead Planche`, `Elevator`
-  und `wide` **unklar bzw. unsicher**; §9 gibt kontextbasierte Hypothesen.
+- **Leitern über schwerere Varianten sind als Überlastung belegt (Evidenz A):**
+  4 Wochen progressives Liegestütz-Training (3×/Woche) steigerten das
+  Bankdrück-1RM signifikant [A-01]; Band-Liegestütz und Bankdrücken bei gleicher
+  6RM-Intensität brachten in 5 Wochen gleiche Kraftzuwächse [A-02].
+- **Eine durchgehende Schwierigkeitsskala existiert:** Overcoming Gravity (OG)
+  ordnet alle Leitern in 16 Level, abgeleitet aus dem FIG Code of Points;
+  Beginner 1–5, Intermediate 6–9, Advanced 10–13, Elite 14–16 [A-30 S. 22,
+  A-31, A-47]. Beispiele: Front Lever Tuck 4 → Full 8; Back Lever Tuck 3 → Full 7;
+  Planche Tuck 5 → Straddle 8 → Full 11 (Boden/Barren) bzw. Full 14 an Ringen
+  [A-31]. Die Hefesto-Ordinalskala übernimmt diese Level (§3).
+- **FIG-Werte bestätigen die Ordnung:** an Ringen Front/Back Lever A, Straddle-
+  Stützwaage A, Stützwaage (Planche) C, Kreuz C, Schwalbe (Maltese) D, Inverted
+  Swallow E; am Boden Handstand A, Straddle Planche A, Planche und Schwalbe je C,
+  Manna C; Mindesthaltedauer 2 s [A-29 S. 20, 28–29, 67].
+- **Formqualität lässt sich an Wettkampfregeln koppeln:** FIG wertet
+  Halteabweichungen > 5–20° als kleinen, > 20–45° als mittleren Fehler und
+  erkennt > 45° nicht an [A-29 S. 19–20]; WSWCF akzeptiert höchstens 15° (Planche
+  ±7,5°) und verlangt ≥ 3 s [A-33 S. 5]. Vorschlag: `form_quality` 4 = ≤ 15°;
+  Unlock von Statics verlangt ≥ 4.
+- **Wechselregeln (Evidenz C/D):** dynamisch 3×5–8, bei 3×8 sauber nächste
+  Variante [A-44]; Grund-Isometrie Wechsel bei 3×30 s [A-44]; Planche-Stufen
+  5×20 s (GMB) [A-35] bzw. 10 s in 3 Sätzen (TMA) [A-40].
+- **Unlock-Vorlage (Vorschlag):** Zwischenstufen der Hebel-Statics ≥ 10 s,
+  Endstufen ≥ 3 s (strengster Wettkampfstandard [A-33]), jeweils Form ≥ 4 und
+  ≥ 2 Vorkommen; dynamisch ≈ 3×8 (§2.4).
+- **Kraft ist notwendig, aber nicht hinreichend (Evidenz B):** Konditionierungs-
+  kraft erklärt 76–85 % der Schwalbe-Leistung, 42–59 % der Stützwaage und
+  38–48 % des Kreuz-Handstands [A-21]; Bankdrücken–Kreuz r = 0,41 mit
+  Schwellenmuster («notwendig, nicht hinreichend») [A-23]; Stützwaage und
+  Schwalbe aktivieren Muskeln anders als ihre Vorübungen [A-24, A-25].
+  Kraftbaselines werden daher **empfohlene** Kanten, keine harten Voraussetzungen.
+- **Kraft-Benchmarks existieren für Ringelemente und Gewichtsstufen:** Schwalbe
+  braucht 63 % KG konzentrisch / 94 % KG exzentrisch in der
+  Konditionierungsmessung, Stützwaage 60 % / 87 % [A-21]; 1RM «Schwalbe in
+  Rückenlage» 73,4 % bzw. 67,4 % KG [A-20]. OG gibt gewichtete Klimmzüge und Dips
+  als Vielfache des KG pro Level an (z. B. Klimmzug-Gesamtlast 1,18× KG =
+  Level 4) [A-31]; Studierende schaffen im 1RM-Klimmzug 1,16× (Männer) bzw.
+  0,73× KG (Frauen) [A-11].
+- **Ringe machen Planche-Stufen schwerer:** OG setzt jede Planche-Stufe an Ringen
+  1–3 Level höher als auf Boden/Barren [A-31]; FIG bewertet die Planche an beiden
+  Geräten gleich (C) [A-29] (→ Widersprüche). Im Handstand an Ringen/Barren sinkt
+  die Aktivität der Handgelenksbeuger (61 % → 44–46 %), die übrige Muskulatur
+  arbeitet an Ringen mehr [A-16].
+- **Handstand-Balance ist eine Handgelenksstrategie (Evidenz A/B):** in > 75 % der
+  Zeit über die Handgelenke reguliert [A-15]; gute Balancen nutzen Handgelenk
+  und Schulter, schwache die Hüfte [A-14]; Kopfhaltung und Sicht beeinflussen die
+  Balance [A-03]. Handgelenk-Konditionierung ist deshalb eine Wurzel.
+- **Kipping und strikt sind verschiedene Bewegungen:** Kipping vergrössert den
+  maximalen Hüftwinkel im Klimmzug um 48,8° [A-10]; Ring-Muscle-ups aktivieren
+  Trapez, Bizeps und Unterarm stärker als Stangen-Muscle-ups, die Autoren raten
+  zur Stange als Einstieg [A-13]. OG setzt Kipping-MU auf Level 4, den strikten
+  Stangen-MU auf Level 7 [A-31].
+- **Dauer bis zur nächsten Stufe ist nur auf Coaching-Niveau belegt (C/D):**
+  Front Lever je Stufe 2–4 Monate, gesamt 12–18 Monate ab 10 Klimmzügen [A-41];
+  Planche kumuliert Tuck nach 2–6, Straddle nach 12–24, Full nach 24–36 Monaten
+  [A-40]; Back Lever 6–12 Monate [A-42]. Elite-Turner steigern spezifische
+  Ringkraft in 3–4 Wochen um 3,6–8,7 % [A-26, A-27]. Studien zu Lernzeiten
+  fehlen; Hefesto sollte Dauern aus den eigenen Logs lernen.
+- **DSL-Lücken:** `occurrences` zählt Sätze, nicht Tage; `min_load_kg` ist absolut
+  (keine %-KG-Standards); exzentrische und assistierte Elemente zählen nie →
+  Negativ- und Band-Stufen können keine automatisch freischaltbaren Levels sein
+  (§2.5).
+- **PDF-Kürzel:** `supi` ist mit hoher Wahrscheinlichkeit die supinierte
+  (aussenrotierte) Handstellung — sie ist die Handstellung der Schwalbe an Ringen
+  [A-21], und FIG nennt «hands turned out» und «slightly wide» als wertneutrale
+  Varianten der Stützwaage [A-29 S. 62]. `Elevator` existiert als Elementname in
+  OG (Level 17) ohne Definition [A-31]. `fake supi`, `neck band`, `Zanetti` und
+  `Dead Planche` bleiben **unklar** (§9).
 
 ## 1. Methodik und Grenzen
 
 | Punkt | Umsetzung |
 |---|---|
-| Suchstrategie | Englische Suchen nach Primärstudien (Ringe/Turnen, Push-up-Kinetik, Pull-up-EMG/Kinematik, Handstand-Biomechanik), Regelwerken (FIG, WSWCF), Coaching-Literatur (Overcoming Gravity, Sommer, GMB) und Community-Routinen (r/bodyweightfitness). |
-| Prüfung | Jede Quelle wurde mindestens auf Titel, Autor(en), Jahr und Abstract/Landing-Page-Auszug geprüft. Volltexte waren nicht erreichbar (siehe Einschränkung oben). Die r/bodyweightfitness-Routine wurde im Wortlaut über den GitHub-Spiegel `redditbwf/redditbwf.github.io` gelesen [A-03]. |
-| Evidenzstufen | A = SR/MA/RCT; B = Einzelstudien, Regelwerk der FIG als Expertenkonsens; C = Coaching-Bücher/-Seiten, Street-Workout-Regelwerk; D = Wikis, Foren, Blogs. |
-| r/bodyweightfitness | Stufe **D** (Community-Wiki), aber seit Jahren kuratiert und breit genutzt; hier nur für Reihenfolgen und Wechselregeln der Grundübungen verwendet, nicht für Schwellen fortgeschrittener Skills. |
-| Overcoming Gravity | Stufe **C**. Die Charts wurden laut Autor aus dem FIG Code of Points abgeleitet [A-01, A-02]. Die Level-Zahlen stammen aus Such-Auszügen von Chart-Kopien *(S)* und sind im Original zu verifizieren. |
-| Nicht erreichbar | Muscle-up-, Human-Flag-, Pistol-, One-Arm-Pull-up- und Weighted-Standards-Quellen, Daï-Long Huynhs Kanäle, r/bodyweightfitness-Übungsseiten, der FIG-Volltext. Diese Lücken sind in «Offene Fragen» gelistet. |
+| Suche | Europe PMC (Titel- und Volltextsuche) für Studien zu Ringelementen, Handstand, Liegestütz, Klimmzug, Rudern, Muscle-up; Direktabruf der Regelwerke (FIG MAG CoP 2025–2028, WSWCF, Calisthenics Cup), der OG-Charts (Google Sheet des Autors), der OG-Leseprobe (Kap. 1–3) und von Coaching-Seiten (GMB, The Movement Athlete, Spiegel der r/bodyweightfitness-Routine). Das Websuch-Kontingent war nach ~45 Suchen erschöpft; danach nur Europe PMC und Direktabrufe bekannter URLs. |
+| Prüftiefe | Studienzahlen wurden, wo Open Access, im Volltext geprüft (z. B. Tabelle 3 in [A-21], Push-up-Tabelle in der Proceedings-Fassung von [A-05]); sonst am Abstract. Die Prüftiefe steht je Quelle in der Quellentabelle. |
+| Evidenzstufen | A = SR/MA/RCT; B = Einzelstudien, FIG-Regelwerk als Expertenkonsens; C = Coaching-Bücher/-Seiten, Street-Workout-Regelwerk; D = Community-Wikis, App-Marketingseiten, Einzel-Event-Regeln. |
+| r/bodyweightfitness | **D** (Community-Wiki), aber seit Jahren kuratiert und breit genutzt; nur für Reihenfolgen und Wechselregeln der Grundübungen verwendet. |
+| Overcoming Gravity | **C**. Charts laut Autor aus dem FIG Code of Points konstruiert [A-47]; Level-Definition in Kap. 3 [A-30 S. 21–25]. Das Chart nennt **keine Haltezeiten oder Wiederholungen** pro Level. |
+| The Movement Athlete (TMA) | **D**: kommerzielle App-Seiten mit Marketing-Aussagen (z. B. «research shows 10 seconds …» ohne Beleg [A-40]). Einzige gefundene Quelle mit stufenweisen Zeitangaben; nur als Praxisindiz verwendet. |
+| Nicht verwendet | Sommer, *Building the Gymnastic Body* (2008): Existenz über den Goodreads-Eintrag geprüft (195 S.), Inhalt nicht zugänglich — nicht als Beleg verwendet. Frühere Such-Auszüge zu OG-Levels und FIG-Werten wurden durch die Originale ersetzt. |
 
 ## 2. Übergreifende Regeln für Stufen, Unlocks und Wechsel
 
 ### 2.1 Was eine Stufe ist
 
-Eine Stufe (Level) ist ein **Leistungsnachweis**, eine Übung (Exercise) ist, was
-geloggt wird (`CONTENT_AUTHORING.md`). Daraus folgt für den Graphen:
+Eine Stufe (Level) ist ein **Leistungsnachweis**; eine Übung (Exercise) ist, was
+geloggt wird (`CONTENT_AUTHORING.md`).
 
 | Regel | Begründung |
 |---|---|
-| Stufen = Positionen/Varianten, die ein Athlet **unassistiert, voll, nicht nur exzentrisch** zeigen kann. | Die Unlock-Engine zählt fehlgeschlagene, partielle und rein exzentrische Elemente nie; `assistance: none` ist Default (`internal/domain/progress/evaluate.go`). |
-| Negative, Band-assistierte, Kicks und Übergänge sind **Übungen mit Rolle `progression`**, keine Stufen. | Sie können mit der DSL nicht automatisch freischalten (s. o.) und sind in den PDFs reguläres Trainingsvolumen auf allen Niveaus [P-01 bis P-03; `01_pdf_extract.md` §4.4]. |
-| Kombinationen (z. B. «L-Sit to Tuck Planche», «Hold to Press») sind ein `set_entry` mit mehreren Elementen und zählen als **ein** Vorkommen. | CLAUDE.md («one code path for sets»); `evaluate.go` zählt Set-Entries. |
-| Bestehende Level-Slugs bleiben: `pull-up/strict-5`, `handstand/wall`, `front-lever/tuck`, `front-lever/advanced-tuck`. Neue Einstiegsstufen darunter werden als **eigene Wurzel-Skills** angelegt statt die Reihenfolge bestehender Skills umzubauen. | Level-Slugs sind permanent (`CONTENT_AUTHORING.md`); ob `order` bestehender Levels verschoben werden darf, ist offen (Offene Fragen). |
+| Stufen = Positionen/Varianten, die unassistiert, mit vollem Weg und nicht nur exzentrisch gezeigt werden. | Die Unlock-Engine zählt fehlgeschlagene, partielle und rein exzentrische Elemente nie; `assistance: none` ist Default (`internal/domain/progress/evaluate.go`). |
+| Negative, Band-assistierte Varianten, Kicks und Übergänge sind **Übungen mit Rolle `progression`**, keine Stufen. | DSL (s. o.); in den PDFs reguläres Trainingsvolumen auf allen Niveaus (`01_pdf_extract.md` §4.4); Stützgeräte (Herdos, Gurte) sind auch im Turnen Werkzeug für Halteelemente [A-04]. |
+| Kombinationen («L-Sit to Tuck Planche», «Hold to Press») sind ein `set_entry` mit mehreren Elementen und zählen als **ein** Vorkommen. | CLAUDE.md («one code path for sets»); `evaluate.go` zählt Set-Entries. |
+| Bestehende Level-Slugs bleiben: `pull-up/strict-5`, `handstand/wall`, `front-lever/tuck`, `front-lever/advanced-tuck`. Neue Einstiegsstufen darunter werden als **eigene Wurzel-Skills** angelegt. | Level-Slugs sind permanent (`CONTENT_AUTHORING.md`); ob die `order` bestehender Levels verschoben werden darf, ist offen. |
+| Die OG-Level bestimmen die **Ordinalskala**, nicht die Level-Liste eines Hefesto-Skills: Ein Hefesto-Level ist ein sinnvoller Meilenstein, auch wenn OG dazwischen weitere Übungen führt. | OG versteht die Charts als «approximate knowledge» der Lage auf dem Kontinuum [A-30 S. 22]. |
 
 ### 2.2 Wechselregeln aus der Literatur
 
 | Regel | Wert | Quelle | Evidenz |
 |---|---|---|---|
-| Dynamische Grundübungen: Arbeitsbereich | 3 Sätze × 5–8 Wdh. der schwersten machbaren Variante | [A-03] | D |
-| Steigerung innerhalb der Variante | jede Einheit versuchen, die Vorwerte zu schlagen (+1 Wdh. pro Satz) | [A-03] | D |
-| Wechsel zur nächsten Variante | bei 3×8 mit guter Form; dort mit 3×5 neu beginnen | [A-03] | D |
-| Grund-Isometrie (Support-Halt, Tuck Front Lever in der Row-Leiter) | Sätze à 10–30 s; Wechsel, wenn alle 3 Sätze 30 s erreichen | [A-03] | D |
-| Hebel-Statics (Planche-Leiter) | nächste Stufe erst, wenn die aktuelle 10 s sauber gehalten wird | [A-12] | C |
-| Tuck → Straddle | Übergang «fliessender» als die Tuck-Stufen; Straddle-Varianten parallel üben | [A-11] *(S)* | C |
-| Wettkampfhalt FIG | 2 s | [A-04] *(S)* | B |
-| Wettkampfhalt Street Workout (WSWCF) | ≥ 3 s | [A-09] | C |
-| Nicht als Halt gewertet (Street-Workout-Wettkampf) | Tuck/Adv-Tuck-Planche; Tuck/Adv-Tuck/45°-Straddle-Front-Lever | [A-10] *(S)* | D |
-| Winkelabzüge bei Halteelementen (FIG) | bis 15° → 0,1; 15–30° → 0,3; > 30° → 0,5; > 45° ggf. nicht anerkannt | [A-04] *(S)* | B |
+| Dynamische Grundübungen: Arbeitsbereich | 3 × 5–8 Wdh. der schwersten sauberen Variante; jede Einheit die Vorwerte schlagen | [A-44] | D |
+| Wechsel | bei 3 × 8 mit guter Form; neue Variante mit 3 × 5 beginnen | [A-44] | D |
+| Tempo | «10X0»: 1 s ab, ohne Pause, explosiv auf | [A-44] | D |
+| Grund-Isometrie (Support, Tuck FL in der Row-Leiter) | Sätze à 10–30 s; Wechsel, wenn alle 3 Sätze 30 s erreichen | [A-44] | D |
+| Planche-Stufen (GMB) | auf einer Stufe bis 5 × 20 s (2–3 min Pause), dann nächste Stufe | [A-35] | C |
+| Planche-Stufen (TMA) | 10 s in 3 Sätzen mit gleichbleibender Form, ohne Gelenkschmerz | [A-40] | D |
+| L-Sit (GMB) | einbeinig mind. 5 s pro Seite, dann voller L-Sit; Halte 5–30 s, 3–5 Sätze | [A-36] | C |
+| Tuck → Straddle Planche (GMB) | zwei Übungen ≥ 3 Wochen, dann neu bewerten; die nächste Stufe laufend testen | [A-35] | C |
+| Untrainierte Anfänger (OG) | zuerst höhere Wiederholungszahlen (Gewöhnung des Bindegewebes); trainierte Anfänger 5–15 Wdh. | [A-30 S. 24] | C |
 
 *Ableitung (RR-Mindestdauer):* Von 3×5 bis 3×8 mit +1 Wdh. pro Satz und
-Einheit braucht es mindestens 4 Einheiten (5→6→7→8) [A-03]; bei 3 Einheiten pro
+Einheit braucht es mindestens 4 Einheiten (5→6→7→8) [A-44]; bei 3 Einheiten pro
 Woche ≈ 1–1,5 Wochen, bei 2 Einheiten ≈ 1,5–2 Wochen (eigene Rechnung). Das ist
 eine **Untergrenze**, keine typische Dauer.
 
-### 2.3 Generische Unlock-Vorlage (Vorschlag)
+### 2.3 Wettkampfstandards als Messlatte für «erreicht»
 
-Die Quellen geben selten stufenspezifische Schwellen. Die Vorlage übersetzt die
-Regeln aus §2.2 in die DSL und unterscheidet **Unlock** (Karte, «erreicht»,
-nie zurückgenommen) von **Trainingswechsel** (Planer stellt das Haupttraining
-auf die nächste Stufe um).
-
-| Stufentyp | Unlock (DSL) | Trainingswechsel zur nächsten Stufe | Quellen |
+| Standard | FIG MAG 2025–2028 | WSWCF Freestyle | Calisthenics Cup |
 |---|---|---|---|
-| Dynamische Grundübung | `reps ≥ 8 · none · occ 3 · 7 d` (≈ 3×8) | 3×8 sauber | [A-03]; occ/within (H-UNL) |
-| Grund-Isometrie (Support, Hollow, L-Sit-Vorstufen, Tuck FL in Row-Leiter) | `hold ≥ 30 s · none · occ 3 · 7 d` | 3×30 s | [A-03]; occ/within (H-UNL) |
-| Zwischenstufe Hebel-Static (Tuck, Adv Tuck, One-Leg) | `hold ≥ 10 s · none · form≥4 · occ 2 · 28 d` | 10 s sauber (Vorschlag: in 2 Sätzen) | [A-12]; Wettkampf wertet diese Stufen nicht [A-10] *(S)* |
-| Wettkampffähige Stufe (Straddle, Half-Lay, Full) | `hold ≥ 3 s · none · form≥4 · occ 2 · 28 d` | ≥ 10 s sauber, bevor die nächste Stufe Haupttraining wird | Halt ≥ 3 s [A-09]; 10 s [A-12] |
-| Press/Kraftskill mit Wdh. (HSPU, OAP, Press) | `reps ≥ 1 · none · form≥4 · occ 2 · 28 d` für die Erststufe, danach Wdh.-Stufen (3, 5) | 3×3–5 sauber | (H-UNL) — PDF dosiert Maximalpressen mit 1–3 Wdh. [P-01 S. 2–3; P-02 S. 2] |
-| Gewichtete Stufe | `reps ≥ 5 · min_load_kg X · occ 2 · 28 d` | — | (H-UNL); % KG nicht ausdrückbar, siehe §2.4 |
+| Mindesthaltedauer | 2 s ab vollständigem Stillstand [A-29 S. 20] | 3 s; länger bringt keine Punkte [A-33 S. 5] | 2 s ab Stillstand [A-34] |
+| Winkeltoleranz Halteposition | > 5–20° klein (−0,1), > 20–45° mittel (−0,3), > 45° gross (−0,5) und nicht anerkannt [A-29 S. 19–22] | max. 15° im Hauptgelenk, Planche ±7,5° zur Horizontalen; sonst Punktabzug [A-33 S. 5] | bessere Form = höhere Bewertung; keine Gradangabe [A-34] |
+| Armbeugung bei Halten/Pressen | 0–15° klein, > 15–30° mittel, > 30–45° gross, > 45° nicht anerkannt [A-29 S. 19] | gebeugte Ellbogen = Abzug [A-33 S. 5] | gebeugte Arme = schlechtere Bewertung [A-34] |
+| Nicht als Halt gewertet | Positionen > 45° neben der Sollposition, z. B. Stützwaage mit > 45° Hüftbeugung [A-29 S. 61] | — (ein Tuck-Planche-Halt von 3 s erscheint als Kombinationsbeispiel) [A-33 S. 8] | Tuck/Adv-Tuck-Planche; Tuck/Adv-Tuck/45°-Straddle-Front-Lever; gehockter V-Sit; einbeiniger Back Lever [A-34] |
+| Gerät | Werte teils geräteabhängig (§3.3) | — | p-Bars, Stange und Boden werden unterschiedlich bewertet [A-34] |
 
-`form_quality`-Zuordnung (Vorschlag, an FIG-Abzüge angelehnt [A-04] *(S)*):
-5 = keine sichtbare Abweichung; 4 = ≤ 15°; 3 = 15–30°; 2 = 30–45°; 1 = > 45°
-(im Wettkampf nicht anerkannt). Unlock für Statics verlangt ≥ 4. Für dynamische
-Grundübungen wird `min_form_quality` weggelassen (H-UNL: Nutzer bewerten Form
-optional; ein gesetztes `min_form_quality` schliesst unbewertete Elemente aus,
-`evaluate.go`).
+### 2.4 Generische Unlock-Vorlage (Vorschlag)
 
-### 2.4 Gefundene Grenzen der DSL
+Unterschieden werden **Unlock** (Karte, «erreicht», nie zurückgenommen) und
+**Trainingswechsel** (der Planer macht die nächste Stufe zum Haupttraining).
 
-| Grenze | Folge | Vorschlag (für die Spezifikation, Phase 4) |
+| Stufentyp | Unlock (DSL) | Trainingswechsel | Quellen |
+|---|---|---|---|
+| Dynamische Grundübung | `reps ≥ 8 · none · occ 3 · 7 d` (≈ 3×8) | 3×8 sauber | [A-44]; occ/within (H-UNL) |
+| Grund-Isometrie (Support, Hollow, Plank, L-Sit-Vorstufen) | `hold ≥ 30 s · none · occ 3 · 7 d` | 3×30 s | [A-44]; occ/within (H-UNL) |
+| Zwischenstufe Hebel-Static (Tuck, Adv Tuck, One-Leg) | `hold ≥ 10 s · none · form≥4 · occ 2 · 28 d` | 10 s in 3 Sätzen [A-40] bzw. 5×20 s [A-35] | 10 s [A-40]; Zwischenstufen zählen im Wettkampf teils nicht [A-34] |
+| Endstufe (Straddle, Half-Lay, Full) | `hold ≥ 3 s · none · form≥4 · occ 2 · 28 d` | ≥ 10 s sauber, bevor die nächste Stufe Haupttraining wird | 3 s = strengster Wettkampfstandard [A-33]; 10 s [A-40] |
+| Press/Kraftskill mit Wdh. | `reps ≥ 1 · none · form≥4 · occ 2 · 28 d`, danach Wdh.-Stufen (3, 5) | 3×3–5 sauber | (H-UNL); die PDFs dosieren Maximalpressen mit 1–3 Wdh. [P-01 S. 2–3; P-02 S. 2] |
+| Gewichtete Stufe | `reps ≥ 1 · min_load_kg X · occ 2 · 28 d` | — | OG in Vielfachen des KG [A-31]; % KG in der DSL nicht ausdrückbar (§2.5) |
+
+**`form_quality`-Zuordnung (Vorschlag):** 5 = ≤ 5° Abweichung (bei FIG
+abzugsfrei [A-29 S. 20]); 4 = > 5–15° (innerhalb der WSWCF-Toleranz
+[A-33 S. 5]); 3 = > 15–30°; 2 = > 30–45°; 1 = > 45° (bei FIG nicht anerkannt
+[A-29 S. 19–20]). Die Grenzen 15/30/45° folgen der FIG-Skala für Armbeugung
+[A-29 S. 19]. Statics verlangen für den Unlock ≥ 4. Für dynamische
+Grundübungen wird `min_form_quality` weggelassen (H-UNL: ein gesetztes
+`min_form_quality` schliesst unbewertete Elemente aus, `evaluate.go`).
+
+### 2.5 Gefundene Grenzen der DSL
+
+| Grenze | Folge | Vorschlag (Spezifikation, Phase 4) |
 |---|---|---|
-| `occurrences` zählt verschiedene Set-Entries, nicht Tage. | «Wiederholung über Tage» ist nicht erzwingbar; zwei Sätze in einer Einheit genügen für `occ 2`. | Feld `min_distinct_days` ergänzen; bis dahin `occ` ≥ 2 mit `within_days` als Näherung. |
-| `min_load_kg` ist absolut. | Standards in % Körpergewicht (z. B. +25 % KG) sind nicht global formulierbar. | Feld `min_load_pct_bw` (bezogen auf `workout_sessions.bodyweight_kg`). |
+| `occurrences` zählt verschiedene Set-Entries, nicht Tage. | Zwei Sätze in einer Einheit erfüllen `occ 2`; «Wiederholung über Tage» ist nicht erzwingbar. | Feld `min_distinct_days`; bis dahin `occ` ≥ 2 mit `within_days`. |
+| `min_load_kg` ist absolut. | OG-Standards in Vielfachen des KG [A-31] sind nicht global formulierbar. | Feld `min_load_pct_bw` (bezogen auf `workout_sessions.bodyweight_kg`). |
 | `min_form_quality` schliesst Elemente ohne Formbewertung aus. | Wer Form nie bewertet, schaltet Statics nie frei. | UI fordert Formbewertung bei Unlock-relevanten Sätzen an. |
-| Exzentrische und assistierte Elemente zählen nie (bei `assistance: none`). | Negativ-/Band-Stufen können nicht automatisch freischalten. | Als `progression`-Übungen führen, nicht als Levels (§2.1). |
-| Kein Kriterium für «Ausführung aus totem Stand vs. mit Schwung». | Kipping und strikt nur über getrennte Slugs trennbar. | Getrennte Exercise-Slugs (`muscle-up-bar-kipping` vs. `muscle-up-bar-strict`) [A-19]. |
+| Exzentrische und (bei `none`) assistierte Elemente zählen nie. | Negativ-/Band-Stufen können nicht automatisch freischalten. | Als `progression`-Übungen führen (§2.1). |
+| Kein Merkmal «mit/ohne Schwung». | Kipping und strikt nur über getrennte Slugs trennbar. | Getrennte Exercise-Slugs [A-10, A-13]. |
 
 ## 3. Relative Schwierigkeit: eine gemeinsame Ordinalskala
 
-### 3.1 Quellen für Schwierigkeit
+### 3.1 Das OG-Levelsystem
 
-| Skala | Was sie liefert | Quelle | Evidenz |
+OG ordnet Kraft- und Skillprogressionen in **16 Level**; ein Level soll über alle
+Spalten hinweg ähnliche Leistungsfähigkeit zeigen. Die Level sind in vier Viertel
+gruppiert (Basic, A, B, C — angelehnt an die FIG-Werte) und in Athletenklassen:
+**Beginner 1–5, Intermediate 6–9, Advanced 10–13, Elite 14–16** [A-30 S. 22;
+A-31]. Die Charts sind laut Autor aus dem FIG Code of Points konstruiert [A-47]
+und geben eine «ungefähre» Einordnung [A-30 S. 22]. Der Körper macht auf
+niedrigen Leveln schneller Fortschritte als auf hohen [A-30 S. 23]. Für die
+Einordnung zählt das Können, nicht die Trainingsdauer [A-30 S. 23]. Das Buch
+enthält keine Schwung-, Salto- oder Riesenfelgen-Elemente [A-47].
+
+### 3.2 OG-Level der für Hefesto relevanten Spalten (Original-Chart [A-31])
+
+| Spalte | Level → Übung |
+|---|---|
+| Planche (Barren/Boden) | 3 Frog Stand · 4 Frog Stand mit gestreckten Armen · 5 Tuck · 6 Adv Tuck · 8 Straddle · 9 Half-Lay/One-Leg · 11 Full · 12 Straddle Planche → Handstand (gestreckte Arme) |
+| Planche (Ringe) | 4 Frog Stand · 5 Frog Stand mit gestreckten Armen · 6 Tuck · 8 Adv Tuck · 10 Straddle · 12 Half-Lay/One-Leg · 14 Full |
+| Planche-Liegestütz (Barren/Boden) | 6 Tuck · 8 Adv Tuck · 10 Straddle · 12 Half-Lay/One-Leg · 14 Full |
+| Front Lever | 4 Tuck · 5 Adv Tuck · 6 Straddle · 7 Half-Lay/One-Leg · 8 Full · 9 FL to Inverted |
+| Front-Lever-Rows | 5 Tuck · 6 Adv Tuck · 8 Straddle · 10 Full |
+| Back Lever | 1 German Hang · 2 Skin the Cat · 3 Tuck · 4 Adv Tuck · 5 Straddle · 6 Half-Lay/One-Leg · 7 Full · 8 BL Pullout |
+| Handstand | 1–3 Wand-HS · 4–5 freistehend · 6 Vorstufen One-Arm-HS · 10 One-Arm-HS; Ringe: 5 Schulterstand · 6 HS mit Seilkontakt · 7 Ring-HS |
+| Handstand-Liegestütz | 1 Pike Headstand-PU · 2 Box Headstand-PU · 3 Wand-Headstand-PU exzentrisch · 4 Wand-Headstand-PU · 5 Wand-HSPU · 6 freier Headstand-PU · 7 freier HSPU; Ringe: 7 breit · 8 mit Seilkontakt · 9 frei |
+| Press in den Handstand (gestreckte Arme) | 5 Wand-Straddle-Press exzentrisch · 6 erhöhter Straddle-Stand-Press · 7 Straddle/Pike-Stand-Press · 8 L-Sit/Straddle-L → Straddle-Press · 9 L-Sit/Straddle-L → Pike-Press |
+| L / Straddle-L / V / Manna | 1 Tuck L-Sit · 2 einbeinig gebeugt · 3 L-Sit · 4 Straddle-L · 5 L-Sit an Ringen (RTO) · 6 V-Sit 45° · 7 75° · 8 100° · 9 120° · 10 140° · 11 155° · 12 170° · 13 Manna |
+| Klimmzüge | 1 Sprung-Klimmzüge · 2 exzentrisch · 3 Klimmzug · 4 L-Klimmzug · 5 Pullover |
+| Ringe-Klimmzüge + One-Arm-Chin (OAC) | 4 L · 5 breit · 6 breit L · 7 Archer · 8 OAC exzentrisch · 9 OAC · 10 OAC + 15 lb (6,8 kg) · 11 OAC + 25 lb (11,3 kg) |
+| Gewichtete Klimmzüge (Gesamtlast × KG) | 2 assistiert · 3 1,00 · 4 1,18 · 5 1,35 · 6 1,50 · 7 1,65 · 8 1,78 · 9 1,90 · 10 2,00 · 11 2,10 |
+| Explosive Klimmzüge | 2 Kipping-Klimmzüge · 3 Klimmzug · 4 Kipping mit Klatschen · 5 Klatschen ohne Kipping |
+| Rudern | 1 exzentrisch · 2 Ringrudern · 3 breit · 4 Archer · 5 Archer-in · 6 einarmig gegrätscht · 7 einarmig |
+| Liegestütz | 1 Standard · 2 Diamond · 3 Ringe breit · 4 Ringe · 5 Ringe RTO · 6 RTO Archer · 7 RTO 40°-Pseudo-Planche · 8 60° · 9 RTO Maltese-Liegestütz · 10 Wand-Pseudo-Planche |
+| Dips (Barren) | 1 Sprung-Dips · 2 exzentrisch · 3 Dips · 4 L-Dips · 5 45°-Dips |
+| Ring-Dips | 1 Stützhalt · 2 Stütz RTO · 3 exzentrisch · 4 Ring-Dips · 5 L-Dips · 6 breit · 7 RTO 45° |
+| Gewichtete Dips (Gesamtlast × KG) | 2 assistiert · 3 1,00 · 4 1,20 · 5 1,38 · 6 1,55 · 7 1,70 · 8 1,85 · 9 2,00 · 10 2,13 · 11 2,25 · danach Vermerk «Maltese (L17)» |
+| Muscle-ups | 3 MU exzentrisch · 4 Kipping-MU · 5 Muscle-up · 6 breit/ohne False Grip · 7 strikter Stangen-MU · 8 L-Sit-MU · 9 einarmig · … · Vermerk «(L17) Elevator» |
+| Flagge | 5 Tuck · 6 Adv Tuck · 7 Straddle · 8 Full |
+| Kniebeuge / Pistol | 1 parallel · 2 tief · 3 seitlich verlagert · 4 Pistol · 5 Pistol mit 1,2× KG · 6 1,35× · 7 1,5× · 8 1,65× · 9 1,8× · 10 1,9× · 11 2,0× |
+| Ab Wheel / Plank | 2 Plank 25 s · 3 Plank 60 s · 4 Plank 1 Arm/1 Bein · 5 Ab Wheel kniend · 8 Ab Wheel voll |
+| Ringe «Full Statics» | 5 RTO L-Sit · 6 RTO Straddle-L · 7 Back Lever · 8 Front Lever · 9 V-Sit 90° · 10 Iron Cross / Straddle Planche · 14 Full Planche · 16 Inverted Cross |
+
+Die Zusatzspalten rechts im Chart (u. a. Victorian-Varianten, Dragon Flag) sind
+laut Autor **nicht im Buch** und werden hier nicht verwendet [A-31]. Das Chart
+nennt **keine Haltezeiten oder Wiederholungen** pro Level.
+
+### 3.3 FIG-Elementwerte (Original [A-29])
+
+In den Wertetabellen entspricht die Position in der Zeile dem Wert
+(Nr. 1/7/13/19/25 = A, 2/8/14/20/26 = B, 3/9/15/21/27 = C, 4/10/16/22 = D,
+5/11/17/23 = E); die Werte unten sind so aus den Tabellen gelesen.
+
+| Element | Gerät | Wert | Fundstelle |
 |---|---|---|---|
-| FIG Code of Points MAG 2025–2028 | Elementwerte A (leicht) … J; Halteelemente 2 s | [A-04]; Werte über [A-05, A-06, A-07, A-08] *(S)* | B (Werte via C/D) |
-| Overcoming Gravity 2. Aufl., Progression Charts | Level 1–16 pro Übungsspalte, aus dem FIG-Code abgeleitet | [A-01, A-02] *(S)* | C |
-| Push-up-Kinetik | Anteil Körpergewicht je Variante | [A-15, A-16] | B |
-| Ring-Kraft-Benchmarks | nötige Konditionierungskraft in % KG | [A-23] | B |
+| L-Sit oder Straddle-L-Sit (2 s) | Ringe | A | [A-29 S. 67, Nr. 1] |
+| V-Sit (2 s) | Ringe | B | [A-29 S. 67, Nr. 2] |
+| Hangwaage rücklings = Back Lever (2 s) | Ringe | A | [A-29 S. 67, Nr. 7] |
+| Hangwaage vorlings = Front Lever (2 s) | Ringe | A | [A-29 S. 67, Nr. 13] |
+| Stützwaage gegrätscht = Straddle Planche (2 s) | Ringe | A | [A-29 S. 67, Nr. 19] |
+| Stützwaage = Planche (2 s) | Ringe | C | [A-29 S. 67, Nr. 9] |
+| Kreuz / V-Kreuz (2 s) | Ringe | C | [A-29 S. 67, Nr. 15; S. 61] |
+| Kreuz-Handstand (Inverted Cross) (2 s) | Ringe | D | [A-29 S. 67, Nr. 4] |
+| Schwalbe = Maltese auf Ringhöhe (2 s) | Ringe | D | [A-29 S. 67, Nr. 10] |
+| Inverted Swallow (Victorian) (2 s) | Ringe | E | [A-29 S. 67, Nr. 11] |
+| Handstand (2 s) | Boden | A | [A-29 S. 28, Nr. 19] |
+| V-Sit (2 s) | Boden | B | [A-29 S. 28, Nr. 2] |
+| Manna (V-Sit mit waagrechten Beinen) (2 s) | Boden | C | [A-29 S. 28, Nr. 3] |
+| Planche gegrätscht (2 s) | Boden | A | [A-29 S. 29, Nr. 25] |
+| Planche (2 s) / Schwalbe (2 s) | Boden | C | [A-29 S. 29, Nr. 27] |
+| Aus gegrätschter Planche Press in den Handstand | Boden | B | [A-29 S. 29, Nr. 32] |
+| Aus Planche Press in den Handstand | Boden | D | [A-29 S. 29, Nr. 34] |
+| Manna (2 s) und Press in den Handstand | Boden | D | [A-29 S. 28, Nr. 10] |
 
-### 3.2 FIG-Elementwerte (sofern gefunden)
-
-| Element | Gerät | Wert | Quelle | Anmerkung |
-|---|---|---|---|---|
-| Straddle Planche (2 s) | Boden | A | [A-06] | URL/Titel der Seite nennt «A – Straddle planche» (Boden Männer) |
-| Planche (2 s) | Boden | C | [A-04] *(S)* | Wert aus Such-Auszug |
-| Straddle Planche | Ringe | A | [A-05] | |
-| Planche (Stützwaage) | Ringe | C | [A-05] | |
-| Front Lever | Ringe | A | [A-05] | |
-| Back Lever | Ringe | A | [A-05] | |
-| Maltese (Schwalbe) | Boden | C | [A-07] | |
-| Maltese (Schwalbe) | Ringe | D | [A-05, A-07] | |
-| Victorian / Inverted Swallow | Ringe | E | [A-05] | |
-| Kreuz (Iron, L, V) | Ringe | C (bis 2024: B) | [A-08] | Aufwertung im Zyklus 2025–2028 |
-| Handstand (2 s), Planche → Press zum Handstand, Manna (2 s) → Handstand | Boden | als Elemente der Gruppe I gelistet | [A-04] *(S)* | Werte nicht verifiziert; Manna-Wert «C» nur aus unklarer Such-Zusammenfassung → nicht verwendet |
-
-### 3.3 Overcoming-Gravity-Level (Such-Auszüge aus Chart-Kopien *(S)*)
-
-| Spalte | Level → Stufe | Quelle |
-|---|---|---|
-| Planche | 3 Frog Stand · 5 Tuck · 6 Adv Tuck · 8 Straddle · 9 Half-Lay / One-Leg · 10–16 Full und Maltese-Varianten | [A-02] *(S)* |
-| Front Lever | 4 Tuck · 5 Adv Tuck · 6 Straddle · 7 Half-Lay / One-Leg · 8 Full | [A-02] *(S)* |
-| Front-Lever-Rows | Tuck (Zeile 4) · Adv Tuck (5–7) · Straddle (8) · Full (10) | [A-02] *(S)* |
-| Back Lever | 1 German Hang · 2 Skin the Cat · 3 Tuck · 4 Adv Tuck · 5 Straddle · 6 Half-Lay / One-Leg · 7 Full | [A-02] *(S)* |
-| Handstand | 1 Wall HS · 4–5 Freestanding HS · höher: Varianten bis One-Arm | [A-02] *(S)* |
-| Handstand Push-up | 1 Pike Headstand-PU · 2 Box Headstand-PU · 3 Wall Headstand-PU exzentrisch · 4 Wall Headstand-PU · höher: freistehend, volle ROM | [A-02] *(S)* |
-| Pull-ups / One-Arm | 7 Archer Pull-up · 8 One-Arm-Chin exzentrisch · 9 One-Arm-Chin · 10 One-Arm-Chin + 15 lb (≈ 6,8 kg) | [A-02] *(S)* |
-| Core (Sitzpositionen) | L-Sit · Straddle-L · V-Sit 45°/75°/100°/120° · Manna (Level-Zahlen nicht gelesen) | [A-02] *(S)* |
-
-**Konsistenzprüfung (eigene Ableitung):** FIG-A-Elemente liegen in OG auf
-Level 7–8 (Full Back Lever 7, Full Front Lever 8, Straddle Planche 8), das
-FIG-C-Element Full Planche auf ≥ 10 [A-02, A-05, A-06]. Die beiden Skalen sind
-also für diese Anker monoton verträglich. Für B, D, E fehlen OG-Anker; die
-Zuordnung unten ist dort Heuristik.
+**Konsistenz OG ↔ FIG (eigene Ableitung):** Die OG-Viertel (Basic 1–4, A 5–8,
+B 9–12, C 13–16) [A-30 S. 22; A-31] treffen die FIG-Werte für Front Lever (A,
+OG 8), Back Lever (A, OG 7), Straddle Planche (A, OG 8), Planche an Ringen (C,
+OG 14), Manna (C, OG 13) und das Kreuz nach dem alten Code (B, OG 10; seit 2025
+C [A-29]). Abweichend: Die Planche am Boden ist bei FIG C, bei OG Level 11
+(B-Viertel), und die Maltese am Boden ist bei FIG gleichwertig mit der Planche
+(C), bei OG erst Level 17 (→ «Widersprüche»).
 
 ### 3.4 Hefesto-Ordinalskala (Vorschlag)
 
-Ordinal = OG-Level, wo vorhanden; sonst Heuristik über FIG-Anker
-(A ≈ 7–8, B ≈ 9, C ≈ 10–11, D ≈ 12–13, E ≈ 14–15). `difficulty_tier`
-(1–10, Schema-Feld der Skills) = ⌈Ordinal × 10 / 16⌉ (PAR-A-37). Einstiegs-
-wurzeln unter OG-Level 1 erhalten Ordinal 0 und Tier 1.
+Ordinal = OG-Level [A-31]; Elemente ohne OG-Level über FIG-Wert und OG-Viertel
+(H). `difficulty_tier` (1–10, Schema-Feld der Skills) = ⌈Ordinal × 10 / 16⌉
+(PAR-A-22, H: lineare Abbildung der OG-Skala auf das bestehende Schemafeld).
+Einstiegswurzeln unter OG-Level 1 erhalten Ordinal 0 und Tier 1.
 
-| Stufe | Ordinal | Tier | Status |
+| Ordinal | Tier | Stufen (Beispiele) | Status |
 |---|---|---|---|
-| Wand-Liegestütz, Schräg-Liegestütz, Support-Halt, Dead Hang, Scapula-Pulls, Wrist Prep | 0 | 1 | (H) — unter OG-Level 1 |
-| Wall Handstand; German Hang; Pike Headstand-PU | 1 | 1 | OG [A-02] *(S)* |
-| Skin the Cat; Box Headstand-PU | 2 | 2 | OG [A-02] *(S)* |
-| Frog Stand; Tuck Back Lever; Wall Headstand-PU exzentrisch | 3 | 2 | OG [A-02] *(S)* |
-| Tuck Front Lever; Adv Tuck Back Lever; Wall Headstand-PU | 4 | 3 | OG [A-02] *(S)* |
-| Freestanding Handstand | 4–5 | 3–4 | OG [A-02] *(S)* |
-| Tuck Planche; Adv Tuck Front Lever; Straddle Back Lever | 5 | 4 | OG [A-02] *(S)* |
-| Adv Tuck Planche; Straddle Front Lever; Half-Lay/One-Leg Back Lever | 6 | 4 | OG [A-02] *(S)* |
-| Half-Lay/One-Leg Front Lever; Full Back Lever (FIG A); Archer Pull-up | 7 | 5 | OG [A-02] *(S)*; FIG [A-05] |
-| Straddle Planche (FIG A); Full Front Lever (FIG A); One-Arm-Chin exzentrisch | 8 | 5 | OG [A-02] *(S)*; FIG [A-05, A-06] |
-| Half-Lay/One-Leg Planche; One-Arm-Chin | 9 | 6 | OG [A-02] *(S)* |
-| Full Planche (FIG C); One-Arm-Chin + 6,8 kg | 10 | 7 | OG [A-02] *(S)*; FIG [A-05] |
-| Iron Cross (FIG C seit 2025) | 10–11 | 7 | (H) über FIG-Anker [A-08] |
-| Maltese Boden (FIG C) | 12 | 8 | (H): FIG-Wert wie Full Planche [A-07], aber in der PDF-Leiter klar nach der Full Planche [P-03; P-04] |
-| Maltese Ringe (FIG D) | 13 | 9 | (H) über FIG-Anker [A-05, A-07] |
-| Victorian (FIG E) | 14–15 | 9–10 | (H) über FIG-Anker [A-05] |
-| Muscle-up, Human Flag, Pistol, L-/V-Sit, Manna | — | — | keine Level-Zahl gefunden; Einstufung in den Skill-Abschnitten als (H) |
+| 0 | 1 | Wand-/Schräg-Liegestütz, Dead Hang, Scapula-Pull, Handgelenk-Vorbereitung | (H) unter OG 1 |
+| 1 | 1 | Wand-HS; German Hang; Pike Headstand-PU; Tuck L-Sit; Standard-Liegestütz; Sprung-Klimmzug; Stützhalt | [A-31] |
+| 2 | 2 | Skin the Cat; Box Headstand-PU; Diamond-Liegestütz; exzentrischer Klimmzug/Dip; Plank 25 s | [A-31] |
+| 3 | 2 | Frog Stand; Tuck BL; L-Sit; Klimmzug; Barren-Dip; Plank 60 s; MU exzentrisch | [A-31] |
+| 4 | 3 | Tuck FL; Adv Tuck BL; Wand-Headstand-PU; Straddle-L; Pistol; Kipping-MU; Ring-Dip; freistehender HS | [A-31] |
+| 5 | 4 | Tuck Planche; Adv Tuck FL; Straddle BL; Wand-HSPU; RTO L-Sit; Muscle-up; Tuck-Flagge; freistehender HS | [A-31] |
+| 6 | 4 | Adv Tuck Planche; Straddle FL; Half-Lay BL; freier Headstand-PU; V-Sit 45°; Adv-Tuck-Flagge | [A-31] |
+| 7 | 5 | Half-Lay/One-Leg FL; Full BL (FIG A); Archer-Klimmzug (Ringe); freier HSPU; strikter Stangen-MU; Straddle-Flagge; Ring-HS | [A-31]; FIG [A-29] |
+| 8 | 5 | Straddle Planche (FIG A); Full FL (FIG A); OAC exzentrisch; L-Sit-MU; Full Flagge | [A-31]; FIG [A-29] |
+| 9 | 6 | Half-Lay/One-Leg Planche; One-Arm-Chin; V-Sit 120° | [A-31] |
+| 10 | 7 | Iron Cross / Straddle Planche an Ringen; OAC + 6,8 kg | [A-31] |
+| 11 | 7 | Full Planche (Boden/Barren) | [A-31] |
+| 12 | 8 | Half-Lay Planche an Ringen; Straddle Planche → Handstand mit gestreckten Armen | [A-31] |
+| 13 | 9 | Manna (FIG C) | [A-31]; FIG [A-29] |
+| 14 | 9 | Full Planche an Ringen (FIG C); Full-Planche-Liegestütz | [A-31]; FIG [A-29] |
+| 16 | 10 | Inverted Cross an Ringen | [A-31] |
+| 17 | 10 | Maltese (OG-Vermerk «L17»); an Ringen FIG D | [A-31]; FIG [A-29] |
+| > 17 | 10 | Victorian (FIG E) | (H) über FIG-Wert [A-29] |
 
-### 3.5 Relative Last innerhalb der Liegestütz-Leiter (belegt)
+### 3.5 Relative Last innerhalb der Liegestütz-Leiter (Evidenz B)
 
-| Variante | Anteil Körpergewicht | relativ zum Standard (= 1,00) | Quelle |
+| Variante | Spitzen-GRF in % KG [A-05] | relativ zum Standard | statisch (oben / unten) |
 |---|---|---|---|
-| Hände 61 cm erhöht | 41 % | 0,64 | [A-15] |
-| Knie-Liegestütz | 49 % (Spitzenkraft); 53,6 % oben / 61,8 % unten | 0,77 | [A-15]; [A-16] |
-| Hände 30,5 cm erhöht | 55 % | 0,86 | [A-15] |
-| Standard-Liegestütz | 64 % (Spitzenkraft); 69,2 % oben / 75,0 % unten | 1,00 | [A-15]; [A-16] |
-| Füsse 30,5 cm erhöht | 70 % | 1,09 | [A-15] |
-| Füsse 61 cm erhöht | 74 % | 1,16 | [A-15] |
+| Hände 60,96 cm erhöht | 41 % (0,41 ± 0,06) | 0,64 | — |
+| Knie-Liegestütz | 49 % (0,49 ± 0,05) | 0,77 | 53,6 % / 61,8 % [A-06] *(S)* |
+| Hände 30,48 cm erhöht | 55 % (0,55 ± 0,05) | 0,86 | — |
+| Standard | 64 % (0,64 ± 0,04) | 1,00 | 69,2 % / 75,0 % [A-06] *(S)* |
+| Füsse 30,48 cm erhöht | 70 % (0,70 ± 0,02) | 1,09 | — |
+| Füsse 60,96 cm erhöht | 74 % (0,74 ± 0,02) | 1,16 | — |
 
-Relativwerte: eigene Rechnung aus [A-15]. Die Differenz zwischen [A-15] und
-[A-16] ist in «Widersprüche» dokumentiert.
+Werte aus Tabelle 1 der Proceedings-Volltextfassung von [A-05]; Relativwerte
+eigene Rechnung. In der statischen Messung tragen die Arme unten mehr Last als
+oben, beim Knie-Liegestütz ist die Änderung grösser [A-06]. Liegestütz-
+Progressionen mit erhöhten Füssen steigern die Aktivität von Serratus anterior
+und oberem Trapez [A-07].
+
+### 3.6 Typische Dauer bis zur nächsten Stufe — was belegt ist
+
+**Es gibt keine Studie zu Lernzeiten calisthenischer Skills.** Belegt sind nur
+(a) Coaching-Angaben, (b) Trainingsstudien an Elite-Turnern und (c) die
+qualitative OG-Aussage, dass niedrige Level schneller fallen.
+
+| Skill / Schritt | Angabe | Quelle | Evidenz |
+|---|---|---|---|
+| Planche kumuliert ab Start | Lean 0–2 Mo · Tuck 2–6 Mo · Adv Tuck 6–12 Mo · Straddle 12–24 Mo · Full 24–36 Mo; «erste Tuck Planche meist nach 3–6 Monaten, Full nach 1–3 Jahren» | [A-40] | D |
+| Front Lever je Stufe | Fundament → Tuck 3–4 Mo · Tuck → Adv Tuck 2–3 Mo · Adv Tuck → Straddle 2–3 Mo · Straddle → Full 3–4 Mo · Full 3–6 Mo | [A-41] | D |
+| Front Lever gesamt | 18–24 Mo (< 5 Klimmzüge), 12–18 Mo (≥ 10 Klimmzüge), 6–12 Mo (ab Tuck FL) | [A-41] | D |
+| Back Lever | Vorbereitung 4–8 Wo · Pike/Straddle 8–12 Wo · Full 12–24 Wo; gesamt 6–12 Mo; jede Stufe 4–8 Wo | [A-42] | D |
+| Erster Ring-Dip | 4–12 Wo (Ø 6–8) ab 30 s Ring-Stütz und 15 Barren-Dips | [A-43] | D |
+| Erster Klimmzug (Dead Hang → Scapula → Negative → assistiert → voll) | 2–6 Monate | [A-46] | D |
+| Allgemein pro Variante | «manche Varianten 2 Wochen, manche 2 Monate» | [A-46] | D |
+| Klimmzug-Aufbauprogramm | 4 Wochen à 3 Tage können zu kurz oder zu lang sein | [A-38] | C |
+| Freistehender Handstand | «viele Monate, manchmal Jahre» | [A-37] | C |
+| Elite-Turner, spezifische Ringkraft | +4,1 % (Schwalbe) / +3,6 % (Stützwaage) nach 4 Wochen [A-26]; +8,7 % / +8,3 % nach 3 Wochen [A-27] | [A-26, A-27] | B |
+| Entwicklung allgemein | niedrige Level schneller als hohe; die stärksten Turner trainieren 10–15 Jahre und mehr | [A-30 S. 23] | C |
+
+*Ableitung für den Planer:* Coaching-Angaben für einen Stufenschritt im mittleren
+Bereich (OG 4–8) liegen bei **2–4 Monaten** [A-41, A-42], für die Planche-
+Endstufen bei **12 Monaten und mehr** [A-40]. Die Elite-Daten zeigen, dass
+spezifische Kraft selbst unter optimalen Bedingungen nur um einige Prozent pro
+Monat wächst [A-26, A-27]. Daraus die Heuristik PAR-A-45 (Wochen pro OG-Level-
+Schritt nach Band); sie erzeugt alle mit (H-DUR) markierten Dauern.
 
 ## 4. Wurzeln: Grundlagen unter dem PDF-«Beginner»
 
 Die PDFs setzen eine solide Tuck-Planche voraus (`01_pdf_extract.md` §4.7). Für
-echte Anfänger braucht der Graph Wurzeln. Grundgerüst ist die
-r/bodyweightfitness-Routine (RR) mit Push-up-, Dip-, Row- und Pull-up-Leiter und
-dem Aufwärmblock [A-03]; die Wirksamkeit progressiver Varianten ist für den
-Liegestütz durch ein RCT gestützt [A-14]. Alles darüber hinaus ist markiert.
+echte Anfänger braucht der Graph Wurzeln. Grundgerüst: die RR mit Pull-up-,
+Dip-, Row- und Push-up-Leiter und ihrem Aufwärmblock [A-44] sowie die unteren
+OG-Level [A-31]. OG empfiehlt untrainierten Anfängern zuerst höhere
+Wiederholungszahlen und eine ausgewogene Ganzkörperroutine [A-30 S. 24]; die
+meisten Anfängerprogramme sind Ganzkörper 3×/Woche [A-30 S. 24], die RR ebenso
+[A-44].
 
 ### 4.1 Handgelenk-Konditionierung (`wrist-conditioning`, Familie `mobility`)
 
-Warum als Wurzel: Im Handstand wird die Balance zuerst über die Handgelenke
-reguliert («wrist strategy»), was den Druck auf die Handgelenke erhöht [A-20].
-Die RR stellt eine Handgelenk-Vorbereitung (GMB Wrist Prep, 10+ Wdh. je Übung)
-an den Anfang jeder Einheit [A-03].
+Warum Wurzel: Im Handstand wird die Balance überwiegend über die Handgelenke
+reguliert [A-15, A-03]; am Boden sind die Handgelenksbeuger dabei stärker aktiv
+als an Barren oder Ringen [A-16]. Die RR beginnt jede Einheit mit einer
+Handgelenk-Vorbereitung (GMB Wrist Prep, 10+ Wdh.) [A-44]; GMB empfiehlt die
+Routine 2–3×/Woche vor Oberkörper-Einheiten [A-39]. TMA nennt «3 Minuten
+Handgelenk-Vorbereitung ohne Schmerz» als Planche-Voraussetzung [A-40].
 
 | Stufe | Slug-Vorschlag | Beschreibung | Formkriterien | Unlock-Kriterium | Dauer bis nächste Stufe | Quellen |
 |---|---|---|---|---|---|---|
-| 1 | `wrist-conditioning/prep` · `wrist-prep-routine` | Handgelenk-Vorbereitung im Vierfüsslerstand (Kreisen, Handflächen-/Handrücken-Varianten) | schmerzfrei, kontrolliert, voller aktiver Bewegungsumfang (H-FORM) | Selbstbestätigung oder `wrist-prep-routine reps ≥ 10 · occ 3 · 14 d` (H-UNL) | 1–2 Wo. (H-DUR) | [A-03] (Übung, 10+ Wdh.) |
-| 2 | `wrist-conditioning/loaded-extension` · `quadruped-wrist-rock` | belastete Extension: Schultern im Vierfüsslerstand über/vor die Hände schieben | Finger gespreizt, Handballen am Boden, keine Schmerzen (H-FORM) | `quadruped-wrist-rock reps ≥ 15 · occ 3 · 14 d` (H-UNL) | 1–3 Wo. (H-DUR) | (H) |
-| 3 | `wrist-conditioning/plank-lean` · `plank-lean-hold` | Liegestützposition, Schultern leicht vor den Händen | Arme gestreckt, Körper gerade, Schulterblätter protrahiert (H-FORM) | `plank-lean-hold hold ≥ 30 s · occ 3 · 7 d` (Isometrie-Regel [A-03]) | geht in `planche/lean` über (§5.5) | [A-03] (Regel); Übung (H) |
+| 1 | `wrist-conditioning/prep` · `wrist-prep-routine` | Handgelenk-Routine im Vierfüsslerstand (Schütteln, Kreisen, Handflächen-/Handrücken-Varianten, 5–10 Wdh., Halte 10–20 s) | schmerzfrei, kontrolliert (H-FORM) | Selbstbestätigung oder `wrist-prep-routine reps ≥ 10 · occ 3 · 14 d` (H-UNL) | 1–2 Wo. (H-DUR) | Übungen und Dosis [A-39]; 10+ Wdh. [A-44] |
+| 2 | `wrist-conditioning/loaded-extension` · `quadruped-wrist-rock` | belastete Extension: Schultern im Vierfüsslerstand über/vor die Hände | Ellbogenbeugen nach vorn, Finger gespreizt (H-FORM) | `quadruped-wrist-rock reps ≥ 15 · occ 3 · 14 d` (H-UNL) | 1–3 Wo. (H-DUR) | Pulsieren mit Ellbogenbeugen nach vorn [A-39] |
+| 3 | `wrist-conditioning/plank` · `plank-hold` | Liegestützposition, Arme gestreckt | Körperlinie gerade, Schultern nicht eingesunken (H-FORM) | `plank-hold hold ≥ 30 s · occ 3 · 7 d` | → `planche/lean` | 30 s Plank = Startbedingung für Planche-Leans [A-35]; OG: Plank 25 s = Level 2, 60 s = Level 3 [A-31] |
 
 - **Voraussetzungen:** keine (Wurzel).
-- **Häufige Fehler:** Schmerz «durchtrainieren»; Finger nicht gespreizt; Last
-  zu früh auf volle Extension (H-FAULT).
-- **Carryover:** Handstand, Planche-Lean, Liegestütz-Varianten mit Fingern nach
-  hinten (Pseudo-Planche) (H-PRE).
-- **Equipment:** Parallettes/Griffe reduzieren die Handgelenk-Extension
-  gegenüber dem Boden (H-EQ). Die PDFs üben Leans bewusst am Boden mit
-  `supi`-Handstellung [P-01 S. 1, 3] (Deutung von `supi` unsicher, §9).
-- **Empfehlung für den Graphen:** Stufe 1 als Voraussetzung (`recommended`,
-  nicht `prerequisite`) für `handstand/wall` und `planche/lean`, damit
-  Anfänger nicht blockiert werden (H-PRE).
+- **Häufige Fehler:** Schmerz «durchtrainieren»; Last zu früh auf volle
+  Extension (GMB rät zu kurzen Sätzen, geringem Druck, Pausen [A-39]).
+- **Carryover:** Handstand, Planche-Lean, Pseudo-Planche-Liegestütz (H-PRE).
+- **Equipment:** Parallettes/Griffe reduzieren den Handgelenkwinkel (TMA [A-40];
+  EMG-Hinweis [A-16]). Die PDFs üben Leans bewusst am Boden in `supi`-Stellung
+  [P-01 S. 1, 3].
+- **Kante:** Stufe 1 als `recommended` (nicht `prerequisite`) für
+  `handstand/wall` und `planche/lean` (H-PRE: Anfänger nicht blockieren).
 
 ### 4.2 Hang- und Scapula-Grundlagen (`hang-foundation`, Familie `pull`)
 
-Die RR beginnt die Pull-up-Leiter mit Scapula-Pulls und Arch Hangs, gefolgt von
-negativen Klimmzügen [A-03]. Weil `pull-up` bereits mit `strict-5` beginnt,
-werden diese Stufen als eigener Wurzel-Skill vorgeschlagen (§2.1).
+Die RR-Pull-up-Leiter beginnt mit Scapula-Pulls; Arch Hangs kommen ins Aufwärmen,
+sobald negative Klimmzüge erreicht sind [A-44]. GMB baut den ersten Klimmzug über
+«Pulling Prep» (3–5 × 5–10, gestreckte Ellbogen, Bewegung nur im Schultergürtel),
+Rudern und Negative (8 × 1–3) auf [A-38]. OG: Sprung-Klimmzug Level 1,
+exzentrisch Level 2, Klimmzug Level 3 [A-31]. Weil `pull-up` bereits mit
+`strict-5` beginnt, werden diese Stufen als eigener Wurzel-Skill vorgeschlagen.
 
 | Stufe | Slug-Vorschlag | Beschreibung | Formkriterien | Unlock-Kriterium | Dauer bis nächste Stufe | Quellen |
 |---|---|---|---|---|---|---|
-| 1 | `hang-foundation/dead-hang` · `dead-hang` | passiver Hang an der Stange | Arme gestreckt, ohne Bodenkontakt (H-FORM) | `dead-hang hold ≥ 30 s · occ 3 · 7 d` | 1–2 Wo. (H-DUR) | Isometrie-Regel 30 s [A-03]; Stufe (H) |
-| 2 | `hang-foundation/scapular-pull` · `scapular-pull-up` (existiert) | aus dem Hang Schulterblätter nach unten/hinten ziehen, Arme bleiben gestreckt | Ellbogen gestreckt, Bewegung nur aus den Schulterblättern (H-FORM) | `scapular-pull-up reps ≥ 8 · occ 3 · 7 d` | 1–2 Wo. (H-DUR) | Reihenfolge und 3×8-Regel [A-03] |
-| 3 | `hang-foundation/arch-hang` · `arch-hang` | Scapula-Zug plus Brustkorb nach oben/vorn, leichter Bogen | Arme gestreckt, Brust Richtung Stange (H-FORM) | `arch-hang reps ≥ 8 · occ 3 · 7 d` | 1–3 Wo. (H-DUR) | Reihenfolge [A-03]; Aufwärm-Dosis 10 Wdh. [A-03] |
-| (Übung) | `pull-up-negative` (Rolle `progression` bei `pull-up/strict-5`) | langsames Absenken aus der oberen Position | kontrolliert, voller Weg (H-FORM) | kein Level (exzentrisch zählt nicht, §2.4) | — | Reihenfolge [A-03] |
+| 1 | `hang-foundation/dead-hang` · `dead-hang` | passiver Hang | Arme gestreckt, ohne Bodenkontakt (H-FORM) | `dead-hang hold ≥ 30 s · occ 3 · 7 d` | 1–2 Wo. (H-DUR) | 30 s Isometrie-Regel [A-44]; 30 s Dead Hang als FL-Voraussetzung [A-41] |
+| 2 | `hang-foundation/scapular-pull` · `scapular-pull-up` (existiert) | Schulterblätter aus dem Hang nach unten ziehen | Ellbogen gestreckt, Bewegung nur im Schultergürtel [A-38] | `scapular-pull-up reps ≥ 8 · occ 3 · 7 d` | 1–2 Wo. (H-DUR) | [A-44, A-38] |
+| 3 | `hang-foundation/arch-hang` · `arch-hang` | Scapula-Zug plus Brust Richtung Stange | Arme gestreckt (H-FORM) | `arch-hang reps ≥ 8 · occ 3 · 7 d` | 2–8 Wo. bis `pull-up/strict-5` (H-DUR) | RR-Aufwärmen 10 Wdh. [A-44] |
+| (Übungen) | `pull-up-jump`, `pull-up-negative`, `row-ring` (Rolle `progression` bei `pull-up/strict-5`) | Sprung-, Negativ-Klimmzug, Rudern | kontrolliert | kein Level (§2.5) | — | OG 1–2 [A-31]; GMB [A-38] |
 
 - **Voraussetzungen:** keine.
-- **Häufige Fehler:** Scapula-Pull mit gebeugten Ellbogen (wird zum
-  Teil-Klimmzug); Schultern hochgezogen im Hang (H-FAULT).
-- **Carryover:** Klimmzug, Front Lever, Muscle-up; die RR ergänzt Arch Hangs
-  im Aufwärmen, sobald negative Klimmzüge erreicht sind [A-03].
-- **Equipment:** Ringe statt Stange erlauben freie Rotation der Hände (H-EQ).
+- **Häufige Fehler:** Scapula-Pull mit gebeugten Ellbogen; Schultern hochgezogen
+  im Hang (H-FAULT).
+- **Carryover:** Klimmzug, Front Lever, Muscle-up (H-PRE).
+- **Equipment:** Ringe (freie Rotation) oder Stange (H-EQ).
 
-### 4.3 Körperspannung: Hollow Body und Arch (`hollow-body`, `arch-body`, Familie `core`)
+### 4.3 Körperspannung: Hollow Body, Arch, Plank (`hollow-body`, `arch-body`, Familie `core`)
 
-Grundpositionen (fundamental static positions) sind Teil des Turn-
-Konditionstrainings nach Sommer [A-13]. Die RR enthält im Aufwärmen Deadbugs
-30 s [A-03]. Stufenschwellen sind nicht belegt.
+OG führt Plank 25 s (Level 2) und 60 s (Level 3) als Einstieg der Ab-Wheel-Leiter
+[A-31]. TMA nennt einen 60-s-Hollow-Hold als Voraussetzung für Front Lever und
+Planche [A-41, A-40]; die RR nutzt Deadbugs (30 s) im Aufwärmen [A-44].
 
 | Stufe | Slug-Vorschlag | Beschreibung | Formkriterien | Unlock-Kriterium | Dauer bis nächste Stufe | Quellen |
 |---|---|---|---|---|---|---|
-| 1 | `hollow-body/tuck` · `hollow-hold-tuck` | Rückenlage, Knie angezogen, Schultern vom Boden | Lendenwirbelsäule am Boden (H-FORM) | `hollow-hold-tuck hold ≥ 30 s · occ 3 · 7 d` | 1–2 Wo. (H-DUR) | Regel [A-03]; Stufe (H) |
-| 2 | `hollow-body/full` · `hollow-hold` | Arme über Kopf, Beine gestreckt, knapp über dem Boden | Lendenwirbelsäule bleibt am Boden, Beine gestreckt (H-FORM) | `hollow-hold hold ≥ 30 s · form≥4 · occ 3 · 7 d` | 2–4 Wo. (H-DUR) | Regel [A-03]; Stufe (H) |
-| 3 | `hollow-body/rocks` · `hollow-rock` | Schaukeln in der Hollow-Position | Form bleibt über die ganze Wiederholung (H-FORM) | `hollow-rock reps ≥ 15 · occ 3 · 7 d` (H-UNL) | — | (H) |
-| 1 | `arch-body/hold` · `arch-hold` | Bauchlage, Arme/Beine gestreckt angehoben | Gesäss angespannt, Nacken neutral (H-FORM) | `arch-hold hold ≥ 30 s · occ 3 · 7 d` | 1–2 Wo. (H-DUR) | Regel [A-03]; Stufe (H) |
+| 1 | `hollow-body/tuck` · `hollow-hold-tuck` | Rückenlage, Knie angezogen, Schultern vom Boden | Lendenwirbelsäule am Boden (H-FORM) | `hollow-hold-tuck hold ≥ 30 s · occ 3 · 7 d` | 1–2 Wo. (H-DUR) | Regel [A-44]; Stufe (H) |
+| 2 | `hollow-body/full` · `hollow-hold` | Arme über Kopf, Beine gestreckt knapp über dem Boden | Lendenwirbelsäule am Boden [A-41] | `hollow-hold hold ≥ 60 s · form≥4 · occ 2 · 14 d` | 2–6 Wo. (H-DUR) | 60 s [A-41, A-40] |
+| 1 | `arch-body/hold` · `arch-hold` | Bauchlage, Arme/Beine angehoben | Gesäss angespannt, Nacken neutral (H-FORM) | `arch-hold hold ≥ 30 s · occ 3 · 7 d` | 1–2 Wo. (H-DUR) | Regel [A-44]; Stufe (H) |
+| 1 | `plank/hold-60` · `plank-hold` | Unterarm- oder Liegestütz-Plank | Körperlinie gerade (H-FORM) | `plank-hold hold ≥ 60 s · occ 2 · 14 d` | — | OG Level 3 [A-31] |
 
 - **Voraussetzungen:** keine.
 - **Häufige Fehler:** Hohlkreuz im Hollow; Nacken überstreckt im Arch (H-FAULT).
-- **Carryover:** Hollow → Front Lever, Handstand-Linie, Planche (Becken-
-  position); Arch → Back Lever, Tap Swing (H-PRE).
-- **Equipment:** keines.
+- **Carryover:** Hollow → Front Lever, Planche, Handstand-Linie (TMA nennt Hollow
+  als Voraussetzung für FL und Planche [A-41, A-40]); Arch → Back Lever (H-PRE).
 
 ### 4.4 Stützhalte (`support-hold`, Familie `push`)
 
-Die RR-Dip-Leiter beginnt mit dem Parallelbarren-Stütz; ab den negativen Dips
-kommt ein 30-s-Stützhalt ins Aufwärmen [A-03].
+OG: Stützhalt = Ring-Dip-Leiter Level 1, Stütz RTO = Level 2 [A-31]. Die RR
+beginnt die Dip-Leiter mit dem Barren-Stütz und nimmt 30 s Stützhalt ins
+Aufwärmen, sobald negative Dips erreicht sind [A-44]. TMA verlangt 30 s
+Ring-Stütz vor dem ersten Ring-Dip [A-43].
 
 | Stufe | Slug-Vorschlag | Beschreibung | Formkriterien | Unlock-Kriterium | Dauer bis nächste Stufe | Quellen |
 |---|---|---|---|---|---|---|
-| 1 | `support-hold/parallel-bars` · `support-hold-pb` | Stütz auf Barren/Dip-Griffen | Ellbogen gestreckt, Schultern tief (nicht hochgezogen) (H-FORM) | `support-hold-pb hold ≥ 30 s · occ 3 · 7 d` | 1–2 Wo. (H-DUR) | [A-03] |
-| 2 | `support-hold/rings` · `support-hold-rings` | Stütz an Ringen | wie 1, Ringe nah am Körper (H-FORM) | `support-hold-rings hold ≥ 30 s · occ 3 · 7 d` | 2–4 Wo. (H-DUR) | Regel [A-03]; Stufe (H) |
-| 3 | `support-hold/rings-turned-out` · `support-hold-rings-rto` | Ringe nach aussen gedreht (RTO) | Ellbogenbeuge zeigt nach vorn (H-FORM) | `support-hold-rings-rto hold ≥ 30 s · form≥4 · occ 3 · 7 d` | — | (H) |
+| 1 | `support-hold/parallel-bars` · `support-hold-pb` | Stütz auf Barren/Dip-Griffen | Ellbogen gestreckt, Schultern tief (H-FORM) | `support-hold-pb hold ≥ 30 s · occ 3 · 7 d` | 1–2 Wo. (H-DUR) | [A-44] |
+| 2 | `support-hold/rings` · `support-hold-rings` | Stütz an Ringen | wie 1, Ringe nah am Körper (H-FORM) | `support-hold-rings hold ≥ 30 s · occ 3 · 7 d` | 2–4 Wo. (H-DUR) | 30 s [A-43]; OG 1 [A-31] |
+| 3 | `support-hold/rings-turned-out` · `support-hold-rings-rto` | Ringe nach aussen gedreht (RTO) | Ellbogenbeuge zeigt nach vorn (H-FORM) | `support-hold-rings-rto hold ≥ 30 s · form≥4 · occ 3 · 7 d` | — | OG 2 [A-31] |
 
-- **Voraussetzungen:** keine.
-- **Häufige Fehler:** Schultern hochgezogen, Ellbogen gebeugt, Ringe driften
-  vom Körper weg (H-FAULT).
+- **Häufige Fehler:** Schultern hochgezogen, Ellbogen gebeugt, Ringe driften weg
+  (H-FAULT).
 - **Carryover:** Dips, Muscle-up-Endposition, L-Sit, Planche an Ringen (H-PRE).
-- **Equipment:** Barren (stabil) < Ringe (instabil) < Ringe RTO (H-EQ).
+- **Equipment:** Barren (stabil) < Ringe < Ringe RTO (OG-Level 1 → 2 [A-31]).
 
 ### 4.5 Liegestütz (`push-up`, Familie `push`)
 
-Reihenfolge nach RR: Wand → Schräg → Standard → Diamond → Pseudo-Planche [A-03].
-Lastanteile siehe §3.5 [A-15, A-16]. Progressives Liegestütz-Training erzielt
-nach 4 Wochen (3×/Woche) vergleichbare Kraft- und Dickenzuwächse wie
-Bankdrücken (**Evidenz A**) [A-14].
+Reihenfolge RR: Wand (vertikal) → Schräg → Standard → Diamond → Pseudo-Planche
+[A-44; Leiter bestätigt in A-45, A-46]; OG: Standard 1, Diamond 2, Ringe breit 3,
+Ringe 4, RTO 5, RTO Archer 6, RTO-Pseudo-Planche 40°/60° 7/8 [A-31].
+Lastanteile §3.5 [A-05, A-06]. Progressive Varianten steigern die Kraft
+(**Evidenz A**) [A-01, A-02].
 
 | Stufe | Slug-Vorschlag | Beschreibung | Formkriterien | Unlock-Kriterium | Dauer bis nächste Stufe | Quellen |
 |---|---|---|---|---|---|---|
-| 1 | `push-up/wall` · `push-up-wall` | Hände an der Wand | Körper gerade, voller Weg (H-FORM) | `push-up-wall reps ≥ 8 · occ 3 · 7 d` | ≥ 4 Einheiten; 1–2 Wo. (H-DUR) | Stufe, Regel [A-03] |
-| 2 | `push-up/incline` · `push-up-incline` | Hände erhöht (Bank, Stange) | wie 1; Last 41–55 % KG je nach Höhe [A-15] | `push-up-incline reps ≥ 8 · occ 3 · 7 d` | 1–3 Wo. (H-DUR) | [A-03, A-15] |
-| 2a | Alternative: `push-up-knee` (Übung, Rolle `progression`) | Knie am Boden | 49 % KG [A-15]; 54–62 % [A-16] | kein eigenes Level (Alternative zu 2) | — | [A-15, A-16] |
-| 3 | `push-up/full` · `push-up` | Standard-Liegestütz | Körperlinie ohne Durchhängen/Abknicken; Brust nahe Boden; Ellbogen oben gestreckt (H-FORM) | `push-up reps ≥ 8 · occ 3 · 7 d` | 1–4 Wo. (H-DUR) | [A-03]; 64 % KG [A-15] |
-| 4 | `push-up/diamond` · `push-up-diamond` | Hände eng unter der Brust | wie 3 (H-FORM) | `push-up-diamond reps ≥ 8 · occ 3 · 7 d` | 2–4 Wo. (H-DUR) | [A-03] |
-| 5 | `push-up/pseudo-planche` · `pseudo-planche-push-up` | Hände auf Hüfthöhe, Schultern vor den Händen | Protraktion, Arme oben gestreckt, Schultern bleiben vor den Händen (H-FORM) | `pseudo-planche-push-up reps ≥ 8 · form≥4 · occ 3 · 7 d` | — | [A-03]; in den PDFs Zubringer 5–15 Wdh. [P-01 S. 1; P-03 S. 3] |
-| (Alt.) | `push-up-decline` (Übung) | Füsse erhöht | 70–74 % KG [A-15] | als Überlastungsvariante zu Stufe 3/4 | — | [A-15] |
+| 1 | `push-up/wall` · `push-up-wall` | Hände an der Wand | Körper gerade, voller Weg (H-FORM) | `push-up-wall reps ≥ 8 · occ 3 · 7 d` | ≥ 4 Einheiten; 1–2 Wo. (H-DUR) | [A-44, A-45] |
+| 2 | `push-up/incline` · `push-up-incline` | Hände erhöht | wie 1; Last 41–55 % KG je nach Höhe [A-05] | `push-up-incline reps ≥ 8 · occ 3 · 7 d` | 1–3 Wo. (H-DUR) | [A-44, A-05] |
+| 2a | Alternative `push-up-knee` (Übung) | Knie am Boden | 49 % KG [A-05] | kein Level | — | [A-05, A-06] |
+| 3 | `push-up/full` · `push-up` | Standard-Liegestütz | Körperlinie ohne Durchhängen; Brust nahe Boden; oben gestreckt (H-FORM) | `push-up reps ≥ 8 · occ 3 · 7 d` | 1–4 Wo. (H-DUR) | [A-44]; OG 1 [A-31] |
+| 4 | `push-up/diamond` · `push-up-diamond` | Hände eng | wie 3 (H-FORM) | `push-up-diamond reps ≥ 8 · occ 3 · 7 d` | 2–8 Wo. (H-DUR) | [A-44]; OG 2 [A-31] |
+| 5 | `push-up/rings` · `push-up-rings` | Ring-Liegestütz | Ringe nah, oben gestreckt (H-FORM) | `push-up-rings reps ≥ 8 · occ 3 · 7 d` | 4–16 Wo. (H-DUR) | OG 4 [A-31] |
+| 6 | `push-up/pseudo-planche` · `pseudo-planche-push-up` | Hände auf Hüfthöhe, Schultern vor den Händen | Protraktion, Arme oben gestreckt, Schultern bleiben vor den Händen (H-FORM) | `pseudo-planche-push-up reps ≥ 8 · form≥4 · occ 3 · 7 d` | — | [A-44]; OG 7–8 (Ringe RTO) [A-31]; PDF-Zubringer 5–15 Wdh. [P-01 S. 1; P-03 S. 3] |
+| (Alt.) | `push-up-decline` (Übung) | Füsse erhöht | 70–74 % KG [A-05] | Überlastung zu 3/4 | — | [A-05] |
 
-- **Voraussetzungen:** keine; `wrist-conditioning/prep` empfohlen (H-PRE).
-- **Häufige Fehler:** Hüfte hängt durch oder knickt ein, halber Weg,
-  Schulterblätter kollabieren oben (H-FAULT).
-- **Carryover:** Dip, Planche-Lean und Pseudo-Planche-Liegestütz → Planche
-  [P-01 bis P-03]; Bankdrück-Kraft [A-14].
-- **Equipment:** Boden, Parallettes (tiefere ROM möglich, neutraler Griff),
-  Ringe (instabil) — alle (H-EQ); Erhöhung der Hände senkt, Erhöhung der Füsse
-  erhöht die Last [A-15].
+- **Voraussetzungen:** keine; `wrist-conditioning/prep` empfohlen (H-PRE). TMA
+  nennt 3 × 20 saubere Liegestütze als Planche-Voraussetzung [A-40].
+- **Häufige Fehler:** Hüfte hängt oder knickt, halber Weg, Schulterblätter
+  kollabieren oben (H-FAULT).
+- **Carryover:** Dip, Planche-Lean, Pseudo-Planche → Planche [P-01 bis P-03];
+  Bankdrück-Kraft [A-01, A-02]; Handstand/HSPU-Training überträgt auf
+  Liegestütz und Dips [A-30 S. 21].
+- **Equipment:** Erhöhung der Hände senkt, der Füsse erhöht die Last [A-05];
+  Ringe +3 OG-Level gegenüber Boden (Standard 1 vs. Ringe 4) [A-31].
 
 ### 4.6 Dip (`dip`, Familie `push`)
 
+RR: Barren-Stütz → negative Dips → Barren-Dips → Ring-Dips [A-44; A-45 *(S)*];
+OG: Barren-Dips 3, L-Dips 4, 45°-Dips 5; Ring-Dips 4, Ring-L-Dips 5, breite
+Ring-Dips 6, RTO 45° 7 [A-31].
+
 | Stufe | Slug-Vorschlag | Beschreibung | Formkriterien | Unlock-Kriterium | Dauer bis nächste Stufe | Quellen |
 |---|---|---|---|---|---|---|
-| (Vorst.) | `support-hold/parallel-bars` (§4.4) | Stütz | — | siehe §4.4 | — | [A-03] |
-| (Übung) | `dip-negative` (Rolle `progression`) | langsames Absenken | kontrolliert (H-FORM) | kein Level (§2.4) | — | [A-03] |
-| 1 | `dip/parallel-bars` · `dip-pb` | Barren-Dip | oben gestreckt, unten Oberarm mindestens parallel zum Boden, Schultern nicht hochgezogen (H-FORM) | `dip-pb reps ≥ 8 · occ 3 · 7 d` | 2–6 Wo. (H-DUR) | [A-03] |
-| 2 | `dip/rings` · `dip-rings` | Ring-Dip | wie 1, Ringe nah am Körper, oben stabiler Stütz (H-FORM) | `dip-rings reps ≥ 8 · occ 3 · 7 d` | 4–8 Wo. (H-DUR) | [A-03] |
-| 3 | `dip/weighted` · `dip-weighted` | Barren-Dip mit Zusatzlast | wie 1 | siehe §7.4 | — | (H) |
+| (Vorst.) | `support-hold/parallel-bars` (§4.4) | Stütz | — | §4.4 | — | [A-44] |
+| (Übung) | `dip-negative` (Rolle `progression`) | Absenken | kontrolliert | kein Level | — | OG 2 [A-31] |
+| 1 | `dip/parallel-bars` · `dip-pb` | Barren-Dip | oben gestreckt, unten Oberarm mind. parallel, Schultern nicht hochgezogen (H-FORM) | `dip-pb reps ≥ 8 · occ 3 · 7 d` | 4–12 Wo. bis Ring-Dip [A-43] | OG 3 [A-31] |
+| 2 | `dip/rings` · `dip-rings` | Ring-Dip | wie 1, Ringe nah, oben stabiler Stütz (H-FORM) | `dip-rings reps ≥ 8 · occ 3 · 7 d` | 4–13 Wo. je Folgelevel (H-DUR) | OG 4 [A-31]; TMA-Standards: 1–5 Wdh. Anfänger, 6–15 Fortgeschritten [A-43] |
+| 3 | `dip/rings-l-sit` · `dip-rings-l` | Ring-Dip im L-Sit | Beine waagrecht | `dip-rings-l reps ≥ 5 · occ 2 · 28 d` (H-UNL) | — | OG 5 [A-31] |
+| (weiter) | Weighted Dips §7.4 | | | | | [A-31] |
 
-- **Voraussetzungen:** `support-hold/parallel-bars` (`prerequisite`) [A-03];
-  für Ring-Dips `support-hold/rings` (`prerequisite`) (H-PRE).
-- **Häufige Fehler:** zu flach, Schultern rollen nach vorn/oben, Schwung aus
-  den Beinen (H-FAULT).
-- **Carryover:** Muscle-up (Stützphase), HSPU, Planche-Liegestütz (H-PRE).
-- **Equipment:** Barren < gerade Stange (Straight-Bar-Dip) < Ringe (H-EQ; die RR
-  stellt Ring-Dips hinter Barren-Dips [A-03]).
+- **Voraussetzungen:** `dip/parallel-bars` ← `support-hold/parallel-bars`
+  (`prerequisite`) [A-44]; `dip/rings` ← `support-hold/rings` (`prerequisite`)
+  und `dip-pb` 15 Wdh. (`recommended`) [A-43].
+- **Häufige Fehler:** zu flach, Schultern rollen nach vorn/oben, Schwung aus den
+  Beinen (H-FAULT).
+- **Carryover:** Muscle-up-Stützphase, HSPU, Planche-Liegestütz (H-PRE).
+- **Equipment:** Barren (Level 3) < Ringe (Level 4) [A-31].
 
 ### 4.7 Australian Row / Rudern (`row`, Familie `pull`)
 
-Reihenfolge nach RR: vertikal → schräg → horizontal → breit → Archer [A-03]. Die
-RR führt den Tuck Front Lever als isometrische Stufe in der Row-Progression
-[A-03] (siehe §5.3).
+RR: vertikal → schräg → horizontal → breit → Archer [A-44; A-45 *(S)*]; die RR
+führt den Tuck Front Lever als Isometrie-Stufe der Row-Leiter [A-44]. OG:
+exzentrisch 1, Ringrudern 2, breit 3, Archer 4, Archer-in 5, einarmig 7 [A-31].
+Beim Inverted Row aktivieren Latissimus, Bizeps, unterer Trapez und hinterer
+Deltamuskel über 61 % MVIC, unabhängig von Ober- oder Untergriff und ein- oder
+beidbeinigem Stand [A-12].
 
 | Stufe | Slug-Vorschlag | Beschreibung | Formkriterien | Unlock-Kriterium | Dauer bis nächste Stufe | Quellen |
 |---|---|---|---|---|---|---|
-| 1 | `row/vertical` · `row-vertical` | fast aufrecht an Ringen/Tisch | Körper gerade, Brust zu den Griffen, Schulterblätter zurück (H-FORM) | `row-vertical reps ≥ 8 · occ 3 · 7 d` | 1–2 Wo. (H-DUR) | [A-03] |
-| 2 | `row/incline` · `row-incline` | schräg | wie 1 | `row-incline reps ≥ 8 · occ 3 · 7 d` | 1–3 Wo. (H-DUR) | [A-03] |
-| 3 | `row/horizontal` · `row-horizontal` | Körper waagrecht (Australian Row) | wie 1; Arme unten gestreckt (H-FORM) | `row-horizontal reps ≥ 8 · occ 3 · 7 d` | 2–4 Wo. (H-DUR) | [A-03] |
-| 4 | `row/wide` · `row-wide` | breiter Griff | wie 3 | `row-wide reps ≥ 8 · occ 3 · 7 d` | 2–4 Wo. (H-DUR) | [A-03] |
-| 5 | `row/archer` · `row-archer` | ein Arm zieht, der andere bleibt gestreckt | Rumpf rotiert nicht (H-FORM) | `row-archer reps ≥ 8 · occ 3 · 7 d` (je Seite) | — | [A-03] |
+| 1 | `row/vertical` · `row-vertical` | fast aufrecht | Körper gerade, Brust zu den Griffen (H-FORM) | `row-vertical reps ≥ 8 · occ 3 · 7 d` | 1–2 Wo. (H-DUR) | [A-44, A-45] |
+| 2 | `row/incline` · `row-incline` | schräg | wie 1 | `row-incline reps ≥ 8 · occ 3 · 7 d` | 1–3 Wo. (H-DUR) | [A-44] |
+| 3 | `row/horizontal` · `row-horizontal` | waagrecht (Australian Row) | Arme unten gestreckt, Brust an Griff/Stange (H-FORM) | `row-horizontal reps ≥ 8 · occ 3 · 7 d` | 2–8 Wo. (H-DUR) | [A-44]; Ringrudern OG 2 [A-31] |
+| 4 | `row/wide` · `row-wide` | breit | wie 3 | `row-wide reps ≥ 8 · occ 3 · 7 d` | 2–8 Wo. (H-DUR) | [A-44]; OG 3 [A-31] |
+| 5 | `row/archer` · `row-archer` | ein Arm zieht, einer bleibt gestreckt | Rumpf rotiert nicht (H-FORM) | `row-archer reps ≥ 8 · occ 3 · 7 d` (je Seite) | — | [A-44]; OG 4 [A-31] |
 
 - **Voraussetzungen:** keine (Wurzel).
-- **Häufige Fehler:** Hüfte hängt, Kinn zieht statt Brust, halber Weg (H-FAULT).
-- **Carryover:** Klimmzug, Front Lever (Rows im Tuck-FL sind eine OG-Spalte
-  [A-02] *(S)*).
-- **Equipment:** Die Last steigt mit flacherem Körperwinkel (H-EQ; Messwerte
-  in dieser Sitzung nicht verifiziert); Ringe erlauben Rotation, Tisch/Stange
-  fixieren den Griff.
+- **Häufige Fehler:** Hüfte hängt, Kinn statt Brust zur Stange, halber Weg
+  (H-FAULT).
+- **Carryover:** Klimmzug, Front Lever (FL-Rows sind eine eigene OG-Spalte ab
+  Level 5 [A-31]).
+- **Equipment:** Die Last steigt mit flacherem Körperwinkel (H-EQ; keine
+  verifizierte Messung); Stand ein- oder beidbeinig änderte die Aktivierung nicht
+  [A-12].
 
 ### 4.8 Klimmzug / Chin-up (`pull-up`, Familie `pull`; bestehender Skill)
 
 | Stufe | Slug-Vorschlag | Beschreibung | Formkriterien | Unlock-Kriterium | Dauer bis nächste Stufe | Quellen |
 |---|---|---|---|---|---|---|
-| (Wurzel) | `hang-foundation/arch-hang` (§4.2) | — | — | — | — | [A-03] |
-| 1 | `pull-up/strict-5` (existiert) · `pull-up` | 5 strikte Klimmzüge | aus gestrecktem Hang, Kinn über Stange, kein Kipping (H-FORM; Kipping ändert die Kinematik [A-19]) | `pull-up reps ≥ 5 · none · max_load_kg 0 · occ 2 · 28 d` (H-UNL) | 4–12 Wo. ab Arch Hang (H-DUR) | [A-03] (Reihenfolge) |
-| 2 | `pull-up/strict-8` · `pull-up` | 3×8 strikt | wie 1 | `pull-up reps ≥ 8 · none · max_load_kg 0 · occ 3 · 7 d` | 2–8 Wo. (H-DUR) | Regel 3×8 [A-03] |
-| 3 | `pull-up/chest-to-bar` · `pull-up-chest-to-bar` | Brust berührt Stange | wie 1, Brust an der Stange (H-FORM) | `pull-up-chest-to-bar reps ≥ 5 · occ 2 · 28 d` (H-UNL) | 4–8 Wo. (H-DUR) | (H) — Muscle-up-Zubringer |
-| 4 | `pull-up/archer` · `pull-up-archer` | Archer-Klimmzug | Hilfsarm gestreckt (H-FORM) | `pull-up-archer reps ≥ 3 · occ 2 · 28 d` (je Seite) (H-UNL) | siehe §7.1 | OG-Level 7 [A-02] *(S)* |
-| (Alt.) | `chin-up` (Übung) | Untergriff | wie 1 | als Alternative zu Stufe 1–2 | — | EMG-Vergleich Pull-up/Chin-up [A-17] |
-| (weiter) | Weighted Pull-up §7.4; One-Arm §7.1 | | | | | [A-03] (Weighted als letzte RR-Stufe) |
+| (Wurzel) | `hang-foundation/arch-hang` (§4.2) | — | — | — | 2–6 Mo. von Dead Hang bis zum ersten Klimmzug [A-46] | [A-44] |
+| 1 | `pull-up/strict-5` (existiert) · `pull-up` | 5 strikte Klimmzüge | aus gestrecktem Hang, Kinn über Stange, ohne Kipping (Kipping ändert die Kinematik [A-10]) | `pull-up reps ≥ 5 · none · max_load_kg 0 · occ 2 · 28 d` (H-UNL) | 2–8 Wo. (H-DUR) | OG 3 [A-31] |
+| 2 | `pull-up/strict-10` · `pull-up` | 10 strikte Klimmzüge | wie 1 | `pull-up reps ≥ 10 · none · max_load_kg 0 · occ 2 · 28 d` | 4–13 Wo. (H-DUR) | 10 Klimmzüge = FL-Voraussetzung [A-41]; 8–10 = BL-Voraussetzung [A-42] |
+| 3 | `pull-up/l-sit` · `pull-up-l-sit` | L-Klimmzug | Beine waagrecht (H-FORM) | `pull-up-l-sit reps ≥ 5 · occ 2 · 28 d` (H-UNL) | 4–13 Wo. (H-DUR) | OG 4 [A-31] |
+| 4 | `pull-up/archer` · `pull-up-archer` | Archer an Ringen | Hilfsarm gestreckt (H-FORM) | `pull-up-archer reps ≥ 3 · occ 2 · 28 d` (je Seite, H-UNL) | siehe §7.1 | OG 7 [A-31] |
+| (Alt.) | `chin-up` (Übung) | Untergriff | wie 1 | Alternative zu 1–2 | — | [A-08, A-09] |
+| (weiter) | Weighted §7.4; One-Arm §7.1 | | | | | [A-31] |
 
-- **Voraussetzungen:** `hang-foundation/arch-hang` (`prerequisite`) [A-03].
-- **Häufige Fehler:** halber Weg unten, Kipping/Beinschwung, Kinn reckt statt
-  Zug bis Kinn über Stange (H-FAULT).
-- **Carryover:** Rows, Front Lever, Muscle-up, One-Arm-Chin (H-PRE); die
-  Griff-/Technikvariante verändert die Kräfte in der Rotatorenmanschette
-  [A-18] — für die Belastungssteuerung relevant (Stream C/D).
-- **Equipment:** Stange (fixer Griff) vs. Ringe (freie Rotation); ein
-  rotierender Griff brachte keine höhere Muskelaktivierung als Pull-up oder
-  Chin-up [A-17].
+- **Voraussetzungen:** `hang-foundation/arch-hang` (`prerequisite`) [A-44].
+- **Häufige Fehler:** halber Weg unten, Kipping, Kinn reckt statt Zug (H-FAULT).
+- **Carryover:** Rudern, Front Lever, Muscle-up, One-Arm-Chin (H-PRE). Weiter
+  Griff betont den Latissimus, Frontgriff Bizeps/Brachialis, Untergriff anteilig
+  die Rotatorenmanschette; die Autoren empfehlen alle drei Varianten [A-09].
+- **Equipment:** Stange vs. Ringe (OG führt Ringe-Klimmzüge als eigene Spalte ab
+  Level 4 [A-31]); rotierende Griffe brachten keine höhere Aktivierung als
+  Pull-up oder Chin-up [A-08].
 
-### 4.9 Kompression / Pike-Grundlagen (Teil von `l-sit`, Familie `core`)
+### 4.9 Kompression / Pike (Teil von `l-sit`, Familie `core`)
 
-Keine Quelle für eigene Stufen gefunden. Vorschlag: Kompression wird nicht als
-eigener Skill geführt, sondern als **Übungen mit Rolle `accessory`** an den
-ersten L-Sit-Stufen (§5.2): `seated-pike-leg-lift` (sitzend, Hände neben den
-Knien, gestreckte Beine anheben) und `pike-compression-hold`. Unlock-relevant
-ist erst der Tuck-L-Sit (H: Kompression lässt sich im Log schlecht objektiv
-messen; der L-Sit ist der messbare Nachweis).
-
-## 5. Statics
-
-### 5.1 Handstand (`handstand`, Familie `handstand`; bestehender Skill)
-
-Belegt: Wall-HS = OG-Level 1, freistehend = Level 4–5 [A-02] *(S)*; FIG führt
-den Handstand (2 s) als Bodenelement [A-04] *(S)*. Biomechanik (**Evidenz A**):
-Balance primär über die Handgelenke; gelingt das nicht, gemischte Strategie mit
-Handgelenk, Schulter, Hüfte, Ellbogen; Augen schliessen senkt die Stabilität,
-Nackenflexion verschlechtert die Leistung [A-20].
-
-| Stufe | Slug-Vorschlag | Beschreibung | Formkriterien | Unlock-Kriterium | Dauer bis nächste Stufe | Quellen |
-|---|---|---|---|---|---|---|
-| 1 | `handstand/wall` (existiert) · `wall-handstand-hold` | Handstand mit Rücken zur Wand | Arme gestreckt, Kopf neutral [A-20] | `wall-handstand-hold hold ≥ 30 s · occ 3 · 14 d` (Isometrie-Regel [A-03], H-UNL) | 2–4 Wo. (H-DUR) | OG 1 [A-02] *(S)* |
-| 2 | `handstand/chest-to-wall` · `handstand-chest-to-wall` | Bauch zur Wand, Hände nahe der Wand | Hand–Schulter–Hüfte–Fuss gestapelt, Rippen drin, Schultern voll geöffnet (H-FORM) | `handstand-chest-to-wall hold ≥ 60 s · form≥4 · occ 2 · 14 d` (H-UNL: Linienausdauer als Basis fürs Balancieren) | 2–6 Wo. (H-DUR) | (H) |
-| 3 | `handstand/free-10s` · `handstand-freestanding` | freistehend | wie 2; Korrektur über Finger/Handgelenk statt Ellbogen/Hüfte [A-20] | `handstand-freestanding hold ≥ 10 s · form≥4 · occ 3 · 14 d` | 4–16 Wo. (H-DUR) | OG 4–5 [A-02] *(S)*; 10-s-Regel [A-12] übertragen (H-UNL) |
-| 4 | `handstand/free-30s` · `handstand-freestanding` | freistehend 30 s | wie 3 | `handstand-freestanding hold ≥ 30 s · form≥4 · occ 3 · 14 d` | 4–16 Wo. (H-DUR) | (H-UNL) |
-| 5 | `handstand/free-60s` · `handstand-freestanding` | freistehend 60 s | wie 3 | `handstand-freestanding hold ≥ 60 s · form≥4 · occ 2 · 28 d` | — | (H-UNL) |
-| P1 | `press-handstand/straddle` · `press-handstand-straddle` | Press aus dem Grätschstand in den Handstand | Arme gestreckt, kein Sprung (H-FORM) | `press-handstand-straddle reps ≥ 1 · form≥4 · occ 2 · 28 d` | 8–26 Wo. (H-DUR) | FIG listet Press-Elemente zum Handstand [A-04] *(S)*; Sommer behandelt Press-Handstände [A-13] |
-| P2 | `press-handstand/pike` · `press-handstand-pike` | Press mit geschlossenen Beinen | wie P1 | `press-handstand-pike reps ≥ 1 · form≥4 · occ 2 · 28 d` | — | (H) |
-
-- **Voraussetzungen:** `wrist-conditioning/prep` (`recommended`);
-  `push-up/full` (`recommended`) (H-PRE). Press-Handstand: `handstand/free-10s`
-  (`prerequisite`) und `l-sit/full` (`recommended`) (H-PRE).
-- **Häufige Fehler:** Hohlkreuz («Banane»), gebeugte Arme, Kopf zu weit
-  eingerollt oder überstreckt [A-20: Nackenflexion verschlechtert die Balance],
-  Korrektur über Hüfte/Ellbogen statt Handgelenk [A-20].
-- **Carryover:** HSPU (§7.2), Planche-Press (§5.5), Press-Handstand (H-PRE).
-- **Equipment:** Boden (Handgelenk in voller Extension), Parallettes (neutraler
-  Griff, andere Korrekturstrategie über den Griff) (H-EQ); Ringe haben in OG
-  eine eigene, deutlich schwerere Spalte [A-02] *(S)*.
-
-### 5.2 L-Sit → V-Sit → Manna (`l-sit`, `v-sit`, `manna`, Familie `core`)
-
-Belegt ist nur die Reihenfolge: L-Sit → Straddle-L → V-Sit 45°/75°/100°/120° →
-Manna [A-02] *(S)*; Sommer behandelt L-Sit und Manna [A-13]; die Manna (2 s) ist
-ein FIG-Bodenelement, auch mit anschliessendem Press zum Handstand [A-04] *(S)*.
-
-| Skill / Stufe | Slug-Vorschlag | Beschreibung | Formkriterien | Unlock-Kriterium | Dauer bis nächste Stufe | Quellen |
-|---|---|---|---|---|---|---|
-| L 1 | `l-sit/tuck` · `l-sit-tuck` | Stütz, Knie angezogen | Arme gestreckt, Schultern tief, Gesäss frei (H-FORM) | `l-sit-tuck hold ≥ 30 s · occ 3 · 7 d` | 1–4 Wo. (H-DUR) | Isometrie-Regel [A-03]; Stufe (H) |
-| L 2 | `l-sit/one-leg` · `l-sit-one-leg` | ein Bein gestreckt | wie 1, gestrecktes Bein waagrecht (H-FORM) | `l-sit-one-leg hold ≥ 20 s · occ 3 · 14 d` (je Seite, H-UNL) | 2–4 Wo. (H-DUR) | (H) |
-| L 3 | `l-sit/full` · `l-sit` | L-Sit | Beine gestreckt und waagrecht, Knie gestreckt (H-FORM) | `l-sit hold ≥ 10 s · form≥4 · occ 2 · 28 d` | 2–8 Wo. (H-DUR) | Reihenfolge [A-02] *(S)*; 10 s [A-12] übertragen |
-| L 4 | `l-sit/full-30s` · `l-sit` | L-Sit 30 s | wie 3 | `l-sit hold ≥ 30 s · form≥4 · occ 2 · 28 d` | 4–12 Wo. (H-DUR) | 30 s [A-03] übertragen |
-| L 5 | `l-sit/straddle` · `straddle-l-sit` | gegrätschter L | Beine gestreckt, weit gegrätscht, waagrecht oder höher (H-FORM) | `straddle-l-sit hold ≥ 10 s · form≥4 · occ 2 · 28 d` | 4–12 Wo. (H-DUR) | [A-02] *(S)* |
-| V 1–4 | `v-sit/45` · `/75` · `/100` · `/120` · `v-sit` | V-Sit, Beinwinkel über der Waagrechten | Winkel erreicht, Arme gestreckt (H-FORM) | `v-sit hold ≥ 5 s · form≥4 · occ 2 · 28 d` je Winkelstufe (eigene Exercise-Slugs je Winkel oder Winkel als Formkriterium) (H-UNL) | je 4–16 Wo. (H-DUR) | Winkelstufen [A-02] *(S)* |
-| M 1 | `manna/full` · `manna` | Beine waagrecht, Rumpf hinter den Händen | Beine waagrecht, Arme gestreckt (H-FORM) | `manna hold ≥ 3 s · form≥4 · occ 2 · 28 d` | — | FIG 2 s [A-04] *(S)*; 3 s [A-09] |
-
-- **Voraussetzungen:** `support-hold/parallel-bars` für `l-sit/tuck`
-  (`prerequisite`) (H-PRE); `v-sit/45` ← `l-sit/straddle`; `manna/full` ←
-  `v-sit/120` (`prerequisite`, Reihenfolge [A-02] *(S)*).
-- **Häufige Fehler:** Schultern hochgezogen, Knie gebeugt, Rundrücken statt
-  aktiver Kompression (H-FAULT).
-- **Carryover:** Press-Handstand (Kompression), Planche-Übergänge «L-Sit to
-  Tuck Planche» [P-01 S. 1–3], Muscle-up-Varianten (H-PRE).
-- **Equipment:** Boden (schwerste Variante: wenig Freiraum) > Parallettes/
-  Barren (mehr Freiraum) ; Ringe (instabil) (H-EQ).
-
-### 5.3 Front Lever (`front-lever`, Familie `pull`; bestehender Skill)
-
-Belegt: OG-Level Tuck 4, Adv Tuck 5, Straddle 6, Half-Lay/One-Leg 7, Full 8
-[A-02] *(S)*; FIG-Wert A (Ringe) [A-05]; im Street-Workout-Wettkampf zählen Tuck,
-Adv Tuck und 45°-Straddle nicht als Halt [A-10] *(S)*; die RR nutzt den Tuck FL
-als Isometrie in der Row-Leiter [A-03].
-
-| Stufe | Slug-Vorschlag | Beschreibung | Formkriterien | Unlock-Kriterium | Dauer bis nächste Stufe | Quellen |
-|---|---|---|---|---|---|---|
-| 1 | `front-lever/tuck` (existiert) · `front-lever-tuck` | Knie zur Brust, Rumpf waagrecht | Arme gestreckt, Schultern depressiert, Rumpf waagrecht ±15° (H-FORM; [A-04] *(S)*) | `front-lever-tuck hold ≥ 10 s · none · form≥4 · occ 2 · 28 d` | 4–12 Wo. ab `pull-up/strict-5` (H-DUR) | OG 4 [A-02] *(S)*; 10 s [A-12]; Platzhalter nennt 15 s |
-| 2 | `front-lever/advanced-tuck` (existiert) · `front-lever-advanced-tuck` | Rücken flach, Hüfte offen, Knie gebeugt | flacher Rücken, Oberschenkel etwa senkrecht zum Rumpf (H-FORM) | `front-lever-advanced-tuck hold ≥ 10 s · none · form≥4 · occ 2 · 28 d` | 4–12 Wo. (H-DUR) | OG 5 [A-02] *(S)*; [A-12] |
-| 3 | `front-lever/straddle` · `front-lever-straddle` | Beine gestreckt, gegrätscht | Körper waagrecht ±15°, Beine gestreckt (H-FORM) | `front-lever-straddle hold ≥ 3 s · none · form≥4 · occ 2 · 28 d` | 8–26 Wo. (H-DUR) | OG 6 [A-02] *(S)*; 3 s [A-09] |
-| 4 | `front-lever/one-leg` · `front-lever-one-leg` (Alt.: `front-lever-half-lay`) | ein Bein gestreckt / Knie halb gebeugt | Hüfte gestreckt, Körperlinie waagrecht (H-FORM) | `front-lever-one-leg hold ≥ 10 s · none · form≥4 · occ 2 · 28 d` | 4–16 Wo. (H-DUR) | OG 7 [A-02] *(S)* |
-| 5 | `front-lever/full` · `front-lever` | Full Front Lever | Körper gestreckt, waagrecht ±15°, Arme gestreckt | `front-lever hold ≥ 3 s · none · form≥4 · occ 2 · 28 d` | — | OG 8 [A-02] *(S)*; FIG A [A-05]; 3 s [A-09] |
-| (Übungen) | `front-lever-row-tuck`, `band-assisted-tuck-fl` (existiert), `front-lever-negative` | Rows in Tuck-Position, Band-Assistenz, Negative | — | Rolle `progression`; kein Level | — | FL-Rows als OG-Spalte [A-02] *(S)* |
-
-- **Voraussetzungen:** `pull-up/strict-5` (`prerequisite`, wie im Platzhalter)
-  (H-PRE); `hollow-body/full` (`recommended`) (H-PRE); `row/horizontal`
-  (`recommended`, RR-Kontext [A-03]).
-- **Häufige Fehler:** Hüfte unter Schulterlinie, gebeugte Ellbogen, Schultern
-  nicht depressiert, runder Rücken im Adv Tuck (H-FAULT; die ersten zwei auch im
-  bestehenden Platzhalter).
-- **Carryover:** Back Lever (gemeinsame Straight-Arm-Zugmuster), Klimmzug,
-  Muscle-up-Übergang, Maltese/Planche als **Antagonist** (Druck vs. Zug) (H-PRE).
-- **Equipment:** Stange vs. Ringe (freie Rotation, gleiche Stufen) (H-EQ);
-  Anthropometrie (Beinlänge) verschiebt die Schwierigkeit der Straddle/Half-Lay-
-  Stufen → Stream C.
-
-### 5.4 Back Lever inkl. German Hang und Skin the Cat (`back-lever`, Familie `pull`)
-
-Belegt: OG-Level German Hang 1, Skin the Cat 2, Tuck 3, Adv Tuck 4, Straddle 5,
-Half-Lay/One-Leg 6, Full 7 [A-02] *(S)*; FIG-Wert A [A-05].
-
-| Stufe | Slug-Vorschlag | Beschreibung | Formkriterien | Unlock-Kriterium | Dauer bis nächste Stufe | Quellen |
-|---|---|---|---|---|---|---|
-| 1 | `back-lever/german-hang` · `german-hang` | Hang in maximaler Schulterextension | kontrolliertes Ein- und Aussteigen, schmerzfrei (H-FORM) | `german-hang hold ≥ 15 s · occ 3 · 14 d` (H-UNL: Gewebetoleranz statt Kraft) | 2–6 Wo. (H-DUR) | OG 1 [A-02] *(S)* |
-| 2 | `back-lever/skin-the-cat` · `skin-the-cat` | Durchdrehen in den German Hang und zurück | Arme gestreckt, langsam (H-FORM) | `skin-the-cat reps ≥ 3 · occ 2 · 14 d` (H-UNL) | 2–6 Wo. (H-DUR) | OG 2 [A-02] *(S)* |
-| 3 | `back-lever/tuck` · `back-lever-tuck` | Tuck, Rücken nach unten | Arme gestreckt, Rumpf waagrecht (H-FORM) | `back-lever-tuck hold ≥ 10 s · form≥4 · occ 2 · 28 d` | 2–8 Wo. (H-DUR) | OG 3 [A-02] *(S)*; [A-12] |
-| 4 | `back-lever/advanced-tuck` · `back-lever-advanced-tuck` | Hüfte gestreckt, Knie gebeugt | flacher Rücken (H-FORM) | `back-lever-advanced-tuck hold ≥ 10 s · form≥4 · occ 2 · 28 d` | 4–12 Wo. (H-DUR) | OG 4 [A-02] *(S)* |
-| 5 | `back-lever/straddle` · `back-lever-straddle` | gegrätscht | waagrecht ±15° (H-FORM) | `back-lever-straddle hold ≥ 3 s · form≥4 · occ 2 · 28 d` | 4–12 Wo. (H-DUR) | OG 5 [A-02] *(S)*; [A-09] |
-| 6 | `back-lever/one-leg` · `back-lever-one-leg` | ein Bein / Half-Lay | wie 5 | `back-lever-one-leg hold ≥ 10 s · form≥4 · occ 2 · 28 d` | 4–12 Wo. (H-DUR) | OG 6 [A-02] *(S)* |
-| 7 | `back-lever/full` · `back-lever` | Full Back Lever | gestreckte Linie, waagrecht ±15° | `back-lever hold ≥ 3 s · form≥4 · occ 2 · 28 d` | — | OG 7 [A-02] *(S)*; FIG A [A-05] |
-
-- **Voraussetzungen:** `hang-foundation/dead-hang` (`prerequisite`) (H-PRE);
-  `arch-body/hold` (`recommended`) (H-PRE).
-- **Häufige Fehler:** Hüfte knickt ein, Arme beugen, zu schnelles Einrollen in
-  den German Hang (H-FAULT). Straight-Arm-Belastung der Bizepssehne und der
-  vorderen Schulter ist Thema von Stream D (ADR 0003 nennt diese Strukturen).
-- **Carryover:** Front Lever, Maltese/Victorian-Familie, Muscle-up-Schwungteile
-  (H-PRE).
-- **Equipment:** Ringe (Hände rotieren frei) vs. Stange (Griff fix; Ober- oder
-  Untergriff) (H-EQ).
-
-### 5.5 Planche (`planche`, `planche-press`, `planche-push-up`, Familie `push`)
-
-Belegt: OG-Level Frog Stand 3, Tuck 5, Adv Tuck 6, Straddle 8, Half-Lay/One-Leg
-9, Full ≥ 10 [A-02] *(S)*; FIG Boden Straddle A / Full C [A-06; A-04 *(S)*],
-Ringe Straddle A / Full C [A-05]. Die PDF-Leiter: Lean → Tuck (5–10 s) → Adv Tuck
-(über «L-Sit to Adv Tuck») → (Wide) Straddle 2–4 s → Wide Planche 3–6 s → Full
-(Press, Kicks) (`01_pdf_extract.md` §4.6; [P-01 S. 1–3; P-02 S. 1; P-03]).
-Wechselregel 10 s sauber je Stufe [A-12]; Tuck → Straddle «fliessender» [A-11]
-*(S)*. Die Stützwaage an den Ringen aktiviert Trapezius, Pectoralis und Bizeps
-deutlich anders als ihre fünf gängigen Vorübungen [A-25]; ihre Leistung
-korreliert mit der Vorübung «Schwalbe in Rückenlage» (r = 0,69) [A-22].
-
-| Stufe | Slug-Vorschlag | Beschreibung | Formkriterien | Unlock-Kriterium | Dauer bis nächste Stufe | Quellen |
-|---|---|---|---|---|---|---|
-| 0 | `planche/lean` · `planche-lean` | Liegestützposition, Schultern weit vor den Händen | Arme gestreckt, Protraktion, Körper gerade (H-FORM) | `planche-lean hold ≥ 20 s · form≥4 · occ 2 · 28 d` (20 s = obere PDF-Dosis [P-01 S. 3]; H-UNL) | 2–6 Wo. (H-DUR) | PDF-Zubringer 8–20 s [P-01 S. 1, 3] |
-| 1 | `planche/frog-stand` · `frog-stand` | Knie auf den Ellbogen, Balance | Füsse frei, kontrolliert (H-FORM) | `frog-stand hold ≥ 30 s · occ 3 · 7 d` ([A-03] Isometrie-Regel) | 1–4 Wo. (H-DUR) | OG 3 [A-02] *(S)* |
-| 2 | `planche/tuck` · `planche-tuck` | Tuck, Arme gestreckt | Arme gestreckt, Hüfte auf Schulterhöhe ±15°, Protraktion (H-FORM; [A-04] *(S)*) | `planche-tuck hold ≥ 10 s · none · form≥4 · occ 2 · 28 d` | 4–16 Wo. (H-DUR) | OG 5 [A-02] *(S)*; [A-12]; PDF-Ziel 5–10 s [P-01 S. 1] |
-| 3 | `planche/advanced-tuck` · `planche-advanced-tuck` | Rücken flach, Knie vom Körper weg | flacher Rücken, Hüfte auf Schulterhöhe (H-FORM; [A-12] *(S)*) | `planche-advanced-tuck hold ≥ 10 s · none · form≥4 · occ 2 · 28 d` | 8–26 Wo. (H-DUR) | OG 6 [A-02] *(S)*; [A-12] |
-| 4 | `planche/straddle` · `planche-straddle` | Beine gestreckt, gegrätscht | Körper waagrecht ±15°, Arme gestreckt | `planche-straddle hold ≥ 3 s · none · form≥4 · occ 2 · 28 d` | 12–52 Wo. (H-DUR) | OG 8 [A-02] *(S)*; FIG A [A-05, A-06]; 3 s [A-09]; PDF 2–4 s [P-01 S. 2] |
-| 5 | `planche/half-lay` · `planche-half-lay` (Alt.: `planche-one-leg`) | Knie halb gebeugt / ein Bein | wie 4 | `planche-half-lay hold ≥ 3 s · none · form≥4 · occ 2 · 28 d` | 8–26 Wo. (H-DUR) | OG 9 [A-02] *(S)* |
-| 6 | `planche/full` · `planche` | Full Planche | gestreckte Linie, waagrecht ±15° | `planche hold ≥ 3 s · none · form≥4 · occ 2 · 28 d` | — | OG ≥ 10 [A-02] *(S)*; FIG C [A-05]; 3 s [A-09] |
-| Pr 1 | `planche-press/straddle` · `planche-straddle-press` | Straddle Planche → Handstand | Arme gestreckt, kein Schwung (H-FORM) | `planche-straddle-press reps ≥ 1 · none · form≥4 · occ 2 · 28 d` | — | PDF Beginner 1–3 Wdh. [P-01 S. 2–3] |
-| Pr 2 | `planche-press/full` · `planche-full-press` | Full Planche → Handstand | wie Pr 1 | `planche-full-press reps ≥ 1 · none · form≥4 · occ 2 · 28 d` | — | PDF Intermediate 1–3 Wdh. [P-02 S. 2] |
-| Pr 3 | `planche-press/full-5` · `planche-full-press` | 5 Wdh. | wie Pr 1 | `planche-full-press reps ≥ 5 · none · form≥4 · occ 2 · 28 d` | — | PDF Advanced 3–8 Wdh. [P-03 S. 2] |
-| PU 1–3 | `planche-push-up/tuck` · `/straddle` · `/full` | Planche-Liegestütze je Stufe | Hüfte bleibt auf Schulterhöhe, voller Weg (H-FORM) | `planche-push-up-<stufe> reps ≥ 5 · none · form≥4 · occ 2 · 28 d` | — | PDF 5–10 Wdh. [P-02 S. 3; P-03 S. 3] |
-| (Übungen) | Kicks, «L-Sit to Tuck Planche», Negative, Band (`elastic`, `neck band`), `badform`-Halte | Volumen- und Technikübungen | — | Rolle `progression`, kein Level | — | [P-01 bis P-03] |
-
-- **Voraussetzungen:** `planche/lean` ← `push-up/full` (`prerequisite`) und
-  `wrist-conditioning/prep` (`recommended`) (H-PRE); `planche/tuck` ←
-  `support-hold/parallel-bars` (`recommended`) (H-PRE); `planche-press/straddle`
-  ← `handstand/free-10s` (`prerequisite`, der Press endet im Handstand; H-PRE)
-  und `planche/straddle` (`prerequisite`).
-- **Häufige Fehler:** gebeugte Arme, Hüfte zu hoch oder zu tief (Winkelabzug
-  [A-04] *(S)*), fehlende Protraktion, zu wenig Vorlage (H-FAULT). Die PDFs üben
-  bewusst `badform`-Halte [P-01 S. 2] — solche Sätze mit niedriger
-  `form_quality` loggen; sie zählen dann nicht für den Unlock.
-- **Carryover:** Pseudo-Planche-Liegestütz, HSPU (P-04 kombiniert Weighted Lean
-  Planche mit Weighted HSPU [P-04 S. 1]), Maltese (Wide Planche als Vorstufe
-  [P-02 S. 4]); Front Lever als Antagonist (H-PRE). Kraft-Vorübungen tragen nur
-  teilweise: gute Korrelationen [A-22, A-23], aber abweichende
-  Muskelaktivierung [A-25].
-- **Equipment:** Boden, Parallettes (`pbar`, in den PDFs Standard für Halte und
-  Presses), Ringe. FIG bewertet die Full Planche am Boden und an den Ringen
-  gleich (C) [A-04 *(S)*, A-05]. Parallettes erlauben tiefere Liegestütze
-  («DEEP» auf `pbar` [P-02 S. 3]) und entlasten die Handgelenk-Extension; Ringe
-  fügen Instabilität hinzu (H-EQ). Handbreite und -rotation (`wide`, `supi`)
-  variieren die Schwierigkeit; die Richtung ist ohne Quelle nicht belegbar
-  (§9).
-
-### 5.6 Maltese (`maltese`, Familie `push`) — PDF-Leiter validiert und erweitert
-
-PDF-Leiter (`01_pdf_extract.md` §4.6): Lean Maltese mit Band (Beginner) → Lean
-Maltese frei 5–15 s → Lean Maltese Elevator 2–5 Wdh. → Wide Planche Hold/Press →
-Maltese Hold mit Band 3–8 s → Maltese Press 1–3 Wdh. mit Band → ohne Band →
-am Boden [P-01 S. 2; P-02 S. 1, 4; P-03 S. 1, 4; P-04 S. 1].
-
-**Validierung gegen externe Quellen:**
-
-| Befund | Quelle | Folge für die Leiter |
-|---|---|---|
-| FIG: Maltese Boden C, Ringe D; Full Planche C | [A-07, A-05] | Maltese ≥ Full Planche; Ringe-Maltese als eigene, höhere Stufe |
-| OG: Level 10–16 der Planche-Spalte enthalten Full Planche und Maltese-Varianten | [A-02] *(S)* | Maltese oberhalb der Full Planche einordnen |
-| Kraft-Benchmarks: bis 94,1 % KG (Schwalbe, exzentrisch) in der Konditionierungsmessung; r 0,65–0,92 zwischen Konditionierungskraft und Elementleistung | [A-23] | extrem hohe Kraftanforderung; Realismus-Check bei Zielen |
-| Schwalbe korreliert mit «Schwalbe in Rückenlage» (r = 0,71) und Bankdrücken (r = 0,71) | [A-22] | Bankdrücken/Schwalbe-Vorübung als `recommended`-Kraftbasis, nicht als harte Voraussetzung |
-| Spezifische Vorübungen und Stützgeräte (Herdos, Gurte) reduzieren die Last bei Halteelementen | [A-21] | bestätigt Band-Assistenz als reguläres Werkzeug, wie in den PDFs |
-| Der Maltese-**Halt** erscheint in den PDFs nur mit Band | `01_pdf_extract.md` §4.4 | ein unassistierter Maltese-Halt liegt jenseits der dokumentierten Programme → eigene Endstufe |
-
-| Stufe | Slug-Vorschlag | Beschreibung | Formkriterien | Unlock-Kriterium | Dauer bis nächste Stufe | Quellen |
-|---|---|---|---|---|---|---|
-| 1 | `maltese/lean` · `maltese-lean` | Lean mit weit seitlich gestellten Händen | Arme gestreckt, Körper gerade, Schultern weit vor (H-FORM) | `maltese-lean hold ≥ 10 s · none · form≥4 · occ 2 · 28 d` | 8–26 Wo. (H-DUR) | PDF frei 5–15 s [P-02 S. 4; P-03 S. 4] |
-| 2 | `maltese/lean-elevator` · `maltese-lean-elevator` | dynamische Lean-Variante mit Wdh. (Deutung §9) | wie 1 | `maltese-lean-elevator reps ≥ 3 · none · form≥4 · occ 2 · 28 d` | 8–26 Wo. (H-DUR) | PDF 2–5 Wdh. [P-02 S. 4; P-03 S. 4] |
-| 3 | `maltese/wide-planche` · `planche-wide` | Planche mit weiter Handstellung (Deutung `wide` unsicher, §9) | waagrecht ±15° | `planche-wide hold ≥ 3 s · none · form≥4 · occ 2 · 28 d` | 12–52 Wo. (H-DUR) | PDF 3–6 s [P-02 S. 1] |
-| 4 | `maltese/press` · `maltese-press` | Press aus der Maltese in den Handstand (unassistiert) | Arme gestreckt (H-FORM) | `maltese-press reps ≥ 1 · none · form≥4 · occ 2 · 28 d` | — | PDF Advanced 1–3 Wdh. ohne Band [P-03 S. 4] |
-| 5 | `maltese/hold` · `maltese` | unassistierter Maltese-Halt (Boden/Parallettes) | Körper waagrecht auf Handhöhe, Arme gestreckt (H-FORM) | `maltese hold ≥ 3 s · none · form≥4 · occ 2 · 28 d` | — | FIG C Boden [A-07]; 3 s [A-09]; **Erweiterung** über PDF hinaus |
-| 6 | `maltese/rings` · `maltese-rings` | Maltese an Ringen | wie 5 | `maltese-rings hold ≥ 3 s · none · form≥4 · occ 2 · 28 d` | — | FIG D [A-05, A-07]; **Erweiterung** |
-| (Übungen) | `maltese-lean-band`, `maltese-hold-band`, `maltese-press-band`, `maltese-elevator`, `zanetti-vertical-band` | assistierte Volumen- und Technikübungen | — | Rolle `progression`; kein Level | — | [P-01 bis P-04] |
-
-Die Reihenfolge von Stufe 4 (Press) vor 5 (Halt) folgt den PDFs (Press ohne
-Band ab Advanced, Halt nie ohne Band); ob ein unassistierter Halt schwerer ist
-als ein unassistierter Press, ist offen (Offene Fragen).
-
-- **Voraussetzungen:** `maltese/lean` ← `planche/advanced-tuck`
-  (`prerequisite`; die PDFs beginnen Lean Maltese auf der Stufe, die an der
-  Straddle Planche arbeitet [P-01 S. 2]; H-PRE). `maltese/wide-planche` ←
-  `planche/straddle` (`prerequisite`, H-PRE). `maltese/press` ←
-  `planche-press/full` (`prerequisite`; in den PDFs erscheint der Maltese-Press
-  mit Band erst mit dem Full-Planche-Press [P-02 S. 2, 4]; H-PRE).
-- **Häufige Fehler:** Hände wandern nach innen (wird zur Planche), Hüfte
-  knickt, Arme beugen (H-FAULT).
-- **Carryover:** Planche (bidirektional), Iron Cross (weite Armhaltung, andere
-  Richtung), Victorian (H-PRE).
-- **Equipment:** Boden, `pbar`, `supi bar`, Ringe [P-02 bis P-04]. FIG wertet
-  Ringe höher als Boden (D vs. C) [A-05, A-07]; beim Autor steht dagegen der
-  Press **am Boden** an der Spitze [P-04 S. 1] → «Widersprüche».
-
-### 5.7 Human Flag (`human-flag`, Familie `core`)
-
-**Keine Quelle gefunden.** Die ganze Leiter ist Praxisheuristik und nur mit
-Selbstbestätigung oder vorsichtigen Schwellen freizugeben.
-
-| Stufe | Slug-Vorschlag | Beschreibung | Formkriterien | Unlock-Kriterium | Dauer bis nächste Stufe | Quellen |
-|---|---|---|---|---|---|---|
-| 1 | `human-flag/vertical` · `human-flag-vertical` | Körper senkrecht seitlich an der Stange, Arme gestreckt | untere Hand drückt, obere zieht; Körper gestreckt (H-FORM) | `human-flag-vertical hold ≥ 10 s · form≥4 · occ 2 · 28 d` (H-UNL) | 4–12 Wo. (H-DUR) | (H) |
-| 2 | `human-flag/tuck` · `human-flag-tuck` | Tuck, Rumpf waagrecht | Arme gestreckt (H-FORM) | `human-flag-tuck hold ≥ 10 s · form≥4 · occ 2 · 28 d` | 4–12 Wo. (H-DUR) | (H) |
-| 3 | `human-flag/straddle` · `human-flag-straddle` | gegrätscht, waagrecht | waagrecht ±15° (H-FORM) | `human-flag-straddle hold ≥ 3 s · form≥4 · occ 2 · 28 d` | 8–26 Wo. (H-DUR) | Halt 3 s [A-09] (WSWCF führt die Flag als Static-Element) |
-| 4 | `human-flag/full` · `human-flag` | Beine geschlossen, waagrecht | waagrecht ±15° | `human-flag hold ≥ 3 s · form≥4 · occ 2 · 28 d` | — | [A-09] |
-
-- **Voraussetzungen:** `pull-up/strict-8` und `support-hold/parallel-bars`
-  (`recommended`) (H-PRE).
-- **Häufige Fehler:** untere Hand nicht gestreckt, Rotation nach vorne, Hüfte
-  hängt (H-FAULT).
-- **Carryover:** gering zu anderen Statics; seitliche Rumpfkraft (H-PRE).
-- **Equipment:** senkrechte Stange (Standard) vs. Sprossenwand/Gitter (Griffe
-  frei wählbar) (H-EQ). Beide Seiten getrennt loggen (`unilateral: true`).
+Kompression wird nicht als eigener Skill geführt, sondern als Übung mit Rolle
+`accessory` an den ersten L-Sit-Stufen (§5.2): GMB empfiehlt sitzendes
+einbeiniges Beinheben mit gestrecktem Bein, 30–45 s je Seite, 3–5 Sätze, weil
+L-Sits meist an der Hüftbeuger-Kompression scheitern [A-36]. Für den Press in den
+Handstand ist Kompression entscheidend: gute Turner zeigen eine engere
+Hechtposition und Hüftbeuge-Momente in der späten Phase [A-17].
