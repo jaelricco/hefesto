@@ -482,7 +482,7 @@ S. 30–33; im Audit an den gerenderten Seiten erneut geprüft). Die Spalten
 «Weighted Pull-Ups» und «Weighted Dips» nennen nur «× Bodyweight» ohne
 Wiederholungszahl; die Lesart als 1RM mit Systemmasse (Körper + Zusatzlast)
 ist eine Interpretation, gestützt darauf, dass Stufe 3 «1x Bodyweight» bzw.
-«Dips» lautet, also eine Wiederholung mit Körpergewicht (**Heuristik**).
+«Dips» lautet, also Klimmzug bzw. Dip mit reinem Körpergewicht (**Heuristik**).
 Planche-Spalte = «PB/FL Planche» (Barren/Boden); an den Ringen liegt die
 volle Planche auf Stufe 14.
 
@@ -1069,17 +1069,19 @@ erkennen [F-18].
 | F-67 | Evaluation of Training Load During Suspension Exercise | Giancotti GF, Fusco A, Varalda C, Capelli G, Cortis C | 2021 | https://doi.org/10.1519/JSC.0000000000003100 | Biomechanik-Studie | B |
 | F-68 | Overcoming Gravity 2nd Edition: Progression Charts (Druck-PDF, S. 30–33 des Buchs) | Low S | 2016 | https://stevenlow.org/wp-content/uploads/2017/02/OG2ChartsPrint.pdf | Coaching-Buch | C |
 | F-69 | Overcoming Gravity 2nd Edition: Leseprobe (Inhalt, Einleitung, Kap. 1–3; gelesen S. 21–25) | Low S | 2016 | https://stevenlow.org/wp-content/uploads/2018/09/OG2-preview-TOC-Intro-Ch1-3.pdf | Coaching-Buch | C |
-| F-70 | Developing a Muscle-Up (Pro Coach) | CrossFit | o. J. | https://www.crossfit.com/pro-coach/developing-a-muscle-up | Coaching-Artikel | C |
-| F-71 | How to Do a Muscle Up: The Complete Progression | CALIMOVE-Blog (Autorenangabe «El Eggs») | 2026 | https://blog.calimove.com/2026/09/14/muscle-up-progression-guide/ | Coaching-Artikel | C |
+| F-70 | How To Muscle-Up (Pro-Coach-Artikel, URL «developing-a-muscle-up») | CrossFit | 2024 | https://www.crossfit.com/pro-coach/developing-a-muscle-up | Coaching-Artikel | C |
+| F-71 | How to Do a Muscle Up: The Complete Progression | Lorenz A (Byline «El Eggs»), CALI MOVE Blog | 2026 | https://blog.calimove.com/2026/09/14/muscle-up-progression-guide/ | Coaching-Artikel | C |
 | F-72 | The Most Effective Front Lever Progression | The Movement Athlete | 2025 | https://themovementathlete.com/front-lever-progression/ | Coaching-Artikel | C |
 | F-73 | How To Achieve A Planche – The Most Effective Planche Progression | The Movement Athlete | 2025 | https://themovementathlete.com/planche-progression-training/ | Coaching-Artikel | C |
 | F-74 | Skill prerequisites — what you need before the big seven | bodyproskills (anonym) | 2026 | https://bodyproskills.com/articles/muscle-up-prerequisites/ | Coaching-Artikel | D |
-| F-75 | Mathematical Model - Weighted Pullups to Front Lever (Forumsthread) | StrongFirst-Forum, mehrere Nutzer | 2021 | https://www.strongfirst.com/community/threads/mathematical-model-weighted-pullups-to-front-lever.19107/ | Forum/Wiki | D |
-| F-76 | What YOU NEED To Know About The Front Lever! | Straight Talking Fitness (Blog) | 2018 | https://straighttalkingfitness.com/2018/03/18/what-you-need-to-know-about-the-front-lever/ | Coaching-Artikel | D |
+| F-75 | Mathematical Model - Weighted Pullups to Front Lever (Forumsthread) | StrongFirst-Forum, Thread von «Yak», Auswertung von «Hung» | 2021 | https://www.strongfirst.com/community/threads/mathematical-model-weighted-pullups-to-front-lever.19107/ | Forum/Wiki | D |
+| F-76 | What YOU NEED To Know About The Front Lever! | «JR», Straight Talking Fitness (Blog) | 2018 | https://straighttalkingfitness.com/2018/03/18/what-you-need-to-know-about-the-front-lever/ | Coaching-Artikel | D |
 | F-77 | Validity of Different Velocity-Based Methods and Repetitions-to-Failure Equations for Predicting the 1 Repetition Maximum During 2 Upper-Body Pulling Exercises | Pérez-Castilla A, Suzovic D, Domanovic A, Fernandes JFT, García-Ramos A | 2021 | https://doi.org/10.1519/JSC.0000000000003076 | Querschnittstudie | B |
 
 Die Praxisquellen P-01 bis P-04 sind in `01_pdf_extract.md` beschrieben und
 werden in `00_sources.md` geführt.
+
+## Prüfprotokoll
 
 **Prüfprotokoll der Ergänzungen:** Volltext gelesen: F-54, F-61, F-66
 (inkl. Tabellen). Nur Abstract: F-51, F-52 (Europe PMC und OpenAlex), F-53
@@ -1088,3 +1090,26 @@ vollständigem Abstract (OpenAlex). F-68 als gerenderte PDF-Seiten abgelesen,
 F-69 S. 21–25 gelesen. F-70–F-76 als Webseiten abgerufen (Stand
 27.09.2026). F-74 ist anonym, F-75 ein Forum, F-76 ein Einzelfall-Blog: nur
 Praxisindiz (Evidenz D).
+
+### Audit
+
+Adversariales Zitations-Audit vom 27.09.2026. Metadaten per Skript gegen
+Crossref und Europe PMC (alle 77 Zeilen), Web- und Buchquellen direkt
+abgerufen; Aussagen gegen Volltext, sonst gegen das Abstract geprüft
+(Prüftiefe je Zeile angegeben); eigene Rechnungen in Python nachgerechnet.
+
+| Prüfung | Ergebnis | Änderung |
+|---|---|---|
+| Metadaten aller 77 Quellen | 62 per DOI ohne Befund. F-09, F-53, F-55: Online-first 2018/2021/2022, Druckjahr 2022/2023/2024 (Tabelle führt das Druckjahr, beibehalten). F-60: DOI mit Klammern über Crossref und PubMed (PMID 10453772) bestätigt. F-25: Europe PMC ordnet die DOI fälschlich einem anderen Artikel zu; PubMed 20179649 bestätigt Titel, Autoren, Jahr. F-19 (ECU-Repositorium), F-43, F-68–F-76 abgerufen, alle existieren; F-68 und F-69 neu geladen, byte-identisch mit der Fassung der Recherche. | F-70: Titel «How To Muscle-Up», Jahr 2024 (war «Developing a Muscle-Up», o. J.). F-71: Autor Lorenz A (Byline «El Eggs»). F-75, F-76: Autorenangaben präzisiert. Keine Quelle entfernt. |
+| Typ und Evidenzstufe | 16 A, 52 B, 6 C, 3 D; Zuordnung schemakonform | – |
+| Parameter-Tabelle, alle 70 Zeilen | 50 ohne Befund; 20 präzisiert oder korrigiert | PAR-F-01/02/03 (Population, Bewerter, MDC-Niveau); 14 (F-24 nur Kinder, F-56 und F-57 ergänzt); 16 (F-01 ergänzt); 17 (Evidenz A nur für 1RM); 21, 55, 56 (Population, F-55-Richtung); 22 (Bewerter in F-28 waren erfahrene Trainer und Physiotherapeuten, Evidenz B → B/Heuristik); 23 (Fehlerspanne 1.45–3.65 statt 1.45–3.4); 24 (B → Heuristik); 44 (PAR-Q+ nur als Konzept, Key `screening_concept`); 49 (A → A/B, F-11 nennt keine MDC); 57, 58 (F-66: «Gurte senkrecht» nicht belegt); 62–64 («nie Sperre», PAR-F-62 C → C/D); 65 (1RM-Lesart als Heuristik) |
+| Eigene Rechnungen (Python) | SEM: F-28 Klimmzug 1.96, Handstand 11.7 s, HSPU 1.81, Pikes 3.77; F-30 20.8 s; F-59 56.1 s und 9.9 s. MDC95 5.42 / 3.05 / 1.94 Wdh., 11.6 %. F-51/F-52: Verzerrung 4.4–6.6 %, SD_diff 6.8–8.2 Wdh. (12.9–18.0 %), 95-%-Grenzen ±25–35 %. Beobachtungszahl 3.84 → 4, 6.83 → 7, 1.16 → 2, 2.07 → 3; Tabelle 8.5; Kalman-Beispiele 8.4 (K 0.69, 0.41, 0.29, 0.88; stationär K 0.22 bzw. 0.36, σ 0.94 bzw. 0.66); Liegestütz-Verhältnisse; F-22 1.247 / 1.327; F-19 1.112; F-76 0.62; Zeitsummen 285 s / 215 s / 50 min | alle reproduzierbar. Korrigiert: «SD_diff 7–8 Wdh.» → «6.8–8.2 Wdh.». Eingangswerte der F-28-Rechnung (Tag 1 und Tag 2 der Retest-Gruppe, n = 30) ergänzt |
+| Selbstauskunft F-51–F-55 | F-51, F-52 (Abstract): alle Zahlen stimmen. F-53 (vollständiges PubMed-Abstract): r 0.29–0.82, κ 0.05–0.34, Klimmzüge am besten, Frauen überschätzten häufiger. F-54 (Volltext): R² 0.247–0.361; unterschätzt wurden alle Aufgaben. F-55 (nur Abstract, nicht frei): 17.3 % stimmt; die Richtung der 15.5 % folgt aus den Mittelwertdifferenzen (unbeaufsichtigter Heimtest niedriger) | Populationen ergänzt (US-Soldaten, 2-min-Test; norwegische Musterung; Paraplegie n = 33). «Richtung nicht eindeutig» korrigiert; Folgerung zu «gefilmt» relativiert (7.1, 8.2, PAR-F-56, Widerspruch 13) |
+| Coaching-Schwellen F-70–F-76 | Alle Zahlen auf den abgerufenen Seiten gefunden. F-73 nennt zusätzlich «15+ perfect push-ups»; F-75 ist die Umfrage eines Schulprojekts (36 Antworten), ausgewertet von einem Forumsnutzer; F-76 hielt den Front Lever 5–6 s | 6.2 mit Vorspann «weicher Hinweis, nie Sperre»; PAR-F-62–64 und Kurzfassung entsprechend; Einschränkungen ergänzt |
+| OG2-Äquivalente F-68 | Seiten 30–33 neu gerendert und abgelesen: Front Lever Tuck / Adv. Tuck / Straddle / Half Lay / Full auf Stufe 4–8, gewichtete Klimmzüge 1.18 / 1.35 / 1.50 / 1.65 / 1.78 (Stufe 11: 2.1) × BW; Planche (Barren/Boden) Tuck 5, Adv. Tuck 6, Straddle 8, Full 11; gewichtete Dips 1.2 / 1.38 / 1.55 / 1.7 / 1.85, Stufe 11: 2.25; Stufe 3 Dips, Bar Pull-ups, L-Sit, 60s Plank; Stufe 4 Kipping MU, Pistol; Stufe 5 Muscle-ups, Wall HSPU, Press .68x BW; Stufe 7 Strict Bar MU. F-69 S. 22–23 bestätigt | Alle Ablesungen korrekt. Ergänzt: Die Charts nennen keine Wiederholungszahl (1RM-Lesart ist Heuristik); Planche-Spalte gilt für Barren/Boden (Ringe: volle Planche auf Stufe 14); «setzt gleich» → «dieselbe Stufe» |
+| Reliabilitätszahlen (ICC, SEM, MDC, CV) | F-01, F-03, F-06, F-10, F-16 (OpenAlex-Abstract), F-17, F-18 (Volltext: 0.88 / 0.85, Log-Transformation), F-19, F-20, F-21, F-27, F-28 (Volltext: Tabelle 5, Methoden, Protokolle), F-29–F-35, F-57–F-60 stimmen | F-60: Retest nur in Untergruppe; F-31: Stichprobe präzisiert; F-17: MDC ohne Konfidenzniveau |
+| PAR-Q+ (Urheberrecht) | eparmedx.com: 7 Fragen, Folgefragen S. 2–3, ePARmed-X+; «Copyright PAR-Q+ Collaboration 2007-2026. All rights reserved»; rät von veränderten Kopien ab. Kein Fragewortlaut im Dokument | Kurzfassung, 7.2, Q5, PAR-F-44 und Offene Fragen auf reine Konzept-Referenz umgestellt; eigene Fragen nach ACSM-Logik [F-41] |
+| Weitere Kernaussagen (> 15) | F-02 (Volltext: keine hochwertige Validitätsstudie zu Kraftausdauertests), F-07 (Volltext: ≈ 15 / ≈ 5 Wdh., SD 2.51 / 4.36), F-08, F-12–F-15, F-22–F-24, F-36–F-50, F-40 (Volltext: R² 0.76 / 0.85, 0.59 / 0.42, 0.48 / 0.38), F-56, F-61 (Volltext: 9.55 ± 15.76 s bzw. 14.29 ± 19.26 s, Abbruch bei 60 s, Test nicht validiert), F-62–F-65 (F-64 Abstract über OpenAlex), F-66 (Volltext, Tabelle 4), F-67, F-77 stimmen | F-66: «Gurte senkrecht» gestrichen, waagrecht laut Autoren nur in Beuge- bzw. Streckphase; F-67: Gurtlänge 238 cm; F-22: Gegengewicht-Aussage präzisiert; 4.2: Pike-Endposition steht in F-28 (war «Praxisheuristik»); G-1 und 2.4: Bewerter präzisiert; F-24-Übergeneralisierung (Kinder) in 3.1, G-6, 7.1 behoben; 8.2 RIR-Fehlerspanne; Widersprüche 13, 15, 16 ergänzt |
+| Prüftiefe F-25 | Abstract ohne Zahlen, Volltext nicht zugänglich; 69.16 / 75.04 / 53.56 / 61.80 % nur über Sekundärzitat (Wikipedia «Push-up», zitiert JSCR 2011) bestätigt | Hinweis unter 5.1 |
+| Interne Konsistenz | 77 Quellen-IDs eindeutig, alle zitiert, keine fehlende ID; 70 PAR-IDs eindeutig, alle Verweise auflösbar; P-01–P-03-Angaben gegen `01_pdf_extract.md` §4.2 und §4.7 geprüft | – |
+| Bilanz | Quellen: 77 geprüft, 73 ohne Befund, 4 Metadaten korrigiert, 0 entfernt. Aussagen: 70 Parameterzeilen und rund 80 weitere Zahlenaussagen geprüft; 20 Parameterzeilen und 36 weitere Stellen korrigiert oder präzisiert, davon 12 inhaltliche Fehler oder Übergeneralisierungen | Quellen danach: 77 |
