@@ -128,7 +128,7 @@ type week struct {
 // week_start event with the plan's headroom. hook may add events after a
 // session (index across the whole run) and returns the snapshot to continue
 // with.
-func simulate(t *testing.T, k *planning.Knowledge, s planning.Snapshot, a *athlete, n int,
+func simulate(t testing.TB, k *planning.Knowledge, s planning.Snapshot, a *athlete, n int,
 	hook func(i int, ps planning.PlannedSession, s planning.Snapshot) planning.Snapshot) ([]week, planning.Snapshot) {
 	t.Helper()
 	var out []week

@@ -1,0 +1,318 @@
+package planning_test
+
+import (
+	"strings"
+	"testing"
+	"time"
+
+	"github.com/jaelricco/hefesto/internal/content"
+	"github.com/jaelricco/hefesto/internal/domain/planning"
+)
+
+// DOSE-01 point rule (spec §12.2): h = min(0.70 d, d − 2) ≥ 2 s, sets =
+// clamp(round(60 / h), 2, 5).
+func TestDose01(t *testing.T) {
+	k := kb(t)
+	for _, c := range []struct {
+		d          float64
+		sets, hold int
+	}{
+		{4, 5, 2}, {6, 5, 4}, {10, 5, 7}, {20, 4, 14}, {30, 3, 21},
+	} {
+		sets, hold := planning.HoldDose(k, c.d)
+		if sets != c.sets || hold != c.hold {
+			t.Errorf("d=%g: %d × %d s, want %d × %d s", c.d, sets, hold, c.sets, c.hold)
+		}
+	}
+}
+
+// PAR-F-30 and PAR-F-31: confidence class by σ/μ and the dose offset.
+func TestConfidenceAndDose(t *testing.T) {
+	k := kb(t)
+	for _, c := range []struct {
+		mu, sigma float64
+		conf      string
+		dose      float64
+	}{
+		{10, 1, planning.ConfHigh, 10},
+		{10, 1.5, planning.ConfMid, 9.25},
+		{10, 2.9, planning.ConfMid, 8.55},
+		{10, 3, planning.ConfLow, 7},
+		{2, 3, planning.ConfLow, 0},
+		{0, 1, planning.ConfLow, 0},
+	} {
+		e := planning.Estimate{Mu: c.mu, Sigma: c.sigma}
+		if got := k.Confidence(e); got != c.conf {
+			t.Errorf("μ=%g σ=%g: confidence %s, want %s", c.mu, c.sigma, got, c.conf)
+		}
+		if got := k.Dose(e); got < c.dose-1e-9 || got > c.dose+1e-9 {
+			t.Errorf("μ=%g σ=%g: dose %g, want %g", c.mu, c.sigma, got, c.dose)
+		}
+	}
+}
+
+// LOAD-02: f(a) is the minimum of the applying factors, never their product
+// (spec §12.2: prior injury and no consent together give 0.5, not 0.25).
+func TestWeekFactorIsTheMinimum(t *testing.T) {
+	k := kb(t)
+	base := planning.Snapshot{Profile: planning.Profile{HealthConsent: true, TrainingMonths: 60},
+		Regions: map[string]planning.RegionState{}}
+	for _, c := range []struct {
+		name   string
+		modify func(*planning.Snapshot)
+		want   float64
+	}{
+		{"none", func(*planning.Snapshot) {}, 1},
+		{"risk window", func(s *planning.Snapshot) { s.Profile.TrainingMonths = 12 }, 0.75},
+		{"prior injury", func(s *planning.Snapshot) {
+			s.Regions["elbow_inner"] = planning.RegionState{State: planning.StateNormal, PriorInjury: true}
+		}, 0.5},
+		{"prior injury, no consent, risk window", func(s *planning.Snapshot) {
+			s.Profile.HealthConsent, s.Profile.TrainingMonths = false, 12
+			s.Regions["elbow_inner"] = planning.RegionState{State: planning.StateNormal, PriorInjury: true}
+		}, 0.5},
+	} {
+		s := base
+		s.Regions = map[string]planning.RegionState{}
+		c.modify(&s)
+		if got := planning.WeekFactor(k, s, "elbow_medial/SA"); got != c.want {
+			t.Errorf("%s: f = %g, want %g", c.name, got, c.want)
+		}
+	}
+}
+
+// LOAD-01: straight-arm work loads the /SA accounts, bent-arm work the /BA
+// accounts; the wrist has one account; assistance counts in full.
+func TestSetLoadAccounts(t *testing.T) {
+	k := kb(t)
+	tuck := planning.SetLoad(k, "planche-tuck", 75)
+	if tuck["biceps_distal/SA"] == 0 || tuck["biceps_distal/BA"] != 0 || tuck["wrist"] == 0 {
+		t.Errorf("tuck planche load %v", tuck)
+	}
+	full := planning.SetLoad(k, "planche", 75)
+	if full["biceps_distal/SA"] <= tuck["biceps_distal/SA"] {
+		t.Errorf("full planche %v not heavier than tuck %v", full, tuck)
+	}
+	pull := planning.SetLoad(k, "pull-up", 75)
+	if pull["biceps_distal/BA"] == 0 || pull["biceps_distal/SA"] != 0 {
+		t.Errorf("pull-up load %v", pull)
+	}
+	for a, u := range full {
+		if u > 1+1e-9 {
+			t.Errorf("%s: %g units, a set is at most 1", a, u)
+		}
+	}
+}
+
+// INJ-01/INJ-02: urgencies and actions of the red flags (research 05 §9).
+func TestRedFlags(t *testing.T) {
+	k := kb(t)
+	for _, c := range []struct {
+		region  string
+		answers map[string]bool
+		minor   bool
+		urgency string
+		stop    bool
+		lock    bool
+		rtt0    bool
+	}{
+		{"elbow_inner", map[string]bool{"RF-10": true}, false, planning.UrgencyNow, true, true, false},
+		{"elbow_inner", map[string]bool{"RF-01": true}, false, planning.UrgencySoon, false, true, false},
+		{"elbow_inner", map[string]bool{"RF-04": true}, false, planning.UrgencyAdvise, false, false, true},
+		{"elbow_inner", map[string]bool{"RF-05": true, "RF-05-displaced": true}, false, planning.UrgencyNow, true, true, false},
+		{"lower_back", map[string]bool{"RF-08": true}, false, planning.UrgencyNow, true, true, false},
+		// Region-specific flags are not asked elsewhere, so they have no effect.
+		{"elbow_inner", map[string]bool{"RF-08": true}, false, "", false, false, false},
+		{"wrist_back_extension", map[string]bool{"RF-12": true}, false, "", false, false, false},
+		{"wrist_back_extension", map[string]bool{"RF-12": true}, true, planning.UrgencyAdvise, false, false, true},
+		{"elbow_inner", nil, false, "", false, false, false},
+	} {
+		got := k.EvaluateRedFlags(c.region, c.answers, c.minor)
+		if got.Urgency != c.urgency || got.Stop != c.stop || got.Lock != c.lock || got.RTT0 != c.rtt0 {
+			t.Errorf("%s %v minor=%v: %+v", c.region, c.answers, c.minor, got)
+		}
+		for _, r := range got.Reasons {
+			if r.Region != c.region {
+				t.Errorf("red-flag reason without region mark (EXPL-07): %+v", r)
+			}
+		}
+	}
+	// Every region asks RF-01 … RF-07 and RF-10 (KB-10).
+	for _, region := range []string{"shoulder_front", "knee", "other", "chest"} {
+		ids := map[string]bool{}
+		for _, q := range k.RedFlags(region, false) {
+			ids[q.ID] = true
+		}
+		for _, id := range []string{"RF-01", "RF-02", "RF-03", "RF-04", "RF-05", "RF-06", "RF-07", "RF-10"} {
+			if !ids[id] {
+				t.Errorf("%s does not ask %s", region, id)
+			}
+		}
+	}
+}
+
+// GOAL-05: the realism check sums the PAR-A-45 bands; the date never
+// changes the plan.
+func TestRealism(t *testing.T) {
+	k := kb(t)
+	date := monday.AddDate(0, 0, 8*7)
+	s := planning.Snapshot{Capacities: map[string]planning.Estimate{}, Unlocked: map[string]bool{}}
+	r, ok := k.RealismFor(s, planning.Goal{Skill: "planche", TargetLevel: "tuck", Priority: 1, TargetDate: &date}, monday)
+	if !ok {
+		t.Fatal("no realism result")
+	}
+	// Tuck is OG 5 from 0: four steps ≤ 4 (2–8 weeks) and one of 5–8 (4–13).
+	if r.LowerWeeks != 12 || r.ShownFrom != 28.5 || r.ShownTo != 45 || !r.Unrealistic {
+		t.Errorf("realism %+v", r)
+	}
+	if !strings.Contains(r.Reason.Text, "Erfahrungswerte") || !strings.Contains(r.Reason.Text, "keine Prognose") {
+		t.Errorf("realism text without the experience-value label: %q", r.Reason.Text)
+	}
+}
+
+// KB-01 … KB-13: the validation finds each kind of defect in otherwise
+// valid files.
+func TestKnowledgeBaseValidation(t *testing.T) {
+	files, issues, err := content.ReadTraining("../../../content")
+	if err != nil || content.HasErrors(issues, false) {
+		t.Fatalf("reading the knowledge base: %v %v", err, issues)
+	}
+	if _, iss := planning.Build(files); planning.HasErrors(iss, false) {
+		t.Fatalf("the repository knowledge base has errors: %v", iss)
+	}
+	for _, c := range []struct {
+		check  string
+		mutate func(f *planning.Files)
+	}{
+		{"KB-01", func(f *planning.Files) { f.Manifest.RulesetVersion = "" }},
+		{"KB-02", func(f *planning.Files) { f.Parameters[0].Sources = append(f.Parameters[0].Sources, "Z-999") }},
+		{"KB-02", func(f *planning.Files) { f.Skills[0].Rungs = append(f.Skills[0].Rungs, "no-such-exercise") }},
+		{"KB-03", func(f *planning.Files) { f.Parameters = drop(f.Parameters, "PAR-D-09") }},
+		{"KB-03", func(f *planning.Files) {
+			f.Rules = dropRule(f.Rules, "LOAD-02")
+		}},
+		{"KB-04", func(f *planning.Files) {
+			// pull-up/strict-5 ⇄ hang-foundation/arch-hang
+			for i := range f.Skills {
+				if f.Skills[i].Slug == "hang-foundation" {
+					f.Skills[i].Levels[0].Prerequisites = []string{"pull-up/strict-5"}
+				}
+			}
+		}},
+		{"KB-05", func(f *planning.Files) {
+			for i := range f.Skills {
+				if f.Skills[i].Slug == "planche" {
+					r := f.Skills[i].Rungs
+					r[1], r[2] = r[2], r[1]
+				}
+			}
+		}},
+		{"KB-06", func(f *planning.Files) { delete(f.Body.Matrix[0].Cells, "front_lever") }},
+		{"KB-07", func(f *planning.Files) { f.Exercises[0].LoadFamily = "" }},
+		{"KB-08", func(f *planning.Files) { f.Skills[1].Levels[0].Exercise = "planche" }},
+		{"KB-09", func(f *planning.Files) { f.Sessions.Templates = f.Sessions.Templates[1:] }},
+		{"KB-10", func(f *planning.Files) { f.Body.RedFlags[0].Regions = []string{"elbow_inner"} }},
+		{"KB-12", func(f *planning.Files) { f.Rules[0].Text += " Das heilt deine Sehne." }},
+	} {
+		f := fresh(t)
+		c.mutate(&f)
+		_, iss := planning.Build(f)
+		found := false
+		for _, i := range iss {
+			if i.Check == c.check && !i.Warn {
+				found = true
+			}
+		}
+		if !found {
+			t.Errorf("%s not reported: %v", c.check, iss)
+		}
+	}
+}
+
+func drop(ps []planning.Param, id string) []planning.Param {
+	var out []planning.Param
+	for _, p := range ps {
+		if p.ID != id {
+			out = append(out, p)
+		}
+	}
+	return out
+}
+
+func dropRule(rs []planning.Rule, id string) []planning.Rule {
+	var out []planning.Rule
+	for _, r := range rs {
+		if r.ID != id {
+			out = append(out, r)
+		}
+	}
+	return out
+}
+
+// fresh re-reads the files, which is the simplest deep copy.
+func fresh(t *testing.T) planning.Files {
+	t.Helper()
+	f, _, err := content.ReadTraining("../../../content")
+	if err != nil {
+		t.Fatal(err)
+	}
+	return f
+}
+
+func BenchmarkGenerate(b *testing.B) {
+	k := kb(b)
+	s, _, err := planning.Start(k, persona2(), now)
+	if err != nil {
+		b.Fatal(err)
+	}
+	b.ResetTimer()
+	for range b.N {
+		if _, err := planning.Generate(k, s, now, monday); err != nil {
+			b.Fatal(err)
+		}
+	}
+}
+
+func BenchmarkBuild(b *testing.B) {
+	files, _, err := content.ReadTraining("../../../content")
+	if err != nil {
+		b.Fatal(err)
+	}
+	b.ResetTimer()
+	for range b.N {
+		planning.Build(files)
+	}
+}
+
+// benchHistory is persona 2 after twelve simulated weeks.
+func benchHistory(b *testing.B) (*planning.Knowledge, planning.Snapshot, planning.LoggedSession) {
+	k := kb(b)
+	s, _ := start(b, k, persona2())
+	a := athleteFor("2-advanced-gym-planche-front-lever")
+	weeks, s := simulate(b, k, s, a, 12, nil)
+	last := weeks[len(weeks)-1].plan
+	sess := a.perform(k, last.Sessions[0], "bench")
+	sess.Date = monday.AddDate(0, 0, 7*12)
+	return k, s, sess
+}
+
+func BenchmarkGenerateWithHistory(b *testing.B) {
+	k, s, _ := benchHistory(b)
+	wk := monday.AddDate(0, 0, 7*12)
+	b.ResetTimer()
+	for range b.N {
+		if _, err := planning.Generate(k, s, wk.Add(7*time.Hour), wk); err != nil {
+			b.Fatal(err)
+		}
+	}
+}
+
+func BenchmarkAdapt(b *testing.B) {
+	k, s, sess := benchHistory(b)
+	b.ResetTimer()
+	for range b.N {
+		if _, _, err := planning.Adapt(k, s, planning.Event{Kind: planning.EventSession, At: sess.Date.Add(20 * time.Hour), Session: &sess}); err != nil {
+			b.Fatal(err)
+		}
+	}
+}

@@ -128,7 +128,7 @@ var personas = []persona{
 
 // start runs the onboarding; persona 6 answers its clarification questions
 // with «no», as the spec scenario expects.
-func start(t *testing.T, k *planning.Knowledge, a planning.Answers) (planning.Snapshot, planning.OnboardingResult) {
+func start(t testing.TB, k *planning.Knowledge, a planning.Answers) (planning.Snapshot, planning.OnboardingResult) {
 	t.Helper()
 	s, res, err := planning.Start(k, a, now)
 	if err != nil {
