@@ -179,6 +179,72 @@ func (s *Store) StartSession(ctx context.Context, userID uuid.UUID, in service.S
 	return in.SessionID, true, nil
 }
 
+// DraftSets returns the sets of a started draft. The memory store keeps no
+// log: every set is open until an adjustment removes it.
+func (s *Store) DraftSets(_ context.Context, _ uuid.UUID, sessionID uuid.UUID) ([]planning.DraftState, bool, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	in, ok := s.started[sessionID]
+	if !ok {
+		return nil, false, nil
+	}
+	var out []planning.DraftState
+	for _, b := range in.Draft.Blocks {
+		for _, set := range b.Sets {
+			out = append(out, planning.DraftState{ID: set.ID, BlockID: b.ID, ItemID: set.ItemID, Open: true})
+		}
+	}
+	return out, true, nil
+}
+
+// AdjustSession applies an adjustment to a started draft.
+func (s *Store) AdjustSession(_ context.Context, _ uuid.UUID, sessionID uuid.UUID, a planning.Adjustment, _ time.Time) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	in, ok := s.started[sessionID]
+	if !ok {
+		return service.ErrNotFound
+	}
+	relink := map[string]string{}
+	for _, r := range a.Relink {
+		relink[r.SetID] = r.ItemID
+	}
+	replace := map[string]planning.DraftSet{}
+	for _, r := range a.Replace {
+		replace[r.SetID] = r.Set
+	}
+	var blocks []planning.DraftBlock
+	for _, b := range in.Draft.Blocks {
+		var sets []planning.DraftSet
+		for _, set := range b.Sets {
+			switch {
+			case slices.Contains(a.Remove, set.ID):
+				continue
+			case replace[set.ID].ID != "":
+				r := replace[set.ID]
+				r.Round = set.Round
+				set = r
+			case relink[set.ID] != "":
+				set.ItemID = relink[set.ID]
+			}
+			sets = append(sets, set)
+		}
+		for _, add := range a.Append {
+			if add.BlockID == b.ID {
+				sets = append(sets, add.Set)
+			}
+		}
+		if len(sets) > 0 {
+			b.Sets = sets
+			blocks = append(blocks, b)
+		}
+	}
+	blocks = append(blocks, a.Blocks...)
+	in.Draft.Blocks = blocks
+	s.started[sessionID] = in
+	return nil
+}
+
 // Started returns the start that created a log session.
 func (s *Store) Started(sessionID uuid.UUID) (service.SessionStart, bool) {
 	s.mu.Lock()

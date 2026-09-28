@@ -3,9 +3,11 @@ package planning_test
 import (
 	"context"
 	"errors"
+	"fmt"
 	"io"
 	"log/slog"
 	"reflect"
+	"slices"
 	"testing"
 	"time"
 
@@ -403,5 +405,126 @@ func TestServiceStartPlannedSession(t *testing.T) {
 	var se *planning.StoppedError
 	if !errors.Is(err, planning.ErrTrainingStopped) || !errors.As(err, &se) || se.Rule != domain.RuleStopped {
 		t.Errorf("start while stopped: %v (plan has %d sessions)", err, len(stopped.Sessions))
+	}
+}
+
+// followsPlan checks that a started draft holds exactly the sets the planned
+// session of its day asks for: nothing is performed in the memory store, so
+// every set is still open.
+func followsPlan(t *testing.T, kb *domain.Knowledge, store *memory.Store, logID uuid.UUID, p domain.Plan) []string {
+	t.Helper()
+	sig := func(s domain.DraftSet) string {
+		v := func(p *int) int {
+			if p == nil {
+				return -1
+			}
+			return *p
+		}
+		return fmt.Sprintf("%s %s %s %d %d %.2f %d %d", s.ItemID, s.Exercise, s.Kind, v(s.Reps), v(s.HoldS), s.LoadKg, s.RestS, v(s.RIR))
+	}
+	var want, got, ids []string
+	for _, ps := range p.Sessions {
+		if ps.WorkoutSessionID == logID.String() {
+			for _, b := range domain.Materialize(kb, ps, func() string { return "" }).Blocks {
+				for _, s := range b.Sets {
+					want = append(want, sig(s))
+				}
+			}
+		}
+	}
+	in, _ := store.Started(logID)
+	for _, b := range in.Draft.Blocks {
+		for _, s := range b.Sets {
+			got = append(got, sig(s))
+			ids = append(ids, s.ID)
+		}
+	}
+	slices.Sort(want)
+	slices.Sort(got)
+	if !slices.Equal(want, got) {
+		t.Errorf("the draft does not follow the plan:\n want %v\n got  %v", want, got)
+	}
+	return ids
+}
+
+// A started draft follows every new plan of the week (ADR 0017).
+func TestServiceStartedDraftFollowsThePlan(t *testing.T) {
+	ctx := context.Background()
+	svc, store, clock := newService(t)
+	kb, err := svc.Knowledge.Current(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	user := uuid.New()
+	_, p, err := svc.Onboard(ctx, user, answers())
+	if err != nil {
+		t.Fatal(err)
+	}
+	logID := uuid.New()
+	if _, _, err := svc.StartPlannedSession(ctx, user, uuid.MustParse(p.Sessions[0].ID),
+		planning.SessionStart{SessionID: logID, StartedAt: clock.t, Timezone: "UTC", LocalDate: clock.t, At: clock.t}); err != nil {
+		t.Fatal(err)
+	}
+	started, err := svc.Plan(ctx, user)
+	if err != nil {
+		t.Fatal(err)
+	}
+	before := followsPlan(t, kb, store, logID, started)
+
+	// The same plan again: the sets stay, only their items are new.
+	again, err := svc.Regenerate(ctx, user)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if ids := followsPlan(t, kb, store, logID, again); !slices.Equal(ids, before) {
+		t.Errorf("an unchanged plan rewrote the draft: %v → %v", before, ids)
+	}
+
+	// Goal and profile changes move the plan; the draft follows each of them.
+	changed := false
+	for _, change := range []func() error{
+		func() error {
+			_, _, err := svc.SetGoals(ctx, user, []domain.Goal{{Skill: "planche", TargetLevel: "full", Priority: 1}})
+			return err
+		},
+		func() error {
+			_, err := svc.UpdateProfile(ctx, user, domain.ProfileUpdate{SessionsPerWeek: 2, SessionMinutes: 30,
+				Equipment: []string{"pull_up_bar"}, BodyweightKg: 75})
+			return err
+		},
+		func() error {
+			_, _, err := svc.SetGoals(ctx, user, []domain.Goal{{Skill: "front-lever", TargetLevel: "full", Priority: 1}})
+			return err
+		},
+	} {
+		if err := change(); err != nil {
+			t.Fatal(err)
+		}
+		now, err := svc.Plan(ctx, user)
+		if err != nil {
+			t.Fatal(err)
+		}
+		ids := followsPlan(t, kb, store, logID, now)
+		changed = changed || !slices.Equal(ids, before)
+		before = ids
+	}
+	if !changed {
+		t.Error("no change adjusted the draft; the test exercises nothing")
+	}
+
+	// A stop empties the draft and says so; a retry answers the same.
+	out, err := svc.ReportSymptoms(ctx, user, "sym-1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var adjusted bool
+	for _, c := range out.Changes {
+		adjusted = adjusted || c.Kind == domain.ChangeAdjusted && c.Session == logID.String()
+	}
+	if in, _ := store.Started(logID); !adjusted || len(in.Draft.Blocks) != 0 {
+		t.Errorf("after a stop: adjusted=%v, %d blocks left", adjusted, len(in.Draft.Blocks))
+	}
+	if replay, err := svc.ReportSymptoms(ctx, user, "sym-1"); err != nil || !replay.Replayed || !reflect.DeepEqual(replay.Changes, out.Changes) {
+		t.Errorf("replay: %+v %v", replay, err)
 	}
 }

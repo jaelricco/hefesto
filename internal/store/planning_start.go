@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
@@ -69,6 +70,188 @@ func (t *plannerTx) StartSession(ctx context.Context, userID uuid.UUID, in plann
 		return uuid.Nil, false, fmt.Errorf("marking planned session started: %w", err)
 	}
 	return row.ID, true, nil
+}
+
+// DraftSets returns the live sets of a started draft in log order. A
+// session that is no live draft (completed, abandoned, deleted) does not
+// follow the plan: ok is false.
+func (t *plannerTx) DraftSets(ctx context.Context, userID, sessionID uuid.UUID) ([]domain.DraftState, bool, error) {
+	if err := t.check(userID); err != nil {
+		return nil, false, err
+	}
+	row, err := lockSession(ctx, t.q, userID, sessionID)
+	if errors.Is(err, ErrNotFound) || errors.Is(err, ErrDeleted) {
+		return nil, false, nil
+	}
+	if err != nil {
+		return nil, false, err
+	}
+	if row.Status != training.StatusDraft {
+		return nil, false, nil
+	}
+	rows, err := t.q.ListDraftSets(ctx, dbgen.ListDraftSetsParams{SessionID: sessionID, UserID: userID})
+	if err != nil {
+		return nil, false, fmt.Errorf("reading the draft's sets: %w", err)
+	}
+	out := make([]domain.DraftState, len(rows))
+	for i, r := range rows {
+		out[i] = domain.DraftState{ID: r.ID.String(), BlockID: r.BlockID.String(), ItemID: uuidString(r.PlannedItemID), Open: r.Open}
+	}
+	return out, true, nil
+}
+
+// AdjustSession writes an adjustment into a draft (ADR 0017). Removed and
+// replaced sets become tombstones, as a deletion by the athlete would; a
+// replacement takes the old set's place. A block left without sets goes
+// too. The rows carry no device: the server wrote them.
+func (t *plannerTx) AdjustSession(ctx context.Context, userID, sessionID uuid.UUID, a domain.Adjustment, at time.Time) error {
+	if err := t.check(userID); err != nil {
+		return err
+	}
+	q := t.q
+	if _, err := lockSession(ctx, q, userID, sessionID); err != nil {
+		return fmt.Errorf("locking the draft: %w", err)
+	}
+	var added []domain.DraftSet
+	for _, r := range a.Replace {
+		added = append(added, r.Set)
+	}
+	for _, ap := range a.Append {
+		added = append(added, ap.Set)
+	}
+	for _, b := range a.Blocks {
+		added = append(added, b.Sets...)
+	}
+	exercises, err := exerciseIDs(ctx, q, domain.SessionDraft{Blocks: []domain.DraftBlock{{Sets: added}}})
+	if err != nil {
+		return err
+	}
+	w := Writer{UserID: userID, At: at}
+	emptied := map[uuid.UUID]bool{}
+
+	for _, r := range a.Relink {
+		id, item, err := parseTwo(r.SetID, r.ItemID)
+		if err != nil {
+			return err
+		}
+		if err := q.RelinkPlannedSet(ctx, dbgen.RelinkPlannedSetParams{ID: id, UserID: userID, SessionID: sessionID, PlannedItemID: &item}); err != nil {
+			return fmt.Errorf("relinking set %s: %w", id, err)
+		}
+	}
+	for _, sid := range a.Remove {
+		prev, ok, err := openSet(ctx, q, userID, sessionID, sid)
+		if err != nil {
+			return err
+		}
+		if !ok {
+			continue
+		}
+		if err := removeSet(ctx, q, w, sessionID, prev.ID); err != nil {
+			return err
+		}
+		emptied[prev.BlockID] = true
+	}
+	for _, r := range a.Replace {
+		prev, ok, err := openSet(ctx, q, userID, sessionID, r.SetID)
+		if err != nil {
+			return err
+		}
+		if !ok {
+			continue
+		}
+		if err := removeSet(ctx, q, w, sessionID, prev.ID); err != nil {
+			return err
+		}
+		set := r.Set
+		set.Round = intPtr16(prev.RoundIndex)
+		if err := writeDraftSet(ctx, q, w, sessionID, prev.BlockID, int(prev.OrderIndex), set, exercises[set.Exercise]); err != nil {
+			return fmt.Errorf("replacing set %s: %w", prev.ID, err)
+		}
+	}
+	for _, ap := range a.Append {
+		block, err := uuid.Parse(ap.BlockID)
+		if err != nil {
+			return fmt.Errorf("block id %q: %w", ap.BlockID, err)
+		}
+		order, err := q.NextSetOrder(ctx, dbgen.NextSetOrderParams{BlockID: block, UserID: userID})
+		if err != nil {
+			return fmt.Errorf("numbering sets: %w", err)
+		}
+		if err := writeDraftSet(ctx, q, w, sessionID, block, int(order), ap.Set, exercises[ap.Set.Exercise]); err != nil {
+			return fmt.Errorf("appending a set: %w", err)
+		}
+	}
+	for _, b := range a.Blocks {
+		order, err := q.NextBlockOrder(ctx, dbgen.NextBlockOrderParams{SessionID: sessionID, UserID: userID})
+		if err != nil {
+			return fmt.Errorf("numbering blocks: %w", err)
+		}
+		if err := writeDraftBlock(ctx, q, w, sessionID, int(order), b, exercises); err != nil {
+			return fmt.Errorf("adding a block: %w", err)
+		}
+	}
+	for block := range emptied {
+		n, err := q.CountLiveSetsOfBlock(ctx, dbgen.CountLiveSetsOfBlockParams{BlockID: block, UserID: userID})
+		if err != nil {
+			return fmt.Errorf("counting sets: %w", err)
+		}
+		if n > 0 {
+			continue
+		}
+		if err := q.SoftDeleteBlocksOfSession(ctx, dbgen.SoftDeleteBlocksOfSessionParams{
+			UpdatedAt: w.At, SessionID: sessionID, UserID: userID, OnlyID: &block,
+		}); err != nil {
+			return fmt.Errorf("removing an empty block: %w", err)
+		}
+	}
+	return nil
+}
+
+// openSet reads a set the adjustment changes. A set that is no longer an
+// open planned set of the session is left alone: ok is false. The session
+// lock makes that impossible within one adjustment; the check keeps a
+// performed set safe regardless.
+func openSet(ctx context.Context, q *dbgen.Queries, userID, sessionID uuid.UUID, id string) (dbgen.SetEntry, bool, error) {
+	sid, err := uuid.Parse(id)
+	if err != nil {
+		return dbgen.SetEntry{}, false, fmt.Errorf("set id %q: %w", id, err)
+	}
+	e, err := q.GetSetEntry(ctx, dbgen.GetSetEntryParams{ID: sid, UserID: userID})
+	if errors.Is(err, pgx.ErrNoRows) {
+		return e, false, nil
+	}
+	if err != nil {
+		return e, false, fmt.Errorf("reading set %s: %w", sid, err)
+	}
+	ok := e.SessionID == sessionID && e.DeletedAt == nil && e.IsPlanned && e.CompletedAt == nil
+	return e, ok, nil
+}
+
+// removeSet tombstones a set and its elements, as DeleteSet does.
+func removeSet(ctx context.Context, q *dbgen.Queries, w Writer, sessionID, setID uuid.UUID) error {
+	if err := q.SoftDeleteSetElements(ctx, dbgen.SoftDeleteSetElementsParams{
+		UpdatedAt: w.At, SessionID: sessionID, UserID: w.UserID, SetEntryID: &setID, Keep: []uuid.UUID{},
+	}); err != nil {
+		return fmt.Errorf("removing the elements of set %s: %w", setID, err)
+	}
+	if err := q.SoftDeleteSetEntries(ctx, dbgen.SoftDeleteSetEntriesParams{
+		UpdatedAt: w.At, SessionID: sessionID, UserID: w.UserID, OnlyID: &setID,
+	}); err != nil {
+		return fmt.Errorf("removing set %s: %w", setID, err)
+	}
+	return nil
+}
+
+func parseTwo(a, b string) (uuid.UUID, uuid.UUID, error) {
+	x, err := uuid.Parse(a)
+	if err != nil {
+		return uuid.Nil, uuid.Nil, fmt.Errorf("id %q: %w", a, err)
+	}
+	y, err := uuid.Parse(b)
+	if err != nil {
+		return uuid.Nil, uuid.Nil, fmt.Errorf("id %q: %w", b, err)
+	}
+	return x, y, nil
 }
 
 // exerciseIDs resolves the draft's exercise slugs to the log's catalogue.

@@ -319,6 +319,36 @@ INSERT INTO set_entries (
     @rest_after_planned_s, @rir, @planned_item_id, @client_id, @updated_at
 );
 
+-- The live sets of a started draft in log order, for the reconciliation
+-- with a new plan (ADR 0017). Open is a planned set not yet performed.
+-- name: ListDraftSets :many
+SELECT se.id, se.block_id, se.planned_item_id,
+       (se.is_planned AND se.completed_at IS NULL)::boolean AS open
+FROM set_entries se
+JOIN session_blocks b ON b.id = se.block_id AND b.user_id = se.user_id
+WHERE se.session_id = @session_id AND se.user_id = @user_id
+  AND se.deleted_at IS NULL AND b.deleted_at IS NULL
+ORDER BY b.order_index, se.order_index;
+
+-- An open planned set follows its item into a new plan. updated_at stays:
+-- it is the athlete's clock, and the set's values did not change.
+-- name: RelinkPlannedSet :exec
+UPDATE set_entries SET planned_item_id = @planned_item_id
+WHERE id = @id AND user_id = @user_id AND session_id = @session_id
+  AND deleted_at IS NULL AND is_planned AND completed_at IS NULL;
+
+-- name: NextSetOrder :one
+SELECT COALESCE(MAX(order_index) + 1, 0)::int FROM set_entries
+WHERE block_id = @block_id AND user_id = @user_id AND deleted_at IS NULL;
+
+-- name: NextBlockOrder :one
+SELECT COALESCE(MAX(order_index) + 1, 0)::int FROM session_blocks
+WHERE session_id = @session_id AND user_id = @user_id AND deleted_at IS NULL;
+
+-- name: CountLiveSetsOfBlock :one
+SELECT count(*)::int FROM set_entries
+WHERE block_id = @block_id AND user_id = @user_id AND deleted_at IS NULL;
+
 -- name: GetActivePlannedSession :one
 SELECT p.id AS plan_id, p.payload, s.order_index
 FROM planned_sessions s

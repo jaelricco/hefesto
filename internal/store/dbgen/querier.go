@@ -29,6 +29,7 @@ type Querier interface {
 	ClearFreezes(ctx context.Context, userID uuid.UUID) error
 	CompleteIdempotencyKey(ctx context.Context, arg CompleteIdempotencyKeyParams) error
 	CompletedSessionsOnDay(ctx context.Context, arg CompletedSessionsOnDayParams) (int32, error)
+	CountLiveSetsOfBlock(ctx context.Context, arg CountLiveSetsOfBlockParams) (int32, error)
 	// Days that count on their own merit. Freeze days are not included: which
 	// days a freeze bridges is recomputed from these every time.
 	CountedDays(ctx context.Context, userID uuid.UUID) ([]pgtype.Date, error)
@@ -149,6 +150,9 @@ type Querier interface {
 	// -------------------------------------------------------------- capacities
 	ListCapacityEstimates(ctx context.Context, userID uuid.UUID) ([]UserCapacityEstimate, error)
 	ListDecisions(ctx context.Context, arg ListDecisionsParams) ([]PlanDecision, error)
+	// The live sets of a started draft in log order, for the reconciliation
+	// with a new plan (ADR 0017). Open is a planned set not yet performed.
+	ListDraftSets(ctx context.Context, arg ListDraftSetsParams) ([]ListDraftSetsRow, error)
 	ListElementMedia(ctx context.Context, arg ListElementMediaParams) ([]ListElementMediaRow, error)
 	ListElementsOfSet(ctx context.Context, arg ListElementsOfSetParams) ([]SetElement, error)
 	// Exercises and bands as the API reads them.
@@ -202,9 +206,11 @@ type Querier interface {
 	MarkSessionCompleted(ctx context.Context, arg MarkSessionCompletedParams) (WorkoutSession, error)
 	// --------------------------------------------------------------- streaks
 	MarkTrainingDay(ctx context.Context, arg MarkTrainingDayParams) error
+	NextBlockOrder(ctx context.Context, arg NextBlockOrderParams) (int32, error)
 	NextConstraintPosition(ctx context.Context, userID uuid.UUID) (int32, error)
 	NextPainPosition(ctx context.Context, userID uuid.UUID) (int32, error)
 	NextPlannerSessionPosition(ctx context.Context, userID uuid.UUID) (int32, error)
+	NextSetOrder(ctx context.Context, arg NextSetOrderParams) (int32, error)
 	// ----------------------------------------------------------------- history
 	// Every performed element of the named exercises, from completed sessions.
 	// Planned sets, deleted rows and abandoned or draft sessions are not evidence.
@@ -214,6 +220,9 @@ type Querier interface {
 	ReapUser(ctx context.Context, arg ReapUserParams) (int64, error)
 	// A failed attempt gives the key back, so the client can retry with it.
 	ReleaseIdempotencyKey(ctx context.Context, arg ReleaseIdempotencyKeyParams) error
+	// An open planned set follows its item into a new plan. updated_at stays:
+	// it is the athlete's clock, and the set's values did not change.
+	RelinkPlannedSet(ctx context.Context, arg RelinkPlannedSetParams) error
 	RequestUserDeletion(ctx context.Context, id uuid.UUID) (User, error)
 	// Removal is soft: rows gone from content are retired, never deleted,
 	// because logged set elements reference them.

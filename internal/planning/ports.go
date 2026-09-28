@@ -59,6 +59,13 @@ type SessionLog interface {
 	// returns that session and created false. ErrNotFound when the planned
 	// session is in no active plan.
 	StartSession(ctx context.Context, userID uuid.UUID, in SessionStart) (id uuid.UUID, created bool, err error)
+	// DraftSets returns the live sets of a log session in log order, and
+	// false when the session is no live draft: a completed, abandoned or
+	// deleted session does not follow the plan.
+	DraftSets(ctx context.Context, userID, sessionID uuid.UUID) ([]planning.DraftState, bool, error)
+	// AdjustSession writes an adjustment into a draft (ADR 0017). at is the
+	// updated_at of the rows it writes.
+	AdjustSession(ctx context.Context, userID, sessionID uuid.UUID, a planning.Adjustment, at time.Time) error
 }
 
 // SessionStart is a planned session started in the log.

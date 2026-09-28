@@ -21,6 +21,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	domain "github.com/jaelricco/hefesto/internal/domain/planning"
+	"github.com/jaelricco/hefesto/internal/domain/training"
 	"github.com/jaelricco/hefesto/internal/planning"
 	"github.com/jaelricco/hefesto/internal/planning/memory"
 	"github.com/jaelricco/hefesto/internal/store"
@@ -884,5 +885,176 @@ func TestPlannerStartsAPlannedSession(t *testing.T) {
 	}
 	if n := count(t, db, `SELECT count(*) FROM workout_sessions WHERE user_id = $1 AND deleted_at IS NULL`, user); n != 1 {
 		t.Errorf("%d live log sessions after a failed start, want 1", n)
+	}
+}
+
+// openSets reads the open planned sets of a log session: set ID, item,
+// exercise slug and targets.
+type openSet struct {
+	id, item, exercise string
+	reps, rest, rir    *int
+	hold               *float64
+	load               float64
+	updated            time.Time
+}
+
+func openSets(t *testing.T, db *pgxpool.Pool, session uuid.UUID) []openSet {
+	t.Helper()
+	rows, err := db.Query(context.Background(), `
+		SELECT se.id::text, se.planned_item_id::text, e.slug, el.reps, se.rest_after_planned_s, se.rir::int,
+		       el.hold_seconds::float8, el.load_kg::float8, se.updated_at
+		FROM set_entries se
+		JOIN set_elements el ON el.set_entry_id = se.id AND el.deleted_at IS NULL
+		JOIN exercises e ON e.id = el.exercise_id
+		WHERE se.session_id = $1 AND se.deleted_at IS NULL AND se.is_planned AND se.completed_at IS NULL
+		ORDER BY se.id`, session)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer rows.Close()
+	var out []openSet
+	for rows.Next() {
+		var s openSet
+		if err := rows.Scan(&s.id, &s.item, &s.exercise, &s.reps, &s.rest, &s.rir, &s.hold, &s.load, &s.updated); err != nil {
+			t.Fatal(err)
+		}
+		out = append(out, s)
+	}
+	return out
+}
+
+// followsSession checks that every open set of a draft names an item of the
+// planned session and asks for that item's target, and no item has more
+// open sets than it plans.
+func followsSession(t *testing.T, sets []openSet, ps domain.PlannedSession) {
+	t.Helper()
+	items := map[string]domain.Item{}
+	for _, b := range ps.Blocks {
+		for _, it := range b.Items {
+			items[it.ID] = it
+		}
+	}
+	per := map[string]int{}
+	for _, s := range sets {
+		it, ok := items[s.item]
+		if !ok {
+			t.Errorf("open set %s names item %s, not of the session", s.id, s.item)
+			continue
+		}
+		per[s.item]++
+		hold := it.HoldS > 0 && s.hold != nil && *s.hold == float64(it.HoldS)
+		reps := it.Reps > 0 && s.reps != nil && *s.reps == it.Reps
+		target := hold || reps
+		if s.exercise != it.Exercise || !target || s.load != it.LoadKg || s.rest == nil || *s.rest != it.RestS {
+			t.Errorf("open set %+v does not ask for item %+v", s, it)
+		}
+	}
+	for id, n := range per {
+		if n > items[id].Sets {
+			t.Errorf("item %s has %d open sets, plans %d", id, n, items[id].Sets)
+		}
+	}
+}
+
+// A started draft follows every new plan of the week (ADR 0017): open
+// planned sets change, a performed set never does.
+func TestPlannerStartedDraftFollowsThePlan(t *testing.T) {
+	db := pgtest.New(t)
+	seed(t, db, contentDir(t))
+	kb := planning.LoadContentKnowledge(filepath.Join(pgtest.RepoRoot(), "content"), false,
+		slog.New(slog.NewTextHandler(io.Discard, nil)))
+	clk := &clock{t: monday.Add(7 * time.Hour)}
+	svc := &planning.Service{Knowledge: kb, Store: store.NewPlanner(db), Clock: clk}
+	logs := store.New(db)
+	ctx := context.Background()
+	user := plannerUser(t, db)
+	if _, _, err := svc.Onboard(ctx, user, plannerAnswers("advanced")); err != nil {
+		t.Fatal(err)
+	}
+	plan, err := svc.Plan(ctx, user)
+	if err != nil {
+		t.Fatal(err)
+	}
+	session := id()
+	if _, _, err := svc.StartPlannedSession(ctx, user, uuid.MustParse(plan.Sessions[0].ID),
+		planning.SessionStart{SessionID: session, StartedAt: clk.t, Timezone: "UTC", LocalDate: monday, At: clk.t}); err != nil {
+		t.Fatal(err)
+	}
+
+	// The athlete performs the first set.
+	draft, err := logs.GetSession(ctx, user, session)
+	if err != nil {
+		t.Fatal(err)
+	}
+	done := draft.Blocks[0].Sets[0]
+	done.IsPlanned = false
+	performed := clk.t.Add(5 * time.Minute)
+	done.CompletedAt = &performed
+	if err := training.ValidateSet(&done); err != nil {
+		t.Fatal(err)
+	}
+	if _, _, err := logs.PutSet(ctx, store.Writer{UserID: user, At: performed}, session, done); err != nil {
+		t.Fatal(err)
+	}
+	before := openSets(t, db, session)
+
+	// The same plan again: the open sets stay as they are, with the new
+	// plan's items and the athlete's clock.
+	regen, err := svc.Regenerate(ctx, user)
+	if err != nil {
+		t.Fatal(err)
+	}
+	after := openSets(t, db, session)
+	if len(after) != len(before) {
+		t.Fatalf("%d open sets after an unchanged plan, %d before", len(after), len(before))
+	}
+	for i := range after {
+		if after[i].id != before[i].id || !after[i].updated.Equal(before[i].updated) {
+			t.Errorf("an unchanged plan rewrote set %s", before[i].id)
+		}
+	}
+	followsSession(t, after, regen.Sessions[0])
+
+	// A new goal changes the day's session; the draft follows it.
+	date := clk.t.AddDate(0, 5, 0)
+	if _, _, err := svc.SetGoals(ctx, user, []domain.Goal{{Skill: "front-lever", TargetLevel: "full", Priority: 1, TargetDate: &date}}); err != nil {
+		t.Fatal(err)
+	}
+	now, err := svc.Plan(ctx, user)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if now.Sessions[0].WorkoutSessionID != session.String() {
+		t.Fatalf("the new plan lost the start: %q", now.Sessions[0].WorkoutSessionID)
+	}
+	changed := openSets(t, db, session)
+	followsSession(t, changed, now.Sessions[0])
+	if n := count(t, db, `SELECT count(*) FROM set_entries WHERE session_id = $1 AND deleted_at IS NOT NULL`, session); n == 0 {
+		t.Error("a new goal changed nothing in the draft")
+	}
+
+	// Symptoms stop training: every open set goes, the performed one stays,
+	// and the event says the session changed.
+	out, err := svc.ReportSymptoms(ctx, user, "sym-1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(openSets(t, db, session)) != 0 {
+		t.Error("open sets left after a stop")
+	}
+	kept, err := logs.GetSession(ctx, user, session)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(kept.Blocks) != 1 || len(kept.Blocks[0].Sets) != 1 || kept.Blocks[0].Sets[0].ID != done.ID ||
+		kept.Blocks[0].Sets[0].CompletedAt == nil {
+		t.Errorf("after the stop the draft holds %+v, want only the performed set", kept.Blocks)
+	}
+	adjusted := false
+	for _, c := range out.Changes {
+		adjusted = adjusted || c.Kind == domain.ChangeAdjusted && c.Session == session.String()
+	}
+	if !adjusted {
+		t.Errorf("the stop does not say the session changed: %+v", out.Changes)
 	}
 }

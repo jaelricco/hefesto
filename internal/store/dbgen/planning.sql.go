@@ -27,6 +27,23 @@ func (q *Queries) ClearConstraint(ctx context.Context, arg ClearConstraintParams
 	return err
 }
 
+const countLiveSetsOfBlock = `-- name: CountLiveSetsOfBlock :one
+SELECT count(*)::int FROM set_entries
+WHERE block_id = $1 AND user_id = $2 AND deleted_at IS NULL
+`
+
+type CountLiveSetsOfBlockParams struct {
+	BlockID uuid.UUID
+	UserID  uuid.UUID
+}
+
+func (q *Queries) CountLiveSetsOfBlock(ctx context.Context, arg CountLiveSetsOfBlockParams) (int32, error) {
+	row := q.db.QueryRow(ctx, countLiveSetsOfBlock, arg.BlockID, arg.UserID)
+	var column_1 int32
+	err := row.Scan(&column_1)
+	return column_1, err
+}
+
 const deleteCapacityEstimate = `-- name: DeleteCapacityEstimate :exec
 DELETE FROM user_capacity_estimates WHERE user_id = $1 AND exercise = $2 AND assistance = $3
 `
@@ -795,6 +812,55 @@ func (q *Queries) ListDecisions(ctx context.Context, arg ListDecisionsParams) ([
 	return items, nil
 }
 
+const listDraftSets = `-- name: ListDraftSets :many
+SELECT se.id, se.block_id, se.planned_item_id,
+       (se.is_planned AND se.completed_at IS NULL)::boolean AS open
+FROM set_entries se
+JOIN session_blocks b ON b.id = se.block_id AND b.user_id = se.user_id
+WHERE se.session_id = $1 AND se.user_id = $2
+  AND se.deleted_at IS NULL AND b.deleted_at IS NULL
+ORDER BY b.order_index, se.order_index
+`
+
+type ListDraftSetsParams struct {
+	SessionID uuid.UUID
+	UserID    uuid.UUID
+}
+
+type ListDraftSetsRow struct {
+	ID            uuid.UUID
+	BlockID       uuid.UUID
+	PlannedItemID *uuid.UUID
+	Open          bool
+}
+
+// The live sets of a started draft in log order, for the reconciliation
+// with a new plan (ADR 0017). Open is a planned set not yet performed.
+func (q *Queries) ListDraftSets(ctx context.Context, arg ListDraftSetsParams) ([]ListDraftSetsRow, error) {
+	rows, err := q.db.Query(ctx, listDraftSets, arg.SessionID, arg.UserID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []ListDraftSetsRow{}
+	for rows.Next() {
+		var i ListDraftSetsRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.BlockID,
+			&i.PlannedItemID,
+			&i.Open,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listLadderStates = `-- name: ListLadderStates :many
 
 SELECT user_id, skill, rung, status, since, exposures, claimed, cap_rung, probe_offer, rep_target, load_kg, ecc_s, last_up, cap_to, cap_until, updated_at FROM user_ladder_states WHERE user_id = $1 ORDER BY skill
@@ -1107,6 +1173,23 @@ func (q *Queries) MarkPlannedSessionStarted(ctx context.Context, arg MarkPlanned
 	return err
 }
 
+const nextBlockOrder = `-- name: NextBlockOrder :one
+SELECT COALESCE(MAX(order_index) + 1, 0)::int FROM session_blocks
+WHERE session_id = $1 AND user_id = $2 AND deleted_at IS NULL
+`
+
+type NextBlockOrderParams struct {
+	SessionID uuid.UUID
+	UserID    uuid.UUID
+}
+
+func (q *Queries) NextBlockOrder(ctx context.Context, arg NextBlockOrderParams) (int32, error) {
+	row := q.db.QueryRow(ctx, nextBlockOrder, arg.SessionID, arg.UserID)
+	var column_1 int32
+	err := row.Scan(&column_1)
+	return column_1, err
+}
+
 const nextConstraintPosition = `-- name: NextConstraintPosition :one
 SELECT coalesce(max(position) + 1, 0)::int AS next FROM planning_constraints WHERE user_id = $1
 `
@@ -1138,6 +1221,48 @@ func (q *Queries) NextPlannerSessionPosition(ctx context.Context, userID uuid.UU
 	var next int32
 	err := row.Scan(&next)
 	return next, err
+}
+
+const nextSetOrder = `-- name: NextSetOrder :one
+SELECT COALESCE(MAX(order_index) + 1, 0)::int FROM set_entries
+WHERE block_id = $1 AND user_id = $2 AND deleted_at IS NULL
+`
+
+type NextSetOrderParams struct {
+	BlockID uuid.UUID
+	UserID  uuid.UUID
+}
+
+func (q *Queries) NextSetOrder(ctx context.Context, arg NextSetOrderParams) (int32, error) {
+	row := q.db.QueryRow(ctx, nextSetOrder, arg.BlockID, arg.UserID)
+	var column_1 int32
+	err := row.Scan(&column_1)
+	return column_1, err
+}
+
+const relinkPlannedSet = `-- name: RelinkPlannedSet :exec
+UPDATE set_entries SET planned_item_id = $1
+WHERE id = $2 AND user_id = $3 AND session_id = $4
+  AND deleted_at IS NULL AND is_planned AND completed_at IS NULL
+`
+
+type RelinkPlannedSetParams struct {
+	PlannedItemID *uuid.UUID
+	ID            uuid.UUID
+	UserID        uuid.UUID
+	SessionID     uuid.UUID
+}
+
+// An open planned set follows its item into a new plan. updated_at stays:
+// it is the athlete's clock, and the set's values did not change.
+func (q *Queries) RelinkPlannedSet(ctx context.Context, arg RelinkPlannedSetParams) error {
+	_, err := q.db.Exec(ctx, relinkPlannedSet,
+		arg.PlannedItemID,
+		arg.ID,
+		arg.UserID,
+		arg.SessionID,
+	)
+	return err
 }
 
 const supersedeActivePlan = `-- name: SupersedeActivePlan :exec

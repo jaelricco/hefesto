@@ -69,7 +69,7 @@ func (s *Service) Onboard(ctx context.Context, userID uuid.UUID, a planning.Answ
 		if err := st.Snapshots.SaveSnapshot(ctx, userID, snap); err != nil {
 			return fmt.Errorf("onboarding: saving snapshot: %w", err)
 		}
-		plan, err := s.regenerate(ctx, st, kb, userID, snap)
+		plan, _, err := s.regenerate(ctx, st, kb, userID, snap)
 		p = &plan
 		return err
 	})
@@ -97,7 +97,7 @@ func (s *Service) Plan(ctx context.Context, userID uuid.UUID) (planning.Plan, er
 			p = stored
 			return nil
 		}
-		p, err = s.regenerate(ctx, st, kb, userID, snap)
+		p, _, err = s.regenerate(ctx, st, kb, userID, snap)
 		return err
 	})
 	return p, err
@@ -138,7 +138,7 @@ func (s *Service) Regenerate(ctx context.Context, userID uuid.UUID) (planning.Pl
 		if err != nil {
 			return err
 		}
-		p, err = s.regenerate(ctx, st, kb, userID, snap)
+		p, _, err = s.regenerate(ctx, st, kb, userID, snap)
 		return err
 	})
 	return p, err
@@ -294,7 +294,7 @@ func (s *Service) save(ctx context.Context, st Stores, kb *planning.Knowledge, u
 	if err := st.Snapshots.SaveSnapshot(ctx, userID, next); err != nil {
 		return fmt.Errorf("saving snapshot: %w", err)
 	}
-	_, err := s.regenerate(ctx, st, kb, userID, next)
+	_, _, err := s.regenerate(ctx, st, kb, userID, next)
 	return err
 }
 
@@ -418,14 +418,19 @@ func (s *Service) applyIn(ctx context.Context, st Stores, userID uuid.UUID, trig
 	if err := st.Snapshots.SaveSnapshot(ctx, userID, next); err != nil {
 		return Outcome{}, fmt.Errorf("%s: saving snapshot: %w", trigger, err)
 	}
-	d := Decision{ID: s.newID(), Trigger: trigger, SourceID: sourceID, At: s.Clock.Now(), Changes: changes}
+	d := Decision{ID: s.newID(), Trigger: trigger, SourceID: sourceID, At: s.Clock.Now()}
+	_, adjusted, err := s.regenerate(ctx, st, kb, userID, next)
+	if err != nil {
+		return Outcome{}, err
+	}
+	// The drafts the new plan adjusted are changes of this event: a retry
+	// answers with them too.
+	changes = append(changes, adjusted...)
+	d.Changes = changes
 	if err := st.Decisions.Record(ctx, userID, d); err != nil {
 		return Outcome{}, fmt.Errorf("%s: recording decisions: %w", trigger, err)
 	}
-	if _, err := s.regenerate(ctx, st, kb, userID, next); err != nil {
-		return Outcome{}, err
-	}
-	return Outcome{Changes: changes}, nil
+	return Outcome{Changes: d.Changes}, nil
 }
 
 func (s *Service) load(ctx context.Context, st Stores, userID uuid.UUID) (*planning.Knowledge, planning.Snapshot, error) {
@@ -443,11 +448,14 @@ func (s *Service) load(ctx context.Context, st Stores, userID uuid.UUID) (*plann
 	return kb, snap, nil
 }
 
-func (s *Service) regenerate(ctx context.Context, st Stores, kb *planning.Knowledge, userID uuid.UUID, snap planning.Snapshot) (planning.Plan, error) {
+// regenerate generates the week's plan anew and stores it. Started sessions
+// keep their log session, and their drafts follow the new plan; the changes
+// say which drafts the athlete sees change (ADR 0017).
+func (s *Service) regenerate(ctx context.Context, st Stores, kb *planning.Knowledge, userID uuid.UUID, snap planning.Snapshot) (planning.Plan, []planning.Change, error) {
 	now := s.Clock.Now()
 	p, err := planning.Generate(kb, snap, now, WeekStart(now))
 	if err != nil {
-		return planning.Plan{}, fmt.Errorf("generating plan: %w", err)
+		return planning.Plan{}, nil, fmt.Errorf("generating plan: %w", err)
 	}
 	p.ID = s.newID().String()
 	for i := range p.Sessions {
@@ -459,17 +467,27 @@ func (s *Service) regenerate(ctx context.Context, st Stores, kb *planning.Knowle
 			}
 		}
 	}
-	if err := s.carryOver(ctx, st, userID, &p); err != nil {
-		return planning.Plan{}, err
+	prev, hadPrev, err := st.Plans.ActivePlan(ctx, userID, p.WeekStart)
+	if err != nil {
+		return planning.Plan{}, nil, fmt.Errorf("loading the plan to replace: %w", err)
+	}
+	if hadPrev {
+		carryOver(prev, &p)
 	}
 	if err := st.Plans.SavePlan(ctx, userID, p); err != nil {
-		return planning.Plan{}, fmt.Errorf("saving plan: %w", err)
+		return planning.Plan{}, nil, fmt.Errorf("saving plan: %w", err)
+	}
+	var changes []planning.Change
+	if hadPrev {
+		if changes, err = s.reconcile(ctx, st, kb, userID, prev, p); err != nil {
+			return planning.Plan{}, nil, err
+		}
 	}
 	if s.Log != nil {
 		s.Log.InfoContext(ctx, "plan generated", "user_id", userID, "week", p.WeekStart.Format(time.DateOnly),
 			"sessions", len(p.Sessions), "ruleset_version", p.RulesetVersion)
 	}
-	return p, nil
+	return p, changes, nil
 }
 
 // carryOver keeps the starts of the plan a new plan replaces: a session of
@@ -477,14 +495,7 @@ func (s *Service) regenerate(ctx context.Context, st Stores, kb *planning.Knowle
 // session. The new plan replaces the whole week; a started day without a
 // session in it keeps its log session, but no planned session shows it
 // (spec §15.4).
-func (s *Service) carryOver(ctx context.Context, st Stores, userID uuid.UUID, p *planning.Plan) error {
-	prev, ok, err := st.Plans.ActivePlan(ctx, userID, p.WeekStart)
-	if err != nil {
-		return fmt.Errorf("loading the plan to replace: %w", err)
-	}
-	if !ok {
-		return nil
-	}
+func carryOver(prev planning.Plan, p *planning.Plan) {
 	for _, old := range prev.Sessions {
 		if old.Status == SessionPlanned || old.WorkoutSessionID == "" {
 			continue
@@ -496,7 +507,60 @@ func (s *Service) carryOver(ctx context.Context, st Stores, userID uuid.UUID, p 
 			}
 		}
 	}
-	return nil
+}
+
+// reconcile lets the draft of every started session follow the new plan
+// (ADR 0017): its open planned sets become what the day's new session asks
+// for, less what is done; without a session on the day, as after a stop,
+// they go. Performed sets never change.
+func (s *Service) reconcile(ctx context.Context, st Stores, kb *planning.Knowledge, userID uuid.UUID, prev, p planning.Plan) ([]planning.Change, error) {
+	var changes []planning.Change
+	for _, old := range prev.Sessions {
+		if old.Status != SessionStarted || old.WorkoutSessionID == "" {
+			continue
+		}
+		logID, err := uuid.Parse(old.WorkoutSessionID)
+		if err != nil {
+			return nil, fmt.Errorf("log session of planned session %s: %w", old.ID, err)
+		}
+		var next *planning.PlannedSession
+		for i := range p.Sessions {
+			if p.Sessions[i].WorkoutSessionID == old.WorkoutSessionID {
+				next = &p.Sessions[i]
+				break
+			}
+		}
+		sets, ok, err := st.Sessions.DraftSets(ctx, userID, logID)
+		if err != nil {
+			return nil, fmt.Errorf("reading the draft of %s: %w", logID, err)
+		}
+		if !ok {
+			continue
+		}
+		a := planning.Reconcile(kb, old, next, sets, func() string { return s.newID().String() })
+		if a.Empty() {
+			continue
+		}
+		if err := st.Sessions.AdjustSession(ctx, userID, logID, a, s.Clock.Now()); err != nil {
+			return nil, fmt.Errorf("adjusting the draft of %s: %w", logID, err)
+		}
+		if a.Visible() {
+			changes = append(changes, kb.SessionAdjusted(old.WorkoutSessionID))
+			if s.Log != nil {
+				s.Log.InfoContext(ctx, "started session adjusted", "user_id", userID, "session_id", logID,
+					"removed", len(a.Remove), "replaced", len(a.Replace), "added", len(a.Append)+countSets(a.Blocks))
+			}
+		}
+	}
+	return changes, nil
+}
+
+func countSets(blocks []planning.DraftBlock) int {
+	n := 0
+	for _, b := range blocks {
+		n += len(b.Sets)
+	}
+	return n
 }
 
 // StartPlannedSession starts a session of an active plan in the training
