@@ -13,11 +13,11 @@ Der Planer hat seine API: Plan, Start mit Check-in, Abgleich und Abschluss
 §10.5 verlangt, dass der Client den Plan der laufenden Woche lokal hält, wie
 die Skill-Karte (ADR 0011).
 
-Zur selben Zeit gestaltet ein anderer Agent jeden Screen der App neu (eigener
-Branch, dort ADR 0020 zum visuellen Design). Neue Screens im alten Stil gäben
-Konflikte in denselben Dateien und doppelte Arbeit. Das Paket `HefestoKit`
-fasst er nicht an. Die Screens des Plans warten deshalb auf das Design; dieses
-ADR entscheidet den Unterbau im Paket.
+Zur selben Zeit gestaltete ein anderer Agent jeden Screen der App neu (ADR 0020
+zum visuellen Design, inzwischen in `main`). Neue Screens im alten Stil hätten
+Konflikte in denselben Dateien und doppelte Arbeit gebracht. Das Paket
+`HefestoKit` fasste er nicht an. Die Screens des Plans warteten deshalb auf das
+Design; dieses ADR entscheidet den Unterbau im Paket.
 
 Offen war:
 - Wie hält die App den Plan offline?
@@ -114,7 +114,7 @@ seinen Elementen.
   - Die Screens: Woche und Heute aus dem Plan, Check-in und Start, der Logger
     mit Zielen, Angebote auf aktive Wahl, die Nachfrage nach der Reserve beim
     Kalibrierungssatz und nach Schmerz bei beobachteten Items (`monitor`).
-    Sie folgen, sobald das Design des anderen Branches in `main` ist.
+    Sie folgen im Design von ADR 0020, das jetzt in `main` ist.
   - Das Onboarding in der App (`POST /v1/me/onboarding`, Katalog des Planers).
     Ohne Onboarding hat ein User keinen Plan.
   - Schmerzberichte und Symptome aus der App.

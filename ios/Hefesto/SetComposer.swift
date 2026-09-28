@@ -73,18 +73,22 @@ struct SetComposer: View {
 
                 if asksRIR || asksSIR {
                     Section {
-                        if asksRIR {
-                            Picker("Reps left", selection: $rir) {
-                                Text("Not rated").tag(Int?.none)
-                                ForEach(Self.rirChoices, id: \.self) { Text($0, format: .number).tag(Int?.some($0)) }
+                        // A group so the theme reaches every row it makes.
+                        Group {
+                            if asksRIR {
+                                Picker("Reps left", selection: $rir) {
+                                    Text("Not rated").tag(Int?.none)
+                                    ForEach(Self.rirChoices, id: \.self) { Text($0, format: .number).tag(Int?.some($0)) }
+                                }
+                            }
+                            if asksSIR {
+                                Picker("Seconds left", selection: $sirS) {
+                                    Text("Not rated").tag(Int?.none)
+                                    ForEach(Self.sirChoices, id: \.self) { Text("\($0) s").tag(Int?.some($0)) }
+                                }
                             }
                         }
-                        if asksSIR {
-                            Picker("Seconds left", selection: $sirS) {
-                                Text("Not rated").tag(Int?.none)
-                                ForEach(Self.sirChoices, id: \.self) { Text("\($0) s").tag(Int?.some($0)) }
-                            }
-                        }
+                        .themedRow()
                     } header: {
                         Text("Reserve")
                     } footer: {
@@ -92,6 +96,7 @@ struct SetComposer: View {
                             if asksRIR { Text("How many more clean reps you could have done.") }
                             if asksSIR { Text("How much longer you could have held with clean form.") }
                         }
+                        .font(.detailText)
                     }
                 }
 

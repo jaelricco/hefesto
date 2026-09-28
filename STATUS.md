@@ -133,8 +133,8 @@ documents are in German.
   - It asks for RIR the same way when a set holds exactly one rep element
     (U-68), 0–10. An element taken to failure is not asked about.
 - **The plan in the iOS app, the foundation (this checkpoint, ADR 0021):**
-  - Screens wait: another branch is redesigning every screen (its ADR 0020).
-    This step touches only the `HefestoKit` package.
+  - Screens waited for the design pass (ADR 0020, now merged), so this step
+    touches only the `HefestoKit` package.
   - The app keeps each week's plan as the document the server sent
     (`cachedPlan`, with its `ETag`), readable offline through the generated
     `TrainingPlan`. `refreshPlan` asks with `If-None-Match`; an unchanged
