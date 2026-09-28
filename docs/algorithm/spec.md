@@ -1148,7 +1148,7 @@ Kombination bleibt ein Satz-Eintrag mit mehreren Elementen (CLAUDE.md).
 
 | Auslöser | Wirkung | Idempotenz |
 |---|---|---|
-| Einheit abgeschlossen (`POST /v1/sessions/{id}/complete` oder Sync) | Kapazitäten, Leiterstand, Belastungshistorie, Regionen, Plateau- und Deload-Prüfung; `plan_changes` | einmal je Session (`plan_decisions` eindeutig über `trigger` + `source_id`) |
+| Einheit abgeschlossen (`POST /v1/sessions/{id}/complete` oder Sync) | Kapazitäten, Leiterstand, Belastungshistorie, Regionen, Plateau- und Deload-Prüfung; `plan_changes`; jede abgeschlossene Einheit seit dem Onboarding, ausser Ruhetagen (U-58) | einmal je Session (`plan_decisions` eindeutig über `trigger` + `source_id`) |
 | Schmerzbericht | Schmerzregeln, Rampe, Verweise (§8.6) | einmal je Bericht |
 | Check-in beim Start (optional) | Anpassung nur dieser Einheit (ADAPT-17) | je Start |
 | Wochenwechsel | neuer Wochenplan; Pausen- und Deload-Prüfung | einmal je Woche |
@@ -1906,7 +1906,7 @@ selbst anlegt, ihre ID.
 - **Abschluss** (`POST /v1/sessions/{id}/complete`, unverändert idempotent):
   Nach dem Commit ruft der Dienst `Adapt`; die Antwort bekommt das optionale,
   additive Feld `plan_changes[]`. Über den Sync abgeschlossene Einheiten lösen
-  denselben Pfad aus.
+  denselben Pfad aus. Umsetzung: ADR 0018, U-58 bis U-61.
 - **Schmerzberichte** sind Client-Zeilen (`user_pain_reports`) mit Sync; nach
   dem Commit wertet der Dienst sie aus (§8.6).
 - **Geplante Ruhe und Deload.** Der Planer schreibt `user_training_days` nicht
@@ -2151,7 +2151,8 @@ echtes Postgres (ADR 0013, U-36 bis U-38), dann die Endpunkte unter dem Tag
 (ADR 0015, U-47 bis U-49), dann der Start einer geplanten Einheit im
 Trainings-Log mit `Materialize` und den Übungen des Planers im Katalog
 (ADR 0016, U-50 bis U-54), und der Abgleich eines gestarteten Entwurfs mit
-jedem neuen Plan (ADR 0017, U-55 bis U-57).
+jedem neuen Plan (ADR 0017, U-55 bis U-57), und der Abschluss einer Einheit, der den Planer
+erreicht (ADR 0018, U-58 bis U-61).
 
 Tests: sechs Personas als Golden Files (`internal/domain/planning/testdata/`),
 die Eigenschaften I-1 bis I-11 für jeden erzeugten Plan, zwölf simulierte
@@ -2227,6 +2228,10 @@ U-35 setzen die Entscheidungen ENT-R-1, ENT-R-2 und ENT-R-5 um (§15.5).
 | U-55 | §10.2 | Jeder neue Plan der Woche gleicht die Entwürfe gestarteter Einheiten ab: Verglichen werden die Plan-Items (Block-Rolle, Übung, Art), nicht die Werte im Log; unveränderte Items behalten ihre Sätze und die Anpassungen des Users, geänderte Ziele ersetzen die offenen Sätze, entfallene Items verlieren sie, neue kommen in einen neuen Block; ohne Einheit an dem Tag gehen alle offenen geplanten Sätze; ausgeführte Sätze bleiben | Sicherheitsbefund aus ADR 0016; der Server ändert nie die Werte eines Elements (ADR 0009), ein neues Ziel ist deshalb ein neuer Satz |
 | U-56 | §10.2 | Erledigt ist, was nicht mehr offen ist (geplante Sätze des alten Items minus offene); ausgeführte und vom User gelöschte Sätze kommen nicht zurück | Der User hat entschieden; eigene Sätze des Users haben kein Item und zählen nicht |
 | U-57 | §6.1, §10.3 | Die Änderung `session_adjusted` (ADAPT-19, Projektvorgabe) nennt die Session und steht im Änderungsprotokoll des Ereignisses; ein nur neu verknüpfter Satz ist keine Änderung | Die App soll die Session neu laden; eine Wiederholung des Ereignisses antwortet gleich |
+| U-58 | §6.1, §10.2 | Jede abgeschlossene, nicht gelöschte Einheit seit dem Tag des Onboardings erreicht den Planer, auch eine frei zusammengestellte; ein geloggter Ruhetag nicht | Frei trainierte Einheiten belasten dieselben Strukturen; die Deckel sollen sie sehen |
+| U-59 | §4.1, §4.3 | Der Verlauf übernimmt ausgeführte Sätze in der Reihenfolge der Ausführung: Wiederholungen oder Sekunden, ohne Unterstützung oder mit Band, das RIR eines Wiederholungssatzes, Form, Zusatzlast; andere Unterstützung und Distanzen fallen weg; RPE wird nicht umgerechnet; ein Halt ohne Reserve zählt als Untergrenze | Partner, Maschine und Co. messen weder die unassistierte noch die Band-Kapazität (PAR-A-21); die Wissensbasis hat keine Umrechnung von RPE; das Log hat keine Spalte für die Reserve eines Halts |
+| U-60 | §10.2 | Der Abschluss markiert die geplante Einheit in jedem Plan als `completed`, bei einer Deload-Einheit den Tag als Deload-Tag, und wendet die Einheit einmal als Ereignis an | Idempotenz über das Änderungsprotokoll: ein wiederholter Abschluss antwortet gleich |
+| U-61 | §6.1 | Ohne Onboarding, bei nicht verfügbarem Planer oder bei einem Fehler fehlt `plan_changes`; `GET /v1/me/plan` holt verpasste Abschlüsse nach (höchstens 20, je eigene Transaktion, ein Fehler blockiert den Plan nicht) | Der Abschluss im Log bleibt gültig, was immer im Planer geschieht |
 
 ### 15.3 Nicht umgesetzt
 
@@ -2243,8 +2248,8 @@ Kapazität), ADAPT-09, ADAPT-11, ADAPT-17, der Mobilitätsblock und Texte in
 weiteren Sprachen (KB-11). Für die Ellbogen-Regionen gibt es kein Prehab: Die
 Recherche nennt Programme, aber keine übertragbare Übung (`05` §10).
 Minderjährige bekommen keinen Plan (SAFE-07); INJ-09 ist deshalb nicht aktiv.
-Aus §10 fehlen `plan_changes[]` und der Status `completed` am Abschluss einer
-gestarteten Einheit, der Check-in beim Start (ADAPT-17), der Offline-Start
+Aus §10 fehlen der Check-in beim Start (ADAPT-17), die Reserve eines Halts
+im Log (`set_entries.sir_s`), der Offline-Start
 über den Sync (§10.5; die Sync-Operationen tragen `planned_session_id` und
 `planned_item_id` nicht), der Sync der Schmerzberichte und `?explain=trace`
 (ADR 0014, ADR 0016), sowie ein Nachweis der Einwilligung mit Zeitpunkt und
@@ -2295,6 +2300,12 @@ weil die Adaption die Kürzung nicht vorhersieht.
   Die App sollte ihren Ausgang synchronisieren, bevor sie ein Ereignis sendet.
   Reicht das nicht, bräuchte ADR 0009 eine Ausnahme: Ein vor der Löschung
   ausgeführter Satz belebt einen Grabstein des Servers wieder.
+- **Assistierte Sätze ohne Band fehlen dem Planer.** Sätze mit Partner,
+  Maschine, Schräge, Gegengewicht oder Fussstütze erreichen weder die
+  Kapazitäten noch die Belastungshistorie (U-59). Wer vor allem so trainiert,
+  hinterlässt wenig, und die Deckel sehen weniger Belastung, als stattfand.
+  Eine Anrechnung auf die Belastung ohne Kapazität wäre möglich, braucht aber
+  eine fachliche Regel, wie viel Last ein solcher Satz trägt.
 - **WEEK-08 erzeugt die ganze Woche neu.** «Ab der nächsten nicht begonnenen
   Einheit» ist nicht umgesetzt: Eine gestartete Einheit behält ihre Session
   (U-54), die neue Einheit desselben Tages kann aber anders aussehen, und ohne

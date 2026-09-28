@@ -57,7 +57,7 @@ Noch nicht gebaut, jeweils mit Grund:
 - `POST /v1/me/plan/sessions/{id}/start` und `plan_changes[]` am Abschluss
   einer Einheit: Die Log-Tabellen verweisen auf Content-Übungen, die Übungen
   des Planers sind keine (U-1, ADR 0013 §2). Der Start ist nachgezogen in
-  ADR 0016, `plan_changes[]` nicht.
+  ADR 0016, `plan_changes[]` in ADR 0018.
 - Sync der Schmerzberichte: Die Tabellen bekommen ihre Sync-Spalten erst mit
   diesem Schritt.
 - Einwilligung ändern oder widerrufen: Ein Widerruf muss Gesundheitsdaten

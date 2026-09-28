@@ -130,10 +130,24 @@ documents are in German.
   - Without a session on the day, as after a stop, every open planned set
     goes. Performed sets never change.
   - The event answers `session_adjusted` with the session (rule ADAPT-19).
+- **Completing a session (this checkpoint, ADR 0018):**
+  - Every completed session since the onboarding reaches the planner after
+    the log's commit, not only planned ones. Rest days are the exception.
+  - Performed sets become the planner's history in the order performed:
+    reps or seconds, without assistance or with a band, and the RIR of rep
+    sets. Other assistance and distances are left out.
+  - The planned session becomes `completed`, and a deload session marks its
+    day. The session is applied once per session.
+  - `POST /v1/sessions/{id}/complete` and sync answer with `plan_changes`.
+    If the planner fails, the completion stays valid and the next
+    `GET /v1/me/plan` catches it up.
 - **Open for review:** the API decisions in ADR 0014 and spec §15.2
   (U-39 to U-46), the consent decisions in ADR 0015 (U-47 to U-49), the
   start decisions in ADR 0016 (U-50 to U-54), the reconciliation in
-  ADR 0017 (U-55 to U-57), and these findings in spec §15.4:
+  ADR 0017 (U-55 to U-57), the completion in ADR 0018 (U-58 to U-61), and
+  these findings in spec §15.4:
+  - sets with partner or machine assistance reach neither the capacities
+    nor the load history;
   - a set performed offline after the server replaced or removed it is
     refused by sync, because deletions are final (ADR 0009). The app should
     push its outbox before an event; otherwise ADR 0009 needs an exception;
@@ -145,8 +159,7 @@ documents are in German.
   - after a withdrawal the decision log and past plans still name regions
     and states; whether they must be redacted is a legal question (ENT-4).
 - **Not yet built:**
-  - `plan_changes` and the `completed` status when a started session is
-    completed;
+  - the reserve of a hold in the log (`set_entries.sir_s`);
   - the check-in at the start (ADAPT-17);
   - starting a session offline through sync;
   - the sync of pain reports;
