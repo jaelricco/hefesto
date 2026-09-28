@@ -84,7 +84,7 @@ func Adapt(k *Knowledge, s Snapshot, ev Event) (Snapshot, []Change, error) {
 	default:
 		return s, nil, ErrUnknownEvent
 	}
-	return a.s, a.changes, nil
+	return a.s.canonical(), a.changes, nil
 }
 
 type adapter struct {

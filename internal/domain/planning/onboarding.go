@@ -274,7 +274,7 @@ func Start(k *Knowledge, a Answers, now time.Time) (Snapshot, OnboardingResult, 
 	if err := k.freezeBreakBase(&s, today); err != nil {
 		return Snapshot{}, OnboardingResult{}, err
 	}
-	return s, res, nil
+	return s.canonical(), res, nil
 }
 
 // freezeBreakBase keeps the week-1 target of the straight-arm and wrist

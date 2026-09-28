@@ -504,3 +504,31 @@ func TestStageZeroExit(t *testing.T) {
 		t.Errorf("after the clearance: %s at %.2f, want rtt_1 at 0.25", rs.State, rs.StartFraction)
 	}
 }
+
+// A store keeps lists as rows and cannot tell an empty list from none; the
+// core therefore never returns an empty one (ADR 0013, §4). Otherwise the
+// snapshot would read back differently and change the input hash.
+func TestSnapshotListsAreNilWhenEmpty(t *testing.T) {
+	k := kb(t)
+	s, _ := start(t, k, persona3())
+	at := monday.Add(9 * time.Hour)
+	s, _, err := planning.Adapt(k, s, planning.Event{Kind: planning.EventSymptoms, At: at})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(s.Constraints) == 0 {
+		t.Fatal("exertion symptoms leave no stop")
+	}
+	s, _, err = planning.Adapt(k, s, planning.Event{Kind: planning.EventClearance, At: at.Add(time.Hour)})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if s.Constraints != nil {
+		t.Errorf("the clearance leaves %#v, want nil", s.Constraints)
+	}
+	for id, rs := range s.Regions {
+		if rs.Breaches != nil && len(rs.Breaches) == 0 || rs.Restrictions != nil && len(rs.Restrictions) == 0 {
+			t.Errorf("region %s keeps an empty list", id)
+		}
+	}
+}

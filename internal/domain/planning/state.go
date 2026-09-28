@@ -301,6 +301,30 @@ func InputHash(k *Knowledge, s Snapshot, now, week time.Time) string {
 	return "sha256:" + hex.EncodeToString(sum[:])
 }
 
+// canonical returns the snapshot with every empty slice as nil. A store
+// keeps a list as rows and cannot tell an empty one from a missing one;
+// without this a filtered list would read back differently and change the
+// input hash (spec §1.3).
+func (s Snapshot) canonical() Snapshot {
+	s.Constraints = nilIfEmpty(s.Constraints)
+	s.Phase.Calibrate = nilIfEmpty(s.Phase.Calibrate)
+	s.Pain = nilIfEmpty(s.Pain)
+	s.History = nilIfEmpty(s.History)
+	for k, v := range s.Regions {
+		v.Breaches = nilIfEmpty(v.Breaches)
+		v.Restrictions = nilIfEmpty(v.Restrictions)
+		s.Regions[k] = v
+	}
+	return s
+}
+
+func nilIfEmpty[T any](v []T) []T {
+	if len(v) == 0 {
+		return nil
+	}
+	return v
+}
+
 // clone returns a deep copy of the snapshot's maps and slices that Adapt
 // changes, so callers' values are never mutated.
 func (s Snapshot) clone() Snapshot {
