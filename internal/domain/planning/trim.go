@@ -300,7 +300,7 @@ func (g *gen) trimLoads() {
 	g.minStep(caps, rules, targetSess, planned)
 	// Carry the unused fraction of a set (PAR-S-35).
 	week := g.weekLoads()
-	g.caps, g.capRules, g.targets = caps, rules, targetWeek
+	g.caps, g.capRules, g.targets, g.targetSess = caps, rules, targetWeek, targetSess
 	g.plan.Headroom = map[string]float64{}
 	for _, a := range sortedKeys(caps) {
 		if rules[a] != RuleWeekCap {

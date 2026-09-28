@@ -795,7 +795,8 @@ ist die Aufteilung ohne Einfluss, B-49).
    0, greift GOAL-03 (WEEK-06).
 
 **Deload-Woche (WEEK-07).** In Mesozyklus-Woche 6 oder nach einem Auslöser
-(§6.9) sind alle Einheiten `deload`: gleiche Tage, Übungen und Frequenz;
+(§6.9) sind alle Einheiten `deload`: gleiche Tage (ausser nach WEEK-09),
+Übungen und Frequenz;
 Sätze × 0.6 (abgerundet, mindestens 1 — Ausnahme von `PAR-S-18`, weil die
 Übungen gleich bleiben, PAR-B-54); Reserve +2 (RIR bzw. SIR); Sprosse halten
 (eine leichter nur beim Schmerz-Deload) (PAR-B-50–54, PAR-B-03). Der Deload
@@ -805,6 +806,31 @@ bzw. der Haltezeit ab; Angebote und Kalibrierungssätze an anderen Sprossen
 entfallen; der Spielraum-Übertrag (`PAR-S-35`) bleibt unverändert. Eine im
 Deload abgeschlossene Einheit wird beim Abschluss als Deload-Tag erfasst
 (`user_training_days.deload`); der Streak zählt sie (ADR 0003).
+
+**Mindestinhalt einer Einheit (WEEK-09, `PAR-S-50`, ENT-R-5).** Nach den
+Deckeln, dem Deload und der Zeit prüft der Planer jede Einheit: Hat sie
+weniger als 2 Arbeitssätze (ohne Aufwärmen und Prehab), wird sie zum geplanten
+Ruhetag, und ihre Sätze gehen in andere Einheiten der Woche:
+1. Ein Arbeitssatz geht an dieselbe Übung mit derselben Intensitätsklasse in
+   einer anderen Einheit (Kalibrierung nur zu Kalibrierung, Angebote bleiben).
+   Eine leichte Übung (Klasse `leicht`, ohne Mindestabstand nach LOAD-05) darf
+   auch in eine Einheit ohne diese Übung, sofern deren Region an dem Tag nicht
+   ruht (PAR-D-28). Zuerst die Einheit mit den wenigsten Sätzen der Übung,
+   dann die mit den wenigsten Arbeitssätzen. So ändern sich die Abstände nicht.
+2. Prehab geht in eine Einheit ohne diese Übung; gibt es keine, entfällt es,
+   solange die Übung in mindestens 2 Einheiten der Woche bleibt (PAR-D-37,
+   untere Grenze).
+3. Die aufnehmende Einheit hält die Zeit und das Straight-Arm-Budget ein; den
+   Einheitsdeckel darf sie wie beim Mindestschritt (LOAD-12) um den
+   verschobenen Satz überschreiten, weil sich die Wochenlast nicht ändert.
+4. Eine Einheit bleibt, wenn eine Rampe sie als Einheit zählt (PAR-D-26: die
+   Pausenrampe jede Einheit mit Straight-Arm- oder Handgelenk-Last, eine Rampe
+   nach Beschwerde jede Einheit, die die Region mit ≥ 2 belastet) oder wenn ein
+   Satz keinen Platz findet.
+
+Die Frequenz der verschobenen Übung sinkt dabei, ihr Wochenvolumen bleibt. Der
+Plan nennt jeden so entstandenen Ruhetag (WEEK-09); ein Ruhetag ist keine
+verpasste Einheit (ADR 0003). Das gilt auch in Deload-Wochen.
 
 **Neu erzeugen (WEEK-08).** Zu Wochenbeginn, bei Profil- oder Zieländerung
 (ab der nächsten nicht begonnenen Einheit), nach Freigabe einer Region und bei
@@ -2117,15 +2143,13 @@ sollte.
 | U-32 | §9.3 | RF-05 mit Folgefrage (verschoben → N); Stopp-Regel nennt plötzlichen stechenden Schmerz; Regionstexte grammatisch; keine Tatsachenaussage zur Sehnenanpassung; Onboarding-Ergebnis mit Disclaimer; SEL-12 für eine unplausible Angabe | Review A-7, A-8, A-11, A-13, B-4, C M-1 |
 | U-33 | §6.11, §7.2 | ENT-R-1: Eine Pause aus dem Onboarding rampt die Straight-Arm- und Handgelenk-Konten auf dem Zielvolumen der ersten Woche, beim Onboarding eingefroren; Anteil = 0.25 + (Stufe − 0.25) · f(a); 72 h und Sprosse unter `pre_break_level` wie U-25 | Review C: die Basis wächst nicht mit einer neuen Sprosse (A-3, A-4), f(a) wirkt wieder (A-3); Persona 4 kam vorher zwölf Wochen nicht über einen Straight-Arm-Satz je Woche hinaus |
 | U-34 | §7.2 | ENT-R-2: Mindestschritt LOAD-12 (`PAR-S-49`); eine geplante Deload-Woche zählt als gehalten, auch ohne Logs; der Satz geht an eine gekürzte Arbeitsübung mit Straight-Arm-Last zurück, und nur ihr Einheitsdeckel darf um diesen Satz über M liegen | ADR 0003: Eine Deload-Woche darf den Schritt nicht verschieben; bei Deloads alle 4–5 Wochen (§15.4) kam sonst fast nie ein Fenster von 3 Wochen zustande. Ohne die Ausnahme beim Einheitsdeckel blockierte `PAR-S-48` (kleinster Satz) den Schritt in jeder Einheit mit leichteren Sätzen derselben Struktur |
+| U-35 | §5.4 | ENT-R-5: Mindestinhalt WEEK-09 (`PAR-S-50`); verschoben wird nur, was die Abstände nicht ändert (dieselbe Übung und Klasse, oder eine leichte Übung); eine Einheit, die eine Rampe zählt, bleibt; Prehab bleibt in ≥ 2 Einheiten (PAR-D-37) | Der erste Versuch vor dem Review störte die Zählung der Rampenstufen (PAR-D-26); die Ausnahme für Rampen-Einheiten verhindert das. Die Frequenz der verschobenen Übung sinkt, was ENT-R-5 in Kauf nimmt |
 
 ### 15.3 Nicht umgesetzt
 
 GOAL-03 bei Zeitmangel (es gibt nur den Hinweis WEEK-06; die Erhaltungsdosis
 gilt bisher nur für erreichte Empfehlungen, U-29), ADAPT-13 (2) (Variation
-und Unterstützungsübung beim Plateau), eine Mindestmenge je Einheit (ein
-Versuch, Einheiten mit einem Satz zusammenzulegen, störte die Zählung der
-Rampenstufen und die gewählte Frequenz; offen als ENT-R-5), die
-Vorlagenfelder für Antagonisten-Paare, Ergänzungen und Skill-Minuten
+und Unterstützungsübung beim Plateau), die Vorlagenfelder für Antagonisten-Paare, Ergänzungen und Skill-Minuten
 (geladen, nicht verwendet; die «Volumenposition» der 75-min-Vorlage fehlt),
 SEL-05
 (Mobilitätsantworten ändern die Auswahl noch nicht), SEL-10 über «eine Sprosse
@@ -2202,6 +2226,7 @@ Evidenz: A–D nach `00_sources.md`; H = Heuristik (Begründung im Abschnitt).
 | WEEK-06 | Zu wenig Tage → Erhaltung | §5.4 | PAR-B-63 | B |
 | WEEK-07 | Deload-Woche | §5.4 | PAR-B-03, PAR-B-50–54 | B |
 | WEEK-08 | Neu erzeugen | §5.4 | – | – |
+| WEEK-09 | Mindestinhalt einer Einheit | §5.4 | PAR-S-50, PAR-D-26, PAR-D-37 | H |
 | SESS-01 | Vorlage nach Minuten | §5.5 | PAR-B-64–67 | H/C |
 | SESS-02 | Reihenfolge | §5.5 | PAR-B-46, PAR-E-01–03 | A |
 | SESS-03 | Aufwärmen, Prehab-Aktivierung, Rampensätze | §5.5 | PAR-B-69–71, PAR-D-01, 05, 37, 38, PAR-E-26, 45–47 | A/B/H |
@@ -2336,6 +2361,7 @@ festgemacht ist.
 | PAR-S-47 | `soreness_definition` | «Soreness» in PAR-D-26 und PAR-D-28: ein Wert während, nach oder am Folgetag über dem Wert vor der Einheit (Basiswert nach PAR-D-16; ohne Basiswert 0) sowie jede Angabe «hielt länger als 1 h an» oder «hält länger als 15 min an»; eine Einheit zählt für die Rampe nur ohne Soreness und mit allen Werten ≤ PAR-D-14 | **Review.** PAR-D-28 nennt «Schmerz am Folgetag» ohne Schwelle; wörtlich genommen käme, wer mit stabilem Grundschmerz trainiert, nie aus der Rampe. Der Vergleich mit dem Wert vor der Einheit folgt PAR-D-16 und ist strenger als PAR-D-14 allein (`08` §4: strengerer Wert) |
 | PAR-S-48 | `session_cap_whole_set` | LOAD-03 lässt je Einheit und Struktur mindestens M plus den kleinsten geplanten Satz dieser Struktur in der Einheit zu (bei M = 0 diesen Satz) | **Review.** PAR-D-31 (10 %) gilt für Volumen; mit ganzen Sätzen wäre bei 1–2 Sätzen je Einheit jede Steigerung > 10 %, und das Volumen bliebe beim halbierten Einstieg stehen. PAR-B-55 erlaubt +1 Satz je Übung; das Wochenwachstum begrenzt weiter LOAD-02 |
 | PAR-S-49 | `small_account_min_step` | ein Satz mehr, wenn ein Straight-Arm- oder Handgelenk-Konto 3 Wochen lang jede Woche geloggt, ohne Deload-Woche, ohne Verletzung einer Schmerzregel und nie unter dem Niveau der ersten dieser Wochen lag, und ein Satz mehr ist als die Steigerung c · f · R nach LOAD-02 | ENT-R-2. 3 Wochen = `PAR-S-14`: Das Referenzmittel besteht dann aus Wochen auf dem gehaltenen Niveau. Der Schritt liegt für Konten mit 1–2 Sätzen über 10 % je Woche (1 → 2 Sätze in 3 Wochen); ohne ihn wuchs ein solches Konto erst nach 10–13 Wochen um einen Satz. +1 Satz aus PAR-B-55 |
+| PAR-S-50 | `min_session_sets` | 2 Arbeitssätze je Einheit (ohne Aufwärmen und Prehab); eine Einheit mit weniger wird zum Ruhetag, ihre Sätze gehen an Einheiten mit derselben Übung | ENT-R-5. 2 = Mindestsätze eines Maximalblocks (`PAR-S-09`); eine Einheit mit einem Satz rechtfertigt Anfahrt und Aufwärmen nicht (Review C I-4) |
 
 ## Anhang C: Index der verwendeten Forschungsparameter
 

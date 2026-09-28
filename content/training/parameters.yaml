@@ -2425,3 +2425,8 @@ parameters:
     Das Referenzmittel besteht dann aus Wochen auf dem gehaltenen Niveau. Der Schritt liegt für Konten
     mit 1–2 Sätzen über 10 % je Woche (1 → 2 Sätze in 3 Wochen); ohne ihn wuchs ein solches Konto erst
     nach 10–13 Wochen um einen Satz. +1 Satz aus PAR-B-55'}
+- {id: PAR-S-50, key: min_session_sets, text: '2 Arbeitssätze je Einheit (ohne Aufwärmen und Prehab);
+    eine Einheit mit weniger wird zum Ruhetag, ihre Sätze gehen an Einheiten mit derselben Übung', value: 2,
+  unit: working sets per session, evidence: Heuristik, heuristic: true, rationale: ENT-R-5. 2 = Mindestsätze
+    eines Maximalblocks (`PAR-S-09`); eine Einheit mit einem Satz rechtfertigt Anfahrt und Aufwärmen nicht
+    (Review C I-4)}

@@ -133,6 +133,8 @@ type gen struct {
 	caps      map[string]float64
 	capRules  map[string]string
 	targets   map[string]float64
+	// targetSess is the session load per structure before the caps.
+	targetSess []map[string]float64
 }
 
 // Generate builds the plan for the week starting at week (a Monday, date at
@@ -192,6 +194,7 @@ func Generate(k *Knowledge, s Snapshot, now, week time.Time) (Plan, error) {
 	g.trimLoads()
 	g.applyDeload()
 	g.trimTime()
+	g.consolidate()
 	g.finish()
 	return *g.plan, nil
 }

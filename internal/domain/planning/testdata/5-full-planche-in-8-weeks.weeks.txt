@@ -1,34 +1,34 @@
 week 1: 3 sessions, 12 sets (0 straight-arm)
   push-up=push-up-incline wrist-conditioning=plank-hold
   changes: probe_offered
-week 2: 3 sessions, 11 sets (0 straight-arm)
+week 2: 2 sessions, 9 sets (0 straight-arm)
   push-up=push-up,push-up-incline wrist-conditioning=plank-hold
   changes: target_changed
-week 3: 3 sessions, 13 sets (0 straight-arm)
+week 3: 2 sessions, 11 sets (0 straight-arm)
   push-up=push-up,push-up-incline wrist-conditioning=plank-hold
   changes: target_changed
-week 4: 3 sessions, 12 sets (0 straight-arm)
+week 4: 2 sessions, 10 sets (0 straight-arm)
   push-up=push-up,push-up-incline wrist-conditioning=plank-hold
   changes: target_changed
-week 5: 3 sessions, 13 sets (0 straight-arm)
+week 5: 2 sessions, 11 sets (0 straight-arm)
   push-up=push-up,push-up-incline wrist-conditioning=plank-hold
   changes: target_changed
-week 6: 3 sessions, 10 sets (0 straight-arm), deload planned
+week 6: 2 sessions, 8 sets (0 straight-arm), deload planned
   push-up=push-up-incline wrist-conditioning=plank-hold
-week 7: 3 sessions, 13 sets (0 straight-arm)
+week 7: 2 sessions, 11 sets (0 straight-arm)
   push-up=push-up,push-up-incline wrist-conditioning=plank-hold
   changes: target_changed
-week 8: 3 sessions, 14 sets (0 straight-arm)
+week 8: 2 sessions, 12 sets (0 straight-arm)
   push-up=push-up,push-up-incline wrist-conditioning=plank-hold
   changes: target_changed
-week 9: 3 sessions, 14 sets (0 straight-arm)
+week 9: 2 sessions, 12 sets (0 straight-arm)
   push-up=push-up,push-up-incline wrist-conditioning=plank-hold
   changes: target_changed
-week 10: 3 sessions, 14 sets (0 straight-arm)
+week 10: 2 sessions, 12 sets (0 straight-arm)
   push-up=push-up,push-up-incline wrist-conditioning=plank-hold
   changes: target_changed
-week 11: 3 sessions, 15 sets (0 straight-arm)
+week 11: 2 sessions, 13 sets (0 straight-arm)
   push-up=push-up,push-up-incline wrist-conditioning=plank-hold
   changes: target_changed
-week 12: 3 sessions, 10 sets (0 straight-arm), deload planned
+week 12: 2 sessions, 8 sets (0 straight-arm), deload planned
   push-up=push-up-incline wrist-conditioning=plank-hold

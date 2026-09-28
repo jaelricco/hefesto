@@ -106,6 +106,12 @@ rules:
   params: [PAR-B-03, PAR-B-50, PAR-B-51, PAR-B-52, PAR-B-53, PAR-B-54]
   evidence: B
 - {id: WEEK-08, title: Neuer Wochenplan, text: Der Wochenplan wurde neu berechnet., evidence: –}
+- id: WEEK-09
+  title: Einheit zusammengelegt
+  text: Die Einheit am {date} hätte nur {sets} Arbeitssatz gehabt. Sie wird zum Ruhetag, und ihre Sätze
+    kommen in eine andere Einheit der Woche mit derselben Übung.
+  params: [PAR-S-50, PAR-D-26, PAR-D-37]
+  evidence: H
 - id: SESS-01
   title: Vorlage nach Zeit
   text: Aufbau für eine Einheit von {minutes} Minuten.

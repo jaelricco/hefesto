@@ -10,18 +10,18 @@ week 4: 4 sessions, 25 sets (7 straight-arm)
   changes: calibration_due
 week 5: 4 sessions, 19 sets (8 straight-arm)
   front-lever=front-lever-advanced-tuck planche=planche-advanced-tuck pull-up=pull-up wrist-conditioning=plank-hold
-week 6: 4 sessions, 16 sets (6 straight-arm), deload planned
+week 6: 3 sessions, 16 sets (6 straight-arm), deload planned
   front-lever=front-lever-advanced-tuck planche=planche-advanced-tuck pull-up=pull-up wrist-conditioning=plank-hold
-week 7: 4 sessions, 18 sets (8 straight-arm)
+week 7: 3 sessions, 18 sets (8 straight-arm)
   front-lever=front-lever-advanced-tuck planche=planche-advanced-tuck pull-up=pull-up wrist-conditioning=plank-hold
-week 8: 4 sessions, 19 sets (9 straight-arm)
+week 8: 3 sessions, 19 sets (9 straight-arm)
   front-lever=front-lever-advanced-tuck planche=planche-advanced-tuck pull-up=pull-up wrist-conditioning=plank-hold
 week 9: 4 sessions, 20 sets (8 straight-arm)
   front-lever=front-lever-advanced-tuck planche=planche-advanced-tuck pull-up=pull-up wrist-conditioning=plank-hold
   changes: deload_scheduled×2
-week 10: 4 sessions, 16 sets (6 straight-arm), deload stagnation
+week 10: 3 sessions, 16 sets (6 straight-arm), deload stagnation
   front-lever=front-lever-advanced-tuck planche=planche-advanced-tuck pull-up=pull-up wrist-conditioning=plank-hold
-week 11: 4 sessions, 19 sets (9 straight-arm)
+week 11: 3 sessions, 19 sets (9 straight-arm)
   front-lever=front-lever-advanced-tuck planche=planche-advanced-tuck pull-up=pull-up wrist-conditioning=plank-hold
-week 12: 4 sessions, 20 sets (10 straight-arm)
+week 12: 3 sessions, 20 sets (10 straight-arm)
   front-lever=front-lever-advanced-tuck planche=planche-advanced-tuck pull-up=pull-up wrist-conditioning=plank-hold

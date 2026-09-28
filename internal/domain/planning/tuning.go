@@ -119,6 +119,7 @@ type Tuning struct {
 	WindowWeeks                        float64 // PAR-B-73
 	RefWeeks                           float64 // PAR-S-14
 	MinStepWeeks                       float64 // PAR-S-49
+	MinSessionSets                     float64 // PAR-S-50
 	MaintSessions                      float64 // PAR-B-63
 	MaintSetsHi                        float64 // PAR-B-63
 	OfferMinForm                       float64 // PAR-A-17
@@ -150,6 +151,7 @@ type Tuning struct {
 	RTT5Weeks                                  float64 // PAR-S-32
 	PainEntryDays                              float64 // PAR-S-42
 	PrehabSessions                             float64 // PAR-D-37
+	PrehabSessionsLo                           float64 // PAR-D-37 lower
 	PlausibleFrac                              float64 // PAR-S-46
 	PainTrendPoints                            float64 // PAR-S-42
 
@@ -342,6 +344,7 @@ func resolveTuning(k *Knowledge, issues []Issue) (Tuning, []Issue) {
 		{&t.WindowWeeks, "PAR-B-73", ""},
 		{&t.RefWeeks, "PAR-S-14", ""},
 		{&t.MinStepWeeks, "PAR-S-49", ""},
+		{&t.MinSessionSets, "PAR-S-50", ""},
 		{&t.MaintSessions, "PAR-B-63", "sessions"},
 		{&t.MaintSetsHi, "PAR-B-63", "sets_hi"},
 		{&t.OfferMinForm, "PAR-A-17", ""},
@@ -376,6 +379,7 @@ func resolveTuning(k *Knowledge, issues []Issue) (Tuning, []Issue) {
 		{&t.PainEntryDays, "PAR-S-42", "entry_days"},
 		{&t.PainTrendPoints, "PAR-S-42", "trend_points"},
 		{&t.PrehabSessions, "PAR-D-37", ""},
+		{&t.PrehabSessionsLo, "PAR-D-37", "lo"},
 		{&t.PlausibleFrac, "PAR-S-46", ""},
 
 		{&t.BreakShort, "PAR-S-41", "normal_below_days"},

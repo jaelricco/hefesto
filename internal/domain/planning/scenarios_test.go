@@ -105,6 +105,58 @@ func TestScenarioMinStep(t *testing.T) {
 	}
 }
 
+// WEEK-09 (ENT-R-5): a session with a single working set becomes a rest day
+// and its set moves to another session. Persona 5's Wednesday holds only a
+// plank from week 2 on; the plank moves to Friday, a light item needs no
+// spacing, and every session left has at least two working sets.
+func TestScenarioMinSessionContent(t *testing.T) {
+	k := kb(t)
+	for _, p := range personas {
+		s, _ := start(t, k, p.answers())
+		weeks, _ := simulate(t, k, s, athleteFor(p.name), 12, painFree(t, k, 1))
+		for i, w := range weeks {
+			for _, r := range w.plan.Reasons {
+				if r.RuleID != "WEEK-09" {
+					continue
+				}
+				day, err := time.Parse(time.DateOnly, r.Args["date"])
+				if err != nil {
+					t.Fatal(err)
+				}
+				if !slices.ContainsFunc(w.plan.RestDays, day.Equal) {
+					t.Errorf("%s week %d: merged session %s is not a rest day", p.name, i+1, r.Args["date"])
+				}
+			}
+		}
+	}
+	s, _ := start(t, k, persona5())
+	weeks, _ := simulate(t, k, s, athleteFor("5-full-planche-in-8-weeks"), 2, painFree(t, k, 1))
+	p := weeks[1].plan
+	if len(p.Sessions) != 2 {
+		t.Fatalf("%d sessions in week 2, want Monday and Friday", len(p.Sessions))
+	}
+	for _, ps := range p.Sessions {
+		n, plank := 0, false
+		for _, b := range ps.Blocks {
+			for _, it := range b.Items {
+				if b.Role == planning.BlockWarmup || it.Stimulus == planning.StimPrehab {
+					continue
+				}
+				n += it.Sets
+				if it.Exercise == "plank-hold" && ps.Date.Weekday() == time.Friday {
+					plank = slices.ContainsFunc(it.Reasons, func(r planning.Reason) bool { return r.RuleID == "WEEK-09" })
+				}
+			}
+		}
+		if n < 2 {
+			t.Errorf("%s has %d working sets", ps.Date.Weekday(), n)
+		}
+		if ps.Date.Weekday() == time.Friday && !plank {
+			t.Error("the plank did not move to Friday")
+		}
+	}
+}
+
 // Spec §12.5: persona 4 returns after six months without logs. The ramp
 // steps 0.25 → 0.5 → 0.75 → 1.0 advance weekly, but without a logged level
 // before the pause they only bound LOAD-04 and LOAD-02 (§7.2); the ramp
@@ -311,8 +363,19 @@ func TestScenarioMissedWeek(t *testing.T) {
 	if s.Break != nil {
 		t.Errorf("one week off started a break ramp: %+v", s.Break)
 	}
-	if len(p.Sessions) != len(before.Sessions) {
-		t.Errorf("%d sessions after the free week, %d before", len(p.Sessions), len(before.Sessions))
+	// A session merged into the others (WEEK-09) still counts as a planned
+	// training day.
+	days := func(p planning.Plan) int {
+		n := len(p.Sessions)
+		for _, r := range p.Reasons {
+			if r.RuleID == "WEEK-09" {
+				n++
+			}
+		}
+		return n
+	}
+	if days(p) != days(before) {
+		t.Errorf("%d training days after the free week, %d before", days(p), days(before))
 	}
 	for _, l := range p.Loads {
 		if l.Rule == "LOAD-04" {

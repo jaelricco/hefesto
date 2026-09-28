@@ -46,6 +46,7 @@ const (
 	RuleAllocation  = "WEEK-05"
 	RuleTooFewDays  = "WEEK-06"
 	RuleDeloadWeek  = "WEEK-07"
+	RuleConsolidate = "WEEK-09"
 
 	RuleTemplate = "SESS-01"
 	RuleOrder    = "SESS-02"
@@ -130,7 +131,7 @@ const (
 var requiredRules = []string{
 	RuleOnboardingRequired, RuleStopped, RuleScreening, RuleNoConsent, RuleRegionLocked, RuleRegionRTT0, RuleMinor,
 	RuleGoalOrder, RuleGoalPath, RuleMaintenance, RuleReadiness, RuleRealism, RuleAntagonist,
-	RuleDays, RuleSessionKind, RuleSplit, RuleFrequency, RuleAllocation, RuleTooFewDays, RuleDeloadWeek,
+	RuleDays, RuleSessionKind, RuleSplit, RuleFrequency, RuleAllocation, RuleTooFewDays, RuleDeloadWeek, RuleConsolidate,
 	RuleTemplate, RuleOrder, RuleWarmup, RuleBalance, RuleMaxBlock, RuleVolume, RuleStrength, RuleEndBlock, RuleLightDay,
 	RuleEquipment, RuleRegionCell, RuleSupinated, RuleMobility, RuleHoldRung, RuleEntryRung, RuleRepRung, RuleSubstitute, RulePlausible,
 	RuleDoseMaxHold, RuleDoseMaxReps, RuleDoseVolume, RuleDoseCond, RuleDoseNovice, RuleDoseTrained, RuleDoseEcc,
