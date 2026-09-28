@@ -13,6 +13,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/jaelricco/hefesto/internal/domain/planning"
+	service "github.com/jaelricco/hefesto/internal/planning"
 )
 
 // Decision is one recorded event with its changes.
@@ -22,12 +23,15 @@ type Decision struct {
 	Changes  []planning.Change
 }
 
-// Store implements SnapshotStore, PlanStore and DecisionLog.
+// Store implements the Transactor and, through it, SnapshotStore,
+// PlanStore and DecisionLog. InTx serialises the calls of one user like the
+// Postgres adapter does; it does not roll back.
 type Store struct {
 	mu        sync.Mutex
 	snapshots map[uuid.UUID][]byte
 	plans     map[string][]byte
 	decisions map[uuid.UUID][]Decision
+	users     map[uuid.UUID]*sync.Mutex
 }
 
 // New returns an empty store.
@@ -36,7 +40,22 @@ func New() *Store {
 		snapshots: map[uuid.UUID][]byte{},
 		plans:     map[string][]byte{},
 		decisions: map[uuid.UUID][]Decision{},
+		users:     map[uuid.UUID]*sync.Mutex{},
 	}
+}
+
+// InTx runs fn while holding the user's lock.
+func (s *Store) InTx(_ context.Context, userID uuid.UUID, fn func(service.Stores) error) error {
+	s.mu.Lock()
+	l, ok := s.users[userID]
+	if !ok {
+		l = &sync.Mutex{}
+		s.users[userID] = l
+	}
+	s.mu.Unlock()
+	l.Lock()
+	defer l.Unlock()
+	return fn(service.Stores{Snapshots: s, Plans: s, Decisions: s})
 }
 
 // Snapshot returns the stored snapshot of a user.

@@ -259,8 +259,10 @@ const (
 	KindTest    = "test"
 )
 
-// PainReport is one NRS report (spec §8.6).
+// PainReport is one NRS report (spec §8.6). The ID is the store's; the core
+// does not read it.
 type PainReport struct {
+	ID          string    `json:"id,omitempty"`
 	Region      string    `json:"region"`
 	Timepoint   string    `json:"timepoint"` // before_session, warmup, during, after, next_morning, daily
 	NRS         float64   `json:"nrs"`

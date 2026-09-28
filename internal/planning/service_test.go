@@ -29,7 +29,7 @@ func newService(t *testing.T) (*planning.Service, *memory.Store, *fixedClock) {
 	}
 	store := memory.New()
 	clock := &fixedClock{t: time.Date(2026, time.September, 28, 7, 0, 0, 0, time.UTC)}
-	return &planning.Service{Knowledge: kb, Snapshots: store, Plans: store, Decisions: store, Clock: clock, Log: quiet}, store, clock
+	return &planning.Service{Knowledge: kb, Store: store, Clock: clock, Log: quiet}, store, clock
 }
 
 func answers() domain.Answers {
@@ -150,7 +150,7 @@ func TestServiceUnavailableKnowledge(t *testing.T) {
 	ctx := context.Background()
 	kb := planning.LoadContentKnowledge(t.TempDir(), false, quiet)
 	store := memory.New()
-	svc := &planning.Service{Knowledge: kb, Snapshots: store, Plans: store, Decisions: store, Clock: planning.SystemClock{}}
+	svc := &planning.Service{Knowledge: kb, Store: store, Clock: planning.SystemClock{}}
 	if _, _, err := svc.Onboard(ctx, uuid.New(), answers()); !errors.Is(err, planning.ErrUnavailable) {
 		t.Fatalf("want ErrUnavailable, got %v", err)
 	}

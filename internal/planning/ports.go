@@ -15,9 +15,25 @@ import (
 	"github.com/jaelricco/hefesto/internal/domain/planning"
 )
 
+// Stores are the ports one call of the service reads and writes.
+type Stores struct {
+	Snapshots SnapshotStore
+	Plans     PlanStore
+	Decisions DecisionLog
+}
+
+// Transactor runs fn with stores bound to one transaction that holds the
+// user's planner lock. Events of one user therefore apply one at a time, and
+// either all writes of an event land or none (spec §9.4, ADR 0013).
+type Transactor interface {
+	InTx(ctx context.Context, userID uuid.UUID, fn func(Stores) error) error
+}
+
 // SnapshotStore reads and writes the planner state of one user. The core
 // returns a whole new snapshot from every event, so the port stores it
-// whole; a Postgres adapter splits it into the tables of spec §4.9.
+// whole; the Postgres adapter splits it into the tables of spec §4.9. Every
+// logged session and pain report in a snapshot carries an ID; the history
+// is append-only.
 type SnapshotStore interface {
 	Snapshot(ctx context.Context, userID uuid.UUID) (planning.Snapshot, bool, error)
 	SaveSnapshot(ctx context.Context, userID uuid.UUID, s planning.Snapshot) error
@@ -49,8 +65,19 @@ type Clock interface{ Now() time.Time }
 // SystemClock is the wall clock.
 type SystemClock struct{}
 
-// Now returns the current time in UTC.
-func (SystemClock) Now() time.Time { return time.Now().UTC() }
+// Now returns the current time in UTC, to the microsecond: Postgres keeps
+// microseconds, and a snapshot must read back exactly as it was written.
+func (SystemClock) Now() time.Time { return time.Now().UTC().Truncate(time.Microsecond) }
+
+// IDSource creates the IDs of rows the planner itself creates, such as the
+// pain baseline from the onboarding.
+type IDSource interface{ New() uuid.UUID }
+
+// UUIDv7 is the ID source of the service: time-ordered UUIDs (CLAUDE.md).
+type UUIDv7 struct{}
+
+// New returns a new UUIDv7.
+func (UUIDv7) New() uuid.UUID { return uuid.Must(uuid.NewV7()) }
 
 // Errors of the service. The HTTP layer maps ErrUnavailable to 503
 // planning-unavailable and ErrNotOnboarded to 409 (spec §10.4).
