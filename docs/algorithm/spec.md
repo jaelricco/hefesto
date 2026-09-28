@@ -615,7 +615,7 @@ Je Region (`onboarding.md` §3.7):
 | `entered_via` | `onboarding` · `pain_report` · `red_flag` · `break` · `clearance` | – |
 | `ramp_accounts` | Lastkonten, für die die Rampe gilt: bei Beschwerde und Red Flag alle Konten der Strukturen der Region; bei `break` nur die Straight-Arm-Konten und `wrist` | §6.11, PAR-D-29 |
 | `start_fraction`, `ramp_step` | Startanteil 0.5 (leichte Beschwerde) oder 0.25 (nach Verweis, Sehnenbefund oder Pause ≥ 4 Wochen); aktueller Schritt der Reihe 0.25 → 0.5 → 0.75 → 1.0 | PAR-D-24, PAR-D-25, PAR-D-33, PAR-D-29 |
-| `reference_volume` | `R(a)` der Rampenkonten vor der Beschwerde bzw. Pause, **nur wenn geloggt**; ohne geloggte Historie gibt es keine Referenz, und die Rampe wirkt nur als zusätzliche Obergrenze auf LOAD-02/LOAD-04 (§7.2) | `05` §6.2 («nur auf früher toleriertes Niveau») |
+| `reference_volume` | `R(a)` der Rampenkonten vor der Beschwerde bzw. Pause, **nur wenn geloggt**; ohne geloggte Historie gibt es keine Referenz, und die Rampe wirkt nur als zusätzliche Obergrenze auf LOAD-02/LOAD-04 (§7.2). Ausnahme: eine Pause aus dem Onboarding rampt auf dem eingefrorenen Zielvolumen der ersten Woche (§6.11, ENT-R-1) | `05` §6.2 («nur auf früher toleriertes Niveau») |
 | `prior_injury` | Verletzung in den letzten 12 Monaten | PAR-F-47, PAR-D-02 |
 | `restrictions` | Bewegungskategorien einer Fachperson | `onboarding.md` §3.7 |
 | Schmerzverlauf | Berichte (NRS 0–10) je Zeitpunkt, Regelverletzungen der letzten 14 Tage, Beginn der Beschwerde | PAR-D-13–20, 32 |
@@ -1265,9 +1265,14 @@ Konto. Die Rampe bezieht sich auf das Referenzmittel vor der Pause.
   Last bis zur letzten Einheit), damit eine längere Pause nie mehr Last
   erlaubt. Mit geloggter Referenz ersetzt die Rampe für Straight-Arm- und
   Handgelenk-Konten den Wochendeckel: Der User kehrt auf früher toleriertes
-  Niveau zurück (`05` §6.2). Ohne geloggte Referenz gibt es kein toleriertes
-  Niveau: LOAD-04 und LOAD-02 gelten unverändert, und der Rampenanteil ×
-  Zielvolumen wirkt zusätzlich als Obergrenze (§7.2). Bent-Arm-Konten folgen
+  Niveau zurück (`05` §6.2). Ohne geloggte Referenz (Pause aus dem
+  Onboarding) läuft die Rampe auf dem Zielvolumen der ersten Woche. Es wird
+  beim Onboarding eingefroren, damit ein Ziel, das mit einer neuen Sprosse
+  wächst, die Stufen nicht vergrössert. f(a) (§7.2) wirkt auf die Schritte
+  wie auf c in LOAD-02: Anteil = 0.25 + (Stufe − 0.25) · f(a), im
+  Risikofenster also 25 → 44 → 63 → 81 % (ENT-R-1). Ein Konto, das in der
+  ersten Woche keine Last hatte, bekommt den Rampenanteil × Zielvolumen nur
+  als zusätzliche Obergrenze über LOAD-04 und LOAD-02. Bent-Arm-Konten folgen
   LOAD-02 bzw. LOAD-04 mit den Faktoren oben als Obergrenze.
 - Die Pause zählt für Straight-Arm- und Handgelenk-Konten ab deren letzter
   Last, für die übrigen Konten ab der letzten Einheit. Solange der User nicht
@@ -1300,7 +1305,9 @@ Konto. Die Rampe bezieht sich auf das Referenzmittel vor der Pause.
 `pre_break_level` ist die **angegebene Stufe** für SEL-08 (Arbeitssprosse
 darunter bzw. nach der Tabelle oben) und die **Obergrenze** der Sprosse
 während der Rampe; der Startwert der Dosierung bleibt die Kapazität mit
-σ × 1.25 (`onboarding.md` §3.5, §5.2).
+σ × 1.25 (`onboarding.md` §3.5, §5.2). Die Basis der Rampe ist das
+eingefrorene Zielvolumen der ersten Woche (ENT-R-1), nicht ein aus
+`pre_break_level` abgeleitetes Volumen.
 
 ### 6.12 Check-in (ADAPT-17, optional)
 
@@ -1369,9 +1376,10 @@ toleriertes Niveau zurückgekehrt wird (`05` §6.2). Ohne geloggte Referenz
 Niveau: Dann gilt LOAD-02 bzw. LOAD-04 unverändert, und der Rampenanteil ×
 Zielvolumen wirkt **zusätzlich** als Obergrenze. Eine Region mit Beschwerde
 wächst so nie schneller als ein beschwerdefreies neues Konto. Dasselbe gilt
-für die Pausenrampe (§6.11); U-13, das die Pausenrampe auch ohne geloggte
-Referenz den Deckel ersetzen liess, ist nach dem Review zurückgenommen
-(§15.5).
+für eine Pause, in deren erster Woche ein Konto keine Last hatte. Eine Pause
+aus dem Onboarding läuft dagegen auf dem Zielvolumen der ersten Woche, das
+beim Onboarding eingefroren wird, mit f(a) auf den Schritten (§6.11,
+ENT-R-1).
 
 **Ganze Sätze** (`PAR-S-35`). Der Deckel ist eine Zahl in Belastungseinheiten,
 geplant werden ganze Sätze. Der Anteil eines Satzes, der beim Abrunden
@@ -1952,7 +1960,7 @@ Changelog-Eintrag in `ruleset_version`.
 | 1 Anfänger, Outdoor-Park, 2×/Woche, Muscle-up | `outdoor_park`, 2 × 45 min, 0–3 Klimmzüge, 0 Dips, Liegestütz 8–12, `lt_6_months` | 2 volle Ganzkörper-Einheiten (Mo, Do); Zubringer-Leitern Klimmzug (Exzentrik, Rudern am niedrigen Holm, Hang), Dip (Stütz, Exzentrik), Liegestütz; keine Band-Übungen (kein Band); kein Muscle-up-Block, Hinweis 5 + 5 als Minimum (§3.4, §3.5); Straight-Arm-Budget 8; Woche 1 mit 50 % (LOAD-04); lineare Doppelprogression |
 | 2 Fortgeschritten, Gym, 4×/Woche, Planche + Front Lever | `gym`, 4 × 60–90 min, Tuck/Adv-Tuck-Stufen mit Halteklassen, `1_to_4_years` | Planche und Front Lever auf 3 Tagen mit ≥ 48 h Abstand, geblockt (gepaart nur bei Zeitmangel, §7.7); vierter Tag ohne Straight-Arm-Sprossen und ohne harte Zugreize (Beine, Rumpf, Balance, leichte Technik); Budget 12 bzw. 18 nach OG-Band; Pausen 300 s; wellenförmige Kraftarbeit; Kalibrierungssätze in den ersten Einheiten; Volumen startet bei 50 % (LOAD-04, ENT-S-1) |
 | 3 Fortgeschritten, mediale Ellbogenbeschwerden, Ziel Planche | wie 2, Region `elbow_inner` aktuell, Alltagsschmerz 1–2, Training 3–4/10, keine Red Flag | Region `rtt_1` (Start 0.5, ohne geloggte Referenz zusätzlich unter LOAD-04); Planche-Familie M (Regression), Ringe-Straight-Arm X, Klimmzug M (Neutralgriff); 72 h zwischen harten Reizen der Region; Schmerz-Monitoring aktiv; keine Tests und Prüfversuche an der Region; Texte und Belege ohne Diagnose (EXPL-07) |
-| 4 Wiedereinsteiger nach 6 Monaten | `17_to_26_weeks`, `pre_break_level` Adv Tuck Planche, 10 Klimmzüge | Pause aus dem Onboarding (§6.11); Straight-Arm- und Handgelenk-Konten in der Rampe ab Stufe 1 mit 25 % des Zielvolumens, ohne geloggte Referenz nur als zusätzliche Obergrenze über LOAD-04 und LOAD-02 (§6.11); Bent-Arm 50 %, 2 Sprossen unter der Angabe, dann nach Kalibrierung; σ × 1.25; keine Straight-Arm-Tests vor Ende der Rampe; Sprosse höchstens bis Adv Tuck während der Rampe |
+| 4 Wiedereinsteiger nach 6 Monaten | `17_to_26_weeks`, `pre_break_level` Adv Tuck Planche, 10 Klimmzüge | Pause aus dem Onboarding (§6.11); Straight-Arm- und Handgelenk-Konten in der Rampe ab Stufe 1 mit 25 % des eingefrorenen Zielvolumens der ersten Woche, f(a) auf den Schritten (§6.11, ENT-R-1); Bent-Arm 50 %, 2 Sprossen unter der Angabe, dann nach Kalibrierung; σ × 1.25; keine Straight-Arm-Tests vor Ende der Rampe; Sprosse höchstens bis Adv Tuck während der Rampe |
 | 5 Anfänger, Full Planche in 8 Wochen | Ziel Full Planche mit Datum, Stufe `none`, Liegestütz 4–7 | Realismus-Check: Untergrenze 48 Wochen, Spanne 105–162 Wochen, Etappenziel die Tuck Planche mit eigener Spanne (die Lean hat kein OG-Level, §15.2 U-19; Coaching nennt für sie 0–2 Monate, PAR-A-47); Plan ab den Wurzeln (Liegestütz, Stütz, Handgelenk, Hollow); kein Planche-Maximalblock; neutrale Texte |
 | 6 Widersprüchliche Angaben | z. B. `sedentary`, 0 Liegestütze, aber Straddle Planche und Full Front Lever | höchstens 2 Rückfragen; danach Stufe nach R-2/R-3 (plausible Vorstufe), σ × 1.25, niedrige Konfidenz → Kalibrierungssätze; keine stille Übernahme des höheren Werts |
 
@@ -2072,7 +2080,7 @@ sollte.
 | U-10 | §6.3 | Angebote (ADAPT-05, ADAPT-10) auch für Zubringer; bei einer Band-Sprosse ist das Angebot dieselbe Sprosse ohne Band; Angebote gehören zum Maximalblock und werden in LOAD-10 Schritt 5 zuletzt gestrichen | sonst kam kein Band-Nutzer und kein Anfänger je an ein Angebot |
 | U-11 | §6.4 ADAPT-10 | Der erste konzentrische Versuch ist ein Kalibrierungssatz (so viele saubere Wdh. wie die Reserve erlaubt) | ein einzelner Versuch liefert nur eine Untergrenze |
 | U-12 | §6.8 | Deload-Einheiten sind kein Plateau-Beleg; der Abstand von `PAR-S-17` zählt ab der letzten Deload-Einheit | sonst folgte auf jeden Deload ein zweiter |
-| U-13 | §6.11, §7.2 | **Zurückgenommen** nach dem Review (A-3): Ohne geloggte Referenz wirkt die Pausenrampe nur als zusätzliche Obergrenze über LOAD-04 und LOAD-02 | Das Zielvolumen ist kein toleriertes Niveau; `pre_break_level` ist laut `onboarding.md` §3.5 kein Startwert. Folge: Persona 4 bleibt lange bei einem Straight-Arm-Satz je Woche (ENT-R-1) |
+| U-13 | §6.11, §7.2 | **Zurückgenommen** nach dem Review (A-3), ersetzt durch U-33: Die Pausenrampe ersetzte ohne geloggte Referenz den Deckel mit Anteilen eines wachsenden Zielvolumens | Das Zielvolumen wuchs mit jeder neuen Sprosse, und f(a) wirkte nicht |
 | U-14 | §7.2 | Ein Deckel trägt die Regel, die tatsächlich bindet; der Spielraum-Übertrag (`PAR-S-35`) gilt für LOAD-02 | vorher benannte die Pausenregel auch Deckel, die LOAD-02 setzte, und der Übertrag fiel weg |
 | U-15 | §7.9 LOAD-10 | Untergrenze 1 Satz je Arbeitsübung bis Schritt 7 (statt 2); innerhalb eines Schritts zuerst die Übung mit den meisten Sätzen; Schritt 7 streicht nach Priorität | mit Untergrenze 2 erreichte der halbe Einstieg (LOAD-04) die 50 % nur durch Streichen ganzer Übungen |
 | U-16 | §8.6 | Eine Einheit zählt für die Rampe einer Beschwerde, wenn der Morgenbericht grün ist; ohne jeden Basiswert wird die Morgenregel nicht geprüft, nur die Schwellen | PAR-D-26 fragt nach dem Folgetag; ein fehlender Basiswert machte aus 1/10 eine Verletzung der Schmerzregel |
@@ -2092,6 +2100,7 @@ sollte.
 | U-30 | §8.3, `onboarding.md` §3.7 | Alltagsschmerz aus dem Onboarding ist der erste Basiswert; Trainingsschmerz > 5 (PAR-D-15) startet die Rampe mit 0.25 (PAR-D-33); `rtt_0` endet nach §8.3 | Review A-9, A-10 |
 | U-31 | §5.7 | Ein Halt unter 4 s ohne leichtere Sprosse oder Band: kurze Technik-Halte aus μ (DOSE-09), bei fehlender Reserve kein Satz und ein Hinweis (SEL-07). Mit Band ohne eigenen Wert: Kalibrierungsstart | Review B-2: vorher 5 s über dem geschätzten Maximum |
 | U-32 | §9.3 | RF-05 mit Folgefrage (verschoben → N); Stopp-Regel nennt plötzlichen stechenden Schmerz; Regionstexte grammatisch; keine Tatsachenaussage zur Sehnenanpassung; Onboarding-Ergebnis mit Disclaimer; SEL-12 für eine unplausible Angabe | Review A-7, A-8, A-11, A-13, B-4, C M-1 |
+| U-33 | §6.11, §7.2 | ENT-R-1: Eine Pause aus dem Onboarding rampt die Straight-Arm- und Handgelenk-Konten auf dem Zielvolumen der ersten Woche, beim Onboarding eingefroren; Anteil = 0.25 + (Stufe − 0.25) · f(a); 72 h und Sprosse unter `pre_break_level` wie U-25 | Review C: die Basis wächst nicht mit einer neuen Sprosse (A-3, A-4), f(a) wirkt wieder (A-3); Persona 4 kam vorher zwölf Wochen nicht über einen Straight-Arm-Satz je Woche hinaus |
 
 ### 15.3 Nicht umgesetzt
 

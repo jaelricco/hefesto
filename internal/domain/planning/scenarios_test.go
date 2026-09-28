@@ -101,6 +101,25 @@ func TestScenarioReturnerRamp(t *testing.T) {
 	if end.Break != nil {
 		t.Errorf("break still active after 10 weeks: %+v", end.Break)
 	}
+	// Without a logged level the ramp runs on the week-1 target frozen at the
+	// onboarding, with f(a) = 0.75 (risk window) on the steps (ENT-R-1).
+	if s.Break == nil || len(s.Break.Base) == 0 {
+		t.Fatalf("no frozen base for a pause from the onboarding: %+v", s.Break)
+	}
+	fracs := []float64{0.25, 0.4375, 0.625, 0.8125}
+	before := s
+	for i, w := range weeks {
+		for _, l := range w.plan.Loads {
+			if before.Break == nil || l.Rule != "ADAPT-16" || before.Break.Base[l.Account] == 0 {
+				continue
+			}
+			want := fracs[min(before.Break.Step, 3)] * before.Break.Base[l.Account]
+			if math.Abs(l.Cap-want) > 2e-3 {
+				t.Errorf("week %d %s: cap %.3f, want %.3f", i+1, l.Account, l.Cap, want)
+			}
+		}
+		before = w.after
+	}
 	for _, l := range weeks[len(weeks)-1].plan.Loads {
 		if l.Rule == "ADAPT-16" && l.Account == "wrist" && l.Cap > l.Target+1e-3 {
 			t.Errorf("wrist cap %.3f above its target %.3f", l.Cap, l.Target)

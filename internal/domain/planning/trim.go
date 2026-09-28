@@ -116,18 +116,23 @@ func (g *gen) weekCap(a string, target float64) (float64, string) {
 	// Break ramp (§6.11). With a logged level before the pause, the ramp
 	// fractions of that level replace the cap of straight-arm and wrist
 	// accounts: the athlete returns to a load they tolerated (05 §6.2).
-	// Without one there is no tolerated level, so LOAD-04 and LOAD-02 stay
-	// and the ramp only adds a bound (§7.2). Bent-arm accounts follow the
-	// stream-B factors as an upper bound.
+	// Without one, the ramp runs on the week-1 target frozen at the
+	// onboarding, with f(a) on the steps as on c in LOAD-02 (ENT-R-1). An
+	// account without either only gets the ramp as a bound. Bent-arm
+	// accounts follow the stream-B factors as an upper bound.
 	if b := g.s.Break; b != nil {
 		weeks := math.Max(0, math.Floor(daysBetween(b.Since, g.week)/7))
 		ref := b.Reference[a]
 		if isStraightAccount(a) && b.StraightDays >= k.T.LayoffDays {
 			steps := []float64{k.T.RampStep1, k.T.RampStep2, k.T.RampStep3, k.T.RampStep4}
 			frac := steps[min(b.Step, 3)]
-			if ref > 0 {
+			switch base := b.Base[a]; {
+			case ref > 0:
 				cp, rule = float64(frac*ref), RuleBreak
-			} else {
+			case base > 0:
+				frac = steps[0] + float64((frac-steps[0])*g.weekFactor(a))
+				cp, rule = float64(frac*base), RuleBreak
+			default:
 				tighten(float64(frac*target), RuleBreak)
 			}
 		} else if f := g.breakFactor(b.Days); f < 1 {

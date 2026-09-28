@@ -41,6 +41,7 @@ type BreakState struct {
 	StepSessions int                `json:"step_sessions"`
 	Logged       bool               `json:"logged"`              // detected from the log
 	Reference    map[string]float64 `json:"reference,omitempty"` // R per account before the pause
+	Base         map[string]float64 `json:"base,omitempty"`      // week-1 target without a logged level (ENT-R-1)
 }
 
 // Profile is the onboarding profile with its derived fields (spec §4.2).
@@ -321,6 +322,7 @@ func (s Snapshot) clone() Snapshot {
 	if s.Break != nil {
 		b := *s.Break
 		b.Reference = cloneMap(b.Reference)
+		b.Base = cloneMap(b.Base)
 		out.Break = &b
 	}
 	return out

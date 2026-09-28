@@ -2,34 +2,34 @@ week 1: 3 sessions, 11 sets (1 straight-arm)
   planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
   changes: ramp_step
   regions after: break=119 days/step 1
-week 2: 3 sessions, 11 sets (1 straight-arm)
-  planche=planche-tuck pull-up=pull-up wrist-conditioning=plank-hold
+week 2: 3 sessions, 13 sets (2 straight-arm)
+  planche=planche-tuck,planche-lean pull-up=pull-up wrist-conditioning=plank-hold
   changes: ramp_step
   regions after: break=119 days/step 2
-week 3: 3 sessions, 11 sets (1 straight-arm)
+week 3: 3 sessions, 14 sets (2 straight-arm)
   planche=planche-tuck pull-up=pull-up wrist-conditioning=plank-hold
   changes: ramp_step
   regions after: break=119 days/step 3
-week 4: 2 sessions, 9 sets (1 straight-arm)
+week 4: 3 sessions, 15 sets (3 straight-arm)
   planche=planche-tuck pull-up=pull-up wrist-conditioning=plank-hold
   regions after: break=119 days/step 3
-week 5: 3 sessions, 12 sets (1 straight-arm)
+week 5: 3 sessions, 15 sets (3 straight-arm)
   planche=planche-tuck pull-up=pull-up wrist-conditioning=plank-hold
   regions after: break=119 days/step 3
-week 6: 2 sessions, 9 sets (1 straight-arm), deload planned
+week 6: 3 sessions, 14 sets (3 straight-arm), deload planned
   planche=planche-tuck pull-up=pull-up wrist-conditioning=plank-hold
   regions after: break=119 days/step 3
-week 7: 2 sessions, 9 sets (1 straight-arm)
+week 7: 3 sessions, 15 sets (3 straight-arm)
   planche=planche-tuck pull-up=pull-up wrist-conditioning=plank-hold
   regions after: break=119 days/step 3
-week 8: 3 sessions, 12 sets (1 straight-arm)
+week 8: 3 sessions, 15 sets (3 straight-arm)
   planche=planche-tuck pull-up=pull-up wrist-conditioning=plank-hold
-week 9: 3 sessions, 13 sets (1 straight-arm)
+week 9: 3 sessions, 15 sets (3 straight-arm)
   planche=planche-tuck pull-up=pull-up wrist-conditioning=plank-hold
   changes: deload_scheduled×2
-week 10: 3 sessions, 12 sets (1 straight-arm), deload stagnation
+week 10: 3 sessions, 15 sets (3 straight-arm), deload stagnation
   planche=planche-tuck pull-up=pull-up wrist-conditioning=plank-hold
-week 11: 3 sessions, 12 sets (1 straight-arm)
+week 11: 3 sessions, 15 sets (3 straight-arm)
   planche=planche-tuck pull-up=pull-up wrist-conditioning=plank-hold
-week 12: 3 sessions, 13 sets (1 straight-arm)
+week 12: 3 sessions, 15 sets (3 straight-arm)
   planche=planche-tuck pull-up=pull-up wrist-conditioning=plank-hold

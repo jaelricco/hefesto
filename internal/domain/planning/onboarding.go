@@ -264,14 +264,41 @@ func Start(k *Knowledge, a Answers, now time.Time) (Snapshot, OnboardingResult, 
 			}
 		}
 	}
-	if s.Profile.HealthConsent {
-		return s, res, nil
+	if !s.Profile.HealthConsent {
+		// Without consent nothing health-related is kept beyond the
+		// constraints.
+		s.Regions = map[string]RegionState{}
+		s.Screening = Screening{}
+		res.Reasons = append(res.Reasons, k.reason(RuleNoConsent))
 	}
-	// Without consent nothing health-related is kept beyond the constraints.
-	s.Regions = map[string]RegionState{}
-	s.Screening = Screening{}
-	res.Reasons = append(res.Reasons, k.reason(RuleNoConsent))
+	if err := k.freezeBreakBase(&s, today); err != nil {
+		return Snapshot{}, OnboardingResult{}, err
+	}
 	return s, res, nil
+}
+
+// freezeBreakBase keeps the week-1 target of the straight-arm and wrist
+// accounts for a pause from the onboarding. Without a logged level the break
+// ramp runs on it, frozen, so a target that grows with a new rung does not
+// enlarge the steps (spec §6.11, ENT-R-1).
+func (k *Knowledge) freezeBreakBase(s *Snapshot, today time.Time) error {
+	if s.Break == nil {
+		return nil
+	}
+	week := weekStart(today)
+	plan, err := Generate(k, *s, week, week)
+	if err != nil {
+		return fmt.Errorf("break base: %w", err)
+	}
+	for _, l := range plan.Loads {
+		if isStraightAccount(l.Account) && l.Target > 0 {
+			if s.Break.Base == nil {
+				s.Break.Base = map[string]float64{}
+			}
+			s.Break.Base[l.Account] = l.Target
+		}
+	}
+	return nil
 }
 
 func validateAnswers(k *Knowledge, a Answers, now time.Time) error {
