@@ -3,7 +3,7 @@
 # Xcode (the self-hosted runner, or by hand). The app runs in its demo mode
 # (ios/Hefesto/DemoMode.swift): seeded local data, no server, no account.
 #
-#   scripts/ios-screenshots.sh [out-dir]    # default: ios/.screenshots
+#   scripts/ios-screenshots.sh [out-dir]    # default: ios/screenshots
 #
 # It builds the Debug app into ios/.derived-screenshots, boots one simulator
 # named "Hefesto Screenshots" (created on the first run and reused), saves one
@@ -12,7 +12,7 @@
 set -euo pipefail
 
 root="$(cd "$(dirname "$0")/.." && pwd)"
-out="${1:-$root/ios/.screenshots}"
+out="${1:-$root/ios/screenshots}"
 mkdir -p "$out"
 out="$(cd "$out" && pwd)"
 rm -f "$out"/*.png

@@ -41,5 +41,5 @@ ios/.derived/
 ios/build.log
 # scripts/ios-screenshots.sh
 ios/.derived-screenshots/
-ios/.screenshots/
+ios/screenshots/
 ios/screenshots-build.log
