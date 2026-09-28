@@ -298,7 +298,7 @@ No server code or API spec changed in this phase.
 Polish: localization, an accessibility pass, a TestFlight build, importing
 the researched seed content, and a load smoke test.
 
-## Design pass: direction B, "Glut" (asked for ahead of Phase 7, in progress)
+## Design pass: direction B, "Glut" (merged in #11; the set composer follows, awaiting review)
 
 The owner chose direction B of three mockups. The decisions are in ADR 0020.
 It is developed on `claude/awesome-wright-gqa9pe`, next to the planner track,
@@ -318,21 +318,28 @@ and touches only the app's views, its project file and its strings.
   no longer reads the generated API type.
 - **A demo mode** (Debug builds only) and a screenshot workflow on the
   self-hosted Mac capture every screen in German for review.
+- **The set composer** is themed in full now that the planner's reserve
+  section has landed (#10). Its sections carry the same caps labels as every
+  other list in the app. The composer can open on an exercise already chosen,
+  and the demo's `reserve` screen uses that to open it on a hold, so the
+  screenshots show the reserve question.
 
 ### Verification
 
-On the self-hosted Mac (Xcode 26.4.1, iOS 26.4 simulator), at 7f3cd01:
-- `ios` (run 37): `swift test` passes 47 tests in 13 suites, and the app
-  builds for the iOS Simulator under Swift 6 strict concurrency.
-- `ios-screenshots` (run 3): all 12 demo screens captured in German on an
-  iPhone 17 Pro simulator and uploaded as an artifact.
-- A trial merge with the planner branch (`claude/busy-babbage-fqio1j`) is
-  clean. The set composer keeps its section header lines as they were,
-  because the planner adds its reserve section right above them.
+On the self-hosted Mac (Xcode 26.4.1, iOS 26.4 simulator):
+- At 7f3cd01, merged in #11: `ios` (run 37) passed 47 tests in 13 suites and
+  built the app for the iOS Simulator under Swift 6 strict concurrency;
+  `ios-screenshots` (run 3) captured all 12 demo screens in German on an
+  iPhone 17 Pro simulator.
+- At c720d95, the set composer on top of the planner (#10): `ios` (run 48)
+  passes 63 tests in 15 suites and builds the app; `ios-screenshots` (run 7)
+  captures all 13 demo screens, the new `reserve` screen among them.
 
 ### Open questions for review
 
-1. **The set composer** is only partly themed until the planner's reserve
-   section lands. Theme it fully after that merge?
-2. **Light mode.** There is none now (ADR 0020). Should a light palette
+1. **Light mode.** There is none now (ADR 0020). Should a light palette
    follow for training outdoors?
+2. **Choices in ember.** The composer's pickers (assistance, form, reserve)
+   show their values in ember, because iOS tints them with the app's accent.
+   Elsewhere ember marks the one action on a screen. Keep them, or set them in
+   the secondary text colour?
