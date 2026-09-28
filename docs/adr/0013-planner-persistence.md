@@ -144,8 +144,7 @@ die Nachvollziehbarkeit. Wann sie gelöscht werden, ist offen.
 
 ## Folgen
 
-- Der Planer kann auf Postgres laufen. Verdrahtet ist er noch nicht: Die
-  Endpunkte folgen nach OpenAPI (ADR 0007).
+- Der Planer läuft auf Postgres; seine Endpunkte beschreibt ADR 0014.
 - Nichts davon wird synchronisiert. Profil, Ziele und Schmerzberichte
   bekommen ihre Sync-Spalten mit den Endpunkten, additiv.
 - Der Widerruf der Einwilligung ist noch nicht gebaut. Die Tabellen dafür

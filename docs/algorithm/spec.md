@@ -1904,25 +1904,28 @@ selbst anlegt, ihre ID.
 
 | Methode und Pfad | Zweck | Anmerkungen |
 |---|---|---|
-| `GET`, `PUT /v1/me/training-profile` | Profil, Verfügbarkeit, Equipment, Körpergewicht, Einwilligungen | `PUT` ersetzt ganz; Validierung nach `onboarding.md` §3 |
-| `POST /v1/me/onboarding` | alle Antworten auf einmal; Ergebnis `needs_answers` (Rückfragen, höchstens 2), `blocked` (SAFE-02) oder `complete` (Start-Zustand, Realismus, Hinweise, erster Plan) | idempotent über `Idempotency-Key` wie die übrige API |
-| `GET`, `PUT /v1/me/goals` | Ziele mit Priorität, Ziel-Stufe, Datum, Etappenziel | Änderung löst WEEK-08 aus |
-| `GET /v1/me/plan` | Plan der laufenden Woche (`?week=YYYY-MM-DD`, `?explain=trace`) | `ETag`; erzeugt den Plan, falls keiner existiert |
-| `POST /v1/me/plan/regenerate` | Plan ab der nächsten nicht begonnenen Einheit neu erzeugen | idempotent; gleiche Eingaben → gleicher Plan |
-| `GET /v1/me/plan/sessions/{id}` | eine geplante Einheit | – |
-| `POST /v1/me/plan/sessions/{id}/start` | Draft-Session erzeugen (§10.2); optional Check-in (ADAPT-17) | gibt `WorkoutSession` im bestehenden Schema zurück |
-| `GET /v1/me/plan/decisions` | Änderungsprotokoll | Cursor-Paginierung |
-| `POST /v1/me/pain-reports`, `GET /v1/me/pain-reports` | Schmerzberichte (auch über Sync) | nur mit Einwilligung gespeichert |
+| `GET`, `PUT /v1/me/training-profile` | Profil, Verfügbarkeit, Equipment, Körpergewicht, Mobilitäts-Checks, Zusatzlast-Grenzen | `PUT` ersetzt den änderbaren Teil; Einwilligung, Geburtsjahr und Trainingshintergrund bleiben (U-39); Validierung nach `onboarding.md` §3 |
+| `POST /v1/me/onboarding` | alle Antworten auf einmal; Ergebnis `needs_answers` (Rückfragen, höchstens 2), `blocked` (SAFE-02) oder `complete` (Start-Zustand, Realismus, Hinweise, erster Plan) | einmal je User (`already-onboarded`, U-39); optional `Idempotency-Key` wie der Sync-Push |
+| `GET`, `PUT /v1/me/goals` | Ziele mit Priorität, Ziel-Stufe, Datum; Realismus der datierten Ziele | Änderung löst WEEK-08 aus |
+| `GET /v1/me/plan` | Plan der laufenden Woche; `?week=YYYY-MM-DD` für frühere Wochen | `ETag` ist die Plan-ID (U-41); erzeugt den Plan, falls keiner existiert; `?explain=trace` folgt (§15.3) |
+| `POST /v1/me/plan/regenerate` | Plan der laufenden Woche neu erzeugen | gleiche Eingaben → gleiche Einheiten, neue IDs |
+| `GET /v1/me/plan/sessions/{id}` | eine geplante Einheit eines aktiven Plans | – |
+| `POST /v1/me/plan/sessions/{id}/start` | Draft-Session erzeugen (§10.2); optional Check-in (ADAPT-17) | **noch nicht gebaut** (§15.3) |
+| `GET /v1/me/plan/decisions` | Änderungsprotokoll | Cursor-Paginierung, neueste zuerst |
+| `POST /v1/me/pain-reports`, `GET /v1/me/pain-reports` | Schmerzberichte | nur mit Einwilligung (`consent-required`, U-44); der Sync folgt (§15.3) |
 | `POST /v1/me/symptoms` | «Symptome beim Training melden» (Belastungssymptome, RF-10) | wirkt sofort (SAFE-02); ohne Einwilligung nur als Auflage gespeichert |
-| `GET /v1/me/regions` | Zustand je Region mit Texten und Disclaimer | – |
-| `POST /v1/me/regions/{region}/red-flags` | Antworten auf die Red-Flag-Fragen | ohne Einwilligung nur flüchtig ausgewertet |
+| `GET /v1/me/regions` | Zustand je Region mit Namen, Auflagen, Red-Flag-Fragen und Disclaimer | ohne Einwilligung nur die Auflagen (`tracked: false`) |
+| `POST /v1/me/regions/{region}/red-flags` | Antworten auf die Red-Flag-Fragen | jede gestellte Frage beantwortet (U-43); ohne Einwilligung nur flüchtig ausgewertet |
 | `POST /v1/me/regions/{region}/clearance`, `POST /v1/me/screening/clearance` | User bestätigt die Freigabe durch eine Fachperson | Zustandswechsel §8.3 |
 | `GET /v1/me/capacity` | Kapazitäten mit Konfidenzklasse | für «Profil verfeinern» |
-| `GET /v1/planner/rules`, `GET /v1/planner/sources`, `GET /v1/planner/parameters` | Katalog für die Erklärungen | öffentlich lesbar, versioniert über `ETag` |
+| `GET /v1/planner/rules`, `GET /v1/planner/sources`, `GET /v1/planner/parameters`, `GET /v1/planner/catalogue` | Katalog für die Erklärungen; `catalogue` mit Skills, Übungen, Regionen und Antwortklassen des Planers (U-46) | öffentlich lesbar, versioniert über `ETag` (`ruleset_version`) |
 
 Alle Anfragekörper werden gegen `api/openapi.yaml` validiert; Contract-Tests
-prüfen Routen und Antworten (ADR 0007). Planungs-Antworten tragen
-`ruleset_version` und `content_version_id`.
+prüfen Routen und Antworten (ADR 0007, ADR 0014). Ereignisse (Schmerzbericht,
+Symptome, Red-Flag-Antworten, Freigaben) tragen eine Client-ID und sind
+darüber idempotent (U-40). Planungs-Antworten tragen `ruleset_version`;
+`content_version_id` kommt dazu, sobald der Planer Content-Übungen nutzt
+(U-1).
 
 ### 10.4 Fehler (application/problem+json)
 
@@ -1930,8 +1933,10 @@ prüfen Routen und Antworten (ADR 0007). Planungs-Antworten tragen
 |---|---|---|
 | `planning-unavailable` | 503 | Wissensbasis fehlt oder ist ungültig (§2.6) |
 | `onboarding-required` | 409 | SAFE-01 |
-| `training-stopped` | 409 | SAFE-02; der Körper nennt die empfohlene Abklärung ohne Diagnose |
-| `validation` (bestehend) | 422 | ungültige Profil- oder Onboarding-Daten |
+| `already-onboarded` | 409 | zweites Onboarding (U-39) |
+| `consent-required` | 409 | Schmerzbericht ohne Einwilligung (U-44) |
+| `training-stopped` | 409 | SAFE-02 beim Start einer Einheit; der Körper nennt die empfohlene Abklärung ohne Diagnose. Der Plan selbst antwortet mit `stopped: true` (U-41) |
+| `validation` (bestehend) | 422 | ungültige Profil- oder Onboarding-Daten; `errors` mit JSON-Pointern (U-43) |
 
 ### 10.5 Offline und Sync
 
@@ -2122,8 +2127,10 @@ Loader und Validierung (`internal/content`, `cmd/contentlint`) sowie der
 Anwendungsdienst `internal/planning` mit den Ports aus §10.1 und
 In-Memory-Adaptern. Danach (28.09.2026): Migration `00009_planning.sql` und
 der Postgres-Adapter `internal/store/planning.go` mit Integrationstests gegen
-echtes Postgres (ADR 0013, U-36 bis U-38). Nicht umgesetzt: HTTP-Endpunkte
-und OpenAPI (nach eigenem Review, ADR 0007), `Materialize`.
+echtes Postgres (ADR 0013, U-36 bis U-38), dann die Endpunkte unter dem Tag
+`planning` mit OpenAPI-Schema und einem Integrationstest je Endpunkt
+(ADR 0014, U-39 bis U-46). Nicht umgesetzt: `Materialize` und der Start einer
+geplanten Einheit (§15.3).
 
 Tests: sechs Personas als Golden Files (`internal/domain/planning/testdata/`),
 die Eigenschaften I-1 bis I-11 für jeden erzeugten Plan, zwölf simulierte
@@ -2180,6 +2187,14 @@ U-35 setzen die Entscheidungen ENT-R-1, ENT-R-2 und ENT-R-5 um (§15.5).
 | U-36 | §4.9 | Tabellen nach ADR 0013 (Migration `00009_planning.sql`) mit den Abweichungen in §4.9; Slugs der Wissensbasis mit Format-`CHECK` statt Fremdschlüsseln; Zeitpunkte als `timestamptz` (Kalendertage als Mitternacht UTC), berechnete Zahlen als `double precision` | Die Übungen des Planers sind noch keine Content-Zeilen (U-1). Ein Snapshot muss byte-gleich zurückkommen, sonst ändert sich der `input_hash` |
 | U-37 | §10.1 | Port `Transactor`: jeder Aufruf in einer Transaktion mit einer Advisory-Sperre je User; der Dienst rundet seine Uhr auf Mikrosekunden; `IDSource` für eigene Zeilen | «Schon gesehen» und Schreiben waren getrennt, zwei gleichzeitige Ereignisse konnten doppelt wirken. Die Zeile in `users` sperrt `touch_sync` bei jedem Sync |
 | U-38 | §4.1, §10.2 | Der Verlauf ist eine Kopie im Planer (`planner_sessions`, Sätze als `jsonb` mit Slugs, Fremdschlüssel auf `workout_sessions`); `PainReport` bekommt eine `ID`, die der Kern nicht liest | Die Log-Tabellen können die Übungen des Planers noch nicht aufnehmen; Verlauf und Schmerzberichte wachsen nur und brauchen eine Identität, damit ein Speichern sie nicht doppelt anlegt |
+| U-39 | §10.3 | Das Onboarding läuft einmal (`already-onboarded`); danach ändern `UpdateProfile` (ohne Einwilligung, Geburtsjahr und Trainingshintergrund) und `SetGoals` den Snapshot; offene Rückfragen speichern nichts | Ein zweiter Start hätte Sperren und Stopps ohne bestätigte Freigabe aufheben können |
+| U-40 | §9.4, §10.3 | Ereignisse tragen eine Client-ID; eine Wiederholung wird nicht angewandt und antwortet mit den aufgezeichneten Änderungen (`replayed`) | Die leere zweite Antwort verlor `ask_red_flags`, wenn die erste nicht ankam |
+| U-41 | §10.3, §10.4 | Der Dienst vergibt die IDs von Plänen, geplanten Einheiten und Protokoll-Einträgen; das `ETag` des Plans ist seine ID; ein gestoppter Plan antwortet mit 200 und `stopped: true` | Eine Neuerzeugung mit gleichen Eingaben behält den Hash, ändert aber die IDs; der Grund eines Stopps gehört in den Plan, den der Client zwischenspeichert |
+| U-42 | §9.1 (EXPL-07) | Die API liefert Begründungen mit Region und Red-Flag-Fragen ohne Quellen-IDs | Kein Client kann einen Studientitel neben einer Beschwerde zeigen; die vollständigen IDs bleiben in `plan_decisions` |
+| U-43 | `onboarding.md` §3.7 | Eingaben werden je Feld geprüft (Schlüssel sind JSON-Pointer); jede Red-Flag-Frage einer aktuellen Region muss beantwortet sein, im Onboarding wie am Red-Flag-Endpunkt | Eine leere Antwort war von «nicht gefragt» nicht zu unterscheiden |
+| U-44 | §13.4 | Schmerzberichte ohne Einwilligung: `409 consent-required` | Der Kern verwirft sie ohne Einwilligung; die API sagt es, statt still nichts zu tun |
+| U-45 | §4 | `Start` und `Adapt` geben leere Listen als `nil` zurück | Der Speicher kann eine leere Zeilenmenge nicht von einer fehlenden unterscheiden; sonst änderte sich der `input_hash` nach dem Lesen |
+| U-46 | §10.3 | `GET /v1/planner/catalogue` liefert Skills, Übungen, Regionen mit Red-Flag-Fragen und Antwortklassen des Planers; Pläne nennen den Namen jeder Übung | Die Skills und Übungen des Planers sind noch keine Content-Zeilen (U-1) und fehlen in `/v1/skills` |
 
 ### 15.3 Nicht umgesetzt
 
@@ -2196,6 +2211,11 @@ Kapazität), ADAPT-09, ADAPT-11, ADAPT-17, der Mobilitätsblock und Texte in
 weiteren Sprachen (KB-11). Für die Ellbogen-Regionen gibt es kein Prehab: Die
 Recherche nennt Programme, aber keine übertragbare Übung (`05` §10).
 Minderjährige bekommen keinen Plan (SAFE-07); INJ-09 ist deshalb nicht aktiv.
+Aus §10 fehlen der Start einer geplanten Einheit (`Materialize`,
+`POST /v1/me/plan/sessions/{id}/start`) und `plan_changes[]` am Abschluss
+(beides braucht die Übungen des Planers im Log, U-1), der Sync der
+Schmerzberichte, das Ändern und der Widerruf der Einwilligung (ENT-S-7) und
+`?explain=trace` (ADR 0014).
 PAR-D-28 enthält zwei der vier Soreness Rules aus `05` §6.1; Schmerz im
 Aufwärmen, der in 15 min verschwindet, hat keine eigene Regel. Ein
 angekündigtes Angebot (ADAPT-05) kann bei knappen Deckeln im Plan fehlen,
@@ -2221,6 +2241,13 @@ weil die Adaption die Kürzung nicht vorhersieht.
   oder Klimmzug belasten dieselben Strukturen wie die Straight-Arm-Sprosse.
   Persona 4 bleibt deshalb bei einem Tuck-Satz je Einheit (3 je Woche, 4 nach
   dem ersten Mindestschritt).
+- **Einschränkungen einer Fachperson wirken nicht.** Keine Übung der
+  Wissensbasis trägt `restriction_tags` (§5.6, SEL-03). Die Einschränkungen
+  aus dem Onboarding (`complaints[].restrictions`) werden geprüft und
+  gespeichert, schliessen aber keine Übung aus. Die Zuordnung der Übungen zu
+  den sechs Kategorien ist Inhalt und braucht eine fachliche Prüfung
+  (ENT-10); bis dahin sollte die App die Frage nicht stellen oder sagen, dass
+  der Planer die Angabe noch nicht berücksichtigt.
 - **Weniger Trainingstage.** Mit WEEK-09 (ENT-R-5) haben Persona 2 meist
   drei statt vier, Persona 3 meist zwei statt vier und Persona 5 zwei statt
   drei Trainingstage, weil die übrigen Tage nur einen Satz hätten. Das

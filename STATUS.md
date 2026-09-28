@@ -19,7 +19,7 @@ that stands.
   #8. Its open questions (rest-day logging, the bodyweight time zone, wiping
   the database on sign-out) still stand.
 
-## Parallel track: training-plan algorithm (stage 5 done; Postgres adapter and migration, awaiting review)
+## Parallel track: training-plan algorithm (stage 5 done; persistence and API, awaiting review)
 
 A separate track, with its own five-stage plan, researches, specifies and
 implements a planner that turns an onboarding and the logs into individual
@@ -64,7 +64,7 @@ documents are in German.
   in spec §15.4. The session cap (`PAR-S-48` with the smallest set) now
   limits straight-arm volume most; some personas train on fewer days than
   they chose.
-- **Postgres adapter and migration (this checkpoint, ADR 0013):**
+- **Postgres adapter and migration (ADR 0013):**
   - Migration `00009_planning.sql` adds the planner's tables: profile,
     goals, health data, constraints, capacities, ladders, phase, pause,
     history, plans and the decision log.
@@ -75,9 +75,34 @@ documents are in German.
   - Integration tests against real Postgres: a full snapshot reads back
     byte-identical, and the service produces the same snapshots, plans and
     changes on Postgres as in memory.
-- **Not yet built:** the HTTP endpoints and the OpenAPI spec, the sync of
-  the tables clients will write, and the withdrawal of the health-data
-  consent. They follow after this review (ADR 0007).
+- **HTTP endpoints (this checkpoint, ADR 0014):**
+  - `api/openapi.yaml` gains the `planning` tag: onboarding, training
+    profile and goals, the week plan with its sessions and decision log,
+    pain reports, exertion symptoms, regions with red flags and clearances,
+    capacities, and a public catalogue (rules, sources, parameters, and the
+    planner's skills, exercises, regions and answer classes). The change is
+    additive.
+  - The onboarding runs once; later changes go through the profile and the
+    goals. Events are idempotent by a client ID, and a repeat answers with
+    the changes recorded the first time.
+  - Answers are checked per field against the knowledge base, with JSON
+    pointers. A current complaint needs an answer to every red-flag question
+    of its region.
+  - Reasons tied to a region carry no sources (EXPL-07). Pain reports need
+    the health-data consent.
+  - `cmd/api` wires the planner on Postgres. With an invalid knowledge base,
+    or with draft content in production (ENT-10), only the planning
+    endpoints answer 503.
+  - Every endpoint has an integration test against real Postgres that checks
+    each response against its schema.
+- **Open for review:** the API decisions in ADR 0014 and spec §15.2
+  (U-39 to U-46), and a new finding in spec §15.4: no exercise carries
+  `restriction_tags`, so a professional's restrictions from the onboarding
+  are stored but do not yet exclude anything.
+- **Not yet built:** starting a planned session and `plan_changes` on
+  completion (the log cannot hold the planner's exercises yet), the sync of
+  pain reports, changing or withdrawing the health-data consent, and
+  `?explain=trace`.
 - **Still blocking production:**
   - The content review of the knowledge base (ENT-10). Until then it stays
     `draft_placeholder`, and production refuses it.
