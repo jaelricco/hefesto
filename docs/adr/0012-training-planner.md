@@ -134,7 +134,7 @@ in v1 (OE-6).
   kleinere Befunde) ist eingearbeitet.
 - Die Entscheidungen ENT-S-1 bis ENT-S-9 (spec §14) sind angenommen.
 
-## Nachtrag: Umsetzung in Stufe 5 (27.09.2026)
+## Nachtrag: Umsetzung in Stufe 5 (27./28.09.2026)
 
 Umgesetzt sind der reine Kern (`internal/domain/planning`), die Wissensbasis
 unter `content/training/` mit JSON-Schemas und Validierung (`internal/content`,
@@ -157,13 +157,22 @@ Adaptern. Migration, Store, HTTP und OpenAPI folgen nach eigenem Review
   seiner Tabellenzeile; ein Test vergleicht Wortlaut, Schlüssel und Quellen
   mit `docs/research/` (U-2). Neue Heuristiken: `PAR-S-44` bis `PAR-S-46`.
 - **Belastung (Entscheidung 6).** Der Plan nennt je Konto Ziel, geplantes
-  Volumen, Deckel und die bindende Regel (U-23). Die Pausenrampe ersetzt für
-  Straight-Arm- und Handgelenk-Konten den Wochendeckel auch ohne geloggte
-  Referenz (U-13). Das ist eine Verhaltensänderung und **muss am Checkpoint
-  bestätigt werden**; mit der Regel vorher blieb ein Wiedereinsteiger
-  monatelang bei einem Straight-Arm-Satz je Woche.
+  Volumen, Deckel und die bindende Regel (U-23). U-13 (die Pausenrampe ersetzt
+  den Wochendeckel auch ohne geloggte Referenz) ist nach dem Review
+  zurückgenommen: Das Zielvolumen ist kein toleriertes Niveau.
+- **Unabhängiger Review.** Drei Reviewer ohne Vorwissen (Sicherheit, Zahlen,
+  Pläne) fanden 6 kritische, 18 wichtige und 21 kleinere Befunde
+  (`docs/algorithm/review.md`). Alle kritischen sind behoben (bei C-1 bleibt das
+  langsame Wachstum kleiner Straight-Arm-Konten als Entscheidung); die wichtigsten
+  Änderungen: Soreness-Regeln der Rampe (PAR-D-28), Pausen, die mitwachsen und
+  ihre Referenz behalten, Deloads auf dem gekürzten Plan, ganze Sätze im
+  Einheitsdeckel, RF-05 mit Folgefrage. Neue Heuristiken `PAR-S-47`,
+  `PAR-S-48` und der anteilige σ-Boden in `PAR-S-38` sind als Review
+  markiert.
 
 Folgen: Die sechs Personas laufen als Golden Files und als zwölfwöchige
-Simulation; jeder erzeugte Plan erfüllt I-1 bis I-11. Ihre Plausibilität und
-die Befunde stehen in `docs/algorithm/personas.md` und `spec.md` §15.4. Die
-Wissensbasis bleibt `draft_placeholder` bis zur fachlichen Abnahme (ENT-10).
+Simulation; jeder erzeugte Plan erfüllt I-1 bis I-11. Ihre Plausibilität steht
+in `docs/algorithm/personas.md`. Die Pläne sind sicher, aber für
+Fortgeschrittene und Wiedereinsteiger sehr vorsichtig; die Entscheidungen
+dazu stehen in `spec.md` §15.5 (ENT-R-1 bis ENT-R-5). Die Wissensbasis bleibt
+`draft_placeholder` bis zur fachlichen Abnahme (ENT-10).

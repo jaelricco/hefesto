@@ -2047,7 +2047,7 @@ die Eigenschaften I-1 bis I-11 für jeden erzeugten Plan, zwölf simulierte
 Wochen je Persona, die Szenarien aus §12.5, Tabellentests je Regel, ein Test
 je Validierungsprüfung KB-01 bis KB-12, ein Abgleich jedes
 Forschungsparameters mit seiner Tabellenzeile in `docs/research/` und
-Benchmarks (`Generate` 4–8 ms und 1–2 MB, `Adapt` ≈ 25 µs, `Build` ≈ 2.5 ms).
+Benchmarks (`Generate` 4–9 ms und 1–2.5 MB, `Adapt` ≈ 20 µs, `Build` ≈ 2.5 ms).
 Die Pläne und ihre Plausibilität stehen in `personas.md`.
 
 ### 15.2 Entscheidungen und Abweichungen

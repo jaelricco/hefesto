@@ -44,11 +44,18 @@ documents are in German.
     scenarios from spec §12.5, and plan invariants I-1 to I-11 on every
     generated plan.
   - `docs/algorithm/personas.md`: the persona plans and their plausibility.
-    Spec §15 records the implementation decisions (U-1 to U-23) and findings.
+    Spec §15 records the implementation decisions (U-1 to U-32) and findings.
+- **Independent review (stage 5 closing):** three reviewers without prior
+  knowledge checked safety, numbers and the persona plans against the
+  research (`docs/algorithm/review.md`). They found 6 critical, 18 major
+  and 21 minor issues. All critical ones are fixed, except that small
+  straight-arm volumes still grow slowly (a decision, ENT-R-2). U-13 is
+  withdrawn.
 - **Open for review:**
-  - U-13: the break ramp replaces the weekly cap. This is a behaviour change.
+  - The decisions in spec §15.5 (ENT-R-1 to ENT-R-5): returners without
+    logs, growth of small straight-arm volumes, the entry session cap, the
+    new heuristics, and a minimum per session.
   - The findings in spec §15.4.
-  - The independent review of spec and persona plans (stage 5 closing).
 - **Not yet built:** the migration, the Postgres store, the HTTP endpoints and
   the OpenAPI spec. They follow after this review (ADR 0007).
 - **Still blocking production:**
