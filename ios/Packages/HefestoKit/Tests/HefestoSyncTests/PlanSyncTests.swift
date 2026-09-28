@@ -23,6 +23,7 @@ import Testing
         #expect(requests.count == 2)
         #expect(requests[0].path.contains("week=2026-09-30"))
         #expect(requests[0].headers[.ifNoneMatch] == nil, "nothing kept yet")
+        #expect(requests[1].headers[.ifNoneMatch] == #""plan-1""#)
         let kept = try #require(try db.plan(on: "2026-09-30"))
         #expect(kept.weekStart == "2026-09-28")
         #expect(kept.etag == #""plan-1""#)

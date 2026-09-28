@@ -43,7 +43,7 @@ final class ScriptedServer: ClientTransport, @unchecked Sendable {
 
     var client: Client {
         Client(serverURL: URL(string: "https://api.test")!, configuration: HefestoAPIConfiguration.configuration,
-               transport: self)
+               transport: self, middlewares: HefestoAPIConfiguration.middlewares)
     }
 }
 
@@ -313,6 +313,7 @@ func logSet(_ db: AppDatabase, _ session: Session, _ block: Block, reps: Int) th
         try await engine.refreshExercises()
 
         #expect(server.requests.count == 2)
+        #expect(server.requests[1].headers[.ifNoneMatch] == #""v1""#, "an entity tag goes out quoted")
         #expect(try db.contentVersion() == "v1")
         #expect(try fetch(db) { try AppDatabase.exercises($0) }.map(\.slug) == ["pull-up"])
     }
