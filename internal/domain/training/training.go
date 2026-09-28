@@ -62,6 +62,9 @@ type Session struct {
 	Status           string
 	IsRestDay        bool
 	TemplateID       *uuid.UUID
+	// PlannedSessionID is the planned session the session was started
+	// from; nil for a session the athlete built.
+	PlannedSessionID *uuid.UUID
 	CompletedAt      *time.Time
 	UpdatedAt        time.Time
 	ServerUpdatedAt  time.Time
@@ -95,10 +98,12 @@ type SetEntry struct {
 	RestAfterActualS  *int
 	RPE               *float64
 	RIR               *int
-	CompletedAt       *time.Time
-	Notes             string
-	UpdatedAt         time.Time
-	Elements          []Element
+	// PlannedItemID is the plan item a planned set comes from.
+	PlannedItemID *uuid.UUID
+	CompletedAt   *time.Time
+	Notes         string
+	UpdatedAt     time.Time
+	Elements      []Element
 }
 
 // Element is one exercise performed within a set. A plain set has one; a

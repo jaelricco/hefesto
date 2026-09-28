@@ -327,3 +327,79 @@ func TestServiceDecisionsNewestFirst(t *testing.T) {
 		t.Fatalf("second page: %+v %v", page, err)
 	}
 }
+
+func TestServiceStartPlannedSession(t *testing.T) {
+	ctx := context.Background()
+	svc, store, clock := newService(t)
+	user := uuid.New()
+	_, p, err := svc.Onboard(ctx, user, answers())
+	if err != nil {
+		t.Fatal(err)
+	}
+	ps := p.Sessions[0]
+	if ps.Status != planning.SessionPlanned {
+		t.Fatalf("a new session is %q", ps.Status)
+	}
+	for _, b := range ps.Blocks {
+		for _, it := range b.Items {
+			if _, err := uuid.Parse(it.ID); err != nil {
+				t.Fatalf("item %s without ID: %q", it.Exercise, it.ID)
+			}
+		}
+	}
+	planned := uuid.MustParse(ps.ID)
+	in := planning.SessionStart{SessionID: uuid.New(), StartedAt: clock.t, Timezone: "Europe/Zurich", LocalDate: clock.t, At: clock.t}
+
+	if _, _, err := svc.StartPlannedSession(ctx, user, uuid.New(), in); !errors.Is(err, planning.ErrNotFound) {
+		t.Errorf("an unknown planned session: %v", err)
+	}
+	id, created, err := svc.StartPlannedSession(ctx, user, planned, in)
+	if err != nil || !created || id != in.SessionID {
+		t.Fatalf("start: %v %v %v", id, created, err)
+	}
+	got, ok := store.Started(id)
+	if !ok || got.PlannedSessionID != planned || len(got.Draft.Blocks) == 0 {
+		t.Fatalf("stored start: %+v", got)
+	}
+	// A second start, even with another ID, answers with the first session.
+	other := in
+	other.SessionID = uuid.New()
+	if again, created, err := svc.StartPlannedSession(ctx, user, planned, other); err != nil || created || again != id {
+		t.Errorf("second start: %v %v %v", again, created, err)
+	}
+	if _, now, err := svc.PlannedSession(ctx, user, planned); err != nil || now.Status != planning.SessionStarted ||
+		now.WorkoutSessionID != id.String() {
+		t.Errorf("planned session after the start: %q %q %v", now.Status, now.WorkoutSessionID, err)
+	}
+	// Another planned session cannot take the log session's ID.
+	next := uuid.MustParse(p.Sessions[1].ID)
+	if _, _, err := svc.StartPlannedSession(ctx, user, next, in); !errors.Is(err, planning.ErrSessionIDTaken) {
+		t.Errorf("a taken ID: %v", err)
+	}
+
+	// A new plan keeps the start on the same day.
+	again, err := svc.Regenerate(ctx, user)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if s := again.Sessions[0]; s.ID == ps.ID || s.Status != planning.SessionStarted || s.WorkoutSessionID != id.String() {
+		t.Errorf("regenerated session: %s %q %q", s.ID, s.Status, s.WorkoutSessionID)
+	}
+	for _, s := range again.Sessions[1:] {
+		if s.Status != planning.SessionPlanned || s.WorkoutSessionID != "" {
+			t.Errorf("session on %s: %q %q", s.Date.Format(time.DateOnly), s.Status, s.WorkoutSessionID)
+		}
+	}
+
+	// A stop starts nothing (SAFE-02).
+	if _, err := svc.ReportSymptoms(ctx, user, "sym-1"); err != nil {
+		t.Fatal(err)
+	}
+	stopped, err := svc.Plan(ctx, user)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, _, err := svc.StartPlannedSession(ctx, user, next, planning.SessionStart{SessionID: uuid.New()}); !errors.Is(err, planning.ErrTrainingStopped) {
+		t.Errorf("start while stopped: %v (plan has %d sessions)", err, len(stopped.Sessions))
+	}
+}

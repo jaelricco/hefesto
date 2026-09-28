@@ -292,6 +292,7 @@ type SetEntry struct {
 	ServerUpdatedAt   time.Time
 	ServerSeq         int64
 	DeletedAt         *time.Time
+	PlannedItemID     *uuid.UUID
 }
 
 type Skill struct {
@@ -691,6 +692,7 @@ type WorkoutSession struct {
 	ServerUpdatedAt  time.Time
 	ServerSeq        int64
 	DeletedAt        *time.Time
+	PlannedSessionID *uuid.UUID
 }
 
 type WorkoutTemplate struct {

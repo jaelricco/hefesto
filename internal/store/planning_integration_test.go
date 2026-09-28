@@ -311,7 +311,7 @@ func TestPlannerPlans(t *testing.T) {
 			Reasons:   []domain.Reason{{RuleID: "WEEK-01", Args: map[string]string{"sessions": "3"}}}, Disclaimer: "x",
 			Loads: []domain.AccountLoad{{Account: "wrist", Target: 1.5, Planned: 1, Cap: 1.2, Rule: "LOAD-02"}}}
 		for i := 0; i < sessions; i++ {
-			pl.Sessions = append(pl.Sessions, domain.PlannedSession{ID: idOf(hash, i), Index: i, Date: monday.AddDate(0, 0, 2*i),
+			pl.Sessions = append(pl.Sessions, domain.PlannedSession{ID: idOf(hash, i), Status: planning.SessionPlanned, Index: i, Date: monday.AddDate(0, 0, 2*i),
 				Kind: domain.SessionFull, EstMinutes: 42, Blocks: []domain.Block{{Role: domain.BlockWarmup, Minutes: 7}}})
 		}
 		return pl
@@ -736,5 +736,148 @@ func TestPlannerServiceMatchesMemory(t *testing.T) {
 				})
 			}
 		})
+	}
+}
+
+// Starting a planned session writes a draft into the log (spec §10.2): one
+// planned set entry per planned set, linked to the plan item, and the start
+// survives a new plan of the week.
+func TestPlannerStartsAPlannedSession(t *testing.T) {
+	db := pgtest.New(t)
+	seed(t, db, contentDir(t))
+	kb := planning.LoadContentKnowledge(filepath.Join(pgtest.RepoRoot(), "content"), false,
+		slog.New(slog.NewTextHandler(io.Discard, nil)))
+	clk := &clock{t: monday.Add(7 * time.Hour)}
+	svc := &planning.Service{Knowledge: kb, Store: store.NewPlanner(db), Clock: clk}
+	logs := store.New(db)
+	ctx := context.Background()
+	user := plannerUser(t, db)
+	_, plan, err := svc.Onboard(ctx, user, plannerAnswers("advanced"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	ps := plan.Sessions[0]
+	planned := uuid.MustParse(ps.ID)
+	start := func(session uuid.UUID) planning.SessionStart {
+		return planning.SessionStart{SessionID: session, StartedAt: clk.t, Timezone: "Europe/Zurich", LocalDate: monday, At: clk.t}
+	}
+
+	first := id()
+	got, created, err := svc.StartPlannedSession(ctx, user, planned, start(first))
+	if err != nil || !created || got != first {
+		t.Fatalf("start: %v %v %v", got, created, err)
+	}
+	sess, err := logs.GetSession(ctx, user, first)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if sess.Status != "draft" || sess.PlannedSessionID == nil || *sess.PlannedSessionID != planned || sess.Timezone != "Europe/Zurich" {
+		t.Fatalf("log session %+v", sess)
+	}
+	items := map[string]domain.Item{}
+	want := 0
+	for _, b := range ps.Blocks {
+		for _, it := range b.Items {
+			items[it.ID] = it
+			if !it.Offer {
+				want += it.Sets
+			}
+		}
+	}
+	sets := 0
+	for _, b := range sess.Blocks {
+		for _, s := range b.Sets {
+			sets++
+			if !s.IsPlanned || s.CompletedAt != nil || s.PlannedItemID == nil || len(s.Elements) != 1 {
+				t.Fatalf("set %+v", s)
+			}
+			it, ok := items[s.PlannedItemID.String()]
+			if !ok || it.Offer {
+				t.Fatalf("set of item %s, not a planned set", s.PlannedItemID)
+			}
+			e := s.Elements[0]
+			if s.Kind != it.Kind || s.RestAfterPlannedS == nil || *s.RestAfterPlannedS != it.RestS || e.LoadKg != it.LoadKg ||
+				e.Assistance != nil {
+				t.Errorf("set %+v from item %+v", s, it)
+			}
+			switch {
+			case it.HoldS > 0:
+				if e.HoldSeconds == nil || *e.HoldSeconds != float64(it.HoldS) || s.RIR != nil {
+					t.Errorf("hold set %+v from %+v", e, it)
+				}
+			case it.Reps > 0:
+				if e.Reps == nil || *e.Reps != it.Reps || s.RIR == nil || *s.RIR != it.Reserve {
+					t.Errorf("rep set %+v from %+v", e, it)
+				}
+			}
+		}
+	}
+	if sets != want || len(sess.Blocks) != len(ps.Blocks) {
+		t.Fatalf("%d sets in %d blocks, want %d in %d", sets, len(sess.Blocks), want, len(ps.Blocks))
+	}
+	// Planned sets are no evidence for the skill map (ADR 0008).
+	if n := count(t, db, `SELECT count(*) FROM set_entries WHERE session_id = $1 AND NOT is_planned`, first); n != 0 {
+		t.Errorf("%d performed sets in a fresh draft", n)
+	}
+
+	// A second start answers with the first session and writes nothing.
+	if again, created, err := svc.StartPlannedSession(ctx, user, planned, start(id())); err != nil || created || again != first {
+		t.Fatalf("second start: %v %v %v", again, created, err)
+	}
+	if n := count(t, db, `SELECT count(*) FROM workout_sessions WHERE user_id = $1`, user); n != 1 {
+		t.Fatalf("%d log sessions after two starts", n)
+	}
+	// The ID of a log session cannot be taken again, and another user
+	// cannot start the session.
+	if _, _, err := svc.StartPlannedSession(ctx, user, uuid.MustParse(plan.Sessions[1].ID), start(first)); !errors.Is(err, planning.ErrSessionIDTaken) {
+		t.Errorf("a taken ID: %v", err)
+	}
+	other := plannerUser(t, db)
+	if _, _, err := svc.Onboard(ctx, other, plannerAnswers("advanced")); err != nil {
+		t.Fatal(err)
+	}
+	if _, _, err := svc.StartPlannedSession(ctx, other, planned, start(id())); !errors.Is(err, planning.ErrNotFound) {
+		t.Errorf("another user's session: %v", err)
+	}
+
+	// A new plan of the week keeps the start.
+	regen, err := svc.Regenerate(ctx, user)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if s := regen.Sessions[0]; s.Status != planning.SessionStarted || s.WorkoutSessionID != first.String() {
+		t.Fatalf("regenerated session: %q %q", s.Status, s.WorkoutSessionID)
+	}
+	if _, s, err := svc.PlannedSession(ctx, user, uuid.MustParse(regen.Sessions[0].ID)); err != nil || s.WorkoutSessionID != first.String() {
+		t.Fatalf("planned session of the new plan: %q %v", s.WorkoutSessionID, err)
+	}
+	var payload string
+	if err := db.QueryRow(ctx, `SELECT payload::text FROM training_plans WHERE id = $1`, regen.ID).Scan(&payload); err != nil ||
+		strings.Contains(payload, "workout_session_id") {
+		t.Errorf("the plan payload holds the start: %v", err)
+	}
+
+	// Deleting the log session frees the planned session.
+	if err := logs.DeleteSession(ctx, store.Writer{UserID: user, At: clk.t}, first); err != nil {
+		t.Fatal(err)
+	}
+	now, err := svc.Plan(ctx, user)
+	if err != nil || now.Sessions[0].Status != planning.SessionPlanned || now.Sessions[0].WorkoutSessionID != "" {
+		t.Fatalf("after deleting the log session: %q %q %v", now.Sessions[0].Status, now.Sessions[0].WorkoutSessionID, err)
+	}
+	second := id()
+	if got, created, err := svc.StartPlannedSession(ctx, user, uuid.MustParse(now.Sessions[0].ID), start(second)); err != nil || !created || got != second {
+		t.Fatalf("start after deleting: %v %v %v", got, created, err)
+	}
+
+	// An exercise missing from the catalogue makes the planner unavailable,
+	// and the start writes nothing.
+	third := uuid.MustParse(now.Sessions[1].ID)
+	exec(t, db, `UPDATE exercises SET status = 'retired' WHERE slug = $1`, now.Sessions[1].Blocks[len(now.Sessions[1].Blocks)-1].Items[0].Exercise)
+	if _, _, err := svc.StartPlannedSession(ctx, user, third, start(id())); !errors.Is(err, planning.ErrUnavailable) {
+		t.Errorf("a missing exercise: %v", err)
+	}
+	if n := count(t, db, `SELECT count(*) FROM workout_sessions WHERE user_id = $1 AND deleted_at IS NULL`, user); n != 1 {
+		t.Errorf("%d live log sessions after a failed start, want 1", n)
 	}
 }

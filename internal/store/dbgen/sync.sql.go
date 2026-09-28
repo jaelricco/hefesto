@@ -492,7 +492,7 @@ func (q *Queries) SyncElementsOfSets(ctx context.Context, arg SyncElementsOfSets
 }
 
 const syncSessions = `-- name: SyncSessions :many
-SELECT id, user_id, started_at, ended_at, timezone, local_date, title, notes, perceived_fatigue, bodyweight_kg, status, is_rest_day, template_id, completed_at, client_id, updated_at, server_updated_at, server_seq, deleted_at FROM workout_sessions WHERE user_id = $1 AND id = ANY($2::uuid[])
+SELECT id, user_id, started_at, ended_at, timezone, local_date, title, notes, perceived_fatigue, bodyweight_kg, status, is_rest_day, template_id, completed_at, client_id, updated_at, server_updated_at, server_seq, deleted_at, planned_session_id FROM workout_sessions WHERE user_id = $1 AND id = ANY($2::uuid[])
 `
 
 type SyncSessionsParams struct {
@@ -529,6 +529,7 @@ func (q *Queries) SyncSessions(ctx context.Context, arg SyncSessionsParams) ([]W
 			&i.ServerUpdatedAt,
 			&i.ServerSeq,
 			&i.DeletedAt,
+			&i.PlannedSessionID,
 		); err != nil {
 			return nil, err
 		}
@@ -541,7 +542,7 @@ func (q *Queries) SyncSessions(ctx context.Context, arg SyncSessionsParams) ([]W
 }
 
 const syncSetEntries = `-- name: SyncSetEntries :many
-SELECT id, user_id, session_id, block_id, order_index, round_index, kind, is_planned, rest_after_planned_s, rest_after_actual_s, rpe, rir, completed_at, notes, client_id, updated_at, server_updated_at, server_seq, deleted_at FROM set_entries WHERE user_id = $1 AND id = ANY($2::uuid[])
+SELECT id, user_id, session_id, block_id, order_index, round_index, kind, is_planned, rest_after_planned_s, rest_after_actual_s, rpe, rir, completed_at, notes, client_id, updated_at, server_updated_at, server_seq, deleted_at, planned_item_id FROM set_entries WHERE user_id = $1 AND id = ANY($2::uuid[])
 `
 
 type SyncSetEntriesParams struct {
@@ -578,6 +579,7 @@ func (q *Queries) SyncSetEntries(ctx context.Context, arg SyncSetEntriesParams) 
 			&i.ServerUpdatedAt,
 			&i.ServerSeq,
 			&i.DeletedAt,
+			&i.PlannedItemID,
 		); err != nil {
 			return nil, err
 		}

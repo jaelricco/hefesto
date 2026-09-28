@@ -451,7 +451,16 @@ func (s *Service) regenerate(ctx context.Context, st Stores, kb *planning.Knowle
 	}
 	p.ID = s.newID().String()
 	for i := range p.Sessions {
-		p.Sessions[i].ID = s.newID().String()
+		ps := &p.Sessions[i]
+		ps.ID, ps.Status = s.newID().String(), SessionPlanned
+		for b := range ps.Blocks {
+			for it := range ps.Blocks[b].Items {
+				ps.Blocks[b].Items[it].ID = s.newID().String()
+			}
+		}
+	}
+	if err := s.carryOver(ctx, st, userID, &p); err != nil {
+		return planning.Plan{}, err
 	}
 	if err := st.Plans.SavePlan(ctx, userID, p); err != nil {
 		return planning.Plan{}, fmt.Errorf("saving plan: %w", err)
@@ -461,6 +470,73 @@ func (s *Service) regenerate(ctx context.Context, st Stores, kb *planning.Knowle
 			"sessions", len(p.Sessions), "ruleset_version", p.RulesetVersion)
 	}
 	return p, nil
+}
+
+// carryOver keeps the starts of the plan a new plan replaces: a session of
+// the new plan on the day of a started session points at the same log
+// session. The new plan replaces the whole week; a started day without a
+// session in it keeps its log session, but no planned session shows it
+// (spec §15.4).
+func (s *Service) carryOver(ctx context.Context, st Stores, userID uuid.UUID, p *planning.Plan) error {
+	prev, ok, err := st.Plans.ActivePlan(ctx, userID, p.WeekStart)
+	if err != nil {
+		return fmt.Errorf("loading the plan to replace: %w", err)
+	}
+	if !ok {
+		return nil
+	}
+	for _, old := range prev.Sessions {
+		if old.Status == SessionPlanned || old.WorkoutSessionID == "" {
+			continue
+		}
+		for i := range p.Sessions {
+			if ps := &p.Sessions[i]; ps.Date.Equal(old.Date) && ps.WorkoutSessionID == "" {
+				ps.Status, ps.WorkoutSessionID = old.Status, old.WorkoutSessionID
+				break
+			}
+		}
+	}
+	return nil
+}
+
+// StartPlannedSession starts a session of an active plan in the training
+// log (spec §10.2): a draft session with one planned set entry per planned
+// set. A session started before is not started again; its log session is
+// the answer, with created false. in carries the log session's ID, time and
+// time zone; the service fills in the rest.
+func (s *Service) StartPlannedSession(ctx context.Context, userID, plannedID uuid.UUID, in SessionStart) (uuid.UUID, bool, error) {
+	var (
+		id      uuid.UUID
+		created bool
+	)
+	err := s.Store.InTx(ctx, userID, func(st Stores) error {
+		kb, snap, err := s.load(ctx, st, userID)
+		if err != nil {
+			return err
+		}
+		if rule := kb.StopRule(snap, s.Clock.Now()); rule != "" {
+			return fmt.Errorf("starting planned session %s: %w (%s)", plannedID, ErrTrainingStopped, rule)
+		}
+		p, i, ok, err := st.Plans.PlannedSession(ctx, userID, plannedID)
+		if err != nil {
+			return fmt.Errorf("loading planned session: %w", err)
+		}
+		if !ok || i < 0 || i >= len(p.Sessions) {
+			return fmt.Errorf("planned session %s: %w", plannedID, ErrNotFound)
+		}
+		in.PlannedSessionID = plannedID
+		in.Draft = planning.Materialize(kb, p.Sessions[i], func() string { return s.newID().String() })
+		id, created, err = st.Sessions.StartSession(ctx, userID, in)
+		if err != nil {
+			return fmt.Errorf("starting planned session %s: %w", plannedID, err)
+		}
+		if created && s.Log != nil {
+			s.Log.InfoContext(ctx, "planned session started", "user_id", userID, "planned_session_id", plannedID,
+				"session_id", id)
+		}
+		return nil
+	})
+	return id, created, err
 }
 
 func (s *Service) newID() uuid.UUID {

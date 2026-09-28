@@ -1,6 +1,7 @@
 package store
 
 import (
+	"cmp"
 	"context"
 	"encoding/json"
 	"errors"
@@ -46,7 +47,7 @@ func (p *Planner) InTx(ctx context.Context, userID uuid.UUID, fn func(planning.S
 			return fmt.Errorf("locking the planner: %w", err)
 		}
 		t := &plannerTx{q: q, user: userID}
-		return fn(planning.Stores{Snapshots: t, Plans: t, Decisions: t})
+		return fn(planning.Stores{Snapshots: t, Plans: t, Decisions: t, Sessions: t})
 	})
 	if err != nil {
 		return fmt.Errorf("planner transaction: %w", err)
@@ -66,6 +67,7 @@ var (
 	_ planning.SnapshotStore = (*plannerTx)(nil)
 	_ planning.PlanStore     = (*plannerTx)(nil)
 	_ planning.DecisionLog   = (*plannerTx)(nil)
+	_ planning.SessionLog    = (*plannerTx)(nil)
 )
 
 func (t *plannerTx) check(userID uuid.UUID) error {
@@ -707,7 +709,35 @@ func (t *plannerTx) ActivePlan(ctx context.Context, userID uuid.UUID, week time.
 	if err := json.Unmarshal(row.Payload, &p); err != nil {
 		return domain.Plan{}, false, fmt.Errorf("decoding plan %s: %w", row.ID, err)
 	}
+	if err := t.fillStates(ctx, row.ID, &p); err != nil {
+		return domain.Plan{}, false, err
+	}
 	return p, true, nil
+}
+
+// fillStates sets whether each session of a plan was started, and its log
+// session. The payload holds what the core planned; the start is a row.
+func (t *plannerTx) fillStates(ctx context.Context, planID uuid.UUID, p *domain.Plan) error {
+	rows, err := t.q.ListPlannedSessionStates(ctx, dbgen.ListPlannedSessionStatesParams{PlanID: planID, UserID: t.user})
+	if err != nil {
+		return fmt.Errorf("reading planned sessions of plan %s: %w", planID, err)
+	}
+	for _, r := range rows {
+		i := int(r.OrderIndex)
+		if i >= len(p.Sessions) {
+			return fmt.Errorf("plan %s has no session %d", planID, i)
+		}
+		ps := &p.Sessions[i]
+		ps.Status, ps.WorkoutSessionID = r.Status, ""
+		switch {
+		case r.WorkoutSessionID != nil && r.SessionLive:
+			ps.WorkoutSessionID = r.WorkoutSessionID.String()
+		case r.Status == planning.SessionStarted || r.Status == planning.SessionCompleted:
+			// The log session was deleted: the session can start again.
+			ps.Status = planning.SessionPlanned
+		}
+	}
+	return nil
 }
 
 // SavePlan stores a plan as the active one of its week; the one it replaces
@@ -717,7 +747,14 @@ func (t *plannerTx) SavePlan(ctx context.Context, userID uuid.UUID, p domain.Pla
 		return err
 	}
 	q, week := t.q, dateOf(p.WeekStart.UTC())
-	payload, err := json.Marshal(p)
+	// The payload is what the core planned; the start of a session lives in
+	// its row.
+	stored := p
+	stored.Sessions = slices.Clone(p.Sessions)
+	for i := range stored.Sessions {
+		stored.Sessions[i].Status, stored.Sessions[i].WorkoutSessionID = "", ""
+	}
+	payload, err := json.Marshal(stored)
 	if err != nil {
 		return fmt.Errorf("encoding plan: %w", err)
 	}
@@ -737,8 +774,14 @@ func (t *plannerTx) SavePlan(ctx context.Context, userID uuid.UUID, p domain.Pla
 		if err != nil {
 			return fmt.Errorf("planned session id %q: %w", ps.ID, err)
 		}
+		status := cmp.Or(ps.Status, planning.SessionPlanned)
+		workout, err := parseOptionalUUID(ps.WorkoutSessionID)
+		if err != nil {
+			return fmt.Errorf("planned session %s: log session: %w", ps.ID, err)
+		}
 		if err := q.InsertPlannedSession(ctx, dbgen.InsertPlannedSessionParams{ID: sid, UserID: userID,
-			PlanID: id, OrderIndex: int32(i), ScheduledDate: dateOf(ps.Date.UTC()), Kind: ps.Kind, EstMinutes: ps.EstMinutes}); err != nil { //nolint:gosec // a week has at most seven sessions
+			PlanID: id, OrderIndex: int32(i), ScheduledDate: dateOf(ps.Date.UTC()), Kind: ps.Kind, EstMinutes: ps.EstMinutes, //nolint:gosec // a week has at most seven sessions
+			Status: status, WorkoutSessionID: workout}); err != nil {
 			return fmt.Errorf("storing planned session %d: %w", i, err)
 		}
 	}
@@ -760,6 +803,9 @@ func (t *plannerTx) PlannedSession(ctx context.Context, userID, sessionID uuid.U
 	var p domain.Plan
 	if err := json.Unmarshal(row.Payload, &p); err != nil {
 		return domain.Plan{}, 0, false, fmt.Errorf("decoding plan of session %s: %w", sessionID, err)
+	}
+	if err := t.fillStates(ctx, row.PlanID, &p); err != nil {
+		return domain.Plan{}, 0, false, err
 	}
 	return p, int(row.OrderIndex), true, nil
 }

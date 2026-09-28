@@ -336,6 +336,15 @@ CREATE TABLE planned_sessions (
 );
 CREATE INDEX planned_sessions_user_date_idx ON planned_sessions (user_id, scheduled_date);
 
+-- A log session started from a plan, and the plan item each of its sets
+-- comes from (spec §10.2). The item IDs live in the plan payload, so the set
+-- column has no foreign key. Additive columns on the log tables.
+ALTER TABLE workout_sessions ADD COLUMN planned_session_id uuid NULL;
+ALTER TABLE workout_sessions ADD CONSTRAINT workout_sessions_planned_session_fk
+    FOREIGN KEY (planned_session_id, user_id)
+    REFERENCES planned_sessions (id, user_id) ON DELETE SET NULL (planned_session_id);
+ALTER TABLE set_entries ADD COLUMN planned_item_id uuid NULL;
+
 -- Every event the planner applied, with the changes the user sees (spec
 -- §6.14, §9.4). One row per event; the trigger and source make events
 -- idempotent.
@@ -375,6 +384,8 @@ CREATE TRIGGER plan_decisions_append_only BEFORE UPDATE OR DELETE ON plan_decisi
 -- +goose Down
 DROP TABLE plan_decisions;
 DROP FUNCTION plan_decisions_append_only();
+ALTER TABLE set_entries DROP COLUMN planned_item_id;
+ALTER TABLE workout_sessions DROP COLUMN planned_session_id;
 DROP TABLE planned_sessions;
 DROP TABLE training_plans;
 DROP TABLE planner_sessions;

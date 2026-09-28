@@ -21,13 +21,14 @@ import (
 )
 
 // Store implements the Transactor and, through it, SnapshotStore,
-// PlanStore and DecisionLog. InTx serialises the calls of one user like the
-// Postgres adapter does; it does not roll back.
+// PlanStore, DecisionLog and SessionLog. InTx serialises the calls of one
+// user like the Postgres adapter does; it does not roll back.
 type Store struct {
 	mu        sync.Mutex
 	snapshots map[uuid.UUID][]byte
 	plans     map[string][]byte
 	decisions map[uuid.UUID][]service.Decision
+	started   map[uuid.UUID]service.SessionStart
 	users     map[uuid.UUID]*sync.Mutex
 }
 
@@ -37,6 +38,7 @@ func New() *Store {
 		snapshots: map[uuid.UUID][]byte{},
 		plans:     map[string][]byte{},
 		decisions: map[uuid.UUID][]service.Decision{},
+		started:   map[uuid.UUID]service.SessionStart{},
 		users:     map[uuid.UUID]*sync.Mutex{},
 	}
 }
@@ -52,7 +54,7 @@ func (s *Store) InTx(_ context.Context, userID uuid.UUID, fn func(service.Stores
 	s.mu.Unlock()
 	l.Lock()
 	defer l.Unlock()
-	return fn(service.Stores{Snapshots: s, Plans: s, Decisions: s})
+	return fn(service.Stores{Snapshots: s, Plans: s, Decisions: s, Sessions: s})
 }
 
 // Snapshot returns the stored snapshot of a user.
@@ -142,6 +144,47 @@ func (s *Store) PlannedSession(ctx context.Context, userID, sessionID uuid.UUID)
 		}
 	}
 	return planning.Plan{}, 0, false, nil
+}
+
+// StartSession records the start of a planned session and marks it
+// started in its plan. The draft is kept as given; Started returns it.
+func (s *Store) StartSession(ctx context.Context, userID uuid.UUID, in service.SessionStart) (uuid.UUID, bool, error) {
+	p, i, ok, err := s.PlannedSession(ctx, userID, in.PlannedSessionID)
+	if err != nil {
+		return uuid.Nil, false, err
+	}
+	if !ok {
+		return uuid.Nil, false, service.ErrNotFound
+	}
+	if id := p.Sessions[i].WorkoutSessionID; id != "" {
+		out, err := uuid.Parse(id)
+		if err != nil {
+			return uuid.Nil, false, fmt.Errorf("log session %q: %w", id, err)
+		}
+		return out, false, nil
+	}
+	s.mu.Lock()
+	_, taken := s.started[in.SessionID]
+	s.mu.Unlock()
+	if taken {
+		return uuid.Nil, false, service.ErrSessionIDTaken
+	}
+	p.Sessions[i].Status, p.Sessions[i].WorkoutSessionID = service.SessionStarted, in.SessionID.String()
+	if err := s.SavePlan(ctx, userID, p); err != nil {
+		return uuid.Nil, false, err
+	}
+	s.mu.Lock()
+	s.started[in.SessionID] = in
+	s.mu.Unlock()
+	return in.SessionID, true, nil
+}
+
+// Started returns the start that created a log session.
+func (s *Store) Started(sessionID uuid.UUID) (service.SessionStart, bool) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	in, ok := s.started[sessionID]
+	return in, ok
 }
 
 // Recorded returns the recorded event of a trigger and source.

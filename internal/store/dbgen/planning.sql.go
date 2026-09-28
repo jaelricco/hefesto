@@ -119,6 +119,36 @@ func (q *Queries) DropGoal(ctx context.Context, arg DropGoalParams) error {
 	return err
 }
 
+const exerciseIDsBySlug = `-- name: ExerciseIDsBySlug :many
+SELECT slug, id FROM exercises WHERE slug = ANY($1::text[]) AND status <> 'retired'
+`
+
+type ExerciseIDsBySlugRow struct {
+	Slug string
+	ID   uuid.UUID
+}
+
+// The planner's exercises in the log's catalogue.
+func (q *Queries) ExerciseIDsBySlug(ctx context.Context, slugs []string) ([]ExerciseIDsBySlugRow, error) {
+	rows, err := q.db.Query(ctx, exerciseIDsBySlug, slugs)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []ExerciseIDsBySlugRow{}
+	for rows.Next() {
+		var i ExerciseIDsBySlugRow
+		if err := rows.Scan(&i.Slug, &i.ID); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getActivePlan = `-- name: GetActivePlan :one
 
 SELECT id, user_id, week_start, ruleset_version, input_hash, status, payload, created_at FROM training_plans WHERE user_id = $1 AND week_start = $2 AND status = 'active'
@@ -147,7 +177,7 @@ func (q *Queries) GetActivePlan(ctx context.Context, arg GetActivePlanParams) (T
 }
 
 const getActivePlannedSession = `-- name: GetActivePlannedSession :one
-SELECT p.payload, s.order_index
+SELECT p.id AS plan_id, p.payload, s.order_index
 FROM planned_sessions s
 JOIN training_plans p ON p.id = s.plan_id AND p.user_id = s.user_id
 WHERE s.id = $1 AND s.user_id = $2 AND p.status = 'active'
@@ -159,6 +189,7 @@ type GetActivePlannedSessionParams struct {
 }
 
 type GetActivePlannedSessionRow struct {
+	PlanID     uuid.UUID
 	Payload    []byte
 	OrderIndex int32
 }
@@ -166,7 +197,7 @@ type GetActivePlannedSessionRow struct {
 func (q *Queries) GetActivePlannedSession(ctx context.Context, arg GetActivePlannedSessionParams) (GetActivePlannedSessionRow, error) {
 	row := q.db.QueryRow(ctx, getActivePlannedSession, arg.ID, arg.UserID)
 	var i GetActivePlannedSessionRow
-	err := row.Scan(&i.Payload, &i.OrderIndex)
+	err := row.Scan(&i.PlanID, &i.Payload, &i.OrderIndex)
 	return i, err
 }
 
@@ -445,18 +476,23 @@ func (q *Queries) InsertPlan(ctx context.Context, arg InsertPlanParams) error {
 }
 
 const insertPlannedSession = `-- name: InsertPlannedSession :exec
-INSERT INTO planned_sessions (id, user_id, plan_id, order_index, scheduled_date, kind, est_minutes)
-VALUES ($1, $2, $3, $4, $5, $6, $7)
+INSERT INTO planned_sessions (
+    id, user_id, plan_id, order_index, scheduled_date, kind, est_minutes, status, workout_session_id
+) VALUES (
+    $1, $2, $3, $4, $5, $6, $7, $8, $9
+)
 `
 
 type InsertPlannedSessionParams struct {
-	ID            uuid.UUID
-	UserID        uuid.UUID
-	PlanID        uuid.UUID
-	OrderIndex    int32
-	ScheduledDate pgtype.Date
-	Kind          string
-	EstMinutes    float64
+	ID               uuid.UUID
+	UserID           uuid.UUID
+	PlanID           uuid.UUID
+	OrderIndex       int32
+	ScheduledDate    pgtype.Date
+	Kind             string
+	EstMinutes       float64
+	Status           string
+	WorkoutSessionID *uuid.UUID
 }
 
 func (q *Queries) InsertPlannedSession(ctx context.Context, arg InsertPlannedSessionParams) error {
@@ -468,8 +504,113 @@ func (q *Queries) InsertPlannedSession(ctx context.Context, arg InsertPlannedSes
 		arg.ScheduledDate,
 		arg.Kind,
 		arg.EstMinutes,
+		arg.Status,
+		arg.WorkoutSessionID,
 	)
 	return err
+}
+
+const insertPlannedSetEntry = `-- name: InsertPlannedSetEntry :exec
+INSERT INTO set_entries (
+    id, user_id, session_id, block_id, order_index, round_index, kind, is_planned,
+    rest_after_planned_s, rir, planned_item_id, client_id, updated_at
+) VALUES (
+    $1, $2, $3, $4, $5, $6, $7, true,
+    $8, $9, $10, $11, $12
+)
+`
+
+type InsertPlannedSetEntryParams struct {
+	ID                uuid.UUID
+	UserID            uuid.UUID
+	SessionID         uuid.UUID
+	BlockID           uuid.UUID
+	OrderIndex        int32
+	RoundIndex        *int16
+	Kind              string
+	RestAfterPlannedS *int32
+	Rir               *int16
+	PlannedItemID     *uuid.UUID
+	ClientID          *uuid.UUID
+	UpdatedAt         time.Time
+}
+
+func (q *Queries) InsertPlannedSetEntry(ctx context.Context, arg InsertPlannedSetEntryParams) error {
+	_, err := q.db.Exec(ctx, insertPlannedSetEntry,
+		arg.ID,
+		arg.UserID,
+		arg.SessionID,
+		arg.BlockID,
+		arg.OrderIndex,
+		arg.RoundIndex,
+		arg.Kind,
+		arg.RestAfterPlannedS,
+		arg.Rir,
+		arg.PlannedItemID,
+		arg.ClientID,
+		arg.UpdatedAt,
+	)
+	return err
+}
+
+const insertPlannedWorkoutSession = `-- name: InsertPlannedWorkoutSession :one
+INSERT INTO workout_sessions (
+    id, user_id, started_at, timezone, local_date, title, planned_session_id, client_id, updated_at
+) VALUES (
+    $1, $2, $3, $4, $5, $6, $7, $8, $9
+)
+ON CONFLICT (id) DO NOTHING
+RETURNING id, user_id, started_at, ended_at, timezone, local_date, title, notes, perceived_fatigue, bodyweight_kg, status, is_rest_day, template_id, completed_at, client_id, updated_at, server_updated_at, server_seq, deleted_at, planned_session_id
+`
+
+type InsertPlannedWorkoutSessionParams struct {
+	ID               uuid.UUID
+	UserID           uuid.UUID
+	StartedAt        time.Time
+	Timezone         string
+	LocalDate        pgtype.Date
+	Title            string
+	PlannedSessionID *uuid.UUID
+	ClientID         *uuid.UUID
+	UpdatedAt        time.Time
+}
+
+func (q *Queries) InsertPlannedWorkoutSession(ctx context.Context, arg InsertPlannedWorkoutSessionParams) (WorkoutSession, error) {
+	row := q.db.QueryRow(ctx, insertPlannedWorkoutSession,
+		arg.ID,
+		arg.UserID,
+		arg.StartedAt,
+		arg.Timezone,
+		arg.LocalDate,
+		arg.Title,
+		arg.PlannedSessionID,
+		arg.ClientID,
+		arg.UpdatedAt,
+	)
+	var i WorkoutSession
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.StartedAt,
+		&i.EndedAt,
+		&i.Timezone,
+		&i.LocalDate,
+		&i.Title,
+		&i.Notes,
+		&i.PerceivedFatigue,
+		&i.BodyweightKg,
+		&i.Status,
+		&i.IsRestDay,
+		&i.TemplateID,
+		&i.CompletedAt,
+		&i.ClientID,
+		&i.UpdatedAt,
+		&i.ServerUpdatedAt,
+		&i.ServerSeq,
+		&i.DeletedAt,
+		&i.PlannedSessionID,
+	)
+	return i, err
 }
 
 const insertPlannerSession = `-- name: InsertPlannerSession :exec
@@ -738,6 +879,54 @@ func (q *Queries) ListPainReports(ctx context.Context, userID uuid.UUID) ([]User
 	return items, nil
 }
 
+const listPlannedSessionStates = `-- name: ListPlannedSessionStates :many
+SELECT s.order_index, s.status, s.workout_session_id,
+       COALESCE(ws.deleted_at IS NULL, false)::boolean AS session_live
+FROM planned_sessions s
+LEFT JOIN workout_sessions ws ON ws.id = s.workout_session_id AND ws.user_id = s.user_id
+WHERE s.plan_id = $1 AND s.user_id = $2
+ORDER BY s.order_index
+`
+
+type ListPlannedSessionStatesParams struct {
+	PlanID uuid.UUID
+	UserID uuid.UUID
+}
+
+type ListPlannedSessionStatesRow struct {
+	OrderIndex       int32
+	Status           string
+	WorkoutSessionID *uuid.UUID
+	SessionLive      bool
+}
+
+// Whether each session of a plan was started, and its log session. A
+// session whose log session was deleted counts as planned again.
+func (q *Queries) ListPlannedSessionStates(ctx context.Context, arg ListPlannedSessionStatesParams) ([]ListPlannedSessionStatesRow, error) {
+	rows, err := q.db.Query(ctx, listPlannedSessionStates, arg.PlanID, arg.UserID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []ListPlannedSessionStatesRow{}
+	for rows.Next() {
+		var i ListPlannedSessionStatesRow
+		if err := rows.Scan(
+			&i.OrderIndex,
+			&i.Status,
+			&i.WorkoutSessionID,
+			&i.SessionLive,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listPlannedSessions = `-- name: ListPlannedSessions :many
 SELECT id, user_id, plan_id, order_index, scheduled_date, kind, est_minutes, status, workout_session_id FROM planned_sessions WHERE plan_id = $1 AND user_id = $2 ORDER BY order_index
 `
@@ -859,6 +1048,36 @@ func (q *Queries) ListRegionStatus(ctx context.Context, userID uuid.UUID) ([]Use
 	return items, nil
 }
 
+const lockActivePlannedSession = `-- name: LockActivePlannedSession :one
+SELECT s.id, s.user_id, s.plan_id, s.order_index, s.scheduled_date, s.kind, s.est_minutes, s.status, s.workout_session_id FROM planned_sessions s
+JOIN training_plans p ON p.id = s.plan_id AND p.user_id = s.user_id
+WHERE s.id = $1 AND s.user_id = $2 AND p.status = 'active'
+FOR UPDATE OF s
+`
+
+type LockActivePlannedSessionParams struct {
+	ID     uuid.UUID
+	UserID uuid.UUID
+}
+
+// The planned session to start, locked for the start (spec §10.2).
+func (q *Queries) LockActivePlannedSession(ctx context.Context, arg LockActivePlannedSessionParams) (PlannedSession, error) {
+	row := q.db.QueryRow(ctx, lockActivePlannedSession, arg.ID, arg.UserID)
+	var i PlannedSession
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.PlanID,
+		&i.OrderIndex,
+		&i.ScheduledDate,
+		&i.Kind,
+		&i.EstMinutes,
+		&i.Status,
+		&i.WorkoutSessionID,
+	)
+	return i, err
+}
+
 const lockPlanner = `-- name: LockPlanner :exec
 
 SELECT pg_advisory_xact_lock(1885433198, hashtext($1::uuid::text))
@@ -871,6 +1090,22 @@ SELECT pg_advisory_xact_lock(1885433198, hashtext($1::uuid::text))
 // cannot collide with it.
 func (q *Queries) LockPlanner(ctx context.Context, userID uuid.UUID) error {
 	_, err := q.db.Exec(ctx, lockPlanner, userID)
+	return err
+}
+
+const markPlannedSessionStarted = `-- name: MarkPlannedSessionStarted :exec
+UPDATE planned_sessions SET status = 'started', workout_session_id = $1
+WHERE id = $2 AND user_id = $3
+`
+
+type MarkPlannedSessionStartedParams struct {
+	WorkoutSessionID *uuid.UUID
+	ID               uuid.UUID
+	UserID           uuid.UUID
+}
+
+func (q *Queries) MarkPlannedSessionStarted(ctx context.Context, arg MarkPlannedSessionStartedParams) error {
+	_, err := q.db.Exec(ctx, markPlannedSessionStarted, arg.WorkoutSessionID, arg.ID, arg.UserID)
 	return err
 }
 

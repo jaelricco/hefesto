@@ -267,14 +267,60 @@ INSERT INTO training_plans (id, user_id, week_start, ruleset_version, input_hash
 VALUES ($1, $2, $3, $4, $5, $6);
 
 -- name: InsertPlannedSession :exec
-INSERT INTO planned_sessions (id, user_id, plan_id, order_index, scheduled_date, kind, est_minutes)
-VALUES ($1, $2, $3, $4, $5, $6, $7);
+INSERT INTO planned_sessions (
+    id, user_id, plan_id, order_index, scheduled_date, kind, est_minutes, status, workout_session_id
+) VALUES (
+    @id, @user_id, @plan_id, @order_index, @scheduled_date, @kind, @est_minutes, @status, @workout_session_id
+);
 
 -- name: ListPlannedSessions :many
 SELECT * FROM planned_sessions WHERE plan_id = $1 AND user_id = $2 ORDER BY order_index;
 
+-- Whether each session of a plan was started, and its log session. A
+-- session whose log session was deleted counts as planned again.
+-- name: ListPlannedSessionStates :many
+SELECT s.order_index, s.status, s.workout_session_id,
+       COALESCE(ws.deleted_at IS NULL, false)::boolean AS session_live
+FROM planned_sessions s
+LEFT JOIN workout_sessions ws ON ws.id = s.workout_session_id AND ws.user_id = s.user_id
+WHERE s.plan_id = @plan_id AND s.user_id = @user_id
+ORDER BY s.order_index;
+
+-- The planner's exercises in the log's catalogue.
+-- name: ExerciseIDsBySlug :many
+SELECT slug, id FROM exercises WHERE slug = ANY(@slugs::text[]) AND status <> 'retired';
+
+-- The planned session to start, locked for the start (spec §10.2).
+-- name: LockActivePlannedSession :one
+SELECT s.* FROM planned_sessions s
+JOIN training_plans p ON p.id = s.plan_id AND p.user_id = s.user_id
+WHERE s.id = $1 AND s.user_id = $2 AND p.status = 'active'
+FOR UPDATE OF s;
+
+-- name: MarkPlannedSessionStarted :exec
+UPDATE planned_sessions SET status = 'started', workout_session_id = @workout_session_id
+WHERE id = @id AND user_id = @user_id;
+
+-- name: InsertPlannedWorkoutSession :one
+INSERT INTO workout_sessions (
+    id, user_id, started_at, timezone, local_date, title, planned_session_id, client_id, updated_at
+) VALUES (
+    @id, @user_id, @started_at, @timezone, @local_date, @title, @planned_session_id, @client_id, @updated_at
+)
+ON CONFLICT (id) DO NOTHING
+RETURNING *;
+
+-- name: InsertPlannedSetEntry :exec
+INSERT INTO set_entries (
+    id, user_id, session_id, block_id, order_index, round_index, kind, is_planned,
+    rest_after_planned_s, rir, planned_item_id, client_id, updated_at
+) VALUES (
+    @id, @user_id, @session_id, @block_id, @order_index, @round_index, @kind, true,
+    @rest_after_planned_s, @rir, @planned_item_id, @client_id, @updated_at
+);
+
 -- name: GetActivePlannedSession :one
-SELECT p.payload, s.order_index
+SELECT p.id AS plan_id, p.payload, s.order_index
 FROM planned_sessions s
 JOIN training_plans p ON p.id = s.plan_id AND p.user_id = s.user_id
 WHERE s.id = $1 AND s.user_id = $2 AND p.status = 'active';

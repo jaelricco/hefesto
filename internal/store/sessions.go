@@ -735,8 +735,9 @@ func sessionFromRow(r dbgen.WorkoutSession) training.Session {
 		ID: r.ID, StartedAt: r.StartedAt, EndedAt: r.EndedAt, Timezone: r.Timezone,
 		LocalDate: r.LocalDate.Time, Title: r.Title, Notes: r.Notes,
 		PerceivedFatigue: intPtr16(r.PerceivedFatigue), BodyweightKg: numericPtrToFloat(r.BodyweightKg),
-		Status: r.Status, IsRestDay: r.IsRestDay, TemplateID: r.TemplateID, CompletedAt: r.CompletedAt,
-		UpdatedAt: r.UpdatedAt, ServerUpdatedAt: r.ServerUpdatedAt, Blocks: []training.Block{},
+		Status: r.Status, IsRestDay: r.IsRestDay, TemplateID: r.TemplateID, PlannedSessionID: r.PlannedSessionID,
+		CompletedAt: r.CompletedAt,
+		UpdatedAt:   r.UpdatedAt, ServerUpdatedAt: r.ServerUpdatedAt, Blocks: []training.Block{},
 	}
 }
 
@@ -783,7 +784,7 @@ func setFromRow(e dbgen.SetEntry) training.SetEntry {
 		ID: e.ID, SessionID: e.SessionID, BlockID: e.BlockID, OrderIndex: int(e.OrderIndex),
 		RoundIndex: intPtr16(e.RoundIndex), Kind: e.Kind, IsPlanned: e.IsPlanned,
 		RestAfterPlannedS: intPtr32(e.RestAfterPlannedS), RestAfterActualS: intPtr32(e.RestAfterActualS),
-		RPE: numericPtrToFloat(e.Rpe), RIR: intPtr16(e.Rir), CompletedAt: e.CompletedAt, Notes: e.Notes,
+		RPE: numericPtrToFloat(e.Rpe), RIR: intPtr16(e.Rir), PlannedItemID: e.PlannedItemID, CompletedAt: e.CompletedAt, Notes: e.Notes,
 		UpdatedAt: e.UpdatedAt, Elements: []training.Element{},
 	}
 }

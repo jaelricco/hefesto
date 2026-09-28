@@ -49,9 +49,8 @@ type DraftSet struct {
 	HoldS     *int
 	LoadKg    float64
 	Eccentric bool
-	// AssistID is set for a band-assisted set; the athlete picks the band
-	// when logging it.
-	AssistID string
+	// A band target stays in the plan item: the log records assistance
+	// with the band used, which the athlete names when logging the set.
 }
 
 // Block kinds of the log.
@@ -66,7 +65,7 @@ const maxRIR = 10
 // Materialize turns a planned session into the draft the log stores (spec
 // §10.1, §10.2). Offers (probes, first attempts) are left out: they are done
 // only on the athlete's active choice, which the client asks for. newID
-// gives every block, set, element and assistance its ID.
+// gives every block, set and element its ID.
 func Materialize(k *Knowledge, p PlannedSession, newID func() string) SessionDraft {
 	d := SessionDraft{Title: "Geplante Einheit"}
 	for _, b := range p.Blocks {
@@ -124,9 +123,6 @@ func draftSet(k *Knowledge, it Item, newID func() string) DraftSet {
 	if ds.Measure == MeasureReps {
 		rir := min(max(it.Reserve, 0), maxRIR)
 		ds.RIR = &rir
-	}
-	if it.Assist == AssistBand {
-		ds.AssistID = newID()
 	}
 	return ds
 }

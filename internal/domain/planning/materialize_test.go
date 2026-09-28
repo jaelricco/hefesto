@@ -80,12 +80,6 @@ func TestMaterialize(t *testing.T) {
 						}
 						checked["reps"] = true
 					}
-					if (it.Assist == planning.AssistBand) != (ds.AssistID != "") {
-						t.Errorf("%s: band assistance lost on %s", pa.name, it.Exercise)
-					}
-					if it.Assist == planning.AssistBand {
-						checked["band"] = true
-					}
 					if ds.Kind != it.Kind || ds.RestS != it.RestS || ds.LoadKg != it.LoadKg || ds.Exercise != it.Exercise {
 						t.Errorf("%s: set %+v from %+v", pa.name, ds, it)
 					}
@@ -101,7 +95,7 @@ func TestMaterialize(t *testing.T) {
 }
 
 // An antagonist pair alternates by round; an offer is left out; a band set
-// keeps its assistance.
+// is the plain target, its band stays in the plan item.
 func TestMaterializePairsAndOffers(t *testing.T) {
 	k := kb(t)
 	ps := planning.PlannedSession{ID: "ps", Blocks: []planning.Block{
@@ -128,7 +122,7 @@ func TestMaterializePairsAndOffers(t *testing.T) {
 		t.Errorf("pair order %s", got)
 	}
 	band := d.Blocks[1]
-	if band.Kind != planning.DraftStraight || len(band.Sets) != 2 || band.Sets[0].AssistID == "" || !band.Sets[0].Eccentric ||
+	if band.Kind != planning.DraftStraight || len(band.Sets) != 2 || band.Sets[0].ItemID != "c" || !band.Sets[0].Eccentric ||
 		band.Sets[0].Round != nil || *band.Sets[0].RIR != 3 {
 		t.Errorf("band block %+v", band)
 	}

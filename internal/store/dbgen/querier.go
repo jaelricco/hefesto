@@ -53,6 +53,8 @@ type Querier interface {
 	DetachMedia(ctx context.Context, arg DetachMediaParams) error
 	DetachOtherElementMedia(ctx context.Context, arg DetachOtherElementMediaParams) error
 	DropGoal(ctx context.Context, arg DropGoalParams) error
+	// The planner's exercises in the log's catalogue.
+	ExerciseIDsBySlug(ctx context.Context, slugs []string) ([]ExerciseIDsBySlugRow, error)
 	ExerciseStatuses(ctx context.Context, ids []uuid.UUID) ([]ExerciseStatusesRow, error)
 	// Uploads never completed: their objects, if any, are removed and the asset
 	// marked failed.
@@ -115,6 +117,8 @@ type Querier interface {
 	InsertPainReport(ctx context.Context, arg InsertPainReportParams) (int64, error)
 	InsertPlan(ctx context.Context, arg InsertPlanParams) error
 	InsertPlannedSession(ctx context.Context, arg InsertPlannedSessionParams) error
+	InsertPlannedSetEntry(ctx context.Context, arg InsertPlannedSetEntryParams) error
+	InsertPlannedWorkoutSession(ctx context.Context, arg InsertPlannedWorkoutSessionParams) (WorkoutSession, error)
 	InsertPlannerSession(ctx context.Context, arg InsertPlannerSessionParams) error
 	InsertRefreshToken(ctx context.Context, arg InsertRefreshTokenParams) error
 	// Sessions -> blocks -> set entries -> set elements (+ assistance).
@@ -162,6 +166,9 @@ type Querier interface {
 	ListLadderStates(ctx context.Context, userID uuid.UUID) ([]UserLadderState, error)
 	// ------------------------------------------------------------ pain reports
 	ListPainReports(ctx context.Context, userID uuid.UUID) ([]UserPainReport, error)
+	// Whether each session of a plan was started, and its log session. A
+	// session whose log session was deleted counts as planned again.
+	ListPlannedSessionStates(ctx context.Context, arg ListPlannedSessionStatesParams) ([]ListPlannedSessionStatesRow, error)
 	ListPlannedSessions(ctx context.Context, arg ListPlannedSessionsParams) ([]PlannedSession, error)
 	// ----------------------------------------------------------------- history
 	ListPlannerSessions(ctx context.Context, userID uuid.UUID) ([]PlannerSession, error)
@@ -178,6 +185,8 @@ type Querier interface {
 	ListUnlockEventsForSession(ctx context.Context, arg ListUnlockEventsForSessionParams) ([]SkillUnlockEvent, error)
 	// ----------------------------------------------------------- user state
 	ListUserSkillStates(ctx context.Context, userID uuid.UUID) ([]UserSkillState, error)
+	// The planned session to start, locked for the start (spec §10.2).
+	LockActivePlannedSession(ctx context.Context, arg LockActivePlannedSessionParams) (PlannedSession, error)
 	// The training planner: snapshot parts, plans and the decision log.
 	// internal/store/planning.go assembles them; see ADR 0013.
 	// Serialises the planner calls of one user for the rest of the
@@ -188,6 +197,7 @@ type Querier interface {
 	MarkFreezeDays(ctx context.Context, arg MarkFreezeDaysParams) error
 	MarkMediaFailed(ctx context.Context, arg MarkMediaFailedParams) (MediaAsset, error)
 	MarkMediaReady(ctx context.Context, arg MarkMediaReadyParams) (MediaAsset, error)
+	MarkPlannedSessionStarted(ctx context.Context, arg MarkPlannedSessionStartedParams) error
 	MarkRefreshTokenRotated(ctx context.Context, arg MarkRefreshTokenRotatedParams) error
 	MarkSessionCompleted(ctx context.Context, arg MarkSessionCompletedParams) (WorkoutSession, error)
 	// --------------------------------------------------------------- streaks

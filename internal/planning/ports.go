@@ -20,6 +20,7 @@ type Stores struct {
 	Snapshots SnapshotStore
 	Plans     PlanStore
 	Decisions DecisionLog
+	Sessions  SessionLog
 }
 
 // Transactor runs fn with stores bound to one transaction that holds the
@@ -40,7 +41,8 @@ type SnapshotStore interface {
 }
 
 // PlanStore keeps the generated week plans. A plan and its sessions carry
-// the IDs the service gave them.
+// the IDs the service gave them. A read fills each session's Status and
+// WorkoutSessionID; a save stores them as given.
 type PlanStore interface {
 	ActivePlan(ctx context.Context, userID uuid.UUID, week time.Time) (planning.Plan, bool, error)
 	SavePlan(ctx context.Context, userID uuid.UUID, p planning.Plan) error
@@ -48,6 +50,38 @@ type PlanStore interface {
 	// and the session's index in it.
 	PlannedSession(ctx context.Context, userID, sessionID uuid.UUID) (planning.Plan, int, bool, error)
 }
+
+// SessionLog writes planned sessions into the training log (spec §10.2).
+type SessionLog interface {
+	// StartSession writes the draft as a draft session of the log and marks
+	// the planned session started, in one transaction. A planned session
+	// whose log session still exists is not started again: the store
+	// returns that session and created false. ErrNotFound when the planned
+	// session is in no active plan.
+	StartSession(ctx context.Context, userID uuid.UUID, in SessionStart) (id uuid.UUID, created bool, err error)
+}
+
+// SessionStart is a planned session started in the log.
+type SessionStart struct {
+	PlannedSessionID uuid.UUID
+	// SessionID is the log session's ID, given by the client.
+	SessionID uuid.UUID
+	// DeviceID becomes the client_id of the log rows.
+	DeviceID  *uuid.UUID
+	StartedAt time.Time
+	Timezone  string
+	LocalDate time.Time // the athlete's calendar day of StartedAt
+	// At is the client's clock for the change, the rows' updated_at.
+	At    time.Time
+	Draft planning.SessionDraft
+}
+
+// Statuses of a planned session.
+const (
+	SessionPlanned   = "planned"
+	SessionStarted   = "started"
+	SessionCompleted = "completed"
+)
 
 // Decision is one applied event with the changes it made (spec §6.14).
 type Decision struct {
@@ -115,4 +149,10 @@ var (
 	ErrConsentRequired = errors.New("health data consent required")
 	// ErrNotFound: no such plan or planned session (404).
 	ErrNotFound = errors.New("not found")
+	// ErrTrainingStopped: SAFE-02 or SAFE-07 stop all training, and no
+	// planned session starts (409, spec §10.4). The plan says why.
+	ErrTrainingStopped = errors.New("training stopped")
+	// ErrSessionIDTaken: the log session's ID belongs to another session
+	// (409).
+	ErrSessionIDTaken = errors.New("session id already in use")
 )
