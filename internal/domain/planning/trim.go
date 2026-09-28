@@ -490,8 +490,9 @@ func (g *gen) hasWork(si int, skill string) bool {
 	return false
 }
 
-// lighter reports whether a set of lower loads the violated quantity less
-// than a set of ex.
+// lighter reports whether a set of lower loads the violated quantity at
+// least the spike margin (PAR-D-31) less than a set of ex; a rung that is
+// barely lighter is no remedy, and the exposure is cut instead.
 func (g *gen) lighter(lower, ex *Exercise, v violation) bool {
 	if v.kind == "budget" {
 		return lower.StraightArm != ArmStraight
@@ -506,7 +507,7 @@ func (g *gen) lighter(lower, ex *Exercise, v violation) bool {
 		}
 		return t
 	}
-	return sum(lower) < sum(ex)-eps
+	return sum(lower) <= sum(ex)*(1-g.k.T.SpikeCap)+eps
 }
 
 func (g *gen) note(it *Item, r Reason, capRule string) {

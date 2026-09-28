@@ -2342,8 +2342,11 @@ parameters:
     balance_short_min: 6, balance_floor_min: 5, balance_set_s: 30, balance_short_under_min: 45}
   evidence: Heuristik
   heuristic: true
-  rationale: Spannen der Quellen brauchen für einen deterministischen Plan einen Wert; Wahl nach `08`
-    §4 (Sicherheit vorsichtig, sonst Mitte)
+  rationale: 'Spannen der Quellen brauchen für einen deterministischen Plan einen Wert. Gewählt ist die
+    vorsichtige Seite dort, wo Sicherheit betroffen ist (Pausen, Halte, Satzzahlen der Skills); sonst
+    ein runder Wert in der Spanne, nicht immer die Mitte: Balance 12 min (PAR-E-35: 11–15), kurz 6 min
+    (5–10), Ergänzungen 3 × 12 (PAR-B-78: 2–3 × 12–20), Prehab 15 Wdh. (12–20); Antagonisten-Paare 2 bei
+    30 min (PAR-B-64: 1–2)'
 - id: PAR-S-37
   key: misc_small_values
   text: 3 min allgemeines Aufwärmen bei 5 min Gesamtdauer; Kantengewicht ≥ 0.5 für Unterstützungsübungen;
