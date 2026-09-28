@@ -15,6 +15,7 @@ const (
 	EventClearance = "clearance"
 	EventSymptoms  = "symptoms"
 	EventWeek      = "week_start"
+	EventConsent   = "consent"
 )
 
 // Event is one trigger for adaptation.
@@ -26,6 +27,17 @@ type Event struct {
 	Region   string             `json:"region,omitempty"`
 	Answers  map[string]bool    `json:"answers,omitempty"`
 	Headroom map[string]float64 `json:"headroom,omitempty"` // from the ending week's plan
+	Consent  *ConsentChange     `json:"consent,omitempty"`
+}
+
+// ConsentChange grants or withdraws the consent to keep health data
+// (onboarding.md §3.1). A grant answers again what was not kept without
+// it: the six screening questions and the regions injured in the last 12
+// months (onboarding.md §3.7).
+type ConsentChange struct {
+	Granted      bool     `json:"granted"`
+	Screening    []bool   `json:"screening,omitempty"`
+	PastInjuries []string `json:"past_injuries,omitempty"`
 }
 
 // Change is one adaptation the user sees (spec §6.14).
@@ -52,6 +64,7 @@ const (
 	ChangeRedFlags    = "ask_red_flags"
 	ChangeStopped     = "training_stopped"
 	ChangeBreak       = "ramp_started"
+	ChangeConsent     = "consent_changed"
 )
 
 // ErrUnknownEvent is returned for an event kind Adapt does not know.
@@ -81,6 +94,11 @@ func Adapt(k *Knowledge, s Snapshot, ev Event) (Snapshot, []Change, error) {
 		a.change(Change{Kind: ChangeStopped, Reasons: []Reason{k.reason(RuleStopped)}})
 	case EventWeek:
 		a.week(civil(ev.At, time.UTC), ev.Headroom)
+	case EventConsent:
+		if ev.Consent == nil {
+			return s, nil, ErrUnknownEvent
+		}
+		a.consent(*ev.Consent)
 	default:
 		return s, nil, ErrUnknownEvent
 	}
@@ -773,6 +791,10 @@ func (a *adapter) redFlags(id string, answers map[string]bool) {
 	}
 	if s.Profile.HealthConsent {
 		s.Regions[id] = rs
+	} else if rs.State == StateRTT0 {
+		// Without consent no stage is kept; the region stays out like
+		// stage 0 (SAFE-04).
+		a.constrain(ConstraintExcluded, id, day)
 	}
 	a.change(Change{Kind: ChangeRegion, Region: id, From: from, To: rs.State, Reasons: out.Reasons})
 }
@@ -793,20 +815,123 @@ func (a *adapter) clearance(id string) {
 		a.enterRamp(&rs, r, k.T.RTTStartReferral, day, "clearance")
 		s.Regions[r] = rs
 	}
+	// A stop raised by a region's red flags goes with that region's
+	// clearance; a stop without a region (exertion symptoms) needs the
+	// global one.
+	cleared := func(c Constraint) bool {
+		return (c.Kind == ConstraintLocked || c.Kind == ConstraintStopped) && (id == "" || c.Region == id)
+	}
+	// A lock the planner keeps no state for cannot ramp. Without consent to
+	// health data the region stays out like stage 0 (SAFE-04); with it, the
+	// region ramps like any locked one.
+	var excluded []string
+	for _, c := range s.Constraints {
+		if c.Kind != ConstraintLocked || c.Region == "" || !cleared(c) {
+			continue
+		}
+		if _, tracked := s.Regions[c.Region]; tracked {
+			continue
+		}
+		if s.Profile.HealthConsent {
+			s.Regions[c.Region] = RegionState{State: StateLocked, Complaint: true, ComplaintAt: c.Created, Since: c.Created, StepSince: c.Created}
+		} else {
+			excluded = append(excluded, c.Region)
+		}
+	}
+	s.Constraints = slices.DeleteFunc(s.Constraints, cleared)
+	for _, r := range excluded {
+		a.constrain(ConstraintExcluded, r, day)
+	}
 	if id == "" {
-		s.Constraints = slices.DeleteFunc(s.Constraints, func(c Constraint) bool { return c.Kind == ConstraintStopped || c.Kind == ConstraintLocked })
 		s.Screening.Cleared = true
 		for _, r := range sortedKeys(s.Regions) {
 			unlock(r)
 		}
 		return
 	}
-	// A stop raised by this region's red flags goes with its clearance; a
-	// stop without a region (exertion symptoms) needs the global one.
-	s.Constraints = slices.DeleteFunc(s.Constraints, func(c Constraint) bool {
-		return (c.Kind == ConstraintLocked || c.Kind == ConstraintStopped) && c.Region == id
-	})
 	unlock(id)
+}
+
+// constrain adds a constraint unless one of its kind already names the
+// region.
+func (a *adapter) constrain(kind, region string, day time.Time) {
+	if !slices.ContainsFunc(a.s.Constraints, func(c Constraint) bool { return c.Kind == kind && c.Region == region }) {
+		a.s.Constraints = append(a.s.Constraints, Constraint{Kind: kind, Region: region, Created: day})
+	}
+}
+
+// consent grants or withdraws the consent to keep health data
+// (onboarding.md §3.1, spec §4.9, §13.4).
+//
+// A withdrawal deletes the health data: region states, screening and pain
+// reports. What protects the user stays as a constraint without answers or
+// values (ENT-S-7): a locked region stays locked, a region with a complaint
+// or in a ramp is excluded like stage 0 (SAFE-04), and a stop stays.
+//
+// A grant takes the screening and the past injuries again, because they
+// were not kept, and turns every exclusion into a tracked region in stage 0.
+// That excludes the same exercises (SAFE-06) and has an exit: green daily
+// pain and negative red flags (spec §8.3). A lock without a state becomes a
+// tracked lock, so its clearance ramps.
+func (a *adapter) consent(c ConsentChange) {
+	k, s := a.k, &a.s
+	if c.Granted == s.Profile.HealthConsent {
+		return
+	}
+	day := civil(a.at, time.UTC)
+	if !c.Granted {
+		for _, id := range sortedKeys(s.Regions) {
+			rs := s.Regions[id]
+			switch {
+			case rs.State == StateLocked:
+				a.constrain(ConstraintLocked, id, day)
+			case rs.Complaint || rttStage(rs.State) >= 0:
+				if !slices.ContainsFunc(s.Constraints, func(c Constraint) bool { return c.Kind == ConstraintLocked && c.Region == id }) {
+					a.constrain(ConstraintExcluded, id, day)
+				}
+			}
+		}
+		s.Regions = map[string]RegionState{}
+		s.Screening = Screening{}
+		s.Pain = nil
+		s.Profile.HealthConsent = false
+		a.change(Change{Kind: ChangeConsent, To: "withdrawn", Reasons: []Reason{k.reason(RuleNoConsent)}})
+		return
+	}
+	s.Profile.HealthConsent = true
+	s.Screening = Screening{AnyYes: slices.Contains(c.Screening, true)}
+	a.change(Change{Kind: ChangeConsent, To: "granted"})
+	for _, id := range c.PastInjuries {
+		if _, ok := s.Regions[id]; !ok {
+			s.Regions[id] = RegionState{State: StateNormal, Since: day, StepSince: day, PriorInjury: true}
+		}
+	}
+	var kept []Constraint
+	for _, cn := range s.Constraints {
+		if cn.Kind != ConstraintExcluded {
+			kept = append(kept, cn)
+			continue
+		}
+		rs := s.Regions[cn.Region]
+		rs.State, rs.EnteredVia, rs.Since, rs.StepSince = StateRTT0, "consent", day, day
+		rs.Complaint, rs.ComplaintAt = true, cn.Created
+		s.Regions[cn.Region] = rs
+		a.change(Change{Kind: ChangeRegion, Region: cn.Region, To: StateRTT0,
+			Reasons: []Reason{regional(k.reason(RuleRegionRTT0, "region", k.regions[cn.Region].Name), cn.Region)}})
+	}
+	s.Constraints = kept
+	for _, cn := range s.Constraints {
+		if cn.Kind != ConstraintLocked || cn.Region == "" {
+			continue
+		}
+		if rs, ok := s.Regions[cn.Region]; !ok || rs.State != StateLocked {
+			rs.State, rs.EnteredVia, rs.Since, rs.StepSince = StateLocked, "consent", day, day
+			rs.Complaint, rs.ComplaintAt = true, cn.Created
+			s.Regions[cn.Region] = rs
+			a.change(Change{Kind: ChangeRegion, Region: cn.Region, To: StateLocked,
+				Reasons: []Reason{regional(k.reason(RuleRegionLocked, "region", k.regions[cn.Region].Name), cn.Region)}})
+		}
+	}
 }
 
 // enterRamp moves a region to stage 1 at a start share.

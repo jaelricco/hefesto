@@ -19,8 +19,8 @@ rules:
   evidence: B (F-41) / H
 - id: SAFE-04
   title: Vorsichtig ohne Gesundheitsangaben
-  text: Ohne Einwilligung zu Gesundheitsangaben steigert der Plan die Belastung vorsichtiger und speichert
-    keine Einschränkungen dauerhaft.
+  text: Ohne Einwilligung zu Gesundheitsangaben steigert der Plan die Belastung vorsichtiger. Er speichert
+    keine Beschwerden und keine Schmerzwerte, nur Sperren und Ausschlüsse aus den Sicherheitsfragen.
   params: [PAR-D-02]
   evidence: H
 - id: SAFE-05

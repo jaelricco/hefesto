@@ -358,6 +358,36 @@ func (k *Knowledge) ValidatePain(r PainReport, now time.Time) error {
 	return f.err()
 }
 
+// ValidateConsent checks a consent change before it is applied: a grant
+// answers the six screening questions and names known regions; a
+// withdrawal carries no answers.
+func (k *Knowledge) ValidateConsent(c ConsentChange) error {
+	f := fields{}
+	if !c.Granted {
+		if len(c.Screening) > 0 {
+			f.add("/screening", "is answered only with a grant")
+		}
+		if len(c.PastInjuries) > 0 {
+			f.add("/past_injuries", "are named only with a grant")
+		}
+		return f.err()
+	}
+	if len(c.Screening) != screeningAnswers {
+		f.add("/screening", fmt.Sprintf("all %d questions must be answered", screeningAnswers))
+	}
+	seen := map[string]bool{}
+	for i, r := range c.PastInjuries {
+		ptr := fmt.Sprintf("/past_injuries/%d", i)
+		if _, ok := k.regions[r]; !ok {
+			f.add(ptr, "unknown region")
+		} else if seen[r] {
+			f.add(ptr, "region named twice")
+		}
+		seen[r] = true
+	}
+	return f.err()
+}
+
 // ProfileUpdate is the part of the profile a user may change after the
 // onboarding: availability, equipment, body weight, preferred days,
 // mobility checks and the added-load limits (onboarding.md §3.3–3.4,
