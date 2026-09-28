@@ -120,6 +120,15 @@ documents are in German.
     A new plan of the week keeps a start on the same day.
   - Offers, and blocks without sets, are not written. A band target stays in
     the plan item, because the log needs the actual band.
+- **A hold's reserve in the log (this checkpoint, U-65, U-66):**
+  - `set_entries.sir_s` (0–60 s) records the seconds a hold could have gone
+    on; `rir` stays repetitions (ENT-S-4). It runs through REST, sync and
+    the responses.
+  - A planned hold carries its target reserve there, and a completed hold's
+    `sir_s` becomes its reserve in the planner's history. Holds count as
+    full observations again where the reserve allows.
+  - The iOS app does not send it yet; without it a hold stays a lower
+    bound, as before.
 - **A started draft follows the plan (this checkpoint, ADR 0017):**
   - Every new plan of the week reconciles the drafts of started sessions in
     the same transaction. Their open planned sets follow the day's session
@@ -169,7 +178,6 @@ documents are in German.
   - after a withdrawal the decision log and past plans still name regions
     and states; whether they must be redacted is a legal question (ENT-4).
 - **Not yet built:**
-  - the reserve of a hold in the log (`set_entries.sir_s`);
   - starting a session offline through sync;
   - the sync of pain reports;
   - a record of the consent text agreed to;

@@ -544,7 +544,9 @@ Die Zeilen gelten **in dieser Reihenfolge**; die erste zutreffende gewinnt.
 **Messung von Reserve bei Halten.** Das Log kennt heute nur `rir` (0–10,
 Wiederholungen). Für Halte braucht der Planer Sekunden in Reserve (SIR,
 `03` §5.3). Vorschlag: neue, optionale Spalte `set_entries.sir_s` (§4.9,
-ENT-S-4).
+ENT-S-4). Umgesetzt (U-65, U-66): Ein geplanter Halt trägt seine
+Ziel-Reserve in `sir_s`, ein ausgeführter die geloggte; ohne sie zählt der
+Halt als Untergrenze.
 
 ### 4.4 Leiterstand
 
@@ -707,8 +709,8 @@ Tabellen folgen der Skizze mit diesen Abweichungen:
   `planner_sessions` (Verlauf als Kopie, bis die Übungen des Planers
   Content-Zeilen sind).
 - Noch nicht angelegt sind `user_bands`, `user_red_flag_answers`,
-  `planner_knowledge`, `set_entries.sir_s` und die Sync-Spalten. Sie kommen
-  mit den Endpunkten.
+  `planner_knowledge` und die Sync-Spalten. Sie kommen mit den Endpunkten.
+  `set_entries.sir_s` kam mit der Reserve eines Halts (U-65).
 - `workout_sessions.planned_session_id` und `set_entries.planned_item_id`
   kamen mit dem Start einer geplanten Einheit (ADR 0016). `planned_item_id`
   hat keinen Fremdschlüssel, weil die Items im Plan-Payload stehen; der
@@ -1901,9 +1903,9 @@ selbst anlegt, ihre ID.
   `set_entries.planned_item_id` die Item-ID des Plans; so ordnet die Adaption
   Ist zu Soll zu, auch wenn zwei Geräte dieselbe Einheit offline starten.
   Der Start ist idempotent (bestehender Draft wird zurückgegeben).
-  Umsetzung und Abweichungen: ADR 0016, U-50 bis U-54 (Band und
-  Halte-Reserve bleiben im Plan-Item, Angebote und Blöcke ohne Satz werden
-  nicht geschrieben).
+  Umsetzung und Abweichungen: ADR 0016, U-50 bis U-54 (das Band bleibt im
+  Plan-Item, Angebote und Blöcke ohne Satz werden nicht geschrieben); die
+  Reserve eines Halts steht seit U-65 in `sir_s`.
 - **Ausführen** läuft unverändert über die Log-API bzw. den Sync (ADR 0007,
   0009): Aus einem geplanten Satz wird ein ausgeführter (`is_planned = false`,
   `completed_at`, Istwerte). Zielwerte bleiben im Plan erhalten.
@@ -2103,7 +2105,7 @@ Phase 5 dokumentiert die erzeugten Pläne je Persona und ihre Plausibilität in
 - Stand: `00009_planning.sql` legt die Tabellen des Planers an (§4.9,
   ADR 0013). `workout_sessions.planned_session_id` und
   `set_entries.planned_item_id` kamen mit dem Start einer geplanten Einheit
-  (ADR 0016); `set_entries.sir_s` fehlt noch.
+  (ADR 0016), `set_entries.sir_s` mit der Reserve eines Halts (U-65).
 
 ### 13.3 Rollout
 
@@ -2245,6 +2247,8 @@ U-35 setzen die Entscheidungen ENT-R-1, ENT-R-2 und ENT-R-5 um (§15.5).
 | U-62 | §6.12 | `fatigue` hat die Skala von `perceived_fatigue` (10 erschöpft); müde ist Schlaf ≤ PAR-E-41 oder Ermüdung ≥ `PAR-S-28` | `PAR-S-28` ist auf dieser Skala definiert, wie PAR-B-49 b |
 | U-63 | §6.12 | Im Block `skill_max` gehen Angebote, jeder Halt (Skill und Kondition) wird Technik: `min(0.5 · d, 10 s)`, drei Versuche, `d` = Halt + Reserve, ohne Reserve fällt er weg; gleiche Sprosse; Wiederholungsarbeit (Kraft, Wiederholungs-Skills, Exzentrik) und alle anderen Blöcke bleiben | Der Maximalblock einer Ziel-Leiter hält auch Konditionshalte; die Technik-Dosis des Plans (DOSE-09) ist schon weit unter der Grenze; Kraft war unter Schlafmangel unbeeinflusst (PAR-E-42) |
 | U-64 | §6.12, §10.2 | Die Antworten werden nie gespeichert; `planned_sessions.check_in_applied` hält die Entscheidung, die Plan-Ansichten zeigen die leichtere Einheit, ein neuer Plan übernimmt sie, der Abgleich macht beide Seiten leichter | Ohne das Flag ersetzte der nächste Abgleich die Technik-Sätze wieder durch Maximalsätze (ADR 0017) |
+| U-65 | §4.3, §4.9, ENT-S-4 | `set_entries.sir_s` (0–60 s, benannter `CHECK`) läuft durch den einen Satz-Pfad: Prüfung, REST, Sync, Antworten; ein Schreiben ohne `sir_s` leert es wie `rir`. Ein geplanter Halt trägt seine Ziel-Reserve darin, der Abgleich vergleicht sie | Nimmt U-52 für die Reserve eines Halts zurück; die Semantik von `rir` bleibt Wiederholungen |
+| U-66 | §4.3, U-59 | Der Verlauf übernimmt das `sir_s` eines ausgeführten Halts als seine Reserve; ohne `sir_s` bleibt der Halt eine Untergrenze | Halte zählen damit wieder als volle Beobachtung, soweit die Reserve es zulässt (`PAR-S-31`) |
 
 ### 15.3 Nicht umgesetzt
 
@@ -2261,9 +2265,7 @@ Kapazität), ADAPT-09, ADAPT-11, ADAPT-17, der Mobilitätsblock und Texte in
 weiteren Sprachen (KB-11). Für die Ellbogen-Regionen gibt es kein Prehab: Die
 Recherche nennt Programme, aber keine übertragbare Übung (`05` §10).
 Minderjährige bekommen keinen Plan (SAFE-07); INJ-09 ist deshalb nicht aktiv.
-Aus §10 fehlen die Reserve eines Halts im Log (`set_entries.sir_s`), der
-Offline-Start
-über den Sync (§10.5; die Sync-Operationen tragen `planned_session_id` und
+Aus §10 fehlen der Offline-Start über den Sync (§10.5; die Sync-Operationen tragen `planned_session_id` und
 `planned_item_id` nicht), der Sync der Schmerzberichte und `?explain=trace`
 (ADR 0014, ADR 0016), sowie ein Nachweis der Einwilligung mit Zeitpunkt und
 Textversion (ADR 0015).

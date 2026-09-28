@@ -61,7 +61,9 @@ speichert:
   allgemeine Aufwärmen oder ein Block nur mit Angeboten. Der Plan zeigt sie
   weiter.
 - **`rir`** trägt die Reserve eines Wiederholungssatzes. Die Reserve eines
-  Halts (Sekunden) hat im Log keine Spalte; sie bleibt im Plan-Item.
+  Halts (Sekunden) hatte im Log keine Spalte und blieb im Plan-Item.
+  Nachtrag (U-65): Seit `set_entries.sir_s` trägt ein geplanter Halt seine
+  Ziel-Reserve dort.
 - **Band-Unterstützung** bleibt im Plan-Item (`assist: band`). Das Log
   verlangt für eine Band-Unterstützung das Band selbst (`band_id`,
   `set_element_assistance_band_ck`), und das kennt der Planer nicht. Die App

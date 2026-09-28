@@ -43,9 +43,10 @@ Ausführung. Aus jedem Element wird ein Satz:
   Band-Kapazität (PAR-A-21). Solche Sätze werden weggelassen; die Tabelle
   der Kapazitäten kennt auch nur `none` und `band`.
 - Reserve: das geloggte RIR eines Wiederholungssatzes. RPE wird nicht
-  umgerechnet, die Wissensbasis hat dafür keine Regel. Für Halte hat das Log
-  keine Spalte (`set_entries.sir_s` fehlt); ein Halt ohne Reserve zählt im
-  Kern als Untergrenze (§4.3).
+  umgerechnet, die Wissensbasis hat dafür keine Regel. Für Halte hatte das
+  Log keine Spalte; ein Halt ohne Reserve zählt im Kern als Untergrenze
+  (§4.3). Nachtrag (U-66): Seit `set_entries.sir_s` ist dessen Wert die
+  Reserve eines Halts.
 - Dazu kommen: Zusatzlast, Art des Satzes, Form (1–5), `failed`,
   Teilbewegung und reine Exzentrik.
 - Die Einheit trägt den Kalendertag, die empfundene Ermüdung und `deload`,
@@ -95,6 +96,6 @@ Brechendes.
   - Eine abgeschlossene Einheit, die der User später löscht, bleibt im
     Verlauf des Planers (wie bisher, ADR 0013).
 - **Nicht gebaut:**
-  - die Reserve eines Halts (`sir_s`);
+  - die Reserve eines Halts (`sir_s`), nachgezogen mit U-65 und U-66;
   - der Check-in beim Start (ADAPT-17);
   - der Offline-Start über den Sync.
