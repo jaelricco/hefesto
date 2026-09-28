@@ -11,6 +11,7 @@ import (
 	"log/slog"
 	"path/filepath"
 	"reflect"
+	"slices"
 	"strings"
 	"testing"
 	"time"
@@ -450,7 +451,7 @@ func plannerAnswers(kind string) domain.Answers {
 		a.BodyMap = map[string]domain.BodyMapEntry{"elbow_inner": {Current: true}}
 		a.Complaints = map[string]domain.Complaint{"elbow_inner": {PainDaily: 1.5, PainTraining: 3.5, Onset: "gradual",
 			DurationWeeks: 2, Suspected: "no", Assessment: "no"}}
-		a.RedFlags = map[string]map[string]bool{"elbow_inner": {}}
+		a.RedFlags = map[string]map[string]bool{"elbow_inner": flags()}
 	case "returner":
 		a.LastRegular = "17_to_26_weeks"
 		a.PreBreak = map[string]string{"planche": "advanced-tuck"}
@@ -460,15 +461,25 @@ func plannerAnswers(kind string) domain.Answers {
 		a.BodyMap = map[string]domain.BodyMapEntry{"elbow_inner": {Current: true}, "knee": {Past12: true}}
 		a.Complaints = map[string]domain.Complaint{"elbow_inner": {PainDaily: 3, PainTraining: 3, Onset: "gradual",
 			DurationWeeks: 2, Suspected: "no", Assessment: "no"}}
-		a.RedFlags = map[string]map[string]bool{"elbow_inner": {}}
+		a.RedFlags = map[string]map[string]bool{"elbow_inner": flags()}
 	case "stopped":
 		// A red flag that stops training, already in the onboarding.
 		a.BodyMap = map[string]domain.BodyMapEntry{"wrist_back_extension": {Current: true}}
 		a.Complaints = map[string]domain.Complaint{"wrist_back_extension": {PainDaily: 1, PainTraining: 2,
 			Onset: "sudden", DurationWeeks: 1, Suspected: "no", Assessment: "no"}}
-		a.RedFlags = map[string]map[string]bool{"wrist_back_extension": {"RF-07": true}}
+		a.RedFlags = map[string]map[string]bool{"wrist_back_extension": flags("RF-07")}
 	}
 	return a
+}
+
+// flags answers the red-flag questions of an adult's arm region: the named
+// ones yes, the others no.
+func flags(yes ...string) map[string]bool {
+	out := map[string]bool{}
+	for _, id := range []string{"RF-01", "RF-02", "RF-03", "RF-04", "RF-05", "RF-06", "RF-07", "RF-10"} {
+		out[id] = slices.Contains(yes, id)
+	}
+	return out
 }
 
 // perform logs a planned session as planned.

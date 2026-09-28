@@ -1,7 +1,6 @@
 package planning
 
 import (
-	"errors"
 	"fmt"
 	"math"
 	"slices"
@@ -86,9 +85,6 @@ const (
 	OnboardingBlocked      = "blocked"
 	OnboardingComplete     = "complete"
 )
-
-// ErrInvalidAnswers wraps validation problems in the answers.
-var ErrInvalidAnswers = errors.New("invalid onboarding answers")
 
 var equipmentImplied = map[string][]string{
 	"outdoor_park": {"pull_up_bar", "low_bar", "parallel_bars"},
@@ -297,42 +293,6 @@ func (k *Knowledge) freezeBreakBase(s *Snapshot, today time.Time) error {
 			}
 			s.Break.Base[l.Account] = l.Target
 		}
-	}
-	return nil
-}
-
-func validateAnswers(k *Knowledge, a Answers, now time.Time) error {
-	var probs []string
-	if !a.DisclaimerAck {
-		probs = append(probs, "disclaimer_ack must be confirmed")
-	}
-	if a.BirthYear < 1920 || a.BirthYear > now.Year() {
-		probs = append(probs, "birth_year out of range")
-	}
-	if len(a.Goals) < 1 || len(a.Goals) > 3 {
-		probs = append(probs, "1 to 3 goals are required")
-	}
-	seen := map[int]bool{}
-	for _, g := range a.Goals {
-		if k.level(g.Skill+"/"+g.TargetLevel) == nil {
-			probs = append(probs, fmt.Sprintf("unknown goal %s/%s", g.Skill, g.TargetLevel))
-		}
-		if g.Priority < 1 || g.Priority > len(a.Goals) || seen[g.Priority] {
-			probs = append(probs, "goal priorities must be 1..n without gaps")
-		}
-		seen[g.Priority] = true
-	}
-	if a.SessionsPerWeek < 1 || a.SessionsPerWeek > 7 {
-		probs = append(probs, "sessions_per_week must be 1–7")
-	}
-	if !slices.Contains([]int{20, 30, 45, 60, 75, 90}, a.SessionMinutes) {
-		probs = append(probs, "session_minutes must be 20, 30, 45, 60, 75 or 90")
-	}
-	if a.BodyweightKg < 30 || a.BodyweightKg > 250 {
-		probs = append(probs, "bodyweight_kg must be 30–250")
-	}
-	if len(probs) > 0 {
-		return fmt.Errorf("%w: %s", ErrInvalidAnswers, strings.Join(probs, "; "))
 	}
 	return nil
 }

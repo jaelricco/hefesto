@@ -63,8 +63,21 @@ func persona3() planning.Answers {
 	a.Complaints = map[string]planning.Complaint{"elbow_inner": {
 		PainDaily: 1.5, PainTraining: 3.5, Onset: "gradual", DurationWeeks: 6, Suspected: "no", Assessment: "no",
 	}}
-	a.RedFlags = map[string]map[string]bool{"elbow_inner": {}}
+	a.RedFlags = map[string]map[string]bool{"elbow_inner": noFlags("elbow_inner")}
 	return a
+}
+
+// noFlags answers every red-flag question of an adult's region with no
+// (onboarding.md §3.7: every question asked is answered).
+func noFlags(region string) map[string]bool {
+	out := map[string]bool{}
+	for _, id := range []string{"RF-01", "RF-02", "RF-03", "RF-04", "RF-05", "RF-06", "RF-07", "RF-10"} {
+		out[id] = false
+	}
+	if region == "lower_back" {
+		out["RF-08"], out["RF-09"] = false, false
+	}
+	return out
 }
 
 // Persona 4: returner after six months without training.

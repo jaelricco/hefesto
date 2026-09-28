@@ -7,8 +7,10 @@ import (
 	"time"
 )
 
-// Plan is one week of planned sessions (spec §5.10).
+// Plan is one week of planned sessions (spec §5.10). The IDs are the
+// service's; the core leaves them empty.
 type Plan struct {
+	ID             string             `json:"id,omitempty"`
 	WeekStart      time.Time          `json:"week_start"`
 	RulesetVersion string             `json:"ruleset_version"`
 	InputHash      string             `json:"input_hash"`
@@ -28,6 +30,7 @@ type Plan struct {
 
 // PlannedSession is one session of the plan.
 type PlannedSession struct {
+	ID         string    `json:"id,omitempty"`
 	Index      int       `json:"index"`
 	Date       time.Time `json:"date"`
 	Kind       string    `json:"kind"` // full, light, deload
