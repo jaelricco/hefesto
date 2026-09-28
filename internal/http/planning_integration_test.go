@@ -3,6 +3,7 @@
 package http_test
 
 import (
+	"context"
 	"io"
 	"log/slog"
 	"path/filepath"
@@ -624,5 +625,82 @@ func TestCompletePlannedSession(t *testing.T) {
 		"timezone": "UTC"}).ok(201, "Session")
 	if out := a.call("POST", "/v1/sessions/"+free+"/complete", other.access, map[string]any{}).ok(200, "CompletionResult"); out["plan_changes"] != nil {
 		t.Errorf("plan changes without an onboarding: %v", out["plan_changes"])
+	}
+}
+
+// A tired check-in at the start makes the session lighter; the planned
+// session says so and shows what the draft holds (ADAPT-17, ADR 0019).
+func TestStartWithCheckIn(t *testing.T) {
+	a := newAPI(t, withPlanner(&fixedClock{plannerMonday}))
+	u := a.register("checkin@example.com")
+	// Without the complaint the planche gets its max holds.
+	answers := onboarding()
+	answers["body_map"], answers["complaints"], answers["red_flags"] = map[string]any{}, map[string]any{}, map[string]any{}
+	a.call("POST", "/v1/me/onboarding", u.access, answers).ok(200, "OnboardingResult")
+	sessions := a.call("GET", "/v1/me/plan", u.access, nil).ok(200, "TrainingPlan")["sessions"].([]any)
+	var seen []any
+	for _, s := range sessions {
+		for _, b := range s.(map[string]any)["blocks"].([]any) {
+			for _, it := range b.(map[string]any)["items"].([]any) {
+				seen = append(seen, []any{b.(map[string]any)["role"], it.(map[string]any)["exercise"], it.(map[string]any)["stimulus"]})
+			}
+		}
+	}
+	sid := ""
+	for _, s := range sessions {
+		for _, b := range s.(map[string]any)["blocks"].([]any) {
+			for _, it := range b.(map[string]any)["items"].([]any) {
+				if st := it.(map[string]any)["stimulus"]; b.(map[string]any)["role"] == "skill_max" && (st == "skill" || st == "conditioning") && sid == "" {
+					sid = s.(map[string]any)["id"].(string)
+				}
+			}
+		}
+	}
+	if sid == "" {
+		t.Fatalf("no session holds a skill in its max block; the test exercises nothing: %v", seen)
+	}
+	body := func(c map[string]any) map[string]any {
+		return map[string]any{"id": newID(), "timezone": "Europe/Zurich",
+			"started_at": plannerMonday.Add(10 * time.Hour).Format(time.RFC3339), "check_in": c}
+	}
+	a.call("POST", "/v1/me/plan/sessions/"+sid+"/start", u.access, body(map[string]any{"fatigue": 11})).problem(422, "validation")
+	a.call("POST", "/v1/me/plan/sessions/"+sid+"/start", u.access, body(map[string]any{"sleep_hours": 5, "mood": 3})).problem(422, "validation")
+
+	a.call("POST", "/v1/me/plan/sessions/"+sid+"/start", u.access, body(map[string]any{"sleep_hours": 5, "fatigue": 4})).ok(201, "Session")
+	detail := a.call("GET", "/v1/me/plan/sessions/"+sid, u.access, nil).ok(200, "PlannedSessionDetail")
+	ps := detail["session"].(map[string]any)
+	if ps["check_in_applied"] != true {
+		t.Fatalf("check_in_applied %v", ps["check_in_applied"])
+	}
+	adapt := false
+	for _, r := range ps["reasons"].([]any) {
+		adapt = adapt || r.(map[string]any)["rule_id"] == "ADAPT-17"
+	}
+	if !adapt {
+		t.Errorf("no ADAPT-17 reason in %v", ps["reasons"])
+	}
+	for _, b := range ps["blocks"].([]any) {
+		b := b.(map[string]any)
+		for _, it := range b["items"].([]any) {
+			it := it.(map[string]any)
+			if b["role"] == "skill_max" && (it["offer"] == true || it["stimulus"] == "skill" || it["stimulus"] == "conditioning") {
+				t.Errorf("max block still holds %v (%v)", it["exercise"], it["stimulus"])
+			}
+		}
+	}
+	// A new plan of the week keeps the session lighter.
+	regen := a.call("POST", "/v1/me/plan/regenerate", u.access, nil).ok(200, "TrainingPlan")
+	kept := false
+	for _, s := range regen["sessions"].([]any) {
+		kept = kept || s.(map[string]any)["check_in_applied"] == true
+	}
+	if !kept {
+		t.Error("the new plan lost the check-in")
+	}
+	// The answers are nowhere in the database; only the decision is, in the
+	// planned session of the replaced plan and of the new one.
+	var n int
+	if err := a.pool.QueryRow(context.Background(), `SELECT count(*) FROM planned_sessions WHERE check_in_applied`).Scan(&n); err != nil || n != 2 {
+		t.Errorf("%d planned sessions with the check-in applied: %v", n, err)
 	}
 }

@@ -65,7 +65,7 @@ func (t *plannerTx) StartSession(ctx context.Context, userID uuid.UUID, in plann
 		}
 	}
 	if err := q.MarkPlannedSessionStarted(ctx, dbgen.MarkPlannedSessionStartedParams{
-		ID: in.PlannedSessionID, UserID: userID, WorkoutSessionID: &row.ID,
+		ID: in.PlannedSessionID, UserID: userID, WorkoutSessionID: &row.ID, CheckInApplied: in.Lighter,
 	}); err != nil {
 		return uuid.Nil, false, fmt.Errorf("marking planned session started: %w", err)
 	}

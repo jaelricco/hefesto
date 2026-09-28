@@ -165,6 +165,7 @@ type PlannedSession struct {
 	EstMinutes       float64
 	Status           string
 	WorkoutSessionID *uuid.UUID
+	CheckInApplied   bool
 }
 
 type PlannerSession struct {

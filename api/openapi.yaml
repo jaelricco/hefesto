@@ -4191,7 +4191,7 @@ components:
 
     PlannedSession:
       type: object
-      required: [id, status, workout_session_id, index, date, kind, est_minutes, blocks, reasons]
+      required: [id, status, workout_session_id, check_in_applied, index, date, kind, est_minutes, blocks, reasons]
       properties:
         id:
           $ref: "#/components/schemas/Id"
@@ -4205,6 +4205,12 @@ components:
           description: The log session it was started as.
           type: [string, "null"]
           format: uuid
+        check_in_applied:
+          description: |
+            A tired check-in at the start made the session lighter (ADAPT-17).
+            The session then shows what its draft holds: technique instead
+            of the max blocks' holds, no offers.
+          type: boolean
         index:
           type: integer
         date:
@@ -4415,6 +4421,29 @@ components:
           $ref: "#/components/schemas/TimeZone"
         updated_at:
           $ref: "#/components/schemas/Timestamp"
+        check_in:
+          $ref: "#/components/schemas/CheckIn"
+
+    CheckIn:
+      description: |
+        How the athlete starts the session (spec §6.12, ADAPT-17). Sleep of
+        at most 6 hours or fatigue of at least 8 makes the session lighter:
+        the max blocks become submaximal technique, strength stays. The
+        answers are not stored; the planned session only records that the
+        check-in made it lighter.
+      type: object
+      additionalProperties: false
+      properties:
+        sleep_hours:
+          description: Hours slept in the last 24 hours.
+          type: number
+          minimum: 0
+          maximum: 24
+        fatigue:
+          description: Fatigue on the scale of `perceived_fatigue`, 1 (fresh) to 10 (exhausted).
+          type: integer
+          minimum: 1
+          maximum: 10
 
     HealthConsentChange:
       type: object

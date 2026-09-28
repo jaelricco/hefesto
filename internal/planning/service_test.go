@@ -620,3 +620,95 @@ func TestServiceCompletesALoggedSession(t *testing.T) {
 		t.Errorf("still pending: %v", ids)
 	}
 }
+
+// A tired check-in makes the started session lighter; the plan shows it,
+// new plans keep it, and the answers are not kept (ADAPT-17, ADR 0019).
+func TestServiceCheckIn(t *testing.T) {
+	ctx := context.Background()
+	svc, store, clock := newService(t)
+	kb, err := svc.Knowledge.Current(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	user := uuid.New()
+	if _, _, err := svc.Onboard(ctx, user, answers()); err != nil {
+		t.Fatal(err)
+	}
+	plan, err := svc.Plan(ctx, user)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var holds []string
+	for _, b := range plan.Sessions[0].Blocks {
+		for _, it := range b.Items {
+			if b.Role == domain.BlockMax && (it.Stimulus == domain.StimSkill || it.Stimulus == domain.StimConditioning) && it.HoldS > 0 {
+				holds = append(holds, it.ID)
+			}
+		}
+	}
+	if len(holds) == 0 {
+		t.Fatal("the first session has no max holds; the test exercises nothing")
+	}
+	start := func(i int, c *domain.CheckIn) (uuid.UUID, error) {
+		id := uuid.New()
+		_, _, err := svc.StartPlannedSession(ctx, user, uuid.MustParse(plan.Sessions[i].ID), planning.SessionStart{
+			SessionID: id, StartedAt: clock.t, Timezone: "UTC", LocalDate: clock.t, At: clock.t, CheckIn: c})
+		return id, err
+	}
+	bad := 11
+	var ve *domain.ValidationError
+	if _, err := start(0, &domain.CheckIn{Fatigue: &bad}); !errors.As(err, &ve) {
+		t.Fatalf("fatigue 11: %v", err)
+	}
+	sleep := 5.0
+	logID, err := start(0, &domain.CheckIn{SleepH: &sleep})
+	if err != nil {
+		t.Fatal(err)
+	}
+	got, _ := store.Started(logID)
+	if !got.Lighter || got.CheckIn != nil {
+		t.Errorf("stored start: lighter=%v, check-in %v kept", got.Lighter, got.CheckIn)
+	}
+	_, ps, err := svc.PlannedSession(ctx, user, uuid.MustParse(plan.Sessions[0].ID))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !ps.CheckIn || !slices.ContainsFunc(ps.Reasons, func(r domain.Reason) bool { return r.RuleID == domain.RuleCheckin }) {
+		t.Errorf("planned session after a tired check-in: check-in %v, reasons %+v", ps.CheckIn, ps.Reasons)
+	}
+	for _, b := range ps.Blocks {
+		for _, it := range b.Items {
+			if slices.Contains(holds, it.ID) && it.Stimulus != domain.StimTechnique || b.Role == domain.BlockMax && it.Offer {
+				t.Errorf("item %s is %s (offer %v), want technique", it.Exercise, it.Stimulus, it.Offer)
+			}
+		}
+	}
+	now, err := svc.Plan(ctx, user)
+	if err != nil {
+		t.Fatal(err)
+	}
+	before := followsPlan(t, kb, store, logID, now)
+
+	// A new plan keeps the session lighter, and its draft follows.
+	again, err := svc.Regenerate(ctx, user)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !again.Sessions[0].CheckIn {
+		t.Error("the new plan lost the check-in")
+	}
+	if ids := followsPlan(t, kb, store, logID, again); !slices.Equal(ids, before) {
+		t.Errorf("an unchanged plan rewrote the lighter draft: %v → %v", before, ids)
+	}
+
+	// A check-in that is not tired changes nothing.
+	plan = again
+	fine := 8.0
+	other, err := start(1, &domain.CheckIn{SleepH: &fine})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got, _ := store.Started(other); got.Lighter {
+		t.Error("a rested check-in made the session lighter")
+	}
+}

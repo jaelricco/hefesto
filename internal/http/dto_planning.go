@@ -185,6 +185,12 @@ type plannedSessionStartIn struct {
 	StartedAt *time.Time `json:"started_at"`
 	Timezone  string     `json:"timezone"`
 	UpdatedAt *time.Time `json:"updated_at"`
+	CheckIn   *checkInIn `json:"check_in"`
+}
+
+type checkInIn struct {
+	SleepHours *float64 `json:"sleep_hours"`
+	Fatigue    *int     `json:"fatigue"`
 }
 
 type redFlagsIn struct {
@@ -361,6 +367,7 @@ type plannedSessionOut struct {
 	ID               string         `json:"id"`
 	Status           string         `json:"status"`
 	WorkoutSessionID *string        `json:"workout_session_id"`
+	CheckInApplied   bool           `json:"check_in_applied"`
 	Index            int            `json:"index"`
 	Date             string         `json:"date"`
 	Kind             string         `json:"kind"`
@@ -440,7 +447,8 @@ func itemFrom(k *core.Knowledge, it core.Item) planItemOut {
 
 func plannedSessionFrom(k *core.Knowledge, s core.PlannedSession) plannedSessionOut {
 	out := plannedSessionOut{ID: s.ID, Status: cmp.Or(s.Status, planning.SessionPlanned), WorkoutSessionID: strOrNil(s.WorkoutSessionID),
-		Index: s.Index, Date: dateOut(s.Date), Kind: s.Kind, EstMinutes: s.EstMinutes,
+		CheckInApplied: s.CheckIn,
+		Index:          s.Index, Date: dateOut(s.Date), Kind: s.Kind, EstMinutes: s.EstMinutes,
 		Blocks: make([]planBlockOut, len(s.Blocks)), Reasons: reasonsFrom(s.Reasons)}
 	for i, b := range s.Blocks {
 		bo := planBlockOut{Role: b.Role, Paired: b.Paired, Items: make([]planItemOut, len(b.Items)), Reasons: reasonsFrom(b.Reasons)}

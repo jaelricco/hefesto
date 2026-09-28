@@ -96,10 +96,11 @@ func (s *Service) Plan(ctx context.Context, userID uuid.UUID) (planning.Plan, er
 			return fmt.Errorf("loading plan: %w", err)
 		}
 		if ok && stored.RulesetVersion == kb.Version {
-			p = stored
+			p = view(kb, stored)
 			return nil
 		}
 		p, _, err = s.regenerate(ctx, st, kb, userID, snap)
+		p = view(kb, p)
 		return err
 	})
 	return p, err
@@ -115,7 +116,8 @@ func (s *Service) WeekPlan(ctx context.Context, userID uuid.UUID, week time.Time
 	}
 	var p planning.Plan
 	err := s.Store.InTx(ctx, userID, func(st Stores) error {
-		if _, _, err := s.load(ctx, st, userID); err != nil {
+		kb, _, err := s.load(ctx, st, userID)
+		if err != nil {
 			return err
 		}
 		stored, ok, err := st.Plans.ActivePlan(ctx, userID, week)
@@ -125,7 +127,7 @@ func (s *Service) WeekPlan(ctx context.Context, userID uuid.UUID, week time.Time
 		if !ok {
 			return fmt.Errorf("plan of the week of %s: %w", week.Format(time.DateOnly), ErrNotFound)
 		}
-		p = stored
+		p = view(kb, stored)
 		return nil
 	})
 	return p, err
@@ -141,6 +143,7 @@ func (s *Service) Regenerate(ctx context.Context, userID uuid.UUID) (planning.Pl
 			return err
 		}
 		p, _, err = s.regenerate(ctx, st, kb, userID, snap)
+		p = view(kb, p)
 		return err
 	})
 	return p, err
@@ -153,7 +156,11 @@ func (s *Service) PlannedSession(ctx context.Context, userID, sessionID uuid.UUI
 		p planning.Plan
 		i int
 	)
-	err := s.Store.InTx(ctx, userID, func(st Stores) error {
+	kb, err := s.Knowledge.Current(ctx)
+	if err != nil {
+		return planning.Plan{}, planning.PlannedSession{}, fmt.Errorf("planning: %w", err)
+	}
+	err = s.Store.InTx(ctx, userID, func(st Stores) error {
 		var (
 			ok  bool
 			err error
@@ -165,6 +172,7 @@ func (s *Service) PlannedSession(ctx context.Context, userID, sessionID uuid.UUI
 		if !ok || i < 0 || i >= len(p.Sessions) {
 			return fmt.Errorf("planned session %s: %w", sessionID, ErrNotFound)
 		}
+		p = view(kb, p)
 		return nil
 	})
 	if err != nil {
@@ -559,7 +567,7 @@ func carryOver(prev planning.Plan, p *planning.Plan) {
 		}
 		for i := range p.Sessions {
 			if ps := &p.Sessions[i]; ps.Date.Equal(old.Date) && ps.WorkoutSessionID == "" {
-				ps.Status, ps.WorkoutSessionID = old.Status, old.WorkoutSessionID
+				ps.Status, ps.WorkoutSessionID, ps.CheckIn = old.Status, old.WorkoutSessionID, old.CheckIn
 				break
 			}
 		}
@@ -594,7 +602,17 @@ func (s *Service) reconcile(ctx context.Context, st Stores, kb *planning.Knowled
 		if !ok {
 			continue
 		}
-		a := planning.Reconcile(kb, old, next, sets, func() string { return s.newID().String() })
+		// A session a check-in made lighter stays lighter in every new plan
+		// (ADAPT-17): both sides are compared as the draft holds them.
+		prevS := old
+		if old.CheckIn {
+			prevS, _ = kb.Technique(old)
+			if next != nil {
+				n, _ := kb.Technique(*next)
+				next = &n
+			}
+		}
+		a := planning.Reconcile(kb, prevS, next, sets, func() string { return s.newID().String() })
 		if a.Empty() {
 			continue
 		}
@@ -630,6 +648,11 @@ func (s *Service) StartPlannedSession(ctx context.Context, userID, plannedID uui
 		id      uuid.UUID
 		created bool
 	)
+	if in.CheckIn != nil {
+		if err := planning.ValidateCheckIn(*in.CheckIn); err != nil {
+			return uuid.Nil, false, fmt.Errorf("check-in: %w", err)
+		}
+	}
 	err := s.Store.InTx(ctx, userID, func(st Stores) error {
 		kb, snap, err := s.load(ctx, st, userID)
 		if err != nil {
@@ -646,7 +669,14 @@ func (s *Service) StartPlannedSession(ctx context.Context, userID, plannedID uui
 			return fmt.Errorf("planned session %s: %w", plannedID, ErrNotFound)
 		}
 		in.PlannedSessionID = plannedID
-		in.Draft = planning.Materialize(kb, p.Sessions[i], func() string { return s.newID().String() })
+		ps := p.Sessions[i]
+		// A tired check-in makes this session lighter (ADAPT-17); its
+		// answers go no further than this call.
+		if in.Lighter = in.CheckIn != nil && kb.Tired(*in.CheckIn); in.Lighter {
+			ps, _ = kb.Technique(ps)
+		}
+		in.CheckIn = nil
+		in.Draft = planning.Materialize(kb, ps, func() string { return s.newID().String() })
 		id, created, err = st.Sessions.StartSession(ctx, userID, in)
 		if err != nil {
 			return fmt.Errorf("starting planned session %s: %w", plannedID, err)
@@ -658,6 +688,17 @@ func (s *Service) StartPlannedSession(ctx context.Context, userID, plannedID uui
 		return nil
 	})
 	return id, created, err
+}
+
+// view is a plan as the athlete sees it: a session a check-in made lighter
+// shows what its draft holds (ADAPT-17). Stored plans stay as generated.
+func view(kb *planning.Knowledge, p planning.Plan) planning.Plan {
+	for i, ps := range p.Sessions {
+		if ps.CheckIn {
+			p.Sessions[i], _ = kb.Technique(ps)
+		}
+	}
+	return p
 }
 
 func (s *Service) newID() uuid.UUID {

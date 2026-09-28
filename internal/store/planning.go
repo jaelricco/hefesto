@@ -728,10 +728,10 @@ func (t *plannerTx) fillStates(ctx context.Context, planID uuid.UUID, p *domain.
 			return fmt.Errorf("plan %s has no session %d", planID, i)
 		}
 		ps := &p.Sessions[i]
-		ps.Status, ps.WorkoutSessionID = r.Status, ""
+		ps.Status, ps.WorkoutSessionID, ps.CheckIn = r.Status, "", false
 		switch {
 		case r.WorkoutSessionID != nil && r.SessionLive:
-			ps.WorkoutSessionID = r.WorkoutSessionID.String()
+			ps.WorkoutSessionID, ps.CheckIn = r.WorkoutSessionID.String(), r.CheckInApplied
 		case r.Status == planning.SessionStarted || r.Status == planning.SessionCompleted:
 			// The log session was deleted: the session can start again.
 			ps.Status = planning.SessionPlanned
@@ -752,7 +752,7 @@ func (t *plannerTx) SavePlan(ctx context.Context, userID uuid.UUID, p domain.Pla
 	stored := p
 	stored.Sessions = slices.Clone(p.Sessions)
 	for i := range stored.Sessions {
-		stored.Sessions[i].Status, stored.Sessions[i].WorkoutSessionID = "", ""
+		stored.Sessions[i].Status, stored.Sessions[i].WorkoutSessionID, stored.Sessions[i].CheckIn = "", "", false
 	}
 	payload, err := json.Marshal(stored)
 	if err != nil {
@@ -781,7 +781,7 @@ func (t *plannerTx) SavePlan(ctx context.Context, userID uuid.UUID, p domain.Pla
 		}
 		if err := q.InsertPlannedSession(ctx, dbgen.InsertPlannedSessionParams{ID: sid, UserID: userID,
 			PlanID: id, OrderIndex: int32(i), ScheduledDate: dateOf(ps.Date.UTC()), Kind: ps.Kind, EstMinutes: ps.EstMinutes, //nolint:gosec // a week has at most seven sessions
-			Status: status, WorkoutSessionID: workout}); err != nil {
+			Status: status, WorkoutSessionID: workout, CheckInApplied: ps.CheckIn && workout != nil}); err != nil {
 			return fmt.Errorf("storing planned session %d: %w", i, err)
 		}
 	}

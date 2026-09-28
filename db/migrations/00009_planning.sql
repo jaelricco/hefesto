@@ -328,6 +328,9 @@ CREATE TABLE planned_sessions (
     status             text             NOT NULL DEFAULT 'planned'
         CONSTRAINT planned_sessions_status_ck CHECK (status IN ('planned','started','completed','expired')),
     workout_session_id uuid                 NULL,
+    -- A tired check-in at the start made the session lighter (ADAPT-17).
+    -- The check-in's answers are never stored, only this decision.
+    check_in_applied   boolean          NOT NULL DEFAULT false,
     CONSTRAINT planned_sessions_id_user_uk UNIQUE (id, user_id),
     CONSTRAINT planned_sessions_order_uk UNIQUE (plan_id, order_index) DEFERRABLE INITIALLY IMMEDIATE,
     FOREIGN KEY (plan_id, user_id) REFERENCES training_plans (id, user_id) ON DELETE CASCADE,

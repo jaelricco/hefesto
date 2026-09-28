@@ -530,9 +530,11 @@ func (q *Queries) InsertPlan(ctx context.Context, arg InsertPlanParams) error {
 
 const insertPlannedSession = `-- name: InsertPlannedSession :exec
 INSERT INTO planned_sessions (
-    id, user_id, plan_id, order_index, scheduled_date, kind, est_minutes, status, workout_session_id
+    id, user_id, plan_id, order_index, scheduled_date, kind, est_minutes, status, workout_session_id,
+    check_in_applied
 ) VALUES (
-    $1, $2, $3, $4, $5, $6, $7, $8, $9
+    $1, $2, $3, $4, $5, $6, $7, $8, $9,
+    $10
 )
 `
 
@@ -546,6 +548,7 @@ type InsertPlannedSessionParams struct {
 	EstMinutes       float64
 	Status           string
 	WorkoutSessionID *uuid.UUID
+	CheckInApplied   bool
 }
 
 func (q *Queries) InsertPlannedSession(ctx context.Context, arg InsertPlannedSessionParams) error {
@@ -559,6 +562,7 @@ func (q *Queries) InsertPlannedSession(ctx context.Context, arg InsertPlannedSes
 		arg.EstMinutes,
 		arg.Status,
 		arg.WorkoutSessionID,
+		arg.CheckInApplied,
 	)
 	return err
 }
@@ -1089,7 +1093,7 @@ func (q *Queries) ListPerformedElements(ctx context.Context, arg ListPerformedEl
 }
 
 const listPlannedSessionStates = `-- name: ListPlannedSessionStates :many
-SELECT s.order_index, s.status, s.workout_session_id,
+SELECT s.order_index, s.status, s.workout_session_id, s.check_in_applied,
        COALESCE(ws.deleted_at IS NULL, false)::boolean AS session_live
 FROM planned_sessions s
 LEFT JOIN workout_sessions ws ON ws.id = s.workout_session_id AND ws.user_id = s.user_id
@@ -1106,6 +1110,7 @@ type ListPlannedSessionStatesRow struct {
 	OrderIndex       int32
 	Status           string
 	WorkoutSessionID *uuid.UUID
+	CheckInApplied   bool
 	SessionLive      bool
 }
 
@@ -1124,6 +1129,7 @@ func (q *Queries) ListPlannedSessionStates(ctx context.Context, arg ListPlannedS
 			&i.OrderIndex,
 			&i.Status,
 			&i.WorkoutSessionID,
+			&i.CheckInApplied,
 			&i.SessionLive,
 		); err != nil {
 			return nil, err
@@ -1137,7 +1143,7 @@ func (q *Queries) ListPlannedSessionStates(ctx context.Context, arg ListPlannedS
 }
 
 const listPlannedSessions = `-- name: ListPlannedSessions :many
-SELECT id, user_id, plan_id, order_index, scheduled_date, kind, est_minutes, status, workout_session_id FROM planned_sessions WHERE plan_id = $1 AND user_id = $2 ORDER BY order_index
+SELECT id, user_id, plan_id, order_index, scheduled_date, kind, est_minutes, status, workout_session_id, check_in_applied FROM planned_sessions WHERE plan_id = $1 AND user_id = $2 ORDER BY order_index
 `
 
 type ListPlannedSessionsParams struct {
@@ -1164,6 +1170,7 @@ func (q *Queries) ListPlannedSessions(ctx context.Context, arg ListPlannedSessio
 			&i.EstMinutes,
 			&i.Status,
 			&i.WorkoutSessionID,
+			&i.CheckInApplied,
 		); err != nil {
 			return nil, err
 		}
@@ -1258,7 +1265,7 @@ func (q *Queries) ListRegionStatus(ctx context.Context, userID uuid.UUID) ([]Use
 }
 
 const lockActivePlannedSession = `-- name: LockActivePlannedSession :one
-SELECT s.id, s.user_id, s.plan_id, s.order_index, s.scheduled_date, s.kind, s.est_minutes, s.status, s.workout_session_id FROM planned_sessions s
+SELECT s.id, s.user_id, s.plan_id, s.order_index, s.scheduled_date, s.kind, s.est_minutes, s.status, s.workout_session_id, s.check_in_applied FROM planned_sessions s
 JOIN training_plans p ON p.id = s.plan_id AND p.user_id = s.user_id
 WHERE s.id = $1 AND s.user_id = $2 AND p.status = 'active'
 FOR UPDATE OF s
@@ -1283,6 +1290,7 @@ func (q *Queries) LockActivePlannedSession(ctx context.Context, arg LockActivePl
 		&i.EstMinutes,
 		&i.Status,
 		&i.WorkoutSessionID,
+		&i.CheckInApplied,
 	)
 	return i, err
 }
@@ -1321,18 +1329,25 @@ func (q *Queries) MarkDeloadDay(ctx context.Context, arg MarkDeloadDayParams) er
 }
 
 const markPlannedSessionStarted = `-- name: MarkPlannedSessionStarted :exec
-UPDATE planned_sessions SET status = 'started', workout_session_id = $1
-WHERE id = $2 AND user_id = $3
+UPDATE planned_sessions SET status = 'started', workout_session_id = $1,
+    check_in_applied = $2
+WHERE id = $3 AND user_id = $4
 `
 
 type MarkPlannedSessionStartedParams struct {
 	WorkoutSessionID *uuid.UUID
+	CheckInApplied   bool
 	ID               uuid.UUID
 	UserID           uuid.UUID
 }
 
 func (q *Queries) MarkPlannedSessionStarted(ctx context.Context, arg MarkPlannedSessionStartedParams) error {
-	_, err := q.db.Exec(ctx, markPlannedSessionStarted, arg.WorkoutSessionID, arg.ID, arg.UserID)
+	_, err := q.db.Exec(ctx, markPlannedSessionStarted,
+		arg.WorkoutSessionID,
+		arg.CheckInApplied,
+		arg.ID,
+		arg.UserID,
+	)
 	return err
 }
 

@@ -174,6 +174,7 @@ func (s *Store) StartSession(ctx context.Context, userID uuid.UUID, in service.S
 		return uuid.Nil, false, service.ErrSessionIDTaken
 	}
 	p.Sessions[i].Status, p.Sessions[i].WorkoutSessionID = service.SessionStarted, in.SessionID.String()
+	p.Sessions[i].CheckIn = in.Lighter
 	if err := s.SavePlan(ctx, userID, p); err != nil {
 		return uuid.Nil, false, err
 	}

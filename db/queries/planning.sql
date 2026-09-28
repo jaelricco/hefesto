@@ -268,9 +268,11 @@ VALUES ($1, $2, $3, $4, $5, $6);
 
 -- name: InsertPlannedSession :exec
 INSERT INTO planned_sessions (
-    id, user_id, plan_id, order_index, scheduled_date, kind, est_minutes, status, workout_session_id
+    id, user_id, plan_id, order_index, scheduled_date, kind, est_minutes, status, workout_session_id,
+    check_in_applied
 ) VALUES (
-    @id, @user_id, @plan_id, @order_index, @scheduled_date, @kind, @est_minutes, @status, @workout_session_id
+    @id, @user_id, @plan_id, @order_index, @scheduled_date, @kind, @est_minutes, @status, @workout_session_id,
+    @check_in_applied
 );
 
 -- name: ListPlannedSessions :many
@@ -279,7 +281,7 @@ SELECT * FROM planned_sessions WHERE plan_id = $1 AND user_id = $2 ORDER BY orde
 -- Whether each session of a plan was started, and its log session. A
 -- session whose log session was deleted counts as planned again.
 -- name: ListPlannedSessionStates :many
-SELECT s.order_index, s.status, s.workout_session_id,
+SELECT s.order_index, s.status, s.workout_session_id, s.check_in_applied,
        COALESCE(ws.deleted_at IS NULL, false)::boolean AS session_live
 FROM planned_sessions s
 LEFT JOIN workout_sessions ws ON ws.id = s.workout_session_id AND ws.user_id = s.user_id
@@ -298,7 +300,8 @@ WHERE s.id = $1 AND s.user_id = $2 AND p.status = 'active'
 FOR UPDATE OF s;
 
 -- name: MarkPlannedSessionStarted :exec
-UPDATE planned_sessions SET status = 'started', workout_session_id = @workout_session_id
+UPDATE planned_sessions SET status = 'started', workout_session_id = @workout_session_id,
+    check_in_applied = @check_in_applied
 WHERE id = @id AND user_id = @user_id;
 
 -- name: InsertPlannedWorkoutSession :one

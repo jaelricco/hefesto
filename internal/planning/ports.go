@@ -91,8 +91,14 @@ type SessionStart struct {
 	Timezone  string
 	LocalDate time.Time // the athlete's calendar day of StartedAt
 	// At is the client's clock for the change, the rows' updated_at.
-	At    time.Time
-	Draft planning.SessionDraft
+	At time.Time
+	// CheckIn is the athlete's optional check-in at the start (spec
+	// §6.12); it is not stored.
+	CheckIn *planning.CheckIn
+	// Lighter records that the check-in made the session lighter
+	// (ADAPT-17); the service sets it.
+	Lighter bool
+	Draft   planning.SessionDraft
 }
 
 // Statuses of a planned session.

@@ -206,7 +206,7 @@ func planETag(p core.Plan) string {
 	started := false
 	for _, s := range p.Sessions {
 		started = started || s.WorkoutSessionID != ""
-		fmt.Fprintf(h, "%s %s %s\n", s.ID, s.Status, s.WorkoutSessionID)
+		fmt.Fprintf(h, "%s %s %s %t\n", s.ID, s.Status, s.WorkoutSessionID, s.CheckIn)
 	}
 	if !started {
 		return p.ID
@@ -281,10 +281,14 @@ func (h *handlers) startPlannedSession(w http.ResponseWriter, r *http.Request) e
 	if in.StartedAt != nil {
 		started = *in.StartedAt
 	}
-	id, created, err := svc.StartPlannedSession(r.Context(), wr.UserID, planned, planning.SessionStart{
+	start := planning.SessionStart{
 		SessionID: in.ID, DeviceID: wr.DeviceID, StartedAt: started, Timezone: in.Timezone,
 		LocalDate: training.LocalDate(started, loc), At: wr.At,
-	})
+	}
+	if c := in.CheckIn; c != nil {
+		start.CheckIn = &core.CheckIn{SleepH: c.SleepHours, Fatigue: c.Fatigue}
+	}
+	id, created, err := svc.StartPlannedSession(r.Context(), wr.UserID, planned, start)
 	if err != nil {
 		return err
 	}
