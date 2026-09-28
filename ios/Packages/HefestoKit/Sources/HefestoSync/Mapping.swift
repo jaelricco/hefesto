@@ -61,8 +61,8 @@ enum OpPayload {
             return make(data(set: .init(
                 blockId: e.blockId, orderIndex: e.orderIndex, roundIndex: e.roundIndex, kind: try req(e.kind),
                 isPlanned: e.isPlanned, restAfterPlannedS: e.restAfterPlannedS, restAfterActualS: e.restAfterActualS,
-                rpe: e.rpe, rir: e.rir, completedAt: e.completedAt, notes: e.notes, updatedAt: e.updatedAt,
-                elements: try elements.map(element))))
+                rpe: e.rpe, rir: e.rir, sirS: e.sirS, completedAt: e.completedAt, notes: e.notes,
+                updatedAt: e.updatedAt, elements: try elements.map(element))))
         case .bodyweight:
             guard let b = try Bodyweight.fetchOne(db, key: op.rowId) else { return nil }
             return make(data(bodyweight: .init(
@@ -129,7 +129,7 @@ enum ServerRows {
                 id: s.id, sessionId: s.sessionId, blockId: s.blockId, orderIndex: s.orderIndex,
                 roundIndex: s.roundIndex, kind: s.kind.rawValue, isPlanned: s.isPlanned,
                 restAfterPlannedS: s.restAfterPlannedS, restAfterActualS: s.restAfterActualS, rpe: s.rpe,
-                rir: s.rir, completedAt: s.completedAt, notes: s.notes, updatedAt: s.updatedAt,
+                rir: s.rir, sirS: s.sirS, completedAt: s.completedAt, notes: s.notes, updatedAt: s.updatedAt,
                 serverSeq: s.serverSeq, deletedAt: s.deletedAt),
             elements: s.elements.map { element($0, setEntryId: s.id) })
     }
@@ -174,7 +174,7 @@ enum ServerRows {
                             id: e.id, sessionId: s.id, blockId: e.blockId, orderIndex: e.orderIndex,
                             roundIndex: e.roundIndex, kind: e.kind.rawValue, isPlanned: e.isPlanned,
                             restAfterPlannedS: e.restAfterPlannedS, restAfterActualS: e.restAfterActualS,
-                            rpe: e.rpe, rir: e.rir, completedAt: e.completedAt, notes: e.notes,
+                            rpe: e.rpe, rir: e.rir, sirS: e.sirS, completedAt: e.completedAt, notes: e.notes,
                             updatedAt: e.updatedAt, serverSeq: nil, deletedAt: nil),
                         elements: e.elements.map { element($0, setEntryId: e.id) })
                 })

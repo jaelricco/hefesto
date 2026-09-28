@@ -161,6 +161,16 @@
         }
       }
     },
+    "%lld s": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld s"
+          }
+        }
+      }
+    },
     "%lld s hold": {
       "localizations": {
         "de": {
@@ -881,6 +891,16 @@
         }
       }
     },
+    "How much longer you could have held with clean form.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wie viel länger du den Halt sauber hättest halten können."
+          }
+        }
+      }
+    },
     "I already have an account": {
       "localizations": {
         "de": {
@@ -1291,6 +1311,16 @@
         }
       }
     },
+    "Reserve": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reserve"
+          }
+        }
+      }
+    },
     "Rest": {
       "localizations": {
         "de": {
@@ -1357,6 +1387,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sichern"
+          }
+        }
+      }
+    },
+    "Seconds left": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sekunden übrig"
           }
         }
       }

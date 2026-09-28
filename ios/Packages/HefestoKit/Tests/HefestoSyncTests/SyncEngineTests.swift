@@ -125,6 +125,21 @@ func logSet(_ db: AppDatabase, _ session: Session, _ block: Block, reps: Int) th
         #expect(try db.batchInFlight()?.key == nil)
     }
 
+    @Test func sendsTheReserveOfAHold() async throws {
+        let (db, session, block) = try seeded()
+        let entry = SetEntry(sessionId: session.id, blockId: block.id, orderIndex: 0, sirS: 4, completedAt: Date())
+        let el = SetElement(
+            setEntryId: entry.id, orderIndex: 0, exerciseId: UUIDv7.make(), measure: "hold_seconds", holdSeconds: 20)
+        try db.saveSet(SetWithElements(entry: entry, elements: [el]))
+        let server = ScriptedServer(applyingEverything)
+        _ = try await SyncEngine(client: server.client, db: db).sync()
+
+        let ops = try #require(server.requests("pushChanges").first?.json["ops"] as? [[String: Any]])
+        let setData = try #require(ops.first { $0["entity"] as? String == "set" }?["data"] as? [String: Any])
+        #expect(setData["sir_s"] as? Int == 4)
+        #expect(setData["rir"] == nil || setData["rir"] is NSNull, "rir stays repetitions")
+    }
+
     @Test func aLostResponseResendsTheSameBytesUnderTheSameKey() async throws {
         let (db, session, _) = try seeded()
         let keys = Counter()
@@ -244,6 +259,19 @@ func logSet(_ db: AppDatabase, _ session: Session, _ block: Block, reps: Int) th
         #expect(s.startedAt.timeIntervalSince1970 == 1_789_997_600.25, "fractional seconds survive")
     }
 
+    @Test func aPulledHoldKeepsItsReserve() async throws {
+        let db = try AppDatabase.inMemory()
+        let sessionId = UUIDv7.make(), blockId = UUIDv7.make(), setId = UUIDv7.make()
+        let server = ScriptedServer { _ in
+            (200, #"{"cursor":3,"has_more":false,"sessions":[\#(syncSessionJSON(sessionId, seq: 1))],"blocks":[\#(syncBlockJSON(blockId, sessionId: sessionId, seq: 2))],"sets":[\#(syncHoldJSON(setId, sessionId: sessionId, blockId: blockId, sirS: 5, seq: 3))],"bodyweight":[]}"#)
+        }
+        _ = try await SyncEngine(client: server.client, db: db).sync()
+
+        let entry = try #require(try fetch(db) { try SetEntry.fetchOne($0, key: setId) })
+        #expect(entry.sirS == 5)
+        #expect(entry.rir == nil)
+    }
+
     @Test func refreshesTheCatalogueOnlyWhenItChanged() async throws {
         let db = try AppDatabase.inMemory()
         let server = ScriptedServer { r in
@@ -293,6 +321,28 @@ func syncSessionJSON(_ id: String, seq: Int) -> String {
      "status":"draft","is_rest_day":false,"template_id":null,"planned_session_id":null,"completed_at":null,
      "updated_at":"2026-09-21T13:33:20.25Z","server_updated_at":"2026-09-21T13:33:21Z",
      "server_seq":\#(seq),"deleted_at":null}
+    """#
+}
+
+func syncBlockJSON(_ id: String, sessionId: String, seq: Int) -> String {
+    #"""
+    {"id":"\#(id)","session_id":"\#(sessionId)","order_index":0,"kind":"straight","rounds_planned":null,
+     "rounds_done":null,"interval_s":null,"notes":"","updated_at":"2026-09-21T13:33:20.25Z",
+     "server_seq":\#(seq),"deleted_at":null}
+    """#
+}
+
+/// A performed 20 s hold with its seconds in reserve.
+func syncHoldJSON(_ id: String, sessionId: String, blockId: String, sirS: Int, seq: Int) -> String {
+    #"""
+    {"id":"\#(id)","session_id":"\#(sessionId)","block_id":"\#(blockId)","order_index":0,"round_index":null,
+     "kind":"working","is_planned":false,"rest_after_planned_s":null,"rest_after_actual_s":null,"rpe":null,
+     "rir":null,"sir_s":\#(sirS),"planned_item_id":null,"completed_at":"2026-09-21T13:40:00Z","notes":"",
+     "updated_at":"2026-09-21T13:40:00Z","server_seq":\#(seq),"deleted_at":null,
+     "elements":[{"id":"\#(UUIDv7.make())","order_index":0,"exercise_id":"\#(UUIDv7.make())","measure":"hold_seconds",
+       "reps":null,"hold_seconds":20,"distance_m":null,"tempo":null,"load_kg":0,"is_eccentric_only":false,
+       "is_partial_rom":false,"rom_note":null,"form_quality":null,"failed":false,
+       "assistance_class":"unassisted","assistance":null,"media_ids":[]}]}
     """#
 }
 

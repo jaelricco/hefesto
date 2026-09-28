@@ -102,6 +102,23 @@ func logger(_ clock: TestClock) throws -> (AppDatabase, LoggerModel) {
         #expect(try model.repeatLastSet(of: "never-logged", in: block) == nil)
     }
 
+    @Test func aHoldKeepsItsReserveButARepeatDoesNot() throws {
+        let clock = TestClock()
+        let (_, model) = try logger(clock)
+        let block = model.tree.blocks[0].id
+        let id = try model.logSet(
+            in: block, element: ElementDraft(exerciseId: "l-sit", measure: "hold_seconds", holdSeconds: 15), sirS: 3)
+        let set = try #require(model.tree.blocks[0].sets.first { $0.id == id })
+        #expect(set.entry.sirS == 3, "read back from the store")
+        #expect(set.entry.rir == nil, "rir stays repetitions")
+
+        clock.advance(90)
+        let repeated = try #require(try model.repeatLastSet(of: "l-sit", in: block))
+        let again = try #require(model.tree.blocks[0].sets.first { $0.id == repeated })
+        #expect(again.elements[0].holdSeconds == 15)
+        #expect(again.entry.sirS == nil, "a reserve is rated per set, never copied")
+    }
+
     @Test func addingAnElementMakesACombo() throws {
         let clock = TestClock()
         let (_, model) = try logger(clock)

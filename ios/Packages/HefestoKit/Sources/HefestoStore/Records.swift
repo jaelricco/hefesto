@@ -79,6 +79,8 @@ public struct SetEntry: Codable, Sendable, Hashable, Identifiable, FetchableReco
     public var restAfterActualS: Int?
     public var rpe: Double?
     public var rir: Int?
+    /// Seconds a hold could have gone on; `rir` stays repetitions.
+    public var sirS: Int?
     public var completedAt: Date?
     public var notes: String
     public var updatedAt: Date
@@ -89,13 +91,13 @@ public struct SetEntry: Codable, Sendable, Hashable, Identifiable, FetchableReco
         id: String = UUIDv7.make(), sessionId: String, blockId: String, orderIndex: Int,
         roundIndex: Int? = nil, kind: String = "working", isPlanned: Bool = false,
         restAfterPlannedS: Int? = nil, restAfterActualS: Int? = nil, rpe: Double? = nil, rir: Int? = nil,
-        completedAt: Date? = nil, notes: String = "", updatedAt: Date = Date(),
+        sirS: Int? = nil, completedAt: Date? = nil, notes: String = "", updatedAt: Date = Date(),
         serverSeq: Int64? = nil, deletedAt: Date? = nil
     ) {
         self.id = id; self.sessionId = sessionId; self.blockId = blockId; self.orderIndex = orderIndex
         self.roundIndex = roundIndex; self.kind = kind; self.isPlanned = isPlanned
         self.restAfterPlannedS = restAfterPlannedS; self.restAfterActualS = restAfterActualS
-        self.rpe = rpe; self.rir = rir; self.completedAt = completedAt; self.notes = notes
+        self.rpe = rpe; self.rir = rir; self.sirS = sirS; self.completedAt = completedAt; self.notes = notes
         self.updatedAt = updatedAt; self.serverSeq = serverSeq; self.deletedAt = deletedAt
     }
 }

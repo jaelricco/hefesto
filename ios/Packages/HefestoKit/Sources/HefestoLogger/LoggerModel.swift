@@ -60,19 +60,24 @@ public final class LoggerModel {
 
     // MARK: sets
 
-    /// Logs a performed set of one element: 8 pull-ups, a 20 s hold.
+    /// Logs a performed set of one element: 8 pull-ups, a 20 s hold. `sirS`
+    /// is a hold's seconds in reserve, when the athlete gives them.
     @discardableResult
-    public func logSet(in blockId: String, element: ElementDraft, restPlannedSeconds: Int? = nil) throws -> String {
-        try logCombo(in: blockId, elements: [element], restPlannedSeconds: restPlannedSeconds)
+    public func logSet(
+        in blockId: String, element: ElementDraft, restPlannedSeconds: Int? = nil, sirS: Int? = nil
+    ) throws -> String {
+        try logCombo(in: blockId, elements: [element], restPlannedSeconds: restPlannedSeconds, sirS: sirS)
     }
 
     /// Logs a performed combo: one set, its elements in order.
     @discardableResult
-    public func logCombo(in blockId: String, elements: [ElementDraft], restPlannedSeconds: Int? = nil) throws -> String {
+    public func logCombo(
+        in blockId: String, elements: [ElementDraft], restPlannedSeconds: Int? = nil, sirS: Int? = nil
+    ) throws -> String {
         let at = now()
         var entry = SetEntry(
             sessionId: session.id, blockId: blockId, orderIndex: nextSetIndex(in: blockId),
-            restAfterPlannedS: restPlannedSeconds, completedAt: at)
+            restAfterPlannedS: restPlannedSeconds, sirS: sirS, completedAt: at)
         entry = try closeRest(before: entry, at: at)
         let set = SetWithElements(
             entry: entry,
