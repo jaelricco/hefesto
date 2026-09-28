@@ -60,6 +60,11 @@ als `If-None-Match` mit; ein unveränderter Plan kostet ein 304.
   diesen User keinen Plan.
 - Die Probleme des Planers kommen als `PlanError`: Onboarding fehlt, Training
   gestoppt, Einheit nicht mehr im Plan, Planer nicht verfügbar.
+- Der generierte Client kodiert Header-Parameter wie Teile einer URI
+  (RFC 6570). Die Anführungszeichen eines `ETag` gingen deshalb als `%22`
+  hinaus, und kein `If-None-Match` traf je, auch beim Übungskatalog nicht.
+  Die Tests prüften das nicht. Jeder Client der App führt jetzt die
+  `EntityTagMiddleware` aus, die den Header sendet, wie HTTP ihn definiert.
 
 ### 3. Der Start braucht das Netz
 

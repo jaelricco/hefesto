@@ -146,6 +146,9 @@ documents are in German.
     performed one in place, with the athlete's values and reserve.
   - Sessions and sets mirror `plannedSessionId` and `plannedItemId`, never
     sent back.
+  - Fixed on the way: the generated client percent-encoded `If-None-Match`,
+    so no `ETag` ever matched, for the exercise catalogue either. Every
+    client of the app now sends the header as HTTP defines it.
   - Not built: the screens, the onboarding in the app, pain reports from
     the app, choosing a band for a planned band set, the offline start.
 - **A started draft follows the plan (this checkpoint, ADR 0017):**
