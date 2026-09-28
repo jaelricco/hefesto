@@ -3523,11 +3523,11 @@ components:
       pattern: "^[a-z][a-z0-9_]*$"
       maxLength: 40
       examples: [elbow_inner]
-    Date:
+    CalendarDate:
       description: A calendar day.
       type: string
       format: date
-    NullableDate:
+    NullableCalendarDate:
       type: [string, "null"]
       format: date
     Equipment:
@@ -3589,7 +3589,7 @@ components:
           minimum: 1
           maximum: 3
         target_date:
-          $ref: "#/components/schemas/Date"
+          $ref: "#/components/schemas/CalendarDate"
 
     TrainingGoal:
       type: object
@@ -3602,7 +3602,7 @@ components:
         priority:
           type: integer
         target_date:
-          $ref: "#/components/schemas/NullableDate"
+          $ref: "#/components/schemas/NullableCalendarDate"
 
     StageAnswer:
       type: object
@@ -3858,7 +3858,7 @@ components:
         disclaimer_ack:
           type: boolean
         onboarded_at:
-          $ref: "#/components/schemas/Date"
+          $ref: "#/components/schemas/CalendarDate"
         preferred_days:
           type: array
           items:
@@ -4010,7 +4010,7 @@ components:
         id:
           $ref: "#/components/schemas/Id"
         week_start:
-          $ref: "#/components/schemas/Date"
+          $ref: "#/components/schemas/CalendarDate"
         ruleset_version:
           type: string
         input_hash:
@@ -4030,7 +4030,7 @@ components:
         rest_days:
           type: array
           items:
-            $ref: "#/components/schemas/Date"
+            $ref: "#/components/schemas/CalendarDate"
         exclusions:
           description: Exercises left out, and why.
           type: array
@@ -4070,7 +4070,7 @@ components:
         index:
           type: integer
         date:
-          $ref: "#/components/schemas/Date"
+          $ref: "#/components/schemas/CalendarDate"
         kind:
           type: string
           enum: [full, light, deload]
@@ -4211,7 +4211,7 @@ components:
         plan_id:
           $ref: "#/components/schemas/Id"
         week_start:
-          $ref: "#/components/schemas/Date"
+          $ref: "#/components/schemas/CalendarDate"
         ruleset_version:
           type: string
         session:
@@ -4430,7 +4430,7 @@ components:
         entered_via:
           type: [string, "null"]
         since:
-          $ref: "#/components/schemas/NullableDate"
+          $ref: "#/components/schemas/NullableCalendarDate"
         start_fraction:
           description: The share of the reference load the ramp started at.
           type: [number, "null"]
@@ -4446,7 +4446,7 @@ components:
           description: soft or advise when an assessment is recommended.
           type: [string, "null"]
         rest_until:
-          $ref: "#/components/schemas/NullableDate"
+          $ref: "#/components/schemas/NullableCalendarDate"
         constraints:
           description: region_locked, region_excluded or plan_stopped, when one names the region.
           type: array
