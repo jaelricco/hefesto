@@ -547,7 +547,9 @@ Wiederholungen). Für Halte braucht der Planer Sekunden in Reserve (SIR,
 ENT-S-4). Umgesetzt (U-65, U-66): Ein geplanter Halt trägt seine
 Ziel-Reserve in `sir_s`, ein ausgeführter die geloggte; ohne sie zählt der
 Halt als Untergrenze. Die iOS-App fragt sie ab, wenn ein Satz genau einen
-Halt enthält (U-67).
+Halt enthält (U-67), und ebenso `rir` bei genau einem Wiederholungselement
+(U-68). Ein Element «bis zum Versagen» hat keine Reserve; die App fragt dann
+nicht.
 
 ### 4.4 Leiterstand
 
@@ -2165,8 +2167,8 @@ Trainings-Log mit `Materialize` und den Übungen des Planers im Katalog
 (ADR 0016, U-50 bis U-54), und der Abgleich eines gestarteten Entwurfs mit
 jedem neuen Plan (ADR 0017, U-55 bis U-57), und der Abschluss einer Einheit, der den Planer
 erreicht (ADR 0018, U-58 bis U-61), und der Check-in beim Start (ADR 0019, U-62 bis
-U-64), und die Reserve eines Halts im Log (U-65, U-66) und in der iOS-App
-(U-67).
+U-64), und die Reserve eines Halts im Log (U-65, U-66) und die Reserve in
+der iOS-App (U-67, U-68).
 
 Tests: sechs Personas als Golden Files (`internal/domain/planning/testdata/`),
 die Eigenschaften I-1 bis I-11 für jeden erzeugten Plan, zwölf simulierte
@@ -2252,6 +2254,7 @@ U-35 setzen die Entscheidungen ENT-R-1, ENT-R-2 und ENT-R-5 um (§15.5).
 | U-65 | §4.3, §4.9, ENT-S-4 | `set_entries.sir_s` (0–60 s, benannter `CHECK`) läuft durch den einen Satz-Pfad: Prüfung, REST, Sync, Antworten; ein Schreiben ohne `sir_s` leert es wie `rir`. Ein geplanter Halt trägt seine Ziel-Reserve darin, der Abgleich vergleicht sie | Nimmt U-52 für die Reserve eines Halts zurück; die Semantik von `rir` bleibt Wiederholungen |
 | U-66 | §4.3, U-59 | Der Verlauf übernimmt das `sir_s` eines ausgeführten Halts als seine Reserve; ohne `sir_s` bleibt der Halt eine Untergrenze | Halte zählen damit wieder als volle Beobachtung, soweit die Reserve es zulässt (`PAR-S-31`) |
 | U-67 | §4.3, ENT-S-4 | Die iOS-App fragt beim Loggen die Reserve eines Halts ab: optional, in festen Stufen von 0 bis 60 s, nur wenn der Satz genau einen Halt enthält. «Letzten Satz wiederholen» übernimmt sie nicht | `sir_s` gehört zum Satz; bei zwei Halten in einer Kombination sagte ein Wert nicht, welcher gemeint ist. Eine Reserve ist eine Einschätzung je Satz, keine Eigenschaft der Übung |
+| U-68 | §4.3, §6.6, `onboarding.md` §4.1 | Die iOS-App fragt ebenso `rir` ab: optional, 0 bis 10 (der Bereich des Logs), nur wenn der Satz genau ein Wiederholungselement enthält. Eine Kombination aus Wiederholungen und Halt fragt beides. Ist das Element «bis zum Versagen» markiert, fragt die App keine Reserve, bei Wiederholungen wie bei Halten | Der Kalibrierungssatz verlangt, dass die App die Reserve abfragt; ohne `rir` war jeder Wiederholungssatz aus der App eine Untergrenze. Ein Satz bis zum Versagen zählt wie ein Test (`onboarding.md` §4.1), eine Reserve daneben widerspräche ihm. Werte über RIR 3 zählen im Kern nur als Untergrenze (PAR-F-24); die App bietet trotzdem den ganzen Bereich, damit die Angabe ehrlich bleibt |
 
 ### 15.3 Nicht umgesetzt
 
@@ -2324,11 +2327,12 @@ weil die Adaption die Kürzung nicht vorhersieht.
   hinterlässt wenig, und die Deckel sehen weniger Belastung, als stattfand.
   Eine Anrechnung auf die Belastung ohne Kapazität wäre möglich, braucht aber
   eine fachliche Regel, wie viel Last ein solcher Satz trägt.
-- **Die App fragt kein RIR ab.** Wiederholungssätze aus der iOS-App kommen
-  ohne Reserve. Der Kern nimmt sie als Untergrenze (§4.3); voll zählen nur
-  Tests und Sätze bis zum Versagen. Die Kapazität für Wiederholungen lernt
-  aus dem Log also langsamer als die für Halte (U-67). Vorschlag: dieselbe
-  optionale Auswahl wie für Halte, für `rir`.
+- **Die Reserve bleibt freiwillig.** Seit U-68 fragt die App `rir` und
+  `sir_s` ab, aber «Nicht bewertet» ist die Vorgabe. Ein Satz ohne Reserve
+  bleibt eine Untergrenze (§4.3). Lässt ein User die Frage immer offen, lernt
+  der Planer nur aus Tests und Sätzen bis zum Versagen. Ob die App bei einem
+  Kalibrierungssatz nachfragen soll, ist offen; sie liest den Plan bisher
+  nicht und erkennt deshalb keinen Kalibrierungssatz.
 - **WEEK-08 erzeugt die ganze Woche neu.** «Ab der nächsten nicht begonnenen
   Einheit» ist nicht umgesetzt: Eine gestartete Einheit behält ihre Session
   (U-54), die neue Einheit desselben Tages kann aber anders aussehen, und ohne
