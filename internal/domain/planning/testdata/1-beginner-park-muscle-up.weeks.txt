@@ -3,7 +3,7 @@ week 1: 2 sessions, 14 sets (0 straight-arm)
   changes: probe_offered×2
 week 2: 2 sessions, 15 sets (0 straight-arm)
   dip=dip-negative hang-foundation=dead-hang pull-up=pull-up-negative row=row-incline,row-vertical support-hold=support-hold-pb
-week 3: 2 sessions, 15 sets (0 straight-arm)
+week 3: 2 sessions, 16 sets (0 straight-arm)
   dip=dip-negative hang-foundation=dead-hang pull-up=pull-up-negative row=row-incline support-hold=support-hold-pb
   changes: probe_offered×2
 week 4: 2 sessions, 15 sets (0 straight-arm)
@@ -14,16 +14,17 @@ week 5: 2 sessions, 16 sets (0 straight-arm)
   changes: probe_offered
 week 6: 2 sessions, 14 sets (0 straight-arm), deload planned
   dip=dip-pb hang-foundation=dead-hang pull-up=pull-up-negative row=row-incline support-hold=support-hold-pb
-week 7: 2 sessions, 16 sets (0 straight-arm)
-  dip=dip-pb,dip-negative hang-foundation=dead-hang pull-up=pull-up-negative row=row-incline support-hold=support-hold-pb
+week 7: 2 sessions, 17 sets (0 straight-arm)
+  dip=dip-pb,dip-negative hang-foundation=dead-hang pull-up=pull-up,pull-up-negative row=row-incline support-hold=support-hold-pb
+  changes: target_changed probe_offered
 week 8: 2 sessions, 16 sets (0 straight-arm)
-  dip=dip-pb,dip-negative hang-foundation=dead-hang pull-up=pull-up-negative row=row-incline support-hold=support-hold-pb
-week 9: 2 sessions, 16 sets (0 straight-arm)
-  dip=dip-pb,dip-negative hang-foundation=dead-hang pull-up=pull-up-negative row=row-incline support-hold=support-hold-pb
-week 10: 2 sessions, 16 sets (0 straight-arm)
-  dip=dip-pb,dip-negative hang-foundation=dead-hang pull-up=pull-up-negative row=row-incline support-hold=support-hold-pb
-week 11: 2 sessions, 16 sets (0 straight-arm)
-  dip=dip-negative,dip-pb hang-foundation=dead-hang pull-up=pull-up-negative row=row-horizontal,row-incline support-hold=support-hold-pb
+  dip=dip-pb,dip-negative hang-foundation=dead-hang pull-up=pull-up,pull-up-negative row=row-incline support-hold=support-hold-pb
+week 9: 2 sessions, 17 sets (0 straight-arm)
+  dip=dip-pb,dip-negative hang-foundation=dead-hang pull-up=pull-up,pull-up-negative row=row-incline support-hold=support-hold-pb
+week 10: 2 sessions, 17 sets (0 straight-arm)
+  dip=dip-pb,dip-negative hang-foundation=dead-hang pull-up=pull-up,pull-up-negative row=row-incline support-hold=support-hold-pb
+week 11: 2 sessions, 17 sets (0 straight-arm)
+  dip=dip-pb,dip-negative hang-foundation=dead-hang pull-up=pull-up-negative row=row-horizontal,row-incline support-hold=support-hold-pb
   changes: target_changed
-week 12: 2 sessions, 14 sets (0 straight-arm), deload planned
-  dip=dip-pb hang-foundation=dead-hang pull-up=pull-up-negative row=row-incline support-hold=support-hold-pb
+week 12: 2 sessions, 12 sets (0 straight-arm), deload planned
+  dip=dip-pb hang-foundation=dead-hang pull-up=pull-up support-hold=support-hold-pb

@@ -199,7 +199,8 @@ func (g *gen) breachWeeks(a string) int {
 
 // sessionCap is the spike cap of a structure in session si (LOAD-03). It
 // always admits one whole set more than the 30-day maximum, the smallest
-// set of the structure in the session (PAR-S-48).
+// set of the structure in the session (PAR-S-48). The entry and break ramps
+// use the same cap (ENT-R-3): their steps grow the week, not the session.
 func (g *gen) sessionCap(si int, structure string, target float64) float64 {
 	k := g.k
 	unit := g.smallestSet(si, structure)
@@ -207,18 +208,7 @@ func (g *gen) sessionCap(si int, structure string, target float64) float64 {
 	if m == 0 {
 		return math.Max(float64(k.T.NewTypeFraction*target), unit)
 	}
-	spike := 1 + k.T.SpikeCap
-	for a := range g.s.Entry {
-		if accountStructure(a) == structure && g.weekIdx < 3 {
-			spike = k.T.EntrySpike
-		}
-	}
-	// The break ramp steps like the entry ramp, so its session cap is the
-	// same (PAR-S-43).
-	if g.breakRamp() {
-		spike = k.T.EntrySpike
-	}
-	return math.Max(float64(m*spike), m+unit)
+	return math.Max(float64(m*(1+k.T.SpikeCap)), m+unit)
 }
 
 // smallestSet is the load of the smallest working set on a structure in

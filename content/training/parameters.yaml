@@ -2390,12 +2390,13 @@ parameters:
     wird
 - id: PAR-S-43
   key: entry_ramp_current_trainers
-  text: 0.5 → 0.75 → 1.0 wöchentlich; Einheitsdeckel in diesen Wochen 1.5 × Vorwochenmaximum
-  values: {step1: 0.5, step2: 0.75, step3: 1, spike: 1.5}
+  text: 0.5 → 0.75 → 1.0 wöchentlich, jeder Schritt höchstens im Verhältnis der Stufen über der geloggten
+    Vorwoche; Einheitsdeckel nach LOAD-03
+  values: {step1: 0.5, step2: 0.75, step3: 1}
   evidence: Heuristik
   heuristic: true
-  rationale: ENT-S-1 (b); Schritte aus PAR-D-25; 1.5 = grösster Schritt (0.5 → 0.75), damit der Einheitsdeckel
-    die Rampe nicht blockiert
+  rationale: 'ENT-S-1 (b); Schritte aus PAR-D-25. Der Einheitsdeckel 1.5 × Vorwochenmaximum ist nach dem
+    Review zurückgenommen (A-4, ENT-R-3): PAR-D-31 gilt, `PAR-S-48` lässt einen ganzen Satz zu'
 - {id: PAR-S-44, key: plausibility_widening_factor, text: σ × 1.25, value: 1.25, evidence: Heuristik,
   heuristic: true, rationale: '`onboarding.md` §5.2 (Verbreiterung bei widersprüchlichen Angaben, R-2,
     und nach Pausen ab 7 Wochen); Faktor ist dort als Heuristik festgelegt'}

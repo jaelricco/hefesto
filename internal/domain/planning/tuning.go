@@ -116,7 +116,6 @@ type Tuning struct {
 	Priority1, Priority2, Priority3    float64 // PAR-S-09
 	MinMaxBlockSets                    float64 // PAR-S-09
 	EntryStep1, EntryStep2, EntryStep3 float64 // PAR-S-43
-	EntrySpike                         float64 // PAR-S-43
 	WindowWeeks                        float64 // PAR-B-73
 	RefWeeks                           float64 // PAR-S-14
 	MaintSessions                      float64 // PAR-B-63
@@ -339,7 +338,6 @@ func resolveTuning(k *Knowledge, issues []Issue) (Tuning, []Issue) {
 		{&t.EntryStep1, "PAR-S-43", "step1"},
 		{&t.EntryStep2, "PAR-S-43", "step2"},
 		{&t.EntryStep3, "PAR-S-43", "step3"},
-		{&t.EntrySpike, "PAR-S-43", "spike"},
 		{&t.WindowWeeks, "PAR-B-73", ""},
 		{&t.RefWeeks, "PAR-S-14", ""},
 		{&t.MaintSessions, "PAR-B-63", "sessions"},

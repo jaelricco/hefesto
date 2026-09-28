@@ -1432,15 +1432,16 @@ Jeder Schritt setzt voraus, dass in der Vorwoche keine Schmerzregel verletzt
 wurde; sonst bleibt der Schritt stehen. Nach 100 % gilt LOAD-02 gegen die dann
 geloggten Wochen. Die Schritte folgen der Reihe PAR-D-25 (ab 0.5, wie
 PAR-D-12), mit derselben Begründung wie die Rampe in `05` §6.2: Rückkehr auf
-ein Niveau, das der User aktuell trägt (`PAR-S-43`). Der Einheitsdeckel
-LOAD-03 gilt in diesen drei Wochen gegen das Maximum der Vorwoche × 1.5, weil
-die Schritte selbst +50 % bzw. +33 % betragen. Jeder Schritt ist höchstens
-dieses Verhältnis über der geloggten Vorwoche, damit ein Zielvolumen, das mit
-einer neuen Sprosse wächst, den Schritt nicht vergrössert. Bis das
-Referenzmittel aus vollen Wochen besteht (`PAR-S-14`), fällt der Deckel nach
-dem Einstieg nicht unter die geloggte Vorwoche. Der Einheitsdeckel × 1.5
-liegt über dem Wert der Recherche (PAR-D-31: 10 %); der Review hält ihn für
-zu hoch (§15.5, ENT-R-3).
+ein Niveau, das der User aktuell trägt (`PAR-S-43`). Jeder Schritt ist
+höchstens das Verhältnis der Stufen über der geloggten Vorwoche, damit ein
+Zielvolumen, das mit einer neuen Sprosse wächst, den Schritt nicht
+vergrössert. Bis das Referenzmittel aus vollen Wochen besteht (`PAR-S-14`),
+fällt der Deckel nach dem Einstieg nicht unter die geloggte Vorwoche. Der
+Einheitsdeckel LOAD-03 gilt auch in diesen Wochen unverändert (PAR-D-31 mit
+`PAR-S-48`, ENT-R-3): Eine Stufe wächst über mehr Sätze in der Woche, je
+Einheit höchstens einen Satz über dem Maximum der letzten 30 Tage. Wo das
+nicht reicht, erreicht die Woche die Stufe nicht ganz, und LOAD-02 führt von
+dort weiter.
 
 ### 7.5 Abstände (LOAD-05)
 
@@ -2302,7 +2303,7 @@ festgemacht ist.
 | PAR-S-40 | `post_pain_deload_cap` | bis zur ersten grünen Woche Deckel 1.0 × Referenz vor der Verletzung der Schmerzregel | «reduzieren und halten» (PAR-D-18, `05` §5.4); verhindert den Sprung auf R × 1.1 direkt nach dem Schmerz-Deload |
 | PAR-S-41 | `onboarding_break_mapping` | Tabelle in §6.11 | Klassen aus `onboarding.md` §3.5 auf die Bänder von PAR-B-59–62 und PAR-D-29 gelegt |
 | PAR-S-42 | `pain_entry_and_trend` | neue Beschwerde: ein Wert > 2 oder Werte > 0 an 2 Tagen in 7 Tagen; Trend steigend: Wochenmittel «danach» ≥ 1 Punkt über der Vorwoche | Grenze 2 aus PAR-D-14; Zählweise und 1-Punkt-Schwelle sind Heuristik, damit PAR-D-17 berechenbar wird |
-| PAR-S-43 | `entry_ramp_current_trainers` | 0.5 → 0.75 → 1.0 wöchentlich; Einheitsdeckel in diesen Wochen 1.5 × Vorwochenmaximum | ENT-S-1 (b); Schritte aus PAR-D-25; 1.5 = grösster Schritt (0.5 → 0.75), damit der Einheitsdeckel die Rampe nicht blockiert |
+| PAR-S-43 | `entry_ramp_current_trainers` | 0.5 → 0.75 → 1.0 wöchentlich, jeder Schritt höchstens im Verhältnis der Stufen über der geloggten Vorwoche; Einheitsdeckel nach LOAD-03 | ENT-S-1 (b); Schritte aus PAR-D-25. Der Einheitsdeckel 1.5 × Vorwochenmaximum ist nach dem Review zurückgenommen (A-4, ENT-R-3): PAR-D-31 gilt, `PAR-S-48` lässt einen ganzen Satz zu |
 | PAR-S-44 | `plausibility_widening_factor` | σ × 1.25 | `onboarding.md` §5.2 (Verbreiterung bei widersprüchlichen Angaben, R-2, und nach Pausen ab 7 Wochen); Faktor ist dort als Heuristik festgelegt |
 | PAR-S-45 | `unknown_answer_sigma_frac` | σ ≥ 0.5 × μ | `onboarding.md` §5.2, Zeile «weiss nicht»: Populations-Prior mit breiter Unsicherheit |
 | PAR-S-46 | `prerequisite_plausibility_fraction` | 0.5 | R-2 (`onboarding.md` §5.5): eine Vorstufe gilt als plausibel, wenn ihre Schätzung mindestens die Hälfte ihrer Schwelle erreicht; die Hälfte entspricht dem Startanteil neuer Belastung (PAR-D-12) und lässt Messrauschen der Selbstauskunft (PAR-F-20: 30 %) Platz |
