@@ -156,3 +156,11 @@ var (
 	// (409).
 	ErrSessionIDTaken = errors.New("session id already in use")
 )
+
+// StoppedError is ErrTrainingStopped with the rule that stops training.
+type StoppedError struct{ Rule string }
+
+func (e *StoppedError) Error() string { return "training stopped by " + e.Rule }
+
+// Unwrap makes a StoppedError match ErrTrainingStopped.
+func (e *StoppedError) Unwrap() error { return ErrTrainingStopped }

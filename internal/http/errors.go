@@ -38,9 +38,10 @@ func writeError(w http.ResponseWriter, r *http.Request, err error) {
 // layer expected: a bug, reported as a bare 500.
 func problemFor(r *http.Request, err error) (p Problem, known bool) {
 	var (
-		bad errBadRequest
-		ve  *training.ValidationError
-		pve *core.ValidationError
+		bad     errBadRequest
+		ve      *training.ValidationError
+		pve     *core.ValidationError
+		stopped *planning.StoppedError
 	)
 	switch {
 	case errors.As(err, &bad):
@@ -63,9 +64,9 @@ func problemFor(r *http.Request, err error) (p Problem, known bool) {
 	case errors.Is(err, planning.ErrConsentRequired):
 		p = problem("consent-required", "Consent required", http.StatusConflict,
 			"pain reports are health data and need the consent to keep them")
-	case errors.Is(err, planning.ErrTrainingStopped):
+	case errors.As(err, &stopped):
 		p = problem("training-stopped", "Training stopped", http.StatusConflict,
-			"training is stopped; the plan says why and what lifts the stop")
+			"training is stopped by "+stopped.Rule+"; the plan's reasons say why and what lifts the stop")
 	case errors.Is(err, store.ErrNotFound), errors.Is(err, planning.ErrNotFound):
 		p = problem("not-found", "Not found", http.StatusNotFound, "")
 	case errors.Is(err, store.ErrAlreadyExists), errors.Is(err, planning.ErrSessionIDTaken):

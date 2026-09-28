@@ -399,7 +399,9 @@ func TestServiceStartPlannedSession(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, _, err := svc.StartPlannedSession(ctx, user, next, planning.SessionStart{SessionID: uuid.New()}); !errors.Is(err, planning.ErrTrainingStopped) {
+	_, _, err = svc.StartPlannedSession(ctx, user, next, planning.SessionStart{SessionID: uuid.New()})
+	var se *planning.StoppedError
+	if !errors.Is(err, planning.ErrTrainingStopped) || !errors.As(err, &se) || se.Rule != domain.RuleStopped {
 		t.Errorf("start while stopped: %v (plan has %d sessions)", err, len(stopped.Sessions))
 	}
 }

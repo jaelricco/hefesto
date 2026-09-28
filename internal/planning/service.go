@@ -515,7 +515,7 @@ func (s *Service) StartPlannedSession(ctx context.Context, userID, plannedID uui
 			return err
 		}
 		if rule := kb.StopRule(snap, s.Clock.Now()); rule != "" {
-			return fmt.Errorf("starting planned session %s: %w (%s)", plannedID, ErrTrainingStopped, rule)
+			return fmt.Errorf("starting planned session %s: %w", plannedID, &StoppedError{Rule: rule})
 		}
 		p, i, ok, err := st.Plans.PlannedSession(ctx, userID, plannedID)
 		if err != nil {
