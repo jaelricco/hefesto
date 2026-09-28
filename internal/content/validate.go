@@ -3,6 +3,7 @@ package content
 import (
 	"cmp"
 	"fmt"
+	"path/filepath"
 	"slices"
 	"strings"
 )
@@ -73,6 +74,8 @@ func SortIssues(issues []Issue) {
 //  7. every level has exactly one primary_test, and level orders are 1..n
 //  8. milestone skills are placed on the map, and no two skills share a spot
 //  9. injury entries carry disclaimer: educational_only
+//  10. every exercise of the planner's knowledge base is in the catalogue with
+//     the same measure, and counts as used
 //
 // plus consistency checks on unlock criteria.
 func Validate(t Tree) []Issue {
@@ -83,6 +86,7 @@ func Validate(t Tree) []Issue {
 	v.checkSkills()
 	v.checkMap()
 	v.checkCycles()
+	v.checkPlanner()
 	v.checkOrphans()
 	SortIssues(v.issues)
 	return v.issues
@@ -318,6 +322,22 @@ func (v *validator) checkCycles() {
 	}
 	slices.Sort(cyclic)
 	v.add(errorf("", "prerequisite cycle: these levels are on or behind a cycle: %s", strings.Join(cyclic, ", ")))
+}
+
+// checkPlanner makes the planner's exercises loggable: a planned set
+// becomes a set element, which references a catalogue exercise.
+func (v *validator) checkPlanner() {
+	for _, p := range v.t.Planner {
+		e, ok := v.exercises[p.Slug]
+		switch {
+		case !ok:
+			v.add(errorf(filepath.Join(TrainingDir, "exercises.yaml"),
+				"the planner's exercise %q is not in the catalogue; add exercises/%s.yaml", p.Slug, p.Slug))
+		case e.DefaultMeasure != p.Measure:
+			v.add(errorf(e.File, "exercise %q is measured in %s, the planner plans it in %s", p.Slug, e.DefaultMeasure, p.Measure))
+		}
+		v.used[p.Slug] = true
+	}
 }
 
 func (v *validator) checkOrphans() {

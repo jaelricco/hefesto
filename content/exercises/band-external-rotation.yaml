@@ -1,0 +1,11 @@
+# PLACEHOLDER — generated from content/training/exercises.yaml, the planner's
+# knowledge base (ENT-10). Replace with researched content.
+slug: band-external-rotation
+status: draft_placeholder
+name: Aussenrotation mit Band
+family: mobility
+default_measure: reps
+summary: Placeholder entry from the planner's knowledge base; not coaching content.
+load_semantics: none
+is_bodyweight: false
+equipment: [band]

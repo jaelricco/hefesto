@@ -83,9 +83,34 @@ func Load(dir string) (Tree, []Issue, error) {
 	if l.err != nil {
 		return Tree{}, nil, l.err
 	}
+	planner, err := readPlannerExercises(dir)
+	if err != nil {
+		return Tree{}, nil, err
+	}
+	t.Planner = planner
 
 	normalise(&t)
 	return t, l.issues, nil
+}
+
+// readPlannerExercises reads the slugs and measures of the planner's
+// exercises. The file's own validation is LoadTraining's (KB-01); a tree
+// without a knowledge base has none.
+func readPlannerExercises(dir string) ([]PlannerExercise, error) {
+	raw, err := os.ReadFile(filepath.Join(dir, TrainingDir, "exercises.yaml")) //nolint:gosec // a path under the content directory
+	if errors.Is(err, fs.ErrNotExist) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, fmt.Errorf("reading the planner's exercises: %w", err)
+	}
+	var f struct {
+		Exercises []PlannerExercise `yaml:"exercises"`
+	}
+	if err := yaml.Unmarshal(raw, &f); err != nil {
+		return nil, nil //nolint:nilerr // LoadTraining reports the broken file
+	}
+	return f.Exercises, nil
 }
 
 type loader struct {
