@@ -34,8 +34,6 @@ type Querier interface {
 	CountedDays(ctx context.Context, userID uuid.UUID) ([]pgtype.Date, error)
 	// Users, devices, refresh tokens and Apple identities.
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
-	// --------------------------------------------------------------- decisions
-	DecisionSeen(ctx context.Context, arg DecisionSeenParams) (bool, error)
 	DeleteAllSkillEdges(ctx context.Context) error
 	DeleteCapacityEstimate(ctx context.Context, arg DeleteCapacityEstimateParams) error
 	DeleteEmptyFreezeDays(ctx context.Context, userID uuid.UUID) error
@@ -62,9 +60,12 @@ type Querier interface {
 	FindPrerequisiteCycles(ctx context.Context) ([]uuid.UUID, error)
 	// ------------------------------------------------------------------- plans
 	GetActivePlan(ctx context.Context, arg GetActivePlanParams) (TrainingPlan, error)
+	GetActivePlannedSession(ctx context.Context, arg GetActivePlannedSessionParams) (GetActivePlannedSessionRow, error)
 	GetAppleIdentity(ctx context.Context, appleSub string) (AppleIdentity, error)
 	GetBlock(ctx context.Context, arg GetBlockParams) (SessionBlock, error)
 	GetBodyweight(ctx context.Context, arg GetBodyweightParams) (UserBodyweightLog, error)
+	// --------------------------------------------------------------- decisions
+	GetDecision(ctx context.Context, arg GetDecisionParams) (PlanDecision, error)
 	GetExerciseBySlug(ctx context.Context, slug string) (GetExerciseBySlugRow, error)
 	GetGraphSkill(ctx context.Context, slug string) (GetGraphSkillRow, error)
 	GetIdempotencyKey(ctx context.Context, arg GetIdempotencyKeyParams) (IdempotencyKey, error)
@@ -140,7 +141,7 @@ type Querier interface {
 	ListBlocks(ctx context.Context, arg ListBlocksParams) ([]SessionBlock, error)
 	// -------------------------------------------------------------- capacities
 	ListCapacityEstimates(ctx context.Context, userID uuid.UUID) ([]UserCapacityEstimate, error)
-	ListDecisions(ctx context.Context, userID uuid.UUID) ([]PlanDecision, error)
+	ListDecisions(ctx context.Context, arg ListDecisionsParams) ([]PlanDecision, error)
 	ListElementMedia(ctx context.Context, arg ListElementMediaParams) ([]ListElementMediaRow, error)
 	ListElementsOfSet(ctx context.Context, arg ListElementsOfSetParams) ([]SetElement, error)
 	// Exercises and bands as the API reads them.

@@ -64,6 +64,7 @@ var (
 	suspicions       = []string{"yes", "no", "unsure"}
 	assessments      = []string{"no", "yes_overuse_or_tendon", "yes_tear_or_suspected_tear", "yes_other", "in_progress"}
 	restrictionTags  = []string{"support_straight_arm", "hang_pull", "overhead", "wrist_extension_loaded", "supination_loaded", "spine_extension"}
+	painTimepoints   = []string{PainBefore, PainWarmup, PainDuring, PainAfter, PainMorning, PainDaily}
 	screeningAnswers = 6
 )
 
@@ -82,6 +83,7 @@ func Vocabularies() map[string][]string {
 		"suspected_serious":         slices.Clone(suspicions),
 		"professional_assessment":   slices.Clone(assessments),
 		"restrictions":              slices.Clone(restrictionTags),
+		"timepoint":                 slices.Clone(painTimepoints),
 	}
 }
 
@@ -94,6 +96,9 @@ const (
 	maxAddedLoadKg = 100
 	maxPlateKg     = 25
 	maxPainNRS     = 10
+	// maxAhead bounds how far a client's clock may run ahead of the
+	// server's; a plausibility limit, not a training rule.
+	maxAhead = 24 * time.Hour
 )
 
 func validateAnswers(k *Knowledge, a Answers, now time.Time) error {
@@ -334,6 +339,22 @@ func (k *Knowledge) ValidateRedFlags(region string, answers map[string]bool, min
 		return f.err()
 	}
 	k.checkRedFlags(f, "/answers", region, answers, minor)
+	return f.err()
+}
+
+// ValidatePain checks a pain report before it is applied (spec §8.6).
+func (k *Knowledge) ValidatePain(r PainReport, now time.Time) error {
+	f := fields{}
+	if _, ok := k.regions[r.Region]; !ok {
+		f.add("/region", "unknown region")
+	}
+	checkOneOf(f, "/timepoint", r.Timepoint, painTimepoints)
+	if r.NRS < 0 || r.NRS > maxPainNRS {
+		f.add("/nrs", "must be 0–10")
+	}
+	if r.At.IsZero() || r.At.After(now.Add(maxAhead)) {
+		f.add("/at", "must not be in the future")
+	}
 	return f.err()
 }
 

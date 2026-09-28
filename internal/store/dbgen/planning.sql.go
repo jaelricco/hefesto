@@ -27,27 +27,6 @@ func (q *Queries) ClearConstraint(ctx context.Context, arg ClearConstraintParams
 	return err
 }
 
-const decisionSeen = `-- name: DecisionSeen :one
-
-SELECT EXISTS (
-    SELECT 1 FROM plan_decisions WHERE user_id = $1 AND trigger = $2 AND source_id = $3
-) AS seen
-`
-
-type DecisionSeenParams struct {
-	UserID   uuid.UUID
-	Trigger  string
-	SourceID string
-}
-
-// --------------------------------------------------------------- decisions
-func (q *Queries) DecisionSeen(ctx context.Context, arg DecisionSeenParams) (bool, error) {
-	row := q.db.QueryRow(ctx, decisionSeen, arg.UserID, arg.Trigger, arg.SourceID)
-	var seen bool
-	err := row.Scan(&seen)
-	return seen, err
-}
-
 const deleteCapacityEstimate = `-- name: DeleteCapacityEstimate :exec
 DELETE FROM user_capacity_estimates WHERE user_id = $1 AND exercise = $2 AND assistance = $3
 `
@@ -147,6 +126,56 @@ func (q *Queries) GetActivePlan(ctx context.Context, arg GetActivePlanParams) (T
 		&i.Status,
 		&i.Payload,
 		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const getActivePlannedSession = `-- name: GetActivePlannedSession :one
+SELECT p.payload, s.order_index
+FROM planned_sessions s
+JOIN training_plans p ON p.id = s.plan_id AND p.user_id = s.user_id
+WHERE s.id = $1 AND s.user_id = $2 AND p.status = 'active'
+`
+
+type GetActivePlannedSessionParams struct {
+	ID     uuid.UUID
+	UserID uuid.UUID
+}
+
+type GetActivePlannedSessionRow struct {
+	Payload    []byte
+	OrderIndex int32
+}
+
+func (q *Queries) GetActivePlannedSession(ctx context.Context, arg GetActivePlannedSessionParams) (GetActivePlannedSessionRow, error) {
+	row := q.db.QueryRow(ctx, getActivePlannedSession, arg.ID, arg.UserID)
+	var i GetActivePlannedSessionRow
+	err := row.Scan(&i.Payload, &i.OrderIndex)
+	return i, err
+}
+
+const getDecision = `-- name: GetDecision :one
+
+SELECT id, user_id, trigger, source_id, occurred_at, changes FROM plan_decisions WHERE user_id = $1 AND trigger = $2 AND source_id = $3
+`
+
+type GetDecisionParams struct {
+	UserID   uuid.UUID
+	Trigger  string
+	SourceID string
+}
+
+// --------------------------------------------------------------- decisions
+func (q *Queries) GetDecision(ctx context.Context, arg GetDecisionParams) (PlanDecision, error) {
+	row := q.db.QueryRow(ctx, getDecision, arg.UserID, arg.Trigger, arg.SourceID)
+	var i PlanDecision
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.Trigger,
+		&i.SourceID,
+		&i.OccurredAt,
+		&i.Changes,
 	)
 	return i, err
 }
@@ -280,15 +309,16 @@ func (q *Queries) InsertConstraint(ctx context.Context, arg InsertConstraintPara
 
 const insertDecision = `-- name: InsertDecision :exec
 INSERT INTO plan_decisions (id, user_id, trigger, source_id, occurred_at, changes)
-VALUES ($1, $2, $3, $4, now(), $5)
+VALUES ($1, $2, $3, $4, $5, $6)
 `
 
 type InsertDecisionParams struct {
-	ID       uuid.UUID
-	UserID   uuid.UUID
-	Trigger  string
-	SourceID string
-	Changes  []byte
+	ID         uuid.UUID
+	UserID     uuid.UUID
+	Trigger    string
+	SourceID   string
+	OccurredAt time.Time
+	Changes    []byte
 }
 
 func (q *Queries) InsertDecision(ctx context.Context, arg InsertDecisionParams) error {
@@ -297,6 +327,7 @@ func (q *Queries) InsertDecision(ctx context.Context, arg InsertDecisionParams) 
 		arg.UserID,
 		arg.Trigger,
 		arg.SourceID,
+		arg.OccurredAt,
 		arg.Changes,
 	)
 	return err
@@ -562,11 +593,28 @@ func (q *Queries) ListCapacityEstimates(ctx context.Context, userID uuid.UUID) (
 }
 
 const listDecisions = `-- name: ListDecisions :many
-SELECT id, user_id, trigger, source_id, occurred_at, changes FROM plan_decisions WHERE user_id = $1 ORDER BY occurred_at, id
+SELECT id, user_id, trigger, source_id, occurred_at, changes FROM plan_decisions
+WHERE user_id = $1
+  AND ($2::timestamptz IS NULL
+       OR (occurred_at, id) < ($2, $3::uuid))
+ORDER BY occurred_at DESC, id DESC
+LIMIT $4
 `
 
-func (q *Queries) ListDecisions(ctx context.Context, userID uuid.UUID) ([]PlanDecision, error) {
-	rows, err := q.db.Query(ctx, listDecisions, userID)
+type ListDecisionsParams struct {
+	UserID    uuid.UUID
+	CursorAt  *time.Time
+	CursorID  *uuid.UUID
+	PageLimit int32
+}
+
+func (q *Queries) ListDecisions(ctx context.Context, arg ListDecisionsParams) ([]PlanDecision, error) {
+	rows, err := q.db.Query(ctx, listDecisions,
+		arg.UserID,
+		arg.CursorAt,
+		arg.CursorID,
+		arg.PageLimit,
+	)
 	if err != nil {
 		return nil, err
 	}

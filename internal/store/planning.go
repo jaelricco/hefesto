@@ -688,16 +688,23 @@ func (t *plannerTx) SavePlan(ctx context.Context, userID uuid.UUID, p domain.Pla
 	if err != nil {
 		return fmt.Errorf("encoding plan: %w", err)
 	}
+	id, err := uuid.Parse(p.ID)
+	if err != nil {
+		return fmt.Errorf("plan id %q: %w", p.ID, err)
+	}
 	if err := q.SupersedeActivePlan(ctx, dbgen.SupersedeActivePlanParams{UserID: userID, WeekStart: week}); err != nil {
 		return fmt.Errorf("superseding plan: %w", err)
 	}
-	id := uuid.Must(uuid.NewV7())
 	if err := q.InsertPlan(ctx, dbgen.InsertPlanParams{ID: id, UserID: userID, WeekStart: week,
 		RulesetVersion: p.RulesetVersion, InputHash: p.InputHash, Payload: payload}); err != nil {
 		return fmt.Errorf("storing plan: %w", err)
 	}
 	for i, ps := range p.Sessions {
-		if err := q.InsertPlannedSession(ctx, dbgen.InsertPlannedSessionParams{ID: uuid.Must(uuid.NewV7()), UserID: userID,
+		sid, err := uuid.Parse(ps.ID)
+		if err != nil {
+			return fmt.Errorf("planned session id %q: %w", ps.ID, err)
+		}
+		if err := q.InsertPlannedSession(ctx, dbgen.InsertPlannedSessionParams{ID: sid, UserID: userID,
 			PlanID: id, OrderIndex: int32(i), ScheduledDate: dateOf(ps.Date.UTC()), Kind: ps.Kind, EstMinutes: ps.EstMinutes}); err != nil { //nolint:gosec // a week has at most seven sessions
 			return fmt.Errorf("storing planned session %d: %w", i, err)
 		}
@@ -705,25 +712,49 @@ func (t *plannerTx) SavePlan(ctx context.Context, userID uuid.UUID, p domain.Pla
 	return nil
 }
 
+// PlannedSession finds a session of one of the user's active plans.
+func (t *plannerTx) PlannedSession(ctx context.Context, userID, sessionID uuid.UUID) (domain.Plan, int, bool, error) {
+	if err := t.check(userID); err != nil {
+		return domain.Plan{}, 0, false, err
+	}
+	row, err := t.q.GetActivePlannedSession(ctx, dbgen.GetActivePlannedSessionParams{ID: sessionID, UserID: userID})
+	if errors.Is(err, pgx.ErrNoRows) {
+		return domain.Plan{}, 0, false, nil
+	}
+	if err != nil {
+		return domain.Plan{}, 0, false, fmt.Errorf("reading planned session: %w", err)
+	}
+	var p domain.Plan
+	if err := json.Unmarshal(row.Payload, &p); err != nil {
+		return domain.Plan{}, 0, false, fmt.Errorf("decoding plan of session %s: %w", sessionID, err)
+	}
+	return p, int(row.OrderIndex), true, nil
+}
+
 // --------------------------------------------------------------- decisions
 
-// Seen reports whether an event was already applied.
-func (t *plannerTx) Seen(ctx context.Context, userID uuid.UUID, trigger, sourceID string) (bool, error) {
+// Recorded returns the recorded event of a trigger and source.
+func (t *plannerTx) Recorded(ctx context.Context, userID uuid.UUID, trigger, sourceID string) (planning.Decision, bool, error) {
 	if err := t.check(userID); err != nil {
-		return false, err
+		return planning.Decision{}, false, err
 	}
-	seen, err := t.q.DecisionSeen(ctx, dbgen.DecisionSeenParams{UserID: userID, Trigger: trigger, SourceID: sourceID})
+	row, err := t.q.GetDecision(ctx, dbgen.GetDecisionParams{UserID: userID, Trigger: trigger, SourceID: sourceID})
+	if errors.Is(err, pgx.ErrNoRows) {
+		return planning.Decision{}, false, nil
+	}
 	if err != nil {
-		return false, fmt.Errorf("reading decision log: %w", err)
+		return planning.Decision{}, false, fmt.Errorf("reading decision log: %w", err)
 	}
-	return seen, nil
+	d, err := decisionFromRow(row)
+	return d, err == nil, err
 }
 
 // Record stores an event and its changes.
-func (t *plannerTx) Record(ctx context.Context, userID uuid.UUID, trigger, sourceID string, cs []domain.Change) error {
+func (t *plannerTx) Record(ctx context.Context, userID uuid.UUID, d planning.Decision) error {
 	if err := t.check(userID); err != nil {
 		return err
 	}
+	cs := d.Changes
 	if cs == nil {
 		cs = []domain.Change{}
 	}
@@ -731,11 +762,49 @@ func (t *plannerTx) Record(ctx context.Context, userID uuid.UUID, trigger, sourc
 	if err != nil {
 		return fmt.Errorf("encoding changes: %w", err)
 	}
-	if err := t.q.InsertDecision(ctx, dbgen.InsertDecisionParams{ID: uuid.Must(uuid.NewV7()), UserID: userID,
-		Trigger: trigger, SourceID: sourceID, Changes: raw}); err != nil {
+	if err := t.q.InsertDecision(ctx, dbgen.InsertDecisionParams{ID: d.ID, UserID: userID, Trigger: d.Trigger,
+		SourceID: d.SourceID, OccurredAt: d.At, Changes: raw}); err != nil {
 		return fmt.Errorf("recording decision: %w", err)
 	}
 	return nil
+}
+
+// ListDecisions returns recorded events newest first, after the cursor.
+func (t *plannerTx) ListDecisions(ctx context.Context, userID uuid.UUID, after *planning.Cursor, limit int) ([]planning.Decision, error) {
+	if err := t.check(userID); err != nil {
+		return nil, err
+	}
+	arg := dbgen.ListDecisionsParams{UserID: userID, PageLimit: int32(min(max(limit, 0), maxPage))} //nolint:gosec // bounded above
+	if after != nil {
+		arg.CursorAt, arg.CursorID = &after.At, &after.ID
+	}
+	rows, err := t.q.ListDecisions(ctx, arg)
+	if err != nil {
+		return nil, fmt.Errorf("listing decisions: %w", err)
+	}
+	out := make([]planning.Decision, 0, len(rows))
+	for _, row := range rows {
+		d, err := decisionFromRow(row)
+		if err != nil {
+			return nil, err
+		}
+		out = append(out, d)
+	}
+	return out, nil
+}
+
+// maxPage bounds one page of a list.
+const maxPage = 1000
+
+func decisionFromRow(row dbgen.PlanDecision) (planning.Decision, error) {
+	var cs []domain.Change
+	if err := json.Unmarshal(row.Changes, &cs); err != nil {
+		return planning.Decision{}, fmt.Errorf("decoding decision %s: %w", row.ID, err)
+	}
+	if len(cs) == 0 {
+		cs = nil
+	}
+	return planning.Decision{ID: row.ID, Trigger: row.Trigger, SourceID: row.SourceID, At: row.OccurredAt.UTC(), Changes: cs}, nil
 }
 
 // ----------------------------------------------------------------- helpers

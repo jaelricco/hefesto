@@ -268,16 +268,25 @@ VALUES ($1, $2, $3, $4, $5, $6, $7);
 -- name: ListPlannedSessions :many
 SELECT * FROM planned_sessions WHERE plan_id = $1 AND user_id = $2 ORDER BY order_index;
 
+-- name: GetActivePlannedSession :one
+SELECT p.payload, s.order_index
+FROM planned_sessions s
+JOIN training_plans p ON p.id = s.plan_id AND p.user_id = s.user_id
+WHERE s.id = $1 AND s.user_id = $2 AND p.status = 'active';
+
 -- --------------------------------------------------------------- decisions
 
--- name: DecisionSeen :one
-SELECT EXISTS (
-    SELECT 1 FROM plan_decisions WHERE user_id = $1 AND trigger = $2 AND source_id = $3
-) AS seen;
+-- name: GetDecision :one
+SELECT * FROM plan_decisions WHERE user_id = $1 AND trigger = $2 AND source_id = $3;
 
 -- name: InsertDecision :exec
 INSERT INTO plan_decisions (id, user_id, trigger, source_id, occurred_at, changes)
-VALUES ($1, $2, $3, $4, now(), $5);
+VALUES ($1, $2, $3, $4, $5, $6);
 
 -- name: ListDecisions :many
-SELECT * FROM plan_decisions WHERE user_id = $1 ORDER BY occurred_at, id;
+SELECT * FROM plan_decisions
+WHERE user_id = @user_id
+  AND (sqlc.narg('cursor_at')::timestamptz IS NULL
+       OR (occurred_at, id) < (sqlc.narg('cursor_at'), sqlc.narg('cursor_id')::uuid))
+ORDER BY occurred_at DESC, id DESC
+LIMIT @page_limit;

@@ -39,18 +39,40 @@ type SnapshotStore interface {
 	SaveSnapshot(ctx context.Context, userID uuid.UUID, s planning.Snapshot) error
 }
 
-// PlanStore keeps the generated week plans.
+// PlanStore keeps the generated week plans. A plan and its sessions carry
+// the IDs the service gave them.
 type PlanStore interface {
 	ActivePlan(ctx context.Context, userID uuid.UUID, week time.Time) (planning.Plan, bool, error)
 	SavePlan(ctx context.Context, userID uuid.UUID, p planning.Plan) error
+	// PlannedSession returns the active plan that holds a planned session,
+	// and the session's index in it.
+	PlannedSession(ctx context.Context, userID, sessionID uuid.UUID) (planning.Plan, int, bool, error)
+}
+
+// Decision is one applied event with the changes it made (spec §6.14).
+type Decision struct {
+	ID       uuid.UUID
+	Trigger  string
+	SourceID string
+	At       time.Time
+	Changes  []planning.Change
+}
+
+// Cursor is a position in a list ordered by time, then ID, newest first.
+type Cursor struct {
+	At time.Time
+	ID uuid.UUID
 }
 
 // DecisionLog records every change the user sees and makes events
-// idempotent: an event already seen (same trigger and source) is skipped
-// (spec §9.4).
+// idempotent: an event recorded before (same trigger and source) is not
+// applied again, and its recorded changes are the answer (spec §9.4).
 type DecisionLog interface {
-	Seen(ctx context.Context, userID uuid.UUID, trigger, sourceID string) (bool, error)
-	Record(ctx context.Context, userID uuid.UUID, trigger, sourceID string, cs []planning.Change) error
+	Recorded(ctx context.Context, userID uuid.UUID, trigger, sourceID string) (Decision, bool, error)
+	Record(ctx context.Context, userID uuid.UUID, d Decision) error
+	// ListDecisions returns up to limit events, newest first, after the
+	// cursor when there is one.
+	ListDecisions(ctx context.Context, userID uuid.UUID, after *Cursor, limit int) ([]Decision, error)
 }
 
 // KnowledgeSource returns the validated knowledge base, or
@@ -69,8 +91,8 @@ type SystemClock struct{}
 // microseconds, and a snapshot must read back exactly as it was written.
 func (SystemClock) Now() time.Time { return time.Now().UTC().Truncate(time.Microsecond) }
 
-// IDSource creates the IDs of rows the planner itself creates, such as the
-// pain baseline from the onboarding.
+// IDSource creates the IDs of rows the planner itself creates: plans and
+// their sessions, decisions and the pain baseline from the onboarding.
 type IDSource interface{ New() uuid.UUID }
 
 // UUIDv7 is the ID source of the service: time-ordered UUIDs (CLAUDE.md).
@@ -79,9 +101,18 @@ type UUIDv7 struct{}
 // New returns a new UUIDv7.
 func (UUIDv7) New() uuid.UUID { return uuid.Must(uuid.NewV7()) }
 
-// Errors of the service. The HTTP layer maps ErrUnavailable to 503
-// planning-unavailable and ErrNotOnboarded to 409 (spec §10.4).
+// Errors of the service, mapped to problems at the HTTP edge (spec §10.4).
 var (
-	ErrUnavailable  = errors.New("planning unavailable")
+	// ErrUnavailable: the knowledge base is missing or invalid (503).
+	ErrUnavailable = errors.New("planning unavailable")
+	// ErrNotOnboarded: SAFE-01, there is no snapshot yet (409).
 	ErrNotOnboarded = errors.New("onboarding required")
+	// ErrAlreadyOnboarded: the onboarding runs once; later changes go
+	// through the profile and the goals (409).
+	ErrAlreadyOnboarded = errors.New("already onboarded")
+	// ErrConsentRequired: pain reports are health data and need the
+	// consent (409, onboarding.md §3.1).
+	ErrConsentRequired = errors.New("health data consent required")
+	// ErrNotFound: no such plan or planned session (404).
+	ErrNotFound = errors.New("not found")
 )

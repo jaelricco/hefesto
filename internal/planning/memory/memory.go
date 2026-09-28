@@ -4,9 +4,13 @@
 package memory
 
 import (
+	"bytes"
+	"cmp"
 	"context"
 	"encoding/json"
 	"fmt"
+	"slices"
+	"strings"
 	"sync"
 	"time"
 
@@ -16,13 +20,6 @@ import (
 	service "github.com/jaelricco/hefesto/internal/planning"
 )
 
-// Decision is one recorded event with its changes.
-type Decision struct {
-	Trigger  string
-	SourceID string
-	Changes  []planning.Change
-}
-
 // Store implements the Transactor and, through it, SnapshotStore,
 // PlanStore and DecisionLog. InTx serialises the calls of one user like the
 // Postgres adapter does; it does not roll back.
@@ -30,7 +27,7 @@ type Store struct {
 	mu        sync.Mutex
 	snapshots map[uuid.UUID][]byte
 	plans     map[string][]byte
-	decisions map[uuid.UUID][]Decision
+	decisions map[uuid.UUID][]service.Decision
 	users     map[uuid.UUID]*sync.Mutex
 }
 
@@ -39,7 +36,7 @@ func New() *Store {
 	return &Store{
 		snapshots: map[uuid.UUID][]byte{},
 		plans:     map[string][]byte{},
-		decisions: map[uuid.UUID][]Decision{},
+		decisions: map[uuid.UUID][]service.Decision{},
 		users:     map[uuid.UUID]*sync.Mutex{},
 	}
 }
@@ -116,29 +113,107 @@ func (s *Store) SavePlan(_ context.Context, userID uuid.UUID, p planning.Plan) e
 	return nil
 }
 
-// Seen reports whether an event was already recorded.
-func (s *Store) Seen(_ context.Context, userID uuid.UUID, trigger, sourceID string) (bool, error) {
+// PlannedSession finds a session of one of the user's active plans.
+func (s *Store) PlannedSession(ctx context.Context, userID, sessionID uuid.UUID) (planning.Plan, int, bool, error) {
+	s.mu.Lock()
+	var keys []string
+	for key := range s.plans {
+		if strings.HasPrefix(key, userID.String()+"/") {
+			keys = append(keys, key)
+		}
+	}
+	s.mu.Unlock()
+	for _, key := range keys {
+		week, err := time.Parse(time.DateOnly, strings.TrimPrefix(key, userID.String()+"/"))
+		if err != nil {
+			return planning.Plan{}, 0, false, fmt.Errorf("plan key %q: %w", key, err)
+		}
+		p, ok, err := s.ActivePlan(ctx, userID, week)
+		if err != nil {
+			return planning.Plan{}, 0, false, err
+		}
+		if !ok {
+			continue
+		}
+		for i, ps := range p.Sessions {
+			if ps.ID == sessionID.String() {
+				return p, i, true, nil
+			}
+		}
+	}
+	return planning.Plan{}, 0, false, nil
+}
+
+// Recorded returns the recorded event of a trigger and source.
+func (s *Store) Recorded(_ context.Context, userID uuid.UUID, trigger, sourceID string) (service.Decision, bool, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	for _, d := range s.decisions[userID] {
 		if d.Trigger == trigger && d.SourceID == sourceID {
-			return true, nil
+			return clone(d)
 		}
 	}
-	return false, nil
+	return service.Decision{}, false, nil
 }
 
 // Record stores an event and its changes.
-func (s *Store) Record(_ context.Context, userID uuid.UUID, trigger, sourceID string, cs []planning.Change) error {
+func (s *Store) Record(_ context.Context, userID uuid.UUID, d service.Decision) error {
+	d, _, err := clone(d)
+	if err != nil {
+		return err
+	}
 	s.mu.Lock()
-	s.decisions[userID] = append(s.decisions[userID], Decision{Trigger: trigger, SourceID: sourceID, Changes: cs})
+	s.decisions[userID] = append(s.decisions[userID], d)
 	s.mu.Unlock()
 	return nil
 }
 
-// Decisions returns the recorded events of a user, oldest first.
-func (s *Store) Decisions(userID uuid.UUID) []Decision {
+// ListDecisions returns recorded events newest first, after the cursor.
+func (s *Store) ListDecisions(_ context.Context, userID uuid.UUID, after *service.Cursor, limit int) ([]service.Decision, error) {
+	s.mu.Lock()
+	all := slices.Clone(s.decisions[userID])
+	s.mu.Unlock()
+	newest := func(a, b service.Decision) int {
+		return cmp.Or(b.At.Compare(a.At), bytes.Compare(b.ID[:], a.ID[:]))
+	}
+	slices.SortFunc(all, newest)
+	out := []service.Decision{}
+	for _, d := range all {
+		if after != nil && newest(service.Decision{At: after.At, ID: after.ID}, d) >= 0 {
+			continue
+		}
+		if len(out) == limit {
+			break
+		}
+		c, _, err := clone(d)
+		if err != nil {
+			return nil, err
+		}
+		out = append(out, c)
+	}
+	return out, nil
+}
+
+// Decisions returns the recorded events of a user in the order recorded.
+func (s *Store) Decisions(userID uuid.UUID) []service.Decision {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	return append([]Decision(nil), s.decisions[userID]...)
+	return slices.Clone(s.decisions[userID])
+}
+
+// clone copies a decision through JSON, as a database would.
+func clone(d service.Decision) (service.Decision, bool, error) {
+	raw, err := json.Marshal(d.Changes)
+	if err != nil {
+		return service.Decision{}, false, fmt.Errorf("encoding changes: %w", err)
+	}
+	var cs []planning.Change
+	if err := json.Unmarshal(raw, &cs); err != nil {
+		return service.Decision{}, false, fmt.Errorf("decoding changes: %w", err)
+	}
+	if len(cs) == 0 {
+		cs = nil
+	}
+	d.Changes = cs
+	return d, true, nil
 }

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"io"
 	"log/slog"
+	"reflect"
 	"testing"
 	"time"
 
@@ -79,12 +80,15 @@ func TestServiceOnboardPlanAndComplete(t *testing.T) {
 		}
 	}
 	clock.t = ps.Date.Add(20 * time.Hour)
-	if _, err := svc.CompleteSession(ctx, user, sess); err != nil {
-		t.Fatal(err)
+	first, err := svc.CompleteSession(ctx, user, sess)
+	if err != nil || first.Replayed {
+		t.Fatal(first, err)
 	}
-	// A retried completion changes nothing (decision log).
-	if cs, err := svc.CompleteSession(ctx, user, sess); err != nil || cs != nil {
-		t.Fatalf("retry: %v %v", cs, err)
+	// A retried completion changes nothing and answers with the changes
+	// recorded the first time (decision log).
+	if again, err := svc.CompleteSession(ctx, user, sess); err != nil || !again.Replayed ||
+		!reflect.DeepEqual(again.Changes, first.Changes) {
+		t.Fatalf("retry: %+v %v, want the first %+v", again, err, first)
 	}
 	if n := len(store.Decisions(user)); n != 1 {
 		t.Errorf("%d decisions recorded, want 1", n)
@@ -99,8 +103,8 @@ func TestServiceOnboardPlanAndComplete(t *testing.T) {
 	if _, err := svc.StartWeek(ctx, user); err != nil {
 		t.Fatal(err)
 	}
-	if cs, err := svc.StartWeek(ctx, user); err != nil || cs != nil {
-		t.Fatalf("second week start: %v %v", cs, err)
+	if out, err := svc.StartWeek(ctx, user); err != nil || !out.Replayed {
+		t.Fatalf("second week start: %+v %v", out, err)
 	}
 	next, err := svc.Plan(ctx, user)
 	if err != nil || !next.WeekStart.Equal(planning.WeekStart(clock.t)) {
@@ -158,5 +162,168 @@ func TestServiceUnavailableKnowledge(t *testing.T) {
 	prod := planning.LoadContentKnowledge("../../content", true, quiet)
 	if _, err := prod.Current(ctx); !errors.Is(err, planning.ErrUnavailable) {
 		t.Errorf("draft knowledge base accepted in production: %v", err)
+	}
+}
+
+func TestServiceOnboardsOnce(t *testing.T) {
+	ctx := context.Background()
+	svc, _, _ := newService(t)
+	user := uuid.New()
+	if _, _, err := svc.Onboard(ctx, user, answers()); err != nil {
+		t.Fatal(err)
+	}
+	if _, _, err := svc.Onboard(ctx, user, answers()); !errors.Is(err, planning.ErrAlreadyOnboarded) {
+		t.Fatalf("second onboarding: %v", err)
+	}
+	// Open questions do not hide that the user is onboarded.
+	a := answers()
+	a.TrainingLevel = domain.LevelSedentary
+	a.Stages = map[string]domain.StageAnswer{"front-lever": {Level: "full", Class: "4_9"}}
+	if _, _, err := svc.Onboard(ctx, user, a); !errors.Is(err, planning.ErrAlreadyOnboarded) {
+		t.Fatalf("second onboarding with questions: %v", err)
+	}
+}
+
+func TestServiceWeeksSessionsAndRegeneration(t *testing.T) {
+	ctx := context.Background()
+	svc, _, clock := newService(t)
+	user := uuid.New()
+	_, first, err := svc.Onboard(ctx, user, answers())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if first.ID == "" || first.Sessions[0].ID == "" {
+		t.Fatalf("plan without IDs: %q %q", first.ID, first.Sessions[0].ID)
+	}
+	if p, err := svc.WeekPlan(ctx, user, clock.t.AddDate(0, 0, 2)); err != nil || p.ID != first.ID {
+		t.Fatalf("this week's plan: %v %v", p.ID, err)
+	}
+	for _, week := range []time.Time{clock.t.AddDate(0, 0, -7), clock.t.AddDate(0, 0, 7)} {
+		if _, err := svc.WeekPlan(ctx, user, week); !errors.Is(err, planning.ErrNotFound) {
+			t.Errorf("week of %s: %v, want not found", week.Format(time.DateOnly), err)
+		}
+	}
+	sid := uuid.MustParse(first.Sessions[1].ID)
+	plan, ps, err := svc.PlannedSession(ctx, user, sid)
+	if err != nil || plan.ID != first.ID || ps.Index != first.Sessions[1].Index {
+		t.Fatalf("planned session: %v %v %v", plan.ID, ps.Index, err)
+	}
+
+	// Regenerating keeps the plan's content and replaces its handles.
+	again, err := svc.Regenerate(ctx, user)
+	if err != nil || again.InputHash != first.InputHash || again.ID == first.ID {
+		t.Fatalf("regenerated %s (%s), first %s (%s): %v", again.ID, again.InputHash, first.ID, first.InputHash, err)
+	}
+	if _, _, err := svc.PlannedSession(ctx, user, sid); !errors.Is(err, planning.ErrNotFound) {
+		t.Errorf("a session of the replaced plan: %v", err)
+	}
+}
+
+func TestServiceProfileAndGoals(t *testing.T) {
+	ctx := context.Background()
+	svc, _, _ := newService(t)
+	user := uuid.New()
+	if _, err := svc.UpdateProfile(ctx, user, domain.ProfileUpdate{}); !errors.Is(err, planning.ErrNotOnboarded) {
+		t.Fatalf("before onboarding: %v", err)
+	}
+	if _, _, err := svc.Onboard(ctx, user, answers()); err != nil {
+		t.Fatal(err)
+	}
+	prof, err := svc.UpdateProfile(ctx, user, domain.ProfileUpdate{SessionsPerWeek: 2, SessionMinutes: 45,
+		Equipment: []string{"gym"}, BodyweightKg: 80})
+	if err != nil || prof.SessionsPerWeek != 2 || prof.BodyweightKg != 80 {
+		t.Fatalf("profile: %+v %v", prof, err)
+	}
+	if p, err := svc.Plan(ctx, user); err != nil || len(p.Sessions) > 2 {
+		t.Fatalf("the plan does not follow the profile: %d sessions, %v", len(p.Sessions), err)
+	}
+	var ve *domain.ValidationError
+	if _, err := svc.UpdateProfile(ctx, user, domain.ProfileUpdate{SessionsPerWeek: 9, SessionMinutes: 45, BodyweightKg: 80}); !errors.As(err, &ve) {
+		t.Fatalf("invalid profile: %v", err)
+	}
+
+	goals, _, err := svc.SetGoals(ctx, user, []domain.Goal{
+		{Skill: "handstand", TargetLevel: "free-30s", Priority: 2},
+		{Skill: "front-lever", TargetLevel: "full", Priority: 1},
+	})
+	if err != nil || len(goals) != 2 || goals[0].Skill != "front-lever" {
+		t.Fatalf("goals: %+v %v", goals, err)
+	}
+	if _, _, err := svc.SetGoals(ctx, user, nil); !errors.As(err, &ve) {
+		t.Fatalf("no goals: %v", err)
+	}
+	_, snap, err := svc.View(ctx, user)
+	if err != nil || len(snap.Goals) != 2 || snap.Profile.SessionsPerWeek != 2 {
+		t.Fatalf("view: %+v %v", snap.Goals, err)
+	}
+}
+
+func TestServicePainNeedsConsentAndValidInput(t *testing.T) {
+	ctx := context.Background()
+	svc, _, clock := newService(t)
+	without, with := uuid.New(), uuid.New()
+	a := answers()
+	a.HealthConsent = false
+	if _, _, err := svc.Onboard(ctx, without, a); err != nil {
+		t.Fatal(err)
+	}
+	if _, _, err := svc.Onboard(ctx, with, answers()); err != nil {
+		t.Fatal(err)
+	}
+	report := domain.PainReport{Region: "elbow_inner", Timepoint: domain.PainDuring, NRS: 2, At: clock.t}
+	if _, err := svc.ReportPain(ctx, without, uuid.NewString(), report); !errors.Is(err, planning.ErrConsentRequired) {
+		t.Fatalf("pain without consent: %v", err)
+	}
+	var ve *domain.ValidationError
+	bad := report
+	bad.Region, bad.NRS = "toe", 11
+	if _, err := svc.ReportPain(ctx, with, uuid.NewString(), bad); !errors.As(err, &ve) || len(ve.Fields) != 2 {
+		t.Fatalf("invalid pain report: %v", err)
+	}
+	ids := []string{uuid.NewString(), uuid.NewString()}
+	for i, id := range ids {
+		r := report
+		r.At = clock.t.Add(time.Duration(i) * time.Hour)
+		if _, err := svc.ReportPain(ctx, with, id, r); err != nil {
+			t.Fatal(err)
+		}
+	}
+	got, err := svc.PainReports(ctx, with, nil, 1)
+	if err != nil || len(got) != 1 || got[0].ID != ids[1] {
+		t.Fatalf("newest pain report: %+v %v", got, err)
+	}
+	at := got[0].At
+	rest, err := svc.PainReports(ctx, with, &planning.Cursor{At: at, ID: uuid.MustParse(ids[1])}, 10)
+	if err != nil || len(rest) != 1 || rest[0].ID != ids[0] {
+		t.Fatalf("next page: %+v %v", rest, err)
+	}
+
+	// Red-flag answers name every question asked for the region.
+	if _, err := svc.AnswerRedFlags(ctx, with, "rf-1", "elbow_inner", map[string]bool{}); !errors.As(err, &ve) {
+		t.Fatalf("unanswered red flags: %v", err)
+	}
+}
+
+func TestServiceDecisionsNewestFirst(t *testing.T) {
+	ctx := context.Background()
+	svc, _, clock := newService(t)
+	user := uuid.New()
+	if _, _, err := svc.Onboard(ctx, user, answers()); err != nil {
+		t.Fatal(err)
+	}
+	for i, id := range []string{"sym-1", "sym-2", "sym-3"} {
+		clock.t = clock.t.Add(time.Duration(i) * time.Minute)
+		if _, err := svc.ReportSymptoms(ctx, user, id); err != nil {
+			t.Fatal(err)
+		}
+	}
+	page, err := svc.Decisions(ctx, user, nil, 2)
+	if err != nil || len(page) != 2 || page[0].SourceID != "sym-3" || page[1].SourceID != "sym-2" {
+		t.Fatalf("first page: %+v %v", page, err)
+	}
+	last := page[1]
+	page, err = svc.Decisions(ctx, user, &planning.Cursor{At: last.At, ID: last.ID}, 2)
+	if err != nil || len(page) != 1 || page[0].SourceID != "sym-1" || len(page[0].Changes) == 0 {
+		t.Fatalf("second page: %+v %v", page, err)
 	}
 }

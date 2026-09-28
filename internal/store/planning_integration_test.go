@@ -3,6 +3,7 @@
 package store_test
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
@@ -282,12 +283,21 @@ func TestPlannerPlans(t *testing.T) {
 	p := store.NewPlanner(db)
 	user := plannerUser(t, db)
 	ctx := context.Background()
+	ids := map[[2]int]string{} // (plan, session) → ID, stable per fixture
+	idOf := func(hash byte, i int) string {
+		key := [2]int{int(hash), i}
+		if _, ok := ids[key]; !ok {
+			ids[key] = id().String()
+		}
+		return ids[key]
+	}
 	plan := func(hash byte, sessions int) domain.Plan {
-		pl := domain.Plan{WeekStart: monday, RulesetVersion: "0.1.0", InputHash: "sha256:" + strings.Repeat(string("0123456789abcdef"[hash]), 64),
-			Reasons: []domain.Reason{{RuleID: "WEEK-01", Args: map[string]string{"sessions": "3"}}}, Disclaimer: "x",
+		pl := domain.Plan{ID: idOf(hash, -1), WeekStart: monday, RulesetVersion: "0.1.0",
+			InputHash: "sha256:" + strings.Repeat(string("0123456789abcdef"[hash]), 64),
+			Reasons:   []domain.Reason{{RuleID: "WEEK-01", Args: map[string]string{"sessions": "3"}}}, Disclaimer: "x",
 			Loads: []domain.AccountLoad{{Account: "wrist", Target: 1.5, Planned: 1, Cap: 1.2, Rule: "LOAD-02"}}}
 		for i := 0; i < sessions; i++ {
-			pl.Sessions = append(pl.Sessions, domain.PlannedSession{Index: i, Date: monday.AddDate(0, 0, 2*i),
+			pl.Sessions = append(pl.Sessions, domain.PlannedSession{ID: idOf(hash, i), Index: i, Date: monday.AddDate(0, 0, 2*i),
 				Kind: domain.SessionFull, EstMinutes: 42, Blocks: []domain.Block{{Role: domain.BlockWarmup, Minutes: 7}}})
 		}
 		return pl
@@ -312,6 +322,24 @@ func TestPlannerPlans(t *testing.T) {
 		return err
 	})
 	sameJSON(t, "plan", plan(2, 2), got)
+	// Sessions are found in the active plan only, and only by their user.
+	other := plannerUser(t, db)
+	inTx(t, p, user, func(st planning.Stores) error {
+		pl, i, ok, err := st.Plans.PlannedSession(ctx, user, uuid.MustParse(idOf(2, 1)))
+		if err != nil || !ok || i != 1 || pl.ID != idOf(2, -1) {
+			t.Fatalf("session of the active plan: %v %d %v %v", pl.ID, i, ok, err)
+		}
+		if _, _, ok, err := st.Plans.PlannedSession(ctx, user, uuid.MustParse(idOf(1, 0))); ok || err != nil {
+			t.Fatalf("session of a superseded plan: %v %v", ok, err)
+		}
+		return nil
+	})
+	inTx(t, p, other, func(st planning.Stores) error {
+		if _, _, ok, err := st.Plans.PlannedSession(ctx, other, uuid.MustParse(idOf(2, 1))); ok || err != nil {
+			t.Fatalf("another user's session: %v %v", ok, err)
+		}
+		return nil
+	})
 	if n := count(t, db, `SELECT count(*) FROM training_plans WHERE user_id = $1 AND status = 'superseded'`, user); n != 1 {
 		t.Fatalf("%d superseded plans, want 1", n)
 	}
@@ -324,7 +352,6 @@ func TestPlannerPlans(t *testing.T) {
 		return err
 	}(), "training_plans_active_uk")
 	// A planned session cannot belong to another user's plan.
-	other := plannerUser(t, db)
 	var planID uuid.UUID
 	if err := db.QueryRow(ctx, `SELECT id FROM training_plans WHERE user_id = $1 AND status = 'active'`, user).Scan(&planID); err != nil {
 		t.Fatal(err)
@@ -339,24 +366,51 @@ func TestPlannerDecisions(t *testing.T) {
 	p := store.NewPlanner(db)
 	user := plannerUser(t, db)
 	ctx := context.Background()
+	changes := []domain.Change{{Kind: domain.ChangeRegion, Region: "knee", To: "rtt_1", Reasons: []domain.Reason{{RuleID: "INJ-03"}}}}
+	decisions := []planning.Decision{
+		{ID: id(), Trigger: planning.TriggerSession, SourceID: "s1", At: at(0, 9)},
+		{ID: id(), Trigger: planning.TriggerPain, SourceID: "p1", At: at(1, 9), Changes: changes},
+		{ID: id(), Trigger: planning.TriggerSymptoms, SourceID: "x1", At: at(1, 9)},
+	}
 	inTx(t, p, user, func(st planning.Stores) error {
-		if seen, err := st.Decisions.Seen(ctx, user, planning.TriggerSession, "s1"); seen || err != nil {
+		if _, seen, err := st.Decisions.Recorded(ctx, user, planning.TriggerSession, "s1"); seen || err != nil {
 			t.Fatalf("seen before recording: %v %v", seen, err)
 		}
-		if err := st.Decisions.Record(ctx, user, planning.TriggerSession, "s1", nil); err != nil {
-			return err
-		}
-		return st.Decisions.Record(ctx, user, planning.TriggerPain, "p1", []domain.Change{{Kind: domain.ChangeRegion,
-			Region: "knee", To: "rtt_1", Reasons: []domain.Reason{{RuleID: "INJ-03"}}}})
-	})
-	inTx(t, p, user, func(st planning.Stores) error {
-		if seen, err := st.Decisions.Seen(ctx, user, planning.TriggerSession, "s1"); !seen || err != nil {
-			t.Fatalf("an event without changes is not seen: %v %v", seen, err)
+		for _, d := range decisions {
+			if err := st.Decisions.Record(ctx, user, d); err != nil {
+				return err
+			}
 		}
 		return nil
 	})
+	inTx(t, p, user, func(st planning.Stores) error {
+		d, seen, err := st.Decisions.Recorded(ctx, user, planning.TriggerPain, "p1")
+		if !seen || err != nil {
+			t.Fatalf("recorded event not found: %v %v", seen, err)
+		}
+		sameJSON(t, "recorded decision", decisions[1], d)
+		if _, seen, err := st.Decisions.Recorded(ctx, user, planning.TriggerSession, "s1"); !seen || err != nil {
+			t.Fatalf("an event without changes is not seen: %v %v", seen, err)
+		}
+		// Newest first; events at the same instant in ID order, descending.
+		want := []planning.Decision{decisions[1], decisions[2], decisions[0]}
+		if bytes.Compare(decisions[1].ID[:], decisions[2].ID[:]) < 0 {
+			want[0], want[1] = decisions[2], decisions[1]
+		}
+		page, err := st.Decisions.ListDecisions(ctx, user, nil, 2)
+		if err != nil {
+			return err
+		}
+		sameJSON(t, "first page", want[:2], page)
+		page, err = st.Decisions.ListDecisions(ctx, user, &planning.Cursor{At: page[1].At, ID: page[1].ID}, 2)
+		if err != nil {
+			return err
+		}
+		sameJSON(t, "second page", want[2:], page)
+		return nil
+	})
 	err := p.InTx(ctx, user, func(st planning.Stores) error {
-		return st.Decisions.Record(ctx, user, planning.TriggerSession, "s1", nil)
+		return st.Decisions.Record(ctx, user, planning.Decision{ID: id(), Trigger: planning.TriggerSession, SourceID: "s1", At: at(2, 9)})
 	})
 	if err == nil {
 		t.Fatal("recorded the same event twice")
@@ -561,10 +615,10 @@ func TestPlannerServiceMatchesMemory(t *testing.T) {
 						Timepoint: domain.PainDaily, NRS: 1, At: clk.t})
 				})
 				both("red flags negative", func(svc *planning.Service) (any, error) {
-					return svc.AnswerRedFlags(ctx, user, "rf-1", "elbow_inner", map[string]bool{})
+					return svc.AnswerRedFlags(ctx, user, "rf-1", "elbow_inner", flags())
 				})
 				both("red flag stop", func(svc *planning.Service) (any, error) {
-					return svc.AnswerRedFlags(ctx, user, "rf-2", "knee", map[string]bool{"RF-10": true})
+					return svc.AnswerRedFlags(ctx, user, "rf-2", "knee", flags("RF-10"))
 				})
 				both("clearance", func(svc *planning.Service) (any, error) {
 					return svc.ConfirmClearance(ctx, user, "cl-1", "knee")
@@ -602,9 +656,48 @@ func TestPlannerServiceMatchesMemory(t *testing.T) {
 					return svc.StartWeek(ctx, user)
 				})
 			}
+			both("profile", func(svc *planning.Service) (any, error) {
+				return svc.UpdateProfile(ctx, user, domain.ProfileUpdate{SessionsPerWeek: 4, SessionMinutes: 45,
+					Equipment: []string{"gym", "parallettes"}, BodyweightKg: 74, PreferredDays: []time.Weekday{time.Monday, time.Thursday},
+					Mobility: map[string]string{"wrist": "partly"}, MaxAddedLoadKg: 20, SmallestPlateKg: 1.25})
+			})
+			date := clk.t.AddDate(0, 5, 0)
+			both("goals", func(svc *planning.Service) (any, error) {
+				goals, realism, err := svc.SetGoals(ctx, user, []domain.Goal{{Skill: "handstand", TargetLevel: "free-30s", Priority: 2},
+					{Skill: "planche", TargetLevel: "full", Priority: 1, TargetDate: &date}})
+				return []any{goals, realism}, err
+			})
+			var plan domain.Plan
+			both("regenerate", func(svc *planning.Service) (any, error) {
+				var err error
+				plan, err = svc.Regenerate(ctx, user)
+				return plan, err
+			})
+			if len(plan.Sessions) > 0 {
+				both("planned session", func(svc *planning.Service) (any, error) {
+					p, ps, err := svc.PlannedSession(ctx, user, uuid.MustParse(plan.Sessions[0].ID))
+					return []any{p.ID, ps}, err
+				})
+			}
 			both("symptoms", func(svc *planning.Service) (any, error) {
 				return svc.ReportSymptoms(ctx, user, "symptoms-1")
 			})
+			both("symptoms again", func(svc *planning.Service) (any, error) {
+				return svc.ReportSymptoms(ctx, user, "symptoms-1")
+			})
+			both("decisions", func(svc *planning.Service) (any, error) {
+				first, err := svc.Decisions(ctx, user, nil, 3)
+				if err != nil || len(first) < 3 {
+					return first, err
+				}
+				rest, err := svc.Decisions(ctx, user, &planning.Cursor{At: first[2].At, ID: first[2].ID}, 100)
+				return []any{first, rest}, err
+			})
+			if kind != "stopped" && kind != "advanced" && kind != "returner" {
+				both("pain reports", func(svc *planning.Service) (any, error) {
+					return svc.PainReports(ctx, user, nil, 100)
+				})
+			}
 		})
 	}
 }
