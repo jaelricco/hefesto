@@ -1390,6 +1390,21 @@ Mittel mit der Rate des Deckels, statt beim Abrunden stehen zu bleiben; eine
 einzelne Woche kann dabei bis zu einem Satz über dem rechnerischen Deckel
 liegen.
 
+**Mindestschritt kleiner Konten** (LOAD-12, `PAR-S-49`, ENT-R-2). Bei 1–2
+Sätzen ist ein ganzer Satz mehr als die Steigerung c · f · R; auch mit dem
+Spielraum-Übertrag wuchs ein solches Konto erst nach 10–13 Wochen um einen
+Satz. Ein Straight-Arm- oder Handgelenk-Konto bekommt deshalb einen Satz mehr,
+wenn es in den letzten 3 Wochen jede Woche geloggt hat, keine davon eine
+Deload-Woche war, keine unter dem Niveau der ersten dieser Wochen lag und in
+seinen Regionen keine Schmerzregel verletzt wurde, und wenn der Plan der Woche
+dieses Niveau noch nicht übersteigt. Der Satz geht an eine Arbeitsübung
+zurück, die die Deckel gekürzt haben (keine Kalibrierung, kein Angebot); alle
+anderen Deckel gelten, nur der Einheitsdeckel der betroffenen Einheit darf um
+diesen Satz über M liegen. Ein Konto macht höchstens einen Schritt je Woche und
+danach wieder 3 Wochen keinen; in Deload-Wochen, Rampen und bei Schmerzdeckeln
+gibt es keinen Schritt. Für Konten mit 1–2 Sätzen liegt der Schritt über 10 %
+je Woche; das ist die Entscheidung ENT-R-2.
+
 ### 7.3 Einheitsdeckel (LOAD-03)
 
 ```
@@ -2101,6 +2116,7 @@ sollte.
 | U-31 | §5.7 | Ein Halt unter 4 s ohne leichtere Sprosse oder Band: kurze Technik-Halte aus μ (DOSE-09), bei fehlender Reserve kein Satz und ein Hinweis (SEL-07). Mit Band ohne eigenen Wert: Kalibrierungsstart | Review B-2: vorher 5 s über dem geschätzten Maximum |
 | U-32 | §9.3 | RF-05 mit Folgefrage (verschoben → N); Stopp-Regel nennt plötzlichen stechenden Schmerz; Regionstexte grammatisch; keine Tatsachenaussage zur Sehnenanpassung; Onboarding-Ergebnis mit Disclaimer; SEL-12 für eine unplausible Angabe | Review A-7, A-8, A-11, A-13, B-4, C M-1 |
 | U-33 | §6.11, §7.2 | ENT-R-1: Eine Pause aus dem Onboarding rampt die Straight-Arm- und Handgelenk-Konten auf dem Zielvolumen der ersten Woche, beim Onboarding eingefroren; Anteil = 0.25 + (Stufe − 0.25) · f(a); 72 h und Sprosse unter `pre_break_level` wie U-25 | Review C: die Basis wächst nicht mit einer neuen Sprosse (A-3, A-4), f(a) wirkt wieder (A-3); Persona 4 kam vorher zwölf Wochen nicht über einen Straight-Arm-Satz je Woche hinaus |
+| U-34 | §7.2 | ENT-R-2: Mindestschritt LOAD-12 (`PAR-S-49`); eine geplante Deload-Woche zählt als gehalten, auch ohne Logs; der Satz geht an eine gekürzte Arbeitsübung mit Straight-Arm-Last zurück, und nur ihr Einheitsdeckel darf um diesen Satz über M liegen | ADR 0003: Eine Deload-Woche darf den Schritt nicht verschieben; bei Deloads alle 4–5 Wochen (§15.4) kam sonst fast nie ein Fenster von 3 Wochen zustande. Ohne die Ausnahme beim Einheitsdeckel blockierte `PAR-S-48` (kleinster Satz) den Schritt in jeder Einheit mit leichteren Sätzen derselben Struktur |
 
 ### 15.3 Nicht umgesetzt
 
@@ -2234,6 +2250,7 @@ Evidenz: A–D nach `00_sources.md`; H = Heuristik (Begründung im Abschnitt).
 | LOAD-09 | Schutz neuer Sprossen | §7.8 | PAR-D-06, PAR-S-27 | A/B (Zeitverlauf)/H |
 | LOAD-10 | Kürzen | §7.9 | – | H |
 | LOAD-11 | Keine ACWR-Sperre | §7.10 | PAR-B-58, PAR-D-30, PAR-B-72, 73 | A/B |
+| LOAD-12 | Mindestschritt kleiner Konten | §7.2 | PAR-S-49, PAR-S-14, PAR-B-55 | H |
 | ADAPT-01–03 | Kapazität, erster Satz, Widerspruch, abgeleitete Startwerte | §4.3, §6.2 | PAR-F-01, 02, 16, 20–26, 28, 32, 33, 41, 55, 68, PAR-E-31, PAR-S-03, 04, 21, 31, 38, 39, 44, 45 | B/H |
 | ADAPT-04 | Haltezeit wächst höchstens +2 s je Woche | §6.3 | PAR-B-33 | H |
 | ADAPT-05 | Prüfsprosse anbieten | §6.3 | PAR-B-05, PAR-B-30, PAR-A-78, PAR-S-24 | B/C/H |
@@ -2318,6 +2335,7 @@ festgemacht ist.
 | PAR-S-46 | `prerequisite_plausibility_fraction` | 0.5 | R-2 (`onboarding.md` §5.5): eine Vorstufe gilt als plausibel, wenn ihre Schätzung mindestens die Hälfte ihrer Schwelle erreicht; die Hälfte entspricht dem Startanteil neuer Belastung (PAR-D-12) und lässt Messrauschen der Selbstauskunft (PAR-F-20: 30 %) Platz |
 | PAR-S-47 | `soreness_definition` | «Soreness» in PAR-D-26 und PAR-D-28: ein Wert während, nach oder am Folgetag über dem Wert vor der Einheit (Basiswert nach PAR-D-16; ohne Basiswert 0) sowie jede Angabe «hielt länger als 1 h an» oder «hält länger als 15 min an»; eine Einheit zählt für die Rampe nur ohne Soreness und mit allen Werten ≤ PAR-D-14 | **Review.** PAR-D-28 nennt «Schmerz am Folgetag» ohne Schwelle; wörtlich genommen käme, wer mit stabilem Grundschmerz trainiert, nie aus der Rampe. Der Vergleich mit dem Wert vor der Einheit folgt PAR-D-16 und ist strenger als PAR-D-14 allein (`08` §4: strengerer Wert) |
 | PAR-S-48 | `session_cap_whole_set` | LOAD-03 lässt je Einheit und Struktur mindestens M plus den kleinsten geplanten Satz dieser Struktur in der Einheit zu (bei M = 0 diesen Satz) | **Review.** PAR-D-31 (10 %) gilt für Volumen; mit ganzen Sätzen wäre bei 1–2 Sätzen je Einheit jede Steigerung > 10 %, und das Volumen bliebe beim halbierten Einstieg stehen. PAR-B-55 erlaubt +1 Satz je Übung; das Wochenwachstum begrenzt weiter LOAD-02 |
+| PAR-S-49 | `small_account_min_step` | ein Satz mehr, wenn ein Straight-Arm- oder Handgelenk-Konto 3 Wochen lang jede Woche geloggt, ohne Deload-Woche, ohne Verletzung einer Schmerzregel und nie unter dem Niveau der ersten dieser Wochen lag, und ein Satz mehr ist als die Steigerung c · f · R nach LOAD-02 | ENT-R-2. 3 Wochen = `PAR-S-14`: Das Referenzmittel besteht dann aus Wochen auf dem gehaltenen Niveau. Der Schritt liegt für Konten mit 1–2 Sätzen über 10 % je Woche (1 → 2 Sätze in 3 Wochen); ohne ihn wuchs ein solches Konto erst nach 10–13 Wochen um einen Satz. +1 Satz aus PAR-B-55 |
 
 ## Anhang C: Index der verwendeten Forschungsparameter
 

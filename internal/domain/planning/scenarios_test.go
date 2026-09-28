@@ -74,6 +74,37 @@ func TestPersonaWeeks(t *testing.T) {
 	}
 }
 
+// LOAD-12 (ENT-R-2): a small straight-arm or wrist account that held its
+// level gets one set more, never in a deload week and at most once in
+// PAR-S-49 weeks.
+func TestScenarioMinStep(t *testing.T) {
+	k := kb(t)
+	steps := 0
+	for _, p := range personas {
+		s, _ := start(t, k, p.answers())
+		weeks, _ := simulate(t, k, s, athleteFor(p.name), 12, painFree(t, k, 1))
+		last := map[string]int{}
+		for i, w := range weeks {
+			for _, l := range w.plan.Loads {
+				if l.Rule != "LOAD-12" {
+					continue
+				}
+				steps++
+				if w.plan.Deload != "" {
+					t.Errorf("%s week %d: %s steps in a deload week", p.name, i+1, l.Account)
+				}
+				if j, ok := last[l.Account]; ok && i-j < 3 {
+					t.Errorf("%s week %d: %s steps again %d weeks after week %d", p.name, i+1, l.Account, i-j, j+1)
+				}
+				last[l.Account] = i
+			}
+		}
+	}
+	if steps == 0 {
+		t.Error("no persona reaches a minimum step in twelve weeks")
+	}
+}
+
 // Spec §12.5: persona 4 returns after six months without logs. The ramp
 // steps 0.25 → 0.5 → 0.75 → 1.0 advance weekly, but without a logged level
 // before the pause they only bound LOAD-04 and LOAD-02 (§7.2); the ramp

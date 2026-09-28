@@ -286,6 +286,8 @@ func (g *gen) trimLoads() {
 	for _, a := range sortedKeys(targetWeek) {
 		caps[a], rules[a] = g.weekCap(a, targetWeek[a])
 	}
+	planned := map[itemRef]int{}
+	g.eachItem(func(r itemRef, it *Item) { planned[r] = it.Sets })
 	for iter := 0; iter < 10000; iter++ {
 		v, ok := g.findViolation(caps, rules, targetSess)
 		if !ok {
@@ -295,6 +297,7 @@ func (g *gen) trimLoads() {
 			break
 		}
 	}
+	g.minStep(caps, rules, targetSess, planned)
 	// Carry the unused fraction of a set (PAR-S-35).
 	week := g.weekLoads()
 	g.caps, g.capRules, g.targets = caps, rules, targetWeek
@@ -313,6 +316,137 @@ func (g *gen) trimLoads() {
 			g.plan.Headroom[a] = math.Min(left, unit)
 		}
 	}
+}
+
+// minStep gives a small straight-arm or wrist account one set more when it
+// has held its level for PAR-S-49 weeks and LOAD-02 does not admit a whole
+// set (LOAD-12, ENT-R-2). The set goes back to a working item the caps cut;
+// every other cap holds, except that its session may exceed LOAD-03 by that
+// one set. An account steps at most once a week.
+func (g *gen) minStep(caps map[string]float64, rules map[string]string, targetSess []map[string]float64, planned map[itemRef]int) {
+	k := g.k
+	if g.deload != "" {
+		return
+	}
+	week := g.weekLoads()
+	held := map[string]float64{}
+	for _, a := range sortedKeys(week) {
+		if lvl, ok := g.heldLevel(a, rules[a]); ok && week[a] <= lvl+eps {
+			held[a] = lvl
+		}
+	}
+	if len(held) == 0 {
+		return
+	}
+	var cands []itemRef
+	g.eachItem(func(r itemRef, it *Item) {
+		ex := k.exercises[it.Exercise]
+		if it.Kind == KindWorking && !it.Offer && !it.Calibration && it.Sets > 0 && it.Sets < planned[r] &&
+			ex.StraightArm == ArmStraight {
+			cands = append(cands, r)
+		}
+	})
+	slices.SortStableFunc(cands, func(a, b itemRef) int {
+		ia, ib := g.item(a), g.item(b)
+		if ia.Priority != ib.Priority {
+			return ia.Priority - ib.Priority
+		}
+		return ia.Sets - ib.Sets
+	})
+	for _, r := range cands {
+		it := g.item(r)
+		one := *it
+		one.Sets = 1
+		unit := g.itemLoad(one)
+		var stepped []string
+		fits := true
+		for _, a := range sortedKeys(unit) {
+			u := unit[a]
+			switch {
+			case week[a]+u <= caps[a]+eps:
+			case held[a] > 0 && week[a] <= held[a]+eps && u > g.growth(a):
+				stepped = append(stepped, a)
+			default:
+				fits = false
+			}
+		}
+		if !fits || len(stepped) == 0 {
+			continue
+		}
+		it.Sets++
+		if !g.stepFits(r.s, unit, targetSess[r.s]) {
+			it.Sets--
+			continue
+		}
+		g.note(it, k.reason(RuleMinStep, "weeks", k.T.MinStepWeeks), "")
+		for a, u := range unit {
+			week[a] += u
+		}
+		for _, a := range stepped {
+			caps[a], rules[a] = week[a], RuleMinStep
+			delete(held, a)
+		}
+	}
+}
+
+// heldLevel is the week load an account held for the last PAR-S-49 weeks:
+// every week logged and none below the first, with no pain-rule breach on
+// its regions. A planned deload week counts as held, logged or not; rest is
+// never a setback (ADR 0003).
+func (g *gen) heldLevel(a, rule string) (float64, bool) {
+	k := g.k
+	n := int(k.T.MinStepWeeks)
+	if !isStraightAccount(a) || rule != RuleWeekCap || n < 1 {
+		return 0, false
+	}
+	from := g.week.AddDate(0, 0, -7*n)
+	for _, r := range k.regionsOf(a) {
+		for _, t := range g.s.Regions[r].Breaches {
+			if !t.Before(from) {
+				return 0, false
+			}
+		}
+	}
+	ph := g.s.Phase
+	lvl := -1.0
+	for i := n; i >= 1; i-- {
+		wk := g.week.AddDate(0, 0, -7*i)
+		if g.hist.deloadWeek[wk] || wk.Equal(ph.DeloadWeek) || wk.Equal(ph.LastDeload) {
+			continue
+		}
+		w := g.hist.weekly[wk][a]
+		if lvl < 0 {
+			lvl = w
+		}
+		if w <= eps || w < lvl-eps {
+			return 0, false
+		}
+	}
+	return lvl, lvl > eps
+}
+
+// growth is the weekly increase LOAD-02 admits on an account, c · f · R.
+func (g *gen) growth(a string) float64 {
+	R, _ := g.k.reference(g.hist, a, g.week)
+	return float64(g.k.capRate(a) * g.weekFactor(a) * R)
+}
+
+// stepFits checks the session caps and the budget of session si after a
+// minimum step: each structure may exceed LOAD-03 by the stepped set.
+func (g *gen) stepFits(si int, unit map[string]float64, target map[string]float64) bool {
+	per := map[string]float64{}
+	for a, u := range unit {
+		per[accountStructure(a)] += u
+	}
+	sl := g.sessionLoads(si)
+	for st, u := range per {
+		c := math.Max(g.sessionCap(si, st, target[st]), g.hist.sessionMax[st]+u)
+		if sl[st] > c+eps {
+			return false
+		}
+	}
+	b, n := g.budget(si)
+	return float64(n) <= b
 }
 
 func (g *gen) findViolation(caps map[string]float64, rules map[string]string, targetSess []map[string]float64) (violation, bool) {

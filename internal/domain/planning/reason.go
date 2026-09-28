@@ -95,6 +95,7 @@ const (
 	RulePairing    = "LOAD-08"
 	RuleNewRung    = "LOAD-09"
 	RuleTrim       = "LOAD-10"
+	RuleMinStep    = "LOAD-12"
 
 	RuleCapacity   = "ADAPT-01"
 	RuleContradict = "ADAPT-03"
@@ -136,7 +137,7 @@ var requiredRules = []string{
 	RuleDoseBalance, RuleDoseTech, RuleDosePrehab, RuleDoseLoad, RuleDoseAccess,
 	RuleStopForm, RuleStopFails, RuleStopDrop, RuleStopPain,
 	RuleLoadUnit, RuleWeekCap, RuleSessionCap, RuleNewLoad, RuleEntryRamp, RuleSpacing, RuleBudget, RuleSameDir,
-	RulePairing, RuleNewRung, RuleTrim,
+	RulePairing, RuleNewRung, RuleTrim, RuleMinStep,
 	RuleCapacity, RuleContradict, RuleHoldGrowth, RuleProbe, RuleRungUp, RuleProbeGate, RuleDoubleProg, RuleUndulating,
 	RuleLoadProg, RuleEccToConc, RuleAutoreg, RuleRungDown, RulePlateau, RuleDeload, RuleMissed, RuleBreak, RuleCheckin,
 	RuleRedFlagAsk, RuleRedFlagAct, RuleRegionState, RuleMatrix, RuleModify, RuleRamp, RulePain, RuleReferral,

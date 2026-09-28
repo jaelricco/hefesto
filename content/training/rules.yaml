@@ -365,6 +365,12 @@ rules:
   text: Der Plan sperrt nichts allein wegen eines Lastquotienten; er steuert über Wochen- und Einheitsgrenzen.
   params: [PAR-B-58, PAR-D-30, PAR-B-72, PAR-B-73]
   evidence: A/B
+- id: LOAD-12
+  title: Ein Satz mehr
+  text: Dieses Volumen ist klein und lag {weeks} Wochen auf gleichem Niveau, ohne dass eine Schmerzregel
+    griff. Deshalb kommt ein Satz dazu, obwohl die Wochengrenze allein noch keinen ganzen Satz zulässt.
+  params: [PAR-S-49, PAR-S-14, PAR-B-55]
+  evidence: H
 - id: ADAPT-01
   title: Leistungsschätzung
   text: Deine Logs aktualisieren die Schätzung deiner Leistung.

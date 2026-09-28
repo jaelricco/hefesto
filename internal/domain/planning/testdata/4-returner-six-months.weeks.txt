@@ -31,5 +31,5 @@ week 10: 3 sessions, 15 sets (3 straight-arm), deload stagnation
   planche=planche-tuck pull-up=pull-up wrist-conditioning=plank-hold
 week 11: 3 sessions, 15 sets (3 straight-arm)
   planche=planche-tuck pull-up=pull-up wrist-conditioning=plank-hold
-week 12: 3 sessions, 15 sets (3 straight-arm)
+week 12: 3 sessions, 16 sets (4 straight-arm)
   planche=planche-tuck pull-up=pull-up wrist-conditioning=plank-hold

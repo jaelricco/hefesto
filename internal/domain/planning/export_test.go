@@ -136,12 +136,18 @@ func CheckInvariants(k *Knowledge, s Snapshot, now, week time.Time, p Plan) []st
 					l.Cap, k.T.NewTypeFraction*l.Target)
 			}
 		}
-		// A break ramp without a logged level before the pause only bounds
-		// LOAD-04 and LOAD-02 (§7.2), so a new straight-arm account stays at
-		// the ramp share of its target.
+		// A break ramp without a logged level before the pause stays at the
+		// ramp share of the week-1 target frozen at the onboarding (ENT-R-1);
+		// an account without one only gets the ramp as a bound over LOAD-04
+		// and LOAD-02 (§7.2), so a new account stays at the share of its
+		// target.
 		if b := s.Break; b != nil && b.StraightDays >= k.T.LayoffDays && b.Reference[l.Account] == 0 && isStraightAccount(l.Account) {
 			steps := []float64{k.T.RampStep1, k.T.RampStep2, k.T.RampStep3, k.T.RampStep4}
-			if R, _ := k.reference(g.hist, l.Account, week); R == 0 && l.Cap > steps[min(b.Step, 3)]*l.Target+2e-3 {
+			share := steps[min(b.Step, 3)]
+			if base := b.Base[l.Account]; base > 0 && l.Cap > share*base+2e-3 {
+				fail("I-11: %s may grow to %.3f, above the ramp share of its frozen base %.3f", l.Account, l.Cap, base)
+			}
+			if R, _ := k.reference(g.hist, l.Account, week); R == 0 && l.Cap > share*l.Target+2e-3 {
 				fail("I-11: %s may grow to %.3f after a pause without a logged level", l.Account, l.Cap)
 			}
 		}

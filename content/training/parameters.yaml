@@ -2418,3 +2418,10 @@ parameters:
   heuristic: true, rationale: '**Review.** PAR-D-31 (10 %) gilt für Volumen; mit ganzen Sätzen wäre bei
     1–2 Sätzen je Einheit jede Steigerung > 10 %, und das Volumen bliebe beim halbierten Einstieg stehen.
     PAR-B-55 erlaubt +1 Satz je Übung; das Wochenwachstum begrenzt weiter LOAD-02'}
+- {id: PAR-S-49, key: small_account_min_step, text: 'ein Satz mehr, wenn ein Straight-Arm- oder Handgelenk-Konto
+    3 Wochen lang jede Woche geloggt, ohne Deload-Woche, ohne Verletzung einer Schmerzregel und nie unter
+    dem Niveau der ersten dieser Wochen lag, und ein Satz mehr ist als die Steigerung c · f · R nach LOAD-02',
+  value: 3, unit: weeks, evidence: Heuristik, heuristic: true, rationale: 'ENT-R-2. 3 Wochen = `PAR-S-14`:
+    Das Referenzmittel besteht dann aus Wochen auf dem gehaltenen Niveau. Der Schritt liegt für Konten
+    mit 1–2 Sätzen über 10 % je Woche (1 → 2 Sätze in 3 Wochen); ohne ihn wuchs ein solches Konto erst
+    nach 10–13 Wochen um einen Satz. +1 Satz aus PAR-B-55'}
