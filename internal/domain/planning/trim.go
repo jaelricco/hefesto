@@ -377,8 +377,8 @@ func (g *gen) cutStep(si int, it *Item, block string) (int, int) {
 	case it.Offer:
 		// Offers belong to the max block (ADAPT-05) and go last in it.
 		return 5, 0
-	case it.Calibration && it.Exercise != g.ladderRung(it.Skill) && g.hasWork(si, it.Skill):
-		// A calibration set at another rung on top of the work goes first.
+	case it.Calibration && it.Exercise != g.ladderRung(it.Skill) && hasRule(it.Reasons, RuleBreak) && g.hasWork(si, it.Skill):
+		// A break calibration on top of the work goes first (§6.11).
 		return 1, 0
 	case it.Role == RoleSupport && it.Stimulus != StimPrehab:
 		return 1, 1
@@ -470,6 +470,10 @@ func (g *gen) cut(v violation) bool {
 		}
 	}
 	return false
+}
+
+func hasRule(rs []Reason, id string) bool {
+	return slices.ContainsFunc(rs, func(r Reason) bool { return r.RuleID == id })
 }
 
 // hasWork reports whether session si has working sets of a skill at its
