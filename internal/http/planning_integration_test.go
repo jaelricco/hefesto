@@ -378,3 +378,67 @@ func hasChange(result map[string]any, kind string) bool {
 	}
 	return false
 }
+
+// A withdrawal deletes the health data and keeps the protection; a grant
+// asks the screening again and tracks the excluded region in stage 0.
+func TestHealthConsentWithdrawAndGrant(t *testing.T) {
+	a := newAPI(t, withPlanner(&fixedClock{plannerMonday}))
+	u := onboarded(t, a, "consent@example.com")
+	a.call("POST", "/v1/me/pain-reports", u.access, map[string]any{"id": newID(), "region": "elbow_inner",
+		"timepoint": "daily", "nrs": 2, "at": plannerMonday.Format(time.RFC3339)}).ok(200, "PlanEventResult")
+
+	withdraw := map[string]any{"id": newID(), "granted": false}
+	out := a.call("POST", "/v1/me/health-consent", u.access, withdraw).ok(200, "PlanEventResult")
+	if !hasChange(out, "consent_changed") {
+		t.Fatalf("withdrawal: %v", out)
+	}
+	if again := a.call("POST", "/v1/me/health-consent", u.access, withdraw).ok(200, "PlanEventResult"); again["replayed"] != true {
+		t.Errorf("repeat: %v", again)
+	}
+	if p := a.call("GET", "/v1/me/training-profile", u.access, nil).ok(200, "TrainingProfile"); p["health_data_consent"] != false {
+		t.Errorf("profile after the withdrawal: %v", p["health_data_consent"])
+	}
+	elbow := a.call("GET", "/v1/me/regions", u.access, nil).ok(200, "RegionOverview")["regions"].([]any)[0].(map[string]any)
+	if elbow["tracked"] != false || elbow["constraints"].([]any)[0] != "region_excluded" {
+		t.Errorf("elbow after the withdrawal: %v", elbow)
+	}
+	if pg := a.call("GET", "/v1/me/pain-reports", u.access, nil).ok(200, "PainReportPage"); len(pg["items"].([]any)) != 0 {
+		t.Errorf("pain reports kept: %v", pg["items"])
+	}
+	a.call("POST", "/v1/me/pain-reports", u.access, map[string]any{"id": newID(), "region": "elbow_inner",
+		"timepoint": "daily", "nrs": 1, "at": plannerMonday.Format(time.RFC3339)}).problem(409, "consent-required")
+
+	hasField(t, a.call("POST", "/v1/me/health-consent", u.access, map[string]any{"id": newID(), "granted": true}).
+		problem(422, "validation"), "/screening")
+	hasField(t, a.call("POST", "/v1/me/health-consent", u.access, map[string]any{"id": newID(), "granted": false,
+		"screening": []any{false, false, false, false, false, false}}).problem(422, "validation"), "/screening")
+	hasField(t, a.call("POST", "/v1/me/health-consent", u.access, map[string]any{"id": newID(), "granted": true,
+		"screening": []any{false, false, false, false, false, false}, "past_injuries": []any{"toe"}}).problem(422, "validation"),
+		"/past_injuries/0")
+
+	out = a.call("POST", "/v1/me/health-consent", u.access, map[string]any{"id": newID(), "granted": true,
+		"screening": []any{false, false, false, false, false, false}, "past_injuries": []any{"knee"}}).ok(200, "PlanEventResult")
+	if !hasChange(out, "consent_changed") || !hasChange(out, "region_state") {
+		t.Fatalf("grant: %v", out)
+	}
+	regions := a.call("GET", "/v1/me/regions", u.access, nil).ok(200, "RegionOverview")["regions"].([]any)
+	states := map[string]any{}
+	for _, r := range regions {
+		states[r.(map[string]any)["region"].(string)] = r.(map[string]any)["state"]
+	}
+	if states["elbow_inner"] != "rtt_0" || states["knee"] != "normal" {
+		t.Errorf("regions after the grant: %v", states)
+	}
+	a.call("POST", "/v1/me/pain-reports", u.access, map[string]any{"id": newID(), "region": "elbow_inner",
+		"timepoint": "daily", "nrs": 1, "at": plannerMonday.Format(time.RFC3339)}).ok(200, "PlanEventResult")
+	d := a.call("GET", "/v1/me/plan/decisions?limit=100", u.access, nil).ok(200, "PlanDecisionPage")
+	consents := 0
+	for _, it := range d["items"].([]any) {
+		if it.(map[string]any)["trigger"] == "consent" {
+			consents++
+		}
+	}
+	if consents != 2 {
+		t.Errorf("%d consent changes in the log, want 2", consents)
+	}
+}

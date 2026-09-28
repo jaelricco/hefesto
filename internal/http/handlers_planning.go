@@ -405,6 +405,24 @@ func (h *handlers) clearance(w http.ResponseWriter, r *http.Request, svc *planni
 	return nil
 }
 
+func (h *handlers) changeHealthConsent(w http.ResponseWriter, r *http.Request) error {
+	svc, err := h.planner()
+	if err != nil {
+		return err
+	}
+	var in consentIn
+	if err := h.body(w, r, "HealthConsentChange", &in); err != nil {
+		return err
+	}
+	out, err := svc.SetConsent(r.Context(), userOf(r), in.ID.String(),
+		core.ConsentChange{Granted: in.Granted, Screening: in.Screening, PastInjuries: in.PastInjuries})
+	if err != nil {
+		return err
+	}
+	WriteJSON(w, r, http.StatusOK, eventResultFrom(out))
+	return nil
+}
+
 func (h *handlers) listMyCapacities(w http.ResponseWriter, r *http.Request) error {
 	svc, err := h.planner()
 	if err != nil {

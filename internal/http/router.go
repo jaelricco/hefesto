@@ -157,6 +157,7 @@ func NewRouter(deps RouterDeps) http.Handler {
 				r.Post("/me/regions/{region}/red-flags", h.wrap(h.answerRedFlags))
 				r.Post("/me/regions/{region}/clearance", h.wrap(h.confirmRegionClearance))
 				r.Post("/me/screening/clearance", h.wrap(h.confirmScreeningClearance))
+				r.Post("/me/health-consent", h.wrap(h.changeHealthConsent))
 				r.Get("/me/capacity", h.wrap(h.listMyCapacities))
 			})
 		})

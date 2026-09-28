@@ -92,7 +92,7 @@ func TestEveryRequestSchemaCompiles(t *testing.T) {
 		"OnboardingAnswers", "OnboardingResult", "TrainingProfile", "TrainingProfileUpdate", "TrainingGoalsUpdate",
 		"TrainingGoalList", "TrainingPlan", "PlannedSessionDetail", "PlanDecisionPage", "PlanEventCreate", "PlanEventResult",
 		"PainReportCreate", "PainReportPage", "RedFlagAnswers", "RegionOverview", "CapacityList", "PlannerRuleList",
-		"PlannerSourceList", "PlannerParameterList", "PlannerCatalogue",
+		"PlannerSourceList", "PlannerParameterList", "PlannerCatalogue", "HealthConsentChange",
 	} {
 		if _, err := schemas.Schema(name); err != nil {
 			t.Errorf("%s: %v", name, err)

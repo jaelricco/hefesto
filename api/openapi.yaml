@@ -1633,6 +1633,48 @@ paths:
         "503":
           $ref: "#/components/responses/Problem"
 
+  /v1/me/health-consent:
+    post:
+      tags: [planning]
+      operationId: changeHealthConsent
+      summary: Grant or withdraw the consent to keep health data
+      description: |
+        Health data are the complaints, pain reports, region states and
+        screening answers. A withdrawal deletes them. What protects the
+        athlete stays as a constraint without answers or values: a locked
+        region stays locked, a region with a complaint stays excluded and a
+        stop stays (spec §4.9). Without the consent the planner plans more
+        cautiously (SAFE-04).
+
+        A grant asks again what was not kept: the six screening questions
+        and the regions injured in the last 12 months. Every excluded region
+        then enters stage 0 of the return ramp, which green daily pain and
+        negative red flags lead out of. Granting or withdrawing what is
+        already in place changes nothing. Idempotent by `id`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HealthConsentChange"
+      responses:
+        "200":
+          description: What the change did.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlanEventResult"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/Problem"
+        "503":
+          $ref: "#/components/responses/Problem"
+
   /v1/me/capacity:
     get:
       tags: [planning]
@@ -4223,8 +4265,9 @@ components:
       description: |
         One change to the plan or the planner's state (spec §6.14), such as
         `capacity`, `rung_down`, `deload_scheduled`, `region_state`,
-        `referral_suggested`, `ask_red_flags` or `training_stopped`. On
-        `ask_red_flags` ask the region's red-flag questions.
+        `referral_suggested`, `ask_red_flags`, `training_stopped` or
+        `consent_changed`. On `ask_red_flags` ask the region's red-flag
+        questions.
       type: object
       required: [kind, skill, region, from, to, reasons]
       properties:
@@ -4252,6 +4295,31 @@ components:
           description: Client-generated; a repeat with the same id is answered from the first time.
           $ref: "#/components/schemas/Id"
 
+    HealthConsentChange:
+      type: object
+      additionalProperties: false
+      required: [id, granted]
+      properties:
+        id:
+          description: Client-generated; a repeat with the same id is answered from the first time.
+          $ref: "#/components/schemas/Id"
+        granted:
+          type: boolean
+        screening:
+          description: With a grant, the six screening questions again, in the order of onboarding.md §3.7.
+          type: array
+          minItems: 6
+          maxItems: 6
+          items:
+            type: boolean
+        past_injuries:
+          description: With a grant, the regions injured in the last 12 months.
+          type: array
+          uniqueItems: true
+          maxItems: 20
+          items:
+            $ref: "#/components/schemas/RegionId"
+
     PlanEventResult:
       type: object
       required: [changes, replayed]
@@ -4271,7 +4339,7 @@ components:
         id:
           $ref: "#/components/schemas/Id"
         trigger:
-          description: onboarding, session_completed, pain_report, red_flags, clearance, symptoms or week_start.
+          description: onboarding, session_completed, pain_report, red_flags, clearance, symptoms, week_start or consent.
           type: string
         source_id:
           type: string

@@ -172,6 +172,13 @@ type eventIn struct {
 	ID uuid.UUID `json:"id"`
 }
 
+type consentIn struct {
+	ID           uuid.UUID `json:"id"`
+	Granted      bool      `json:"granted"`
+	Screening    []bool    `json:"screening"`
+	PastInjuries []string  `json:"past_injuries"`
+}
+
 type redFlagsIn struct {
 	ID      uuid.UUID       `json:"id"`
 	Answers map[string]bool `json:"answers"`
