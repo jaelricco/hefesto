@@ -73,7 +73,11 @@ func (g *gen) buildSessions() {
 			default:
 				strB = append(strB, g.probeItems(a)...)
 				strB = append(strB, g.nextRungCalibration(a, idx)...)
-				strB = append(strB, g.secondary(a, idx, reasons))
+				it := g.secondary(a, idx, reasons)
+				if a.maintain && it.Kind == KindWorking {
+					it.Sets = min(it.Sets, int(k.T.MaintSetsHi))
+				}
+				strB = append(strB, it)
 			}
 		}
 		if !sl.full {

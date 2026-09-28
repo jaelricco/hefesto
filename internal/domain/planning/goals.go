@@ -22,19 +22,22 @@ type active struct {
 	goal     *Goal
 	reasons  []Reason
 
-	rung    *Exercise // working rung
-	assist  string
-	stim    string
-	class   int
-	freq    int
-	cap     Estimate // dose source for the working rung
-	hasCap  bool
-	calib   bool
-	probe   *Exercise
-	monitor bool
-	modify  bool
-	region  Reason
-	days    []int
+	rung   *Exercise // working rung
+	assist string
+	stim   string
+	class  int
+	freq   int
+	cap    Estimate // dose source for the working rung
+	hasCap bool
+	calib  bool
+	// maintain: a support whose recommended level is reached keeps a
+	// maintenance dose (PAR-B-63).
+	maintain bool
+	probe    *Exercise
+	monitor  bool
+	modify   bool
+	region   Reason
+	days     []int
 }
 
 // Stimulus types (spec §0.3).
@@ -80,7 +83,7 @@ func (k *Knowledge) firstUnmet(s Snapshot, sk *Skill) int {
 func (g *gen) activeLadders() {
 	k, s := g.k, g.s
 	byskill := map[string]*active{}
-	add := func(skill, role string, prio int, goal *Goal, r Reason) {
+	add := func(skill, role string, prio int, goal *Goal, r Reason) *active {
 		if a, ok := byskill[skill]; ok {
 			if prio < a.priority || (prio == a.priority && roleRank(role) < roleRank(a.role)) {
 				a.priority, a.role = prio, role
@@ -88,10 +91,12 @@ func (g *gen) activeLadders() {
 					a.goal = goal
 				}
 			}
-			return
+			a.maintain = false
+			return a
 		}
 		a := &active{skill: k.skills[skill], role: role, priority: prio, goal: goal, reasons: []Reason{r}}
 		byskill[skill] = a
+		return a
 	}
 	var feed func(ref string, prio int, depth int)
 	feed = func(ref string, prio int, depth int) {
@@ -150,6 +155,19 @@ func (g *gen) activeLadders() {
 			}
 			skill, _, _ := strings.Cut(e.To, "/")
 			add(skill, RoleSupport, goal.Priority, nil, k.reason(RuleGoalPath, "skill", k.skills[skill].Name, "role", RoleSupport))
+		}
+		// Foundations recommended for this or an earlier level that are
+		// reached keep a maintenance dose (PAR-B-63).
+		for i := 0; i <= idx; i++ {
+			for _, e := range sk.Levels[i].Recommended {
+				skill, _, _ := strings.Cut(e.To, "/")
+				if e.Weight < k.T.RecommendedMin || !k.levelMet(s, e.To) {
+					continue
+				}
+				if _, ok := byskill[skill]; !ok {
+					add(skill, RoleSupport, goal.Priority, nil, k.reason(RuleMaintenance, "skill", k.skills[skill].Name)).maintain = true
+				}
+			}
 		}
 	}
 	// GOAL-06: if the week only pushes or only pulls, add the other side.
@@ -589,6 +607,8 @@ func (g *gen) frequency(a *active) int {
 	}
 	f := strength
 	switch {
+	case a.maintain:
+		f = k.T.MaintSessions
 	case a.stim == StimBalance:
 		f = k.T.FreqBalance
 	case a.role == RoleSupport:

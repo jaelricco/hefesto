@@ -2116,6 +2116,7 @@ Evidenz: A–D nach `00_sources.md`; H = Heuristik (Begründung im Abschnitt).
 | SEL-09 | Arbeitssprosse Wdh. | §5.6 | PAR-B-23, PAR-B-16, PAR-B-77 | H/C |
 | SEL-10 | Ersatzreihenfolge | §5.6 | PAR-C-27 | H |
 | SEL-11 | Variation zwischen Einheiten | §5.6 | PAR-E-24, PAR-E-34 | A/B |
+| SEL-12 | Unplausible Angabe | §5.6, `onboarding.md` §5.5 | PAR-S-44, PAR-S-46 | H |
 | DOSE-01 | Maximalblock Halt | §5.7 | PAR-S-01, 02, 05, PAR-B-08, 33, PAR-E-04, 05, 08 | C/H |
 | DOSE-02 | Maximalblock Wdh. | §5.7 | PAR-E-04, 08, 18 | C/H |
 | DOSE-03 | Volumenblock | §5.7 | PAR-B-10–12, PAR-E-06 | B/C |
@@ -2214,7 +2215,7 @@ festgemacht ist.
 | PAR-S-35 | `set_headroom_carry` | Rest-Spielraum je Konto in die Folgewoche übertragen; höchstens +1 Satz je Übung und Woche | verhindert, dass ganze Sätze bei kleinen Volumen nie wachsen; +1 Satz aus PAR-B-55 |
 | PAR-S-36 | `point_values` | Punktwerte der Tabelle in §5.7, SESS-01, SESS-04 | Spannen der Quellen brauchen für einen deterministischen Plan einen Wert; Wahl nach `08` §4 (Sicherheit vorsichtig, sonst Mitte) |
 | PAR-S-37 | `misc_small_values` | 3 min allgemeines Aufwärmen bei 5 min Gesamtdauer; Kantengewicht ≥ 0.5 für Unterstützungsübungen; +1 s je Exzentrik-Wdh. und Einheit; 1.25 kg kleinste Scheibe ohne Angabe | 3 min: Rest für Rampensätze; 0.5 = Mitte der `recommended`-Gewichte (PAR-A-62); +1 s führt in ≈ 4–7 Einheiten von 3 auf 7–10 s (PAR-B-16); 1.25 kg = übliche kleinste Hantelscheibe |
-| PAR-S-38 | `estimate_floors` | offene Halteklassen μ = halbe Obergrenze; σ ≥ 3 s bzw. 2 Wdh.; r ≥ 1 s bzw. 1 Wdh. | verhindert σ = 0 und undefinierte Konfidenz bei Nullwerten; 2 Wdh. aus PAR-F-20 |
+| PAR-S-38 | `estimate_floors` | offene Halteklassen μ = halbe Obergrenze; σ ≥ max(1 s, 0.15 · μ) bzw. 2 Wdh.; r ≥ 1 s bzw. 1 Wdh. | verhindert σ = 0 und undefinierte Konfidenz bei Nullwerten; 2 Wdh. aus PAR-F-20. **Review:** Der Halte-Boden ist anteilig (0.15 = Grenze «hoch» in PAR-F-30); ein fester Boden von 3 s machte jeden Halt unter 10 s dauerhaft zu «niedriger Konfidenz», und Sprossen mit kurzen Halten wurden nie Arbeitssprosse |
 | PAR-S-39 | `derived_rung_prior` | leichtere Sprosse oder Band: μ = μ der schwereren bzw. unassistierten, σ = max(3 s, 0.35 μ); schwerere Sprosse: kein Wert bis zu Prüfversuchen | nur die sichere Richtung (leichter ≥ schwerer), keine Umrechnung über Intensitätsmodelle (`08` §4); σ aus PAR-F-26 |
 | PAR-S-40 | `post_pain_deload_cap` | bis zur ersten grünen Woche Deckel 1.0 × Referenz vor der Verletzung der Schmerzregel | «reduzieren und halten» (PAR-D-18, `05` §5.4); verhindert den Sprung auf R × 1.1 direkt nach dem Schmerz-Deload |
 | PAR-S-41 | `onboarding_break_mapping` | Tabelle in §6.11 | Klassen aus `onboarding.md` §3.5 auf die Bänder von PAR-B-59–62 und PAR-D-29 gelegt |

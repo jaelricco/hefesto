@@ -119,6 +119,12 @@ type Tuning struct {
 	EntrySpike                         float64 // PAR-S-43
 	WindowWeeks                        float64 // PAR-B-73
 	RefWeeks                           float64 // PAR-S-14
+	MaintSessions                      float64 // PAR-B-63
+	MaintSetsHi                        float64 // PAR-B-63
+	OfferMinForm                       float64 // PAR-A-17
+	PainEntryCount                     float64 // PAR-S-42
+	NoviceMonths                       float64 // PAR-S-20
+	AdvancedMonths                     float64 // PAR-S-20
 	SpikeDays                          float64 // PAR-D-31 window
 	NewRungWeeks                       float64 // PAR-D-06
 	SupinatedMinOG                     float64 // PAR-A-23 intermediate
@@ -176,7 +182,8 @@ type Tuning struct {
 	DerivedFrac      float64 // PAR-F-26
 	Widening         float64 // PAR-S-44
 	UnknownFrac      float64 // PAR-S-45
-	MinHoldSD        float64 // PAR-S-38
+	MinHoldSD        float64 // PAR-S-38 (absolute)
+	MinHoldSDFrac    float64 // PAR-S-38 (share of μ)
 	MinRepSD         float64 // PAR-S-38
 	MinObsSD         float64 // PAR-S-38
 	MinFormEvidence  float64 // PAR-F-41
@@ -335,6 +342,12 @@ func resolveTuning(k *Knowledge, issues []Issue) (Tuning, []Issue) {
 		{&t.EntrySpike, "PAR-S-43", "spike"},
 		{&t.WindowWeeks, "PAR-B-73", ""},
 		{&t.RefWeeks, "PAR-S-14", ""},
+		{&t.MaintSessions, "PAR-B-63", "sessions"},
+		{&t.MaintSetsHi, "PAR-B-63", "sets_hi"},
+		{&t.OfferMinForm, "PAR-A-17", ""},
+		{&t.PainEntryCount, "PAR-S-42", "entry_count"},
+		{&t.NoviceMonths, "PAR-S-20", "novice_months"},
+		{&t.AdvancedMonths, "PAR-S-20", "advanced_months"},
 		{&t.SpikeDays, "PAR-D-31", "window_days"},
 		{&t.NewRungWeeks, "PAR-D-06", ""},
 		{&t.SupinatedMinOG, "PAR-A-23", "intermediate_lo"},
@@ -399,7 +412,8 @@ func resolveTuning(k *Knowledge, issues []Issue) (Tuning, []Issue) {
 		{&t.DerivedFrac, "PAR-F-26", ""},
 		{&t.Widening, "PAR-S-44", ""},
 		{&t.UnknownFrac, "PAR-S-45", ""},
-		{&t.MinHoldSD, "PAR-S-38", "hold_sd"},
+		{&t.MinHoldSD, "PAR-S-38", "hold_sd_abs"},
+		{&t.MinHoldSDFrac, "PAR-S-38", "hold_sd_frac"},
 		{&t.MinRepSD, "PAR-S-38", "rep_sd"},
 		{&t.MinObsSD, "PAR-S-38", "obs_sd"},
 		{&t.MinFormEvidence, "PAR-F-41", ""},

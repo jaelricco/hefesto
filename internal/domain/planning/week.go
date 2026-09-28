@@ -13,11 +13,11 @@ const (
 	ExpAdvanced     = "advanced"
 )
 
-func experience(p Profile) string {
+func experience(k *Knowledge, p Profile) string {
 	switch {
-	case p.TrainingMonths < 6 || p.TrainingLevel == LevelSedentary:
+	case p.TrainingMonths < k.T.NoviceMonths || p.TrainingLevel == LevelSedentary:
 		return ExpNovice
-	case p.TrainingMonths >= 48 && p.TrainingLevel == LevelHighlyTrained:
+	case p.TrainingMonths >= k.T.AdvancedMonths && p.TrainingLevel == LevelHighlyTrained:
 		return ExpAdvanced
 	default:
 		return ExpIntermediate

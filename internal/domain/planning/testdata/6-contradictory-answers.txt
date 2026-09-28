@@ -1,8 +1,8 @@
 onboarding: complete
   asked R-3/planche: Hältst du die Stufe «Straddle Planche» ohne Band und mit gestreckten Armen?
   asked R-3/front-lever: Hältst du die Stufe «Full Front Lever» ohne Band und mit gestreckten Armen?
-  [SEL-08] Die ersten Einheiten liegen eine Stufe unter deiner Angabe, bis Logs sie bestätigen.
-  [SEL-08] Die ersten Einheiten liegen eine Stufe unter deiner Angabe, bis Logs sie bestätigen.
+  [SEL-12] Deine Angabe zu Planche passt nicht zu deinen Grundlagen. Die App beginnt deshalb bei der Stufe, die dazu passt, und prüft sie mit Kalibrierungssätzen.
+  [SEL-12] Deine Angabe zu Front Lever passt nicht zu deinen Grundlagen. Die App beginnt deshalb bei der Stufe, die dazu passt, und prüft sie mit Kalibrierungssätzen.
 week 2026-09-28  ruleset 0.1.0  stopped=false
   plan: [WEEK-01] Die App verteilt 3 Einheiten so, dass zwischen harten Einheiten möglichst viel Abstand liegt.
 session 1 Mon 28.09. full ~18 min

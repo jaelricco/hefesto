@@ -72,7 +72,7 @@ func (g *gen) weekFactor(a string) float64 {
 		f = math.Min(f, k.T.PriorInjury)
 	}
 	months := g.s.Profile.TrainingMonths
-	if months >= k.T.RiskWindowLo && months <= k.T.RiskWindowHi {
+	if months >= k.T.RiskWindowLo && months < k.T.RiskWindowHi {
 		f = math.Min(f, k.T.RiskWindow)
 	}
 	return f

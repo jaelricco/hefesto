@@ -16,19 +16,19 @@ week 4: 2 sessions, 9 sets (1 straight-arm)
 week 5: 2 sessions, 9 sets (1 straight-arm)
   planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
   regions after: break=119 days/step 3
-week 6: 3 sessions, 12 sets (1 straight-arm), deload planned
+week 6: 2 sessions, 9 sets (1 straight-arm), deload planned
   planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
   regions after: break=119 days/step 3
-week 7: 3 sessions, 12 sets (1 straight-arm)
+week 7: 2 sessions, 9 sets (1 straight-arm)
   planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
   regions after: break=119 days/step 3
-week 8: 2 sessions, 9 sets (1 straight-arm)
+week 8: 3 sessions, 12 sets (1 straight-arm)
   planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
 week 9: 3 sessions, 12 sets (1 straight-arm)
   planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
 week 10: 3 sessions, 12 sets (1 straight-arm)
   planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
-week 11: 3 sessions, 12 sets (1 straight-arm)
+week 11: 3 sessions, 13 sets (1 straight-arm)
   planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
   changes: probe_offered
 week 12: 3 sessions, 12 sets (1 straight-arm), deload planned

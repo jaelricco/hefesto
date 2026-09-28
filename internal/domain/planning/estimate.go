@@ -58,10 +58,12 @@ func (k *Knowledge) obsFrac(e *Exercise) float64 {
 	}
 }
 
-// minSD is the floor of σ for an exercise (PAR-S-38).
-func (k *Knowledge) minSD(e *Exercise) float64 {
+// minSD is the floor of σ for an exercise at a mean of mu (PAR-S-38): for
+// holds a share of μ, so repeated logs can lift a short hold out of the low
+// confidence class.
+func (k *Knowledge) minSD(e *Exercise, mu float64) float64 {
 	if e.Measure == MeasureHold {
-		return k.T.MinHoldSD
+		return math.Max(k.T.MinHoldSD, float64(k.T.MinHoldSDFrac*mu))
 	}
 	return k.T.MinRepSD
 }
@@ -69,10 +71,14 @@ func (k *Knowledge) minSD(e *Exercise) float64 {
 // predict widens an estimate for the time since its last observation
 // (spec §4.3 step 1): σ² += q² · Δweeks.
 func (k *Knowledge) predict(e Estimate, ex *Exercise, now time.Time) Estimate {
-	if e.At.IsZero() || !now.After(e.At) {
+	last := e.At
+	if e.Seen.After(last) {
+		last = e.Seen
+	}
+	if last.IsZero() || !now.After(last) {
 		return e
 	}
-	weeks := now.Sub(e.At).Hours() / (24 * 7)
+	weeks := now.Sub(last).Hours() / (24 * 7)
 	q := k.T.ProcessReps
 	if ex.Measure == MeasureHold {
 		q = float64(k.T.ProcessHoldFrac * e.Mu)
@@ -87,6 +93,7 @@ type Observation struct {
 	R          float64
 	LowerBound bool
 	Test       bool
+	Capped     bool // the reserve was larger than the usable limit
 }
 
 // classify turns a logged set into an observation for the unassisted or
@@ -133,14 +140,14 @@ func (k *Knowledge) classify(set LoggedSet, ex *Exercise, first bool, mu float64
 			}
 			return Observation{X: x, LowerBound: true}, true
 		}
-		return Observation{X: set.Value + k.T.RIRMaxUsable, LowerBound: true}, true
+		return Observation{X: set.Value + k.T.RIRMaxUsable, LowerBound: true, Capped: true}, true
 	}
 	limit := math.Max(k.T.SIRUsableAbs, float64(k.T.SIRUsableFrac*set.Value))
 	if res <= limit {
 		x := set.Value + res
 		return Observation{X: x, R: holdR(x)}, true
 	}
-	return Observation{X: set.Value + limit, LowerBound: true}, true
+	return Observation{X: set.Value + limit, LowerBound: true, Capped: true}, true
 }
 
 // update applies one observation (spec §4.3 steps 3–4). It returns the new
@@ -148,6 +155,11 @@ func (k *Knowledge) classify(set LoggedSet, ex *Exercise, first bool, mu float64
 func (k *Knowledge) update(e Estimate, ex *Exercise, o Observation, at time.Time) (Estimate, bool) {
 	if o.LowerBound {
 		if o.X <= e.Mu {
+			// No news about the mean, but the capacity has not fallen below
+			// the dose either: the estimate stops widening (spec §4.3).
+			if o.X >= e.Mu-e.Sigma {
+				e.Seen = at
+			}
 			return e, false
 		}
 		o.R = k.T.RepObsSD
@@ -156,7 +168,7 @@ func (k *Knowledge) update(e Estimate, ex *Exercise, o Observation, at time.Time
 		}
 	}
 	o.R = math.Max(o.R, k.T.MinObsSD)
-	floor := k.minSD(ex)
+	floor := k.minSD(ex, e.Mu)
 	gap := math.Sqrt(float64(e.Sigma*e.Sigma) + float64(o.R*o.R))
 	if e.N > 0 && math.Abs(o.X-e.Mu) > float64(k.T.ContradictionSD*gap) {
 		// ADAPT-03: never overwrite silently. A second deviation in the same
@@ -223,7 +235,7 @@ func (k *Knowledge) selfReport(ex *Exercise, c AnswerClass, confidence string, a
 			sd = float64(sd * k.T.CountedFactor)
 		}
 	}
-	sd = math.Max(sd, k.minSD(ex))
+	sd = math.Max(sd, k.minSD(ex, mu))
 	return Estimate{Mu: mu, Sigma: sd, Origin: OriginSelf, At: at}
 }
 
@@ -231,6 +243,6 @@ func (k *Knowledge) selfReport(ex *Exercise, c AnswerClass, confidence string, a
 // harder or unassisted one: the harder value is a lower bound (PAR-S-39).
 func (k *Knowledge) derivedPrior(from Estimate, ex *Exercise, at time.Time) Estimate {
 	mu := from.Mu
-	sd := math.Max(k.minSD(ex), float64(k.T.DerivedFrac*mu))
+	sd := math.Max(k.minSD(ex, mu), float64(k.T.DerivedFrac*mu))
 	return Estimate{Mu: mu, Sigma: sd, Origin: OriginDerived, At: at}
 }

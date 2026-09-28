@@ -192,7 +192,7 @@ func Start(k *Knowledge, a Answers, now time.Time) (Snapshot, OnboardingResult, 
 				}
 				claimedIdx = k.plausibleLevel(s, sk, claimedIdx)
 				widen = true
-				res.Reasons = append(res.Reasons, k.reason(RuleEntryRung, "skill", sk.Name))
+				res.Reasons = append(res.Reasons, k.reason(RulePlausible, "skill", sk.Name))
 			}
 		}
 		if claimedIdx < 0 {
@@ -501,7 +501,7 @@ func (k *Knowledge) startRegions(s *Snapshot, a Answers, minor bool, today time.
 		if a.HealthConsent {
 			s.Pain = append(s.Pain, PainReport{Region: id, Timepoint: PainDaily, NRS: c.PainDaily, At: today})
 		}
-		if c.DurationWeeks > 4 {
+		if float64(c.DurationWeeks*7) > k.T.ReferralDays {
 			rs.Referral = "advise"
 			res.Hints = append(res.Hints, regional(k.reason(RuleReferral, "region", k.regions[id].Name), id))
 		}

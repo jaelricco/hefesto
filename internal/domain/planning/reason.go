@@ -65,6 +65,7 @@ const (
 	RuleEntryRung  = "SEL-08"
 	RuleRepRung    = "SEL-09"
 	RuleSubstitute = "SEL-10"
+	RulePlausible  = "SEL-12"
 
 	RuleDoseMaxHold = "DOSE-01"
 	RuleDoseMaxReps = "DOSE-02"
@@ -130,7 +131,7 @@ var requiredRules = []string{
 	RuleGoalOrder, RuleGoalPath, RuleMaintenance, RuleReadiness, RuleRealism, RuleAntagonist,
 	RuleDays, RuleSessionKind, RuleSplit, RuleFrequency, RuleAllocation, RuleTooFewDays, RuleDeloadWeek,
 	RuleTemplate, RuleOrder, RuleWarmup, RuleBalance, RuleMaxBlock, RuleVolume, RuleStrength, RuleEndBlock, RuleLightDay,
-	RuleEquipment, RuleRegionCell, RuleSupinated, RuleMobility, RuleHoldRung, RuleEntryRung, RuleRepRung, RuleSubstitute,
+	RuleEquipment, RuleRegionCell, RuleSupinated, RuleMobility, RuleHoldRung, RuleEntryRung, RuleRepRung, RuleSubstitute, RulePlausible,
 	RuleDoseMaxHold, RuleDoseMaxReps, RuleDoseVolume, RuleDoseCond, RuleDoseNovice, RuleDoseTrained, RuleDoseEcc,
 	RuleDoseBalance, RuleDoseTech, RuleDosePrehab, RuleDoseLoad, RuleDoseAccess,
 	RuleStopForm, RuleStopFails, RuleStopDrop, RuleStopPain,

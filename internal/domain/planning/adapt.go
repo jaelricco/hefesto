@@ -131,11 +131,11 @@ func (a *adapter) session(sess LoggedSession) {
 			continue
 		}
 		if !has {
-			sd := math.Max(o.R, k.minSD(ex))
+			sd := math.Max(o.R, k.minSD(ex, o.X))
 			if o.LowerBound {
 				// A lower bound without any prior: the bound itself, as wide
 				// as a derived value (PAR-S-31, PAR-F-26).
-				sd = math.Max(k.minSD(ex), float64(k.T.DerivedFrac*o.X))
+				sd = math.Max(k.minSD(ex, o.X), float64(k.T.DerivedFrac*o.X))
 			}
 			s.Capacities[key] = Estimate{Mu: o.X, Sigma: sd, Origin: OriginLog, At: sess.Date, N: 1}
 			continue
@@ -143,6 +143,11 @@ func (a *adapter) session(sess LoggedSession) {
 		est = k.predict(est, ex, sess.Date)
 		next, contradicted := k.update(est, ex, o, sess.Date)
 		s.Capacities[key] = next
+		// A reserve too large to count in full hides the capacity: the
+		// next exposure calibrates (reserve 2–3, spec §4.3).
+		if o.Capped && !slices.Contains(s.Phase.Calibrate, key) {
+			s.Phase.Calibrate = append(s.Phase.Calibrate, key)
+		}
 		if contradicted {
 			if !slices.Contains(s.Phase.Calibrate, key) {
 				s.Phase.Calibrate = append(s.Phase.Calibrate, key)
@@ -210,7 +215,7 @@ func (a *adapter) progression(ls *LadderState, top *Exercise, sets []LoggedSet, 
 	if len(mine) == 0 {
 		return
 	}
-	if top.Measure == MeasureReps && experience(a.s.Profile) == ExpNovice {
+	if top.Measure == MeasureReps && experience(k, a.s.Profile) == ExpNovice {
 		target := ls.RepTarget
 		if target == 0 {
 			target = mine[0].Value
@@ -241,7 +246,7 @@ func (a *adapter) progression(ls *LadderState, top *Exercise, sets []LoggedSet, 
 		if f.Reserve != nil {
 			x += *f.Reserve
 		}
-		good := f.Form == nil || *f.Form >= 4
+		good := f.Form == nil || *f.Form >= k.T.OfferMinForm
 		prevOK := a.lastFirstSetOK(top, sess.ID)
 		if x >= k.T.StageOffer && good && prevOK && !ls.ProbeOffer {
 			ls.ProbeOffer = true
@@ -527,7 +532,7 @@ func (a *adapter) pain(r PainReport) {
 	}
 	day := civil(r.At, time.UTC)
 	if !rs.Complaint {
-		if r.NRS > k.T.PainGreen || a.painDays(r.Region, day) >= 2 {
+		if r.NRS > k.T.PainGreen || float64(a.painDays(r.Region, day)) >= k.T.PainEntryCount {
 			rs.Complaint, rs.ComplaintAt, rs.EnteredVia = true, day, "pain_report"
 			rs.StartFraction = k.T.RTTStart
 			rs.Step = k.startStep(rs.StartFraction)

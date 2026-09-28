@@ -84,6 +84,7 @@ type Estimate struct {
 	Sigma   float64   `json:"sigma"`
 	Origin  string    `json:"origin"` // self_report, test, log, derived
 	At      time.Time `json:"at"`
+	Seen    time.Time `json:"seen,omitempty"` // last lower bound that confirmed the estimate
 	N       int       `json:"n"`
 	Pending *float64  `json:"pending,omitempty"` // last contradicting observation (ADAPT-03)
 }

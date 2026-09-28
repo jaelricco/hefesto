@@ -28,4 +28,6 @@ excluded pull-up: [SEL-02] Klimmzug braucht Ausrüstung, die du nicht angegeben 
 excluded pull-up-l-sit: [SEL-02] L-Klimmzug braucht Ausrüstung, die du nicht angegeben hast.
 excluded pull-up-negative: [SEL-02] Negativer Klimmzug braucht Ausrüstung, die du nicht angegeben hast.
 excluded push-up-rings: [SEL-02] Liegestütz an Ringen braucht Ausrüstung, die du nicht angegeben hast.
-realism planche/full: lower 48, shown 105–162 weeks, date in 7 weeks, unrealistic=true, milestone tuck 28.5–45 weeks
+hint: [GOAL-06] Weil deine Ziele nur in eine Richtung arbeiten, plant die App eine Übung der Gegenrichtung zum Ausgleich.
+hint: [SEL-02] Negativer Klimmzug braucht Ausrüstung, die du nicht angegeben hast.
+realism planche/full: lower 48, shown 105–162 weeks, date in 8 weeks, unrealistic=true, milestone tuck 28.5–45 weeks

@@ -2,13 +2,13 @@ onboarding: complete
 week 2026-09-28  ruleset 0.1.0  stopped=false
   plan: [WEEK-01] Die App verteilt 4 Einheiten so, dass zwischen harten Einheiten möglichst viel Abstand liegt.
   plan: [WEEK-03] Bei 4 vollen Einheiten verteilt die App Druck und Zug auf verschiedene Tage.
-session 1 Mon 28.09. full ~20 min
+session 1 Mon 28.09. full ~15 min
   warmup (10 min)
     Aussenrotation mit Band                2 × 15       res 2  rest  90s  prehab p99 support  [warm-up]  {DOSE-10}
     Handgelenk-Vorbereitung                2 × 15       res 2  rest  90s  prehab p99 support  [warm-up]  {DOSE-10}
   skill_max
-    Planche Lean                           2 × 4 s      res 2  rest 300s  skill p1 goal  [calibration]  {GOAL-01 SEL-07 SEL-08 DOSE-01 LOAD-04b LOAD-10}
-    Tuck Front Lever                       1 × 2 s      res 2  rest 300s  skill p2 goal  [assist=band, calibration]  {GOAL-01 SEL-07 DOSE-09 DOSE-01 LOAD-04b LOAD-10 LOAD-03 LOAD-10}
+    Planche Lean                           1 × 4 s      res 2  rest 120s  conditioning p1 goal  [calibration]  {GOAL-01 SEL-07 SEL-08 DOSE-04 LOAD-04b LOAD-10 LOAD-03 LOAD-10}
+    Tuck Front Lever                       1 × 2 s      res 2  rest 300s  skill p2 goal  [assist=band, calibration]  {GOAL-01 SEL-07 DOSE-09 DOSE-01 LOAD-04b LOAD-10}
   strength
     Klimmzug                               1 × 6        res 2  rest 120s  accessory p2 support  [calibration]  {GOAL-02 SEL-07 SEL-08 DOSE-12 LOAD-04b LOAD-10 LOAD-03 LOAD-10}
   end
@@ -18,27 +18,27 @@ session 2 Tue 29.09. full ~15 min
     Aussenrotation mit Band                2 × 15       res 2  rest  90s  prehab p99 support  [warm-up]  {DOSE-10}
     Handgelenk-Vorbereitung                2 × 15       res 2  rest  90s  prehab p99 support  [warm-up]  {DOSE-10}
   strength
-    Unterarmstütz mit gestreckten Armen (Plank) 1 × 10 s     res 2  rest 120s  conditioning p1 support  [calibration]  {GOAL-02 SEL-07 DOSE-04 LOAD-04b LOAD-10}
+    Unterarmstütz mit gestreckten Armen (Plank) 1 × 10 s     res 2  rest 120s  conditioning p1 support  [calibration]  {GOAL-02 SEL-07 DOSE-04 LOAD-04b LOAD-10 LOAD-03 LOAD-10}
     Hollow Hold                            1 × 14 s     res 6  rest 120s  conditioning p2 support  [calibration]  {GOAL-02 SEL-07 SEL-08 DOSE-04 LOAD-04b LOAD-10 LOAD-03 LOAD-10}
   end
     Handgelenk-Wippen im Vierfüsslerstand  2 × 15       res 2  rest  90s  prehab p99 support  {DOSE-10}
-session 3 Thu 01.10. full ~29 min
+session 3 Thu 01.10. full ~21 min
   warmup (10 min)
     Aussenrotation mit Band                2 × 15       res 2  rest  90s  prehab p99 support  [warm-up]  {DOSE-10}
     Handgelenk-Vorbereitung                2 × 15       res 2  rest  90s  prehab p99 support  [warm-up]  {DOSE-10}
   skill_max
-    Planche Lean                           2 × 4 s      res 2  rest 300s  skill p1 goal  [calibration]  {GOAL-01 SEL-07 SEL-08 DOSE-01 LOAD-04b LOAD-10}
-    Tuck Front Lever                       2 × 2 s      res 2  rest 300s  skill p2 goal  [assist=band, calibration]  {GOAL-01 SEL-07 DOSE-09 DOSE-01 LOAD-04b LOAD-10}
+    Planche Lean                           2 × 4 s      res 2  rest 120s  conditioning p1 goal  [calibration]  {GOAL-01 SEL-07 SEL-08 DOSE-04 LOAD-04b LOAD-10}
+    Tuck Front Lever                       1 × 2 s      res 2  rest 300s  skill p2 goal  [assist=band, calibration]  {GOAL-01 SEL-07 DOSE-09 DOSE-01 LOAD-04b LOAD-10}
   strength
     Unterarmstütz mit gestreckten Armen (Plank) 1 × 10 s     res 2  rest 120s  conditioning p1 support  [calibration]  {GOAL-02 SEL-07 DOSE-04 LOAD-04b LOAD-10}
     Hollow Hold                            2 × 14 s     res 6  rest 120s  conditioning p2 support  [calibration]  {GOAL-02 SEL-07 SEL-08 DOSE-04 LOAD-04b LOAD-10}
     Klimmzug                               1 × 6        res 2  rest 120s  accessory p2 support  [calibration]  {GOAL-02 SEL-07 SEL-08 DOSE-12 LOAD-04b LOAD-10}
   end
     Handgelenk-Wippen im Vierfüsslerstand  2 × 15       res 2  rest  90s  prehab p99 support  {DOSE-10}
-session 4 Sat 03.10. full ~18 min
+session 4 Sat 03.10. full ~13 min
   warmup (10 min)
   skill_max
-    Planche Lean                           2 × 4 s      res 2  rest 300s  skill p1 goal  [calibration]  {GOAL-01 SEL-07 SEL-08 DOSE-01 LOAD-04b LOAD-10}
+    Planche Lean                           1 × 4 s      res 2  rest 120s  conditioning p1 goal  [calibration]  {GOAL-01 SEL-07 SEL-08 DOSE-04 LOAD-04b LOAD-10}
     Tuck Front Lever                       1 × 2 s      res 2  rest 300s  skill p2 goal  [assist=band, calibration]  {GOAL-01 SEL-07 DOSE-09 DOSE-01 LOAD-04b LOAD-10}
   strength
     Unterarmstütz mit gestreckten Armen (Plank) 1 × 10 s     res 2  rest 120s  conditioning p1 support  [calibration]  {GOAL-02 SEL-07 DOSE-04 LOAD-04b LOAD-10}

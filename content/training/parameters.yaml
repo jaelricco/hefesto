@@ -73,8 +73,8 @@ parameters:
   evidence: Heuristik
   heuristic: true
   rationale: Zuordnung eigene; Grenzen aus FIG; nur Form 5 liegt sicher im WSWCF-Band ±7,5° (W-3)
-- {id: PAR-A-17, key: unlock_min_form_quality_statics, text: '4', unit: 1–5, evidence: Heuristik, heuristic: true,
-  rationale: entspricht ≤ 15° (PAR-A-16)}
+- {id: PAR-A-17, key: unlock_min_form_quality_statics, text: '4', value: 4, unit: 1–5, evidence: Heuristik,
+  heuristic: true, rationale: entspricht ≤ 15° (PAR-A-16)}
 - id: PAR-A-18
   key: unlock_occurrences_default
   text: '2 (dynamisch ≈ 3×8: 3)'
@@ -805,6 +805,7 @@ parameters:
 - id: PAR-B-63
   key: maintenance_min_dose
   text: '1 Einheit/Woche, 1–2 Sätze je Übung, gleiche Stufe/Intensität (Ältere: 2 Einheiten, 2–3 Sätze)'
+  values: {sessions: 1, sets_lo: 1, sets_hi: 2}
   unit: —
   sources: [B-98, B-87, B-96]
   evidence: B
@@ -2258,8 +2259,13 @@ parameters:
 - {id: PAR-S-19, key: realism_prior_scaling_enabled, text: 'false', evidence: Heuristik, heuristic: true,
   rationale: 'dass relative Hebelanforderung (PAR-C-32, PAR-C-54) die Lernzeit proportional verlängert,
     ist nicht belegt'}
-- {id: PAR-S-20, key: experience_class_mapping, text: §4.2, evidence: Heuristik, heuristic: true, rationale: Grenze
-    6 Monate aus PAR-B-01; `highly_trained` aus PAR-F-48}
+- id: PAR-S-20
+  key: experience_class_mapping
+  text: §4.2
+  values: {novice_months: 6, advanced_months: 48}
+  evidence: Heuristik
+  heuristic: true
+  rationale: Grenze 6 Monate aus PAR-B-01; `highly_trained` aus PAR-F-48
 - {id: PAR-S-21, key: contradiction_confirmation, text: 'zweite Abweichung in dieselbe Richtung → Mittel
     beider Beobachtungen, σ = r', evidence: Heuristik, heuristic: true, rationale: 'verhindert, dass PAR-F-33
     eine echte Veränderung dauerhaft blockiert'}
@@ -2349,11 +2355,13 @@ parameters:
     in ≈ 4–7 Einheiten von 3 auf 7–10 s (PAR-B-16); 1.25 kg = übliche kleinste Hantelscheibe'
 - id: PAR-S-38
   key: estimate_floors
-  text: offene Halteklassen μ = halbe Obergrenze; σ ≥ 3 s bzw. 2 Wdh.; r ≥ 1 s bzw. 1 Wdh.
-  values: {hold_sd: 3, rep_sd: 2, obs_sd: 1}
+  text: offene Halteklassen μ = halbe Obergrenze; σ ≥ max(1 s, 0.15 · μ) bzw. 2 Wdh.; r ≥ 1 s bzw. 1 Wdh.
+  values: {hold_sd_abs: 1, hold_sd_frac: 0.15, rep_sd: 2, obs_sd: 1}
   evidence: Heuristik
   heuristic: true
-  rationale: verhindert σ = 0 und undefinierte Konfidenz bei Nullwerten; 2 Wdh. aus PAR-F-20
+  rationale: verhindert σ = 0 und undefinierte Konfidenz bei Nullwerten; 2 Wdh. aus PAR-F-20. **Review:**
+    Der Halte-Boden ist anteilig (0.15 = Grenze «hoch» in PAR-F-30); ein fester Boden von 3 s machte jeden
+    Halt unter 10 s dauerhaft zu «niedriger Konfidenz», und Sprossen mit kurzen Halten wurden nie Arbeitssprosse
 - {id: PAR-S-39, key: derived_rung_prior, text: 'leichtere Sprosse oder Band: μ = μ der schwereren bzw.
     unassistierten, σ = max(3 s, 0.35 μ); schwerere Sprosse: kein Wert bis zu Prüfversuchen', evidence: Heuristik,
   heuristic: true, rationale: 'nur die sichere Richtung (leichter ≥ schwerer), keine Umrechnung über Intensitätsmodelle

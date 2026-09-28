@@ -143,7 +143,7 @@ func Generate(k *Knowledge, s Snapshot, now, week time.Time) (Plan, error) {
 	}
 	g := &gen{
 		k: k, s: s, now: now, week: week, today: civil(now, time.UTC),
-		exp:       experience(s.Profile),
+		exp:       experience(k, s.Profile),
 		minor:     isMinor(k, s.Profile.BirthYear, now),
 		equipment: map[string]bool{},
 		plan: &Plan{WeekStart: week, RulesetVersion: k.Version, Disclaimer: k.Disclaimer(),
@@ -184,6 +184,7 @@ func Generate(k *Knowledge, s Snapshot, now, week time.Time) (Plan, error) {
 		g.selectRung(a)
 	}
 	g.addFeeders()
+	g.antagonistHint()
 	g.ladders = slices.DeleteFunc(g.ladders, func(a *active) bool { return a.rung == nil })
 	g.planDays()
 	g.allocate()
@@ -193,6 +194,24 @@ func Generate(k *Knowledge, s Snapshot, now, week time.Time) (Plan, error) {
 	g.trimTime()
 	g.finish()
 	return *g.plan, nil
+}
+
+// antagonistHint explains a missing counter-direction (GOAL-06): when no
+// rung of the antagonist ladder can be planned, the user sees why.
+func (g *gen) antagonistHint() {
+	for _, a := range g.ladders {
+		if a.rung != nil || !slices.ContainsFunc(a.reasons, func(r Reason) bool { return r.RuleID == RuleAntagonist }) {
+			continue
+		}
+		for _, rung := range a.skill.Rungs { // the easiest rung explains best
+			for _, e := range g.plan.Exclusions {
+				if e.Exercise == rung {
+					g.plan.Hints = append(g.plan.Hints, a.reasons[0], e.Reason)
+					return
+				}
+			}
+		}
+	}
 }
 
 // addFeeders adds the feeder skills of ladders on their eccentric rung

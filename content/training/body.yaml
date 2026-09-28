@@ -58,7 +58,7 @@ load_families:
   label: push_up
   ratings: {wrist: 2, elbow_medial: 1, elbow_lateral: 1, biceps_distal: 0, biceps_long_head_anterior_shoulder: 1,
     shoulder_overhead: 0, shoulder_extension: 1, lumbar: 1, knee: 0, fingers_forearm: 1}
-  ref_bw: 0.64
+  ref_bw: 0.66
   sources: [C-42, C-43, C-41, C-38, C-26, C-28]
   rationale: Handlast 64–75 % KG in Extension [C-26, C-28]; Valgus- und Axiallast gemessen [C-41]; Bizeps
     kein Hauptbeweger; unten moderate Extension/Horizontalabduktion

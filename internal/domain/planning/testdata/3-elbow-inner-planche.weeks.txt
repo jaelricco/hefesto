@@ -1,36 +1,37 @@
-week 1: 4 sessions, 15 sets (4 straight-arm)
+week 1: 4 sessions, 13 sets (2 straight-arm)
   planche=planche-lean pull-up=pull-up+band wrist-conditioning=plank-hold
   regions after: elbow_inner=rtt_1/step 1
-week 2: 4 sessions, 15 sets (4 straight-arm)
+week 2: 4 sessions, 13 sets (2 straight-arm)
   planche=planche-lean pull-up=pull-up+band wrist-conditioning=plank-hold
   changes: ramp_step
   regions after: elbow_inner=rtt_2/step 2
-week 3: 4 sessions, 15 sets (4 straight-arm)
+week 3: 4 sessions, 13 sets (2 straight-arm)
   planche=planche-lean pull-up=pull-up+band wrist-conditioning=plank-hold
   changes: ramp_step
   regions after: elbow_inner=rtt_3/step 2
-week 4: 4 sessions, 15 sets (4 straight-arm)
+week 4: 4 sessions, 13 sets (2 straight-arm)
   planche=planche-lean pull-up=pull-up+band wrist-conditioning=plank-hold
   changes: ramp_step
   regions after: elbow_inner=rtt_4/step 2
-week 5: 4 sessions, 15 sets (4 straight-arm)
+week 5: 4 sessions, 13 sets (2 straight-arm)
   planche=planche-lean pull-up=pull-up+band wrist-conditioning=plank-hold
   changes: ramp_step
   regions after: elbow_inner=rtt_5/step 2
-week 6: 4 sessions, 14 sets (3 straight-arm), deload planned
+week 6: 4 sessions, 13 sets (2 straight-arm), deload planned
   planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
   regions after: elbow_inner=rtt_5/step 2
-week 7: 4 sessions, 16 sets (4 straight-arm)
-  planche=planche-tuck pull-up=pull-up wrist-conditioning=plank-hold
+week 7: 4 sessions, 14 sets (2 straight-arm)
+  planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
   changes: region_state
-week 8: 4 sessions, 17 sets (5 straight-arm)
-  planche=planche-tuck pull-up=pull-up wrist-conditioning=plank-hold
-week 9: 4 sessions, 16 sets (4 straight-arm)
-  planche=planche-tuck pull-up=pull-up wrist-conditioning=plank-hold
-week 10: 4 sessions, 17 sets (5 straight-arm)
-  planche=planche-tuck pull-up=pull-up wrist-conditioning=plank-hold
-week 11: 4 sessions, 18 sets (5 straight-arm)
-  planche=planche-tuck pull-up=pull-up wrist-conditioning=plank-hold
-  changes: deload_scheduled×2
-week 12: 4 sessions, 15 sets (3 straight-arm), deload stagnation
-  planche=planche-tuck pull-up=pull-up wrist-conditioning=plank-hold
+week 8: 4 sessions, 14 sets (2 straight-arm)
+  planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
+week 9: 4 sessions, 14 sets (2 straight-arm)
+  planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
+week 10: 3 sessions, 11 sets (2 straight-arm)
+  hollow-body=hollow-hold planche=planche-lean push-up=push-up
+  changes: probe_offered
+week 11: 4 sessions, 12 sets (3 straight-arm)
+  hollow-body=hollow-hold planche=planche-tuck,planche-lean push-up=push-up
+  changes: probe_offered
+week 12: 3 sessions, 9 sets (2 straight-arm), deload planned
+  planche=planche-lean pull-up=pull-up

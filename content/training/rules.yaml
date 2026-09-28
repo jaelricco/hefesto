@@ -213,6 +213,12 @@ rules:
   text: Gleichwertige Varianten wechseln zwischen den Einheiten; die Arbeitsstufe bleibt.
   params: [PAR-E-24, PAR-E-34]
   evidence: A/B
+- id: SEL-12
+  title: Vorsichtiger Einstieg
+  text: Deine Angabe zu {skill} passt nicht zu deinen Grundlagen. Die App beginnt deshalb bei der Stufe,
+    die dazu passt, und prüft sie mit Kalibrierungssätzen.
+  params: [PAR-S-44, PAR-S-46]
+  evidence: H
 - id: DOSE-01
   title: Dosis Halt
   text: '{sets} × {hold_s} s: etwa 70 % deiner geschätzten Maximalhaltezeit von {max_s} s, damit Reserve
