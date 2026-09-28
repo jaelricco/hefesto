@@ -146,6 +146,48 @@ type MediaAsset struct {
 	DeletedAt      *time.Time
 }
 
+type PlanDecision struct {
+	ID         uuid.UUID
+	UserID     uuid.UUID
+	Trigger    string
+	SourceID   string
+	OccurredAt time.Time
+	Changes    []byte
+}
+
+type PlannedSession struct {
+	ID               uuid.UUID
+	UserID           uuid.UUID
+	PlanID           uuid.UUID
+	OrderIndex       int32
+	ScheduledDate    pgtype.Date
+	Kind             string
+	EstMinutes       float64
+	Status           string
+	WorkoutSessionID *uuid.UUID
+}
+
+type PlannerSession struct {
+	ID         uuid.UUID
+	UserID     uuid.UUID
+	LocalDate  time.Time
+	Deload     bool
+	Fatigue    *float64
+	Sets       []byte
+	Position   int32
+	ReceivedAt time.Time
+}
+
+type PlanningConstraint struct {
+	ID        uuid.UUID
+	UserID    uuid.UUID
+	Kind      string
+	Region    *string
+	CreatedAt time.Time
+	Position  int32
+	ClearedAt *time.Time
+}
+
 type RefreshToken struct {
 	ID            uuid.UUID
 	UserID        uuid.UUID
@@ -380,6 +422,17 @@ type TemplateSetEntry struct {
 	DeletedAt         *time.Time
 }
 
+type TrainingPlan struct {
+	ID             uuid.UUID
+	UserID         uuid.UUID
+	WeekStart      pgtype.Date
+	RulesetVersion string
+	InputHash      string
+	Status         string
+	Payload        []byte
+	CreatedAt      time.Time
+}
+
 type User struct {
 	ID                  uuid.UUID
 	Email               *string
@@ -419,6 +472,20 @@ type UserBodyweightLog struct {
 	DeletedAt       *time.Time
 }
 
+type UserCapacityEstimate struct {
+	UserID     uuid.UUID
+	Exercise   string
+	Assistance string
+	Mu         float64
+	Sigma      float64
+	Origin     string
+	ObservedAt *time.Time
+	SeenAt     *time.Time
+	NObs       int32
+	Pending    *float64
+	UpdatedAt  time.Time
+}
+
 type UserExerciseBest struct {
 	UserID               uuid.UUID
 	ExerciseID           uuid.UUID
@@ -430,6 +497,97 @@ type UserExerciseBest struct {
 	EvidenceSetElementID *uuid.UUID
 	Occurrences30d       int32
 	UpdatedAt            time.Time
+}
+
+type UserGoal struct {
+	ID          uuid.UUID
+	UserID      uuid.UUID
+	Skill       string
+	TargetLevel string
+	Priority    *int16
+	TargetDate  *time.Time
+	Status      string
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+}
+
+type UserLadderState struct {
+	UserID     uuid.UUID
+	Skill      string
+	Rung       *string
+	Status     *string
+	Since      *time.Time
+	Exposures  int32
+	Claimed    *string
+	CapRung    *string
+	ProbeOffer bool
+	RepTarget  float64
+	LoadKg     float64
+	EccS       float64
+	LastUp     *time.Time
+	CapTo      *string
+	CapUntil   *time.Time
+	UpdatedAt  time.Time
+}
+
+type UserPainReport struct {
+	ID                 uuid.UUID
+	UserID             uuid.UUID
+	Region             string
+	Timepoint          string
+	Nrs                float64
+	LastedOver1h       bool
+	PersistedOver15min bool
+	SuddenSharp        bool
+	SessionID          *uuid.UUID
+	ReportedAt         time.Time
+	Position           int32
+	CreatedAt          time.Time
+}
+
+type UserPlannerState struct {
+	UserID     uuid.UUID
+	MesoStart  *time.Time
+	LastDeload *time.Time
+	DeloadWeek *time.Time
+	DeloadKind *string
+	DeloadNext *string
+	Calibrate  []string
+	Headroom   []byte
+	Entry      []byte
+	Unlocked   []byte
+	UpdatedAt  time.Time
+}
+
+type UserRegionStatus struct {
+	UserID        uuid.UUID
+	Region        string
+	State         string
+	EnteredVia    *string
+	Since         *time.Time
+	StartFraction float64
+	Step          int16
+	StepSince     *time.Time
+	StepSessions  int32
+	Reference     []byte
+	PriorInjury   bool
+	Complaint     bool
+	ComplaintAt   *time.Time
+	Restrictions  []string
+	Breaches      []time.Time
+	PainDeloadTo  *time.Time
+	RestUntil     *time.Time
+	HoldAtRef     bool
+	Referral      *string
+	UpdatedAt     time.Time
+}
+
+type UserScreening struct {
+	UserID           uuid.UUID
+	ExertionSymptoms bool
+	AnyYes           bool
+	Cleared          bool
+	UpdatedAt        time.Time
 }
 
 type UserSkillState struct {
@@ -457,6 +615,20 @@ type UserStreak struct {
 	UpdatedAt              time.Time
 }
 
+type UserTrainingBreak struct {
+	UserID       uuid.UUID
+	Days         float64
+	StraightDays float64
+	Since        *time.Time
+	Step         int16
+	StepSince    *time.Time
+	StepSessions int32
+	Logged       bool
+	Reference    []byte
+	Base         []byte
+	UpdatedAt    time.Time
+}
+
 type UserTrainingDay struct {
 	UserID          uuid.UUID
 	LocalDate       pgtype.Date
@@ -466,6 +638,27 @@ type UserTrainingDay struct {
 	Deload          bool
 	FreezeUsed      bool
 	CountsForStreak bool
+}
+
+type UserTrainingProfile struct {
+	UserID              uuid.UUID
+	BirthYear           int16
+	SessionsPerWeek     int16
+	SessionMinutes      int16
+	Equipment           []string
+	BodyweightKg        float64
+	TrainingLevel       string
+	TrainingMonths      float64
+	LastRegularTraining *string
+	HealthDataConsent   bool
+	DisclaimerAck       bool
+	OnboardedAt         time.Time
+	PreferredDays       []int16
+	Mobility            []byte
+	MaxAddedLoadKg      float64
+	SmallestPlateKg     float64
+	CreatedAt           time.Time
+	UpdatedAt           time.Time
 }
 
 type UserXpEvent struct {

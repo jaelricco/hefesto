@@ -23,6 +23,7 @@ type Querier interface {
 	// stalled (in progress for five minutes, same request) is taken. Returns no
 	// row when the key is live and held.
 	ClaimIdempotencyKey(ctx context.Context, arg ClaimIdempotencyKeyParams) (string, error)
+	ClearConstraint(ctx context.Context, arg ClearConstraintParams) error
 	// Freezes are recomputed from scratch: clear the old ones, then mark the
 	// days the current walk bridged.
 	ClearFreezes(ctx context.Context, userID uuid.UUID) error
@@ -33,16 +34,24 @@ type Querier interface {
 	CountedDays(ctx context.Context, userID uuid.UUID) ([]pgtype.Date, error)
 	// Users, devices, refresh tokens and Apple identities.
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
+	// --------------------------------------------------------------- decisions
+	DecisionSeen(ctx context.Context, arg DecisionSeenParams) (bool, error)
 	DeleteAllSkillEdges(ctx context.Context) error
+	DeleteCapacityEstimate(ctx context.Context, arg DeleteCapacityEstimateParams) error
 	DeleteEmptyFreezeDays(ctx context.Context, userID uuid.UUID) error
 	DeleteInjuryPrehab(ctx context.Context, riskID uuid.UUID) error
 	// Injury content references no user rows, so entries gone from a skill file
 	// are deleted outright.
 	DeleteInjuryRisksNotIn(ctx context.Context, arg DeleteInjuryRisksNotInParams) error
+	DeleteLadderState(ctx context.Context, arg DeleteLadderStateParams) error
+	DeleteRegionStatus(ctx context.Context, arg DeleteRegionStatusParams) error
+	DeleteScreening(ctx context.Context, userID uuid.UUID) error
 	// Associations carry no user data, so they are replaced wholesale.
 	DeleteSkillLevelExercises(ctx context.Context, skillLevelID uuid.UUID) error
+	DeleteTrainingBreak(ctx context.Context, userID uuid.UUID) error
 	DetachMedia(ctx context.Context, arg DetachMediaParams) error
 	DetachOtherElementMedia(ctx context.Context, arg DetachOtherElementMediaParams) error
+	DropGoal(ctx context.Context, arg DropGoalParams) error
 	ExerciseStatuses(ctx context.Context, ids []uuid.UUID) ([]ExerciseStatusesRow, error)
 	// Uploads never completed: their objects, if any, are removed and the asset
 	// marked failed.
@@ -51,6 +60,8 @@ type Querier interface {
 	// the seed re-checks the graph as the database now holds it. Returns the ids
 	// of levels that can reach themselves through prerequisite edges.
 	FindPrerequisiteCycles(ctx context.Context) ([]uuid.UUID, error)
+	// ------------------------------------------------------------------- plans
+	GetActivePlan(ctx context.Context, arg GetActivePlanParams) (TrainingPlan, error)
 	GetAppleIdentity(ctx context.Context, appleSub string) (AppleIdentity, error)
 	GetBlock(ctx context.Context, arg GetBlockParams) (SessionBlock, error)
 	GetBodyweight(ctx context.Context, arg GetBodyweightParams) (UserBodyweightLog, error)
@@ -67,24 +78,40 @@ type Querier interface {
 	// the /v1/skills ETag.
 	GetLatestContentVersion(ctx context.Context) (ContentVersion, error)
 	GetMediaAsset(ctx context.Context, arg GetMediaAssetParams) (MediaAsset, error)
+	// ----------------------------------------------------- phase and bookkeeping
+	GetPlannerState(ctx context.Context, userID uuid.UUID) (UserPlannerState, error)
 	// Locks the row: two concurrent refreshes with the same token must not both
 	// succeed.
 	GetRefreshTokenForUpdate(ctx context.Context, tokenHash []byte) (RefreshToken, error)
+	// --------------------------------------------------------------- screening
+	GetScreening(ctx context.Context, userID uuid.UUID) (UserScreening, error)
 	GetSession(ctx context.Context, arg GetSessionParams) (WorkoutSession, error)
 	// Any session row of the user's, tombstones included.
 	GetSessionAny(ctx context.Context, arg GetSessionAnyParams) (WorkoutSession, error)
 	GetSessionForUpdate(ctx context.Context, arg GetSessionForUpdateParams) (WorkoutSession, error)
 	GetSetEntry(ctx context.Context, arg GetSetEntryParams) (SetEntry, error)
 	GetStreak(ctx context.Context, userID uuid.UUID) (UserStreak, error)
+	// ------------------------------------------------------------------ breaks
+	GetTrainingBreak(ctx context.Context, userID uuid.UUID) (UserTrainingBreak, error)
+	// ----------------------------------------------------------------- profile
+	GetTrainingProfile(ctx context.Context, userID uuid.UUID) (UserTrainingProfile, error)
 	GetUnlockEvent(ctx context.Context, arg GetUnlockEventParams) (SkillUnlockEvent, error)
 	GetUserByEmail(ctx context.Context, email *string) (User, error)
 	GetUserByID(ctx context.Context, id uuid.UUID) (User, error)
 	GetUserSkillState(ctx context.Context, arg GetUserSkillStateParams) (UserSkillState, error)
 	InsertAppleIdentity(ctx context.Context, arg InsertAppleIdentityParams) error
+	InsertConstraint(ctx context.Context, arg InsertConstraintParams) error
 	InsertContentVersion(ctx context.Context, arg InsertContentVersionParams) error
+	InsertDecision(ctx context.Context, arg InsertDecisionParams) error
+	InsertGoal(ctx context.Context, arg InsertGoalParams) error
 	InsertInjuryPrehab(ctx context.Context, arg InsertInjuryPrehabParams) error
 	// Media assets and their attachment to set elements.
 	InsertMediaAsset(ctx context.Context, arg InsertMediaAssetParams) (MediaAsset, error)
+	// A report the client already wrote keeps its row.
+	InsertPainReport(ctx context.Context, arg InsertPainReportParams) (int64, error)
+	InsertPlan(ctx context.Context, arg InsertPlanParams) error
+	InsertPlannedSession(ctx context.Context, arg InsertPlannedSessionParams) error
+	InsertPlannerSession(ctx context.Context, arg InsertPlannerSessionParams) error
 	InsertRefreshToken(ctx context.Context, arg InsertRefreshTokenParams) error
 	// Sessions -> blocks -> set entries -> set elements (+ assistance).
 	//
@@ -102,11 +129,18 @@ type Querier interface {
 	InsertXPEvent(ctx context.Context, arg InsertXPEventParams) (int32, error)
 	// ------------------------------------------------------------- last set
 	LastSetWithExercise(ctx context.Context, arg LastSetWithExerciseParams) (LastSetWithExerciseRow, error)
+	// ------------------------------------------------------------- constraints
+	ListActiveConstraints(ctx context.Context, userID uuid.UUID) ([]PlanningConstraint, error)
+	// ------------------------------------------------------------------- goals
+	ListActiveGoals(ctx context.Context, userID uuid.UUID) ([]UserGoal, error)
 	// ----------------------------------------------------------- assistance
 	ListAssistance(ctx context.Context, arg ListAssistanceParams) ([]SetElementAssistance, error)
 	ListBandsForUser(ctx context.Context, ownerUserID *uuid.UUID) ([]Band, error)
 	// --------------------------------------------------------------- blocks
 	ListBlocks(ctx context.Context, arg ListBlocksParams) ([]SessionBlock, error)
+	// -------------------------------------------------------------- capacities
+	ListCapacityEstimates(ctx context.Context, userID uuid.UUID) ([]UserCapacityEstimate, error)
+	ListDecisions(ctx context.Context, userID uuid.UUID) ([]PlanDecision, error)
 	ListElementMedia(ctx context.Context, arg ListElementMediaParams) ([]ListElementMediaRow, error)
 	ListElementsOfSet(ctx context.Context, arg ListElementsOfSetParams) ([]SetElement, error)
 	// Exercises and bands as the API reads them.
@@ -120,6 +154,15 @@ type Querier interface {
 	// ----------------------------------------------------------------- graph
 	ListGraphSkills(ctx context.Context) ([]ListGraphSkillsRow, error)
 	ListInjuryPrehab(ctx context.Context, skillID uuid.UUID) ([]ListInjuryPrehabRow, error)
+	// ----------------------------------------------------------------- ladders
+	ListLadderStates(ctx context.Context, userID uuid.UUID) ([]UserLadderState, error)
+	// ------------------------------------------------------------ pain reports
+	ListPainReports(ctx context.Context, userID uuid.UUID) ([]UserPainReport, error)
+	ListPlannedSessions(ctx context.Context, arg ListPlannedSessionsParams) ([]PlannedSession, error)
+	// ----------------------------------------------------------------- history
+	ListPlannerSessions(ctx context.Context, userID uuid.UUID) ([]PlannerSession, error)
+	// ----------------------------------------------------------------- regions
+	ListRegionStatus(ctx context.Context, userID uuid.UUID) ([]UserRegionStatus, error)
 	// Newest first; the cursor is the (started_at, id) of the last row seen.
 	ListSessions(ctx context.Context, arg ListSessionsParams) ([]ListSessionsRow, error)
 	// ------------------------------------------------------------- elements
@@ -131,6 +174,12 @@ type Querier interface {
 	ListUnlockEventsForSession(ctx context.Context, arg ListUnlockEventsForSessionParams) ([]SkillUnlockEvent, error)
 	// ----------------------------------------------------------- user state
 	ListUserSkillStates(ctx context.Context, userID uuid.UUID) ([]UserSkillState, error)
+	// The training planner: snapshot parts, plans and the decision log.
+	// internal/store/planning.go assembles them; see ADR 0013.
+	// Serialises the planner calls of one user for the rest of the
+	// transaction. The first key names the planner, so other advisory locks
+	// cannot collide with it.
+	LockPlanner(ctx context.Context, userID uuid.UUID) error
 	LockUserProgress(ctx context.Context, userKey string) error
 	MarkFreezeDays(ctx context.Context, arg MarkFreezeDaysParams) error
 	MarkMediaFailed(ctx context.Context, arg MarkMediaFailedParams) (MediaAsset, error)
@@ -139,6 +188,9 @@ type Querier interface {
 	MarkSessionCompleted(ctx context.Context, arg MarkSessionCompletedParams) (WorkoutSession, error)
 	// --------------------------------------------------------------- streaks
 	MarkTrainingDay(ctx context.Context, arg MarkTrainingDayParams) error
+	NextConstraintPosition(ctx context.Context, userID uuid.UUID) (int32, error)
+	NextPainPosition(ctx context.Context, userID uuid.UUID) (int32, error)
+	NextPlannerSessionPosition(ctx context.Context, userID uuid.UUID) (int32, error)
 	// ----------------------------------------------------------------- history
 	// Every performed element of the named exercises, from completed sessions.
 	// Planned sets, deleted rows and abandoned or draft sessions are not evidence.
@@ -174,6 +226,7 @@ type Querier interface {
 	// Parks and tombstones live sets of a block, or of the whole session, or one set.
 	SoftDeleteSetEntries(ctx context.Context, arg SoftDeleteSetEntriesParams) error
 	SoftDeleteUserBand(ctx context.Context, arg SoftDeleteUserBandParams) (int64, error)
+	SupersedeActivePlan(ctx context.Context, arg SupersedeActivePlanParams) error
 	SyncAssistanceOfSets(ctx context.Context, arg SyncAssistanceOfSetsParams) ([]SetElementAssistance, error)
 	SyncBlocks(ctx context.Context, arg SyncBlocksParams) ([]SessionBlock, error)
 	SyncBodyweight(ctx context.Context, arg SyncBodyweightParams) ([]UserBodyweightLog, error)
@@ -196,6 +249,7 @@ type Querier interface {
 	TotalXP(ctx context.Context, userID uuid.UUID) (int32, error)
 	// Touches the elements an asset is attached to, so the detachment syncs.
 	TouchElementsWithMedia(ctx context.Context, arg TouchElementsWithMediaParams) error
+	UpdateGoal(ctx context.Context, arg UpdateGoalParams) error
 	UpdateSession(ctx context.Context, arg UpdateSessionParams) (WorkoutSession, error)
 	UpdateUserProfile(ctx context.Context, arg UpdateUserProfileParams) (User, error)
 	UpsertAssistance(ctx context.Context, arg UpsertAssistanceParams) (uuid.UUID, error)
@@ -206,6 +260,7 @@ type Querier interface {
 	// Inserts, or replaces a live entry of the same user. No row for a tombstone
 	// or another user's id.
 	UpsertBodyweight(ctx context.Context, arg UpsertBodyweightParams) (UserBodyweightLog, error)
+	UpsertCapacityEstimate(ctx context.Context, arg UpsertCapacityEstimateParams) error
 	// A device id is claimed by the first account that signs in with it and is
 	// never re-owned: the row returns nothing if another account holds the id.
 	UpsertDevice(ctx context.Context, arg UpsertDeviceParams) (uuid.UUID, error)
@@ -213,11 +268,17 @@ type Querier interface {
 	UpsertFamily(ctx context.Context, arg UpsertFamilyParams) (uuid.UUID, error)
 	UpsertGlobalBand(ctx context.Context, arg UpsertGlobalBandParams) error
 	UpsertInjuryRisk(ctx context.Context, arg UpsertInjuryRiskParams) (uuid.UUID, error)
+	UpsertLadderState(ctx context.Context, arg UpsertLadderStateParams) error
+	UpsertPlannerState(ctx context.Context, arg UpsertPlannerStateParams) error
+	UpsertRegionStatus(ctx context.Context, arg UpsertRegionStatusParams) error
+	UpsertScreening(ctx context.Context, arg UpsertScreeningParams) error
 	UpsertSetElement(ctx context.Context, arg UpsertSetElementParams) (uuid.UUID, error)
 	UpsertSetEntry(ctx context.Context, arg UpsertSetEntryParams) (UpsertSetEntryRow, error)
 	UpsertSkill(ctx context.Context, arg UpsertSkillParams) (uuid.UUID, error)
 	UpsertSkillLevel(ctx context.Context, arg UpsertSkillLevelParams) (uuid.UUID, error)
 	UpsertStreak(ctx context.Context, arg UpsertStreakParams) error
+	UpsertTrainingBreak(ctx context.Context, arg UpsertTrainingBreakParams) error
+	UpsertTrainingProfile(ctx context.Context, arg UpsertTrainingProfileParams) error
 	// first_achieved_at, evidence and verification are only ever set once: the
 	// COALESCEs keep them, and the monotonic trigger refuses anything else.
 	UpsertUserSkillState(ctx context.Context, arg UpsertUserSkillStateParams) error
