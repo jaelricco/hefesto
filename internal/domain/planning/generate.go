@@ -28,15 +28,18 @@ type Plan struct {
 	Disclaimer     string             `json:"disclaimer"`
 }
 
-// PlannedSession is one session of the plan.
+// PlannedSession is one session of the plan. Status and WorkoutSessionID
+// are the store's: whether the session was started, and its log session.
 type PlannedSession struct {
-	ID         string    `json:"id,omitempty"`
-	Index      int       `json:"index"`
-	Date       time.Time `json:"date"`
-	Kind       string    `json:"kind"` // full, light, deload
-	EstMinutes float64   `json:"est_minutes"`
-	Blocks     []Block   `json:"blocks"`
-	Reasons    []Reason  `json:"reasons,omitempty"`
+	ID               string    `json:"id,omitempty"`
+	Status           string    `json:"status,omitempty"`
+	WorkoutSessionID string    `json:"workout_session_id,omitempty"`
+	Index            int       `json:"index"`
+	Date             time.Time `json:"date"`
+	Kind             string    `json:"kind"` // full, light, deload
+	EstMinutes       float64   `json:"est_minutes"`
+	Blocks           []Block   `json:"blocks"`
+	Reasons          []Reason  `json:"reasons,omitempty"`
 }
 
 // Session kinds.
@@ -65,8 +68,10 @@ type Block struct {
 	Reasons []Reason `json:"reasons,omitempty"`
 }
 
-// Item is a group of identical planned sets of one exercise.
+// Item is a group of identical planned sets of one exercise. The ID is the
+// service's; a logged set refers to it (spec §10.2).
 type Item struct {
+	ID          string   `json:"id,omitempty"`
 	Exercise    string   `json:"exercise"`
 	Skill       string   `json:"skill,omitempty"`
 	Stimulus    string   `json:"stimulus"`
@@ -161,14 +166,9 @@ func Generate(k *Knowledge, s Snapshot, now, week time.Time) (Plan, error) {
 	g.weekIdx = int(math.Floor(daysBetween(weekStart(s.Profile.OnboardedAt), week) / 7))
 
 	// SAFE-07, SAFE-02.
-	if g.minor {
+	if rule := k.StopRule(s, now); rule != "" {
 		g.plan.Stopped = true
-		g.plan.Reasons = append(g.plan.Reasons, k.reason(RuleMinor))
-		return *g.plan, nil
-	}
-	if hasConstraint(s, ConstraintStopped) || s.Screening.ExertionSymptoms && !s.Screening.Cleared {
-		g.plan.Stopped = true
-		g.plan.Reasons = append(g.plan.Reasons, k.reason(RuleStopped))
+		g.plan.Reasons = append(g.plan.Reasons, k.reason(rule))
 		return *g.plan, nil
 	}
 	if s.Screening.AnyYes && !s.Screening.Cleared {
