@@ -42,7 +42,7 @@ struct SetComposer: View {
                         .themedRow()
                         if draft.exercise != nil { ElementFields(draft: $draft) }
                     } header: {
-                        CapsLabel(elements.count > 1 ? LocalizedStringKey("Combo, part \(index + 1)") : "Set")
+                        Text(elements.count > 1 ? LocalizedStringKey("Combo, part \(index + 1)") : "Set")
                     } footer: {
                         if elements.count > 1 {
                             Button("Remove this part", role: .destructive) {

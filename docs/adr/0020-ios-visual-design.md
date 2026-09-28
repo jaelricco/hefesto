@@ -63,9 +63,11 @@ warm throughout; C, light paper and typography. The owner chose B.
   "Hefesto Demo" scheme starts it in German. The seed uses only local store
   types, never generated API types, so API changes cannot break the build
   through it. None of it is compiled into Release builds.
-- The real skills and criteria in the seed follow `content/`. The locked
-  skills on the demo map carry only names from the project brief. This is
-  fixture data, not content.
+- The real skills and criteria in the seed follow `content/`. The other
+  skills on the demo map (push-up, dip, planche, muscle-up) and the
+  prerequisites between them follow the researched planner content
+  (`content/training/skills.yaml`), names and edges only. This is fixture
+  data, not content.
 - **`.github/workflows/ios-screenshots.yml`** runs `scripts/ios-screenshots.sh`
   on the self-hosted Mac when the app's views change. It boots one simulator,
   "Hefesto Screenshots", captures every demo screen in German and uploads them

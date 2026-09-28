@@ -41,6 +41,19 @@ struct LoggerView: View {
                     }
                 }
             }
+            // The rest stays in view however many sets are above or below it.
+            .safeAreaInset(edge: .top, spacing: 0) {
+                if let logger, let rest = logger.rest {
+                    RestCard(rest: rest) { skipRest(logger) }
+                        .padding(.horizontal, 20)
+                        .padding(.top, 16)
+                        .padding(.bottom, 18)
+                        .background(Palette.surface, in: .rect(cornerRadius: 20))
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 8)
+                        .background(Palette.background)
+                }
+            }
             .safeAreaInset(edge: .bottom) {
                 if let logger, isDraft, !logger.session.isRestDay { bottomBar(logger) }
             }
@@ -78,20 +91,28 @@ struct LoggerView: View {
 
     @ViewBuilder
     private func content(_ logger: LoggerModel) -> some View {
-        List {
-            if let rest = logger.rest {
-                Section {
-                    RestCard(rest: rest) { skipRest(logger) }
-                        .listRowInsets(EdgeInsets(top: 16, leading: 20, bottom: 18, trailing: 20))
-                        .themedRow()
+        // The set the athlete logged last: the list keeps it in view.
+        let latest = logger.tree.blocks.flatMap(\.sets)
+            .max { ($0.entry.completedAt ?? .distantPast) < ($1.entry.completedAt ?? .distantPast) }?.id
+        ScrollViewReader { proxy in
+            sets(logger)
+                .task(id: latest) {
+                    guard let latest else { return }
+                    try? await Task.sleep(for: .milliseconds(100))
+                    withAnimation(.snappy) { proxy.scrollTo(latest, anchor: .bottom) }
                 }
-            }
+        }
+    }
+
+    private func sets(_ logger: LoggerModel) -> some View {
+        List {
             ForEach(Array(logger.tree.blocks.enumerated()), id: \.element.id) { i, block in
                 Section {
                     ForEach(Array(block.sets.enumerated()), id: \.element.id) { n, set in
                         SetRow(number: n + 1, set: set, exercises: exercises) {
                             repeatSet(set, in: block.id, logger)
                         }
+                        .id(set.id)
                         .themedRow()
                         .swipeActions {
                             Button("Delete", systemImage: "trash", role: .destructive) {

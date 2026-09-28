@@ -37,8 +37,10 @@ struct DemoRun {
 // in memory, nothing sent anywhere. The "Hefesto Demo" scheme does the first.
 //
 // This is fixture data for looking at the design, like a test's. The three
-// real skills and their criteria follow content/skills; the locked ones only
-// carry names from the project brief. None of it is content, and none of it
+// real skills and their criteria follow content/skills. Push-up, dip, planche
+// and muscle-up, and the prerequisites between them, follow the researched
+// planner content (content/training/skills.yaml on the planner branch):
+// names and edges only, no criteria. None of it is content, and none of it
 // reaches a Release build.
 extension DemoRun {
     static var requestedScreen: DemoScreen? {
@@ -94,10 +96,10 @@ extension DemoRun {
             faults: ["Hips sagging below shoulder line", "Elbows bending to shorten the lever"])
         let pull = skill("pull-up", "Pull-up", "pull", tier: 2, milestone: false, x: 340, y: 360)
         let handstand = skill("handstand", "Handstand", "handstand", tier: 3, milestone: true, x: 80, y: 240)
-        let planche = skill("planche", "Planche", "push", tier: 8, milestone: true, x: 110, y: 110)
-        let maltese = skill("maltese", "Maltese", "push", tier: 10, milestone: false, x: 200, y: 20)
-        let flag = skill("human-flag", "Human Flag", "core", tier: 7, milestone: false, x: 470, y: 60)
-        let muscleUp = skill("muscle-up", "Muscle-up", "dynamic", tier: 5, milestone: false, x: 470, y: 290)
+        let pushUp = skill("push-up", "Push-up", "push", tier: 1, milestone: false, x: 170, y: 380)
+        let dip = skill("dip", "Dip", "push", tier: 3, milestone: false, x: 520, y: 400)
+        let planche = skill("planche", "Planche", "push", tier: 8, milestone: true, x: 160, y: 120)
+        let muscleUp = skill("muscle-up", "Muscle-up", "dynamic", tier: 5, milestone: true, x: 500, y: 220)
 
         let strict5 = SkillLevel(
             id: "demo-level-strict-5", skillId: pull.id, orderIndex: 1, slug: "strict-5", name: "Five Strict Pull-ups",
@@ -116,8 +118,8 @@ extension DemoRun {
         func only(_ s: Skill) -> SkillLevel {
             SkillLevel(id: "demo-level-\(s.slug)", skillId: s.id, orderIndex: 1, slug: s.slug, name: s.name)
         }
-        let plancheLevel = only(planche), malteseLevel = only(maltese)
-        let flagLevel = only(flag), muscleUpLevel = only(muscleUp)
+        let pushUpLevel = only(pushUp), dipLevel = only(dip)
+        let plancheLevel = only(planche), muscleUpLevel = only(muscleUp)
 
         try db.replaceSkillMap(SkillMapSnapshot(
             contentVersion: "demo",
@@ -125,18 +127,17 @@ extension DemoRun {
                 SkillWithLevels(skill: frontLever, levels: [tuckLevel, advLevel]),
                 SkillWithLevels(skill: pull, levels: [strict5]),
                 SkillWithLevels(skill: handstand, levels: [wall]),
+                SkillWithLevels(skill: pushUp, levels: [pushUpLevel]),
+                SkillWithLevels(skill: dip, levels: [dipLevel]),
                 SkillWithLevels(skill: planche, levels: [plancheLevel]),
-                SkillWithLevels(skill: maltese, levels: [malteseLevel]),
-                SkillWithLevels(skill: flag, levels: [flagLevel]),
                 SkillWithLevels(skill: muscleUp, levels: [muscleUpLevel]),
             ],
             edges: [
                 SkillEdge(fromLevelId: strict5.id, toLevelId: tuckLevel.id),
                 SkillEdge(fromLevelId: tuckLevel.id, toLevelId: advLevel.id),
+                SkillEdge(fromLevelId: pushUpLevel.id, toLevelId: plancheLevel.id),
                 SkillEdge(fromLevelId: strict5.id, toLevelId: muscleUpLevel.id),
-                SkillEdge(fromLevelId: wall.id, toLevelId: plancheLevel.id),
-                SkillEdge(fromLevelId: plancheLevel.id, toLevelId: malteseLevel.id),
-                SkillEdge(fromLevelId: advLevel.id, toLevelId: flagLevel.id),
+                SkillEdge(fromLevelId: dipLevel.id, toLevelId: muscleUpLevel.id),
             ],
             states: [
                 LevelState(levelId: strict5.id, state: "unlocked", bestValue: 8, bestUnit: "reps",
@@ -145,9 +146,9 @@ extension DemoRun {
                            firstAchievedAt: day(4, 18, 40), verification: "auto", attemptsCount: 7),
                 LevelState(levelId: advLevel.id, state: "available", bestValue: 6, bestUnit: "hold_seconds"),
                 LevelState(levelId: wall.id, state: "in_progress", bestValue: 30, bestUnit: "hold_seconds"),
+                LevelState(levelId: pushUpLevel.id, state: "available", bestValue: 6, bestUnit: "reps"),
+                LevelState(levelId: dipLevel.id, state: "available"),
                 LevelState(levelId: plancheLevel.id, state: "locked"),
-                LevelState(levelId: malteseLevel.id, state: "locked"),
-                LevelState(levelId: flagLevel.id, state: "locked"),
                 LevelState(levelId: muscleUpLevel.id, state: "locked"),
             ]),
             now: now)

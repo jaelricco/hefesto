@@ -40,12 +40,8 @@ struct SkillDetailView: View {
             }
         }
         .themedScreen()
-        .navigationTitle(skill.map { Text(verbatim: $0.skill.name) } ?? Text(verbatim: ""))
+        // The name is the page's own title; the bar keeps only the way back.
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            // The name is the page's own title; the bar keeps only the way back.
-            ToolbarItem(placement: .principal) { EmptyView() }
-        }
         .confirmationDialog(
             "Mark as achieved?", isPresented: .constant(attesting != nil), titleVisibility: .visible,
             presenting: attesting

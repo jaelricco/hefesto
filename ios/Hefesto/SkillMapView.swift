@@ -386,16 +386,16 @@ struct ProgressBadge: View {
     @State private var progress: AthleteProgress?
 
     var body: some View {
-        Group {
+        // An HStack even when empty: an empty Group never appears, and its
+        // task would never load the progress.
+        HStack(spacing: style == .chips ? 8 : 10) {
             if let progress {
-                HStack(spacing: style == .chips ? 8 : 10) {
                     item(Text("\(progress.xpTotal) XP"), icon: "star.fill", iconTint: Palette.gold, textTint: Palette.gold)
                     if progress.currentDays > 0 {
                         item(Text("\(progress.currentDays)"), icon: "flame.fill", iconTint: Palette.ember,
                              textTint: style == .chips ? Palette.text : Palette.ember)
-                            .accessibilityElement(children: .ignore)
-                            .accessibilityLabel(Text("\(progress.currentDays)-day streak"))
-                    }
+                        .accessibilityElement(children: .ignore)
+                        .accessibilityLabel(Text("\(progress.currentDays)-day streak"))
                 }
             }
         }
