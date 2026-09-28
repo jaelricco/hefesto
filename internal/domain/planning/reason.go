@@ -115,6 +115,7 @@ const (
 	RuleMissed     = "ADAPT-15"
 	RuleBreak      = "ADAPT-16"
 	RuleCheckin    = "ADAPT-17"
+	RuleAdjusted   = "ADAPT-19"
 
 	RuleRedFlagAsk  = "INJ-01"
 	RuleRedFlagAct  = "INJ-02"
@@ -141,6 +142,7 @@ var requiredRules = []string{
 	RulePairing, RuleNewRung, RuleTrim, RuleMinStep,
 	RuleCapacity, RuleContradict, RuleHoldGrowth, RuleProbe, RuleRungUp, RuleProbeGate, RuleDoubleProg, RuleUndulating,
 	RuleLoadProg, RuleEccToConc, RuleAutoreg, RuleRungDown, RulePlateau, RuleDeload, RuleMissed, RuleBreak, RuleCheckin,
+	RuleAdjusted,
 	RuleRedFlagAsk, RuleRedFlagAct, RuleRegionState, RuleMatrix, RuleModify, RuleRamp, RulePain, RuleReferral,
 	RuleMinorRules, RuleRestriction,
 }

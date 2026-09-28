@@ -42,9 +42,11 @@ type ConsentChange struct {
 
 // Change is one adaptation the user sees (spec §6.14).
 type Change struct {
-	Kind    string   `json:"kind"`
-	Skill   string   `json:"skill,omitempty"`
-	Region  string   `json:"region,omitempty"`
+	Kind   string `json:"kind"`
+	Skill  string `json:"skill,omitempty"`
+	Region string `json:"region,omitempty"`
+	// Session is the log session a session_adjusted change adjusted.
+	Session string   `json:"session,omitempty"`
 	From    string   `json:"from,omitempty"`
 	To      string   `json:"to,omitempty"`
 	Reasons []Reason `json:"reasons"`
@@ -65,6 +67,7 @@ const (
 	ChangeStopped     = "training_stopped"
 	ChangeBreak       = "ramp_started"
 	ChangeConsent     = "consent_changed"
+	ChangeAdjusted    = "session_adjusted"
 )
 
 // ErrUnknownEvent is returned for an event kind Adapt does not know.

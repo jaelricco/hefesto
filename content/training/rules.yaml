@@ -477,6 +477,8 @@ rules:
   evidence: A/H
 - {id: ADAPT-18, title: Freischaltungen, text: 'Freigeschaltete Stufen bleiben freigeschaltet; die Karte
     zeigt, was du erreicht hast.', evidence: –}
+- {id: ADAPT-19, title: Laufende Einheit, text: 'Deine laufende Einheit folgt dem geänderten Plan: offene
+    Sätze sind angepasst, erledigte bleiben.', evidence: Projektvorgabe}
 - id: INJ-01
   title: Fragen zu Warnzeichen
   text: Zu deiner Angabe {region} stellt die App kurze Fragen zu Warnzeichen.

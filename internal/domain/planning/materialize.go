@@ -71,41 +71,48 @@ const maxRIR = 10
 func Materialize(k *Knowledge, p PlannedSession, newID func() string) SessionDraft {
 	var d SessionDraft
 	for _, b := range p.Blocks {
-		db := DraftBlock{ID: newID(), Role: b.Role, Kind: DraftStraight}
-		var items []Item
-		for _, it := range b.Items {
-			if !it.Offer && it.Sets > 0 {
-				items = append(items, it)
-			}
-		}
-		if b.Paired && len(items) > 1 {
-			db.Kind = DraftSuperset
-			rounds := 0
-			for _, it := range items {
-				rounds = max(rounds, it.Sets)
-			}
-			for r := 0; r < rounds; r++ {
-				for _, it := range items {
-					if r < it.Sets {
-						round := r
-						ds := draftSet(k, it, newID)
-						ds.Round = &round
-						db.Sets = append(db.Sets, ds)
-					}
-				}
-			}
-		} else {
-			for _, it := range items {
-				for range it.Sets {
-					db.Sets = append(db.Sets, draftSet(k, it, newID))
-				}
-			}
-		}
-		if len(db.Sets) > 0 {
+		if db := draftBlock(k, b, newID); len(db.Sets) > 0 {
 			d.Blocks = append(d.Blocks, db)
 		}
 	}
 	return d
+}
+
+// materialized reports whether an item becomes sets in the log.
+func materialized(it Item) bool { return !it.Offer && it.Sets > 0 }
+
+func draftBlock(k *Knowledge, b Block, newID func() string) DraftBlock {
+	db := DraftBlock{ID: newID(), Role: b.Role, Kind: DraftStraight}
+	var items []Item
+	for _, it := range b.Items {
+		if materialized(it) {
+			items = append(items, it)
+		}
+	}
+	if b.Paired && len(items) > 1 {
+		db.Kind = DraftSuperset
+		rounds := 0
+		for _, it := range items {
+			rounds = max(rounds, it.Sets)
+		}
+		for r := 0; r < rounds; r++ {
+			for _, it := range items {
+				if r < it.Sets {
+					round := r
+					ds := draftSet(k, it, newID)
+					ds.Round = &round
+					db.Sets = append(db.Sets, ds)
+				}
+			}
+		}
+		return db
+	}
+	for _, it := range items {
+		for range it.Sets {
+			db.Sets = append(db.Sets, draftSet(k, it, newID))
+		}
+	}
+	return db
 }
 
 func draftSet(k *Knowledge, it Item, newID func() string) DraftSet {
