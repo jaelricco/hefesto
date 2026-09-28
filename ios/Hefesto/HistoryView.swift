@@ -11,9 +11,10 @@ struct HistoryView: View {
     @State private var mode = Mode.sessions
     @State private var weeks: [HistoryWeek] = []
     @State private var logged: [LoggedExercise] = []
+    @State private var path = NavigationPath()
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             List {
                 Section {
                     Picker("Show", selection: $mode) {
@@ -29,34 +30,52 @@ struct HistoryView: View {
                 case .exercises: exercises
                 }
             }
+            .listStyle(.insetGrouped)
+            .themedScreen()
             .navigationTitle("History")
-            .toolbar { ToolbarItem(placement: .topBarLeading) { ProgressBadge() } }
+            .toolbar { ToolbarItem(placement: .topBarTrailing) { ProgressBadge() } }
             .navigationDestination(for: SessionLink.self) { SessionDetailView(sessionId: $0.id) }
             .navigationDestination(for: LoggedExercise.self) { ExerciseStatsView(logged: $0) }
+        }
+        .task {
+            if let demo = model.demo, demo.screen == .session { path.append(SessionLink(id: demo.pastSessionId)) }
         }
         .task {
             do { for try await w in model.db.observeHistory() { weeks = w } } catch {}
         }
         .task {
-            do { for try await l in model.db.observeLoggedExercises() { logged = l } } catch {}
+            do {
+                for try await l in model.db.observeLoggedExercises() {
+                    logged = l
+                    if let demo = model.demo, demo.screen == .stats, path.isEmpty,
+                       let item = l.first(where: { $0.exercise.id == demo.exerciseId }) {
+                        mode = .exercises
+                        path.append(item)
+                    }
+                }
+            } catch {}
         }
     }
 
     @ViewBuilder
     private var sessions: some View {
         if weeks.isEmpty {
-            Text("Your sessions appear here.").foregroundStyle(.secondary)
+            Text("Your sessions appear here.").font(.detailText).foregroundStyle(Palette.textSecondary).themedRow()
         }
         ForEach(weeks) { week in
             Section {
                 ForEach(week.sessions) { s in
                     NavigationLink(value: SessionLink(id: s.id)) { SessionRow(session: s) }
+                        .themedRow()
                 }
             } header: {
                 HStack {
-                    Text("Week \(week.week)")
+                    CapsLabel("Week \(week.week)")
                     Spacer()
-                    Text("\(week.trainingCount) sessions").monospacedDigit()
+                    Text("\(week.trainingCount) sessions")
+                        .font(.capsLabel)
+                        .monospacedDigit()
+                        .foregroundStyle(Palette.textSecondary)
                 }
             }
         }
@@ -65,16 +84,17 @@ struct HistoryView: View {
     @ViewBuilder
     private var exercises: some View {
         if logged.isEmpty {
-            Text("Exercises you log appear here.").foregroundStyle(.secondary)
+            Text("Exercises you log appear here.").font(.detailText).foregroundStyle(Palette.textSecondary).themedRow()
         }
         ForEach(logged) { l in
             NavigationLink(value: l) {
-                VStack(alignment: .leading) {
-                    Text(verbatim: l.exercise.name).font(.headline)
-                    Text("\(l.sets) sets").font(.caption).foregroundStyle(.secondary)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(verbatim: l.exercise.name).font(.rowTitle).foregroundStyle(Palette.text)
+                    Text("\(l.sets) sets").font(.meta).foregroundStyle(Palette.textSecondary)
                 }
                 .frame(minHeight: 44)
             }
+            .themedRow()
         }
     }
 }
@@ -98,32 +118,47 @@ struct SessionDetailView: View {
                     LabeledContent("Date") {
                         Text(tree.session.startedAt, format: .dateTime.weekday(.wide).day().month().year())
                     }
+                    .themedRow()
                     if let end = tree.session.endedAt {
                         LabeledContent("Duration") {
                             Text(Duration.seconds(end.timeIntervalSince(tree.session.startedAt))
                                 .formatted(.units(allowed: [.hours, .minutes], width: .abbreviated)))
                         }
+                        .themedRow()
                     }
                     if let f = tree.session.perceivedFatigue {
-                        LabeledContent("Effort") { Text("\(f) of 10") }
+                        LabeledContent("Effort") { Text("\(f) of 10") }.themedRow()
                     }
-                    if !tree.session.notes.isEmpty { Text(verbatim: tree.session.notes) }
-                    if tree.session.status == "draft" {
-                        Button("Continue this session", systemImage: "play.fill") { logging = true }
-                            .frame(minHeight: 44)
+                    if !tree.session.notes.isEmpty { Text(verbatim: tree.session.notes).themedRow() }
+                }
+                .font(.bodyText)
+                if tree.session.status == "draft" {
+                    Section {
+                        Button {
+                            logging = true
+                        } label: {
+                            Label("Continue this session", systemImage: "play.fill")
+                        }
+                        .buttonStyle(PrimaryButtonStyle())
+                        .listRowInsets(EdgeInsets())
+                        .listRowBackground(Color.clear)
                     }
                 }
                 ForEach(Array(tree.blocks.enumerated()), id: \.element.id) { i, block in
-                    Section("Block \(i + 1)") {
+                    Section {
                         ForEach(Array(block.sets.enumerated()), id: \.element.id) { n, set in
-                            SetRow(number: n + 1, set: set, exercises: exercises, onRepeat: nil)
+                            SetRow(number: n + 1, set: set, exercises: exercises, onRepeat: nil).themedRow()
                         }
+                    } header: {
+                        CapsLabel("Block \(i + 1)")
                     }
                 }
             } else {
-                Text("This session was deleted.").foregroundStyle(.secondary)
+                Text("This session was deleted.").font(.detailText).foregroundStyle(Palette.textSecondary).themedRow()
             }
         }
+        .listStyle(.insetGrouped)
+        .themedScreen()
         .navigationTitle(tree.map { Text(verbatim: $0.session.title.isEmpty
             ? String(localized: $0.session.isRestDay ? "Rest day" : "Session") : $0.session.title) } ?? Text(verbatim: ""))
         .navigationBarTitleDisplayMode(.inline)
@@ -146,41 +181,70 @@ struct ExerciseStatsView: View {
     var body: some View {
         List {
             if let stats, !stats.isEmpty {
-                Section("Bests") {
+                Section {
                     best("Most reps", stats.bestReps, unit: "reps")
                     best("Longest hold", stats.bestHoldSeconds, unit: "hold_seconds")
                     best("Longest distance", stats.bestDistanceM, unit: "distance_m")
                     best("Most added load", stats.maxLoadKg, unit: "kg")
-                    Text("Bests count full, unassisted repetitions.").font(.caption).foregroundStyle(.secondary)
+                } header: {
+                    CapsLabel("Bests")
+                } footer: {
+                    Text("Bests count full, unassisted repetitions.").font(.fine).foregroundStyle(Palette.textSecondary)
                 }
-                Section(chartTitle) {
+                Section {
                     Chart(stats.days) { day in
                         if let y = chartValue(day) {
                             BarMark(x: .value("Day", Day.date(day.localDate) ?? .distantPast, unit: .day),
                                     y: .value("Value", y))
-                                .foregroundStyle(.yellow.gradient)
+                                .foregroundStyle(Palette.ember)
+                                .cornerRadius(3)
+                        }
+                    }
+                    .chartXAxis {
+                        AxisMarks(values: .automatic) { _ in
+                            AxisGridLine().foregroundStyle(Palette.hairline)
+                            AxisValueLabel().foregroundStyle(Palette.textSecondary)
+                        }
+                    }
+                    .chartYAxis {
+                        AxisMarks { _ in
+                            AxisGridLine().foregroundStyle(Palette.hairline)
+                            AxisValueLabel().foregroundStyle(Palette.textSecondary)
                         }
                     }
                     .frame(height: 200)
+                    .padding(.vertical, 8)
                     .accessibilityLabel(Text(chartTitle))
+                    .themedRow()
+                } header: {
+                    CapsLabel(chartTitle)
                 }
-                Section("Days") {
+                Section {
                     ForEach(stats.days.reversed()) { day in
                         HStack {
                             Text(Day.date(day.localDate) ?? .distantPast, format: .dateTime.day().month().year())
+                                .font(.bodyText)
                             Spacer()
-                            Text("\(day.sets) sets").foregroundStyle(.secondary)
+                            Text("\(day.sets) sets").font(.meta).foregroundStyle(Palette.textSecondary)
                             if let v = chartValue(day) {
-                                Text(verbatim: LevelText.value(v, unit: chartUnit)).monospacedDigit()
+                                Text(verbatim: LevelText.value(v, unit: chartUnit))
+                                    .font(Typeface.condensed(20, .bold, relativeTo: .headline))
+                                    .monospacedDigit()
+                                    .frame(minWidth: 56, alignment: .trailing)
                             }
                         }
                         .accessibilityElement(children: .combine)
+                        .themedRow()
                     }
+                } header: {
+                    CapsLabel("Days")
                 }
             } else {
-                Text("No sets logged yet.").foregroundStyle(.secondary)
+                Text("No sets logged yet.").font(.detailText).foregroundStyle(Palette.textSecondary).themedRow()
             }
         }
+        .listStyle(.insetGrouped)
+        .themedScreen()
         .navigationTitle(Text(verbatim: logged.exercise.name))
         .task {
             do {
@@ -192,16 +256,21 @@ struct ExerciseStatsView: View {
     @ViewBuilder
     private func best(_ title: LocalizedStringKey, _ b: PersonalBest?, unit: String) -> some View {
         if let b {
-            LabeledContent(title) {
-                VStack(alignment: .trailing) {
+            LabeledContent {
+                VStack(alignment: .trailing, spacing: 0) {
                     Text(verbatim: unit == "kg"
                          ? String(localized: "+\(b.value.formatted()) kg")
                          : LevelText.value(b.value, unit: unit))
-                        .font(.headline.monospacedDigit())
+                        .font(.metricSmall)
+                        .monospacedDigit()
+                        .foregroundStyle(Palette.gold)
                     Text(Day.date(b.localDate) ?? .distantPast, format: .dateTime.day().month().year())
-                        .font(.caption).foregroundStyle(.secondary)
+                        .font(.fine).foregroundStyle(Palette.textSecondary)
                 }
+            } label: {
+                Text(title).font(.bodyText)
             }
+            .themedRow()
         }
     }
 

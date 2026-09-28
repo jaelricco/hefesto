@@ -2,7 +2,8 @@ import HefestoLogger
 import HefestoStore
 import SwiftUI
 
-/// The session player: dark, high contrast, large targets, one hand.
+/// The session player: dark, high contrast, large targets, one hand. The
+/// next set is logged from the bottom of the screen, where the thumb is.
 struct LoggerView: View {
     let sessionId: String
     @Environment(AppModel.self) private var model
@@ -14,6 +15,8 @@ struct LoggerView: View {
     @State private var error: String?
     @State private var loggedCount = 0
 
+    private var isDraft: Bool { logger?.session.status == "draft" }
+
     var body: some View {
         NavigationStack {
             Group {
@@ -23,25 +26,36 @@ struct LoggerView: View {
                     ProgressView()
                 }
             }
-            .navigationTitle(logger.map { title($0.session) } ?? "")
+            .themedScreen()
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Close") { dismiss() }
                 }
-                if logger?.session.status == "draft" {
+                ToolbarItem(placement: .principal) {
+                    Text(verbatim: logger.map { title($0.session) } ?? "").font(.navTitle)
+                }
+                if isDraft {
                     ToolbarItem(placement: .confirmationAction) {
-                        Button("Finish") { finishing = true }.bold()
+                        Button("Finish") { finishing = true }.fontWeight(.semibold)
                     }
                 }
+            }
+            .safeAreaInset(edge: .bottom) {
+                if let logger, isDraft, !logger.session.isRestDay { bottomBar(logger) }
             }
         }
         .preferredColorScheme(.dark)
         .sensoryFeedback(.success, trigger: loggedCount)
         .task {
             do {
-                logger = try LoggerModel(db: model.db, sessionId: sessionId)
+                let logger = try model.makeLogger(sessionId: sessionId)
+                self.logger = logger
                 exercises = try model.db.exercisesById()
+                if let demo = model.demo, demo.screen == .composer, let last = logger.tree.blocks.last {
+                    composing = Composing(blockId: last.id)
+                }
+                if model.demo?.screen == .finish { finishing = true }
             } catch {
                 self.error = error.localizedDescription
             }
@@ -53,7 +67,7 @@ struct LoggerView: View {
         }
         .sheet(isPresented: $finishing) {
             FinishSheet { fatigue in finish(fatigue) }
-                .presentationDetents([.medium])
+                .presentationDetents([.medium, .large])
         }
         .alert("Something went wrong", isPresented: .constant(error != nil)) {
             Button("OK") { error = nil }
@@ -66,7 +80,11 @@ struct LoggerView: View {
     private func content(_ logger: LoggerModel) -> some View {
         List {
             if let rest = logger.rest {
-                Section { RestBanner(rest: rest) { skipRest(logger) } }
+                Section {
+                    RestCard(rest: rest) { skipRest(logger) }
+                        .listRowInsets(EdgeInsets(top: 16, leading: 20, bottom: 18, trailing: 20))
+                        .themedRow()
+                }
             }
             ForEach(Array(logger.tree.blocks.enumerated()), id: \.element.id) { i, block in
                 Section {
@@ -74,36 +92,68 @@ struct LoggerView: View {
                         SetRow(number: n + 1, set: set, exercises: exercises) {
                             repeatSet(set, in: block.id, logger)
                         }
+                        .themedRow()
                         .swipeActions {
                             Button("Delete", systemImage: "trash", role: .destructive) {
                                 attempt { try logger.deleteSet(set.id) }
                             }
                         }
                     }
-                    if logger.session.status == "draft" {
+                    // The bottom bar logs into the last block; an earlier
+                    // one keeps its own, smaller way in.
+                    if isDraft, block.id != logger.tree.blocks.last?.id {
                         Button {
                             composing = Composing(blockId: block.id)
                         } label: {
-                            Label("Log a set", systemImage: "plus.circle.fill")
-                                .font(.title3.weight(.semibold))
-                                .frame(maxWidth: .infinity, minHeight: 56)
+                            Label("Log a set in this block", systemImage: "plus")
+                                .font(.bodyMedium)
+                                .foregroundStyle(Palette.ember)
+                                .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
                         }
-                        .buttonStyle(.borderedProminent)
-                        .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                        .themedRow()
+                    }
+                    if block.sets.isEmpty {
+                        Text("No sets in this block yet.")
+                            .font(.detailText)
+                            .foregroundStyle(Palette.textSecondary)
+                            .frame(minHeight: 44)
+                            .themedRow()
                     }
                 } header: {
-                    Text("Block \(i + 1)")
-                }
-            }
-            if logger.session.status == "draft", !logger.session.isRestDay {
-                Section {
-                    Button("Add a block", systemImage: "square.stack.3d.up") {
-                        attempt { try logger.addBlock() }
-                    }
-                    .frame(minHeight: 44)
+                    CapsLabel("Block \(i + 1)")
                 }
             }
         }
+        .listStyle(.insetGrouped)
+    }
+
+    private func bottomBar(_ logger: LoggerModel) -> some View {
+        HStack(spacing: 10) {
+            Button {
+                attempt { try logger.addBlock() }
+            } label: {
+                Image(systemName: "square.stack.3d.up")
+                    .font(.system(size: 22, weight: .medium))
+                    .foregroundStyle(Palette.text)
+                    .frame(width: 64, height: 64)
+                    .background(Palette.surfaceRaised, in: .rect(cornerRadius: 16))
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Add a block")
+
+            Button {
+                if let last = logger.tree.blocks.last { composing = Composing(blockId: last.id) }
+            } label: {
+                Label("Log a set", systemImage: "plus")
+            }
+            .buttonStyle(PrimaryButtonStyle())
+            .disabled(logger.tree.blocks.isEmpty)
+        }
+        .padding(.horizontal, 16)
+        .padding(.top, 12)
+        .padding(.bottom, 8)
+        .background(Palette.background.ignoresSafeArea(edges: .bottom))
+        .overlay(alignment: .top) { Divider().overlay(Palette.surfaceRaised) }
     }
 
     private func log(_ drafts: [ElementDraft], rest: Int, in blockId: String) {
@@ -155,7 +205,8 @@ struct Composing: Identifiable {
     var id: String { blockId }
 }
 
-/// One logged set: its elements in order, a combo reading as one line each.
+/// One logged set: its number, its elements, the numbers large. A combo is
+/// one set whose elements are joined by a line, in order.
 struct SetRow: View {
     let number: Int
     let set: SetWithElements
@@ -164,39 +215,117 @@ struct SetRow: View {
     let onRepeat: (() -> Void)?
 
     var body: some View {
-        HStack(alignment: .firstTextBaseline, spacing: 12) {
-            Text("\(number)")
-                .font(.title2.monospacedDigit().bold())
-                .frame(minWidth: 28)
-                .accessibilityLabel(Text("Set \(number)"))
-            VStack(alignment: .leading, spacing: 4) {
-                ForEach(set.elements) { e in
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text(verbatim: exercises[e.exerciseId]?.name ?? String(localized: "Exercise"))
-                            .font(.headline)
-                        Text(verbatim: ElementFormat.summary(e)).font(.body.monospacedDigit())
-                    }
-                }
-                if let rest = set.entry.restAfterActualS {
-                    Text("Rested \(Duration.seconds(rest).formatted(.time(pattern: .minuteSecond)))")
-                        .font(.caption).foregroundStyle(.secondary)
-                }
+        HStack(alignment: .center, spacing: 12) {
+            HStack(alignment: .center, spacing: 12) {
+                Text("\(number)")
+                    .font(Typeface.condensed(16, .semibold, relativeTo: .subheadline))
+                    .monospacedDigit()
+                    .foregroundStyle(Palette.textSecondary)
+                    .frame(width: 28, height: 28)
+                    .background(Palette.surfaceRaised, in: .circle)
+                    .accessibilityLabel(Text("Set \(number)"))
+                if set.elements.count > 1 { combo } else if let e = set.elements.first { single(e) }
             }
-            Spacer()
+            .accessibilityElement(children: .combine)
             if let onRepeat {
-                Button(action: onRepeat) {
-                    Image(systemName: "arrow.clockwise.circle.fill").font(.title)
-                }
-                .buttonStyle(.plain)
-                .frame(minWidth: 56, minHeight: 56)
-                .accessibilityLabel("Repeat this set")
+                Button(action: onRepeat) { Image(systemName: "arrow.clockwise") }
+                    .buttonStyle(RoundIconButtonStyle())
+                    .accessibilityLabel("Repeat this set")
             }
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 6)
+    }
+
+    private func single(_ e: SetElement) -> some View {
+        HStack(alignment: .center, spacing: 8) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(verbatim: name(e)).font(.rowTitle).foregroundStyle(Palette.text)
+                if let extra = ElementFormat.qualifiers(e) {
+                    Text(verbatim: extra).font(.fine).foregroundStyle(Palette.textSecondary)
+                }
+                restLine
+            }
+            Spacer(minLength: 4)
+            metric(e, font: .metric)
+        }
+    }
+
+    private var combo: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("Combo")
+                .font(.capsSmall)
+                .tracking(1.2)
+                .textCase(.uppercase)
+                .foregroundStyle(Palette.ember)
+            VStack(alignment: .leading, spacing: 6) {
+                ForEach(set.elements) { e in
+                    HStack(alignment: .center, spacing: 10) {
+                        Circle().fill(Palette.ember).frame(width: 8, height: 8)
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text(verbatim: name(e)).font(Typeface.text(16, .semibold, relativeTo: .headline))
+                                .foregroundStyle(Palette.text)
+                            if let extra = ElementFormat.qualifiers(e) {
+                                Text(verbatim: extra).font(.fine).foregroundStyle(Palette.textSecondary)
+                            }
+                        }
+                        Spacer(minLength: 4)
+                        metric(e, font: .metricSmall)
+                    }
+                    .frame(minHeight: 34)
+                }
+            }
+            // The line that joins the parts, from the first dot to the last.
+            .background(alignment: .leading) {
+                Rectangle().fill(Palette.ember).frame(width: 1.5).padding(.vertical, 17).padding(.leading, 3.25)
+            }
+            restLine
+        }
+    }
+
+    @ViewBuilder
+    private var restLine: some View {
+        if let rest = set.entry.restAfterActualS {
+            Text("Rested \(Duration.seconds(rest).formatted(.time(pattern: .minuteSecond)))")
+                .font(.fine)
+                .monospacedDigit()
+                .foregroundStyle(Palette.textSecondary)
+        }
+    }
+
+    private func metric(_ e: SetElement, font: Font) -> some View {
+        HStack(alignment: .firstTextBaseline, spacing: 3) {
+            if let m = ElementFormat.metric(e) {
+                Text(verbatim: m.value).font(font).monospacedDigit().foregroundStyle(Palette.text)
+                Text(verbatim: m.unit).font(.meta).foregroundStyle(Palette.textSecondary)
+            }
+        }
+    }
+
+    private func name(_ e: SetElement) -> String {
+        exercises[e.exerciseId]?.name ?? String(localized: "Exercise")
     }
 }
 
 enum ElementFormat {
+    /// The number to read at a glance and its unit: "8" "reps", "12" "s".
+    static func metric(_ e: SetElement) -> (value: String, unit: String)? {
+        switch e.measure {
+        case "reps": e.reps.map { (value: "\($0)", unit: String(localized: "reps")) }
+        case "hold_seconds": e.holdSeconds.map { (value: "\(Int($0))", unit: "s") }
+        case "distance_m": e.distanceM.map { (value: "\(Int($0))", unit: "m") }
+        default: nil
+        }
+    }
+
+    /// Load, help and failure, when there are any: "+5 kg · Partner".
+    static func qualifiers(_ e: SetElement) -> String? {
+        var parts: [String] = []
+        if e.loadKg > 0 { parts.append(String(localized: "+\(e.loadKg.formatted(.number.precision(.fractionLength(0...2)))) kg")) }
+        if let a = e.assistance { parts.append(AssistanceKind.label(a.type)) }
+        if e.failed { parts.append(String(localized: "to failure")) }
+        return parts.isEmpty ? nil : parts.joined(separator: " · ")
+    }
+
     static func summary(_ e: SetElement) -> String {
         var parts: [String] = []
         switch e.measure {
@@ -205,33 +334,59 @@ enum ElementFormat {
         case "distance_m": if let d = e.distanceM { parts.append(String(localized: "\(Int(d)) m")) }
         default: break
         }
-        if e.loadKg > 0 { parts.append(String(localized: "+\(e.loadKg.formatted(.number.precision(.fractionLength(0...2)))) kg")) }
-        if let a = e.assistance { parts.append(AssistanceKind.label(a.type)) }
-        if e.failed { parts.append(String(localized: "to failure")) }
+        if let q = qualifiers(e) { parts.append(q) }
         return parts.joined(separator: " · ")
     }
 }
 
-/// The rest since the last set, computed from the wall clock each second.
-struct RestBanner: View {
+/// The rest since the last set, computed from the wall clock each second:
+/// the time left in large numbers, and how much of the planned rest is gone.
+struct RestCard: View {
     let rest: RestTimer
     let onSkip: () -> Void
 
     var body: some View {
         TimelineView(.periodic(from: rest.startedAt, by: 1)) { context in
             let done = rest.isDone(at: context.date)
-            HStack {
-                VStack(alignment: .leading) {
-                    Text(done ? LocalizedStringKey("Rest done") : "Rest").font(.headline)
-                    Text(clock(context.date))
-                        .font(.system(size: 48, weight: .bold, design: .rounded).monospacedDigit())
-                        .foregroundStyle(done ? .green : .primary)
-                        .contentTransition(.numericText())
+            VStack(alignment: .leading, spacing: 10) {
+                HStack(alignment: .bottom) {
+                    VStack(alignment: .leading, spacing: 0) {
+                        CapsLabel(done ? "Rest done" : "Rest", isHeader: false)
+                        Text(clock(context.date))
+                            .font(.timerDigits)
+                            .monospacedDigit()
+                            .foregroundStyle(done ? Palette.ember : Palette.text)
+                            .contentTransition(.numericText())
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.6)
+                    }
+                    Spacer(minLength: 8)
+                    Button(action: onSkip) {
+                        Text("Skip")
+                            .font(.bodyMedium)
+                            .foregroundStyle(Palette.text)
+                            .padding(.horizontal, 16)
+                            .frame(minHeight: 44)
+                            .background(Palette.surfaceRaised, in: .rect(cornerRadius: 12))
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.bottom, 10)
                 }
-                Spacer()
-                Button("Skip", action: onSkip)
-                    .buttonStyle(.bordered)
-                    .frame(minHeight: 56)
+                if let planned = rest.plannedSeconds {
+                    Capsule()
+                        .fill(Palette.hairline)
+                        .frame(height: 6)
+                        .overlay(alignment: .leading) {
+                            Capsule().fill(Palette.ember)
+                                .scaleEffect(x: fraction(at: context.date, of: planned), y: 1, anchor: .leading)
+                        }
+                        .accessibilityHidden(true)
+                    Text("of \(Duration.seconds(planned).formatted(.time(pattern: .minuteSecond)))")
+                        .font(.fine)
+                        .monospacedDigit()
+                        .foregroundStyle(Palette.textSecondary)
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                }
             }
             .sensoryFeedback(.impact(weight: .heavy), trigger: done) { old, new in !old && new }
             .accessibilityElement(children: .combine)
@@ -242,6 +397,10 @@ struct RestBanner: View {
         let seconds = rest.remaining(at: now) ?? rest.elapsed(at: now)
         return Duration.seconds(seconds).formatted(.time(pattern: .minuteSecond))
     }
+
+    private func fraction(at now: Date, of planned: Int) -> CGFloat {
+        min(1, CGFloat(rest.elapsed(at: now)) / CGFloat(max(1, planned)))
+    }
 }
 
 /// Ends a session, with how hard it felt if the athlete wants to say.
@@ -251,29 +410,38 @@ struct FinishSheet: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 20) {
-                Text("How hard did it feel?").font(.title3.weight(.semibold))
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 5), spacing: 8) {
-                    ForEach(1...10, id: \.self) { n in
-                        Button {
-                            fatigue = fatigue == n ? nil : n
-                        } label: {
-                            Text("\(n)").font(.title3.monospacedDigit().bold()).frame(maxWidth: .infinity, minHeight: 48)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    Text("How hard did it feel?").font(.displayTitle).foregroundStyle(Palette.text)
+                    LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 5), spacing: 8) {
+                        ForEach(1...10, id: \.self) { n in
+                            Button {
+                                fatigue = fatigue == n ? nil : n
+                            } label: {
+                                Text("\(n)")
+                                    .font(.metricSmall)
+                                    .monospacedDigit()
+                                    .foregroundStyle(fatigue == n ? Palette.emberInk : Palette.text)
+                                    .frame(maxWidth: .infinity, minHeight: 52)
+                                    .background(fatigue == n ? Palette.ember : Palette.surface, in: .rect(cornerRadius: 12))
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityAddTraits(fatigue == n ? .isSelected : [])
                         }
-                        .buttonStyle(.bordered)
-                        .tint(fatigue == n ? .accentColor : .secondary)
-                        .accessibilityAddTraits(fatigue == n ? .isSelected : [])
                     }
+                    Text("Optional. 1 is easy, 10 is everything you had.")
+                        .font(.detailText)
+                        .foregroundStyle(Palette.textSecondary)
+                    Button {
+                        onFinish(fatigue)
+                    } label: {
+                        Label("Finish session", systemImage: "checkmark")
+                    }
+                    .buttonStyle(PrimaryButtonStyle())
                 }
-                Text("Optional. 1 is easy, 10 is everything you had.").font(.footnote).foregroundStyle(.secondary)
-                Button {
-                    onFinish(fatigue)
-                } label: {
-                    Text("Finish session").font(.title3.weight(.semibold)).frame(maxWidth: .infinity, minHeight: 56)
-                }
-                .buttonStyle(.borderedProminent)
+                .padding(20)
             }
-            .padding()
+            .themedScreen()
         }
     }
 }
