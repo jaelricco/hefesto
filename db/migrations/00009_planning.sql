@@ -102,7 +102,9 @@ CREATE TABLE planning_constraints (
     position    int         NOT NULL
         CONSTRAINT planning_constraints_position_ck CHECK (position >= 0),
     cleared_at  timestamptz     NULL,
-    CONSTRAINT planning_constraints_region_kind_ck CHECK ((kind = 'plan_stopped') = (region IS NULL))
+    -- A stop may name the region whose red flag caused it; a lock or an
+    -- exclusion always does.
+    CONSTRAINT planning_constraints_region_kind_ck CHECK (kind = 'plan_stopped' OR region IS NOT NULL)
 );
 CREATE INDEX planning_constraints_user_idx ON planning_constraints (user_id, position) WHERE cleared_at IS NULL;
 
@@ -116,7 +118,7 @@ CREATE TABLE user_region_status (
         CHECK (state IN ('normal','locked','rtt_0','rtt_1','rtt_2','rtt_3','rtt_4','rtt_5')),
     entered_via    text                 NULL
         CONSTRAINT user_region_status_via_ck
-        CHECK (entered_via IN ('onboarding','pain_report','red_flag','break','clearance')),
+        CHECK (entered_via IN ('onboarding','pain_report','red_flag','red_flags_negative','break','clearance')),
     since          timestamptz          NULL,
     start_fraction double precision NOT NULL DEFAULT 0
         CONSTRAINT user_region_status_fraction_ck CHECK (start_fraction BETWEEN 0 AND 1),

@@ -111,13 +111,18 @@ Ein gespeicherter Snapshot liest sich byte-gleich zurück. Dafür gilt:
   unverändert zurückkommt.
 - Maps, die der Kern leer oder `nil` führt, bleiben es (`jsonb` bzw.
   `NULL`).
+- Listen sind Zeilen, und leere Zeilenmengen lassen sich nicht von
+  fehlenden unterscheiden. Der Kern gibt leere Listen deshalb immer als
+  `nil` zurück (`Start` und `Adapt`), etwa wenn eine Freigabe die letzte
+  Auflage entfernt.
 
 Zwei Tests prüfen das gegen echtes Postgres:
 - ein Snapshot, in dem jedes Feld gesetzt ist; ein Test schlägt fehl, wenn
   ein neues Feld in der Fixture fehlt;
-- der Dienst mit drei Onboarding-Profilen über drei Wochen, einmal mit dem
+- der Dienst mit fünf Onboarding-Profilen über drei Wochen, einmal mit dem
   Speicher im Arbeitsspeicher, einmal mit Postgres. Snapshots, Pläne und
-  Änderungen müssen gleich sein.
+  Änderungen müssen gleich sein. Zwei Profile laufen durch Red Flags, einen
+  Stopp mit Region und die Freigaben.
 
 ### 5. Eine Transaktion je Aufruf, eine Sperre je User
 

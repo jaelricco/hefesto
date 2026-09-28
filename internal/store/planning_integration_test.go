@@ -455,6 +455,18 @@ func plannerAnswers(kind string) domain.Answers {
 		a.LastRegular = "17_to_26_weeks"
 		a.PreBreak = map[string]string{"planche": "advanced-tuck"}
 		a.Stages = map[string]domain.StageAnswer{"planche": {Level: "unknown"}}
+	case "redflags":
+		// Daily pain above the green limit: the region starts at stage 0.
+		a.BodyMap = map[string]domain.BodyMapEntry{"elbow_inner": {Current: true}, "knee": {Past12: true}}
+		a.Complaints = map[string]domain.Complaint{"elbow_inner": {PainDaily: 3, PainTraining: 3, Onset: "gradual",
+			DurationWeeks: 2, Suspected: "no", Assessment: "no"}}
+		a.RedFlags = map[string]map[string]bool{"elbow_inner": {}}
+	case "stopped":
+		// A red flag that stops training, already in the onboarding.
+		a.BodyMap = map[string]domain.BodyMapEntry{"wrist_back_extension": {Current: true}}
+		a.Complaints = map[string]domain.Complaint{"wrist_back_extension": {PainDaily: 1, PainTraining: 2,
+			Onset: "sudden", DurationWeeks: 1, Suspected: "no", Assessment: "no"}}
+		a.RedFlags = map[string]map[string]bool{"wrist_back_extension": {"RF-07": true}}
 	}
 	return a
 }
@@ -489,7 +501,7 @@ func perform(ps domain.PlannedSession, sessionID uuid.UUID) domain.LoggedSession
 func TestPlannerServiceMatchesMemory(t *testing.T) {
 	kb := planning.LoadContentKnowledge(filepath.Join(pgtest.RepoRoot(), "content"), false,
 		slog.New(slog.NewTextHandler(io.Discard, nil)))
-	for _, kind := range []string{"advanced", "complaint", "returner"} {
+	for _, kind := range []string{"advanced", "complaint", "returner", "redflags", "stopped"} {
 		t.Run(kind, func(t *testing.T) {
 			db := pgtest.New(t)
 			pg, mem := store.NewPlanner(db), memory.New()
@@ -528,6 +540,29 @@ func TestPlannerServiceMatchesMemory(t *testing.T) {
 				res, p, err := svc.Onboard(ctx, user, plannerAnswers(kind))
 				return []any{res, p}, err
 			})
+			switch kind {
+			case "redflags":
+				// Stage 0 ends on green daily pain and negative red flags;
+				// a stop names its region and goes with its clearance.
+				rid := id().String()
+				both("daily pain", func(svc *planning.Service) (any, error) {
+					return svc.ReportPain(ctx, user, rid, domain.PainReport{Region: "elbow_inner",
+						Timepoint: domain.PainDaily, NRS: 1, At: clk.t})
+				})
+				both("red flags negative", func(svc *planning.Service) (any, error) {
+					return svc.AnswerRedFlags(ctx, user, "rf-1", "elbow_inner", map[string]bool{})
+				})
+				both("red flag stop", func(svc *planning.Service) (any, error) {
+					return svc.AnswerRedFlags(ctx, user, "rf-2", "knee", map[string]bool{"RF-10": true})
+				})
+				both("clearance", func(svc *planning.Service) (any, error) {
+					return svc.ConfirmClearance(ctx, user, "cl-1", "knee")
+				})
+			case "stopped":
+				both("screening clearance", func(svc *planning.Service) (any, error) {
+					return svc.ConfirmClearance(ctx, user, "cl-1", "")
+				})
+			}
 			for week := 0; week < 3; week++ {
 				var plan domain.Plan
 				both(fmt.Sprintf("week %d plan", week+1), func(svc *planning.Service) (any, error) {
