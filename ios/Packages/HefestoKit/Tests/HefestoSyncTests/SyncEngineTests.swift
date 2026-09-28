@@ -266,12 +266,12 @@ func sessionJSON(_ s: Session, _ b: Block, setId: String, reps: Int) -> String {
     #"""
     {"id":"\#(s.id)","started_at":"2026-09-25T10:00:00Z","ended_at":null,"timezone":"\#(zurich)",
      "local_date":"2026-09-25","title":"Pull day","notes":"","perceived_fatigue":null,"bodyweight_kg":null,
-     "status":"draft","is_rest_day":false,"template_id":null,"completed_at":null,
+     "status":"draft","is_rest_day":false,"template_id":null,"planned_session_id":null,"completed_at":null,
      "updated_at":"2026-09-25T10:00:00Z","server_updated_at":"2026-09-25T10:00:00Z",
      "blocks":[{"id":"\#(b.id)","order_index":0,"kind":"straight","rounds_planned":null,"rounds_done":null,
        "interval_s":null,"notes":"","updated_at":"2026-09-25T10:00:00Z",
        "sets":[{"id":"\#(setId)","block_id":"\#(b.id)","order_index":0,"round_index":null,"kind":"working",
-         "is_planned":false,"rest_after_planned_s":null,"rest_after_actual_s":null,"rpe":null,"rir":null,
+         "is_planned":false,"rest_after_planned_s":null,"rest_after_actual_s":null,"rpe":null,"rir":null,"planned_item_id":null,
          "completed_at":"2026-09-25T10:05:00.5Z","notes":"","updated_at":"2026-09-25T10:05:00.5Z",
          "elements":[\#(elementJSON(reps: reps))]}]}]}
     """#
@@ -290,7 +290,7 @@ func syncSessionJSON(_ id: String, seq: Int) -> String {
     #"""
     {"id":"\#(id)","started_at":"2026-09-21T13:33:20.25Z","ended_at":null,"timezone":"\#(zurich)",
      "local_date":"2026-09-21","title":"","notes":"","perceived_fatigue":null,"bodyweight_kg":null,
-     "status":"draft","is_rest_day":false,"template_id":null,"completed_at":null,
+     "status":"draft","is_rest_day":false,"template_id":null,"planned_session_id":null,"completed_at":null,
      "updated_at":"2026-09-21T13:33:20.25Z","server_updated_at":"2026-09-21T13:33:21Z",
      "server_seq":\#(seq),"deleted_at":null}
     """#
