@@ -102,3 +102,29 @@ No server code or API spec changed in this phase.
 
 Polish: localization, an accessibility pass, a TestFlight build, importing
 the researched seed content, and a load smoke test.
+
+## Design pass: direction B, "Glut" (asked for ahead of Phase 7, in progress)
+
+The owner chose direction B of three mockups. The decisions are in ADR 0020.
+It is developed on `claude/awesome-wright-gqa9pe`, next to the planner track,
+and touches only the app's views, its project file and its strings.
+
+- **One dark, warm theme** for every screen: warm graphite, ember for
+  actions, gold only for achievement, Barlow and Barlow Condensed (bundled,
+  SIL Open Font License), sizes that follow Dynamic Type.
+- **Today** shows XP and the streak, "rest days count", and the sessions with
+  their dates as blocks.
+- **The logger** has the rest timer as a large card with its progress and
+  numbers in large type. Combos are joined by a line. "Log a set" and "Add a
+  block" sit at the bottom, in reach of the thumb.
+- **The map** is in warm colours, and its first tap shows the skill in a card
+  below. **The skill page** shows a level ladder and level cards.
+- **The celebration, history and sign-in** follow the theme. The celebration
+  no longer reads the generated API type.
+- **A demo mode** (Debug builds only) and a screenshot workflow on the
+  self-hosted Mac capture every screen in German for review.
+
+### Verification
+
+To follow: the `ios` workflow (HefestoKit tests and the simulator build) and
+the `ios-screenshots` workflow on the self-hosted Mac.
