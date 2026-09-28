@@ -4354,11 +4354,13 @@ components:
       description: |
         One change to the plan or the planner's state (spec §6.14), such as
         `capacity`, `rung_down`, `deload_scheduled`, `region_state`,
-        `referral_suggested`, `ask_red_flags`, `training_stopped` or
-        `consent_changed`. On `ask_red_flags` ask the region's red-flag
-        questions.
+        `referral_suggested`, `ask_red_flags`, `training_stopped`,
+        `consent_changed` or `session_adjusted`. On `ask_red_flags` ask the
+        region's red-flag questions. On `session_adjusted` the started
+        session `session_id` followed the new plan: its open planned sets
+        changed, its performed sets did not; fetch it again.
       type: object
-      required: [kind, skill, region, from, to, reasons]
+      required: [kind, skill, region, session_id, from, to, reasons]
       properties:
         kind:
           type: string
@@ -4366,6 +4368,10 @@ components:
           type: [string, "null"]
         region:
           type: [string, "null"]
+        session_id:
+          description: The log session a `session_adjusted` change adjusted.
+          type: [string, "null"]
+          format: uuid
         from:
           type: [string, "null"]
         to:

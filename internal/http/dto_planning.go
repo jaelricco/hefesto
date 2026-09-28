@@ -590,6 +590,7 @@ type changeOut struct {
 	Kind    string      `json:"kind"`
 	Skill   *string     `json:"skill"`
 	Region  *string     `json:"region"`
+	Session *string     `json:"session_id"`
 	From    *string     `json:"from"`
 	To      *string     `json:"to"`
 	Reasons []reasonOut `json:"reasons"`
@@ -598,8 +599,8 @@ type changeOut struct {
 func changesFrom(cs []core.Change) []changeOut {
 	out := make([]changeOut, len(cs))
 	for i, c := range cs {
-		out[i] = changeOut{Kind: c.Kind, Skill: strOrNil(c.Skill), Region: strOrNil(c.Region), From: strOrNil(c.From),
-			To: strOrNil(c.To), Reasons: reasonsFrom(c.Reasons)}
+		out[i] = changeOut{Kind: c.Kind, Skill: strOrNil(c.Skill), Region: strOrNil(c.Region), Session: strOrNil(c.Session),
+			From: strOrNil(c.From), To: strOrNil(c.To), Reasons: reasonsFrom(c.Reasons)}
 	}
 	return out
 }

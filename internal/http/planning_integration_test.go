@@ -537,6 +537,27 @@ func TestStartPlannedSession(t *testing.T) {
 	a.call("POST", "/v1/me/plan/sessions/"+next+"/start", u.access, map[string]any{"id": newID(), "timezone": "Mars/Base"}).
 		problem(422, "validation")
 	a.call("POST", "/v1/me/plan/sessions/"+next+"/start", u.access, start(logID)).problem(409, "already-exists")
-	a.call("POST", "/v1/me/symptoms", u.access, map[string]any{"id": newID()}).ok(200, "PlanEventResult")
+
+	// Symptoms stop training: the started session keeps the performed set
+	// and loses its open planned sets, and the answer says so (ADR 0017).
+	out := a.call("POST", "/v1/me/symptoms", u.access, map[string]any{"id": newID()}).ok(200, "PlanEventResult")
+	adjusted := false
+	for _, c := range out["changes"].([]any) {
+		c := c.(map[string]any)
+		adjusted = adjusted || c["kind"] == "session_adjusted" && c["session_id"] == logID
+	}
+	if !adjusted {
+		t.Errorf("the stop does not name the adjusted session: %v", out["changes"])
+	}
+	left := a.call("GET", "/v1/sessions/"+logID, u.access, nil).ok(200, "Session")
+	var ids []any
+	for _, b := range left["blocks"].([]any) {
+		for _, s := range b.(map[string]any)["sets"].([]any) {
+			ids = append(ids, s.(map[string]any)["id"])
+		}
+	}
+	if len(ids) != 1 || ids[0] != set["id"] {
+		t.Errorf("after the stop the session holds sets %v, want only the performed %v", ids, set["id"])
+	}
 	a.call("POST", "/v1/me/plan/sessions/"+next+"/start", u.access, start(newID())).problem(409, "training-stopped")
 }
