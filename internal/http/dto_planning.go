@@ -1,6 +1,7 @@
 package http
 
 import (
+	"cmp"
 	"fmt"
 	"sort"
 	"strings"
@@ -179,6 +180,13 @@ type consentIn struct {
 	PastInjuries []string  `json:"past_injuries"`
 }
 
+type plannedSessionStartIn struct {
+	ID        uuid.UUID  `json:"id"`
+	StartedAt *time.Time `json:"started_at"`
+	Timezone  string     `json:"timezone"`
+	UpdatedAt *time.Time `json:"updated_at"`
+}
+
 type redFlagsIn struct {
 	ID      uuid.UUID       `json:"id"`
 	Answers map[string]bool `json:"answers"`
@@ -319,6 +327,7 @@ func redFlagsFrom(fs []core.RedFlag) []redFlagOut {
 }
 
 type planItemOut struct {
+	ID           string      `json:"id"`
 	Exercise     string      `json:"exercise"`
 	ExerciseName string      `json:"exercise_name"`
 	Skill        *string     `json:"skill"`
@@ -349,13 +358,15 @@ type planBlockOut struct {
 }
 
 type plannedSessionOut struct {
-	ID         string         `json:"id"`
-	Index      int            `json:"index"`
-	Date       string         `json:"date"`
-	Kind       string         `json:"kind"`
-	EstMinutes float64        `json:"est_minutes"`
-	Blocks     []planBlockOut `json:"blocks"`
-	Reasons    []reasonOut    `json:"reasons"`
+	ID               string         `json:"id"`
+	Status           string         `json:"status"`
+	WorkoutSessionID *string        `json:"workout_session_id"`
+	Index            int            `json:"index"`
+	Date             string         `json:"date"`
+	Kind             string         `json:"kind"`
+	EstMinutes       float64        `json:"est_minutes"`
+	Blocks           []planBlockOut `json:"blocks"`
+	Reasons          []reasonOut    `json:"reasons"`
 }
 
 type exclusionOut struct {
@@ -405,7 +416,7 @@ func exerciseName(k *core.Knowledge, slug string) string {
 }
 
 func itemFrom(k *core.Knowledge, it core.Item) planItemOut {
-	out := planItemOut{Exercise: it.Exercise, ExerciseName: exerciseName(k, it.Exercise), Skill: strOrNil(it.Skill),
+	out := planItemOut{ID: it.ID, Exercise: it.Exercise, ExerciseName: exerciseName(k, it.Exercise), Skill: strOrNil(it.Skill),
 		Stimulus: it.Stimulus, Kind: it.Kind, Sets: it.Sets, Assist: core.AssistNone, Reserve: it.Reserve, RestS: it.RestS,
 		Calibration: it.Calibration, Offer: it.Offer, StopRules: nonNil(it.StopRules), Intensity: it.Intensity(),
 		Role: it.Role, Monitor: it.Monitor, Reasons: reasonsFrom(it.Reasons)}
@@ -428,7 +439,8 @@ func itemFrom(k *core.Knowledge, it core.Item) planItemOut {
 }
 
 func plannedSessionFrom(k *core.Knowledge, s core.PlannedSession) plannedSessionOut {
-	out := plannedSessionOut{ID: s.ID, Index: s.Index, Date: dateOut(s.Date), Kind: s.Kind, EstMinutes: s.EstMinutes,
+	out := plannedSessionOut{ID: s.ID, Status: cmp.Or(s.Status, planning.SessionPlanned), WorkoutSessionID: strOrNil(s.WorkoutSessionID),
+		Index: s.Index, Date: dateOut(s.Date), Kind: s.Kind, EstMinutes: s.EstMinutes,
 		Blocks: make([]planBlockOut, len(s.Blocks)), Reasons: reasonsFrom(s.Reasons)}
 	for i, b := range s.Blocks {
 		bo := planBlockOut{Role: b.Role, Paired: b.Paired, Items: make([]planItemOut, len(b.Items)), Reasons: reasonsFrom(b.Reasons)}

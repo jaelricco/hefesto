@@ -149,6 +149,7 @@ func NewRouter(deps RouterDeps) http.Handler {
 				r.Get("/me/plan", h.wrap(h.getTrainingPlan))
 				r.Post("/me/plan/regenerate", h.wrap(h.regenerateTrainingPlan))
 				r.Get("/me/plan/sessions/{plannedSessionId}", h.wrap(h.getPlannedSession))
+				r.Post("/me/plan/sessions/{plannedSessionId}/start", h.wrap(h.startPlannedSession))
 				r.Get("/me/plan/decisions", h.wrap(h.listPlanDecisions))
 				r.Post("/me/pain-reports", h.wrap(h.reportPain))
 				r.Get("/me/pain-reports", h.wrap(h.listPainReports))

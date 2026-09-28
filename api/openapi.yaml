@@ -42,6 +42,7 @@ info:
     | `already-onboarded` | 409 | The onboarding runs once; change the training profile or the goals instead. |
     | `onboarding-required` | 409 | The planner needs the onboarding first (SAFE-01). |
     | `consent-required` | 409 | Pain reports are health data and need the athlete's consent. |
+    | `training-stopped` | 409 | Training is stopped (SAFE-02, SAFE-07); no planned session starts. The plan says why. |
     | `email-taken` | 409 | An account already uses this email. |
     | `order-conflict` | 409 | Another live sibling already has this `order_index`; use the reorder endpoint. |
     | `prerequisites-unmet` | 409 | A level cannot be attested before its prerequisites are unlocked. |
@@ -1363,6 +1364,64 @@ paths:
         "503":
           $ref: "#/components/responses/Problem"
 
+  /v1/me/plan/sessions/{plannedSessionId}/start:
+    parameters:
+      - $ref: "#/components/parameters/PlannedSessionId"
+    post:
+      tags: [planning]
+      operationId: startPlannedSession
+      summary: Start a planned session in the training log
+      description: |
+        Writes the planned session into the log as a draft session (spec
+        §10.2): its blocks in order, one planned set entry per planned set
+        (`is_planned: true`) with one element carrying the targets. Each set
+        entry names its plan item in `planned_item_id`; the session names the
+        planned session in `planned_session_id`. Offers (probes, first
+        attempts) are not written; the athlete adds them on active choice.
+        A band target stays in the plan item: the log's assistance needs the
+        band, which the athlete names when logging the set.
+
+        Performing a set goes through the log API or sync as usual. A planned
+        session starts once: a second start answers `200` with the session
+        started first, whatever its `id`. After the log session is deleted,
+        the planned session can start again. Nothing starts while training
+        is stopped (`training-stopped`).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlannedSessionStart"
+      responses:
+        "201":
+          description: Started.
+          headers:
+            Location:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Session"
+        "200":
+          description: Started before; the session it started.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Session"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "404":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/Problem"
+        "503":
+          $ref: "#/components/responses/Problem"
+
   /v1/me/plan/decisions:
     get:
       tags: [planning]
@@ -2351,7 +2410,7 @@ components:
 
     Session:
       type: object
-      required: [id, started_at, ended_at, timezone, local_date, title, notes, perceived_fatigue, bodyweight_kg, status, is_rest_day, template_id, completed_at, updated_at, server_updated_at, blocks]
+      required: [id, started_at, ended_at, timezone, local_date, title, notes, perceived_fatigue, bodyweight_kg, status, is_rest_day, template_id, planned_session_id, completed_at, updated_at, server_updated_at, blocks]
       properties:
         id:
           $ref: "#/components/schemas/Id"
@@ -2377,6 +2436,10 @@ components:
         is_rest_day:
           type: boolean
         template_id:
+          type: [string, "null"]
+          format: uuid
+        planned_session_id:
+          description: The planned session the session was started from.
           type: [string, "null"]
           format: uuid
         completed_at:
@@ -2640,7 +2703,7 @@ components:
 
     SetEntry:
       type: object
-      required: [id, block_id, order_index, round_index, kind, is_planned, rest_after_planned_s, rest_after_actual_s, rpe, rir, completed_at, notes, updated_at, elements]
+      required: [id, block_id, order_index, round_index, kind, is_planned, rest_after_planned_s, rest_after_actual_s, rpe, rir, planned_item_id, completed_at, notes, updated_at, elements]
       properties:
         id:
           $ref: "#/components/schemas/Id"
@@ -2662,6 +2725,10 @@ components:
           type: [number, "null"]
         rir:
           type: [integer, "null"]
+        planned_item_id:
+          description: The plan item a set started from a planned session comes from.
+          type: [string, "null"]
+          format: uuid
         completed_at:
           $ref: "#/components/schemas/NullableTimestamp"
         notes:
@@ -3170,7 +3237,7 @@ components:
     SyncSession:
       description: A session row as sync carries it, without its blocks.
       type: object
-      required: [id, started_at, ended_at, timezone, local_date, title, notes, perceived_fatigue, bodyweight_kg, status, is_rest_day, template_id, completed_at, updated_at, server_updated_at, server_seq, deleted_at]
+      required: [id, started_at, ended_at, timezone, local_date, title, notes, perceived_fatigue, bodyweight_kg, status, is_rest_day, template_id, planned_session_id, completed_at, updated_at, server_updated_at, server_seq, deleted_at]
       properties:
         id:
           $ref: "#/components/schemas/Id"
@@ -3196,6 +3263,10 @@ components:
         is_rest_day:
           type: boolean
         template_id:
+          type: [string, "null"]
+          format: uuid
+        planned_session_id:
+          description: The planned session the session was started from.
           type: [string, "null"]
           format: uuid
         completed_at:
@@ -3245,7 +3316,7 @@ components:
         latest change to the set or any of its elements. A deleted set has no
         elements.
       type: object
-      required: [id, session_id, block_id, order_index, round_index, kind, is_planned, rest_after_planned_s, rest_after_actual_s, rpe, rir, completed_at, notes, updated_at, server_seq, deleted_at, elements]
+      required: [id, session_id, block_id, order_index, round_index, kind, is_planned, rest_after_planned_s, rest_after_actual_s, rpe, rir, planned_item_id, completed_at, notes, updated_at, server_seq, deleted_at, elements]
       properties:
         id:
           $ref: "#/components/schemas/Id"
@@ -3269,6 +3340,10 @@ components:
           type: [number, "null"]
         rir:
           type: [integer, "null"]
+        planned_item_id:
+          description: The plan item a set started from a planned session comes from.
+          type: [string, "null"]
+          format: uuid
         completed_at:
           $ref: "#/components/schemas/NullableTimestamp"
         notes:
@@ -4105,10 +4180,20 @@ components:
 
     PlannedSession:
       type: object
-      required: [id, index, date, kind, est_minutes, blocks, reasons]
+      required: [id, status, workout_session_id, index, date, kind, est_minutes, blocks, reasons]
       properties:
         id:
           $ref: "#/components/schemas/Id"
+        status:
+          description: |
+            planned, or started once the log has a session for it (completed
+            follows with the completion). A new plan of the week keeps the
+            start of the session on the same day.
+          type: string
+        workout_session_id:
+          description: The log session it was started as.
+          type: [string, "null"]
+          format: uuid
         index:
           type: integer
         date:
@@ -4152,9 +4237,12 @@ components:
     PlanItem:
       description: Identical planned sets of one exercise.
       type: object
-      required: [exercise, exercise_name, skill, stimulus, kind, sets, reps, hold_s, load_kg, assist, reserve, rest_s,
+      required: [id, exercise, exercise_name, skill, stimulus, kind, sets, reps, hold_s, load_kg, assist, reserve, rest_s,
                  calibration, offer, stop_rules, intensity, role, monitor, reasons]
       properties:
+        id:
+          description: Named by the planned set entries in the log (`planned_item_id`).
+          $ref: "#/components/schemas/Id"
         exercise:
           $ref: "#/components/schemas/Slug"
         exercise_name:
@@ -4294,6 +4382,22 @@ components:
         id:
           description: Client-generated; a repeat with the same id is answered from the first time.
           $ref: "#/components/schemas/Id"
+
+    PlannedSessionStart:
+      type: object
+      additionalProperties: false
+      required: [id, timezone]
+      properties:
+        id:
+          description: The log session's id, a UUIDv7 made by the client.
+          $ref: "#/components/schemas/Id"
+        started_at:
+          description: Now when absent.
+          $ref: "#/components/schemas/Timestamp"
+        timezone:
+          $ref: "#/components/schemas/TimeZone"
+        updated_at:
+          $ref: "#/components/schemas/Timestamp"
 
     HealthConsentChange:
       type: object

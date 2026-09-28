@@ -63,9 +63,12 @@ func problemFor(r *http.Request, err error) (p Problem, known bool) {
 	case errors.Is(err, planning.ErrConsentRequired):
 		p = problem("consent-required", "Consent required", http.StatusConflict,
 			"pain reports are health data and need the consent to keep them")
+	case errors.Is(err, planning.ErrTrainingStopped):
+		p = problem("training-stopped", "Training stopped", http.StatusConflict,
+			"training is stopped; the plan says why and what lifts the stop")
 	case errors.Is(err, store.ErrNotFound), errors.Is(err, planning.ErrNotFound):
 		p = problem("not-found", "Not found", http.StatusNotFound, "")
-	case errors.Is(err, store.ErrAlreadyExists):
+	case errors.Is(err, store.ErrAlreadyExists), errors.Is(err, planning.ErrSessionIDTaken):
 		p = problem("already-exists", "Already exists", http.StatusConflict, "a resource with this id already exists")
 	case errors.Is(err, store.ErrEmailTaken):
 		p = problem("email-taken", "Email already registered", http.StatusConflict, "")

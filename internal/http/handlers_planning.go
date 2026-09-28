@@ -12,6 +12,7 @@ import (
 	"github.com/google/uuid"
 
 	core "github.com/jaelricco/hefesto/internal/domain/planning"
+	"github.com/jaelricco/hefesto/internal/domain/training"
 	"github.com/jaelricco/hefesto/internal/planning"
 )
 
@@ -208,6 +209,50 @@ func (h *handlers) getPlannedSession(w http.ResponseWriter, r *http.Request) err
 	}
 	WriteJSON(w, r, http.StatusOK, plannedSessionDetailOut{PlanID: p.ID, WeekStart: dateOut(p.WeekStart),
 		RulesetVersion: p.RulesetVersion, Session: plannedSessionFrom(k, s), Disclaimer: p.Disclaimer})
+	return nil
+}
+
+// startPlannedSession writes a planned session into the log as a draft
+// session (spec §10.2). A second start answers with the first session.
+func (h *handlers) startPlannedSession(w http.ResponseWriter, r *http.Request) error {
+	svc, err := h.planner()
+	if err != nil {
+		return err
+	}
+	planned, err := pathID(r, "plannedSessionId")
+	if err != nil {
+		return err
+	}
+	var in plannedSessionStartIn
+	if err := h.body(w, r, "PlannedSessionStart", &in); err != nil {
+		return err
+	}
+	loc, err := time.LoadLocation(in.Timezone)
+	if err != nil || in.Timezone == "Local" {
+		return training.FieldErrors{"/timezone": "not a known IANA time zone"}.Err()
+	}
+	wr := writer(r, in.UpdatedAt)
+	started := time.Now().UTC().Truncate(time.Microsecond)
+	if in.StartedAt != nil {
+		started = *in.StartedAt
+	}
+	id, created, err := svc.StartPlannedSession(r.Context(), wr.UserID, planned, planning.SessionStart{
+		SessionID: in.ID, DeviceID: wr.DeviceID, StartedAt: started, Timezone: in.Timezone,
+		LocalDate: training.LocalDate(started, loc), At: wr.At,
+	})
+	if err != nil {
+		return err
+	}
+	sess, err := h.Store.GetSession(r.Context(), wr.UserID, id)
+	if err != nil {
+		return err
+	}
+	status := http.StatusOK
+	if created {
+		status = http.StatusCreated
+		w.Header().Set("Location", "/v1/sessions/"+id.String())
+	}
+	WriteJSON(w, r, status, sessionFrom(sess))
 	return nil
 }
 

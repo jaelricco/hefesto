@@ -442,3 +442,97 @@ func TestHealthConsentWithdrawAndGrant(t *testing.T) {
 		t.Errorf("%d consent changes in the log, want 2", consents)
 	}
 }
+
+// A planned session starts as a draft in the log (spec §10.2); its sets are
+// performed through the log API as usual and keep their plan item.
+func TestStartPlannedSession(t *testing.T) {
+	a := newAPI(t, withPlanner(&fixedClock{plannerMonday}))
+	u := onboarded(t, a, "start@example.com")
+	plan := a.call("GET", "/v1/me/plan", u.access, nil).ok(200, "TrainingPlan")
+	sessions := plan["sessions"].([]any)
+	if len(sessions) < 2 {
+		t.Fatalf("%d sessions planned", len(sessions))
+	}
+	first := sessions[0].(map[string]any)
+	if first["status"] != "planned" || first["workout_session_id"] != nil {
+		t.Fatalf("a new session: %v %v", first["status"], first["workout_session_id"])
+	}
+	sid := first["id"].(string)
+	items := map[string]bool{}
+	for _, b := range first["blocks"].([]any) {
+		for _, it := range b.(map[string]any)["items"].([]any) {
+			items[it.(map[string]any)["id"].(string)] = true
+		}
+	}
+	start := func(id string) map[string]any {
+		return map[string]any{"id": id, "timezone": "Europe/Zurich", "started_at": plannerMonday.Add(10 * time.Hour).Format(time.RFC3339)}
+	}
+
+	logID := newID()
+	r := a.call("POST", "/v1/me/plan/sessions/"+sid+"/start", u.access, start(logID))
+	sess := r.ok(201, "Session")
+	if r.header.Get("Location") != "/v1/sessions/"+logID || sess["id"] != logID || sess["planned_session_id"] != sid ||
+		sess["status"] != "draft" || sess["local_date"] != "2026-09-28" {
+		t.Fatalf("started session %v (Location %q)", sess, r.header.Get("Location"))
+	}
+	var set map[string]any
+	for _, b := range sess["blocks"].([]any) {
+		for _, s := range b.(map[string]any)["sets"].([]any) {
+			s := s.(map[string]any)
+			if s["is_planned"] != true || !items[s["planned_item_id"].(string)] {
+				t.Fatalf("set %v", s)
+			}
+			if set == nil {
+				set = s
+			}
+		}
+	}
+	if set == nil {
+		t.Fatal("no planned sets")
+	}
+
+	// A second start answers with the first session.
+	again := a.call("POST", "/v1/me/plan/sessions/"+sid+"/start", u.access, start(newID())).ok(200, "Session")
+	if again["id"] != logID {
+		t.Errorf("second start gave %v, want %v", again["id"], logID)
+	}
+	now := a.call("GET", "/v1/me/plan", u.access, nil).ok(200, "TrainingPlan")["sessions"].([]any)[0].(map[string]any)
+	if now["status"] != "started" || now["workout_session_id"] != logID {
+		t.Errorf("planned session after the start: %v %v", now["status"], now["workout_session_id"])
+	}
+
+	// Performing a planned set goes through the log API and keeps its item.
+	el := set["elements"].([]any)[0].(map[string]any)
+	el["reps"], el["hold_seconds"] = nil, nil
+	if el["measure"] == "reps" {
+		el["reps"] = 3
+	} else {
+		el["hold_seconds"] = 5
+	}
+	delete(el, "assistance_class")
+	delete(el, "order_index")
+	done := a.call("PUT", "/v1/sessions/"+logID+"/sets/"+set["id"].(string), u.access, map[string]any{
+		"block_id": set["block_id"], "order_index": set["order_index"], "kind": set["kind"], "is_planned": false,
+		"completed_at": plannerMonday.Add(10*time.Hour + 5*time.Minute).Format(time.RFC3339),
+		"elements":     []any{map[string]any{"id": el["id"], "exercise_id": el["exercise_id"], "measure": el["measure"], "reps": el["reps"], "hold_seconds": el["hold_seconds"]}},
+	}).ok(200, "SetEntry")
+	if done["is_planned"] != false || done["planned_item_id"] != set["planned_item_id"] {
+		t.Errorf("performed set %v", done)
+	}
+	pulled := a.call("GET", "/v1/sync?cursor=0&limit=1000", u.access, nil).ok(200, "SyncPage")
+	if s := pulled["sessions"].([]any); len(s) != 1 || s[0].(map[string]any)["planned_session_id"] != sid {
+		t.Errorf("synced sessions %v", s)
+	}
+
+	// Errors: an unknown or another user's session, a bad time zone, a
+	// taken ID, and a stop.
+	a.call("POST", "/v1/me/plan/sessions/"+newID()+"/start", u.access, start(newID())).problem(404, "not-found")
+	other := onboarded(t, a, "start-other@example.com")
+	a.call("POST", "/v1/me/plan/sessions/"+sid+"/start", other.access, start(newID())).problem(404, "not-found")
+	next := sessions[1].(map[string]any)["id"].(string)
+	a.call("POST", "/v1/me/plan/sessions/"+next+"/start", u.access, map[string]any{"id": newID(), "timezone": "Mars/Base"}).
+		problem(422, "validation")
+	a.call("POST", "/v1/me/plan/sessions/"+next+"/start", u.access, start(logID)).problem(409, "already-exists")
+	a.call("POST", "/v1/me/symptoms", u.access, map[string]any{"id": newID()}).ok(200, "PlanEventResult")
+	a.call("POST", "/v1/me/plan/sessions/"+next+"/start", u.access, start(newID())).problem(409, "training-stopped")
+}
