@@ -347,6 +347,10 @@ ALTER TABLE workout_sessions ADD CONSTRAINT workout_sessions_planned_session_fk
     FOREIGN KEY (planned_session_id, user_id)
     REFERENCES planned_sessions (id, user_id) ON DELETE SET NULL (planned_session_id);
 ALTER TABLE set_entries ADD COLUMN planned_item_id uuid NULL;
+-- Seconds in reserve of a hold (SIR, spec §4.3, ENT-S-4); rir stays
+-- repetitions.
+ALTER TABLE set_entries ADD COLUMN sir_s smallint NULL
+    CONSTRAINT set_entries_sir_ck CHECK (sir_s IS NULL OR sir_s BETWEEN 0 AND 60);
 
 -- Every event the planner applied, with the changes the user sees (spec
 -- §6.14, §9.4). One row per event; the trigger and source make events
@@ -387,6 +391,7 @@ CREATE TRIGGER plan_decisions_append_only BEFORE UPDATE OR DELETE ON plan_decisi
 -- +goose Down
 DROP TABLE plan_decisions;
 DROP FUNCTION plan_decisions_append_only();
+ALTER TABLE set_entries DROP COLUMN sir_s;
 ALTER TABLE set_entries DROP COLUMN planned_item_id;
 ALTER TABLE workout_sessions DROP COLUMN planned_session_id;
 DROP TABLE planned_sessions;

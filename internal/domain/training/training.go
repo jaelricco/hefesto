@@ -48,6 +48,9 @@ const (
 // shorter; the bound stops a malformed client from writing thousands.
 const MaxElementsPerSet = 20
 
+// MaxSIR bounds the seconds in reserve of a hold (spec §4.9).
+const MaxSIR = 60
+
 // Session is a logged workout.
 type Session struct {
 	ID               uuid.UUID
@@ -98,6 +101,9 @@ type SetEntry struct {
 	RestAfterActualS  *int
 	RPE               *float64
 	RIR               *int
+	// SIR is the seconds in reserve of a hold; RIR stays repetitions
+	// (ENT-S-4).
+	SIR *int
 	// PlannedItemID is the plan item a planned set comes from.
 	PlannedItemID *uuid.UUID
 	CompletedAt   *time.Time

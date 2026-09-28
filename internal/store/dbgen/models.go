@@ -294,6 +294,7 @@ type SetEntry struct {
 	ServerSeq         int64
 	DeletedAt         *time.Time
 	PlannedItemID     *uuid.UUID
+	SirS              *int16
 }
 
 type Skill struct {

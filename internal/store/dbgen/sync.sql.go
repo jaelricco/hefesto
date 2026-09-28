@@ -542,7 +542,7 @@ func (q *Queries) SyncSessions(ctx context.Context, arg SyncSessionsParams) ([]W
 }
 
 const syncSetEntries = `-- name: SyncSetEntries :many
-SELECT id, user_id, session_id, block_id, order_index, round_index, kind, is_planned, rest_after_planned_s, rest_after_actual_s, rpe, rir, completed_at, notes, client_id, updated_at, server_updated_at, server_seq, deleted_at, planned_item_id FROM set_entries WHERE user_id = $1 AND id = ANY($2::uuid[])
+SELECT id, user_id, session_id, block_id, order_index, round_index, kind, is_planned, rest_after_planned_s, rest_after_actual_s, rpe, rir, completed_at, notes, client_id, updated_at, server_updated_at, server_seq, deleted_at, planned_item_id, sir_s FROM set_entries WHERE user_id = $1 AND id = ANY($2::uuid[])
 `
 
 type SyncSetEntriesParams struct {
@@ -580,6 +580,7 @@ func (q *Queries) SyncSetEntries(ctx context.Context, arg SyncSetEntriesParams) 
 			&i.ServerSeq,
 			&i.DeletedAt,
 			&i.PlannedItemID,
+			&i.SirS,
 		); err != nil {
 			return nil, err
 		}

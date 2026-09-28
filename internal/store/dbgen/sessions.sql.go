@@ -160,7 +160,7 @@ func (q *Queries) GetSessionForUpdate(ctx context.Context, arg GetSessionForUpda
 }
 
 const getSetEntry = `-- name: GetSetEntry :one
-SELECT id, user_id, session_id, block_id, order_index, round_index, kind, is_planned, rest_after_planned_s, rest_after_actual_s, rpe, rir, completed_at, notes, client_id, updated_at, server_updated_at, server_seq, deleted_at, planned_item_id FROM set_entries WHERE id = $1 AND user_id = $2
+SELECT id, user_id, session_id, block_id, order_index, round_index, kind, is_planned, rest_after_planned_s, rest_after_actual_s, rpe, rir, completed_at, notes, client_id, updated_at, server_updated_at, server_seq, deleted_at, planned_item_id, sir_s FROM set_entries WHERE id = $1 AND user_id = $2
 `
 
 type GetSetEntryParams struct {
@@ -192,6 +192,7 @@ func (q *Queries) GetSetEntry(ctx context.Context, arg GetSetEntryParams) (SetEn
 		&i.ServerSeq,
 		&i.DeletedAt,
 		&i.PlannedItemID,
+		&i.SirS,
 	)
 	return i, err
 }
@@ -590,7 +591,7 @@ func (q *Queries) ListSetElements(ctx context.Context, arg ListSetElementsParams
 
 const listSetEntries = `-- name: ListSetEntries :many
 
-SELECT id, user_id, session_id, block_id, order_index, round_index, kind, is_planned, rest_after_planned_s, rest_after_actual_s, rpe, rir, completed_at, notes, client_id, updated_at, server_updated_at, server_seq, deleted_at, planned_item_id FROM set_entries
+SELECT id, user_id, session_id, block_id, order_index, round_index, kind, is_planned, rest_after_planned_s, rest_after_actual_s, rpe, rir, completed_at, notes, client_id, updated_at, server_updated_at, server_seq, deleted_at, planned_item_id, sir_s FROM set_entries
 WHERE session_id = $1 AND user_id = $2 AND deleted_at IS NULL
 ORDER BY block_id, order_index
 `
@@ -631,6 +632,7 @@ func (q *Queries) ListSetEntries(ctx context.Context, arg ListSetEntriesParams) 
 			&i.ServerSeq,
 			&i.DeletedAt,
 			&i.PlannedItemID,
+			&i.SirS,
 		); err != nil {
 			return nil, err
 		}
@@ -1230,22 +1232,22 @@ func (q *Queries) UpsertSetElement(ctx context.Context, arg UpsertSetElementPara
 const upsertSetEntry = `-- name: UpsertSetEntry :one
 INSERT INTO set_entries AS s (
     id, user_id, session_id, block_id, order_index, round_index, kind, is_planned,
-    rest_after_planned_s, rest_after_actual_s, rpe, rir, completed_at, notes,
+    rest_after_planned_s, rest_after_actual_s, rpe, rir, sir_s, completed_at, notes,
     client_id, updated_at
 ) VALUES (
     $1, $2, $3, $4, $5, $6, $7, $8,
-    $9, $10, $11, $12, $13, $14,
-    $15, $16
+    $9, $10, $11, $12, $13, $14, $15,
+    $16, $17
 )
 ON CONFLICT (id) DO UPDATE SET
     block_id = EXCLUDED.block_id, order_index = EXCLUDED.order_index,
     round_index = EXCLUDED.round_index, kind = EXCLUDED.kind, is_planned = EXCLUDED.is_planned,
     rest_after_planned_s = EXCLUDED.rest_after_planned_s,
     rest_after_actual_s = EXCLUDED.rest_after_actual_s,
-    rpe = EXCLUDED.rpe, rir = EXCLUDED.rir, completed_at = EXCLUDED.completed_at,
+    rpe = EXCLUDED.rpe, rir = EXCLUDED.rir, sir_s = EXCLUDED.sir_s, completed_at = EXCLUDED.completed_at,
     notes = EXCLUDED.notes, client_id = EXCLUDED.client_id, updated_at = EXCLUDED.updated_at
 WHERE s.user_id = EXCLUDED.user_id AND s.session_id = EXCLUDED.session_id AND s.deleted_at IS NULL
-RETURNING id, user_id, session_id, block_id, order_index, round_index, kind, is_planned, rest_after_planned_s, rest_after_actual_s, rpe, rir, completed_at, notes, client_id, updated_at, server_updated_at, server_seq, deleted_at, planned_item_id, (xmax = 0) AS inserted
+RETURNING id, user_id, session_id, block_id, order_index, round_index, kind, is_planned, rest_after_planned_s, rest_after_actual_s, rpe, rir, completed_at, notes, client_id, updated_at, server_updated_at, server_seq, deleted_at, planned_item_id, sir_s, (xmax = 0) AS inserted
 `
 
 type UpsertSetEntryParams struct {
@@ -1261,6 +1263,7 @@ type UpsertSetEntryParams struct {
 	RestAfterActualS  *int32
 	Rpe               pgtype.Numeric
 	Rir               *int16
+	SirS              *int16
 	CompletedAt       *time.Time
 	Notes             string
 	ClientID          *uuid.UUID
@@ -1288,6 +1291,7 @@ type UpsertSetEntryRow struct {
 	ServerSeq         int64
 	DeletedAt         *time.Time
 	PlannedItemID     *uuid.UUID
+	SirS              *int16
 	Inserted          bool
 }
 
@@ -1305,6 +1309,7 @@ func (q *Queries) UpsertSetEntry(ctx context.Context, arg UpsertSetEntryParams) 
 		arg.RestAfterActualS,
 		arg.Rpe,
 		arg.Rir,
+		arg.SirS,
 		arg.CompletedAt,
 		arg.Notes,
 		arg.ClientID,
@@ -1332,6 +1337,7 @@ func (q *Queries) UpsertSetEntry(ctx context.Context, arg UpsertSetEntryParams) 
 		&i.ServerSeq,
 		&i.DeletedAt,
 		&i.PlannedItemID,
+		&i.SirS,
 		&i.Inserted,
 	)
 	return i, err

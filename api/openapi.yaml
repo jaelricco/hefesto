@@ -2592,6 +2592,11 @@ components:
           type: [integer, "null"]
           minimum: 0
           maximum: 10
+        sir_s:
+          description: Seconds a hold could have gone on (SIR). `rir` stays repetitions.
+          type: [integer, "null"]
+          minimum: 0
+          maximum: 60
         completed_at:
           $ref: "#/components/schemas/NullableTimestamp"
         notes:
@@ -2704,7 +2709,7 @@ components:
 
     SetEntry:
       type: object
-      required: [id, block_id, order_index, round_index, kind, is_planned, rest_after_planned_s, rest_after_actual_s, rpe, rir, planned_item_id, completed_at, notes, updated_at, elements]
+      required: [id, block_id, order_index, round_index, kind, is_planned, rest_after_planned_s, rest_after_actual_s, rpe, rir, sir_s, planned_item_id, completed_at, notes, updated_at, elements]
       properties:
         id:
           $ref: "#/components/schemas/Id"
@@ -2725,6 +2730,9 @@ components:
         rpe:
           type: [number, "null"]
         rir:
+          type: [integer, "null"]
+        sir_s:
+          description: Seconds in reserve of a hold; on a planned set, the target.
           type: [integer, "null"]
         planned_item_id:
           description: The plan item a set started from a planned session comes from.
@@ -3327,7 +3335,7 @@ components:
         latest change to the set or any of its elements. A deleted set has no
         elements.
       type: object
-      required: [id, session_id, block_id, order_index, round_index, kind, is_planned, rest_after_planned_s, rest_after_actual_s, rpe, rir, planned_item_id, completed_at, notes, updated_at, server_seq, deleted_at, elements]
+      required: [id, session_id, block_id, order_index, round_index, kind, is_planned, rest_after_planned_s, rest_after_actual_s, rpe, rir, sir_s, planned_item_id, completed_at, notes, updated_at, server_seq, deleted_at, elements]
       properties:
         id:
           $ref: "#/components/schemas/Id"
@@ -3350,6 +3358,9 @@ components:
         rpe:
           type: [number, "null"]
         rir:
+          type: [integer, "null"]
+        sir_s:
+          description: Seconds in reserve of a hold; on a planned set, the target.
           type: [integer, "null"]
         planned_item_id:
           description: The plan item a set started from a planned session comes from.

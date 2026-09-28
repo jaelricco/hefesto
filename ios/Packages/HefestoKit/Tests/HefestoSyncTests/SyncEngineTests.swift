@@ -271,7 +271,7 @@ func sessionJSON(_ s: Session, _ b: Block, setId: String, reps: Int) -> String {
      "blocks":[{"id":"\#(b.id)","order_index":0,"kind":"straight","rounds_planned":null,"rounds_done":null,
        "interval_s":null,"notes":"","updated_at":"2026-09-25T10:00:00Z",
        "sets":[{"id":"\#(setId)","block_id":"\#(b.id)","order_index":0,"round_index":null,"kind":"working",
-         "is_planned":false,"rest_after_planned_s":null,"rest_after_actual_s":null,"rpe":null,"rir":null,"planned_item_id":null,
+         "is_planned":false,"rest_after_planned_s":null,"rest_after_actual_s":null,"rpe":null,"rir":null,"sir_s":null,"planned_item_id":null,
          "completed_at":"2026-09-25T10:05:00.5Z","notes":"","updated_at":"2026-09-25T10:05:00.5Z",
          "elements":[\#(elementJSON(reps: reps))]}]}]}
     """#

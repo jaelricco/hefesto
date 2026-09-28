@@ -327,7 +327,7 @@ func (s *Store) PutSet(ctx context.Context, w Writer, sessionID uuid.UUID, set t
 			OrderIndex: int32(set.OrderIndex), //nolint:gosec // bounded by the API schema
 			RoundIndex: int16Ptr(set.RoundIndex), Kind: set.Kind, IsPlanned: set.IsPlanned,
 			RestAfterPlannedS: int32Ptr(set.RestAfterPlannedS), RestAfterActualS: int32Ptr(set.RestAfterActualS),
-			Rpe: rpe, Rir: int16Ptr(set.RIR), CompletedAt: set.CompletedAt, Notes: set.Notes,
+			Rpe: rpe, Rir: int16Ptr(set.RIR), SirS: int16Ptr(set.SIR), CompletedAt: set.CompletedAt, Notes: set.Notes,
 			ClientID: w.DeviceID, UpdatedAt: w.At,
 		})
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -784,7 +784,7 @@ func setFromRow(e dbgen.SetEntry) training.SetEntry {
 		ID: e.ID, SessionID: e.SessionID, BlockID: e.BlockID, OrderIndex: int(e.OrderIndex),
 		RoundIndex: intPtr16(e.RoundIndex), Kind: e.Kind, IsPlanned: e.IsPlanned,
 		RestAfterPlannedS: intPtr32(e.RestAfterPlannedS), RestAfterActualS: intPtr32(e.RestAfterActualS),
-		RPE: numericPtrToFloat(e.Rpe), RIR: intPtr16(e.Rir), PlannedItemID: e.PlannedItemID, CompletedAt: e.CompletedAt, Notes: e.Notes,
+		RPE: numericPtrToFloat(e.Rpe), RIR: intPtr16(e.Rir), SIR: intPtr16(e.SirS), PlannedItemID: e.PlannedItemID, CompletedAt: e.CompletedAt, Notes: e.Notes,
 		UpdatedAt: e.UpdatedAt, Elements: []training.Element{},
 	}
 }
