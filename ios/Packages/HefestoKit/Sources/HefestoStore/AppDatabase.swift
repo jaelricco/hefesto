@@ -167,6 +167,14 @@ public final class AppDatabase: Sendable {
         m.registerMigration("v3-set-reserve") { db in
             try db.alter(table: "setEntry") { t in t.add(column: "sirS", .integer) }
         }
+
+        // The training plan (ADR 0021): the links of a started session to
+        // its plan, and the plan of each week as the server sent it.
+        m.registerMigration("v4-plan") { db in
+            try db.alter(table: "session") { t in t.add(column: "plannedSessionId", .text) }
+            try db.alter(table: "setEntry") { t in t.add(column: "plannedItemId", .text) }
+            try migratePlanCache(db)
+        }
         return m
     }
 }

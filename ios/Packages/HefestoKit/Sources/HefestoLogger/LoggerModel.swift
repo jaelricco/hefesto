@@ -91,6 +91,35 @@ public final class LoggerModel {
         return entry.id
     }
 
+    /// Performs a set the plan wrote into the draft (ADR 0016): the planned
+    /// set becomes the set the athlete did, in place. Its id stays, so the
+    /// server keeps its link to the plan item; its targets give way to what
+    /// was done, and its planned rest starts.
+    @discardableResult
+    public func perform(
+        plannedSet setId: String, elements: [ElementDraft], rir: Int? = nil, sirS: Int? = nil
+    ) throws -> String {
+        guard var set = findSet(setId), set.entry.isPlanned else { throw StoreError.notFound }
+        guard !elements.isEmpty else { throw StoreError.emptySet }
+        let at = now()
+        set.entry.isPlanned = false
+        set.entry.completedAt = at
+        set.entry.rir = rir
+        set.entry.sirS = sirS
+        set.entry = try closeRest(before: set.entry, at: at)
+        set.elements = elements.enumerated().map { $0.element.element(in: setId, orderIndex: $0.offset) }
+        try db.saveSet(set, now: at)
+        rest = RestTimer(startedAt: at, plannedSeconds: set.entry.restAfterPlannedS ?? defaultRestSeconds)
+        try reload()
+        return setId
+    }
+
+    /// The planned sets of the session not yet performed, in the order of
+    /// their blocks.
+    public var openPlannedSets: [SetWithElements] {
+        tree.blocks.flatMap { $0.sets.filter { $0.entry.isPlanned && $0.entry.completedAt == nil } }
+    }
+
     /// Adds an element to an existing set, turning it into a combo (or a
     /// longer one). The set is rewritten whole, as every set write is.
     public func addElement(to setId: String, _ element: ElementDraft) throws {

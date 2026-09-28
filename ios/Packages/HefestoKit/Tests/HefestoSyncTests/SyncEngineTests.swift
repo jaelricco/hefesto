@@ -21,6 +21,8 @@ final class ScriptedServer: ClientTransport, @unchecked Sendable {
     private let lock = NSLock()
     private var _requests: [Request] = []
     var handler: (Request) throws -> (Int, String)
+    /// Headers every response carries, such as an `ETag`.
+    var responseHeaders = HTTPFields()
 
     init(_ handler: @escaping (Request) throws -> (Int, String)) { self.handler = handler }
 
@@ -34,7 +36,7 @@ final class ScriptedServer: ClientTransport, @unchecked Sendable {
         let r = Request(operation: operationID, headers: request.headerFields, path: request.path ?? "", body: data)
         lock.withLock { _requests.append(r) }
         let (status, json) = try lock.withLock { try handler(r) }
-        var fields = HTTPFields()
+        var fields = lock.withLock { responseHeaders }
         fields[.contentType] = status >= 400 ? "application/problem+json" : "application/json"
         return (HTTPResponse(status: .init(code: status), headerFields: fields), json.isEmpty ? nil : HTTPBody(json))
     }
