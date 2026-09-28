@@ -5,7 +5,9 @@ import HefestoStore
 /// A screen a demo run opens on, for design review and the screenshot
 /// workflow (.github/workflows/ios-screenshots.yml).
 enum DemoScreen: String, CaseIterable {
-    case today, logger, composer, finish, map, peek, detail, history, session, stats, celebration
+    // `composer` opens the set composer empty; `reserve` opens it on a hold,
+    // so it asks what the athlete had left.
+    case today, logger, composer, reserve, finish, map, peek, detail, history, session, stats, celebration
     case signIn = "signin"
 
     var tab: AppTab {
@@ -15,6 +17,8 @@ enum DemoScreen: String, CaseIterable {
         default: .today
         }
     }
+
+    var opensLogger: Bool { [.logger, .composer, .reserve, .finish].contains(self) }
 }
 
 /// What a demo run seeded, so screens can open on it.
@@ -25,10 +29,11 @@ struct DemoRun {
     let draftSessionId: String
     let pastSessionId: String
     let skillId: String
+    /// A hold: the stats screen shows it, and the reserve screen chooses it.
     let exerciseId: String
     let celebration: Celebration?
 
-    var opensLogger: Bool { [.logger, .composer, .finish].contains(screen) }
+    var opensLogger: Bool { screen.opensLogger }
 }
 
 #if DEBUG
@@ -213,7 +218,7 @@ extension DemoRun {
         // The logger screens open on the draft with a combo logged 48 s ago:
         // the rest runs, 1:42 of 2:30 left.
         var logger: LoggerModel?
-        if [.logger, .composer, .finish].contains(screen) {
+        if screen.opensLogger {
             let clock: @Sendable () -> Date = { Date().addingTimeInterval(-48) }
             let model = try LoggerModel(db: db, sessionId: draft, now: clock)
             if let lastBlock = model.tree.blocks.last {

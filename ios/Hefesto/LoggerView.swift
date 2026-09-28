@@ -64,9 +64,12 @@ struct LoggerView: View {
             do {
                 let logger = try model.makeLogger(sessionId: sessionId)
                 self.logger = logger
-                exercises = try model.db.exercisesById()
-                if let demo = model.demo, demo.screen == .composer, let last = logger.tree.blocks.last {
-                    composing = Composing(blockId: last.id)
+                let exercises = try model.db.exercisesById()
+                self.exercises = exercises
+                if let demo = model.demo, [.composer, .reserve].contains(demo.screen),
+                   let last = logger.tree.blocks.last {
+                    composing = Composing(
+                        blockId: last.id, exercise: demo.screen == .reserve ? exercises[demo.exerciseId] : nil)
                 }
                 if model.demo?.screen == .finish { finishing = true }
             } catch {
@@ -74,7 +77,9 @@ struct LoggerView: View {
             }
         }
         .sheet(item: $composing) { c in
-            SetComposer(db: model.db, defaultRest: logger?.defaultRestSeconds ?? 120) { drafts, rest, reserve in
+            SetComposer(
+                db: model.db, defaultRest: logger?.defaultRestSeconds ?? 120, exercise: c.exercise
+            ) { drafts, rest, reserve in
                 log(drafts, rest: rest, reserve: reserve, in: c.blockId)
             }
         }
@@ -224,6 +229,8 @@ struct LoggerView: View {
 
 struct Composing: Identifiable {
     let blockId: String
+    /// The exercise the composer opens on, if any.
+    var exercise: Exercise?
     var id: String { blockId }
 }
 

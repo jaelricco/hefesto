@@ -11,7 +11,7 @@ struct SetComposer: View {
     let onSave: ([ElementDraft], Int, SetReserve) -> Void
 
     @Environment(\.dismiss) private var dismiss
-    @State private var elements: [Draft] = [Draft()]
+    @State private var elements: [Draft]
     @State private var rest: Int
     @State private var rir: Int?
     @State private var sirS: Int?
@@ -22,10 +22,15 @@ struct SetComposer: View {
     /// The choices for a hold's reserve, within the log's 0–60 s.
     static let sirChoices = [0, 1, 2, 3, 4, 5, 6, 8, 10, 15, 20, 30, 45, 60]
 
-    init(db: AppDatabase, defaultRest: Int, onSave: @escaping ([ElementDraft], Int, SetReserve) -> Void) {
+    /// `exercise`, if given, is chosen for the first element already.
+    init(db: AppDatabase, defaultRest: Int, exercise: Exercise? = nil,
+         onSave: @escaping ([ElementDraft], Int, SetReserve) -> Void) {
         self.db = db
         self.defaultRest = defaultRest
         self.onSave = onSave
+        var first = Draft()
+        if let exercise { first.choose(exercise) }
+        _elements = State(initialValue: [first])
         _rest = State(initialValue: defaultRest)
     }
 
@@ -50,7 +55,7 @@ struct SetComposer: View {
                         .themedRow()
                         if draft.exercise != nil { ElementFields(draft: $draft) }
                     } header: {
-                        Text(elements.count > 1 ? LocalizedStringKey("Combo, part \(index + 1)") : "Set")
+                        CapsLabel(elements.count > 1 ? LocalizedStringKey("Combo, part \(index + 1)") : "Set")
                     } footer: {
                         if elements.count > 1 {
                             Button("Remove this part", role: .destructive) {
@@ -90,17 +95,18 @@ struct SetComposer: View {
                         }
                         .themedRow()
                     } header: {
-                        Text("Reserve")
+                        CapsLabel("Reserve")
                     } footer: {
                         VStack(alignment: .leading) {
                             if asksRIR { Text("How many more clean reps you could have done.") }
                             if asksSIR { Text("How much longer you could have held with clean form.") }
                         }
                         .font(.detailText)
+                        .foregroundStyle(Palette.textSecondary)
                     }
                 }
 
-                Section("Rest after") {
+                Section {
                     Stepper(value: $rest, in: 0...600, step: 15) {
                         Text(Duration.seconds(rest).formatted(.time(pattern: .minuteSecond)))
                             .font(.metricSmall)
@@ -108,6 +114,8 @@ struct SetComposer: View {
                             .foregroundStyle(Palette.text)
                     }
                     .themedRow()
+                } header: {
+                    CapsLabel("Rest after")
                 }
             }
             .themedScreen()
