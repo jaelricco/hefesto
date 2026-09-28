@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hefesto.fit/schema/training/manifest.schema.json",
+  "title": "Training knowledge base manifest (content/training/manifest.yaml)",
+  "description": "Ruleset version and file list (spec §2.5).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "ruleset_version",
+    "status",
+    "files"
+  ],
+  "properties": {
+    "ruleset_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "status": {
+      "$ref": "common.schema.json#/$defs/status"
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z_]+\\.yaml$"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    }
+  }
+}

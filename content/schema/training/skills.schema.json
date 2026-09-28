@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hefesto.fit/schema/training/skills.schema.json",
+  "title": "Planner skills (content/training/skills.yaml)",
+  "description": "Ladders and levels of the skill graph (spec §3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "skills"
+  ],
+  "properties": {
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "slug",
+          "name",
+          "limiting_factor",
+          "rungs",
+          "levels"
+        ],
+        "properties": {
+          "slug": {
+            "$ref": "common.schema.json#/$defs/slug"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "foundation": {
+            "type": "boolean"
+          },
+          "limiting_factor": {
+            "type": "string",
+            "enum": [
+              "strength",
+              "balance",
+              "mixed"
+            ]
+          },
+          "rungs": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/slug"
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "levels": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "slug",
+                "exercise",
+                "threshold",
+                "og_ordinal"
+              ],
+              "properties": {
+                "slug": {
+                  "$ref": "common.schema.json#/$defs/slug"
+                },
+                "exercise": {
+                  "$ref": "common.schema.json#/$defs/slug"
+                },
+                "threshold": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "og_ordinal": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 20
+                },
+                "prerequisites": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9-]+/[a-z0-9-]+$"
+                  },
+                  "uniqueItems": true
+                },
+                "recommended": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "to",
+                      "weight"
+                    ],
+                    "properties": {
+                      "to": {
+                        "type": "string",
+                        "pattern": "^[a-z0-9-]+/[a-z0-9-]+$"
+                      },
+                      "weight": {
+                        "type": "number",
+                        "exclusiveMinimum": 0,
+                        "exclusiveMaximum": 1
+                      }
+                    }
+                  }
+                },
+                "milestone": {
+                  "type": "boolean"
+                },
+                "hint": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "minItems": 1
+          },
+          "feeders": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/slug"
+            },
+            "uniqueItems": true
+          },
+          "sources": {
+            "$ref": "common.schema.json#/$defs/sources"
+          }
+        }
+      },
+      "minItems": 1
+    }
+  }
+}

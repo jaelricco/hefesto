@@ -21,6 +21,7 @@ import (
 	"github.com/jaelricco/hefesto/internal/config"
 	lhttp "github.com/jaelricco/hefesto/internal/http"
 	"github.com/jaelricco/hefesto/internal/media"
+	"github.com/jaelricco/hefesto/internal/planning"
 	"github.com/jaelricco/hefesto/internal/store"
 )
 
@@ -74,6 +75,15 @@ func run() error {
 		deps.DB = pool
 		if err := wireAPI(ctx, cfg, &deps, store.New(pool)); err != nil {
 			return err
+		}
+		// The planner validates its knowledge base once; when it is invalid
+		// the planning endpoints answer 503 and the rest of the API runs
+		// (spec §2.6). Draft content is refused in production (ENT-10).
+		deps.Planner = &planning.Service{
+			Knowledge: planning.LoadContentKnowledge(cfg.ContentDir, cfg.Env == config.EnvProd, slog.Default()),
+			Store:     store.NewPlanner(pool),
+			Clock:     planning.SystemClock{},
+			Log:       slog.Default(),
 		}
 	}
 	router := lhttp.NewRouter(deps)

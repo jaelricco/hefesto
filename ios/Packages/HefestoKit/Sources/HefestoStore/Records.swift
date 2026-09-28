@@ -19,6 +19,9 @@ public struct Session: Codable, Sendable, Hashable, Identifiable, FetchableRecor
     public var status: String // draft | completed | abandoned
     public var isRestDay: Bool
     public var templateId: String?
+    /// The planned session it was started from (ADR 0016). Set by the
+    /// server's start and never sent back: the server keeps it.
+    public var plannedSessionId: String?
     public var completedAt: Date?
     public var updatedAt: Date
     public var serverSeq: Int64?
@@ -28,14 +31,15 @@ public struct Session: Codable, Sendable, Hashable, Identifiable, FetchableRecor
         id: String = UUIDv7.make(), startedAt: Date, endedAt: Date? = nil, timezone: String,
         localDate: String, title: String = "", notes: String = "", perceivedFatigue: Int? = nil,
         bodyweightKg: Double? = nil, status: String = "draft", isRestDay: Bool = false,
-        templateId: String? = nil, completedAt: Date? = nil, updatedAt: Date = Date(),
-        serverSeq: Int64? = nil, deletedAt: Date? = nil
+        templateId: String? = nil, plannedSessionId: String? = nil, completedAt: Date? = nil,
+        updatedAt: Date = Date(), serverSeq: Int64? = nil, deletedAt: Date? = nil
     ) {
         self.id = id; self.startedAt = startedAt; self.endedAt = endedAt; self.timezone = timezone
         self.localDate = localDate; self.title = title; self.notes = notes
         self.perceivedFatigue = perceivedFatigue; self.bodyweightKg = bodyweightKg; self.status = status
-        self.isRestDay = isRestDay; self.templateId = templateId; self.completedAt = completedAt
-        self.updatedAt = updatedAt; self.serverSeq = serverSeq; self.deletedAt = deletedAt
+        self.isRestDay = isRestDay; self.templateId = templateId; self.plannedSessionId = plannedSessionId
+        self.completedAt = completedAt; self.updatedAt = updatedAt; self.serverSeq = serverSeq
+        self.deletedAt = deletedAt
     }
 }
 
@@ -79,6 +83,11 @@ public struct SetEntry: Codable, Sendable, Hashable, Identifiable, FetchableReco
     public var restAfterActualS: Int?
     public var rpe: Double?
     public var rir: Int?
+    /// Seconds a hold could have gone on; `rir` stays repetitions.
+    public var sirS: Int?
+    /// The plan item the set was planned for (ADR 0016). Set by the server
+    /// and never sent back; performing the set in place keeps it.
+    public var plannedItemId: String?
     public var completedAt: Date?
     public var notes: String
     public var updatedAt: Date
@@ -89,13 +98,14 @@ public struct SetEntry: Codable, Sendable, Hashable, Identifiable, FetchableReco
         id: String = UUIDv7.make(), sessionId: String, blockId: String, orderIndex: Int,
         roundIndex: Int? = nil, kind: String = "working", isPlanned: Bool = false,
         restAfterPlannedS: Int? = nil, restAfterActualS: Int? = nil, rpe: Double? = nil, rir: Int? = nil,
-        completedAt: Date? = nil, notes: String = "", updatedAt: Date = Date(),
-        serverSeq: Int64? = nil, deletedAt: Date? = nil
+        sirS: Int? = nil, plannedItemId: String? = nil, completedAt: Date? = nil, notes: String = "",
+        updatedAt: Date = Date(), serverSeq: Int64? = nil, deletedAt: Date? = nil
     ) {
         self.id = id; self.sessionId = sessionId; self.blockId = blockId; self.orderIndex = orderIndex
         self.roundIndex = roundIndex; self.kind = kind; self.isPlanned = isPlanned
         self.restAfterPlannedS = restAfterPlannedS; self.restAfterActualS = restAfterActualS
-        self.rpe = rpe; self.rir = rir; self.completedAt = completedAt; self.notes = notes
+        self.rpe = rpe; self.rir = rir; self.sirS = sirS; self.plannedItemId = plannedItemId
+        self.completedAt = completedAt; self.notes = notes
         self.updatedAt = updatedAt; self.serverSeq = serverSeq; self.deletedAt = deletedAt
     }
 }

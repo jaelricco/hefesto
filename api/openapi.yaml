@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Hefesto API
-  version: 0.4.0
+  version: 0.5.0
   summary: Calisthenics training logger and skill map
   description: |
     The source of truth for the Hefesto API and for the generated Swift client.
@@ -39,6 +39,10 @@ info:
     | `not-found` | 404 | No such resource for this user. |
     | `method-not-allowed` | 405 | The path exists but not with this method. |
     | `already-exists` | 409 | A resource with this id already exists. |
+    | `already-onboarded` | 409 | The onboarding runs once; change the training profile or the goals instead. |
+    | `onboarding-required` | 409 | The planner needs the onboarding first (SAFE-01). |
+    | `consent-required` | 409 | Pain reports are health data and need the athlete's consent. |
+    | `training-stopped` | 409 | Training is stopped (SAFE-02, SAFE-07); no planned session starts. The plan says why. |
     | `email-taken` | 409 | An account already uses this email. |
     | `order-conflict` | 409 | Another live sibling already has this `order_index`; use the reorder endpoint. |
     | `prerequisites-unmet` | 409 | A level cannot be attested before its prerequisites are unlocked. |
@@ -49,6 +53,7 @@ info:
     | `rate-limited` | 429 | Too many attempts; retry after `Retry-After`. |
     | `internal` | 500 | A server bug. Quote `trace_id` when reporting it. |
     | `not-ready` | 503 | A dependency is unavailable. |
+    | `planning-unavailable` | 503 | The planner's knowledge base is missing or invalid. |
   license:
     name: Proprietary
 servers:
@@ -76,6 +81,12 @@ tags:
     description: Delta pull and batched offline push for the athlete's own rows.
   - name: media
     description: Images uploaded straight to object storage through presigned URLs.
+  - name: planning
+    description: |
+      The training planner: onboarding, the week plan, what changed and why,
+      pain reports, regions and the catalogue behind every explanation. It
+      adapts training only; it never diagnoses, and on a red flag it refers
+      to a professional (docs/algorithm/spec.md).
 
 security:
   - bearerAuth: []
@@ -1108,6 +1119,760 @@ paths:
         "404":
           $ref: "#/components/responses/Problem"
 
+  # -------------------------------------------------------------- planning
+
+  /v1/me/onboarding:
+    post:
+      tags: [planning]
+      operationId: submitOnboarding
+      summary: Answer the onboarding and get the first plan
+      description: |
+        All answers at once (docs/algorithm/onboarding.md §3). The result is
+        one of:
+
+        - `needs_answers`: at most two clarification questions. Nothing is
+          stored; send the answers again with `clarifications`.
+        - `blocked`: a safety answer stops training (SAFE-02). The profile
+          is stored and the plan says why; a confirmed clearance ends it.
+        - `complete`: the start state is stored; the result carries the
+          realism of dated goals, hints and the first week's plan.
+
+        A current complaint needs its details and an answer to every
+        red-flag question asked for its region (see `GET
+        /v1/planner/catalogue`). The onboarding runs once
+        (`already-onboarded`); later changes go through the training profile
+        and the goals. With an `Idempotency-Key` a retry returns the first
+        response.
+      parameters:
+        - $ref: "#/components/parameters/OptionalIdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OnboardingAnswers"
+      responses:
+        "200":
+          description: The result.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OnboardingResult"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/Problem"
+        "503":
+          $ref: "#/components/responses/Problem"
+
+  /v1/me/training-profile:
+    get:
+      tags: [planning]
+      operationId: getTrainingProfile
+      summary: My training profile
+      responses:
+        "200":
+          description: The profile.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrainingProfile"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "503":
+          $ref: "#/components/responses/Problem"
+    put:
+      tags: [planning]
+      operationId: updateTrainingProfile
+      summary: Change availability, equipment, body weight and refinements
+      description: |
+        Replaces the part of the profile that may change after the
+        onboarding; optional fields left out are cleared. Consent, birth
+        year and training background stay as answered. The week's plan is
+        generated anew (WEEK-08).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TrainingProfileUpdate"
+      responses:
+        "200":
+          description: The updated profile.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrainingProfile"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/Problem"
+        "503":
+          $ref: "#/components/responses/Problem"
+
+  /v1/me/goals:
+    get:
+      tags: [planning]
+      operationId: getTrainingGoals
+      summary: My goals with the realism of dated ones
+      responses:
+        "200":
+          description: The goals in priority order.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrainingGoalList"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "503":
+          $ref: "#/components/responses/Problem"
+    put:
+      tags: [planning]
+      operationId: updateTrainingGoals
+      summary: Replace my goals
+      description: |
+        One to three goals with priorities 1 to n. A skill that is no longer
+        a goal keeps its working rung for when it returns. The week's plan is
+        generated anew (WEEK-08).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TrainingGoalsUpdate"
+      responses:
+        "200":
+          description: The goals in priority order.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrainingGoalList"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/Problem"
+        "503":
+          $ref: "#/components/responses/Problem"
+
+  /v1/me/plan:
+    get:
+      tags: [planning]
+      operationId: getTrainingPlan
+      summary: The week's training plan
+      description: |
+        The plan of the current week, generated on first use; plans change
+        only on events. `week` asks for an earlier week's plan as it ended.
+        A plan whose training is stopped (SAFE-02, SAFE-07) has
+        `stopped: true`, no sessions, and says why. The `ETag` names this
+        plan and the starts of its sessions; a matching `If-None-Match`
+        returns 304.
+      parameters:
+        - name: week
+          in: query
+          description: Any day of the week wanted, in UTC. Defaults to today.
+          schema:
+            type: string
+            format: date
+        - name: If-None-Match
+          in: header
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The plan.
+          headers:
+            ETag:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrainingPlan"
+        "304":
+          description: The plan has not changed.
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "404":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "503":
+          $ref: "#/components/responses/Problem"
+
+  /v1/me/plan/regenerate:
+    post:
+      tags: [planning]
+      operationId: regenerateTrainingPlan
+      summary: Generate the current week's plan anew
+      description: |
+        The same inputs on the same day give the same sessions (spec §1.3);
+        the plan and its sessions get new IDs, and the replaced plan's
+        sessions are no longer found.
+      responses:
+        "200":
+          description: The new plan.
+          headers:
+            ETag:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrainingPlan"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "503":
+          $ref: "#/components/responses/Problem"
+
+  /v1/me/plan/sessions/{plannedSessionId}:
+    parameters:
+      - $ref: "#/components/parameters/PlannedSessionId"
+    get:
+      tags: [planning]
+      operationId: getPlannedSession
+      summary: One session of a current plan
+      responses:
+        "200":
+          description: The planned session.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlannedSessionDetail"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "404":
+          $ref: "#/components/responses/Problem"
+        "503":
+          $ref: "#/components/responses/Problem"
+
+  /v1/me/plan/sessions/{plannedSessionId}/start:
+    parameters:
+      - $ref: "#/components/parameters/PlannedSessionId"
+    post:
+      tags: [planning]
+      operationId: startPlannedSession
+      summary: Start a planned session in the training log
+      description: |
+        Writes the planned session into the log as a draft session (spec
+        §10.2): its blocks in order, one planned set entry per planned set
+        (`is_planned: true`) with one element carrying the targets. Each set
+        entry names its plan item in `planned_item_id`; the session names the
+        planned session in `planned_session_id`. Offers (probes, first
+        attempts) are not written; the athlete adds them on active choice.
+        A band target stays in the plan item: the log's assistance needs the
+        band, which the athlete names when logging the set.
+
+        Performing a set goes through the log API or sync as usual. A planned
+        session starts once: a second start answers `200` with the session
+        started first, whatever its `id`. After the log session is deleted,
+        the planned session can start again. Nothing starts while training
+        is stopped (`training-stopped`).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlannedSessionStart"
+      responses:
+        "201":
+          description: Started.
+          headers:
+            Location:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Session"
+        "200":
+          description: Started before; the session it started.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Session"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "404":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/Problem"
+        "503":
+          $ref: "#/components/responses/Problem"
+
+  /v1/me/plan/decisions:
+    get:
+      tags: [planning]
+      operationId: listPlanDecisions
+      summary: What the planner changed and why, newest first
+      parameters:
+        - name: cursor
+          in: query
+          description: The `next_cursor` of the previous page. Opaque.
+          schema:
+            type: string
+            maxLength: 200
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        "200":
+          description: One page.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlanDecisionPage"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "503":
+          $ref: "#/components/responses/Problem"
+
+  /v1/me/pain-reports:
+    post:
+      tags: [planning]
+      operationId: reportPain
+      summary: Report pain in a region
+      description: |
+        One pain rating (0–10) at a time point (spec §8.6). The planner may
+        ask the region's red-flag questions (`ask_red_flags`) or change the
+        region's ramp. Pain reports are health data and need the athlete's
+        consent (`consent-required`). Idempotent by `id`: a repeat answers
+        with the first changes and `replayed: true`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PainReportCreate"
+      responses:
+        "200":
+          description: What the report changed.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlanEventResult"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/Problem"
+        "503":
+          $ref: "#/components/responses/Problem"
+    get:
+      tags: [planning]
+      operationId: listPainReports
+      summary: My pain reports, newest first
+      parameters:
+        - name: cursor
+          in: query
+          description: The `next_cursor` of the previous page. Opaque.
+          schema:
+            type: string
+            maxLength: 200
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        "200":
+          description: One page.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PainReportPage"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "503":
+          $ref: "#/components/responses/Problem"
+
+  /v1/me/symptoms:
+    post:
+      tags: [planning]
+      operationId: reportExertionSymptoms
+      summary: Report symptoms during training
+      description: |
+        Chest pain, unusual shortness of breath, dizziness or fainting
+        under exertion (RF-10). Training stops at once (SAFE-02) until the
+        athlete confirms a professional clearance. Without consent to health
+        data only the stop is kept. Idempotent by `id`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlanEventCreate"
+      responses:
+        "200":
+          description: What the report changed.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlanEventResult"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/Problem"
+        "503":
+          $ref: "#/components/responses/Problem"
+
+  /v1/me/regions:
+    get:
+      tags: [planning]
+      operationId: listMyRegions
+      summary: The state of every region with a complaint or a constraint
+      description: |
+        Each region with its ramp stage, the constraints on it and the
+        red-flag questions asked for it. The texts name the region as the
+        body map does and never a diagnosis; the disclaimer travels with
+        the payload. Without consent to health data no state is kept
+        (`tracked: false`), but locks, exclusions and stops still hold.
+      responses:
+        "200":
+          description: The regions.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegionOverview"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "503":
+          $ref: "#/components/responses/Problem"
+
+  /v1/me/regions/{region}/red-flags:
+    parameters:
+      - $ref: "#/components/parameters/Region"
+    post:
+      tags: [planning]
+      operationId: answerRedFlags
+      summary: Answer the red-flag questions of a region
+      description: |
+        Every question asked for the region is answered, a follow-up
+        exactly when its question was answered yes. A yes locks the region
+        or stops training and recommends a professional assessment (spec
+        §8.2); the app never diagnoses. Without consent to health data the
+        answers are evaluated and not kept. Idempotent by `id`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RedFlagAnswers"
+      responses:
+        "200":
+          description: What the answers changed.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlanEventResult"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "404":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/Problem"
+        "503":
+          $ref: "#/components/responses/Problem"
+
+  /v1/me/regions/{region}/clearance:
+    parameters:
+      - $ref: "#/components/parameters/Region"
+    post:
+      tags: [planning]
+      operationId: confirmRegionClearance
+      summary: Confirm a professional's clearance for a region
+      description: |
+        The athlete confirms that a professional cleared the region. A
+        locked region or one in stage 0 re-enters the ramp at its first
+        step; a stop raised by the region's red flags ends (spec §8.3).
+        Idempotent by `id`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlanEventCreate"
+      responses:
+        "200":
+          description: What the clearance changed.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlanEventResult"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "404":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/Problem"
+        "503":
+          $ref: "#/components/responses/Problem"
+
+  /v1/me/screening/clearance:
+    post:
+      tags: [planning]
+      operationId: confirmScreeningClearance
+      summary: Confirm a professional's clearance for training as a whole
+      description: |
+        The athlete confirms that a professional cleared them to train: the
+        screening, a stop after exertion symptoms and every locked region.
+        Idempotent by `id`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlanEventCreate"
+      responses:
+        "200":
+          description: What the clearance changed.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlanEventResult"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/Problem"
+        "503":
+          $ref: "#/components/responses/Problem"
+
+  /v1/me/health-consent:
+    post:
+      tags: [planning]
+      operationId: changeHealthConsent
+      summary: Grant or withdraw the consent to keep health data
+      description: |
+        Health data are the complaints, pain reports, region states and
+        screening answers. A withdrawal deletes them. What protects the
+        athlete stays as a constraint without answers or values: a locked
+        region stays locked, a region with a complaint stays excluded and a
+        stop stays (spec §4.9). Without the consent the planner plans more
+        cautiously (SAFE-04).
+
+        A grant asks again what was not kept: the six screening questions
+        and the regions injured in the last 12 months. Every excluded region
+        then enters stage 0 of the return ramp, which green daily pain and
+        negative red flags lead out of. Granting or withdrawing what is
+        already in place changes nothing. Idempotent by `id`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HealthConsentChange"
+      responses:
+        "200":
+          description: What the change did.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlanEventResult"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/Problem"
+        "503":
+          $ref: "#/components/responses/Problem"
+
+  /v1/me/capacity:
+    get:
+      tags: [planning]
+      operationId: listMyCapacities
+      summary: What the planner estimates I can do, with its confidence
+      description: |
+        One estimate per exercise and assistance: the mean and spread of the
+        maximal reps or hold time, where it comes from and how sure the
+        planner is (spec §4.3). Wide estimates are dosed conservatively;
+        a logged set narrows them.
+      responses:
+        "200":
+          description: The estimates.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CapacityList"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "503":
+          $ref: "#/components/responses/Problem"
+
+  /v1/planner/rules:
+    get:
+      tags: [planning]
+      operationId: listPlannerRules
+      summary: The rule catalogue behind every explanation
+      security: []
+      parameters:
+        - name: If-None-Match
+          in: header
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The rules. The `ETag` is the ruleset version.
+          headers:
+            ETag:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlannerRuleList"
+        "304":
+          description: The catalogue has not changed.
+        "503":
+          $ref: "#/components/responses/Problem"
+
+  /v1/planner/sources:
+    get:
+      tags: [planning]
+      operationId: listPlannerSources
+      summary: The sources the rules and parameters cite
+      security: []
+      parameters:
+        - name: If-None-Match
+          in: header
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The sources. The `ETag` is the ruleset version.
+          headers:
+            ETag:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlannerSourceList"
+        "304":
+          description: The catalogue has not changed.
+        "503":
+          $ref: "#/components/responses/Problem"
+
+  /v1/planner/parameters:
+    get:
+      tags: [planning]
+      operationId: listPlannerParameters
+      summary: The parameters the rules use, with their values and evidence
+      security: []
+      parameters:
+        - name: If-None-Match
+          in: header
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The parameters. The `ETag` is the ruleset version.
+          headers:
+            ETag:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlannerParameterList"
+        "304":
+          description: The catalogue has not changed.
+        "503":
+          $ref: "#/components/responses/Problem"
+
+  /v1/planner/catalogue:
+    get:
+      tags: [planning]
+      operationId: getPlannerCatalogue
+      summary: Skills, exercises, regions and answer classes of the planner
+      description: |
+        What a client needs to ask the onboarding and to show a plan: the
+        planner's skills with their levels and stage classes, its exercises,
+        the body-map regions with their red-flag questions, and the answer
+        classes. The planner's skills and exercises are its own knowledge
+        base, not yet the content catalogue of `/v1/skills`.
+      security: []
+      parameters:
+        - name: If-None-Match
+          in: header
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The catalogue. The `ETag` is the ruleset version.
+          headers:
+            ETag:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlannerCatalogue"
+        "304":
+          description: The catalogue has not changed.
+        "503":
+          $ref: "#/components/responses/Problem"
+
 components:
   securitySchemes:
     bearerAuth:
@@ -1162,6 +1927,28 @@ components:
         minLength: 8
         maxLength: 255
         pattern: "^[\\x21-\\x7E]+$"
+    OptionalIdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: false
+      description: A client-chosen key, unique per logical request, kept for 24 hours. With it a retry returns the first response.
+      schema:
+        type: string
+        minLength: 8
+        maxLength: 255
+        pattern: "^[\\x21-\\x7E]+$"
+    PlannedSessionId:
+      name: plannedSessionId
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/Id"
+    Region:
+      name: region
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/RegionId"
 
   responses:
     Problem:
@@ -1624,7 +2411,7 @@ components:
 
     Session:
       type: object
-      required: [id, started_at, ended_at, timezone, local_date, title, notes, perceived_fatigue, bodyweight_kg, status, is_rest_day, template_id, completed_at, updated_at, server_updated_at, blocks]
+      required: [id, started_at, ended_at, timezone, local_date, title, notes, perceived_fatigue, bodyweight_kg, status, is_rest_day, template_id, planned_session_id, completed_at, updated_at, server_updated_at, blocks]
       properties:
         id:
           $ref: "#/components/schemas/Id"
@@ -1650,6 +2437,10 @@ components:
         is_rest_day:
           type: boolean
         template_id:
+          type: [string, "null"]
+          format: uuid
+        planned_session_id:
+          description: The planned session the session was started from.
           type: [string, "null"]
           format: uuid
         completed_at:
@@ -1801,6 +2592,11 @@ components:
           type: [integer, "null"]
           minimum: 0
           maximum: 10
+        sir_s:
+          description: Seconds a hold could have gone on (SIR). `rir` stays repetitions.
+          type: [integer, "null"]
+          minimum: 0
+          maximum: 60
         completed_at:
           $ref: "#/components/schemas/NullableTimestamp"
         notes:
@@ -1913,7 +2709,7 @@ components:
 
     SetEntry:
       type: object
-      required: [id, block_id, order_index, round_index, kind, is_planned, rest_after_planned_s, rest_after_actual_s, rpe, rir, completed_at, notes, updated_at, elements]
+      required: [id, block_id, order_index, round_index, kind, is_planned, rest_after_planned_s, rest_after_actual_s, rpe, rir, sir_s, planned_item_id, completed_at, notes, updated_at, elements]
       properties:
         id:
           $ref: "#/components/schemas/Id"
@@ -1935,6 +2731,13 @@ components:
           type: [number, "null"]
         rir:
           type: [integer, "null"]
+        sir_s:
+          description: Seconds in reserve of a hold; on a planned set, the target.
+          type: [integer, "null"]
+        planned_item_id:
+          description: The plan item a set started from a planned session comes from.
+          type: [string, "null"]
+          format: uuid
         completed_at:
           $ref: "#/components/schemas/NullableTimestamp"
         notes:
@@ -2410,6 +3213,16 @@ components:
           type: integer
         streak:
           $ref: "#/components/schemas/Streak"
+        plan_changes:
+          description: |
+            What the training planner changed after the completion (spec
+            §10.2, ADR 0018). Absent when the planner did not run: without
+            an onboarding, while it is unavailable, for a rest day, or when
+            it failed; the next `GET /v1/me/plan` catches the session up.
+            A repeated completion answers with the changes of the first.
+          type: array
+          items:
+            $ref: "#/components/schemas/PlanChange"
 
     AttestRequest:
       description: |
@@ -2443,7 +3256,7 @@ components:
     SyncSession:
       description: A session row as sync carries it, without its blocks.
       type: object
-      required: [id, started_at, ended_at, timezone, local_date, title, notes, perceived_fatigue, bodyweight_kg, status, is_rest_day, template_id, completed_at, updated_at, server_updated_at, server_seq, deleted_at]
+      required: [id, started_at, ended_at, timezone, local_date, title, notes, perceived_fatigue, bodyweight_kg, status, is_rest_day, template_id, planned_session_id, completed_at, updated_at, server_updated_at, server_seq, deleted_at]
       properties:
         id:
           $ref: "#/components/schemas/Id"
@@ -2469,6 +3282,10 @@ components:
         is_rest_day:
           type: boolean
         template_id:
+          type: [string, "null"]
+          format: uuid
+        planned_session_id:
+          description: The planned session the session was started from.
           type: [string, "null"]
           format: uuid
         completed_at:
@@ -2518,7 +3335,7 @@ components:
         latest change to the set or any of its elements. A deleted set has no
         elements.
       type: object
-      required: [id, session_id, block_id, order_index, round_index, kind, is_planned, rest_after_planned_s, rest_after_actual_s, rpe, rir, completed_at, notes, updated_at, server_seq, deleted_at, elements]
+      required: [id, session_id, block_id, order_index, round_index, kind, is_planned, rest_after_planned_s, rest_after_actual_s, rpe, rir, sir_s, planned_item_id, completed_at, notes, updated_at, server_seq, deleted_at, elements]
       properties:
         id:
           $ref: "#/components/schemas/Id"
@@ -2542,6 +3359,13 @@ components:
           type: [number, "null"]
         rir:
           type: [integer, "null"]
+        sir_s:
+          description: Seconds in reserve of a hold; on a planned set, the target.
+          type: [integer, "null"]
+        planned_item_id:
+          description: The plan item a set started from a planned session comes from.
+          type: [string, "null"]
+          format: uuid
         completed_at:
           $ref: "#/components/schemas/NullableTimestamp"
         notes:
@@ -2830,3 +3654,1316 @@ components:
                 type: string
             expires_at:
               $ref: "#/components/schemas/Timestamp"
+
+    # ------------------------------------------------------------ planning
+    RegionId:
+      description: A body-map region, as `GET /v1/planner/catalogue` lists them.
+      type: string
+      pattern: "^[a-z][a-z0-9_]*$"
+      maxLength: 40
+      examples: [elbow_inner]
+    CalendarDate:
+      description: A calendar day.
+      type: string
+      format: date
+    NullableCalendarDate:
+      type: [string, "null"]
+      format: date
+    Equipment:
+      type: string
+      enum: [floor, wall, pull_up_bar, low_bar, parallel_bars, parallettes, rings, resistance_bands,
+             weight_vest, dumbbells_or_plates, dip_belt, box_or_bench, gym, outdoor_park]
+    IsoWeekday:
+      description: ISO 8601 weekday, 1 = Monday … 7 = Sunday.
+      type: integer
+      minimum: 1
+      maximum: 7
+    TrainingLevel:
+      type: string
+      enum: [sedentary, recreational, trained, highly_trained]
+    TrainingAge:
+      type: string
+      enum: [lt_6_months, 6_to_12_months, 1_to_4_years, gt_4_years]
+    LastRegularTraining:
+      type: string
+      enum: [current_or_lt_3_weeks, 3_to_6_weeks, 7_to_16_weeks, 17_to_26_weeks, gt_26_weeks, never]
+    DataConfidence:
+      type: string
+      enum: [estimated, counted_last_4_weeks, filmed]
+    MobilityAnswer:
+      type: string
+      enum: ["yes", partly, "no"]
+    MobilityChecks:
+      description: Self-checks that steer the choice of exercises, never the level (onboarding.md §3.6).
+      type: object
+      additionalProperties: false
+      properties:
+        wrist:
+          $ref: "#/components/schemas/MobilityAnswer"
+        shoulder:
+          $ref: "#/components/schemas/MobilityAnswer"
+        ankle:
+          $ref: "#/components/schemas/MobilityAnswer"
+        compression:
+          $ref: "#/components/schemas/MobilityAnswer"
+    PainTimepoint:
+      type: string
+      enum: [before_session, warmup, during, after, next_morning, daily]
+    Restriction:
+      description: A movement category a professional restricted.
+      type: string
+      enum: [support_straight_arm, hang_pull, overhead, wrist_extension_loaded, supination_loaded, spine_extension]
+
+    TrainingGoalWrite:
+      type: object
+      additionalProperties: false
+      required: [skill, target_level, priority]
+      properties:
+        skill:
+          $ref: "#/components/schemas/Slug"
+        target_level:
+          $ref: "#/components/schemas/Slug"
+        priority:
+          type: integer
+          minimum: 1
+          maximum: 3
+        target_date:
+          $ref: "#/components/schemas/CalendarDate"
+
+    TrainingGoal:
+      type: object
+      required: [skill, target_level, priority, target_date]
+      properties:
+        skill:
+          $ref: "#/components/schemas/Slug"
+        target_level:
+          $ref: "#/components/schemas/Slug"
+        priority:
+          type: integer
+        target_date:
+          $ref: "#/components/schemas/NullableCalendarDate"
+
+    StageAnswer:
+      type: object
+      additionalProperties: false
+      required: [level]
+      properties:
+        level:
+          description: The level the athlete holds now, `none` or `unknown`.
+          type: string
+          maxLength: 80
+        class:
+          description: How long or how often, as a stage class of the skill, or `unknown`.
+          type: string
+          maxLength: 20
+
+    BodyMapEntry:
+      type: object
+      additionalProperties: false
+      required: [current, past_12_months]
+      properties:
+        current:
+          type: boolean
+        past_12_months:
+          type: boolean
+
+    Complaint:
+      type: object
+      additionalProperties: false
+      required: [pain_daily, pain_training, onset, duration_weeks, suspected_serious, professional_assessment]
+      properties:
+        pain_daily:
+          type: number
+          minimum: 0
+          maximum: 10
+        pain_training:
+          type: number
+          minimum: 0
+          maximum: 10
+        onset:
+          type: string
+          enum: [sudden, gradual]
+        duration_weeks:
+          type: number
+          minimum: 0
+          maximum: 520
+        suspected_serious:
+          type: string
+          enum: ["yes", "no", unsure]
+        professional_assessment:
+          type: string
+          enum: ["no", yes_overuse_or_tendon, yes_tear_or_suspected_tear, yes_other, in_progress]
+        restrictions:
+          type: array
+          uniqueItems: true
+          maxItems: 6
+          items:
+            $ref: "#/components/schemas/Restriction"
+
+    RedFlagAnswerMap:
+      description: Red-flag ID → answered yes.
+      type: object
+      maxProperties: 20
+      additionalProperties:
+        type: boolean
+
+    OnboardingAnswers:
+      description: The onboarding in one request (docs/algorithm/onboarding.md §3).
+      type: object
+      additionalProperties: false
+      required: [birth_year, health_data_consent, disclaimer_ack, goals, sessions_per_week, session_minutes, equipment,
+                 bodyweight_kg, training_level, calisthenics_training_age, last_regular_training, classes,
+                 data_confidence, exertion_symptoms, screening]
+      properties:
+        birth_year:
+          type: integer
+          minimum: 1920
+          maximum: 2100
+        health_data_consent:
+          description: Consent to keep complaint and health answers. Without it the safety questions are still asked and applied, but not kept.
+          type: boolean
+        disclaimer_ack:
+          description: The athlete read that the app adapts training and replaces no medical advice. Must be true.
+          type: boolean
+        goals:
+          type: array
+          minItems: 1
+          maxItems: 3
+          items:
+            $ref: "#/components/schemas/TrainingGoalWrite"
+        sessions_per_week:
+          type: integer
+          minimum: 1
+          maximum: 7
+        session_minutes:
+          description: 20, 30, 45, 60, 75 or 90.
+          type: integer
+          minimum: 20
+          maximum: 90
+        equipment:
+          type: array
+          uniqueItems: true
+          maxItems: 14
+          items:
+            $ref: "#/components/schemas/Equipment"
+        bodyweight_kg:
+          type: number
+          minimum: 30
+          maximum: 250
+        training_level:
+          $ref: "#/components/schemas/TrainingLevel"
+        calisthenics_training_age:
+          $ref: "#/components/schemas/TrainingAge"
+        last_regular_training:
+          $ref: "#/components/schemas/LastRegularTraining"
+        pre_break_level:
+          description: Skill → the level held before the break.
+          type: object
+          maxProperties: 20
+          additionalProperties:
+            $ref: "#/components/schemas/Slug"
+        classes:
+          description: Question key → answer class key or `unknown`, as the catalogue's `class_questions` list them.
+          type: object
+          maxProperties: 20
+          additionalProperties:
+            type: string
+            maxLength: 20
+        skill_stages:
+          description: Goal skill → the stage the athlete holds now.
+          type: object
+          maxProperties: 20
+          additionalProperties:
+            $ref: "#/components/schemas/StageAnswer"
+        mobility_checks:
+          $ref: "#/components/schemas/MobilityChecks"
+        data_confidence:
+          $ref: "#/components/schemas/DataConfidence"
+        exertion_symptoms:
+          description: Chest pain, unusual shortness of breath, dizziness or fainting under exertion (RF-10).
+          type: boolean
+        screening:
+          description: The six further screening questions, in the order of onboarding.md §3.7.
+          type: array
+          minItems: 6
+          maxItems: 6
+          items:
+            type: boolean
+        body_map:
+          description: Region → current complaint and injury in the last 12 months.
+          type: object
+          maxProperties: 20
+          additionalProperties:
+            $ref: "#/components/schemas/BodyMapEntry"
+        complaints:
+          description: Region → details, for every current region of the body map.
+          type: object
+          maxProperties: 20
+          additionalProperties:
+            $ref: "#/components/schemas/Complaint"
+        red_flags:
+          description: Region → answers, for every current region of the body map.
+          type: object
+          maxProperties: 20
+          additionalProperties:
+            $ref: "#/components/schemas/RedFlagAnswerMap"
+        clarifications:
+          description: Question id of an earlier `needs_answers` result → yes.
+          type: object
+          maxProperties: 10
+          additionalProperties:
+            type: boolean
+        preferred_days:
+          type: array
+          uniqueItems: true
+          maxItems: 7
+          items:
+            $ref: "#/components/schemas/IsoWeekday"
+
+    OnboardingQuestion:
+      type: object
+      required: [id, rule, skill, text]
+      properties:
+        id:
+          description: Send the answer back under this key in `clarifications`.
+          type: string
+        rule:
+          type: string
+        skill:
+          type: [string, "null"]
+        text:
+          type: string
+
+    OnboardingResult:
+      type: object
+      required: [status, questions, realism, hints, reasons, disclaimer]
+      properties:
+        status:
+          type: string
+          enum: [needs_answers, blocked, complete]
+        questions:
+          type: array
+          items:
+            $ref: "#/components/schemas/OnboardingQuestion"
+        realism:
+          type: array
+          items:
+            $ref: "#/components/schemas/GoalRealism"
+        hints:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlanReason"
+        reasons:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlanReason"
+        disclaimer:
+          type: string
+        plan:
+          description: The first plan; absent while questions are open.
+          $ref: "#/components/schemas/TrainingPlan"
+
+    TrainingProfile:
+      type: object
+      required: [birth_year, is_minor, sessions_per_week, session_minutes, equipment, bodyweight_kg, training_level,
+                 training_months, last_regular_training, health_data_consent, disclaimer_ack, onboarded_at,
+                 preferred_days, mobility_checks, max_added_load_kg, smallest_plate_kg]
+      properties:
+        birth_year:
+          type: integer
+        is_minor:
+          description: Minors get no plan (SAFE-07).
+          type: boolean
+        sessions_per_week:
+          type: integer
+        session_minutes:
+          type: integer
+        equipment:
+          description: What the athlete has, with what a gym or a park implies.
+          type: array
+          items:
+            $ref: "#/components/schemas/Equipment"
+        bodyweight_kg:
+          type: number
+        training_level:
+          $ref: "#/components/schemas/TrainingLevel"
+        training_months:
+          description: A lower bound of the calisthenics training age, advanced by the log.
+          type: number
+        last_regular_training:
+          $ref: "#/components/schemas/LastRegularTraining"
+        health_data_consent:
+          type: boolean
+        disclaimer_ack:
+          type: boolean
+        onboarded_at:
+          $ref: "#/components/schemas/CalendarDate"
+        preferred_days:
+          type: array
+          items:
+            $ref: "#/components/schemas/IsoWeekday"
+        mobility_checks:
+          $ref: "#/components/schemas/MobilityChecks"
+        max_added_load_kg:
+          description: Upper limit of added load; null means none.
+          type: [number, "null"]
+        smallest_plate_kg:
+          description: The smallest plate; null means 1.25 kg (PAR-S-37).
+          type: [number, "null"]
+
+    TrainingProfileUpdate:
+      type: object
+      additionalProperties: false
+      required: [sessions_per_week, session_minutes, equipment, bodyweight_kg]
+      properties:
+        sessions_per_week:
+          type: integer
+          minimum: 1
+          maximum: 7
+        session_minutes:
+          description: 20, 30, 45, 60, 75 or 90.
+          type: integer
+          minimum: 20
+          maximum: 90
+        equipment:
+          type: array
+          uniqueItems: true
+          maxItems: 14
+          items:
+            $ref: "#/components/schemas/Equipment"
+        bodyweight_kg:
+          type: number
+          minimum: 30
+          maximum: 250
+        preferred_days:
+          type: array
+          uniqueItems: true
+          maxItems: 7
+          items:
+            $ref: "#/components/schemas/IsoWeekday"
+        mobility_checks:
+          $ref: "#/components/schemas/MobilityChecks"
+        max_added_load_kg:
+          type: number
+          minimum: 0
+          maximum: 100
+        smallest_plate_kg:
+          type: number
+          exclusiveMinimum: 0
+          maximum: 25
+
+    TrainingGoalsUpdate:
+      type: object
+      additionalProperties: false
+      required: [goals]
+      properties:
+        goals:
+          type: array
+          minItems: 1
+          maxItems: 3
+          items:
+            $ref: "#/components/schemas/TrainingGoalWrite"
+
+    TrainingGoalList:
+      type: object
+      required: [goals, realism]
+      properties:
+        goals:
+          type: array
+          items:
+            $ref: "#/components/schemas/TrainingGoal"
+        realism:
+          description: The realism check of every dated goal (GOAL-05).
+          type: array
+          items:
+            $ref: "#/components/schemas/GoalRealism"
+
+    GoalRealism:
+      description: |
+        How long the step to a dated goal usually takes (GOAL-05). A band of
+        weeks, never a promise; `unrealistic` when the date is before its
+        lower end. A milestone is the next level on the way.
+      type: object
+      required: [skill, target_level, lower_weeks, shown_from_weeks, shown_to_weeks, weeks_to_date, unrealistic,
+                 milestone, milestone_from_weeks, milestone_to_weeks, reason]
+      properties:
+        skill:
+          $ref: "#/components/schemas/Slug"
+        target_level:
+          $ref: "#/components/schemas/Slug"
+        lower_weeks:
+          type: number
+        shown_from_weeks:
+          type: number
+        shown_to_weeks:
+          type: number
+        weeks_to_date:
+          type: number
+        unrealistic:
+          type: boolean
+        milestone:
+          type: [string, "null"]
+        milestone_from_weeks:
+          type: [number, "null"]
+        milestone_to_weeks:
+          type: [number, "null"]
+        reason:
+          $ref: "#/components/schemas/PlanReason"
+
+    PlanReason:
+      description: |
+        Why the planner decided something: the rule, the parameters it used,
+        their sources and the evidence level (spec §9.1). A reason tied to a
+        region with a complaint or a red flag names the region and carries
+        no sources, so no study title reads like a diagnosis (EXPL-07).
+      type: object
+      required: [rule_id, params, sources, evidence, text, args, region]
+      properties:
+        rule_id:
+          type: string
+        params:
+          type: array
+          items:
+            type: string
+        sources:
+          type: array
+          items:
+            type: string
+        evidence:
+          type: string
+        text:
+          type: string
+        args:
+          type: object
+          additionalProperties:
+            type: string
+        region:
+          type: [string, "null"]
+
+    TrainingPlan:
+      description: One week of planned sessions (spec §5.10).
+      type: object
+      required: [id, week_start, ruleset_version, input_hash, stopped, deload, sessions, rest_days, exclusions, hints,
+                 realism, monitor, loads, reasons, disclaimer]
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        week_start:
+          $ref: "#/components/schemas/CalendarDate"
+        ruleset_version:
+          type: string
+        input_hash:
+          description: SHA-256 of everything the plan depends on; the same inputs give the same plan.
+          type: string
+          pattern: "^sha256:[0-9a-f]{64}$"
+        stopped:
+          description: Training is stopped until a clearance (SAFE-02) or planned for adults only (SAFE-07).
+          type: boolean
+        deload:
+          description: The kind of deload this week is, if it is one.
+          type: [string, "null"]
+        sessions:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlannedSession"
+        rest_days:
+          type: array
+          items:
+            $ref: "#/components/schemas/CalendarDate"
+        exclusions:
+          description: Exercises left out, and why.
+          type: array
+          items:
+            $ref: "#/components/schemas/PlanExclusion"
+        hints:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlanReason"
+        realism:
+          type: array
+          items:
+            $ref: "#/components/schemas/GoalRealism"
+        monitor:
+          description: Regions under pain monitoring, with the red-flag questions to ask offline.
+          type: array
+          items:
+            $ref: "#/components/schemas/RegionMonitor"
+        loads:
+          description: The week load of every account before and after the caps (spec §7.2).
+          type: array
+          items:
+            $ref: "#/components/schemas/AccountLoad"
+        reasons:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlanReason"
+        disclaimer:
+          type: string
+
+    PlannedSession:
+      type: object
+      required: [id, status, workout_session_id, check_in_applied, index, date, kind, est_minutes, blocks, reasons]
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        status:
+          description: |
+            planned, or started once the log has a session for it (completed
+            follows with the completion). A new plan of the week keeps the
+            start of the session on the same day.
+          type: string
+        workout_session_id:
+          description: The log session it was started as.
+          type: [string, "null"]
+          format: uuid
+        check_in_applied:
+          description: |
+            A tired check-in at the start made the session lighter (ADAPT-17).
+            The session then shows what its draft holds: technique instead
+            of the max blocks' holds, no offers.
+          type: boolean
+        index:
+          type: integer
+        date:
+          $ref: "#/components/schemas/CalendarDate"
+        kind:
+          type: string
+          enum: [full, light, deload]
+        est_minutes:
+          type: number
+        blocks:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlanBlock"
+        reasons:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlanReason"
+
+    PlanBlock:
+      type: object
+      required: [role, minutes, paired, items, reasons]
+      properties:
+        role:
+          type: string
+          enum: [warmup, balance, skill_max, skill_volume, strength, end]
+        minutes:
+          description: Time of a general warm-up or balance practice.
+          type: [number, "null"]
+        paired:
+          description: Items alternate as antagonist pairs.
+          type: boolean
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlanItem"
+        reasons:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlanReason"
+
+    PlanItem:
+      description: Identical planned sets of one exercise.
+      type: object
+      required: [id, exercise, exercise_name, skill, stimulus, kind, sets, reps, hold_s, load_kg, assist, reserve, rest_s,
+                 calibration, offer, stop_rules, intensity, role, monitor, reasons]
+      properties:
+        id:
+          description: Named by the planned set entries in the log (`planned_item_id`).
+          $ref: "#/components/schemas/Id"
+        exercise:
+          $ref: "#/components/schemas/Slug"
+        exercise_name:
+          type: string
+        skill:
+          type: [string, "null"]
+        stimulus:
+          description: skill, skill_reps, strength, conditioning, eccentric, balance, technique, prehab or accessory.
+          type: string
+        kind:
+          type: string
+          enum: [working, warmup]
+        sets:
+          type: integer
+        reps:
+          type: [integer, "null"]
+        hold_s:
+          type: [integer, "null"]
+        load_kg:
+          description: Added load.
+          type: [number, "null"]
+        assist:
+          type: string
+          enum: [none, band]
+        reserve:
+          description: Reps or seconds left in reserve at the end of each set.
+          type: integer
+        rest_s:
+          type: integer
+        calibration:
+          description: The first working set calibrates the estimate.
+          type: boolean
+        offer:
+          description: A probe or first attempt, done only on the athlete's active choice.
+          type: boolean
+        stop_rules:
+          description: Rule IDs that end the item early (form, failed reps, a drop, pain).
+          type: array
+          items:
+            type: string
+        intensity:
+          type: string
+          enum: [light, moderate, hard]
+        role:
+          type: string
+          enum: [goal, feeder, support]
+        monitor:
+          description: The item loads a region under pain monitoring; ask for pain after it.
+          type: boolean
+        reasons:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlanReason"
+
+    PlanExclusion:
+      type: object
+      required: [exercise, exercise_name, reason]
+      properties:
+        exercise:
+          $ref: "#/components/schemas/Slug"
+        exercise_name:
+          type: string
+        reason:
+          $ref: "#/components/schemas/PlanReason"
+
+    RegionMonitor:
+      type: object
+      required: [region, questions]
+      properties:
+        region:
+          $ref: "#/components/schemas/RegionId"
+        questions:
+          type: array
+          items:
+            $ref: "#/components/schemas/RedFlagQuestion"
+
+    AccountLoad:
+      type: object
+      required: [account, target, planned, cap, rule]
+      properties:
+        account:
+          type: string
+        target:
+          type: number
+        planned:
+          type: number
+        cap:
+          type: number
+        rule:
+          type: string
+
+    PlannedSessionDetail:
+      type: object
+      required: [plan_id, week_start, ruleset_version, session, disclaimer]
+      properties:
+        plan_id:
+          $ref: "#/components/schemas/Id"
+        week_start:
+          $ref: "#/components/schemas/CalendarDate"
+        ruleset_version:
+          type: string
+        session:
+          $ref: "#/components/schemas/PlannedSession"
+        disclaimer:
+          type: string
+
+    PlanChange:
+      description: |
+        One change to the plan or the planner's state (spec §6.14), such as
+        `capacity`, `rung_down`, `deload_scheduled`, `region_state`,
+        `referral_suggested`, `ask_red_flags`, `training_stopped`,
+        `consent_changed` or `session_adjusted`. On `ask_red_flags` ask the
+        region's red-flag questions. On `session_adjusted` the started
+        session `session_id` followed the new plan: its open planned sets
+        changed, its performed sets did not; fetch it again.
+      type: object
+      required: [kind, skill, region, session_id, from, to, reasons]
+      properties:
+        kind:
+          type: string
+        skill:
+          type: [string, "null"]
+        region:
+          type: [string, "null"]
+        session_id:
+          description: The log session a `session_adjusted` change adjusted.
+          type: [string, "null"]
+          format: uuid
+        from:
+          type: [string, "null"]
+        to:
+          type: [string, "null"]
+        reasons:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlanReason"
+
+    PlanEventCreate:
+      type: object
+      additionalProperties: false
+      required: [id]
+      properties:
+        id:
+          description: Client-generated; a repeat with the same id is answered from the first time.
+          $ref: "#/components/schemas/Id"
+
+    PlannedSessionStart:
+      type: object
+      additionalProperties: false
+      required: [id, timezone]
+      properties:
+        id:
+          description: The log session's id, a UUIDv7 made by the client.
+          $ref: "#/components/schemas/Id"
+        started_at:
+          description: Now when absent.
+          $ref: "#/components/schemas/Timestamp"
+        timezone:
+          $ref: "#/components/schemas/TimeZone"
+        updated_at:
+          $ref: "#/components/schemas/Timestamp"
+        check_in:
+          $ref: "#/components/schemas/CheckIn"
+
+    CheckIn:
+      description: |
+        How the athlete starts the session (spec §6.12, ADAPT-17). Sleep of
+        at most 6 hours or fatigue of at least 8 makes the session lighter:
+        the max blocks become submaximal technique, strength stays. The
+        answers are not stored; the planned session only records that the
+        check-in made it lighter.
+      type: object
+      additionalProperties: false
+      properties:
+        sleep_hours:
+          description: Hours slept in the last 24 hours.
+          type: number
+          minimum: 0
+          maximum: 24
+        fatigue:
+          description: Fatigue on the scale of `perceived_fatigue`, 1 (fresh) to 10 (exhausted).
+          type: integer
+          minimum: 1
+          maximum: 10
+
+    HealthConsentChange:
+      type: object
+      additionalProperties: false
+      required: [id, granted]
+      properties:
+        id:
+          description: Client-generated; a repeat with the same id is answered from the first time.
+          $ref: "#/components/schemas/Id"
+        granted:
+          type: boolean
+        screening:
+          description: With a grant, the six screening questions again, in the order of onboarding.md §3.7.
+          type: array
+          minItems: 6
+          maxItems: 6
+          items:
+            type: boolean
+        past_injuries:
+          description: With a grant, the regions injured in the last 12 months.
+          type: array
+          uniqueItems: true
+          maxItems: 20
+          items:
+            $ref: "#/components/schemas/RegionId"
+
+    PlanEventResult:
+      type: object
+      required: [changes, replayed]
+      properties:
+        changes:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlanChange"
+        replayed:
+          description: The event was applied before; the changes are the ones recorded then.
+          type: boolean
+
+    PlanDecision:
+      type: object
+      required: [id, trigger, source_id, occurred_at, changes]
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        trigger:
+          description: onboarding, session_completed, pain_report, red_flags, clearance, symptoms, week_start or consent.
+          type: string
+        source_id:
+          type: string
+        occurred_at:
+          $ref: "#/components/schemas/Timestamp"
+        changes:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlanChange"
+
+    PlanDecisionPage:
+      type: object
+      required: [items, next_cursor]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlanDecision"
+        next_cursor:
+          type: [string, "null"]
+
+    PainReportCreate:
+      type: object
+      additionalProperties: false
+      required: [id, region, timepoint, nrs, at]
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        region:
+          $ref: "#/components/schemas/RegionId"
+        timepoint:
+          $ref: "#/components/schemas/PainTimepoint"
+        nrs:
+          description: Pain on the 0–10 numeric rating scale.
+          type: number
+          minimum: 0
+          maximum: 10
+        at:
+          $ref: "#/components/schemas/Timestamp"
+        lasted_over_1h:
+          type: boolean
+        persisted_over_15min:
+          type: boolean
+        sudden_sharp:
+          type: boolean
+        session_id:
+          $ref: "#/components/schemas/Id"
+
+    PainReport:
+      type: object
+      required: [id, region, timepoint, nrs, at, lasted_over_1h, persisted_over_15min, sudden_sharp, session_id]
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        region:
+          $ref: "#/components/schemas/RegionId"
+        timepoint:
+          $ref: "#/components/schemas/PainTimepoint"
+        nrs:
+          type: number
+        at:
+          $ref: "#/components/schemas/Timestamp"
+        lasted_over_1h:
+          type: boolean
+        persisted_over_15min:
+          type: boolean
+        sudden_sharp:
+          type: boolean
+        session_id:
+          type: [string, "null"]
+          format: uuid
+
+    PainReportPage:
+      type: object
+      required: [items, next_cursor]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/PainReport"
+        next_cursor:
+          type: [string, "null"]
+
+    RedFlagAnswers:
+      type: object
+      additionalProperties: false
+      required: [id, answers]
+      properties:
+        id:
+          description: Client-generated; a repeat with the same id is answered from the first time.
+          $ref: "#/components/schemas/Id"
+        answers:
+          $ref: "#/components/schemas/RedFlagAnswerMap"
+
+    RedFlagQuestion:
+      description: |
+        A warning-sign question. Urgency N: see a doctor now; D: in the next
+        days; A: an assessment is advisable. The action says what a yes does
+        to the plan. Minor-only questions are asked of minors only.
+      type: object
+      required: [id, urgency, action, question, advice, minor_only, followup]
+      properties:
+        id:
+          type: string
+        urgency:
+          type: string
+          enum: ["N", "D", "A"]
+        action:
+          type: string
+          enum: [stop, lock, rtt0]
+        question:
+          type: string
+        advice:
+          type: string
+        minor_only:
+          type: boolean
+        followup:
+          $ref: "#/components/schemas/RedFlagFollowup"
+
+    RedFlagFollowup:
+      description: Asked after a yes; a yes to it raises the urgency.
+      # Nullable here rather than as oneOf [ref, null] at the use site, which
+      # swift-openapi-generator cannot express and silently drops (ADR 0010).
+      type: [object, "null"]
+      required: [id, urgency, action, question, advice]
+      properties:
+        id:
+          type: string
+        urgency:
+          type: string
+          enum: ["N", "D", "A"]
+        action:
+          type: string
+          enum: [stop, lock, rtt0]
+        question:
+          type: string
+        advice:
+          type: string
+
+    RegionStatus:
+      type: object
+      required: [region, name, tracked, state, entered_via, since, start_fraction, complaint, prior_injury,
+                 restrictions, referral, rest_until, constraints, red_flags]
+      properties:
+        region:
+          $ref: "#/components/schemas/RegionId"
+        name:
+          description: The region in the words of the body map.
+          type: string
+        tracked:
+          description: The planner keeps a state for the region; false without consent to health data.
+          type: boolean
+        state:
+          description: normal, locked, or a stage of the return ramp from rtt_0 (no load) to rtt_5.
+          type: [string, "null"]
+        entered_via:
+          type: [string, "null"]
+        since:
+          $ref: "#/components/schemas/NullableCalendarDate"
+        start_fraction:
+          description: The share of the reference load the ramp started at.
+          type: [number, "null"]
+        complaint:
+          type: boolean
+        prior_injury:
+          type: boolean
+        restrictions:
+          type: array
+          items:
+            type: string
+        referral:
+          description: soft or advise when an assessment is recommended.
+          type: [string, "null"]
+        rest_until:
+          $ref: "#/components/schemas/NullableCalendarDate"
+        constraints:
+          description: region_locked, region_excluded or plan_stopped, when one names the region.
+          type: array
+          items:
+            type: string
+        red_flags:
+          type: array
+          items:
+            $ref: "#/components/schemas/RedFlagQuestion"
+
+    RegionOverview:
+      type: object
+      required: [regions, disclaimer]
+      properties:
+        regions:
+          type: array
+          items:
+            $ref: "#/components/schemas/RegionStatus"
+        disclaimer:
+          type: string
+
+    Capacity:
+      type: object
+      required: [exercise, exercise_name, measure, assist, mu, sigma, confidence, origin, estimated_at, observations]
+      properties:
+        exercise:
+          $ref: "#/components/schemas/Slug"
+        exercise_name:
+          type: string
+        measure:
+          type: string
+          enum: [reps, hold_seconds]
+        assist:
+          type: string
+          enum: [none, band]
+        mu:
+          description: Mean of the maximal reps or hold seconds.
+          type: number
+        sigma:
+          description: Spread of the estimate.
+          type: number
+        confidence:
+          type: string
+          enum: [low, medium, high]
+        origin:
+          description: self_report, test, log or derived.
+          type: string
+        estimated_at:
+          $ref: "#/components/schemas/Timestamp"
+        observations:
+          type: integer
+
+    CapacityList:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Capacity"
+
+    PlannerRule:
+      type: object
+      required: [id, title, text, params, sources, evidence]
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        text:
+          type: string
+        params:
+          type: array
+          items:
+            type: string
+        sources:
+          type: array
+          items:
+            type: string
+        evidence:
+          type: string
+
+    PlannerRuleList:
+      type: object
+      required: [ruleset_version, items]
+      properties:
+        ruleset_version:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlannerRule"
+
+    PlannerSource:
+      type: object
+      required: [id, title, authors, year, url, type, evidence]
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        authors:
+          type: [string, "null"]
+        year:
+          type: [string, "null"]
+        url:
+          type: [string, "null"]
+        type:
+          type: [string, "null"]
+        evidence:
+          description: A strong study base, B single studies, C coaching literature, D practice reports.
+          type: string
+
+    PlannerSourceList:
+      type: object
+      required: [ruleset_version, items]
+      properties:
+        ruleset_version:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlannerSource"
+
+    PlannerParameter:
+      type: object
+      required: [id, key, text, value, values, unit, sources, evidence, heuristic, definition, rationale]
+      properties:
+        id:
+          type: string
+        key:
+          type: string
+        text:
+          description: The value as the research states it.
+          type: [string, "null"]
+        value:
+          type: [number, "null"]
+        values:
+          description: Values by case, when the parameter has several.
+          type: [object, "null"]
+          additionalProperties:
+            type: number
+        unit:
+          type: [string, "null"]
+        sources:
+          type: array
+          items:
+            type: string
+        evidence:
+          type: string
+        heuristic:
+          description: A rule of thumb of this app, to be sharpened with data.
+          type: boolean
+        definition:
+          description: A scale reference or a mechanical identity; it needs a rationale, not a source.
+          type: boolean
+        rationale:
+          type: [string, "null"]
+
+    PlannerParameterList:
+      type: object
+      required: [ruleset_version, items]
+      properties:
+        ruleset_version:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlannerParameter"
+
+    AnswerClass:
+      type: object
+      required: [key, lo, hi, open]
+      properties:
+        key:
+          type: string
+        lo:
+          type: number
+        hi:
+          type: [number, "null"]
+        open:
+          description: More than `lo`, without an upper bound.
+          type: boolean
+
+    ClassQuestion:
+      type: object
+      required: [key, exercise, classes]
+      properties:
+        key:
+          type: string
+        exercise:
+          $ref: "#/components/schemas/Slug"
+        classes:
+          type: array
+          items:
+            $ref: "#/components/schemas/AnswerClass"
+
+    PlannerLevel:
+      type: object
+      required: [slug, exercise, threshold, milestone]
+      properties:
+        slug:
+          $ref: "#/components/schemas/Slug"
+        exercise:
+          $ref: "#/components/schemas/Slug"
+        threshold:
+          description: The reps or seconds of the exercise at which the level counts as met.
+          type: number
+        milestone:
+          type: boolean
+
+    PlannerSkill:
+      type: object
+      required: [slug, name, foundation, levels, stage_classes]
+      properties:
+        slug:
+          $ref: "#/components/schemas/Slug"
+        name:
+          type: string
+        foundation:
+          type: boolean
+        levels:
+          description: Easiest first.
+          type: array
+          items:
+            $ref: "#/components/schemas/PlannerLevel"
+        stage_classes:
+          description: The answer classes of the skill's stage question; empty when it has none.
+          type: array
+          items:
+            $ref: "#/components/schemas/AnswerClass"
+
+    PlannerExercise:
+      type: object
+      required: [slug, name, measure, requires, skill, draft]
+      properties:
+        slug:
+          $ref: "#/components/schemas/Slug"
+        name:
+          type: string
+        measure:
+          type: string
+          enum: [reps, hold_seconds]
+        requires:
+          type: array
+          items:
+            $ref: "#/components/schemas/Equipment"
+        skill:
+          type: [string, "null"]
+        draft:
+          description: Draft content awaiting review.
+          type: boolean
+
+    PlannerRegion:
+      type: object
+      required: [id, name, red_flags]
+      properties:
+        id:
+          $ref: "#/components/schemas/RegionId"
+        name:
+          type: string
+        red_flags:
+          description: The questions asked for the region, including those for minors only.
+          type: array
+          items:
+            $ref: "#/components/schemas/RedFlagQuestion"
+
+    PlannerCatalogue:
+      type: object
+      required: [ruleset_version, disclaimer, skills, exercises, regions, class_questions]
+      properties:
+        ruleset_version:
+          type: string
+        disclaimer:
+          type: string
+        skills:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlannerSkill"
+        exercises:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlannerExercise"
+        regions:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlannerRegion"
+        class_questions:
+          type: array
+          items:
+            $ref: "#/components/schemas/ClassQuestion"

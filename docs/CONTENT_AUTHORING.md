@@ -34,6 +34,12 @@ deploy.
 - **Injury content is educational, not medical advice.** Every injury entry
   carries `disclaimer: educational_only`; the API sends it with the content.
   Do not write diagnoses, treatment plans or return-to-training advice.
+- **Training-load ramps are not return-to-training advice.** The training
+  planner (`docs/algorithm/spec.md`, ADR 0012) lowers and rebuilds training
+  load after a reported complaint or a long break. Its texts describe training
+  load only: they name no condition, promise no recovery or protection, and
+  always send warning signs to a professional. Write them as training
+  instructions, never as rehabilitation.
 - **Slugs are permanent.** Users' logs and progress point at them. Use
   lowercase letters, digits and single hyphens: `front-lever-tuck`.
 - **A file is named after its slug**: `exercises/front-lever-tuck.yaml` holds

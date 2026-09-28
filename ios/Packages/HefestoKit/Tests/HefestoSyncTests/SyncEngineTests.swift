@@ -21,6 +21,8 @@ final class ScriptedServer: ClientTransport, @unchecked Sendable {
     private let lock = NSLock()
     private var _requests: [Request] = []
     var handler: (Request) throws -> (Int, String)
+    /// Headers every response carries, such as an `ETag`.
+    var responseHeaders = HTTPFields()
 
     init(_ handler: @escaping (Request) throws -> (Int, String)) { self.handler = handler }
 
@@ -34,14 +36,14 @@ final class ScriptedServer: ClientTransport, @unchecked Sendable {
         let r = Request(operation: operationID, headers: request.headerFields, path: request.path ?? "", body: data)
         lock.withLock { _requests.append(r) }
         let (status, json) = try lock.withLock { try handler(r) }
-        var fields = HTTPFields()
+        var fields = lock.withLock { responseHeaders }
         fields[.contentType] = status >= 400 ? "application/problem+json" : "application/json"
         return (HTTPResponse(status: .init(code: status), headerFields: fields), json.isEmpty ? nil : HTTPBody(json))
     }
 
     var client: Client {
         Client(serverURL: URL(string: "https://api.test")!, configuration: HefestoAPIConfiguration.configuration,
-               transport: self)
+               transport: self, middlewares: HefestoAPIConfiguration.middlewares)
     }
 }
 
@@ -123,6 +125,35 @@ func logSet(_ db: AppDatabase, _ session: Session, _ block: Block, reps: Int) th
         #expect(report.pushed == 3)
         #expect(try db.queuedOps().isEmpty)
         #expect(try db.batchInFlight()?.key == nil)
+    }
+
+    @Test func sendsTheReserveOfAHold() async throws {
+        let (db, session, block) = try seeded()
+        let entry = SetEntry(sessionId: session.id, blockId: block.id, orderIndex: 0, sirS: 4, completedAt: Date())
+        let el = SetElement(
+            setEntryId: entry.id, orderIndex: 0, exerciseId: UUIDv7.make(), measure: "hold_seconds", holdSeconds: 20)
+        try db.saveSet(SetWithElements(entry: entry, elements: [el]))
+        let server = ScriptedServer(applyingEverything)
+        _ = try await SyncEngine(client: server.client, db: db).sync()
+
+        let ops = try #require(server.requests("pushChanges").first?.json["ops"] as? [[String: Any]])
+        let setData = try #require(ops.first { $0["entity"] as? String == "set" }?["data"] as? [String: Any])
+        #expect(setData["sir_s"] as? Int == 4)
+        #expect(setData["rir"] == nil || setData["rir"] is NSNull, "rir stays repetitions")
+    }
+
+    @Test func sendsTheRIROfARepSet() async throws {
+        let (db, session, block) = try seeded()
+        let entry = SetEntry(sessionId: session.id, blockId: block.id, orderIndex: 0, rir: 2, completedAt: Date())
+        let el = SetElement(setEntryId: entry.id, orderIndex: 0, exerciseId: UUIDv7.make(), measure: "reps", reps: 8)
+        try db.saveSet(SetWithElements(entry: entry, elements: [el]))
+        let server = ScriptedServer(applyingEverything)
+        _ = try await SyncEngine(client: server.client, db: db).sync()
+
+        let ops = try #require(server.requests("pushChanges").first?.json["ops"] as? [[String: Any]])
+        let setData = try #require(ops.first { $0["entity"] as? String == "set" }?["data"] as? [String: Any])
+        #expect(setData["rir"] as? Int == 2)
+        #expect(setData["sir_s"] == nil || setData["sir_s"] is NSNull)
     }
 
     @Test func aLostResponseResendsTheSameBytesUnderTheSameKey() async throws {
@@ -244,6 +275,33 @@ func logSet(_ db: AppDatabase, _ session: Session, _ block: Block, reps: Int) th
         #expect(s.startedAt.timeIntervalSince1970 == 1_789_997_600.25, "fractional seconds survive")
     }
 
+    @Test func aPulledHoldKeepsItsReserve() async throws {
+        let entry = try await pullOneSet {
+            syncSetJSON($0, sessionId: $1, blockId: $2, element: holdElementJSON(seconds: 20), sirS: 5)
+        }
+        #expect(entry.sirS == 5)
+        #expect(entry.rir == nil)
+    }
+
+    @Test func aPulledRepSetKeepsItsRIR() async throws {
+        let entry = try await pullOneSet {
+            syncSetJSON($0, sessionId: $1, blockId: $2, element: elementJSON(reps: 8), rir: 2)
+        }
+        #expect(entry.rir == 2)
+        #expect(entry.sirS == nil)
+    }
+
+    /// Pulls one page with a session, a block and the set built from their
+    /// ids, and returns the set as stored.
+    func pullOneSet(_ set: (_ id: String, _ sessionId: String, _ blockId: String) -> String) async throws -> SetEntry {
+        let db = try AppDatabase.inMemory()
+        let sessionId = UUIDv7.make(), blockId = UUIDv7.make(), setId = UUIDv7.make()
+        let page = #"{"cursor":3,"has_more":false,"sessions":[\#(syncSessionJSON(sessionId, seq: 1))],"blocks":[\#(syncBlockJSON(blockId, sessionId: sessionId, seq: 2))],"sets":[\#(set(setId, sessionId, blockId))],"bodyweight":[]}"#
+        let server = ScriptedServer { _ in (200, page) }
+        _ = try await SyncEngine(client: server.client, db: db).sync()
+        return try #require(try fetch(db) { try SetEntry.fetchOne($0, key: setId) })
+    }
+
     @Test func refreshesTheCatalogueOnlyWhenItChanged() async throws {
         let db = try AppDatabase.inMemory()
         let server = ScriptedServer { r in
@@ -255,6 +313,7 @@ func logSet(_ db: AppDatabase, _ session: Session, _ block: Block, reps: Int) th
         try await engine.refreshExercises()
 
         #expect(server.requests.count == 2)
+        #expect(server.requests[1].headers[.ifNoneMatch] == #""v1""#, "an entity tag goes out quoted")
         #expect(try db.contentVersion() == "v1")
         #expect(try fetch(db) { try AppDatabase.exercises($0) }.map(\.slug) == ["pull-up"])
     }
@@ -266,12 +325,12 @@ func sessionJSON(_ s: Session, _ b: Block, setId: String, reps: Int) -> String {
     #"""
     {"id":"\#(s.id)","started_at":"2026-09-25T10:00:00Z","ended_at":null,"timezone":"\#(zurich)",
      "local_date":"2026-09-25","title":"Pull day","notes":"","perceived_fatigue":null,"bodyweight_kg":null,
-     "status":"draft","is_rest_day":false,"template_id":null,"completed_at":null,
+     "status":"draft","is_rest_day":false,"template_id":null,"planned_session_id":null,"completed_at":null,
      "updated_at":"2026-09-25T10:00:00Z","server_updated_at":"2026-09-25T10:00:00Z",
      "blocks":[{"id":"\#(b.id)","order_index":0,"kind":"straight","rounds_planned":null,"rounds_done":null,
        "interval_s":null,"notes":"","updated_at":"2026-09-25T10:00:00Z",
        "sets":[{"id":"\#(setId)","block_id":"\#(b.id)","order_index":0,"round_index":null,"kind":"working",
-         "is_planned":false,"rest_after_planned_s":null,"rest_after_actual_s":null,"rpe":null,"rir":null,
+         "is_planned":false,"rest_after_planned_s":null,"rest_after_actual_s":null,"rpe":null,"rir":null,"sir_s":null,"planned_item_id":null,
          "completed_at":"2026-09-25T10:05:00.5Z","notes":"","updated_at":"2026-09-25T10:05:00.5Z",
          "elements":[\#(elementJSON(reps: reps))]}]}]}
     """#
@@ -290,9 +349,39 @@ func syncSessionJSON(_ id: String, seq: Int) -> String {
     #"""
     {"id":"\#(id)","started_at":"2026-09-21T13:33:20.25Z","ended_at":null,"timezone":"\#(zurich)",
      "local_date":"2026-09-21","title":"","notes":"","perceived_fatigue":null,"bodyweight_kg":null,
-     "status":"draft","is_rest_day":false,"template_id":null,"completed_at":null,
+     "status":"draft","is_rest_day":false,"template_id":null,"planned_session_id":null,"completed_at":null,
      "updated_at":"2026-09-21T13:33:20.25Z","server_updated_at":"2026-09-21T13:33:21Z",
      "server_seq":\#(seq),"deleted_at":null}
+    """#
+}
+
+func syncBlockJSON(_ id: String, sessionId: String, seq: Int) -> String {
+    #"""
+    {"id":"\#(id)","session_id":"\#(sessionId)","order_index":0,"kind":"straight","rounds_planned":null,
+     "rounds_done":null,"interval_s":null,"notes":"","updated_at":"2026-09-21T13:33:20.25Z",
+     "server_seq":\#(seq),"deleted_at":null}
+    """#
+}
+
+/// A performed set of one element, with what the athlete had left.
+func syncSetJSON(
+    _ id: String, sessionId: String, blockId: String, element: String, rir: Int? = nil, sirS: Int? = nil, seq: Int = 3
+) -> String {
+    #"""
+    {"id":"\#(id)","session_id":"\#(sessionId)","block_id":"\#(blockId)","order_index":0,"round_index":null,
+     "kind":"working","is_planned":false,"rest_after_planned_s":null,"rest_after_actual_s":null,"rpe":null,
+     "rir":\#(rir.map { "\($0)" } ?? "null"),"sir_s":\#(sirS.map { "\($0)" } ?? "null"),"planned_item_id":null,
+     "completed_at":"2026-09-21T13:40:00Z","notes":"","updated_at":"2026-09-21T13:40:00Z",
+     "server_seq":\#(seq),"deleted_at":null,"elements":[\#(element)]}
+    """#
+}
+
+func holdElementJSON(seconds: Int) -> String {
+    #"""
+    {"id":"\#(UUIDv7.make())","order_index":0,"exercise_id":"\#(UUIDv7.make())","measure":"hold_seconds",
+     "reps":null,"hold_seconds":\#(seconds),"distance_m":null,"tempo":null,"load_kg":0,"is_eccentric_only":false,
+     "is_partial_rom":false,"rom_note":null,"form_quality":null,"failed":false,
+     "assistance_class":"unassisted","assistance":null,"media_ids":[]}
     """#
 }
 

@@ -3,6 +3,7 @@
 // configures how they talk to the server.
 
 import Foundation
+import HTTPTypes
 import OpenAPIRuntime
 import OpenAPIURLSession
 
@@ -40,10 +41,13 @@ public enum HefestoAPIConfiguration {
     /// The configuration every `Client` of the app uses.
     public static let configuration = Configuration(dateTranscoder: dates, jsonEncodingOptions: [.sortedKeys])
 
+    /// What every client of the app runs before its own middlewares.
+    public static let middlewares: [any ClientMiddleware] = [EntityTagMiddleware()]
+
     /// A client of the API at `serverURL` over URLSession.
     public static func client(serverURL: URL, middlewares: [any ClientMiddleware] = []) -> Client {
         Client(serverURL: serverURL, configuration: configuration, transport: URLSessionTransport(),
-               middlewares: middlewares)
+               middlewares: Self.middlewares + middlewares)
     }
 
     /// An encoder that writes generated types exactly as the client does, so
@@ -64,5 +68,24 @@ public enum HefestoAPIConfiguration {
             try dates.decode(try decoder.singleValueContainer().decode(String.self))
         }
         return d
+    }
+}
+
+/// Sends `If-None-Match` as HTTP defines it. The generated client serialises
+/// header parameters like URI components (RFC 6570), so the quotes of an
+/// entity tag leave as `%22` and no `ETag` ever matches: every conditional
+/// request would cost a full response.
+public struct EntityTagMiddleware: ClientMiddleware {
+    public init() {}
+
+    public func intercept(
+        _ request: HTTPRequest, body: HTTPBody?, baseURL: URL, operationID: String,
+        next: @Sendable (HTTPRequest, HTTPBody?, URL) async throws -> (HTTPResponse, HTTPBody?)
+    ) async throws -> (HTTPResponse, HTTPBody?) {
+        var request = request
+        if let tag = request.headerFields[.ifNoneMatch], let decoded = tag.removingPercentEncoding {
+            request.headerFields[.ifNoneMatch] = decoded
+        }
+        return try await next(request, body, baseURL)
     }
 }

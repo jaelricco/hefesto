@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hefesto.fit/schema/training/common.schema.json",
+  "title": "Shared definitions of the training knowledge base",
+  "description": "Vocabularies and ID patterns.",
+  "$defs": {
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "maxLength": 80
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(_[a-z0-9]+)*$",
+      "maxLength": 80
+    },
+    "param_id": {
+      "type": "string",
+      "pattern": "^PAR-[A-FS]-[0-9]{2}$"
+    },
+    "rule_id": {
+      "type": "string",
+      "pattern": "^[A-Z]+-[0-9]{2}[a-z]?$"
+    },
+    "source_id": {
+      "type": "string",
+      "pattern": "^[A-Z]-[0-9]{2,3}$"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source_id"
+      },
+      "uniqueItems": true
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "draft_placeholder",
+        "retired"
+      ]
+    },
+    "measure": {
+      "type": "string",
+      "enum": [
+        "reps",
+        "hold_seconds"
+      ]
+    },
+    "equipment": {
+      "type": "string",
+      "enum": [
+        "floor",
+        "wall",
+        "pull_up_bar",
+        "low_bar",
+        "parallel_bars",
+        "parallettes",
+        "rings",
+        "resistance_bands",
+        "weight_vest",
+        "dumbbells_or_plates",
+        "dip_belt",
+        "box_or_bench",
+        "gym",
+        "outdoor_park"
+      ]
+    },
+    "weekday": {
+      "type": "string",
+      "enum": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat",
+        "sun"
+      ]
+    },
+    "answer_class": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "key",
+        "lo"
+      ],
+      "properties": {
+        "key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lo": {
+          "type": "number",
+          "minimum": 0
+        },
+        "hi": {
+          "type": "number",
+          "minimum": 0
+        },
+        "open": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

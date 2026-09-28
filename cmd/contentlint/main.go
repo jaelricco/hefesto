@@ -12,6 +12,9 @@
 //     primary_test exercise
 //  8. map coordinates are present on every milestone skill and do not collide
 //  9. injury entries carry disclaimer: educational_only
+//  10. the planner's knowledge base in content/training (schemas, references,
+//     cycles, parameters, rule texts; KB-01 … KB-13 in
+//     docs/algorithm/spec.md §2.6), when the directory exists
 //
 // The checks live in internal/content; this command only reports them.
 // Exit status is 1 on any error, or on any warning with -strict.
@@ -22,6 +25,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 
 	"github.com/jaelricco/hefesto/internal/content"
 )
@@ -51,14 +55,22 @@ func run(w io.Writer, dir string, strict bool) (bool, error) {
 	if !content.HasErrors(issues, false) {
 		issues = append(issues, content.Validate(tree)...)
 	}
+	if st, err := os.Stat(filepath.Join(dir, content.TrainingDir)); err == nil && st.IsDir() {
+		_, kb, err := content.LoadTraining(dir)
+		if err != nil {
+			return false, fmt.Errorf("loading %s: %w", content.TrainingDir, err)
+		}
+		issues = append(issues, kb...)
+	}
 	content.SortIssues(issues)
 
 	errs, warns := 0, 0
 	for _, i := range issues {
 		_, _ = fmt.Fprintln(w, i)
-		if i.Severity == content.SeverityError {
+		switch i.Severity {
+		case content.SeverityError:
 			errs++
-		} else {
+		case content.SeverityWarning:
 			warns++
 		}
 	}

@@ -4,7 +4,12 @@ package http_test
 
 import (
 	"net/http"
+	"path/filepath"
+	"slices"
 	"testing"
+
+	"github.com/jaelricco/hefesto/internal/content"
+	"github.com/jaelricco/hefesto/internal/testutil/pgtest"
 )
 
 func names(m map[string]any) []string {
@@ -30,8 +35,12 @@ func TestExerciseCatalogue(t *testing.T) {
 
 	all := a.call("GET", "/v1/exercises", u.access, nil)
 	m := all.ok(200, "ExerciseList")
-	if n := len(m["items"].([]any)); n != 7 {
-		t.Fatalf("got %d exercises, want the 7 seeded", n)
+	tree, _, err := content.Load(filepath.Join(pgtest.RepoRoot(), "content"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if n := len(m["items"].([]any)); n != len(tree.Exercises) {
+		t.Fatalf("got %d exercises, want the %d seeded", n, len(tree.Exercises))
 	}
 	etag := all.header.Get("ETag")
 	if etag == "" || etag != `"`+m["content_version"].(string)+`"` {
@@ -52,8 +61,16 @@ func TestExerciseCatalogue(t *testing.T) {
 	}
 
 	hs := names(a.call("GET", "/v1/exercises?family=handstand", u.access, nil).ok(200, "ExerciseList"))
-	if len(hs) != 1 || hs[0] != "wall-handstand-hold" {
-		t.Fatalf("family filter: %v", hs)
+	var want []string
+	for _, e := range tree.Exercises {
+		if e.Family == "handstand" {
+			want = append(want, e.Slug)
+		}
+	}
+	slices.Sort(hs)
+	slices.Sort(want)
+	if !contains(hs, "wall-handstand-hold") || !slices.Equal(hs, want) {
+		t.Fatalf("family filter: %v, want %v", hs, want)
 	}
 	fuzzy := names(a.call("GET", "/v1/exercises?q=frnt%20lever", u.access, nil).ok(200, "ExerciseList"))
 	if !contains(fuzzy, "front-lever-tuck") {

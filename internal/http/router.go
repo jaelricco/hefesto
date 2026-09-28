@@ -12,6 +12,7 @@ import (
 
 	"github.com/jaelricco/hefesto/internal/auth"
 	"github.com/jaelricco/hefesto/internal/media"
+	"github.com/jaelricco/hefesto/internal/planning"
 	"github.com/jaelricco/hefesto/internal/store"
 )
 
@@ -43,6 +44,10 @@ type RouterDeps struct {
 	Media media.Store
 	// PresignTTL is how long upload and download URLs stay valid.
 	PresignTTL time.Duration
+
+	// Planner is the training planner; nil makes its endpoints answer 503
+	// planning-unavailable.
+	Planner *planning.Service
 }
 
 // NewRouter builds the HTTP handler.
@@ -90,6 +95,12 @@ func NewRouter(deps RouterDeps) http.Handler {
 			})
 			r.Post("/auth/logout", h.wrap(h.logout))
 
+			// The planner's catalogue is public: it explains the rules.
+			r.Get("/planner/rules", h.wrap(h.listPlannerRules()))
+			r.Get("/planner/sources", h.wrap(h.listPlannerSources()))
+			r.Get("/planner/parameters", h.wrap(h.listPlannerParameters()))
+			r.Get("/planner/catalogue", h.wrap(h.getPlannerCatalogue()))
+
 			r.Group(func(r chi.Router) {
 				r.Use(requireAuth(deps.Auth))
 
@@ -129,6 +140,26 @@ func NewRouter(deps RouterDeps) http.Handler {
 				r.Post("/media/{mediaId}/complete", h.wrap(h.completeUpload))
 				r.Get("/media/{mediaId}", h.wrap(h.getMedia))
 				r.Delete("/media/{mediaId}", h.wrap(h.deleteMedia))
+
+				r.Post("/me/onboarding", h.wrap(h.submitOnboarding))
+				r.Get("/me/training-profile", h.wrap(h.getTrainingProfile))
+				r.Put("/me/training-profile", h.wrap(h.updateTrainingProfile))
+				r.Get("/me/goals", h.wrap(h.getTrainingGoals))
+				r.Put("/me/goals", h.wrap(h.updateTrainingGoals))
+				r.Get("/me/plan", h.wrap(h.getTrainingPlan))
+				r.Post("/me/plan/regenerate", h.wrap(h.regenerateTrainingPlan))
+				r.Get("/me/plan/sessions/{plannedSessionId}", h.wrap(h.getPlannedSession))
+				r.Post("/me/plan/sessions/{plannedSessionId}/start", h.wrap(h.startPlannedSession))
+				r.Get("/me/plan/decisions", h.wrap(h.listPlanDecisions))
+				r.Post("/me/pain-reports", h.wrap(h.reportPain))
+				r.Get("/me/pain-reports", h.wrap(h.listPainReports))
+				r.Post("/me/symptoms", h.wrap(h.reportExertionSymptoms))
+				r.Get("/me/regions", h.wrap(h.listMyRegions))
+				r.Post("/me/regions/{region}/red-flags", h.wrap(h.answerRedFlags))
+				r.Post("/me/regions/{region}/clearance", h.wrap(h.confirmRegionClearance))
+				r.Post("/me/screening/clearance", h.wrap(h.confirmScreeningClearance))
+				r.Post("/me/health-consent", h.wrap(h.changeHealthConsent))
+				r.Get("/me/capacity", h.wrap(h.listMyCapacities))
 			})
 		})
 	}
@@ -159,19 +190,26 @@ func (h *handlers) wrap(fn func(http.ResponseWriter, *http.Request) error) http.
 // body reads the request body, validates it against the named schema of the
 // OpenAPI document, and decodes it into v.
 func (h *handlers) body(w http.ResponseWriter, r *http.Request, schema string, v any) error {
+	_, err := h.bodyRaw(w, r, schema, v)
+	return err
+}
+
+// bodyRaw is body that also returns the bytes read, for a request
+// fingerprint.
+func (h *handlers) bodyRaw(w http.ResponseWriter, r *http.Request, schema string, v any) ([]byte, error) {
 	r.Body = http.MaxBytesReader(w, r.Body, maxBodyBytes)
 	raw, err := io.ReadAll(r.Body)
 	if err != nil {
-		return errBadRequest{"body too large or unreadable"}
+		return nil, errBadRequest{"body too large or unreadable"}
 	}
 	if len(raw) == 0 {
-		return errBadRequest{"empty body"}
+		return nil, errBadRequest{"empty body"}
 	}
 	if err := h.Schemas.Validate(schema, raw); err != nil {
-		return err
+		return nil, err
 	}
 	r.Body = io.NopCloser(bytesReader(raw))
-	return decode(w, r, v)
+	return raw, decode(w, r, v)
 }
 
 // pathID parses a UUID path parameter.

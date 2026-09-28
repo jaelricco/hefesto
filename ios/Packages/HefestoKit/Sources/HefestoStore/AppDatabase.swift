@@ -162,6 +162,19 @@ public final class AppDatabase: Sendable {
         // Phase 6: the skill map, level states, progress and injury notes.
         // A new migration, never an edit to one already shipped.
         m.registerMigration("v2-skill-map") { db in try migrateSkillMap(db) }
+
+        // The seconds in reserve of a hold (sir_s), as the server keeps them.
+        m.registerMigration("v3-set-reserve") { db in
+            try db.alter(table: "setEntry") { t in t.add(column: "sirS", .integer) }
+        }
+
+        // The training plan (ADR 0021): the links of a started session to
+        // its plan, and the plan of each week as the server sent it.
+        m.registerMigration("v4-plan") { db in
+            try db.alter(table: "session") { t in t.add(column: "plannedSessionId", .text) }
+            try db.alter(table: "setEntry") { t in t.add(column: "plannedItemId", .text) }
+            try migratePlanCache(db)
+        }
         return m
     }
 }

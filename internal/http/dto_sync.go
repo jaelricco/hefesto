@@ -22,6 +22,7 @@ type syncSessionOut struct {
 	Status           string     `json:"status"`
 	IsRestDay        bool       `json:"is_rest_day"`
 	TemplateID       *uuid.UUID `json:"template_id"`
+	PlannedSessionID *uuid.UUID `json:"planned_session_id"`
 	CompletedAt      *time.Time `json:"completed_at"`
 	UpdatedAt        time.Time  `json:"updated_at"`
 	ServerUpdatedAt  time.Time  `json:"server_updated_at"`
@@ -82,7 +83,7 @@ func syncPageFrom(p store.SyncPage) syncPageOut {
 			ID: s.ID, StartedAt: utc(s.StartedAt), EndedAt: utcPtr(s.EndedAt), Timezone: s.Timezone,
 			LocalDate: s.LocalDate.Format(dateLayout), Title: s.Title, Notes: s.Notes,
 			PerceivedFatigue: s.PerceivedFatigue, BodyweightKg: s.BodyweightKg, Status: s.Status,
-			IsRestDay: s.IsRestDay, TemplateID: s.TemplateID, CompletedAt: utcPtr(s.CompletedAt),
+			IsRestDay: s.IsRestDay, TemplateID: s.TemplateID, PlannedSessionID: s.PlannedSessionID, CompletedAt: utcPtr(s.CompletedAt),
 			UpdatedAt: utc(s.UpdatedAt), ServerUpdatedAt: utc(s.ServerUpdatedAt), ServerSeq: s.ServerSeq,
 			DeletedAt: utcPtr(s.DeletedAt),
 		}

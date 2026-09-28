@@ -102,6 +102,77 @@ func logger(_ clock: TestClock) throws -> (AppDatabase, LoggerModel) {
         #expect(try model.repeatLastSet(of: "never-logged", in: block) == nil)
     }
 
+    @Test func aHoldKeepsItsReserveButARepeatDoesNot() throws {
+        let clock = TestClock()
+        let (_, model) = try logger(clock)
+        let block = model.tree.blocks[0].id
+        let id = try model.logSet(
+            in: block, element: ElementDraft(exerciseId: "l-sit", measure: "hold_seconds", holdSeconds: 15), sirS: 3)
+        let set = try #require(model.tree.blocks[0].sets.first { $0.id == id })
+        #expect(set.entry.sirS == 3, "read back from the store")
+        #expect(set.entry.rir == nil, "rir stays repetitions")
+
+        clock.advance(90)
+        let repeated = try #require(try model.repeatLastSet(of: "l-sit", in: block))
+        let again = try #require(model.tree.blocks[0].sets.first { $0.id == repeated })
+        #expect(again.elements[0].holdSeconds == 15)
+        #expect(again.entry.sirS == nil, "a reserve is rated per set, never copied")
+    }
+
+    @Test func aComboKeepsBothReservesAndARepeatNeither() throws {
+        let clock = TestClock()
+        let (_, model) = try logger(clock)
+        let block = model.tree.blocks[0].id
+        let id = try model.logCombo(in: block, elements: [
+            ElementDraft(exerciseId: "pull-up", measure: "reps", reps: 6),
+            ElementDraft(exerciseId: "l-sit", measure: "hold_seconds", holdSeconds: 10),
+        ], rir: 2, sirS: 4)
+        let set = try #require(model.tree.blocks[0].sets.first { $0.id == id })
+        #expect(set.entry.rir == 2)
+        #expect(set.entry.sirS == 4)
+
+        clock.advance(90)
+        let repeated = try #require(try model.repeatLastSet(of: "pull-up", in: block))
+        let again = try #require(model.tree.blocks[0].sets.first { $0.id == repeated })
+        #expect(again.entry.rir == nil)
+        #expect(again.entry.sirS == nil)
+    }
+
+    @Test func performingAPlannedSetKeepsItsIdAndItsLink() throws {
+        let clock = TestClock()
+        let db = try AppDatabase.inMemory()
+        let session = Session(
+            startedAt: clock.now, timezone: "Europe/Zurich", localDate: "2026-09-21", plannedSessionId: "ps-1")
+        try db.saveSession(session)
+        let block = Block(sessionId: session.id, orderIndex: 0)
+        try db.saveBlock(block)
+        let planned = SetEntry(sessionId: session.id, blockId: block.id, orderIndex: 0, isPlanned: true,
+                               restAfterPlannedS: 90, rir: 2, plannedItemId: "item-1")
+        let target = SetElement(setEntryId: planned.id, orderIndex: 0, exerciseId: "pull-up", measure: "reps", reps: 6)
+        try db.saveSet(SetWithElements(entry: planned, elements: [target]))
+        let model = try LoggerModel(db: db, sessionId: session.id, now: { clock.now })
+        #expect(model.openPlannedSets.map(\.id) == [planned.id])
+
+        clock.advance(60)
+        let id = try model.perform(
+            plannedSet: planned.id, elements: [ElementDraft(exerciseId: "pull-up", measure: "reps", reps: 5)], rir: 1)
+
+        #expect(id == planned.id)
+        let set = try #require(model.tree.blocks[0].sets.first)
+        #expect(set.entry.isPlanned == false)
+        #expect(set.entry.completedAt == clock.now)
+        #expect(set.entry.rir == 1, "what was left, not the target")
+        #expect(set.entry.plannedItemId == "item-1")
+        #expect(set.elements.map(\.reps) == [5])
+        #expect(model.rest?.plannedSeconds == 90, "the planned rest starts")
+        #expect(model.openPlannedSets.isEmpty)
+        #expect(try db.queuedOps().contains { $0.entity == .set && $0.rowId == planned.id })
+
+        #expect(throws: StoreError.notFound) {
+            try model.perform(plannedSet: planned.id, elements: [ElementDraft(exerciseId: "pull-up", measure: "reps", reps: 5)])
+        }
+    }
+
     @Test func addingAnElementMakesACombo() throws {
         let clock = TestClock()
         let (_, model) = try logger(clock)

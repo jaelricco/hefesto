@@ -21,6 +21,8 @@ var forbidden = []string{
 	"github.com/jaelricco/hefesto/internal/auth",
 	"github.com/jaelricco/hefesto/internal/media",
 	"github.com/jaelricco/hefesto/internal/sync",
+	"github.com/jaelricco/hefesto/internal/planning",
+	"github.com/jaelricco/hefesto/internal/content",
 	"database/sql",
 	"net/http",
 	"os",

@@ -74,8 +74,8 @@ struct LoggerView: View {
             }
         }
         .sheet(item: $composing) { c in
-            SetComposer(db: model.db, defaultRest: logger?.defaultRestSeconds ?? 120) { drafts, rest in
-                log(drafts, rest: rest, in: c.blockId)
+            SetComposer(db: model.db, defaultRest: logger?.defaultRestSeconds ?? 120) { drafts, rest, reserve in
+                log(drafts, rest: rest, reserve: reserve, in: c.blockId)
             }
         }
         .sheet(isPresented: $finishing) {
@@ -177,10 +177,11 @@ struct LoggerView: View {
         .overlay(alignment: .top) { Divider().overlay(Palette.surfaceRaised) }
     }
 
-    private func log(_ drafts: [ElementDraft], rest: Int, in blockId: String) {
+    private func log(_ drafts: [ElementDraft], rest: Int, reserve: SetReserve, in blockId: String) {
         guard let logger else { return }
         attempt {
-            try logger.logCombo(in: blockId, elements: drafts, restPlannedSeconds: rest)
+            try logger.logCombo(
+                in: blockId, elements: drafts, restPlannedSeconds: rest, rir: reserve.rir, sirS: reserve.sirS)
             loggedCount += 1
             if let end = logger.rest?.endsAt { RestNotifier.schedule(at: end) }
         }

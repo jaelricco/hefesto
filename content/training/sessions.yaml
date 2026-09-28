@@ -1,0 +1,21 @@
+# Session templates by available minutes (spec §5.5, SESS-01) and default
+# training days by sessions per week (PAR-S-06, spec §5.4: largest smallest
+# gap between days). Warm-up minutes from PAR-B-69 (12 = lower bound of
+# 12–15 for 90 min); skill minutes from PAR-B-65 and PAR-B-66 (lower bound of
+# 8–10). The 20-minute template is the minimum dose of onboarding.md §3.3,
+# the 75-minute one interpolates between 60 and 90 (both heuristic).
+templates:
+  - { minutes: 20, warmup_min: 5, skill_min: 0, volume_blocks: false, antagonist_pairs: 1, accessories: 0, params: [PAR-B-69] }
+  - { minutes: 30, warmup_min: 5, skill_min: 0, volume_blocks: false, antagonist_pairs: 2, accessories: 0, params: [PAR-B-64, PAR-B-69] }
+  - { minutes: 45, warmup_min: 7, skill_min: 5, volume_blocks: false, antagonist_pairs: 2, accessories: 1, params: [PAR-B-65, PAR-B-69] }
+  - { minutes: 60, warmup_min: 10, skill_min: 8, volume_blocks: true, antagonist_pairs: 1, accessories: 2, params: [PAR-B-66, PAR-B-69] }
+  - { minutes: 75, warmup_min: 10, skill_min: 8, volume_blocks: true, antagonist_pairs: 1, accessories: 2, params: [PAR-B-66, PAR-B-67] }
+  - { minutes: 90, warmup_min: 12, skill_min: 0, volume_blocks: true, antagonist_pairs: 1, accessories: 2, params: [PAR-B-67, PAR-B-69] }
+day_patterns:
+  "1": [wed]
+  "2": [mon, thu]
+  "3": [mon, wed, fri]
+  "4": [mon, tue, thu, sat]
+  "5": [mon, tue, wed, fri, sat]
+  "6": [mon, tue, wed, thu, fri, sat]
+  "7": [mon, tue, wed, thu, fri, sat, sun]

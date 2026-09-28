@@ -7,14 +7,22 @@ import SwiftUI
 struct SetComposer: View {
     let db: AppDatabase
     let defaultRest: Int
-    let onSave: ([ElementDraft], Int) -> Void
+    /// The elements, the planned rest and what the athlete had left.
+    let onSave: ([ElementDraft], Int, SetReserve) -> Void
 
     @Environment(\.dismiss) private var dismiss
     @State private var elements: [Draft] = [Draft()]
     @State private var rest: Int
+    @State private var rir: Int?
+    @State private var sirS: Int?
     @State private var picking: Int?
 
-    init(db: AppDatabase, defaultRest: Int, onSave: @escaping ([ElementDraft], Int) -> Void) {
+    /// The choices for reps in reserve, the log's 0–10.
+    static let rirChoices = Array(0...10)
+    /// The choices for a hold's reserve, within the log's 0–60 s.
+    static let sirChoices = [0, 1, 2, 3, 4, 5, 6, 8, 10, 15, 20, 30, 45, 60]
+
+    init(db: AppDatabase, defaultRest: Int, onSave: @escaping ([ElementDraft], Int, SetReserve) -> Void) {
         self.db = db
         self.defaultRest = defaultRest
         self.onSave = onSave
@@ -63,6 +71,35 @@ struct SetComposer: View {
                     .themedRow()
                 }
 
+                if asksRIR || asksSIR {
+                    Section {
+                        // A group so the theme reaches every row it makes.
+                        Group {
+                            if asksRIR {
+                                Picker("Reps left", selection: $rir) {
+                                    Text("Not rated").tag(Int?.none)
+                                    ForEach(Self.rirChoices, id: \.self) { Text($0, format: .number).tag(Int?.some($0)) }
+                                }
+                            }
+                            if asksSIR {
+                                Picker("Seconds left", selection: $sirS) {
+                                    Text("Not rated").tag(Int?.none)
+                                    ForEach(Self.sirChoices, id: \.self) { Text("\($0) s").tag(Int?.some($0)) }
+                                }
+                            }
+                        }
+                        .themedRow()
+                    } header: {
+                        Text("Reserve")
+                    } footer: {
+                        VStack(alignment: .leading) {
+                            if asksRIR { Text("How many more clean reps you could have done.") }
+                            if asksSIR { Text("How much longer you could have held with clean form.") }
+                        }
+                        .font(.detailText)
+                    }
+                }
+
                 Section("Rest after") {
                     Stepper(value: $rest, in: 0...600, step: 15) {
                         Text(Duration.seconds(rest).formatted(.time(pattern: .minuteSecond)))
@@ -81,7 +118,9 @@ struct SetComposer: View {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
-                        onSave(elements.compactMap(\.element), rest)
+                        onSave(
+                            elements.compactMap(\.element), rest,
+                            SetReserve(rir: asksRIR ? rir : nil, sirS: asksSIR ? sirS : nil))
                         dismiss()
                     }
                     .fontWeight(.semibold)
@@ -96,6 +135,24 @@ struct SetComposer: View {
             }
         }
     }
+
+    private var asksRIR: Bool { asksReserve(of: "reps") }
+    private var asksSIR: Bool { asksReserve(of: "hold_seconds") }
+
+    /// A reserve belongs to the set, so it is asked only when exactly one
+    /// element has the measure: with two, it would not say which one. An
+    /// element taken to failure had nothing left.
+    private func asksReserve(of measure: String) -> Bool {
+        let matching = elements.filter { $0.exercise != nil && $0.measure == measure }
+        return matching.count == 1 && !matching[0].failed
+    }
+}
+
+/// What the athlete had left after a set: reps for a rep element, seconds
+/// for a hold. Either may be unrated.
+struct SetReserve {
+    var rir: Int?
+    var sirS: Int?
 }
 
 private struct Picking: Identifiable {
