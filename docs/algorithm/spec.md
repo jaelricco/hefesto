@@ -1971,7 +1971,8 @@ darüber idempotent (U-40). Planungs-Antworten tragen `ruleset_version`;
 
 - Der Client hält den Plan der laufenden Woche im lokalen Speicher (`ETag`),
   wie die Skill-Karte (ADR 0011). Server-Tabellen des Planers sind für den
-  Client nur lesbar.
+  Client nur lesbar. Umsetzung in der iOS-App: ADR 0021, U-69 bis U-71; die
+  Screens folgen.
 - Offline startet der Client eine geplante Einheit selbst nach demselben
   Materialisierungsschema (§10.2, neue IDs, `planned_item_id`); der Sync lädt
   sie hoch, der Server adaptiert nach dem Commit. **Noch nicht gebaut:** Die
@@ -2168,7 +2169,8 @@ Trainings-Log mit `Materialize` und den Übungen des Planers im Katalog
 jedem neuen Plan (ADR 0017, U-55 bis U-57), und der Abschluss einer Einheit, der den Planer
 erreicht (ADR 0018, U-58 bis U-61), und der Check-in beim Start (ADR 0019, U-62 bis
 U-64), und die Reserve eines Halts im Log (U-65, U-66) und die Reserve in
-der iOS-App (U-67, U-68).
+der iOS-App (U-67, U-68), und der Unterbau des Plans in der iOS-App
+(ADR 0021, U-69 bis U-71).
 
 Tests: sechs Personas als Golden Files (`internal/domain/planning/testdata/`),
 die Eigenschaften I-1 bis I-11 für jeden erzeugten Plan, zwölf simulierte
@@ -2255,6 +2257,9 @@ U-35 setzen die Entscheidungen ENT-R-1, ENT-R-2 und ENT-R-5 um (§15.5).
 | U-66 | §4.3, U-59 | Der Verlauf übernimmt das `sir_s` eines ausgeführten Halts als seine Reserve; ohne `sir_s` bleibt der Halt eine Untergrenze | Halte zählen damit wieder als volle Beobachtung, soweit die Reserve es zulässt (`PAR-S-31`) |
 | U-67 | §4.3, ENT-S-4 | Die iOS-App fragt beim Loggen die Reserve eines Halts ab: optional, in festen Stufen von 0 bis 60 s, nur wenn der Satz genau einen Halt enthält. «Letzten Satz wiederholen» übernimmt sie nicht | `sir_s` gehört zum Satz; bei zwei Halten in einer Kombination sagte ein Wert nicht, welcher gemeint ist. Eine Reserve ist eine Einschätzung je Satz, keine Eigenschaft der Übung |
 | U-68 | §4.3, §6.6, `onboarding.md` §4.1 | Die iOS-App fragt ebenso `rir` ab: optional, 0 bis 10 (der Bereich des Logs), nur wenn der Satz genau ein Wiederholungselement enthält. Eine Kombination aus Wiederholungen und Halt fragt beides. Ist das Element «bis zum Versagen» markiert, fragt die App keine Reserve, bei Wiederholungen wie bei Halten | Der Kalibrierungssatz verlangt, dass die App die Reserve abfragt; ohne `rir` war jeder Wiederholungssatz aus der App eine Untergrenze. Ein Satz bis zum Versagen zählt wie ein Test (`onboarding.md` §4.1), eine Reserve daneben widerspräche ihm. Werte über RIR 3 zählen im Kern nur als Untergrenze (PAR-F-24); die App bietet trotzdem den ganzen Bereich, damit die Angabe ehrlich bleibt |
+| U-69 | §10.5 | Die iOS-App hält den Plan je Woche als Dokument, wie der Server ihn sendet (`cachedPlan`: Wochenbeginn, `ETag`, JSON), und liest ihn mit dem generierten Typ; Pläne mehr als vier Wochen vor dem neuesten gehen; `onboarding-required` löscht alle | Der Plan ist das Lesemodell des Servers, wird ganz ersetzt und lokal nie geändert; Tabellen wie bei der Skill-Karte (ADR 0011) brächten Abbildungen ohne Nutzen und verlören Felder, die die App noch nicht zeigt |
+| U-70 | §10.2, §10.5 | Der Start in der App braucht das Netz; der Draft der Antwort wird ohne Outbox gehalten; hält die App die Session schon (auch gelöscht), bleibt ihre Kopie; die Antworten des Check-ins speichert auch die App nicht | Ein wiederholter Start antwortet mit der ersten Session (U-51); die lokale Kopie kann ungesendete Änderungen tragen. Der Offline-Start bleibt offen (§15.3) |
+| U-71 | §10.2 | Ein geplanter Satz wird an seinem Platz ausgeführt: dieselbe ID, `is_planned = false`, `completed_at`, Istwerte statt Zielen, die angegebene Reserve, die geplante Pause startet; `plannedSessionId` und `plannedItemId` werden gespiegelt, nie gesendet | Der Server behält `planned_item_id` bei jedem Schreiben (ADR 0016); so bleibt die Zuordnung von Ist zu Soll, und es gibt weiter nur einen Pfad für Sätze |
 
 ### 15.3 Nicht umgesetzt
 

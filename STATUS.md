@@ -132,6 +132,22 @@ documents are in German.
     ways. Repeating the last set does not copy it.
   - It asks for RIR the same way when a set holds exactly one rep element
     (U-68), 0–10. An element taken to failure is not asked about.
+- **The plan in the iOS app, the foundation (this checkpoint, ADR 0021):**
+  - Screens wait: another branch is redesigning every screen (its ADR 0020).
+    This step touches only the `HefestoKit` package.
+  - The app keeps each week's plan as the document the server sent
+    (`cachedPlan`, with its `ETag`), readable offline through the generated
+    `TrainingPlan`. `refreshPlan` asks with `If-None-Match`; an unchanged
+    plan costs a 304, and `onboarding-required` forgets every kept plan.
+  - `startPlannedSession` starts a planned session with an optional
+    check-in and keeps the returned draft. A repeated start leaves a session
+    already kept here alone. Starting needs the network.
+  - `LoggerModel.perform(plannedSet:)` turns a planned set into the
+    performed one in place, with the athlete's values and reserve.
+  - Sessions and sets mirror `plannedSessionId` and `plannedItemId`, never
+    sent back.
+  - Not built: the screens, the onboarding in the app, pain reports from
+    the app, choosing a band for a planned band set, the offline start.
 - **A started draft follows the plan (this checkpoint, ADR 0017):**
   - Every new plan of the week reconciles the drafts of started sessions in
     the same transaction. Their open planned sets follow the day's session
@@ -167,7 +183,8 @@ documents are in German.
   (U-39 to U-46), the consent decisions in ADR 0015 (U-47 to U-49), the
   start decisions in ADR 0016 (U-50 to U-54), the reconciliation in
   ADR 0017 (U-55 to U-57), the completion in ADR 0018 (U-58 to U-61), the
-  check-in in ADR 0019 (U-62 to U-64), the reserve (U-65 to U-68),
+  check-in in ADR 0019 (U-62 to U-64), the reserve (U-65 to U-68), the
+  plan's foundation in the iOS app in ADR 0021 (U-69 to U-71),
   and these findings in spec §15.4:
   - sets with partner or machine assistance reach neither the capacities
     nor the load history;
