@@ -18,41 +18,55 @@ struct SignInView: View {
         NavigationStack {
             Form {
                 Section {
+                    Text("Log what you train. The map shows what you achieve.")
+                        .font(.detailText)
+                        .foregroundStyle(Palette.textSecondary)
+                        .listRowBackground(Color.clear)
+                        .listRowInsets(EdgeInsets(top: 0, leading: 4, bottom: 8, trailing: 4))
+                }
+
+                Section {
                     TextField("Email", text: $email)
                         .textContentType(.username)
                         .keyboardType(.emailAddress)
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled()
+                        .themedRow()
                     SecureField("Password", text: $password)
                         .textContentType(isRegistering ? .newPassword : .password)
+                        .themedRow()
                     if isRegistering {
                         TextField("Name (optional)", text: $displayName)
                             .textContentType(.name)
+                            .themedRow()
                     }
                 } footer: {
-                    if isRegistering { Text("At least 10 characters.") }
+                    if isRegistering { Text("At least 10 characters.").font(.fine) }
                 }
+                .font(.bodyText)
 
                 Section {
-                    Button {
-                        Task { await submit() }
-                    } label: {
-                        Text(isRegistering ? LocalizedStringKey("Create account") : "Sign in")
-                            .frame(maxWidth: .infinity, minHeight: 44)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .disabled(working || email.isEmpty || password.isEmpty)
+                    VStack(spacing: 10) {
+                        Button {
+                            Task { await submit() }
+                        } label: {
+                            Text(isRegistering ? LocalizedStringKey("Create account") : "Sign in")
+                        }
+                        .buttonStyle(PrimaryButtonStyle(height: 56))
+                        .disabled(working || email.isEmpty || password.isEmpty)
 
-                    SignInWithAppleButton(isRegistering ? .signUp : .signIn) { request in
-                        nonce = Self.randomNonce()
-                        request.requestedScopes = [.fullName]
-                        request.nonce = Self.sha256(nonce)
-                    } onCompletion: { result in
-                        Task { await apple(result) }
+                        SignInWithAppleButton(isRegistering ? .signUp : .signIn) { request in
+                            nonce = Self.randomNonce()
+                            request.requestedScopes = [.fullName]
+                            request.nonce = Self.sha256(nonce)
+                        } onCompletion: { result in
+                            Task { await apple(result) }
+                        }
+                        .signInWithAppleButtonStyle(.white)
+                        .frame(height: 52)
+                        .clipShape(.rect(cornerRadius: 16))
+                        .disabled(working)
                     }
-                    .signInWithAppleButtonStyle(.white)
-                    .frame(minHeight: 44)
-                    .disabled(working)
                 }
                 .listRowInsets(EdgeInsets())
                 .listRowBackground(Color.clear)
@@ -62,15 +76,21 @@ struct SignInView: View {
                         isRegistering.toggle()
                         message = nil
                     }
+                    .font(.bodyMedium)
+                    .foregroundStyle(Palette.ember)
+                    .frame(minHeight: 44)
+                    .themedRow()
                 }
 
                 if let message {
                     Section {
-                        Text(message).foregroundStyle(.red)
-                        if let detail { Text(verbatim: detail).font(.footnote).foregroundStyle(.secondary) }
+                        Text(message).font(.bodyText).foregroundStyle(Palette.ember)
+                        if let detail { Text(verbatim: detail).font(.fine).foregroundStyle(Palette.textSecondary) }
                     }
+                    .themedRow()
                 }
             }
+            .themedScreen()
             .navigationTitle("Hefesto")
         }
     }

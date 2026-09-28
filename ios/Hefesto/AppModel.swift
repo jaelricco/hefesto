@@ -1,6 +1,7 @@
 import Foundation
 import HefestoAPI
 import HefestoAuth
+import HefestoLogger
 import HefestoStore
 import HefestoSync
 import Network
@@ -24,13 +25,24 @@ final class AppModel {
     var celebration: Celebration?
     var tab: AppTab = .today
 
+    /// Set only in a Debug build started as a demo (DemoMode.swift): a seeded
+    /// in-memory database, signed in, never on the network.
+    private(set) var demo: DemoRun?
+
     private var pathMonitor: NWPathMonitor?
 
     init() throws {
         let baseURL = Self.apiBaseURL
-        let dir = try FileManager.default.url(
-            for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-        db = try AppDatabase.onDisk(at: dir.appending(path: "hefesto.sqlite"))
+        #if DEBUG
+        if let screen = DemoRun.requestedScreen {
+            db = try AppDatabase.inMemory()
+            demo = try DemoRun.seed(db, screen: screen)
+        } else {
+            db = try Self.openDatabase()
+        }
+        #else
+        db = try Self.openDatabase()
+        #endif
 
         auth = AuthService(
             client: HefestoAPIConfiguration.client(serverURL: baseURL),
@@ -40,21 +52,41 @@ final class AppModel {
         sync = SyncEngine(client: api, db: db)
     }
 
+    private static func openDatabase() throws -> AppDatabase {
+        let dir = try FileManager.default.url(
+            for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+        return try AppDatabase.onDisk(at: dir.appending(path: "hefesto.sqlite"))
+    }
+
     func start() async {
+        if let demo {
+            isSignedIn = demo.screen != .signIn
+            tab = demo.screen.tab
+            celebration = demo.celebration
+            return
+        }
         isSignedIn = await auth.isSignedIn
         watchNetwork()
         await syncNow()
     }
 
+    /// A logger on a session. A demo hands out its prepared one, with the
+    /// rest already running.
+    func makeLogger(sessionId: String) throws -> LoggerModel {
+        if let logger = demo?.logger, logger.session.id == sessionId { return logger }
+        return try LoggerModel(db: db, sessionId: sessionId)
+    }
+
     // MARK: auth
 
     func signedIn() async {
+        guard demo == nil else { isSignedIn = true; return }
         isSignedIn = await auth.isSignedIn
         await syncNow()
     }
 
     func signOut() async {
-        await auth.logout()
+        if demo == nil { await auth.logout() }
         isSignedIn = false
     }
 
@@ -63,7 +95,7 @@ final class AppModel {
     /// One push-then-pull, and the catalogue if it changed. Failures leave
     /// everything queued; the next trigger tries again.
     func syncNow() async {
-        guard isSignedIn else { return }
+        guard isSignedIn, demo == nil else { return }
         isSyncing = true
         defer { isSyncing = false }
         do {
@@ -81,6 +113,12 @@ final class AppModel {
             isSignedIn = await auth.isSignedIn
             isOffline = isSignedIn
         }
+    }
+
+    /// Fetches a skill's injury notes for offline reading; a demo has them already.
+    func refreshSkillNotes(slug: String) async {
+        guard demo == nil else { return }
+        try? await sync.refreshSkillNotes(slug: slug)
     }
 
     private func watchNetwork() {
@@ -120,8 +158,30 @@ enum AppTab: Hashable {
     case today, history, map
 }
 
+/// What a completed session earned, ready to show. Built from the server's
+/// answer here, so the celebration does not depend on the API's types.
 struct Celebration: Identifiable {
+    struct Unlock: Hashable {
+        let levelId: String
+        let levelName: String
+        let skillName: String
+    }
+
     let sessionId: String
-    let result: Components.Schemas.CompletionResult
+    let unlocked: [Unlock]
+    let xp: Int
+    let newlyAvailable: Int
+    let streakDays: Int
     var id: String { sessionId }
+}
+
+extension Celebration {
+    init(sessionId: String, result: Components.Schemas.CompletionResult) {
+        self.init(
+            sessionId: sessionId,
+            unlocked: result.unlocked.map { Unlock(levelId: $0.levelId, levelName: $0.levelName, skillName: $0.skillName) },
+            xp: result.xpAwarded.reduce(0) { $0 + $1.amount },
+            newlyAvailable: result.newlyAvailable.count,
+            streakDays: result.streak.currentDays)
+    }
 }

@@ -32,12 +32,14 @@ struct SetComposer: View {
                         } label: {
                             HStack {
                                 Text(verbatim: draft.exercise?.name ?? String(localized: "Choose an exercise"))
-                                    .foregroundStyle(draft.exercise == nil ? .secondary : .primary)
+                                    .font(.rowTitle)
+                                    .foregroundStyle(draft.exercise == nil ? Palette.textSecondary : Palette.text)
                                 Spacer()
-                                Image(systemName: "chevron.right").foregroundStyle(.tertiary)
+                                Image(systemName: "chevron.right").foregroundStyle(Palette.textTertiary)
                             }
                             .frame(minHeight: 44)
                         }
+                        .themedRow()
                         if draft.exercise != nil { ElementFields(draft: $draft) }
                     } header: {
                         Text(elements.count > 1 ? LocalizedStringKey("Combo, part \(index + 1)") : "Set")
@@ -46,6 +48,7 @@ struct SetComposer: View {
                             Button("Remove this part", role: .destructive) {
                                 elements.removeAll { $0.id == draft.id }
                             }
+                            .font(.detailText)
                         }
                     }
                 }
@@ -54,18 +57,26 @@ struct SetComposer: View {
                     Button("Add an exercise to make a combo", systemImage: "plus.square.on.square") {
                         elements.append(Draft())
                     }
+                    .font(.bodyMedium)
+                    .foregroundStyle(Palette.ember)
                     .frame(minHeight: 44)
+                    .themedRow()
                 }
 
                 Section("Rest after") {
                     Stepper(value: $rest, in: 0...600, step: 15) {
                         Text(Duration.seconds(rest).formatted(.time(pattern: .minuteSecond)))
-                            .font(.title3.monospacedDigit())
+                            .font(.metricSmall)
+                            .monospacedDigit()
+                            .foregroundStyle(Palette.text)
                     }
+                    .themedRow()
                 }
             }
+            .themedScreen()
             .navigationTitle("Log a set")
             .navigationBarTitleDisplayMode(.inline)
+            .font(.bodyText)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
@@ -73,7 +84,7 @@ struct SetComposer: View {
                         onSave(elements.compactMap(\.element), rest)
                         dismiss()
                     }
-                    .bold()
+                    .fontWeight(.semibold)
                     .disabled(!elements.allSatisfy { $0.element != nil })
                 }
             }
@@ -129,20 +140,26 @@ struct ElementFields: View {
     @Binding var draft: Draft
 
     var body: some View {
+        // A group so the theme reaches every row it makes.
+        Group { fields }.themedRow()
+    }
+
+    @ViewBuilder
+    private var fields: some View {
         switch draft.measure {
         case "reps":
             Stepper(value: $draft.reps, in: 0...500) {
-                Text("\(draft.reps) reps").font(.title2.monospacedDigit().bold())
+                Text("\(draft.reps) reps").font(.metricSmall).monospacedDigit()
             }
             .frame(minHeight: 56)
         case "hold_seconds":
             Stepper(value: $draft.holdSeconds, in: 0...3600, step: 5) {
-                Text("\(draft.holdSeconds) s hold").font(.title2.monospacedDigit().bold())
+                Text("\(draft.holdSeconds) s hold").font(.metricSmall).monospacedDigit()
             }
             .frame(minHeight: 56)
         case "distance_m":
             Stepper(value: $draft.distanceM, in: 0...10000, step: 5) {
-                Text("\(draft.distanceM) m").font(.title2.monospacedDigit().bold())
+                Text("\(draft.distanceM) m").font(.metricSmall).monospacedDigit()
             }
             .frame(minHeight: 56)
         default:
@@ -219,13 +236,16 @@ struct ExercisePicker: View {
                     onPick(e)
                 } label: {
                     VStack(alignment: .leading) {
-                        Text(verbatim: e.name).font(.headline)
-                        Text(verbatim: e.family).font(.caption).foregroundStyle(.secondary)
+                        Text(verbatim: e.name).font(.rowTitle).foregroundStyle(Palette.text)
+                        Text(verbatim: FamilyText.label(e.family)).font(.fine).foregroundStyle(Palette.textSecondary)
                     }
-                    .frame(minHeight: 44)
+                    .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                    .contentShape(.rect)
                 }
-                .foregroundStyle(.primary)
+                .buttonStyle(.plain)
+                .themedRow()
             }
+            .themedScreen()
             .overlay {
                 if results.isEmpty {
                     ContentUnavailableView(

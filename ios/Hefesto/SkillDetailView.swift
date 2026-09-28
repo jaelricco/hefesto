@@ -17,25 +17,30 @@ struct SkillDetailView: View {
     private var skill: SkillWithLevels? { map?.skills.first { $0.id == skillId } }
 
     var body: some View {
-        List {
+        ScrollView {
             if let skill, let map {
-                header(skill, map)
-                Section("Levels") {
-                    ForEach(skill.levels) { level in
-                        LevelRow(level: level, state: map.states[level.id], exerciseNames: exerciseNames) {
-                            attesting = level
+                VStack(alignment: .leading, spacing: 0) {
+                    header(skill, map).padding(.horizontal, 20)
+                    if skill.levels.count > 1 {
+                        LevelLadder(skill: skill, map: map).padding(.horizontal, 16).padding(.top, 18)
+                    }
+                    CapsLabel("Levels").padding(.horizontal, 20).padding(.top, 24).padding(.bottom, 10)
+                    VStack(spacing: 10) {
+                        ForEach(skill.levels) { level in
+                            LevelCard(level: level, state: map.states[level.id], exerciseNames: exerciseNames) {
+                                attesting = level
+                            }
                         }
                     }
+                    .padding(.horizontal, 16)
+                    if !skill.skill.commonFaults.isEmpty { faults(skill).padding(.top, 24) }
+                    injuries.padding(.top, 24)
                 }
-                if !skill.skill.commonFaults.isEmpty {
-                    Section("Common faults") {
-                        ForEach(skill.skill.commonFaults, id: \.self) { Text(verbatim: $0) }
-                    }
-                }
-                injuries(skill)
+                .padding(.bottom, 24)
             }
         }
-        .navigationTitle(skill.map { Text(verbatim: $0.skill.name) } ?? Text(verbatim: ""))
+        .themedScreen()
+        // The name is the page's own title; the bar keeps only the way back.
         .navigationBarTitleDisplayMode(.inline)
         .confirmationDialog(
             "Mark as achieved?", isPresented: .constant(attesting != nil), titleVisibility: .visible,
@@ -57,7 +62,7 @@ struct SkillDetailView: View {
         }
         .task(id: skill?.skill.slug) {
             guard let slug = skill?.skill.slug else { return }
-            try? await model.sync.refreshSkillNotes(slug: slug)
+            await model.refreshSkillNotes(slug: slug)
             do { for try await n in model.db.observeSkillNotes(slug: slug) { notes = n } } catch {}
         }
     }
@@ -68,65 +73,105 @@ struct SkillDetailView: View {
 
     @ViewBuilder
     private func header(_ s: SkillWithLevels, _ map: SkillMapData) -> some View {
-        Section {
-            VStack(alignment: .leading, spacing: 8) {
-                HStack {
-                    Text(StandingText.label(map.standing(of: s))).font(.subheadline.weight(.semibold))
-                        .foregroundStyle(map.standing(of: s) == .locked ? Color.secondary : Color.yellow)
-                    Spacer()
-                    if s.skill.isMilestone {
-                        Label("Milestone", systemImage: "star.circle").font(.caption).foregroundStyle(.yellow)
-                    }
-                }
-                if !s.skill.summary.isEmpty { Text(verbatim: s.skill.summary) }
-                Text("Difficulty \(s.skill.difficultyTier) of 10").font(.caption).foregroundStyle(.secondary)
-                if s.skill.status == "draft_placeholder" {
-                    Text("This skill's content is still being researched.").font(.caption).foregroundStyle(.orange)
-                }
+        let standing = map.standing(of: s)
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(spacing: 6) {
+                if s.skill.isMilestone { Chip("Milestone", tone: .gold) }
+                Chip(verbatim: FamilyText.label(s.skill.family))
+                Chip(verbatim: StandingText.label(standing), tone: standing == .locked ? .neutral : .ember)
+            }
+            Text(verbatim: s.skill.name)
+                .font(Typeface.condensed(46, .bold, relativeTo: .largeTitle))
+                .foregroundStyle(Palette.text)
+                .padding(.top, 10)
+                .accessibilityAddTraits(.isHeader)
+            if !s.skill.summary.isEmpty {
+                Text(verbatim: s.skill.summary)
+                    .font(Typeface.text(16, relativeTo: .body))
+                    .foregroundStyle(Palette.textSecondary)
+                    .padding(.top, 6)
+            }
+            DifficultyMeter(tier: s.skill.difficultyTier).padding(.top, 14)
+            if s.skill.status == "draft_placeholder" {
+                Text("This skill's content is still being researched.")
+                    .font(.fine)
+                    .foregroundStyle(Palette.ember)
+                    .padding(.top, 10)
             }
         }
     }
 
-    @ViewBuilder
-    private func injuries(_ s: SkillWithLevels) -> some View {
-        if let notes, !notes.injuries.isEmpty {
-            Section {
-                // The disclaimer comes first and with every note, as the API sends it.
-                Label {
-                    Text(verbatim: notes.disclaimer)
-                } icon: {
-                    Image(systemName: "info.circle")
+    private func faults(_ s: SkillWithLevels) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            CapsLabel("Common faults").padding(.horizontal, 20)
+            VStack(alignment: .leading, spacing: 0) {
+                ForEach(Array(s.skill.commonFaults.enumerated()), id: \.offset) { i, fault in
+                    if i > 0 { Divider().overlay(Palette.hairline).padding(.leading, 38) }
+                    HStack(alignment: .firstTextBaseline, spacing: 12) {
+                        Text(verbatim: "–").font(.rowTitle).foregroundStyle(Palette.ember).accessibilityHidden(true)
+                        Text(verbatim: fault).font(Typeface.text(16, relativeTo: .body)).foregroundStyle(Palette.text)
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
                 }
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-                ForEach(notes.injuries, id: \.name) { injury in
-                    DisclosureGroup {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(verbatim: injury.details)
-                            if !injury.riskFactors.isEmpty {
-                                Text("Risk factors").font(.subheadline.weight(.semibold))
-                                ForEach(injury.riskFactors, id: \.self) { Text(verbatim: "• \($0)") }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Palette.surface, in: .rect(cornerRadius: 16))
+            .padding(.horizontal, 16)
+        }
+    }
+
+    @ViewBuilder
+    private var injuries: some View {
+        if let notes, !notes.injuries.isEmpty {
+            VStack(alignment: .leading, spacing: 10) {
+                CapsLabel("Injury awareness").padding(.horizontal, 20)
+                VStack(alignment: .leading, spacing: 0) {
+                    // The disclaimer comes first and with every note, as the API sends it.
+                    Label {
+                        Text(verbatim: notes.disclaimer)
+                    } icon: {
+                        Image(systemName: "info.circle")
+                    }
+                    .font(.meta)
+                    .foregroundStyle(Palette.textSecondary)
+                    .padding(16)
+                    ForEach(notes.injuries, id: \.name) { injury in
+                        Divider().overlay(Palette.hairline)
+                        DisclosureGroup {
+                            VStack(alignment: .leading, spacing: 8) {
+                                if !injury.details.isEmpty { Text(verbatim: injury.details) }
+                                if !injury.riskFactors.isEmpty {
+                                    Text("Risk factors").font(.rowTitle)
+                                    ForEach(injury.riskFactors, id: \.self) { Text(verbatim: "• \($0)") }
+                                }
+                                if !injury.earlySigns.isEmpty {
+                                    Text("Early signs").font(.rowTitle)
+                                    ForEach(injury.earlySigns, id: \.self) { Text(verbatim: "• \($0)") }
+                                }
+                                if !injury.prehabExerciseSlugs.isEmpty {
+                                    Text("Prehab").font(.rowTitle)
+                                    Text(verbatim: injury.prehabExerciseSlugs.map { exerciseNames[$0] ?? $0 }
+                                        .joined(separator: ", "))
+                                }
                             }
-                            if !injury.earlySigns.isEmpty {
-                                Text("Early signs").font(.subheadline.weight(.semibold))
-                                ForEach(injury.earlySigns, id: \.self) { Text(verbatim: "• \($0)") }
-                            }
-                            if !injury.prehabExerciseSlugs.isEmpty {
-                                Text("Prehab").font(.subheadline.weight(.semibold))
-                                Text(verbatim: injury.prehabExerciseSlugs.map { exerciseNames[$0] ?? $0 }
-                                    .joined(separator: ", "))
+                            .font(.detailText)
+                            .foregroundStyle(Palette.text)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.top, 8)
+                        } label: {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(verbatim: injury.name).font(.rowTitle).foregroundStyle(Palette.text)
+                                Text(verbatim: RegionText.label(injury.region)).font(.fine)
+                                    .foregroundStyle(Palette.textSecondary)
                             }
                         }
-                        .font(.callout)
-                    } label: {
-                        VStack(alignment: .leading) {
-                            Text(verbatim: injury.name).font(.headline)
-                            Text(verbatim: injury.region).font(.caption).foregroundStyle(.secondary)
-                        }
+                        .padding(16)
                     }
                 }
-            } header: {
-                Text("Injury awareness")
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Palette.surface, in: .rect(cornerRadius: 16))
+                .padding(.horizontal, 16)
             }
         }
     }
@@ -145,8 +190,95 @@ struct SkillDetailView: View {
     }
 }
 
+/// The levels in order, as steps: where the athlete is on the way.
+struct LevelLadder: View {
+    let skill: SkillWithLevels
+    let map: SkillMapData
+
+    var body: some View {
+        let unlocked = skill.levels.filter { map.state(of: $0.id) == "unlocked" }.count
+        VStack(alignment: .leading, spacing: 12) {
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(alignment: .top, spacing: 0) {
+                    ForEach(Array(skill.levels.enumerated()), id: \.element.id) { i, level in
+                        if i > 0 {
+                            Rectangle()
+                                .fill(map.state(of: skill.levels[i - 1].id) == "unlocked" ? Palette.gold : Palette.lockedStroke)
+                                .frame(width: 32, height: 2)
+                                .padding(.top, 13)
+                        }
+                        VStack(spacing: 6) {
+                            step(map.state(of: level.id))
+                            Text(verbatim: shortName(level))
+                                .font(Typeface.text(14, .semibold, relativeTo: .subheadline))
+                                .foregroundStyle(Palette.text)
+                                .multilineTextAlignment(.center)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                        .frame(width: 96)
+                    }
+                }
+            }
+            Text("\(unlocked) of \(skill.levels.count) levels unlocked")
+                .font(.meta)
+                .foregroundStyle(Palette.textSecondary)
+        }
+        .card()
+        .accessibilityElement(children: .combine)
+    }
+
+    @ViewBuilder
+    private func step(_ state: String) -> some View {
+        ZStack {
+            switch state {
+            case "unlocked":
+                Circle().fill(Palette.gold)
+                Image(systemName: "checkmark").font(.system(size: 13, weight: .bold)).foregroundStyle(Palette.emberInk)
+            case "in_progress":
+                Circle().strokeBorder(Palette.ember, lineWidth: 2)
+                Circle().fill(Palette.ember).padding(8)
+            case "available":
+                Circle().strokeBorder(Palette.text, lineWidth: 2)
+            default:
+                Circle().strokeBorder(Palette.lockedStroke, lineWidth: 1.5)
+                Image(systemName: "lock.fill").font(.system(size: 11)).foregroundStyle(Palette.lockedLabel)
+            }
+        }
+        .frame(width: 28, height: 28)
+    }
+
+    /// "Tuck Front Lever" on the Front Lever page is "Tuck".
+    private func shortName(_ level: SkillLevel) -> String {
+        let short = level.name.replacingOccurrences(of: skill.skill.name, with: "")
+            .trimmingCharacters(in: .whitespaces)
+        return short.isEmpty ? level.name : short
+    }
+}
+
+/// How hard a skill is, as ten bars and in words.
+struct DifficultyMeter: View {
+    let tier: Int
+
+    var body: some View {
+        HStack(spacing: 12) {
+            CapsLabel("Difficulty", isHeader: false)
+            HStack(spacing: 4) {
+                ForEach(1...10, id: \.self) { i in
+                    Capsule().fill(i <= tier ? Palette.ember : Palette.hairline).frame(width: 14, height: 6)
+                }
+            }
+            .accessibilityHidden(true)
+            Text("\(tier) of 10")
+                .font(Typeface.condensed(16, .semibold, relativeTo: .subheadline))
+                .monospacedDigit()
+                .foregroundStyle(Palette.text)
+        }
+        .accessibilityElement(children: .combine)
+    }
+}
+
 /// One level: its state, what unlocks it, and the athlete's best.
-struct LevelRow: View {
+struct LevelCard: View {
     let level: SkillLevel
     let state: LevelState?
     let exerciseNames: [String: String]
@@ -155,34 +287,57 @@ struct LevelRow: View {
     private var status: String { state?.state ?? "locked" }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack(alignment: .firstTextBaseline) {
-                Image(systemName: icon).foregroundStyle(tint).accessibilityHidden(true)
-                Text(verbatim: level.name).font(.headline)
-                Spacer()
-                Text(LevelText.state(status)).font(.caption).foregroundStyle(tint)
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(alignment: .center, spacing: 10) {
+                Image(systemName: icon).font(.system(size: 20)).foregroundStyle(tint).accessibilityHidden(true)
+                Text(verbatim: level.name).font(Typeface.text(18, .semibold, relativeTo: .headline))
+                    .foregroundStyle(Palette.text)
+                Spacer(minLength: 4)
+                Chip(verbatim: LevelText.state(status), tone: status == "unlocked" ? .gold : .neutral)
             }
-            if !level.details.isEmpty { Text(verbatim: level.details).font(.callout).foregroundStyle(.secondary) }
+            if !level.details.isEmpty {
+                Text(verbatim: level.details).font(.detailText).foregroundStyle(Palette.textSecondary)
+            }
             ForEach(Array(LevelText.criteria(level.criteria, names: exerciseNames).enumerated()), id: \.offset) {
-                Text(verbatim: $0.element).font(.callout)
+                Text(verbatim: $0.element).font(.detailText).foregroundStyle(Palette.textSecondary)
             }
-            if let best = state?.bestValue, let unit = state?.bestUnit {
-                Text("Best: \(LevelText.value(best, unit: unit))").font(.caption.monospacedDigit())
-            }
-            if let achieved = state?.firstAchievedAt, status == "unlocked" {
-                Text(state?.verification == "self_attested"
-                     ? LocalizedStringKey("Self-attested on \(achieved.formatted(date: .abbreviated, time: .omitted))")
-                     : "Unlocked on \(achieved.formatted(date: .abbreviated, time: .omitted))")
-                    .font(.caption).foregroundStyle(.secondary)
+            if state?.bestValue != nil || (status == "unlocked" && state?.firstAchievedAt != nil) {
+                HStack(alignment: .top, spacing: 12) {
+                    if let best = state?.bestValue, let unit = state?.bestUnit {
+                        stat("Best") {
+                            Text(verbatim: LevelText.value(best, unit: unit))
+                                .font(.metricSmall)
+                                .monospacedDigit()
+                                .foregroundStyle(Palette.text)
+                        }
+                    }
+                    if let achieved = state?.firstAchievedAt, status == "unlocked" {
+                        stat(state?.verification == "self_attested" ? "Self-attested on" : "Unlocked on") {
+                            Text(achieved, format: .dateTime.day().month(.abbreviated).year())
+                                .font(.rowTitle)
+                                .foregroundStyle(Palette.text)
+                                .frame(minHeight: 30)
+                        }
+                    }
+                }
+                .padding(.top, 4)
             }
             if status == "available" || status == "in_progress" {
                 Button("I can already do this", action: onAttest)
-                    .font(.callout)
-                    .frame(minHeight: 44)
+                    .buttonStyle(SecondaryButtonStyle(height: 48))
+                    .padding(.top, 4)
             }
         }
-        .padding(.vertical, 4)
+        .card()
         .accessibilityElement(children: .combine)
+    }
+
+    private func stat<V: View>(_ label: LocalizedStringKey, @ViewBuilder value: () -> V) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            CapsLabel(label, isHeader: false)
+            value()
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var icon: String {
@@ -196,10 +351,42 @@ struct LevelRow: View {
 
     private var tint: Color {
         switch status {
-        case "unlocked": .yellow
-        case "in_progress": .orange
-        case "available": .primary
-        default: .secondary
+        case "unlocked": Palette.gold
+        case "in_progress": Palette.ember
+        case "available": Palette.text
+        default: Palette.lockedLabel
+        }
+    }
+}
+
+/// A skill family's name, from the vocabulary in content/families.yaml.
+enum FamilyText {
+    static func label(_ family: String) -> String {
+        switch family {
+        case "push": String(localized: "Push")
+        case "pull": String(localized: "Pull")
+        case "core": String(localized: "Core")
+        case "legs": String(localized: "Legs")
+        case "handstand": String(localized: "Handstand")
+        case "dynamic": String(localized: "Dynamic")
+        case "mobility": String(localized: "Mobility")
+        default: family
+        }
+    }
+}
+
+/// A body region as injury notes name it.
+enum RegionText {
+    static func label(_ region: String) -> String {
+        switch region {
+        case "elbow": String(localized: "Elbow")
+        case "shoulder": String(localized: "Shoulder")
+        case "wrist": String(localized: "Wrist")
+        case "lower_back": String(localized: "Lower back")
+        case "knee": String(localized: "Knee")
+        case "neck": String(localized: "Neck")
+        case "hip": String(localized: "Hip")
+        default: region
         }
     }
 }

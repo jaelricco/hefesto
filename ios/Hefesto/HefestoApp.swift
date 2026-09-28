@@ -6,6 +6,10 @@ struct HefestoApp: App {
     @State private var failure: String?
     @Environment(\.scenePhase) private var scenePhase
 
+    init() {
+        Appearance.apply()
+    }
+
     var body: some Scene {
         WindowGroup {
             Group {
@@ -18,6 +22,10 @@ struct HefestoApp: App {
                     ProgressView()
                 }
             }
+            // One dark, warm world (ADR 0020): system controls, sheets and
+            // alerts follow it too.
+            .preferredColorScheme(.dark)
+            .tint(Palette.ember)
             .task {
                 guard model == nil else { return }
                 do {
