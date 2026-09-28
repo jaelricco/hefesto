@@ -29,6 +29,8 @@ type Store struct {
 	plans     map[string][]byte
 	decisions map[uuid.UUID][]service.Decision
 	started   map[uuid.UUID]service.SessionStart
+	completed map[uuid.UUID]planning.LoggedSession
+	deload    map[uuid.UUID]bool
 	users     map[uuid.UUID]*sync.Mutex
 }
 
@@ -39,6 +41,8 @@ func New() *Store {
 		plans:     map[string][]byte{},
 		decisions: map[uuid.UUID][]service.Decision{},
 		started:   map[uuid.UUID]service.SessionStart{},
+		completed: map[uuid.UUID]planning.LoggedSession{},
+		deload:    map[uuid.UUID]bool{},
 		users:     map[uuid.UUID]*sync.Mutex{},
 	}
 }
@@ -243,6 +247,110 @@ func (s *Store) AdjustSession(_ context.Context, _ uuid.UUID, sessionID uuid.UUI
 	in.Draft.Blocks = blocks
 	s.started[sessionID] = in
 	return nil
+}
+
+// Complete records a completed log session, as the log would after
+// POST /v1/sessions/{id}/complete. The memory store keeps no log; tests
+// hand it the session the planner reads.
+func (s *Store) Complete(sess planning.LoggedSession) error {
+	id, err := uuid.Parse(sess.ID)
+	if err != nil {
+		return fmt.Errorf("session id %q: %w", sess.ID, err)
+	}
+	s.mu.Lock()
+	s.completed[id] = sess
+	delete(s.started, id)
+	s.mu.Unlock()
+	return nil
+}
+
+// CompletedSession returns a session recorded with Complete.
+func (s *Store) CompletedSession(_ context.Context, _ uuid.UUID, sessionID uuid.UUID) (planning.LoggedSession, bool, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	sess, ok := s.completed[sessionID]
+	return sess, ok, nil
+}
+
+// MarkCompleted marks the planned sessions of a log session completed in
+// the stored plans.
+func (s *Store) MarkCompleted(ctx context.Context, userID, sessionID uuid.UUID, deload bool) error {
+	s.mu.Lock()
+	var weeks []string
+	for key := range s.plans {
+		if strings.HasPrefix(key, userID.String()+"/") {
+			weeks = append(weeks, strings.TrimPrefix(key, userID.String()+"/"))
+		}
+	}
+	if deload {
+		s.deload[sessionID] = true
+	}
+	s.mu.Unlock()
+	for _, w := range weeks {
+		week, err := time.Parse(time.DateOnly, w)
+		if err != nil {
+			return fmt.Errorf("plan week %q: %w", w, err)
+		}
+		p, ok, err := s.ActivePlan(ctx, userID, week)
+		if err != nil || !ok {
+			return err
+		}
+		changed := false
+		for i := range p.Sessions {
+			if p.Sessions[i].WorkoutSessionID == sessionID.String() {
+				p.Sessions[i].Status, changed = service.SessionCompleted, true
+			}
+		}
+		if changed {
+			if err := s.SavePlan(ctx, userID, p); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+// DeloadDay reports whether a completed session marked its day a deload day.
+func (s *Store) DeloadDay(sessionID uuid.UUID) bool {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	return s.deload[sessionID]
+}
+
+// PendingCompletions lists recorded completions from the day of the
+// onboarding on that no decision applied, oldest first.
+func (s *Store) PendingCompletions(ctx context.Context, userID uuid.UUID, limit int) ([]uuid.UUID, error) {
+	snap, ok, err := s.Snapshot(ctx, userID)
+	if err != nil || !ok {
+		return nil, err
+	}
+	since := snap.Profile.OnboardedAt
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	type entry struct {
+		id   uuid.UUID
+		date time.Time
+	}
+	var pending []entry
+	for id, sess := range s.completed {
+		applied := slices.ContainsFunc(s.decisions[userID], func(d service.Decision) bool {
+			return d.Trigger == service.TriggerSession && d.SourceID == sess.ID
+		})
+		if !applied && !sess.Date.Before(civilDay(since)) {
+			pending = append(pending, entry{id, sess.Date})
+		}
+	}
+	slices.SortFunc(pending, func(a, b entry) int { return cmp.Or(a.date.Compare(b.date), bytes.Compare(a.id[:], b.id[:])) })
+	var out []uuid.UUID
+	for _, e := range pending[:min(limit, len(pending))] {
+		out = append(out, e.id)
+	}
+	return out, nil
+}
+
+func civilDay(t time.Time) time.Time {
+	y, m, d := t.UTC().Date()
+	return time.Date(y, m, d, 0, 0, 0, 0, time.UTC)
 }
 
 // Started returns the start that created a log session.

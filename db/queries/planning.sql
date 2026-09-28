@@ -349,6 +349,53 @@ WHERE session_id = @session_id AND user_id = @user_id AND deleted_at IS NULL;
 SELECT count(*)::int FROM set_entries
 WHERE block_id = @block_id AND user_id = @user_id AND deleted_at IS NULL;
 
+-- A completed session as the planner reads it (ADR 0018): deload when it
+-- was started from a deload session of the plan.
+-- name: GetCompletedSessionForPlanner :one
+SELECT ws.id, ws.local_date, ws.perceived_fatigue, ws.is_rest_day,
+       COALESCE(ps.kind = 'deload', false)::boolean AS deload
+FROM workout_sessions ws
+LEFT JOIN planned_sessions ps ON ps.id = ws.planned_session_id AND ps.user_id = ws.user_id
+WHERE ws.id = @id AND ws.user_id = @user_id AND ws.deleted_at IS NULL AND ws.status = 'completed';
+
+-- The performed elements of a session in the order performed.
+-- name: ListPerformedElements :many
+SELECT el.id, e.slug AS exercise, se.kind, el.measure, el.reps, el.hold_seconds, el.load_kg,
+       se.rir, el.form_quality, el.failed, el.is_partial_rom, el.is_eccentric_only,
+       COALESCE(a.type, 'none')::text AS assistance
+FROM set_elements el
+JOIN set_entries se ON se.id = el.set_entry_id AND se.user_id = el.user_id
+JOIN session_blocks b ON b.id = se.block_id AND b.user_id = se.user_id
+JOIN exercises e ON e.id = el.exercise_id
+LEFT JOIN set_element_assistance a ON a.set_element_id = el.id AND a.user_id = el.user_id AND a.deleted_at IS NULL
+WHERE el.session_id = @session_id AND el.user_id = @user_id AND NOT se.is_planned
+  AND el.deleted_at IS NULL AND se.deleted_at IS NULL AND b.deleted_at IS NULL
+ORDER BY se.completed_at NULLS LAST, b.order_index, se.order_index, el.order_index;
+
+-- name: MarkPlannedSessionsCompleted :exec
+UPDATE planned_sessions SET status = 'completed'
+WHERE workout_session_id = @workout_session_id AND user_id = @user_id;
+
+-- A session completed in a deload marks its day (spec §10.2, ADR 0003).
+-- name: MarkDeloadDay :exec
+UPDATE user_training_days d SET deload = true
+FROM workout_sessions ws
+WHERE ws.id = @session_id AND ws.user_id = @user_id
+  AND d.user_id = ws.user_id AND d.local_date = ws.local_date;
+
+-- Completed sessions the planner has not applied yet, oldest first: the
+-- catch-up when the adaptation after a completion failed (spec §6.1). Only
+-- sessions from the day of the onboarding on; before it, none.
+-- name: ListPendingCompletions :many
+SELECT ws.id FROM workout_sessions ws
+JOIN user_training_profiles p ON p.user_id = ws.user_id
+WHERE ws.user_id = @user_id AND ws.status = 'completed' AND ws.deleted_at IS NULL AND NOT ws.is_rest_day
+  AND ws.completed_at >= p.onboarded_at
+  AND NOT EXISTS (SELECT 1 FROM plan_decisions d
+                  WHERE d.user_id = ws.user_id AND d.trigger = 'session_completed' AND d.source_id = ws.id::text)
+ORDER BY ws.completed_at, ws.id
+LIMIT @max_rows;
+
 -- name: GetActivePlannedSession :one
 SELECT p.id AS plan_id, p.payload, s.order_index
 FROM planned_sessions s

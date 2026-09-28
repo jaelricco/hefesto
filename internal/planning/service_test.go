@@ -1,6 +1,7 @@
 package planning_test
 
 import (
+	"cmp"
 	"context"
 	"errors"
 	"fmt"
@@ -526,5 +527,96 @@ func TestServiceStartedDraftFollowsThePlan(t *testing.T) {
 	}
 	if replay, err := svc.ReportSymptoms(ctx, user, "sym-1"); err != nil || !replay.Replayed || !reflect.DeepEqual(replay.Changes, out.Changes) {
 		t.Errorf("replay: %+v %v", replay, err)
+	}
+}
+
+// performed logs a planned session as planned: every set at its target.
+func performed(id uuid.UUID, ps domain.PlannedSession) domain.LoggedSession {
+	sess := domain.LoggedSession{ID: id.String(), Date: ps.Date, Deload: ps.Kind == domain.SessionDeload}
+	for _, b := range ps.Blocks {
+		for _, it := range b.Items {
+			if it.Offer {
+				continue
+			}
+			v := float64(it.Reps)
+			if it.HoldS > 0 {
+				v = float64(it.HoldS)
+			}
+			r := float64(it.Reserve)
+			for i := range it.Sets {
+				sess.Sets = append(sess.Sets, domain.LoggedSet{ID: fmt.Sprintf("%s-%d", it.ID, i), Exercise: it.Exercise,
+					Kind: it.Kind, Assist: cmp.Or(it.Assist, domain.AssistNone), LoadKg: it.LoadKg, Value: v, Reserve: &r})
+			}
+		}
+	}
+	return sess
+}
+
+// A session completed in the log reaches the planner once, marks its
+// planned session completed, and a missed one is caught up (ADR 0018).
+func TestServiceCompletesALoggedSession(t *testing.T) {
+	ctx := context.Background()
+	svc, store, clock := newService(t)
+	user := uuid.New()
+	if _, _, err := svc.Onboard(ctx, user, answers()); err != nil {
+		t.Fatal(err)
+	}
+	plan, err := svc.Plan(ctx, user)
+	if err != nil {
+		t.Fatal(err)
+	}
+	logID := uuid.New()
+	if _, _, err := svc.StartPlannedSession(ctx, user, uuid.MustParse(plan.Sessions[0].ID),
+		planning.SessionStart{SessionID: logID, StartedAt: clock.t, Timezone: "UTC", LocalDate: clock.t, At: clock.t}); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, applied, err := svc.CompleteLoggedSession(ctx, user, logID); err != nil || applied {
+		t.Fatalf("a session not completed yet: applied=%v %v", applied, err)
+	}
+	if err := store.Complete(performed(logID, plan.Sessions[0])); err != nil {
+		t.Fatal(err)
+	}
+	clock.t = clock.t.Add(2 * time.Hour)
+	out, applied, err := svc.CompleteLoggedSession(ctx, user, logID)
+	if err != nil || !applied || out.Replayed {
+		t.Fatalf("completion: %+v %v %v", out, applied, err)
+	}
+	if again, _, err := svc.CompleteLoggedSession(ctx, user, logID); err != nil || !again.Replayed ||
+		!reflect.DeepEqual(again.Changes, out.Changes) {
+		t.Errorf("repeat: %+v %v", again, err)
+	}
+	now, err := svc.Plan(ctx, user)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if s := now.Sessions[0]; s.Status != planning.SessionCompleted || s.WorkoutSessionID != logID.String() {
+		t.Errorf("planned session after the completion: %q %q", s.Status, s.WorkoutSessionID)
+	}
+	snap, _, _ := store.Snapshot(ctx, user)
+	if len(snap.History) != 1 || snap.History[0].ID != logID.String() {
+		t.Errorf("history %+v", snap.History)
+	}
+	if store.DeloadDay(logID) {
+		t.Error("a full session marked a deload day")
+	}
+
+	// A completion the planner missed is applied with the next plan; a
+	// deload session marks its day.
+	missed := uuid.New()
+	late := performed(missed, plan.Sessions[1])
+	late.Deload = true
+	if err := store.Complete(late); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := svc.Plan(ctx, user); err != nil {
+		t.Fatal(err)
+	}
+	snap, _, _ = store.Snapshot(ctx, user)
+	if len(snap.History) != 2 || !store.DeloadDay(missed) {
+		t.Errorf("after the catch-up: %d sessions in the history, deload day %v", len(snap.History), store.DeloadDay(missed))
+	}
+	if ids, _ := store.PendingCompletions(ctx, user, 10); len(ids) != 0 {
+		t.Errorf("still pending: %v", ids)
 	}
 }

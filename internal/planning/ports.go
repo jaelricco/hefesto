@@ -66,6 +66,18 @@ type SessionLog interface {
 	// AdjustSession writes an adjustment into a draft (ADR 0017). at is the
 	// updated_at of the rows it writes.
 	AdjustSession(ctx context.Context, userID, sessionID uuid.UUID, a planning.Adjustment, at time.Time) error
+	// CompletedSession returns a completed log session as the planner's
+	// history records it (ADR 0018): its performed sets in the order
+	// performed. ok is false when the session is not completed, is a rest
+	// day or does not exist.
+	CompletedSession(ctx context.Context, userID, sessionID uuid.UUID) (planning.LoggedSession, bool, error)
+	// MarkCompleted marks the planned sessions a log session was started
+	// from as completed, and its day a deload day when deload is set.
+	MarkCompleted(ctx context.Context, userID, sessionID uuid.UUID, deload bool) error
+	// PendingCompletions returns up to limit sessions completed since the
+	// day of the onboarding that the planner has not applied yet, oldest
+	// first.
+	PendingCompletions(ctx context.Context, userID uuid.UUID, limit int) ([]uuid.UUID, error)
 }
 
 // SessionStart is a planned session started in the log.

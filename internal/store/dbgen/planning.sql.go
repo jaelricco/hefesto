@@ -218,6 +218,42 @@ func (q *Queries) GetActivePlannedSession(ctx context.Context, arg GetActivePlan
 	return i, err
 }
 
+const getCompletedSessionForPlanner = `-- name: GetCompletedSessionForPlanner :one
+SELECT ws.id, ws.local_date, ws.perceived_fatigue, ws.is_rest_day,
+       COALESCE(ps.kind = 'deload', false)::boolean AS deload
+FROM workout_sessions ws
+LEFT JOIN planned_sessions ps ON ps.id = ws.planned_session_id AND ps.user_id = ws.user_id
+WHERE ws.id = $1 AND ws.user_id = $2 AND ws.deleted_at IS NULL AND ws.status = 'completed'
+`
+
+type GetCompletedSessionForPlannerParams struct {
+	ID     uuid.UUID
+	UserID uuid.UUID
+}
+
+type GetCompletedSessionForPlannerRow struct {
+	ID               uuid.UUID
+	LocalDate        pgtype.Date
+	PerceivedFatigue *int16
+	IsRestDay        bool
+	Deload           bool
+}
+
+// A completed session as the planner reads it (ADR 0018): deload when it
+// was started from a deload session of the plan.
+func (q *Queries) GetCompletedSessionForPlanner(ctx context.Context, arg GetCompletedSessionForPlannerParams) (GetCompletedSessionForPlannerRow, error) {
+	row := q.db.QueryRow(ctx, getCompletedSessionForPlanner, arg.ID, arg.UserID)
+	var i GetCompletedSessionForPlannerRow
+	err := row.Scan(
+		&i.ID,
+		&i.LocalDate,
+		&i.PerceivedFatigue,
+		&i.IsRestDay,
+		&i.Deload,
+	)
+	return i, err
+}
+
 const getDecision = `-- name: GetDecision :one
 
 SELECT id, user_id, trigger, source_id, occurred_at, changes FROM plan_decisions WHERE user_id = $1 AND trigger = $2 AND source_id = $3
@@ -943,6 +979,115 @@ func (q *Queries) ListPainReports(ctx context.Context, userID uuid.UUID) ([]User
 	return items, nil
 }
 
+const listPendingCompletions = `-- name: ListPendingCompletions :many
+SELECT ws.id FROM workout_sessions ws
+JOIN user_training_profiles p ON p.user_id = ws.user_id
+WHERE ws.user_id = $1 AND ws.status = 'completed' AND ws.deleted_at IS NULL AND NOT ws.is_rest_day
+  AND ws.completed_at >= p.onboarded_at
+  AND NOT EXISTS (SELECT 1 FROM plan_decisions d
+                  WHERE d.user_id = ws.user_id AND d.trigger = 'session_completed' AND d.source_id = ws.id::text)
+ORDER BY ws.completed_at, ws.id
+LIMIT $2
+`
+
+type ListPendingCompletionsParams struct {
+	UserID  uuid.UUID
+	MaxRows int32
+}
+
+// Completed sessions the planner has not applied yet, oldest first: the
+// catch-up when the adaptation after a completion failed (spec §6.1). Only
+// sessions from the day of the onboarding on; before it, none.
+func (q *Queries) ListPendingCompletions(ctx context.Context, arg ListPendingCompletionsParams) ([]uuid.UUID, error) {
+	rows, err := q.db.Query(ctx, listPendingCompletions, arg.UserID, arg.MaxRows)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []uuid.UUID{}
+	for rows.Next() {
+		var id uuid.UUID
+		if err := rows.Scan(&id); err != nil {
+			return nil, err
+		}
+		items = append(items, id)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listPerformedElements = `-- name: ListPerformedElements :many
+SELECT el.id, e.slug AS exercise, se.kind, el.measure, el.reps, el.hold_seconds, el.load_kg,
+       se.rir, el.form_quality, el.failed, el.is_partial_rom, el.is_eccentric_only,
+       COALESCE(a.type, 'none')::text AS assistance
+FROM set_elements el
+JOIN set_entries se ON se.id = el.set_entry_id AND se.user_id = el.user_id
+JOIN session_blocks b ON b.id = se.block_id AND b.user_id = se.user_id
+JOIN exercises e ON e.id = el.exercise_id
+LEFT JOIN set_element_assistance a ON a.set_element_id = el.id AND a.user_id = el.user_id AND a.deleted_at IS NULL
+WHERE el.session_id = $1 AND el.user_id = $2 AND NOT se.is_planned
+  AND el.deleted_at IS NULL AND se.deleted_at IS NULL AND b.deleted_at IS NULL
+ORDER BY se.completed_at NULLS LAST, b.order_index, se.order_index, el.order_index
+`
+
+type ListPerformedElementsParams struct {
+	SessionID uuid.UUID
+	UserID    uuid.UUID
+}
+
+type ListPerformedElementsRow struct {
+	ID              uuid.UUID
+	Exercise        string
+	Kind            string
+	Measure         string
+	Reps            *int32
+	HoldSeconds     pgtype.Numeric
+	LoadKg          pgtype.Numeric
+	Rir             *int16
+	FormQuality     *int16
+	Failed          bool
+	IsPartialRom    bool
+	IsEccentricOnly bool
+	Assistance      string
+}
+
+// The performed elements of a session in the order performed.
+func (q *Queries) ListPerformedElements(ctx context.Context, arg ListPerformedElementsParams) ([]ListPerformedElementsRow, error) {
+	rows, err := q.db.Query(ctx, listPerformedElements, arg.SessionID, arg.UserID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []ListPerformedElementsRow{}
+	for rows.Next() {
+		var i ListPerformedElementsRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.Exercise,
+			&i.Kind,
+			&i.Measure,
+			&i.Reps,
+			&i.HoldSeconds,
+			&i.LoadKg,
+			&i.Rir,
+			&i.FormQuality,
+			&i.Failed,
+			&i.IsPartialRom,
+			&i.IsEccentricOnly,
+			&i.Assistance,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listPlannedSessionStates = `-- name: ListPlannedSessionStates :many
 SELECT s.order_index, s.status, s.workout_session_id,
        COALESCE(ws.deleted_at IS NULL, false)::boolean AS session_live
@@ -1157,6 +1302,24 @@ func (q *Queries) LockPlanner(ctx context.Context, userID uuid.UUID) error {
 	return err
 }
 
+const markDeloadDay = `-- name: MarkDeloadDay :exec
+UPDATE user_training_days d SET deload = true
+FROM workout_sessions ws
+WHERE ws.id = $1 AND ws.user_id = $2
+  AND d.user_id = ws.user_id AND d.local_date = ws.local_date
+`
+
+type MarkDeloadDayParams struct {
+	SessionID uuid.UUID
+	UserID    uuid.UUID
+}
+
+// A session completed in a deload marks its day (spec §10.2, ADR 0003).
+func (q *Queries) MarkDeloadDay(ctx context.Context, arg MarkDeloadDayParams) error {
+	_, err := q.db.Exec(ctx, markDeloadDay, arg.SessionID, arg.UserID)
+	return err
+}
+
 const markPlannedSessionStarted = `-- name: MarkPlannedSessionStarted :exec
 UPDATE planned_sessions SET status = 'started', workout_session_id = $1
 WHERE id = $2 AND user_id = $3
@@ -1170,6 +1333,21 @@ type MarkPlannedSessionStartedParams struct {
 
 func (q *Queries) MarkPlannedSessionStarted(ctx context.Context, arg MarkPlannedSessionStartedParams) error {
 	_, err := q.db.Exec(ctx, markPlannedSessionStarted, arg.WorkoutSessionID, arg.ID, arg.UserID)
+	return err
+}
+
+const markPlannedSessionsCompleted = `-- name: MarkPlannedSessionsCompleted :exec
+UPDATE planned_sessions SET status = 'completed'
+WHERE workout_session_id = $1 AND user_id = $2
+`
+
+type MarkPlannedSessionsCompletedParams struct {
+	WorkoutSessionID *uuid.UUID
+	UserID           uuid.UUID
+}
+
+func (q *Queries) MarkPlannedSessionsCompleted(ctx context.Context, arg MarkPlannedSessionsCompletedParams) error {
+	_, err := q.db.Exec(ctx, markPlannedSessionsCompleted, arg.WorkoutSessionID, arg.UserID)
 	return err
 }
 

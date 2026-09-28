@@ -80,8 +80,10 @@ func (s *Service) Onboard(ctx context.Context, userID uuid.UUID, a planning.Answ
 }
 
 // Plan returns the plan of the current week, generating it on first use.
-// Plans change only on events (spec §11.3).
+// Plans change only on events (spec §11.3). Completions the planner missed
+// are applied first.
 func (s *Service) Plan(ctx context.Context, userID uuid.UUID) (planning.Plan, error) {
+	s.catchUp(ctx, userID)
 	var p planning.Plan
 	err := s.Store.InTx(ctx, userID, func(st Stores) error {
 		kb, snap, err := s.load(ctx, st, userID)
@@ -304,6 +306,61 @@ func (s *Service) save(ctx context.Context, st Stores, kb *planning.Knowledge, u
 type Outcome struct {
 	Changes  []planning.Change
 	Replayed bool
+}
+
+// maxCatchUp bounds the missed completions one plan request applies.
+const maxCatchUp = 20
+
+// CompleteLoggedSession applies a session completed in the log (spec §6.1,
+// §10.2, ADR 0018): the planner reads its performed sets, marks the planned
+// session it was started from completed and adapts. applied is false when
+// the session is nothing for the planner: not completed, or a rest day. It
+// is idempotent per session; a repeat answers with the recorded changes.
+func (s *Service) CompleteLoggedSession(ctx context.Context, userID, sessionID uuid.UUID) (out Outcome, applied bool, err error) {
+	err = s.Store.InTx(ctx, userID, func(st Stores) error {
+		sess, ok, err := st.Sessions.CompletedSession(ctx, userID, sessionID)
+		if err != nil {
+			return fmt.Errorf("reading completed session %s: %w", sessionID, err)
+		}
+		if !ok {
+			return nil
+		}
+		if err := st.Sessions.MarkCompleted(ctx, userID, sessionID, sess.Deload); err != nil {
+			return fmt.Errorf("completed session %s: %w", sessionID, err)
+		}
+		out, err = s.applyIn(ctx, st, userID, TriggerSession, sess.ID,
+			planning.Event{Kind: planning.EventSession, At: s.Clock.Now(), Session: &sess}, nil)
+		applied = err == nil
+		return err
+	})
+	return out, applied, err
+}
+
+// catchUp applies completions the planner missed, when the adaptation
+// after a completion failed (spec §6.1). Each runs in its own transaction;
+// a failure is logged and left for the next request, so it never blocks
+// the plan.
+func (s *Service) catchUp(ctx context.Context, userID uuid.UUID) {
+	var ids []uuid.UUID
+	if err := s.Store.InTx(ctx, userID, func(st Stores) error {
+		var err error
+		ids, err = st.Sessions.PendingCompletions(ctx, userID, maxCatchUp)
+		return err
+	}); err != nil {
+		s.warn(ctx, "listing missed completions", userID, err)
+		return
+	}
+	for _, id := range ids {
+		if _, _, err := s.CompleteLoggedSession(ctx, userID, id); err != nil {
+			s.warn(ctx, "applying a missed completion", userID, err, "session_id", id)
+		}
+	}
+}
+
+func (s *Service) warn(ctx context.Context, msg string, userID uuid.UUID, err error, kv ...any) {
+	if s.Log != nil {
+		s.Log.WarnContext(ctx, msg, append([]any{"user_id", userID, "err", err}, kv...)...)
+	}
 }
 
 // CompleteSession adapts to a completed session. It is idempotent per

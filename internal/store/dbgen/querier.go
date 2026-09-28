@@ -70,6 +70,9 @@ type Querier interface {
 	GetAppleIdentity(ctx context.Context, appleSub string) (AppleIdentity, error)
 	GetBlock(ctx context.Context, arg GetBlockParams) (SessionBlock, error)
 	GetBodyweight(ctx context.Context, arg GetBodyweightParams) (UserBodyweightLog, error)
+	// A completed session as the planner reads it (ADR 0018): deload when it
+	// was started from a deload session of the plan.
+	GetCompletedSessionForPlanner(ctx context.Context, arg GetCompletedSessionForPlannerParams) (GetCompletedSessionForPlannerRow, error)
 	// --------------------------------------------------------------- decisions
 	GetDecision(ctx context.Context, arg GetDecisionParams) (PlanDecision, error)
 	GetExerciseBySlug(ctx context.Context, slug string) (GetExerciseBySlugRow, error)
@@ -170,6 +173,12 @@ type Querier interface {
 	ListLadderStates(ctx context.Context, userID uuid.UUID) ([]UserLadderState, error)
 	// ------------------------------------------------------------ pain reports
 	ListPainReports(ctx context.Context, userID uuid.UUID) ([]UserPainReport, error)
+	// Completed sessions the planner has not applied yet, oldest first: the
+	// catch-up when the adaptation after a completion failed (spec §6.1). Only
+	// sessions from the day of the onboarding on; before it, none.
+	ListPendingCompletions(ctx context.Context, arg ListPendingCompletionsParams) ([]uuid.UUID, error)
+	// The performed elements of a session in the order performed.
+	ListPerformedElements(ctx context.Context, arg ListPerformedElementsParams) ([]ListPerformedElementsRow, error)
 	// Whether each session of a plan was started, and its log session. A
 	// session whose log session was deleted counts as planned again.
 	ListPlannedSessionStates(ctx context.Context, arg ListPlannedSessionStatesParams) ([]ListPlannedSessionStatesRow, error)
@@ -198,10 +207,13 @@ type Querier interface {
 	// cannot collide with it.
 	LockPlanner(ctx context.Context, userID uuid.UUID) error
 	LockUserProgress(ctx context.Context, userKey string) error
+	// A session completed in a deload marks its day (spec §10.2, ADR 0003).
+	MarkDeloadDay(ctx context.Context, arg MarkDeloadDayParams) error
 	MarkFreezeDays(ctx context.Context, arg MarkFreezeDaysParams) error
 	MarkMediaFailed(ctx context.Context, arg MarkMediaFailedParams) (MediaAsset, error)
 	MarkMediaReady(ctx context.Context, arg MarkMediaReadyParams) (MediaAsset, error)
 	MarkPlannedSessionStarted(ctx context.Context, arg MarkPlannedSessionStartedParams) error
+	MarkPlannedSessionsCompleted(ctx context.Context, arg MarkPlannedSessionsCompletedParams) error
 	MarkRefreshTokenRotated(ctx context.Context, arg MarkRefreshTokenRotatedParams) error
 	MarkSessionCompleted(ctx context.Context, arg MarkSessionCompletedParams) (WorkoutSession, error)
 	// --------------------------------------------------------------- streaks
