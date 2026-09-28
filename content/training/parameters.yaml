@@ -2362,9 +2362,10 @@ parameters:
   values: {hold_sd_abs: 1, hold_sd_frac: 0.15, rep_sd: 2, obs_sd: 1}
   evidence: Heuristik
   heuristic: true
-  rationale: verhindert σ = 0 und undefinierte Konfidenz bei Nullwerten; 2 Wdh. aus PAR-F-20. **Review:**
-    Der Halte-Boden ist anteilig (0.15 = Grenze «hoch» in PAR-F-30); ein fester Boden von 3 s machte jeden
-    Halt unter 10 s dauerhaft zu «niedriger Konfidenz», und Sprossen mit kurzen Halten wurden nie Arbeitssprosse
+  rationale: verhindert σ = 0 und undefinierte Konfidenz bei Nullwerten; 2 Wdh. aus PAR-F-20. **Review,
+    bestätigt (ENT-R-4):** Der Halte-Boden ist anteilig (0.15 = Grenze «hoch» in PAR-F-30); ein fester
+    Boden von 3 s machte jeden Halt unter 10 s dauerhaft zu «niedriger Konfidenz», und Sprossen mit kurzen
+    Halten wurden nie Arbeitssprosse
 - {id: PAR-S-39, key: derived_rung_prior, text: 'leichtere Sprosse oder Band: μ = μ der schwereren bzw.
     unassistierten, σ = max(3 s, 0.35 μ); schwerere Sprosse: kein Wert bis zu Prüfversuchen', evidence: Heuristik,
   heuristic: true, rationale: 'nur die sichere Richtung (leichter ≥ schwerer), keine Umrechnung über Intensitätsmodelle
@@ -2409,15 +2410,15 @@ parameters:
 - {id: PAR-S-47, key: soreness_definition, text: '«Soreness» in PAR-D-26 und PAR-D-28: ein Wert während,
     nach oder am Folgetag über dem Wert vor der Einheit (Basiswert nach PAR-D-16; ohne Basiswert 0) sowie
     jede Angabe «hielt länger als 1 h an» oder «hält länger als 15 min an»; eine Einheit zählt für die
-    Rampe nur ohne Soreness und mit allen Werten ≤ PAR-D-14', evidence: Heuristik, heuristic: true, rationale: '**Review.**
-    PAR-D-28 nennt «Schmerz am Folgetag» ohne Schwelle; wörtlich genommen käme, wer mit stabilem Grundschmerz
-    trainiert, nie aus der Rampe. Der Vergleich mit dem Wert vor der Einheit folgt PAR-D-16 und ist strenger
-    als PAR-D-14 allein (`08` §4: strengerer Wert)'}
+    Rampe nur ohne Soreness und mit allen Werten ≤ PAR-D-14', evidence: Heuristik, heuristic: true, rationale: '**Review,
+    bestätigt (ENT-R-4).** PAR-D-28 nennt «Schmerz am Folgetag» ohne Schwelle; wörtlich genommen käme,
+    wer mit stabilem Grundschmerz trainiert, nie aus der Rampe. Der Vergleich mit dem Wert vor der Einheit
+    folgt PAR-D-16 und ist strenger als PAR-D-14 allein (`08` §4: strengerer Wert)'}
 - {id: PAR-S-48, key: session_cap_whole_set, text: LOAD-03 lässt je Einheit und Struktur mindestens M
     plus den kleinsten geplanten Satz dieser Struktur in der Einheit zu (bei M = 0 diesen Satz), evidence: Heuristik,
-  heuristic: true, rationale: '**Review.** PAR-D-31 (10 %) gilt für Volumen; mit ganzen Sätzen wäre bei
-    1–2 Sätzen je Einheit jede Steigerung > 10 %, und das Volumen bliebe beim halbierten Einstieg stehen.
-    PAR-B-55 erlaubt +1 Satz je Übung; das Wochenwachstum begrenzt weiter LOAD-02'}
+  heuristic: true, rationale: '**Review, bestätigt (ENT-R-4).** PAR-D-31 (10 %) gilt für Volumen; mit
+    ganzen Sätzen wäre bei 1–2 Sätzen je Einheit jede Steigerung > 10 %, und das Volumen bliebe beim halbierten
+    Einstieg stehen. PAR-B-55 erlaubt +1 Satz je Übung; das Wochenwachstum begrenzt weiter LOAD-02'}
 - {id: PAR-S-49, key: small_account_min_step, text: 'ein Satz mehr, wenn ein Straight-Arm- oder Handgelenk-Konto
     3 Wochen lang jede Woche geloggt, ohne Deload-Woche, ohne Verletzung einer Schmerzregel und nie unter
     dem Niveau der ersten dieser Wochen lag, und ein Satz mehr ist als die Steigerung c · f · R nach LOAD-02',

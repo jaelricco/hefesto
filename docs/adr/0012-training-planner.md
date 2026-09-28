@@ -141,7 +141,7 @@ unter `content/training/` mit JSON-Schemas und Validierung (`internal/content`,
 `contentlint`) und der Anwendungsdienst `internal/planning` mit In-Memory-
 Adaptern. Migration, Store, HTTP und OpenAPI folgen nach eigenem Review
 (ADR 0007). Die Abweichungen von der Spezifikation stehen einzeln in
-`spec.md` §15.2 (U-1 bis U-23); die folgenden betreffen dieses ADR:
+`spec.md` §15.2 (U-1 bis U-35); die folgenden betreffen dieses ADR:
 
 - **Schichten (Entscheidung 2).** Die Kernfunktionen heissen `Build` (Laden
   und Prüfen der Wissensbasis), `Start`, `Generate` und `Adapt`. `Adapt` gibt
@@ -159,7 +159,9 @@ Adaptern. Migration, Store, HTTP und OpenAPI folgen nach eigenem Review
 - **Belastung (Entscheidung 6).** Der Plan nennt je Konto Ziel, geplantes
   Volumen, Deckel und die bindende Regel (U-23). U-13 (die Pausenrampe ersetzt
   den Wochendeckel auch ohne geloggte Referenz) ist nach dem Review
-  zurückgenommen: Das Zielvolumen ist kein toleriertes Niveau.
+  zurückgenommen: Das wachsende Zielvolumen ist kein toleriertes Niveau. An
+  seine Stelle tritt mit ENT-R-1 das beim Onboarding eingefrorene Zielvolumen
+  der ersten Woche (U-33).
 - **Unabhängiger Review.** Drei Reviewer ohne Vorwissen (Sicherheit, Zahlen,
   Pläne) fanden 6 kritische, 18 wichtige und 21 kleinere Befunde
   (`docs/algorithm/review.md`). Alle kritischen sind behoben (bei C-1 bleibt das
@@ -169,10 +171,25 @@ Adaptern. Migration, Store, HTTP und OpenAPI folgen nach eigenem Review
   Einheitsdeckel, RF-05 mit Folgefrage. Neue Heuristiken `PAR-S-47`,
   `PAR-S-48` und der anteilige σ-Boden in `PAR-S-38` sind als Review
   markiert.
+- **Entscheidungen des Reviews (28.09.2026).** Der Checkpoint hat ENT-R-1 bis
+  ENT-R-5 entschieden und alle Vorschläge übernommen (`spec.md` §15.5):
+  - ENT-R-1: Eine Pause aus dem Onboarding rampt auf dem eingefrorenen
+    Zielvolumen der ersten Woche, mit f(a) auf den Schritten (U-33).
+  - ENT-R-2: Ein kleines Straight-Arm- oder Handgelenk-Konto bekommt alle
+    3 Wochen einen Satz mehr (LOAD-12, `PAR-S-49`, U-34). Eine geplante
+    Deload-Woche zählt dabei als gehalten (ADR 0003).
+  - ENT-R-3: Einstieg und Pausenrampe nutzen den normalen Einheitsdeckel
+    LOAD-03 statt × 1.5.
+  - ENT-R-4: `PAR-S-47`, `PAR-S-48` und `PAR-S-38` sind bestätigt.
+  - ENT-R-5: Eine Einheit mit weniger als 2 Arbeitssätzen wird Ruhetag, ihre
+    Sätze gehen in andere Einheiten (WEEK-09, `PAR-S-50`, U-35). Einheiten,
+    die eine Rampe zählt, bleiben.
 
 Folgen: Die sechs Personas laufen als Golden Files und als zwölfwöchige
 Simulation; jeder erzeugte Plan erfüllt I-1 bis I-11. Ihre Plausibilität steht
-in `docs/algorithm/personas.md`. Die Pläne sind sicher, aber für
-Fortgeschrittene und Wiedereinsteiger sehr vorsichtig; die Entscheidungen
-dazu stehen in `spec.md` §15.5 (ENT-R-1 bis ENT-R-5). Die Wissensbasis bleibt
-`draft_placeholder` bis zur fachlichen Abnahme (ENT-10).
+in `docs/algorithm/personas.md`. Die Pläne sind sicher und für
+Fortgeschrittene und Wiedereinsteiger weiter vorsichtig: Nach den
+Entscheidungen bremst vor allem der Einheitsdeckel (`PAR-S-48` mit dem
+kleinsten Satz), und manche Personas trainieren an weniger Tagen, als sie
+gewählt haben (spec §15.4). Die Wissensbasis bleibt `draft_placeholder` bis zur
+fachlichen Abnahme (ENT-10).

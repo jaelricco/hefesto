@@ -19,7 +19,7 @@ that stands.
   #8. Its open questions (rest-day logging, the bodyweight time zone, wiping
   the database on sign-out) still stand.
 
-## Parallel track: training-plan algorithm (stage 5 of 5, implementation, awaiting review)
+## Parallel track: training-plan algorithm (stage 5 of 5, review decisions implemented, awaiting review)
 
 A separate track, with its own five-stage plan, researches, specifies and
 implements a planner that turns an onboarding and the logs into individual
@@ -44,18 +44,26 @@ documents are in German.
     scenarios from spec §12.5, and plan invariants I-1 to I-11 on every
     generated plan.
   - `docs/algorithm/personas.md`: the persona plans and their plausibility.
-    Spec §15 records the implementation decisions (U-1 to U-32) and findings.
+    Spec §15 records the implementation decisions (U-1 to U-35) and findings.
 - **Independent review (stage 5 closing):** three reviewers without prior
   knowledge checked safety, numbers and the persona plans against the
   research (`docs/algorithm/review.md`). They found 6 critical, 18 major
-  and 21 minor issues. All critical ones are fixed, except that small
-  straight-arm volumes still grow slowly (a decision, ENT-R-2). U-13 is
-  withdrawn.
-- **Open for review:**
-  - The decisions in spec §15.5 (ENT-R-1 to ENT-R-5): returners without
-    logs, growth of small straight-arm volumes, the entry session cap, the
-    new heuristics, and a minimum per session.
-  - The findings in spec §15.4.
+  and 21 minor issues. All critical ones are fixed. U-13 is withdrawn.
+- **Review decisions (ENT-R-1 to ENT-R-5, all proposals accepted):**
+  - ENT-R-1: a pause from the onboarding ramps on the week-1 target frozen
+    at the onboarding, with f(a) on the steps.
+  - ENT-R-2: a small straight-arm or wrist account gets one set more every
+    three weeks (LOAD-12). A planned deload week counts as held.
+  - ENT-R-3: the entry and break ramps use the normal session cap.
+  - ENT-R-4: the heuristics `PAR-S-47`, `PAR-S-48` and `PAR-S-38` are
+    confirmed.
+  - ENT-R-5: a session with fewer than two working sets becomes a rest day,
+    and its sets move to other sessions (WEEK-09). Sessions a ramp counts
+    stay.
+- **Open for review:** the implementation of the decisions and the findings
+  in spec §15.4. The session cap (`PAR-S-48` with the smallest set) now
+  limits straight-arm volume most; some personas train on fewer days than
+  they chose.
 - **Not yet built:** the migration, the Postgres store, the HTTP endpoints and
   the OpenAPI spec. They follow after this review (ADR 0007).
 - **Still blocking production:**

@@ -1,7 +1,8 @@
 # Personas: erzeugte Pläne und Plausibilität
 
-Stand: Phase 5 nach dem unabhängigen Review, Regelwerk `0.1.0`
-(`content/training/`), 28.09.2026.
+Stand: Phase 5 nach dem unabhängigen Review und den Entscheidungen ENT-R-1 bis
+ENT-R-5 (`spec.md` §15.5), Regelwerk `0.1.0` (`content/training/`),
+28.09.2026.
 
 Dieses Dokument zeigt, was der Planer für die sechs Personas aus `spec.md`
 §12.4 erzeugt, und prüft die Pläne gegen die Erwartungen der Spezifikation und
@@ -68,11 +69,11 @@ Training, trainiert aktuell.
   kommt je ein Kalibrierungssatz an der waagrechten Variante (ADAPT-07).
 - Die Negativen verlängern sich von 3 auf 7 s. Ab Woche 5 erscheinen
   Barren-Dips.
-- Der Klimmzug bleibt zwölf Wochen negativ: Der Athlet schafft 2 Klimmzüge,
-  mit 3 % je Woche knapp 3; eine konzentrische Wiederholung mit Reserve 2 ist
-  nicht möglich. Angekündigte Angebote scheitern ab Woche 3 an den knappen
-  Deckeln (§15.3).
-- Volumen 14 → 16 Sätze; Deloads in Woche 6 und 12 mit 14 Sätzen.
+- Der Klimmzug arbeitet elf Wochen negativ; ab Woche 7 kommt montags ein
+  Kalibrierungssatz am Klimmzug (1 Wdh., Reserve 2). Der Athlet schafft 2
+  Klimmzüge, mit 3 % je Woche knapp 3. Nach Woche 11 arbeitet die Leiter am
+  Klimmzug; Rudern und negative Dips entfallen dann als Zubringer (SEL-09).
+- Volumen 14 → 17 Sätze; Deloads in Woche 6 (14 Sätze) und 12 (12 Sätze).
 - Szenario §12.5: Mit 6 Klimmzügen und 7 Dips wird die Muscle-up-Leiter
   innerhalb von 16 Wochen aktiv (`TestScenarioMuscleUpActivates`).
 
@@ -103,8 +104,14 @@ trainiert aktuell.
   Woche 3 an der Advanced Tuck.
 - Front Lever: Woche 3 an der Tuck ohne Band, ab Woche 4 an der Advanced Tuck
   (der anteilige σ-Boden macht die kurzen Halte erreichbar, U-28).
-- 7–11 Straight-Arm-Sätze je Woche; Deload in Woche 6 (16 statt 20 Sätze, 6
-  statt 9 Straight-Arm-Sätze) und ein Stagnations-Deload in Woche 10.
+- 7–10 Straight-Arm-Sätze je Woche; der Mindestschritt (LOAD-12) gibt in Woche
+  8 und 12 je einen Satz dazu. Deload in Woche 6 (16 statt 18–19 Sätze, 6
+  statt 8 Straight-Arm-Sätze) und ein Stagnations-Deload in Woche 10.
+- Ab Woche 5 enthält der Dienstag nur noch Planks (der Hollow Hold ist
+  erreicht). In den Wochen 6–8 und 10–12 ist es ein einziger Satz, und der
+  Dienstag wird Ruhetag (WEEK-09): Der Plank geht an Donnerstag oder Samstag,
+  das Prehab an den Samstag, der keins hatte. In Woche 5 und 9 hat er 2 Sätze
+  und bleibt.
 - Klimmzüge bleiben im Plan, nach erreichter Empfehlung mit Erhaltungsdosis
   (1 Einheit, ≤ 2 Sätze, U-29); der Hollow Hold entfällt nach der Tuck-Stufe,
   weil die Empfehlung an ihr hängt (`02` §8).
@@ -115,8 +122,13 @@ trainiert aktuell.
 - Der Einstieg ist doppelt vorsichtig: Lean 4 s für eine Tuck von 10–19 s,
   Tuck Front Lever mit Band für eine Advanced Tuck (I-1, teilweise). Die erste
   Woche korrigiert beides.
-- 9 Straight-Arm-Sätze je Woche ab Woche 7 sind für einen Fortgeschrittenen
-  wenig. Ursache ist LOAD-02 auf dem kleinen Einstiegsvolumen (ENT-R-2).
+- 8–10 Straight-Arm-Sätze je Woche ab Woche 7 sind für einen
+  Fortgeschrittenen wenig. Ursache ist LOAD-02 auf dem kleinen
+  Einstiegsvolumen; der Mindestschritt (ENT-R-2) beschleunigt das nur bei
+  Konten mit 1–2 Sätzen, und der Einheitsdeckel lässt je Einheit weiter nur
+  einen Satz mehr zu (ENT-R-3).
+- Drei statt vier Trainingstage in den meisten Wochen ab Woche 6: gewollt nach
+  ENT-R-5, weil der vierte Tag nur einen Satz hätte.
 
 ## Persona 3: Wie 2, mediale Ellbogenbeschwerden, Ziel Planche
 
@@ -133,7 +145,9 @@ ist der erste Basiswert des Monitorings (U-30).
   Frequenz begründet mit WEEK-04; die Planche-Familie ist `M` (INJ-05).
 - Klimmzug mit Band 1 × 6 (M bei Wiederholungen, U-24; vorher unverändert,
   Review I-7); Plank 1 × 10 s; alle mit Schmerz-Monitoring.
-- Samstag enthält nur einen Plank-Satz (ENT-R-5).
+- Dienstag und Samstag enthalten nur einen Plank-Satz. In Woche 1 bleiben
+  sie: Ohne Verlauf (M = 0) lässt der Einheitsdeckel das Verschieben nicht zu
+  (WEEK-09).
 - Die Red-Flag-Fragen für die Region liegen im Plan (RF-01 bis RF-07, RF-10);
   keine Angebote (ADAPT-06a).
 
@@ -145,6 +159,11 @@ ist der erste Basiswert des Monitorings (U-30).
   mit Technik-Halten bis 10 s (U-24). Ab Woche 7 arbeitet die Planche an der
   Tuck.
 - 2–3 Straight-Arm-Sätze je Woche.
+- Ab Woche 2 werden Dienstag und Samstag meist Ruhetage (WEEK-09); ihr Plank
+  geht an Montag und Donnerstag. Die Pläne haben dann 2 statt 4
+  Trainingstage (Wochen 2–7 und 9), in den Wochen 8, 10 und 11 wieder 4. Der
+  Plank belastet die Ellbogen-Region nicht mit ≥ 2, deshalb zählt die Rampe
+  diese Einheiten nicht, und ihre Stufen laufen unverändert.
 
 **Szenarien:**
 - 6/10 nach Einheit 2 (`TestScenarioElbowPain`): Red-Flag-Fragen,
@@ -158,7 +177,8 @@ ist der erste Basiswert des Monitorings (U-30).
 
 **Plausibilität: plausibel, vorsichtig.** Die Last wird reduziert, nicht
 pausiert (PAR-D-40). Für den Ellbogen gibt es kein Prehab, weil die Recherche
-keine übertragbare Übung nennt.
+keine übertragbare Übung nennt. Zwei Trainingstage statt der gewählten vier
+folgen aus ENT-R-5: Die beiden anderen Tage hätten je nur einen Plank-Satz.
 
 ## Persona 4: Wiedereinsteiger nach 6 Monaten Pause
 
@@ -169,22 +189,27 @@ Klimmzüge; Gym mit Ringen, 3 × 60 min, 1–4 Jahre Training.
 - Pause aus dem Onboarding: 119 Tage (`PAR-S-41`), keine geloggte Referenz.
 - Planche Lean 1 × 10 s als Kalibrierung, zwei Sprossen unter dem Stand vor der
   Pause (§6.11).
-- Straight-Arm- und Handgelenk-Konten: LOAD-04 mit der Rampe (25 %) als
-  zusätzlicher Obergrenze. U-13 ist zurückgenommen (Review A-3).
+- Straight-Arm- und Handgelenk-Konten: Rampe auf dem Zielvolumen der ersten
+  Woche, beim Onboarding eingefroren; im Risikofenster mit f(a) = 0.75 auf den
+  Schritten: 25 → 44 → 63 → 81 % (ENT-R-1, U-33).
 - Klimmzüge als Gegenrichtung (GOAL-06); alle Schätzungen σ × 1.25.
 
 **Verlauf:**
-- Die Rampe steigt je Woche (Stufe 1 → 3 bis Woche 3) und endet nach Woche 7.
+- Die Rampe steigt je Woche (Stufe 1 → 3 bis Woche 3) und endet nach Woche 8;
+  der Deckel steigt dabei von 1.6 auf 5.1 Belastungseinheiten am medialen
+  Ellbogen.
 - Woche 2: Kalibrierungssatz an der Tuck; ab Woche 2 arbeitet die Planche an
   der Tuck, eine Sprosse unter dem Stand vor der Pause (U-25).
-- Ein Straight-Arm-Satz je Woche über alle zwölf Wochen: LOAD-02 wächst vom
-  Einstieg aus mit 7.5 % je Woche; ein zweiter Satz passt erst nach etwa 13
-  Wochen.
+- Straight-Arm-Sätze je Woche: 1, 2, 2, dann 3 ab Woche 4 (ein Tuck-Satz je
+  Einheit), 4 in Woche 12 durch den Mindestschritt (LOAD-12). Mehr lässt der
+  Einheitsdeckel nicht zu: Plank und Klimmzug belasten dieselben Strukturen,
+  und `PAR-S-48` erlaubt je Einheit nur den kleinsten Satz über M.
+- Die Einheiten mit einem einzelnen Plank-Satz in Woche 1 und 2 bleiben, weil
+  die Pausenrampe jede Einheit mit Handgelenk-Last zählt (WEEK-09, PAR-D-26).
 
-**Plausibilität: sicher, aber zu wenig Straight-Arm-Volumen.** Das ist die
-offene Entscheidung ENT-R-1: Die Rampe auf das Zielvolumen (U-13) wäre
-schneller, lässt aber ohne Logs ein Niveau zu, das der User nie nachweislich
-getragen hat.
+**Plausibilität: sicher, Volumen noch knapp.** Die eingefrorene Basis
+(ENT-R-1) verdreifacht das Straight-Arm-Volumen gegenüber dem Stand vor der
+Entscheidung; der Einheitsdeckel bremst danach.
 
 ## Persona 5: Anfänger, Full Planche in 8 Wochen
 
@@ -194,7 +219,9 @@ regelmässig trainiert.
 
 **Woche 1:**
 - Liegestütze mit erhöhten Händen 2 × 5 (Mo, Fr) und Plank 1 × 10 s (Mo, Mi),
-  alle als Kalibrierung; der Mittwoch enthält nur den Plank (ENT-R-5).
+  alle als Kalibrierung. Der Mittwoch enthält nur den Plank; in Woche 1 bleibt
+  er, weil der Einheitsdeckel ohne Verlauf (M = 0) das Verschieben nicht
+  zulässt (WEEK-09).
 - Kein Planche-Block: Die Lean setzt die Stufe `push-up/full` voraus.
 - Hinweise: Gegenrichtung fehlt, weil keine Stange angegeben ist (GOAL-06,
   SEL-02).
@@ -205,15 +232,18 @@ mit 28.5–45 Wochen aus dem Bandmodell; das Coaching nennt 2–6 Monate
 (PAR-A-47). Der Plan folgt der Arbeitsstufe, nicht dem Datum.
 
 **Verlauf:**
+- Ab Woche 2 ist der Mittwoch Ruhetag (WEEK-09); der Plank geht an den
+  Freitag, der noch keinen hatte. Zwei Trainingstage statt drei.
 - Erhöhte Liegestütze wachsen von 2 × 5 auf 3 × 14 je Einheit (Woche 11);
   wöchentlich ein Kalibrierungssatz an normalen Liegestützen (ADAPT-07).
 - Die Stufe `push-up/full` (8 Wdh.) wird in 12 Wochen nicht erreicht: Der
   Athlet startet mit 6 und schafft nach 11 Wochen gut 8; die vorsichtige Dosis
   (μ − σ) liegt darunter.
-- Deloads in Woche 6 und 12 (10 statt 13–15 Sätze).
+- Deloads in Woche 6 und 12 (8 statt 11–13 Sätze).
 
 **Plausibilität: plausibel.** Der Realismus-Check entspricht §12.4; das
-Volumen wächst seit PAR-S-48 (Review C-1).
+Volumen wächst seit PAR-S-48 (Review C-1). Zwei Tage statt der gewählten drei
+folgen aus ENT-R-5.
 
 ## Persona 6: Widersprüchliche Angaben
 
@@ -236,7 +266,7 @@ Straddle Planche und Full Front Lever, je 4–9 s; Park, 3 × 60 min.
 
 **Verlauf:** Hollow Hold ab Woche 3 gestreckt, Rudern bis zur waagrechten
 Variante, Liegestütze zwischen Wand und erhöhten Händen (der Athlet schafft
-einen Liegestütz); Volumen 20 → 23 Sätze.
+einen Liegestütz); Volumen 20 → 24 Sätze.
 
 **Plausibilität: plausibel.** Höchstens zwei Rückfragen, keine stille
 Übernahme der hohen Angaben, alle Startwerte mit Kalibrierung (§12.4).
@@ -245,12 +275,12 @@ einen Liegestütz); Volumen 20 → 23 Sätze.
 
 | Persona | Erwartung §12.4 | Stand |
 |---|---|---|
-| 1 | erfüllt, ohne Liegestütz-Leiter | sicher; Klimmzug bleibt negativ; kurze Einheiten |
-| 2 | erfüllt | Progression gut; Volumen niedrig (ENT-R-2); doppelt vorsichtiger Einstieg |
-| 3 | erfüllt | Rampe, Monitoring, Soreness-Regeln, Band am Klimmzug |
-| 4 | erfüllt ohne U-13 | ein Straight-Arm-Satz je Woche (ENT-R-1) |
-| 5 | erfüllt | Volumen wächst; Mittwoch fast leer (ENT-R-5) |
+| 1 | erfüllt, ohne Liegestütz-Leiter | sicher; Klimmzug erst nach Woche 11; kurze Einheiten |
+| 2 | erfüllt | Progression gut; Volumen niedrig, Mindestschritt in Woche 8 und 12; drei Tage in den meisten Wochen (ENT-R-5) |
+| 3 | erfüllt | Rampe, Monitoring, Soreness-Regeln, Band am Klimmzug; meist zwei Tage (ENT-R-5) |
+| 4 | erfüllt mit eingefrorener Basis (ENT-R-1) | 3–4 Straight-Arm-Sätze je Woche; Einheitsdeckel bremst |
+| 5 | erfüllt | Volumen wächst; Mittwoch ab Woche 2 Ruhetag (ENT-R-5) |
 | 6 | erfüllt | – |
 
-Übergreifende Befunde: `spec.md` §15.4; offene Entscheidungen: §15.5; alle
-Befunde des Reviews: `review.md`.
+Übergreifende Befunde: `spec.md` §15.4; Entscheidungen des Reviews: §15.5;
+alle Befunde des Reviews: `review.md`.

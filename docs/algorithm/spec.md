@@ -1441,7 +1441,7 @@ je Struktur (beide Konten zusammen) (PAR-D-31, `08` §4). In der Rampe bezieht
 sich M auf das geloggte beschwerdefreie Maximum vor der Beschwerde (`05`
 §6.2); gibt es keins, gilt LOAD-04.
 
-**Ganze Sätze** (`PAR-S-48`, Review). Geplant werden ganze Sätze. Der Deckel
+**Ganze Sätze** (`PAR-S-48`, Review, bestätigt mit ENT-R-4). Geplant werden ganze Sätze. Der Deckel
 lässt deshalb je Einheit und Struktur mindestens M plus den kleinsten
 geplanten Satz dieser Struktur in der Einheit zu (bei M = 0: mindestens diesen
 einen Satz). Ohne diese Regel wächst eine Einheit mit einem oder zwei Sätzen
@@ -2097,15 +2097,15 @@ die Eigenschaften I-1 bis I-11 für jeden erzeugten Plan, zwölf simulierte
 Wochen je Persona, die Szenarien aus §12.5, Tabellentests je Regel, ein Test
 je Validierungsprüfung KB-01 bis KB-12, ein Abgleich jedes
 Forschungsparameters mit seiner Tabellenzeile in `docs/research/` und
-Benchmarks (`Generate` 4–9 ms und 1–2.5 MB, `Adapt` ≈ 20 µs, `Build` ≈ 2.5 ms).
+Benchmarks (`Generate` 3–8 ms und 1–2.5 MB, `Adapt` 10–20 µs, `Build` 2–2.5 ms).
 Die Pläne und ihre Plausibilität stehen in `personas.md`.
 
 ### 15.2 Entscheidungen und Abweichungen
 
 Die Personas und die Simulation haben Lücken und Widersprüche dieser
 Spezifikation gezeigt. Die Umsetzung entscheidet sie wie folgt; die mit
-**Review** markierten Punkte ändern Verhalten, das der Checkpoint bestätigen
-sollte.
+**Review** markierten Punkte hat der Checkpoint bestätigt (ENT-R-4), U-33 bis
+U-35 setzen die Entscheidungen ENT-R-1, ENT-R-2 und ENT-R-5 um (§15.5).
 
 | Nr. | Stelle | Umsetzung | Grund |
 |---|---|---|---|
@@ -2132,11 +2132,11 @@ sollte.
 | U-21 | §10.1 | `Adapt` gibt den ganzen neuen Snapshot zurück (kein Delta); `SnapshotStore` speichert ihn; ohne `Materialize` und `IDSource` | einfacher und ausreichend, solange es keinen Store gibt |
 | U-22 | §12.3, §11.3 | Golden Files als lesbarer Text; die Benchmark-Grenze ist kein Test (Zeitmessung in CI schwankt) | Reviewbarkeit |
 | U-23 | §5.10 | Der Plan listet je Lastkonto Zielvolumen, geplantes Volumen, Deckel und bindende Regel (`loads`) | Erklärbarkeit; I-3 und I-11 werden damit prüfbar |
-| U-24 | §8.3, §8.6 | Verletzungen der Soreness Rules in der Rampe (PAR-D-28): Soreness am Folgetag oder > 1 h danach wiederholt den Schritt und gibt der Region 1 Tag Pause; Schmerz im Aufwärmen > 15 min geht einen Schritt zurück (in `rtt_1` auf den nächstkleineren Anteil) und gibt 2 Tage Pause; jede Verletzung startet den Schritt neu. Soreness zählt gegen den Wert vor der Einheit (`PAR-S-47`, **Review**) | Review A-1, A-5, B-1: vorher änderte eine Verletzung in der Rampe die Last kaum |
+| U-24 | §8.3, §8.6 | Verletzungen der Soreness Rules in der Rampe (PAR-D-28): Soreness am Folgetag oder > 1 h danach wiederholt den Schritt und gibt der Region 1 Tag Pause; Schmerz im Aufwärmen > 15 min geht einen Schritt zurück (in `rtt_1` auf den nächstkleineren Anteil) und gibt 2 Tage Pause; jede Verletzung startet den Schritt neu. Soreness zählt gegen den Wert vor der Einheit (`PAR-S-47`, **Review**, bestätigt) | Review A-1, A-5, B-1: vorher änderte eine Verletzung in der Rampe die Last kaum |
 | U-25 | §6.11 | Pause je Kontengruppe, wächst während der Abwesenheit, Referenz vor der Pause festgehalten, Stufe zählt nur Einheiten mit Straight-Arm-Last, 72 h in der Rampe, Sprosse eine unter der Stufe vor der Pause, Kalibrierungssätze an der nächsten Sprosse | Review A-2, A-3, C I-5 |
-| U-26 | §7.3 | Einheitsdeckel lässt immer einen ganzen Satz über M zu (`PAR-S-48`, **Review**) | Review C-1: mit ganzen Sätzen konnte eine Einheit mit 1–2 Sätzen nie wachsen |
+| U-26 | §7.3 | Einheitsdeckel lässt immer einen ganzen Satz über M zu (`PAR-S-48`, **Review**, bestätigt) | Review C-1: mit ganzen Sätzen konnte eine Einheit mit 1–2 Sätzen nie wachsen |
 | U-27 | §5.4, §6.9 | Deloads werden nach den Deckeln angewandt; Reserve von Wdh. bzw. Haltezeit abgezogen; Sprosse gehalten; keine Angebote | Review C-2: Deload-Wochen waren nicht leichter |
-| U-28 | §4.3 | σ-Boden für Halte anteilig (`PAR-S-38`, **Review**); eine Untergrenze auf Höhe der Schätzung hält σ an; eine nicht voll anrechenbare Reserve löst einen Kalibrierungssatz aus | Review C I-1, I-2: kurze Halte blieben dauerhaft «niedrig», Schätzungen verfielen bei wachsender Leistung |
+| U-28 | §4.3 | σ-Boden für Halte anteilig (`PAR-S-38`, **Review**, bestätigt); eine Untergrenze auf Höhe der Schätzung hält σ an; eine nicht voll anrechenbare Reserve löst einen Kalibrierungssatz aus | Review C I-1, I-2: kurze Halte blieben dauerhaft «niedrig», Schätzungen verfielen bei wachsender Leistung |
 | U-29 | §5.3 | Erreichte Empfehlungen des Zielpfads bleiben mit Erhaltungsdosis (1 Einheit/Woche, höchstens 2 Sätze, PAR-B-63) | Review C I-3: Kraftarbeit verschwand aus fortgeschrittenen Plänen |
 | U-30 | §8.3, `onboarding.md` §3.7 | Alltagsschmerz aus dem Onboarding ist der erste Basiswert; Trainingsschmerz > 5 (PAR-D-15) startet die Rampe mit 0.25 (PAR-D-33); `rtt_0` endet nach §8.3 | Review A-9, A-10 |
 | U-31 | §5.7 | Ein Halt unter 4 s ohne leichtere Sprosse oder Band: kurze Technik-Halte aus μ (DOSE-09), bei fehlender Reserve kein Satz und ein Hinweis (SEL-07). Mit Band ohne eigenen Wert: Kalibrierungsstart | Review B-2: vorher 5 s über dem geschätzten Maximum |
@@ -2177,27 +2177,36 @@ weil die Adaption die Kürzung nicht vorhersieht.
 - **Die Plateau-Definition ist streng.** Mit `PAR-S-12` (zwei Einheiten ohne
   Zuwachs) plant die Simulation etwa alle 4–5 Wochen einen Stagnations-Deload,
   weil Leistung in Wochenschritten statt je Einheit wächst.
-- **Kleine Straight-Arm-Volumina wachsen langsam.** Ausserhalb der Rampen
-  wächst ein Konto mit 1–2 Sätzen unter LOAD-02 um einen Satz in etwa 10–13
-  Wochen (c = 10 %, im Risikofenster f = 0.75). Persona 4 bleibt deshalb ohne
-  geloggte Referenz zwölf Wochen bei einem Straight-Arm-Satz je Woche
-  (ENT-R-1).
+- **Kleine Straight-Arm-Volumina wachsen langsam.** Unter LOAD-02 allein
+  wuchs ein Konto mit 1–2 Sätzen um einen Satz in etwa 10–13 Wochen (c = 10 %,
+  im Risikofenster f = 0.75). Seit ENT-R-2 bekommt es alle 3 Wochen einen Satz
+  (LOAD-12). Die engere Grenze ist danach oft der Einheitsdeckel: `PAR-S-48`
+  lässt je Einheit nur den kleinsten Satz der Struktur über M zu, und Plank
+  oder Klimmzug belasten dieselben Strukturen wie die Straight-Arm-Sprosse.
+  Persona 4 bleibt deshalb bei einem Tuck-Satz je Einheit (3 je Woche, 4 nach
+  dem ersten Mindestschritt).
+- **Weniger Trainingstage.** Mit WEEK-09 (ENT-R-5) haben Persona 2 meist
+  drei statt vier, Persona 3 meist zwei statt vier und Persona 5 zwei statt
+  drei Trainingstage, weil die übrigen Tage nur einen Satz hätten. Das
+  Wochenvolumen bleibt, nur Prehab entfällt, solange es in 2 Einheiten
+  bleibt.
 
 ### 15.5 Unabhängiger Review
 
 Drei Reviewer ohne Vorwissen haben die Spezifikation, die Wissensbasis und die
 Persona-Pläne gegen die Recherche geprüft: Sicherheit (A), Zahlen und Quellen
 (B), Plausibilität der Pläne (C). Alle Befunde, ihre Behandlung und die
-Commits stehen in `review.md`. Behoben sind alle kritischen Befunde; die
-folgenden Punkte braucht der Checkpoint als Entscheidung:
+Commits stehen in `review.md`. Behoben sind alle kritischen Befunde. Die
+folgenden Punkte hat der Checkpoint entschieden und dabei alle Vorschläge
+übernommen:
 
-| Nr. | Frage | Stand der Umsetzung | Alternative |
+| Nr. | Frage | Stand vor der Entscheidung | Entscheidung und Umsetzung |
 |---|---|---|---|
-| ENT-R-1 | Wiedereinsteiger ohne Logs: Rampe als Deckel auf das Zielvolumen (U-13) oder nur als Obergrenze über LOAD-02? | Obergrenze (sicher, sehr langsam: Persona 4 zwölf Wochen bei einem Straight-Arm-Satz je Woche) | Rampe mit eingefrorener Basis in Woche 1, f(a) auf die Schritte, 72 h und Sprosse unter `pre_break_level` (Review C) |
-| ENT-R-2 | Wachstum kleiner Straight-Arm-Konten (LOAD-02, +10 %) | unverändert | Mindestschritt von einem Satz alle n Wochen |
-| ENT-R-3 | Einheitsdeckel im Einstieg (LOAD-04b) × 1.5 statt × 1.1 (PAR-D-31) | × 1.5 (ENT-S-1), Schritte an die Vorwoche gebunden | × 1.1 (Review A-4) |
-| ENT-R-4 | `PAR-S-47`, `PAR-S-48`, `PAR-S-38` (anteiliger Boden) | umgesetzt, als Review markiert | wörtliche Soreness-Definition (jeder Schmerz > 0); kein ganzer Satz über 10 %; fester Boden 3 s |
-| ENT-R-5 | Mindestinhalt einer Einheit | keiner; Einheiten mit einem Satz kommen vor | Einheit mit < 2 Sätzen zum Ruhetag machen und ihre Sätze verschieben |
+| ENT-R-1 | Wiedereinsteiger ohne Logs: Rampe als Deckel auf das Zielvolumen (U-13) oder nur als Obergrenze über LOAD-02? | Obergrenze (sicher, sehr langsam: Persona 4 zwölf Wochen bei einem Straight-Arm-Satz je Woche) | Rampe mit eingefrorener Basis in Woche 1, f(a) auf die Schritte, 72 h und Sprosse unter `pre_break_level` (Review C); §6.11, U-33 |
+| ENT-R-2 | Wachstum kleiner Straight-Arm-Konten (LOAD-02, +10 %) | unverändert | Mindestschritt von einem Satz alle 3 Wochen (LOAD-12, `PAR-S-49`); §7.2, U-34 |
+| ENT-R-3 | Einheitsdeckel im Einstieg (LOAD-04b) × 1.5 statt × 1.1 (PAR-D-31) | × 1.5 (ENT-S-1), Schritte an die Vorwoche gebunden | LOAD-03 wie sonst (1.1 mit `PAR-S-48`), auch in der Pausenrampe (Review A-4); §7.4 |
+| ENT-R-4 | `PAR-S-47`, `PAR-S-48`, `PAR-S-38` (anteiliger Boden) | umgesetzt, als Review markiert | bestätigt; die Alternative (wörtliche Soreness-Definition, kein ganzer Satz über 10 %, fester Boden 3 s) hätte C-1 und I-1 wieder geöffnet |
+| ENT-R-5 | Mindestinhalt einer Einheit | keiner; Einheiten mit einem Satz kommen vor | Einheit mit < 2 Sätzen zum Ruhetag machen und ihre Sätze verschieben (WEEK-09, `PAR-S-50`); §5.4, U-35 |
 
 ## Anhang A: Regelkatalog
 
@@ -2349,7 +2358,7 @@ festgemacht ist.
 | PAR-S-35 | `set_headroom_carry` | Rest-Spielraum je Konto in die Folgewoche übertragen; höchstens +1 Satz je Übung und Woche | verhindert, dass ganze Sätze bei kleinen Volumen nie wachsen; +1 Satz aus PAR-B-55 |
 | PAR-S-36 | `point_values` | Punktwerte der Tabelle in §5.7, SESS-01, SESS-04 | Spannen der Quellen brauchen für einen deterministischen Plan einen Wert. Gewählt ist die vorsichtige Seite dort, wo Sicherheit betroffen ist (Pausen, Halte, Satzzahlen der Skills); sonst ein runder Wert in der Spanne, nicht immer die Mitte: Balance 12 min (PAR-E-35: 11–15), kurz 6 min (5–10), Ergänzungen 3 × 12 (PAR-B-78: 2–3 × 12–20), Prehab 15 Wdh. (12–20); Antagonisten-Paare 2 bei 30 min (PAR-B-64: 1–2) |
 | PAR-S-37 | `misc_small_values` | 3 min allgemeines Aufwärmen bei 5 min Gesamtdauer; Kantengewicht ≥ 0.5 für Unterstützungsübungen; +1 s je Exzentrik-Wdh. und Einheit; 1.25 kg kleinste Scheibe ohne Angabe | 3 min: Rest für Rampensätze; 0.5 = Mitte der `recommended`-Gewichte (PAR-A-62); +1 s führt in ≈ 4–7 Einheiten von 3 auf 7–10 s (PAR-B-16); 1.25 kg = übliche kleinste Hantelscheibe |
-| PAR-S-38 | `estimate_floors` | offene Halteklassen μ = halbe Obergrenze; σ ≥ max(1 s, 0.15 · μ) bzw. 2 Wdh.; r ≥ 1 s bzw. 1 Wdh. | verhindert σ = 0 und undefinierte Konfidenz bei Nullwerten; 2 Wdh. aus PAR-F-20. **Review:** Der Halte-Boden ist anteilig (0.15 = Grenze «hoch» in PAR-F-30); ein fester Boden von 3 s machte jeden Halt unter 10 s dauerhaft zu «niedriger Konfidenz», und Sprossen mit kurzen Halten wurden nie Arbeitssprosse |
+| PAR-S-38 | `estimate_floors` | offene Halteklassen μ = halbe Obergrenze; σ ≥ max(1 s, 0.15 · μ) bzw. 2 Wdh.; r ≥ 1 s bzw. 1 Wdh. | verhindert σ = 0 und undefinierte Konfidenz bei Nullwerten; 2 Wdh. aus PAR-F-20. **Review, bestätigt (ENT-R-4):** Der Halte-Boden ist anteilig (0.15 = Grenze «hoch» in PAR-F-30); ein fester Boden von 3 s machte jeden Halt unter 10 s dauerhaft zu «niedriger Konfidenz», und Sprossen mit kurzen Halten wurden nie Arbeitssprosse |
 | PAR-S-39 | `derived_rung_prior` | leichtere Sprosse oder Band: μ = μ der schwereren bzw. unassistierten, σ = max(3 s, 0.35 μ); schwerere Sprosse: kein Wert bis zu Prüfversuchen | nur die sichere Richtung (leichter ≥ schwerer), keine Umrechnung über Intensitätsmodelle (`08` §4); σ aus PAR-F-26 |
 | PAR-S-40 | `post_pain_deload_cap` | bis zur ersten grünen Woche Deckel 1.0 × Referenz vor der Verletzung der Schmerzregel | «reduzieren und halten» (PAR-D-18, `05` §5.4); verhindert den Sprung auf R × 1.1 direkt nach dem Schmerz-Deload |
 | PAR-S-41 | `onboarding_break_mapping` | Tabelle in §6.11 | Klassen aus `onboarding.md` §3.5 auf die Bänder von PAR-B-59–62 und PAR-D-29 gelegt |
@@ -2358,8 +2367,8 @@ festgemacht ist.
 | PAR-S-44 | `plausibility_widening_factor` | σ × 1.25 | `onboarding.md` §5.2 (Verbreiterung bei widersprüchlichen Angaben, R-2, und nach Pausen ab 7 Wochen); Faktor ist dort als Heuristik festgelegt |
 | PAR-S-45 | `unknown_answer_sigma_frac` | σ ≥ 0.5 × μ | `onboarding.md` §5.2, Zeile «weiss nicht»: Populations-Prior mit breiter Unsicherheit |
 | PAR-S-46 | `prerequisite_plausibility_fraction` | 0.5 | R-2 (`onboarding.md` §5.5): eine Vorstufe gilt als plausibel, wenn ihre Schätzung mindestens die Hälfte ihrer Schwelle erreicht; die Hälfte entspricht dem Startanteil neuer Belastung (PAR-D-12) und lässt Messrauschen der Selbstauskunft (PAR-F-20: 30 %) Platz |
-| PAR-S-47 | `soreness_definition` | «Soreness» in PAR-D-26 und PAR-D-28: ein Wert während, nach oder am Folgetag über dem Wert vor der Einheit (Basiswert nach PAR-D-16; ohne Basiswert 0) sowie jede Angabe «hielt länger als 1 h an» oder «hält länger als 15 min an»; eine Einheit zählt für die Rampe nur ohne Soreness und mit allen Werten ≤ PAR-D-14 | **Review.** PAR-D-28 nennt «Schmerz am Folgetag» ohne Schwelle; wörtlich genommen käme, wer mit stabilem Grundschmerz trainiert, nie aus der Rampe. Der Vergleich mit dem Wert vor der Einheit folgt PAR-D-16 und ist strenger als PAR-D-14 allein (`08` §4: strengerer Wert) |
-| PAR-S-48 | `session_cap_whole_set` | LOAD-03 lässt je Einheit und Struktur mindestens M plus den kleinsten geplanten Satz dieser Struktur in der Einheit zu (bei M = 0 diesen Satz) | **Review.** PAR-D-31 (10 %) gilt für Volumen; mit ganzen Sätzen wäre bei 1–2 Sätzen je Einheit jede Steigerung > 10 %, und das Volumen bliebe beim halbierten Einstieg stehen. PAR-B-55 erlaubt +1 Satz je Übung; das Wochenwachstum begrenzt weiter LOAD-02 |
+| PAR-S-47 | `soreness_definition` | «Soreness» in PAR-D-26 und PAR-D-28: ein Wert während, nach oder am Folgetag über dem Wert vor der Einheit (Basiswert nach PAR-D-16; ohne Basiswert 0) sowie jede Angabe «hielt länger als 1 h an» oder «hält länger als 15 min an»; eine Einheit zählt für die Rampe nur ohne Soreness und mit allen Werten ≤ PAR-D-14 | **Review, bestätigt (ENT-R-4).** PAR-D-28 nennt «Schmerz am Folgetag» ohne Schwelle; wörtlich genommen käme, wer mit stabilem Grundschmerz trainiert, nie aus der Rampe. Der Vergleich mit dem Wert vor der Einheit folgt PAR-D-16 und ist strenger als PAR-D-14 allein (`08` §4: strengerer Wert) |
+| PAR-S-48 | `session_cap_whole_set` | LOAD-03 lässt je Einheit und Struktur mindestens M plus den kleinsten geplanten Satz dieser Struktur in der Einheit zu (bei M = 0 diesen Satz) | **Review, bestätigt (ENT-R-4).** PAR-D-31 (10 %) gilt für Volumen; mit ganzen Sätzen wäre bei 1–2 Sätzen je Einheit jede Steigerung > 10 %, und das Volumen bliebe beim halbierten Einstieg stehen. PAR-B-55 erlaubt +1 Satz je Übung; das Wochenwachstum begrenzt weiter LOAD-02 |
 | PAR-S-49 | `small_account_min_step` | ein Satz mehr, wenn ein Straight-Arm- oder Handgelenk-Konto 3 Wochen lang jede Woche geloggt, ohne Deload-Woche, ohne Verletzung einer Schmerzregel und nie unter dem Niveau der ersten dieser Wochen lag, und ein Satz mehr ist als die Steigerung c · f · R nach LOAD-02 | ENT-R-2. 3 Wochen = `PAR-S-14`: Das Referenzmittel besteht dann aus Wochen auf dem gehaltenen Niveau. Der Schritt liegt für Konten mit 1–2 Sätzen über 10 % je Woche (1 → 2 Sätze in 3 Wochen); ohne ihn wuchs ein solches Konto erst nach 10–13 Wochen um einen Satz. +1 Satz aus PAR-B-55 |
 | PAR-S-50 | `min_session_sets` | 2 Arbeitssätze je Einheit (ohne Aufwärmen und Prehab); eine Einheit mit weniger wird zum Ruhetag, ihre Sätze gehen an Einheiten mit derselben Übung | ENT-R-5. 2 = Mindestsätze eines Maximalblocks (`PAR-S-09`); eine Einheit mit einem Satz rechtfertigt Anfahrt und Aufwärmen nicht (Review C I-4) |
 

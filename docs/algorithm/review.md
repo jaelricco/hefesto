@@ -27,15 +27,17 @@ Belastungswerte in `body.yaml` und die Rechenbeispiele der Spezifikation.
 
 | Reviewer | kritisch | wichtig | klein | behoben | teilweise | dokumentiert oder offen |
 |---|---|---|---|---|---|---|
-| A Sicherheit | 3 | 7 | 4 | 11 | 2 | 1 |
+| A Sicherheit | 3 | 7 | 4 | 12 | 1 | 1 |
 | B Zahlen | 1 | 3 | 12 | 13 | – | 3 |
-| C Pläne | 2 | 8 | 5 | 7 | 6 | 2 |
+| C Pläne | 2 | 8 | 5 | 10 | 4 | 1 |
 
-Alle kritischen Befunde sind behoben; bei C-1 bleibt das langsame Wachstum
-kleiner Straight-Arm-Konten als Entscheidung offen. Die Korrekturen stehen in
-den Commits `259063b`, `4d930f7`, `d69b3ee`, `19c5b7a` und `7421f7e`; die
-Entscheidungen der Umsetzung in `spec.md` §15.2 (U-24 bis U-32), die offenen
-Fragen in §15.5 (ENT-R-1 bis ENT-R-5).
+Alle kritischen Befunde sind behoben. Die Korrekturen stehen in den Commits
+`259063b`, `4d930f7`, `d69b3ee`, `19c5b7a` und `7421f7e`; die Entscheidungen der
+Umsetzung in `spec.md` §15.2 (U-24 bis U-32). Der Checkpoint hat die Fragen
+ENT-R-1 bis ENT-R-5 entschieden und alle Vorschläge übernommen (§15.5); die
+Umsetzung steht in den Commits `227f4a9` (ENT-R-3), `769798c` (ENT-R-1),
+`6a663c6` (ENT-R-2) und `4a88397` (ENT-R-5), die Entscheidungen der Umsetzung in
+§15.2 (U-33 bis U-35).
 
 ## A — Sicherheit
 
@@ -43,8 +45,8 @@ Fragen in §15.5 (ENT-R-1 bis ENT-R-5).
 |---|---|---|---|---|
 | A-1 | kritisch | Eine Schmerzverletzung in der Rampe senkte die Last kaum: Stufe zurück ohne Volumenschritt, keine Tage Pause, 8/10 über 1 h ohne Deload. | PAR-D-28 umgesetzt: Schritt wiederholen oder zurück, 1 bzw. 2 Tage Pause der Region; PAR-D-18 zusätzlich bei jeder Schwellenverletzung. Tabellentest je Fall. | behoben (U-24) |
 | A-2 | kritisch | Die erkannte Pause veraltete; nach 44–65 Tagen wurde das Zielvolumen zur Basis, eine längere Pause erlaubte mehr Last. | Pause wächst während der Abwesenheit, Referenz vor der Pause festgehalten, Pause je Kontengruppe. Property-Test: eine längere Pause erlaubt nie mehr Last. | behoben (U-25) |
-| A-3 | kritisch | U-13 liess die Straight-Arm-Last eines Wiedereinsteigers in drei Wochen versechsfachen; Stufen zählten jede Einheit, kein 72-h-Abstand, f(a) wirkungslos, zwei Sprossen in einer Woche. | U-13 zurückgenommen; Stufe zählt nur Einheiten mit Straight-Arm-Last; 72 h; Sprosse eine unter der Stufe vor der Pause; Aufstieg über Kalibrierungssätze. | behoben; Folge: ENT-R-1 |
-| A-4 | wichtig | Einstieg LOAD-04b: Einheitsdeckel × 1.5 statt 10 %, Schritte eines wachsenden Ziels (+82–96 %), «weiss nicht» qualifizierte. | «Weiss nicht» ausgeschlossen, Schritte an die Vorwoche gebunden, kein Abfall bei der Übergabe an LOAD-02. Der Deckel × 1.5 bleibt (ENT-S-1). | teilweise; ENT-R-3 |
+| A-3 | kritisch | U-13 liess die Straight-Arm-Last eines Wiedereinsteigers in drei Wochen versechsfachen; Stufen zählten jede Einheit, kein 72-h-Abstand, f(a) wirkungslos, zwei Sprossen in einer Woche. | U-13 zurückgenommen; Stufe zählt nur Einheiten mit Straight-Arm-Last; 72 h; Sprosse eine unter der Stufe vor der Pause; Aufstieg über Kalibrierungssätze. Nach ENT-R-1 rampt eine Pause aus dem Onboarding auf dem eingefrorenen Zielvolumen der ersten Woche, mit f(a) auf den Schritten (U-33). | behoben; ENT-R-1 umgesetzt (U-33) |
+| A-4 | wichtig | Einstieg LOAD-04b: Einheitsdeckel × 1.5 statt 10 %, Schritte eines wachsenden Ziels (+82–96 %), «weiss nicht» qualifizierte. | «Weiss nicht» ausgeschlossen, Schritte an die Vorwoche gebunden, kein Abfall bei der Übergabe an LOAD-02. Nach ENT-R-3 gilt der Einheitsdeckel LOAD-03 auch im Einstieg und in der Pausenrampe. | behoben (ENT-R-3) |
 | A-5 | wichtig | Eine Verletzung setzte den Zähler der Stufe nicht zurück. | Jede Verletzung startet die Stufe neu. | behoben |
 | A-6 | wichtig | In der Rampe wuchs die Haltezeit ungebremst (Lean 4 → 16 s). | M-Zelle: kürzere Halte mit Technik-Dosierung (DOSE-09). | behoben |
 | A-7 | wichtig | RF-05 «Gelenk sichtbar verschoben» (N) war nicht auslösbar. | Folgefrage im Katalog; «ja» stoppt das Training (SAFE-02). | behoben |
@@ -60,7 +62,7 @@ Fragen in §15.5 (ENT-R-1 bis ENT-R-5).
 
 | Nr. | Schwere | Befund | Behandlung | Stand |
 |---|---|---|---|---|
-| B-1 | kritisch | Die Folgetag-Regel war abgeschwächt: «höher als vor der Einheit» statt «Schmerz am Folgetag» (PAR-D-28), und ≤ 2 zählte als schmerzfrei (PAR-D-26). | `PAR-S-47`: Soreness zählt gegen den Wert vor der Einheit, ohne Wert gegen 0; eine Einheit zählt für die Rampe nur ohne Soreness. | behoben; ENT-R-4 |
+| B-1 | kritisch | Die Folgetag-Regel war abgeschwächt: «höher als vor der Einheit» statt «Schmerz am Folgetag» (PAR-D-28), und ≤ 2 zählte als schmerzfrei (PAR-D-26). | `PAR-S-47`: Soreness zählt gegen den Wert vor der Einheit, ohne Wert gegen 0; eine Einheit zählt für die Rampe nur ohne Soreness. | behoben; bestätigt (ENT-R-4) |
 | B-2 | wichtig | Der Rückfall-Halt (2 × 5 s) lag über dem geschätzten Maximum. | Technik-Halte aus μ, ohne Reserve kein Satz und ein Hinweis; mit Band ohne eigenen Wert ein Kalibrierungsstart. | behoben (U-31) |
 | B-3 | wichtig | Die Lean zählte schwerer als die Tuck, die Wand-Liegestütz schwerer als die erhöhte. | Lean 0.59 (PAR-C-10, 31°), Wand höchstens 0.55 (PAR-C-20). | behoben |
 | B-4 | wichtig | = A-7 | | behoben |
@@ -81,13 +83,13 @@ Fragen in §15.5 (ENT-R-1 bis ENT-R-5).
 
 | Nr. | Schwere | Befund | Behandlung | Stand |
 |---|---|---|---|---|
-| C-1 | kritisch | Das Volumen verliess den halbierten Start nie: LOAD-03 mit ganzen Sätzen liess keinen zusätzlichen Satz zu. | `PAR-S-48`: ein ganzer Satz über M ist immer erlaubt. Bent-Arm-Volumen wächst wieder (Persona 5: 2 + 2 → 3 + 3 Sätze); kleine Straight-Arm-Konten wachsen unter LOAD-02 weiter langsam. | teilweise; ENT-R-2 |
+| C-1 | kritisch | Das Volumen verliess den halbierten Start nie: LOAD-03 mit ganzen Sätzen liess keinen zusätzlichen Satz zu. | `PAR-S-48`: ein ganzer Satz über M ist immer erlaubt. Bent-Arm-Volumen wächst wieder (Persona 5: 2 + 2 → 3 + 3 Sätze); kleine Straight-Arm-Konten wachsen seit ENT-R-2 mit dem Mindestschritt LOAD-12 um einen Satz je 3 Wochen (U-34). | behoben (ENT-R-2) |
 | C-2 | kritisch | Deload-Wochen waren nicht leichter. | Deload auf dem gekürzten Plan, Reserve von Wdh. und Halt abgezogen, Sprosse gehalten, keine Angebote (Persona 2: 16 statt 20 Sätze, 6 statt 9 Straight-Arm-Sätze). | behoben (U-27) |
 | I-1 | wichtig | Gestapelte Vorsicht: Lean 2 × 4 s für eine Tuck von 10–19 s, Front Lever zwei Regressionen, Advanced Tuck nie erreichbar. | Leans als Konditionshalt; anteiliger σ-Boden (Persona 2 erreicht an beiden Skills die Advanced Tuck). Der Einstieg bleibt eine Untergrenze (PAR-F-26); ein Frog Stand fehlt der Wissensbasis. | teilweise (U-28) |
 | I-2 | wichtig | Schätzungen froren ein oder sanken bei wachsender Leistung. | Untergrenzen auf Höhe der Schätzung halten σ an; grosse Reserven lösen einen Kalibrierungssatz aus. | behoben (U-28) |
 | I-3 | wichtig | Persona 2 ohne Kraftarbeit ab Woche 2. | Erreichte Empfehlungen mit Erhaltungsdosis; Klimmzüge bleiben. | teilweise (U-29) |
-| I-4 | wichtig | Fast leere Einheiten (ein Plank-Satz). | Zusammenlegen versucht und zurückgenommen (stört die Zählung der Rampe und die Frequenz). | offen; ENT-R-5 |
-| I-5 | wichtig | Persona 4 blieb neun Wochen an der Lean. | Kalibrierungssatz an der nächsten Sprosse: ab Woche 2 an der Tuck. Das Volumen bleibt bei einem Satz je Woche. | teilweise; ENT-R-1 |
+| I-4 | wichtig | Fast leere Einheiten (ein Plank-Satz). | Nach ENT-R-5 wird eine Einheit mit weniger als 2 Arbeitssätzen Ruhetag, ihre Sätze gehen an Einheiten mit derselben Übung oder, bei leichten Übungen, an eine andere Einheit (WEEK-09, U-35). Einheiten, die eine Rampe zählt, bleiben; die Frequenz der verschobenen Übung sinkt. | behoben (ENT-R-5) |
+| I-5 | wichtig | Persona 4 blieb neun Wochen an der Lean. | Kalibrierungssatz an der nächsten Sprosse: ab Woche 2 an der Tuck. Nach ENT-R-1: 3 Straight-Arm-Sätze je Woche ab Woche 4, 4 in Woche 12. | behoben (ENT-R-1) |
 | I-6 | wichtig | Angebote nannten die falsche Sprosse, wurden angekündigt, ohne im Plan zu erscheinen, und wiederholten sich jede Einheit. | Name der angebotenen Sprosse; Ankündigung nur mit Tor. Ein Abstand zwischen Wiederholungen fehlt. | teilweise |
 | I-7 | wichtig | Klimmzüge bei Ellbogenbeschwerde unverändert. | M: Band bei Wiederholungsübungen. | behoben |
 | I-8 | wichtig | Persona 5 ohne Zug und ohne Hinweis. | Hinweis GOAL-06 mit fehlender Ausrüstung. Hollow und Stütz hängen laut `02` §8 an späteren Stufen; neue Kanten ohne Beleg wurden nicht erfunden. | teilweise |
