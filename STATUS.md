@@ -126,5 +126,18 @@ and touches only the app's views, its project file and its strings.
 
 ### Verification
 
-To follow: the `ios` workflow (HefestoKit tests and the simulator build) and
-the `ios-screenshots` workflow on the self-hosted Mac.
+On the self-hosted Mac (Xcode 26.4.1, iOS 26.4 simulator), at 7f3cd01:
+- `ios` (run 37): `swift test` passes 47 tests in 13 suites, and the app
+  builds for the iOS Simulator under Swift 6 strict concurrency.
+- `ios-screenshots` (run 3): all 12 demo screens captured in German on an
+  iPhone 17 Pro simulator and uploaded as an artifact.
+- A trial merge with the planner branch (`claude/busy-babbage-fqio1j`) is
+  clean. The set composer keeps its section header lines as they were,
+  because the planner adds its reserve section right above them.
+
+### Open questions for review
+
+1. **The set composer** is only partly themed until the planner's reserve
+   section lands. Theme it fully after that merge?
+2. **Light mode.** There is none now (ADR 0020). Should a light palette
+   follow for training outdoors?
