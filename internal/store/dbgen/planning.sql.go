@@ -570,10 +570,10 @@ func (q *Queries) InsertPlannedSession(ctx context.Context, arg InsertPlannedSes
 const insertPlannedSetEntry = `-- name: InsertPlannedSetEntry :exec
 INSERT INTO set_entries (
     id, user_id, session_id, block_id, order_index, round_index, kind, is_planned,
-    rest_after_planned_s, rir, planned_item_id, client_id, updated_at
+    rest_after_planned_s, rir, sir_s, planned_item_id, client_id, updated_at
 ) VALUES (
     $1, $2, $3, $4, $5, $6, $7, true,
-    $8, $9, $10, $11, $12
+    $8, $9, $10, $11, $12, $13
 )
 `
 
@@ -587,6 +587,7 @@ type InsertPlannedSetEntryParams struct {
 	Kind              string
 	RestAfterPlannedS *int32
 	Rir               *int16
+	SirS              *int16
 	PlannedItemID     *uuid.UUID
 	ClientID          *uuid.UUID
 	UpdatedAt         time.Time
@@ -603,6 +604,7 @@ func (q *Queries) InsertPlannedSetEntry(ctx context.Context, arg InsertPlannedSe
 		arg.Kind,
 		arg.RestAfterPlannedS,
 		arg.Rir,
+		arg.SirS,
 		arg.PlannedItemID,
 		arg.ClientID,
 		arg.UpdatedAt,
@@ -1024,7 +1026,7 @@ func (q *Queries) ListPendingCompletions(ctx context.Context, arg ListPendingCom
 
 const listPerformedElements = `-- name: ListPerformedElements :many
 SELECT el.id, e.slug AS exercise, se.kind, el.measure, el.reps, el.hold_seconds, el.load_kg,
-       se.rir, el.form_quality, el.failed, el.is_partial_rom, el.is_eccentric_only,
+       se.rir, se.sir_s, el.form_quality, el.failed, el.is_partial_rom, el.is_eccentric_only,
        COALESCE(a.type, 'none')::text AS assistance
 FROM set_elements el
 JOIN set_entries se ON se.id = el.set_entry_id AND se.user_id = el.user_id
@@ -1050,6 +1052,7 @@ type ListPerformedElementsRow struct {
 	HoldSeconds     pgtype.Numeric
 	LoadKg          pgtype.Numeric
 	Rir             *int16
+	SirS            *int16
 	FormQuality     *int16
 	Failed          bool
 	IsPartialRom    bool
@@ -1076,6 +1079,7 @@ func (q *Queries) ListPerformedElements(ctx context.Context, arg ListPerformedEl
 			&i.HoldSeconds,
 			&i.LoadKg,
 			&i.Rir,
+			&i.SirS,
 			&i.FormQuality,
 			&i.Failed,
 			&i.IsPartialRom,

@@ -316,10 +316,10 @@ RETURNING *;
 -- name: InsertPlannedSetEntry :exec
 INSERT INTO set_entries (
     id, user_id, session_id, block_id, order_index, round_index, kind, is_planned,
-    rest_after_planned_s, rir, planned_item_id, client_id, updated_at
+    rest_after_planned_s, rir, sir_s, planned_item_id, client_id, updated_at
 ) VALUES (
     @id, @user_id, @session_id, @block_id, @order_index, @round_index, @kind, true,
-    @rest_after_planned_s, @rir, @planned_item_id, @client_id, @updated_at
+    @rest_after_planned_s, @rir, @sir_s, @planned_item_id, @client_id, @updated_at
 );
 
 -- The live sets of a started draft in log order, for the reconciliation
@@ -364,7 +364,7 @@ WHERE ws.id = @id AND ws.user_id = @user_id AND ws.deleted_at IS NULL AND ws.sta
 -- The performed elements of a session in the order performed.
 -- name: ListPerformedElements :many
 SELECT el.id, e.slug AS exercise, se.kind, el.measure, el.reps, el.hold_seconds, el.load_kg,
-       se.rir, el.form_quality, el.failed, el.is_partial_rom, el.is_eccentric_only,
+       se.rir, se.sir_s, el.form_quality, el.failed, el.is_partial_rom, el.is_eccentric_only,
        COALESCE(a.type, 'none')::text AS assistance
 FROM set_elements el
 JOIN set_entries se ON se.id = el.set_entry_id AND se.user_id = el.user_id

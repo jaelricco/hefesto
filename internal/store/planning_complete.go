@@ -49,7 +49,8 @@ func (t *plannerTx) CompletedSession(ctx context.Context, userID, sessionID uuid
 // Only what the planner can compare counts (ADR 0018): reps or seconds,
 // without assistance or with a band. Other assistance (a partner, a
 // machine, ...) is no measure of either capacity, and distances have none.
-// The reserve is the logged RIR of a rep set; the log keeps none for holds.
+// The reserve is the logged RIR of a rep set and the SIR of a hold; a set
+// without one counts as a lower bound in the core (spec §4.3).
 func loggedSet(e dbgen.ListPerformedElementsRow) (domain.LoggedSet, bool) {
 	var assist string
 	switch e.Assistance {
@@ -78,6 +79,10 @@ func loggedSet(e dbgen.ListPerformedElementsRow) (domain.LoggedSet, bool) {
 			return domain.LoggedSet{}, false
 		}
 		set.Value = *hold
+		if e.SirS != nil {
+			r := float64(*e.SirS)
+			set.Reserve = &r
+		}
 	default:
 		return domain.LoggedSet{}, false
 	}

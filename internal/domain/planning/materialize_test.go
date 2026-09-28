@@ -76,12 +76,14 @@ func TestMaterialize(t *testing.T) {
 					}
 					switch {
 					case it.HoldS > 0:
-						if ds.Measure != planning.MeasureHold || ds.HoldS == nil || *ds.HoldS != it.HoldS || ds.RIR != nil {
+						if ds.Measure != planning.MeasureHold || ds.HoldS == nil || *ds.HoldS != it.HoldS || ds.RIR != nil ||
+							ds.SIR == nil || *ds.SIR != it.Reserve {
 							t.Errorf("%s: hold %+v from %+v", pa.name, ds, it)
 						}
 						checked["hold"] = true
 					case it.Reps > 0:
-						if ds.Measure != planning.MeasureReps || ds.Reps == nil || *ds.Reps != it.Reps || ds.RIR == nil || *ds.RIR != it.Reserve {
+						if ds.Measure != planning.MeasureReps || ds.Reps == nil || *ds.Reps != it.Reps || ds.RIR == nil || *ds.RIR != it.Reserve ||
+							ds.SIR != nil {
 							t.Errorf("%s: reps %+v from %+v", pa.name, ds, it)
 						}
 						checked["reps"] = true

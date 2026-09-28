@@ -808,7 +808,7 @@ func TestPlannerStartsAPlannedSession(t *testing.T) {
 			}
 			switch {
 			case it.HoldS > 0:
-				if e.HoldSeconds == nil || *e.HoldSeconds != float64(it.HoldS) || s.RIR != nil {
+				if e.HoldSeconds == nil || *e.HoldSeconds != float64(it.HoldS) || s.RIR != nil || s.SIR == nil || *s.SIR != it.Reserve {
 					t.Errorf("hold set %+v from %+v", e, it)
 				}
 			case it.Reps > 0:
@@ -1157,7 +1157,8 @@ func TestPlannerAppliesALoggedCompletion(t *testing.T) {
 		if it.HoldS > 0 {
 			want = float64(it.HoldS)
 		}
-		if s.Value != want || s.Assist != domain.AssistNone || it.HoldS == 0 && (s.Reserve == nil || *s.Reserve != float64(it.Reserve)) {
+		// Holds carry their SIR, rep sets their RIR, as the draft asked.
+		if s.Value != want || s.Assist != domain.AssistNone || s.Reserve == nil || *s.Reserve != float64(it.Reserve) {
 			t.Errorf("logged set %+v from item %+v", s, it)
 		}
 	}

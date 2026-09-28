@@ -42,7 +42,8 @@ type DraftSet struct {
 	Round  *int   // the round in a superset
 	Kind   string // working or warmup
 	RestS  int
-	RIR    *int // the target reserve of a rep set; a hold's reserve stays in the plan
+	RIR    *int // the target reserve of a rep set
+	SIR    *int // the target reserve of a hold, in seconds (ENT-S-4)
 
 	ElementID string
 	Exercise  string
@@ -61,8 +62,12 @@ const (
 	DraftSuperset = "superset"
 )
 
-// maxRIR is the largest reserve the log records.
-const maxRIR = 10
+// The largest reserves the log records: repetitions, and seconds of a
+// hold.
+const (
+	maxRIR = 10
+	maxSIR = 60
+)
 
 // Materialize turns a planned session into the draft the log stores (spec
 // §10.1, §10.2). Offers (probes, first attempts) are left out: they are done
@@ -131,9 +136,13 @@ func draftSet(k *Knowledge, it Item, newID func() string) DraftSet {
 			ds.Measure = ex.Measure
 		}
 	}
-	if ds.Measure == MeasureReps {
+	switch ds.Measure {
+	case MeasureReps:
 		rir := min(max(it.Reserve, 0), maxRIR)
 		ds.RIR = &rir
+	case MeasureHold:
+		sir := min(max(it.Reserve, 0), maxSIR)
+		ds.SIR = &sir
 	}
 	return ds
 }

@@ -183,7 +183,7 @@ func sameTarget(k *Knowledge, a, b Item) bool {
 
 func equalDraftSet(x, y DraftSet) bool {
 	eq := func(p, q *int) bool { return (p == nil) == (q == nil) && (p == nil || *p == *q) }
-	return x.Kind == y.Kind && x.RestS == y.RestS && eq(x.RIR, y.RIR) && x.Exercise == y.Exercise &&
+	return x.Kind == y.Kind && x.RestS == y.RestS && eq(x.RIR, y.RIR) && eq(x.SIR, y.SIR) && x.Exercise == y.Exercise &&
 		x.Measure == y.Measure && eq(x.Reps, y.Reps) && eq(x.HoldS, y.HoldS) && x.LoadKg == y.LoadKg &&
 		x.Eccentric == y.Eccentric
 }

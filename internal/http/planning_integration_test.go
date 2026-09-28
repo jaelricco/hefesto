@@ -524,6 +524,40 @@ func TestStartPlannedSession(t *testing.T) {
 	if done["is_planned"] != false || done["planned_item_id"] != set["planned_item_id"] {
 		t.Errorf("performed set %v", done)
 	}
+	// A hold records its seconds in reserve; more than a minute is refused.
+	held := ""
+	for _, b := range sess["blocks"].([]any) {
+		for _, hs := range b.(map[string]any)["sets"].([]any) {
+			hs := hs.(map[string]any)
+			hel := hs["elements"].([]any)[0].(map[string]any)
+			if hel["measure"] != "hold_seconds" || hs["id"] == set["id"] {
+				continue
+			}
+			if hs["sir_s"] == nil {
+				t.Errorf("planned hold %v without a target SIR", hs["id"])
+			}
+			put := func(sir int) res {
+				return a.call("PUT", "/v1/sessions/"+logID+"/sets/"+hs["id"].(string), u.access, map[string]any{
+					"block_id": hs["block_id"], "order_index": hs["order_index"], "kind": hs["kind"], "is_planned": false,
+					"completed_at": plannerMonday.Add(10*time.Hour + 7*time.Minute).Format(time.RFC3339), "sir_s": sir,
+					"elements": []any{map[string]any{"id": hel["id"], "exercise_id": hel["exercise_id"], "measure": "hold_seconds",
+						"hold_seconds": 6}},
+				})
+			}
+			put(61).problem(422, "validation")
+			if got := put(3).ok(200, "SetEntry"); got["sir_s"] != float64(3) {
+				t.Errorf("performed hold sir_s %v, want 3", got["sir_s"])
+			}
+			held = hs["id"].(string)
+			break
+		}
+		if held != "" {
+			break
+		}
+	}
+	if held == "" {
+		t.Error("no planned hold in the draft; the SIR is untested")
+	}
 	pulled := a.call("GET", "/v1/sync?cursor=0&limit=1000", u.access, nil).ok(200, "SyncPage")
 	if s := pulled["sessions"].([]any); len(s) != 1 || s[0].(map[string]any)["planned_session_id"] != sid {
 		t.Errorf("synced sessions %v", s)
@@ -557,8 +591,12 @@ func TestStartPlannedSession(t *testing.T) {
 			ids = append(ids, s.(map[string]any)["id"])
 		}
 	}
-	if len(ids) != 1 || ids[0] != set["id"] {
-		t.Errorf("after the stop the session holds sets %v, want only the performed %v", ids, set["id"])
+	want := []any{set["id"]}
+	if held != "" {
+		want = append(want, held)
+	}
+	if !sameMembers(ids, want) {
+		t.Errorf("after the stop the session holds sets %v, want only the performed %v", ids, want)
 	}
 	a.call("POST", "/v1/me/plan/sessions/"+next+"/start", u.access, start(newID())).problem(409, "training-stopped")
 }
@@ -703,4 +741,22 @@ func TestStartWithCheckIn(t *testing.T) {
 	if err := a.pool.QueryRow(context.Background(), `SELECT count(*) FROM planned_sessions WHERE check_in_applied`).Scan(&n); err != nil || n != 2 {
 		t.Errorf("%d planned sessions with the check-in applied: %v", n, err)
 	}
+}
+
+// sameMembers reports whether two lists hold the same values in any order.
+func sameMembers(a, b []any) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	left := map[any]int{}
+	for _, v := range a {
+		left[v]++
+	}
+	for _, v := range b {
+		if left[v] == 0 {
+			return false
+		}
+		left[v]--
+	}
+	return true
 }

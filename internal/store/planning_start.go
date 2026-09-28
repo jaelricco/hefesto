@@ -331,7 +331,7 @@ func writeDraftSet(ctx context.Context, q *dbgen.Queries, w Writer, sessionID, b
 	if err := q.InsertPlannedSetEntry(ctx, dbgen.InsertPlannedSetEntryParams{
 		ID: setID, UserID: w.UserID, SessionID: sessionID, BlockID: blockID,
 		OrderIndex: int32(order), //nolint:gosec // a block has a few dozen sets at most
-		RoundIndex: int16Ptr(s.Round), Kind: s.Kind, RestAfterPlannedS: int32Ptr(&rest), Rir: int16Ptr(s.RIR),
+		RoundIndex: int16Ptr(s.Round), Kind: s.Kind, RestAfterPlannedS: int32Ptr(&rest), Rir: int16Ptr(s.RIR), SirS: int16Ptr(s.SIR),
 		PlannedItemID: item, ClientID: w.DeviceID, UpdatedAt: w.At,
 	}); err != nil {
 		return fmt.Errorf("writing set: %w", err)
