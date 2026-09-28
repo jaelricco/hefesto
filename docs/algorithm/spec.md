@@ -707,8 +707,12 @@ Tabellen folgen der Skizze mit diesen Abweichungen:
   `planner_sessions` (Verlauf als Kopie, bis die Übungen des Planers
   Content-Zeilen sind).
 - Noch nicht angelegt sind `user_bands`, `user_red_flag_answers`,
-  `planner_knowledge`, die neuen Spalten an `workout_sessions` und
-  `set_entries` und die Sync-Spalten. Sie kommen mit den Endpunkten.
+  `planner_knowledge`, `set_entries.sir_s` und die Sync-Spalten. Sie kommen
+  mit den Endpunkten.
+- `workout_sessions.planned_session_id` und `set_entries.planned_item_id`
+  kamen mit dem Start einer geplanten Einheit (ADR 0016). `planned_item_id`
+  hat keinen Fremdschlüssel, weil die Items im Plan-Payload stehen; der
+  Start steht in `planned_sessions.status` und `workout_session_id` (U-53).
 
 Skills, Stufen, Übungen und Regionen sind Slugs der Wissensbasis mit
 Format-`CHECK`, keine Fremdschlüssel.
@@ -1887,6 +1891,9 @@ selbst anlegt, ihre ID.
   `set_entries.planned_item_id` die Item-ID des Plans; so ordnet die Adaption
   Ist zu Soll zu, auch wenn zwei Geräte dieselbe Einheit offline starten.
   Der Start ist idempotent (bestehender Draft wird zurückgegeben).
+  Umsetzung und Abweichungen: ADR 0016, U-50 bis U-54 (Band und
+  Halte-Reserve bleiben im Plan-Item, Angebote und Blöcke ohne Satz werden
+  nicht geschrieben).
 - **Ausführen** läuft unverändert über die Log-API bzw. den Sync (ADR 0007,
   0009): Aus einem geplanten Satz wird ein ausgeführter (`is_planned = false`,
   `completed_at`, Istwerte). Zielwerte bleiben im Plan erhalten.
@@ -1911,7 +1918,7 @@ selbst anlegt, ihre ID.
 | `GET /v1/me/plan` | Plan der laufenden Woche; `?week=YYYY-MM-DD` für frühere Wochen | `ETag` ist die Plan-ID (U-41); erzeugt den Plan, falls keiner existiert; `?explain=trace` folgt (§15.3) |
 | `POST /v1/me/plan/regenerate` | Plan der laufenden Woche neu erzeugen | gleiche Eingaben → gleiche Einheiten, neue IDs |
 | `GET /v1/me/plan/sessions/{id}` | eine geplante Einheit eines aktiven Plans | – |
-| `POST /v1/me/plan/sessions/{id}/start` | Draft-Session erzeugen (§10.2); optional Check-in (ADAPT-17) | **noch nicht gebaut** (§15.3) |
+| `POST /v1/me/plan/sessions/{id}/start` | Draft-Session erzeugen (§10.2); optional Check-in (ADAPT-17) | einmal je geplanter Einheit, ein zweiter Start antwortet `200` mit derselben Session (U-51); gestoppt → `training-stopped`; der Check-in fehlt noch (§15.3) |
 | `GET /v1/me/plan/decisions` | Änderungsprotokoll | Cursor-Paginierung, neueste zuerst |
 | `POST /v1/me/pain-reports`, `GET /v1/me/pain-reports` | Schmerzberichte | nur mit Einwilligung (`consent-required`, U-44); der Sync folgt (§15.3) |
 | `POST /v1/me/symptoms` | «Symptome beim Training melden» (Belastungssymptome, RF-10) | wirkt sofort (SAFE-02); ohne Einwilligung nur als Auflage gespeichert |
@@ -1937,7 +1944,7 @@ darüber idempotent (U-40). Planungs-Antworten tragen `ruleset_version`;
 | `onboarding-required` | 409 | SAFE-01 |
 | `already-onboarded` | 409 | zweites Onboarding (U-39) |
 | `consent-required` | 409 | Schmerzbericht ohne Einwilligung (U-44) |
-| `training-stopped` | 409 | SAFE-02 beim Start einer Einheit; der Körper nennt die empfohlene Abklärung ohne Diagnose. Der Plan selbst antwortet mit `stopped: true` (U-41) |
+| `training-stopped` | 409 | SAFE-02 oder SAFE-07 beim Start einer Einheit; der Körper nennt die Regel, Grund und empfohlene Abklärung ohne Diagnose stehen in den Gründen des Plans (`stopped: true`, U-41) |
 | `validation` (bestehend) | 422 | ungültige Profil- oder Onboarding-Daten; `errors` mit JSON-Pointern (U-43) |
 
 ### 10.5 Offline und Sync
@@ -1947,7 +1954,9 @@ darüber idempotent (U-40). Planungs-Antworten tragen `ruleset_version`;
   Client nur lesbar.
 - Offline startet der Client eine geplante Einheit selbst nach demselben
   Materialisierungsschema (§10.2, neue IDs, `planned_item_id`); der Sync lädt
-  sie hoch, der Server adaptiert nach dem Commit.
+  sie hoch, der Server adaptiert nach dem Commit. **Noch nicht gebaut:** Die
+  Sync-Operationen tragen `planned_session_id` und `planned_item_id` nicht
+  (§15.3).
 - Schmerzberichte und Red-Flag-Antworten werden offline erfasst und
   synchronisiert. Der Plan-Payload enthält die Red-Flag-Fragen der Regionen
   mit Dringlichkeit und Aktion; eine N-Antwort beendet die Einheit auch
@@ -2077,8 +2086,9 @@ Phase 5 dokumentiert die erzeugten Pläne je Persona und ihre Plausibilität in
 - Inhalte kommen nie über Migrationen, sondern über den Seed (CLAUDE.md).
 - `sqlc` nach der Schemaänderung neu erzeugen (`make sqlc`).
 - Stand: `00009_planning.sql` legt die Tabellen des Planers an (§4.9,
-  ADR 0013). Die drei Spalten an `workout_sessions` und `set_entries` kommen
-  mit dem Start einer geplanten Einheit (§10.2).
+  ADR 0013). `workout_sessions.planned_session_id` und
+  `set_entries.planned_item_id` kamen mit dem Start einer geplanten Einheit
+  (ADR 0016); `set_entries.sir_s` fehlt noch.
 
 ### 13.3 Rollout
 
@@ -2132,8 +2142,9 @@ der Postgres-Adapter `internal/store/planning.go` mit Integrationstests gegen
 echtes Postgres (ADR 0013, U-36 bis U-38), dann die Endpunkte unter dem Tag
 `planning` mit OpenAPI-Schema und einem Integrationstest je Endpunkt
 (ADR 0014, U-39 bis U-46), dann Widerruf und Erteilung der Einwilligung
-(ADR 0015, U-47 bis U-49). Nicht umgesetzt: `Materialize` und der Start einer
-geplanten Einheit (§15.3).
+(ADR 0015, U-47 bis U-49), dann der Start einer geplanten Einheit im
+Trainings-Log mit `Materialize` und den Übungen des Planers im Katalog
+(ADR 0016, U-50 bis U-54).
 
 Tests: sechs Personas als Golden Files (`internal/domain/planning/testdata/`),
 die Eigenschaften I-1 bis I-11 für jeden erzeugten Plan, zwölf simulierte
@@ -2201,6 +2212,11 @@ U-35 setzen die Entscheidungen ENT-R-1, ENT-R-2 und ENT-R-5 um (§15.5).
 | U-47 | §4.9, §13.4 | `POST /v1/me/health-consent`: Der Widerruf löscht Regionszustände, Screening und Schmerzberichte; eine gesperrte Region bleibt gesperrt, eine Region mit Beschwerde oder in der Rampe wird ausgeschlossen, ein Stopp bleibt. Die Erteilung fragt die sechs Screening-Fragen und die Vorverletzungen neu und macht aus jedem Ausschluss eine verfolgte Region in `rtt_0` | ENT-S-7; ohne neue Antworten würde ein früheres «Ja» im Screening Tests erlauben; `rtt_0` schliesst dieselben Übungen aus wie der Ausschluss, hat aber den Ausgang aus §8.3 |
 | U-48 | §8.3, SAFE-04 | Ohne Einwilligung lässt die Freigabe einer Sperre ohne gespeicherten Zustand einen Ausschluss zurück, und eine Red Flag mit der Aktion «Stufe 0» schliesst die Region aus; mit Einwilligung führt eine solche Freigabe in die Rampe | Vorher war die Region nach der Freigabe sofort frei, und eine A-Red-Flag hinterliess nichts, weil ohne Einwilligung kein Zustand gespeichert wird |
 | U-49 | Anhang A (SAFE-04) | Text: «Er speichert keine Beschwerden und keine Schmerzwerte, nur Sperren und Ausschlüsse aus den Sicherheitsfragen.» | Der alte Text («keine Einschränkungen dauerhaft») widersprach ENT-S-7 |
+| U-50 | §2.1, U-1 | Die 49 fehlenden Übungen des Planers stehen als `draft_placeholder` in `content/exercises/` (Name, Messgrösse und Equipment aus der Wissensbasis, Familie aus dem Bewegungsmuster); die Validierung verlangt jede Übung des Planers im Katalog mit gleicher Messgrösse | Ein Element des Logs verweist auf eine Katalog-Übung; nichts ist erfunden, die Einträge fallen unter ENT-10 |
+| U-51 | §10.2 | Der Start ist einmal je geplanter Einheit möglich; ein zweiter Start antwortet mit der ersten Session, auch mit anderer `id`; nach dem Löschen der Session startet die Einheit neu; ein Stopp geht vor, auch bei einem wiederholten Start | Kein zweiter Draft durch zwei Geräte oder einen wiederholten Aufruf; nach einem Stopp soll der Client den Stopp erfahren |
+| U-52 | §10.2 | Band-Unterstützung und die Reserve eines Halts bleiben im Plan-Item; Angebote und Blöcke ohne geplanten Satz werden nicht geschrieben; die Session hat keinen Titel | Das Log verlangt für ein Band die `band_id`, die der Planer nicht kennt, und hat keine Spalte für eine Halte-Reserve; Angebote gelten nur auf aktive Wahl (U-10); ein Titel im Code umginge die Texte der Wissensbasis (KB-11) |
+| U-53 | §10.2, §10.3 | Der Start steht in `planned_sessions` (Status, Session), nicht im Plan-Payload; das `ETag` des Plans nimmt die Starts auf | Ein gespeicherter Plan ändert sich nie (U-41); ohne die Starts im `ETag` sähe ein Client mit Cache den Start nicht |
+| U-54 | §5.4 WEEK-08 | Ein neuer Plan übernimmt Status und Session einer gestarteten Einheit am selben Tag | Jedes Ereignis erzeugt einen neuen Plan; ohne Übernahme wäre ein Start nach einem Schmerzbericht nicht mehr sichtbar |
 
 ### 15.3 Nicht umgesetzt
 
@@ -2217,11 +2233,12 @@ Kapazität), ADAPT-09, ADAPT-11, ADAPT-17, der Mobilitätsblock und Texte in
 weiteren Sprachen (KB-11). Für die Ellbogen-Regionen gibt es kein Prehab: Die
 Recherche nennt Programme, aber keine übertragbare Übung (`05` §10).
 Minderjährige bekommen keinen Plan (SAFE-07); INJ-09 ist deshalb nicht aktiv.
-Aus §10 fehlen der Start einer geplanten Einheit (`Materialize`,
-`POST /v1/me/plan/sessions/{id}/start`) und `plan_changes[]` am Abschluss
-(beides braucht die Übungen des Planers im Log, U-1), der Sync der
-Schmerzberichte und `?explain=trace` (ADR 0014), sowie ein Nachweis der
-Einwilligung mit Zeitpunkt und Textversion (ADR 0015).
+Aus §10 fehlen `plan_changes[]` und der Status `completed` am Abschluss einer
+gestarteten Einheit, der Check-in beim Start (ADAPT-17), der Offline-Start
+über den Sync (§10.5; die Sync-Operationen tragen `planned_session_id` und
+`planned_item_id` nicht), der Sync der Schmerzberichte und `?explain=trace`
+(ADR 0014, ADR 0016), sowie ein Nachweis der Einwilligung mit Zeitpunkt und
+Textversion (ADR 0015).
 PAR-D-28 enthält zwei der vier Soreness Rules aus `05` §6.1; Schmerz im
 Aufwärmen, der in 15 min verschwindet, hat keine eigene Regel. Ein
 angekündigtes Angebot (ADAPT-05) kann bei knappen Deckeln im Plan fehlen,
@@ -2260,6 +2277,18 @@ weil die Adaption die Kürzung nicht vorhersieht.
   bleiben. Das Protokoll ist nur anhängbar und trägt die Idempotenz der
   Ereignisse. Ob diese Angaben geschwärzt oder gelöscht werden müssen,
   gehört zur rechtlichen Prüfung (ENT-4, ADR 0015).
+- **Ein gestarteter Draft folgt dem Plan nicht.** Meldet der User während
+  einer Einheit Schmerz oder Symptome, schliesst der neue Plan vielleicht
+  eine Region aus oder stoppt das Training; der Draft im Log behält seine
+  offenen geplanten Sätze (ADR 0016). Die App muss die Antwort des
+  Ereignisses zeigen und die offenen Sätze mit dem neuen Plan abgleichen.
+  Vorschlag: Der Server ersetzt beim Speichern eines neuen Plans die offenen
+  geplanten Sätze eines gestarteten Drafts und löscht sie bei einem Stopp.
+- **WEEK-08 erzeugt die ganze Woche neu.** «Ab der nächsten nicht begonnenen
+  Einheit» ist nicht umgesetzt: Eine gestartete Einheit behält ihre Session
+  (U-54), die neue Einheit desselben Tages kann aber anders aussehen, und ohne
+  Einheit an diesem Tag zeigt keine geplante Einheit die Session. Das braucht
+  einen Kern, der gestartete Einheiten beim Erzeugen festhält.
 - **Weniger Trainingstage.** Mit WEEK-09 (ENT-R-5) haben Persona 2 meist
   drei statt vier, Persona 3 meist zwei statt vier und Persona 5 zwei statt
   drei Trainingstage, weil die übrigen Tage nur einen Satz hätten. Das

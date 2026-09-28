@@ -56,7 +56,8 @@ Unter dem Tag `planning` entstehen:
 Noch nicht gebaut, jeweils mit Grund:
 - `POST /v1/me/plan/sessions/{id}/start` und `plan_changes[]` am Abschluss
   einer Einheit: Die Log-Tabellen verweisen auf Content-Übungen, die Übungen
-  des Planers sind keine (U-1, ADR 0013 §2).
+  des Planers sind keine (U-1, ADR 0013 §2). Der Start ist nachgezogen in
+  ADR 0016, `plan_changes[]` nicht.
 - Sync der Schmerzberichte: Die Tabellen bekommen ihre Sync-Spalten erst mit
   diesem Schritt.
 - Einwilligung ändern oder widerrufen: Ein Widerruf muss Gesundheitsdaten
@@ -118,7 +119,8 @@ Speicher im Arbeitsspeicher und Postgres dieselben Antworten bis auf die ID.
 Ein gespeicherter Plan ändert sich nie; jede Neuerzeugung ist ein neuer Plan
 mit neuer ID. Deshalb ist die Plan-ID das `ETag`, nicht der `input_hash`:
 Nach einer Neuerzeugung mit gleichen Eingaben hat der Plan denselben Hash,
-aber neue Einheiten-IDs. Geplante Einheiten findet die API nur in aktiven
+aber neue Einheiten-IDs. Seit ADR 0016 nimmt das `ETag` auch die Starts der
+Einheiten auf. Geplante Einheiten findet die API nur in aktiven
 Plänen.
 
 Ist das Training gestoppt (SAFE-02, SAFE-07), antwortet der Plan mit

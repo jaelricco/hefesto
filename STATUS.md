@@ -19,7 +19,7 @@ that stands.
   #8. Its open questions (rest-day logging, the bodyweight time zone, wiping
   the database on sign-out) still stand.
 
-## Parallel track: training-plan algorithm (stage 5 done; persistence and API, awaiting review)
+## Parallel track: training-plan algorithm (stage 5 done; persistence, API and the log link, awaiting review)
 
 A separate track, with its own five-stage plan, researches, specifies and
 implements a planner that turns an onboarding and the logs into individual
@@ -103,18 +103,46 @@ documents are in German.
     excluded region in stage 0 of the return ramp.
   - Without consent a cleared lock and a stage-0 red flag now leave the
     region excluded; before, the region was left unprotected.
+- **Starting a planned session (this checkpoint, ADR 0016):**
+  - The 49 planner exercises missing from the catalogue are added to
+    `content/exercises/` as `draft_placeholder`. Name, measure and equipment
+    come from the knowledge base. Validation fails when a planner exercise is
+    missing from the catalogue.
+  - `POST /v1/me/plan/sessions/{id}/start` writes the planned session into
+    the log as a draft: one planned set entry per planned set. Each set names
+    its plan item (`planned_item_id`); the session names the planned session
+    (`planned_session_id`). Sets are then performed through the log API or
+    sync as before.
+  - A planned session starts once; a second start returns the same session.
+    Deleting the draft frees the planned session.
+  - A stop answers `409 training-stopped` and names the rule.
+  - Plans show each session's status, and their `ETag` follows the starts.
+    A new plan of the week keeps a start on the same day.
+  - Offers, and blocks without sets, are not written. A band target stays in
+    the plan item, because the log needs the actual band.
 - **Open for review:** the API decisions in ADR 0014 and spec §15.2
-  (U-39 to U-46), the consent decisions in ADR 0015 (U-47 to U-49), and two
-  findings in spec §15.4:
+  (U-39 to U-46), the consent decisions in ADR 0015 (U-47 to U-49), the
+  start decisions in ADR 0016 (U-50 to U-54), and these findings in
+  spec §15.4:
+  - a started draft does not follow the plan. If pain or symptoms during a
+    session exclude a region or stop training, the draft keeps its open
+    planned sets. The app must reconcile them; a server-side proposal is in
+    ADR 0016;
+  - WEEK-08 regenerates the whole week, not only from the next session that
+    has not started;
   - no exercise carries `restriction_tags`, so a professional's
     restrictions from the onboarding are stored but do not yet exclude
     anything;
   - after a withdrawal the decision log and past plans still name regions
     and states; whether they must be redacted is a legal question (ENT-4).
-- **Not yet built:** starting a planned session and `plan_changes` on
-  completion (the log cannot hold the planner's exercises yet), the sync of
-  pain reports, a record of the consent text agreed to, and
-  `?explain=trace`.
+- **Not yet built:**
+  - `plan_changes` and the `completed` status when a started session is
+    completed;
+  - the check-in at the start (ADAPT-17);
+  - starting a session offline through sync;
+  - the sync of pain reports;
+  - a record of the consent text agreed to;
+  - `?explain=trace`.
 - **Still blocking production:**
   - The content review of the knowledge base (ENT-10). Until then it stays
     `draft_placeholder`, and production refuses it.
