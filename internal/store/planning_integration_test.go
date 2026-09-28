@@ -1058,3 +1058,139 @@ func TestPlannerStartedDraftFollowsThePlan(t *testing.T) {
 		t.Errorf("the stop does not say the session changed: %+v", out.Changes)
 	}
 }
+
+// performAll turns every planned set of a draft into a performed set at its
+// target; the first one is partner-assisted.
+func performAll(t *testing.T, logs *store.Store, user, session uuid.UUID, at time.Time) int {
+	t.Helper()
+	ctx := context.Background()
+	draft, err := logs.GetSession(ctx, user, session)
+	if err != nil {
+		t.Fatal(err)
+	}
+	n := 0
+	for _, b := range draft.Blocks {
+		for _, set := range b.Sets {
+			set.IsPlanned = false
+			done := at.Add(time.Duration(n) * time.Minute)
+			set.CompletedAt = &done
+			if n == 0 {
+				set.Elements[0].Assistance = &training.Assistance{ID: id(), Type: "partner"}
+			}
+			if err := training.ValidateSet(&set); err != nil {
+				t.Fatal(err)
+			}
+			if _, _, err := logs.PutSet(ctx, store.Writer{UserID: user, At: done}, session, set); err != nil {
+				t.Fatal(err)
+			}
+			n++
+		}
+	}
+	return n
+}
+
+// A session completed in the log reaches the planner's history with its
+// performed sets; its planned session is completed, and a completion the
+// planner missed is caught up with the next plan (ADR 0018).
+func TestPlannerAppliesALoggedCompletion(t *testing.T) {
+	db := pgtest.New(t)
+	seed(t, db, contentDir(t))
+	kb := planning.LoadContentKnowledge(filepath.Join(pgtest.RepoRoot(), "content"), false,
+		slog.New(slog.NewTextHandler(io.Discard, nil)))
+	clk := &clock{t: monday.Add(7 * time.Hour)}
+	pg := store.NewPlanner(db)
+	svc := &planning.Service{Knowledge: kb, Store: pg, Clock: clk}
+	logs := store.New(db)
+	ctx := context.Background()
+	user := plannerUser(t, db)
+	if _, _, err := svc.Onboard(ctx, user, plannerAnswers("advanced")); err != nil {
+		t.Fatal(err)
+	}
+	plan, err := svc.Plan(ctx, user)
+	if err != nil {
+		t.Fatal(err)
+	}
+	start := func(i int) uuid.UUID {
+		t.Helper()
+		sid := id()
+		if _, _, err := svc.StartPlannedSession(ctx, user, uuid.MustParse(plan.Sessions[i].ID),
+			planning.SessionStart{SessionID: sid, StartedAt: clk.t, Timezone: "UTC", LocalDate: plan.Sessions[i].Date, At: clk.t}); err != nil {
+			t.Fatal(err)
+		}
+		return sid
+	}
+	first := start(0)
+	sets := performAll(t, logs, user, first, clk.t.Add(10*time.Minute))
+	if _, applied, err := svc.CompleteLoggedSession(ctx, user, first); err != nil || applied {
+		t.Fatalf("a draft reached the planner: %v %v", applied, err)
+	}
+	fatigue := 6
+	if _, err := logs.CompleteSession(ctx, store.Writer{UserID: user, At: clk.t.Add(time.Hour)}, first,
+		store.CompleteInput{PerceivedFatigue: &fatigue}); err != nil {
+		t.Fatal(err)
+	}
+	out, applied, err := svc.CompleteLoggedSession(ctx, user, first)
+	if err != nil || !applied || out.Replayed {
+		t.Fatalf("completion: %+v %v %v", out, applied, err)
+	}
+	if again, _, err := svc.CompleteLoggedSession(ctx, user, first); err != nil || !again.Replayed {
+		t.Errorf("repeat: %+v %v", again, err)
+	}
+
+	snap := loadSnapshot(t, pg, user)
+	if len(snap.History) != 1 {
+		t.Fatalf("history %+v", snap.History)
+	}
+	h := snap.History[0]
+	if h.ID != first.String() || !h.Date.Equal(plan.Sessions[0].Date) || h.Fatigue == nil || *h.Fatigue != 6 || len(h.Sets) != sets-1 {
+		t.Errorf("history entry %+v, want %d sets without the partner-assisted one", h, sets-1)
+	}
+	items := map[string]domain.Item{}
+	for _, b := range plan.Sessions[0].Blocks {
+		for _, it := range b.Items {
+			items[it.Exercise] = it
+		}
+	}
+	for _, s := range h.Sets {
+		it := items[s.Exercise]
+		want := float64(it.Reps)
+		if it.HoldS > 0 {
+			want = float64(it.HoldS)
+		}
+		if s.Value != want || s.Assist != domain.AssistNone || it.HoldS == 0 && (s.Reserve == nil || *s.Reserve != float64(it.Reserve)) {
+			t.Errorf("logged set %+v from item %+v", s, it)
+		}
+	}
+	now, err := svc.Plan(ctx, user)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if s := now.Sessions[0]; s.Status != planning.SessionCompleted || s.WorkoutSessionID != first.String() {
+		t.Errorf("planned session after the completion: %q %q", s.Status, s.WorkoutSessionID)
+	}
+
+	// A deload session completed without the planner: the next plan
+	// catches up, and the day is a deload day.
+	plan = now
+	second := start(1)
+	performAll(t, logs, user, second, clk.t.Add(26*time.Hour))
+	exec(t, db, `UPDATE planned_sessions SET kind = 'deload' WHERE workout_session_id = $1`, second)
+	if _, err := logs.CompleteSession(ctx, store.Writer{UserID: user, At: clk.t.Add(27 * time.Hour)}, second,
+		store.CompleteInput{}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := svc.Plan(ctx, user); err != nil {
+		t.Fatal(err)
+	}
+	if n := count(t, db, `SELECT count(*) FROM plan_decisions WHERE user_id = $1 AND trigger = 'session_completed' AND source_id = $2`,
+		user, second.String()); n != 1 {
+		t.Errorf("the missed completion was applied %d times", n)
+	}
+	if n := count(t, db, `SELECT count(*) FROM user_training_days d JOIN workout_sessions ws ON ws.local_date = d.local_date
+		WHERE ws.id = $1 AND d.user_id = $2 AND d.deload`, second, user); n != 1 {
+		t.Error("the deload session did not mark its day")
+	}
+	if len(loadSnapshot(t, pg, user).History) != 2 {
+		t.Error("the caught-up session is not in the history")
+	}
+}
