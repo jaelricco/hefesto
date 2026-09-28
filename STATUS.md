@@ -336,6 +336,10 @@ On the self-hosted Mac (Xcode 26.4.1, iOS 26.4 simulator):
 - At c720d95, the set composer on top of the planner (#10): `ios` (run 48)
   passes 63 tests in 15 suites and builds the app; `ios-screenshots` (run 7)
   captures all 13 demo screens, the new `reserve` screen among them.
+- At 6d0936f, grey pickers: `ios` (run 51) and `ios-screenshots` (run 9)
+  pass. On the `reserve` screen, the pickers' values and the added load now
+  measure #A89F95, the palette's secondary text; they were ember (#FF7A33)
+  and the system's grey.
 
 ### Open questions for review
 
