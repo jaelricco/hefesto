@@ -157,6 +157,12 @@ extension View {
         self.listRowBackground(Palette.surface)
             .listRowSeparatorTint(Palette.hairline)
     }
+
+    /// A picker shows its choice like any other value, in the secondary text
+    /// colour. iOS would tint it with the accent, but ember is for actions.
+    func themedPicker() -> some View {
+        self.tint(Palette.textSecondary)
+    }
 }
 
 /// The one action to take on a screen: ember, large, in reach of the thumb.

@@ -37,6 +37,9 @@ warm throughout; C, light paper and typography. The owner chose B.
   theme colours them; it does not replace them. From iOS 26 the tab bar and
   toolbars are Liquid Glass and keep the system look. Before iOS 26 the tab
   bar gets the warm ground.
+- **A picker shows its choice in the secondary text colour**, like any other
+  value, not in the accent colour iOS would give it. The owner decided this
+  on review of the set composer, so that ember keeps meaning an action.
 
 ### Changes to the screens that come with it
 
