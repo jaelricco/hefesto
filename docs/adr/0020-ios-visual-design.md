@@ -20,8 +20,9 @@ warm throughout; C, light paper and typography. The owner chose B.
 ### One dark, warm world
 
 - **The app is always dark** (`UIUserInterfaceStyle: Dark` and
-  `.preferredColorScheme(.dark)`). There is no light mode. The logger and the
-  map were dark already; now nothing switches.
+  `.preferredColorScheme(.dark)`). There is no light mode, and none is to
+  follow: the owner confirmed on review that the app stays dark. The logger
+  and the map were dark already; now nothing switches.
 - **One palette** (`ios/Hefesto/Theme.swift`). The ground is warm graphite
   (`#15120F`), cards sit on `#211D19`, and hairlines are `#3A332C`.
   - **Ember** (`#FF7A33`) is for actions: the one thing to press on a screen.
@@ -80,9 +81,9 @@ warm throughout; C, light paper and typography. The owner chose B.
 
 ## Consequences
 
-- There is no light mode. In direct sunlight, a light UI would read better.
-  If athletes ask for it, a light palette can come later behind the same
-  names in `Palette`.
+- There is no light mode, although a light UI would read better in direct
+  sunlight. Every colour goes through `Palette`, so the decision stays cheap
+  to revisit.
 - The app ships about 640 KB of fonts.
 - A custom font does not follow the system's Bold Text setting by itself.
   That is left for the accessibility pass (Phase 7).

@@ -298,15 +298,16 @@ No server code or API spec changed in this phase.
 Polish: localization, an accessibility pass, a TestFlight build, importing
 the researched seed content, and a load smoke test.
 
-## Design pass: direction B, "Glut" (merged in #11 and #12; grey pickers awaiting review)
+## Design pass: direction B, "Glut" (done; merged in #11, #12 and #13)
 
 The owner chose direction B of three mockups. The decisions are in ADR 0020.
-It is developed on `claude/awesome-wright-gqa9pe`, next to the planner track,
-and touches only the app's views, its project file and its strings.
+It was developed on `claude/awesome-wright-gqa9pe`, next to the planner track,
+and touched only the app's views, its project file and its strings.
 
 - **One dark, warm theme** for every screen: warm graphite, ember for
   actions, gold only for achievement, Barlow and Barlow Condensed (bundled,
-  SIL Open Font License), sizes that follow Dynamic Type.
+  SIL Open Font License), sizes that follow Dynamic Type. There is no light
+  mode; on review the owner chose to stay dark.
 - **Today** shows XP and the streak, "rest days count", and the sessions with
   their dates as blocks.
 - **The logger** has the rest timer as a large card with its progress and
@@ -325,6 +326,7 @@ and touches only the app's views, its project file and its strings.
   screenshots show the reserve question. Merged in #12.
 - **Pickers show their choice in grey**, the secondary text colour, like any
   other value. Ember stays for actions (the owner's call on review, ADR 0020).
+  Merged in #13.
 
 ### Verification
 
@@ -340,8 +342,3 @@ On the self-hosted Mac (Xcode 26.4.1, iOS 26.4 simulator):
   pass. On the `reserve` screen, the pickers' values and the added load now
   measure #A89F95, the palette's secondary text; they were ember (#FF7A33)
   and the system's grey.
-
-### Open questions for review
-
-1. **Light mode.** There is none now (ADR 0020). Should a light palette
-   follow for training outdoors?
