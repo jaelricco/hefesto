@@ -51,6 +51,46 @@
         }
       }
     },
+    "%@ · %lld of %lld levels": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · %2$lld von %3$lld Stufen"
+          }
+        }
+      }
+    },
+    "%@ · abandoned": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · abgebrochen"
+          }
+        }
+      }
+    },
+    "%@ · completed": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · abgeschlossen"
+          }
+        }
+      }
+    },
+    "%@ · in progress": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · läuft"
+          }
+        }
+      }
+    },
     "%lld XP": {
       "localizations": {
         "de": {
@@ -107,6 +147,16 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "%lld of %lld levels unlocked": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld von %2$lld Stufen freigeschaltet"
           }
         }
       }
@@ -491,6 +541,16 @@
         }
       }
     },
+    "Best": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bestwert"
+          }
+        }
+      }
+    },
     "Best: %@": {
       "localizations": {
         "de": {
@@ -561,6 +621,16 @@
         }
       }
     },
+    "Combo": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kombination"
+          }
+        }
+      }
+    },
     "Combo, part %lld": {
       "localizations": {
         "de": {
@@ -601,6 +671,16 @@
         }
       }
     },
+    "Core": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rumpf"
+          }
+        }
+      }
+    },
     "Could not reach Hefesto. Check your connection.": {
       "localizations": {
         "de": {
@@ -617,6 +697,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Gegengewicht"
+          }
+        }
+      }
+    },
+    "Counts towards the streak": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zählt zur Serie"
           }
         }
       }
@@ -651,6 +741,16 @@
         }
       }
     },
+    "Day": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tag"
+          }
+        }
+      }
+    },
     "Days": {
       "localizations": {
         "de": {
@@ -667,6 +767,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Löschen"
+          }
+        }
+      }
+    },
+    "Difficulty": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schwierigkeit"
           }
         }
       }
@@ -701,6 +811,16 @@
         }
       }
     },
+    "Dynamic": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dynamik"
+          }
+        }
+      }
+    },
     "Early signs": {
       "localizations": {
         "de": {
@@ -717,6 +837,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Anstrengung"
+          }
+        }
+      }
+    },
+    "Elbow": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ellbogen"
           }
         }
       }
@@ -851,6 +981,16 @@
         }
       }
     },
+    "Handstand": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Handstand"
+          }
+        }
+      }
+    },
     "Hefesto": {
       "localizations": {
         "de": {
@@ -867,6 +1007,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hefesto konnte seine Daten nicht öffnen"
+          }
+        }
+      }
+    },
+    "Hip": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hüfte"
           }
         }
       }
@@ -971,6 +1121,26 @@
         }
       }
     },
+    "Knee": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Knie"
+          }
+        }
+      }
+    },
+    "Legs": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beine"
+          }
+        }
+      }
+    },
     "Levels": {
       "localizations": {
         "de": {
@@ -1007,6 +1177,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Satz eintragen"
+          }
+        }
+      }
+    },
+    "Log a set in this block": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Satz in diesem Block eintragen"
+          }
+        }
+      }
+    },
+    "Log what you train. The map shows what you achieve.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trag ein, was du trainierst. Die Karte zeigt, was du erreichst."
           }
         }
       }
@@ -1051,6 +1241,16 @@
         }
       }
     },
+    "Lower back": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unterer Rücken"
+          }
+        }
+      }
+    },
     "Machine": {
       "localizations": {
         "de": {
@@ -1077,6 +1277,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Meilenstein"
+          }
+        }
+      }
+    },
+    "Mobility": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mobilität"
           }
         }
       }
@@ -1121,6 +1331,16 @@
         }
       }
     },
+    "Neck": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nacken"
+          }
+        }
+      }
+    },
     "New skill unlocked": {
       "localizations": {
         "de": {
@@ -1157,6 +1377,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Keine Treffer"
+          }
+        }
+      }
+    },
+    "No sets in this block yet.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noch keine Sätze in diesem Block."
           }
         }
       }
@@ -1231,6 +1461,16 @@
         }
       }
     },
+    "Opens the skill": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Öffnet den Skill"
+          }
+        }
+      }
+    },
     "Optional. 1 is easy, 10 is everything you had.": {
       "localizations": {
         "de": {
@@ -1277,6 +1517,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Prehab"
+          }
+        }
+      }
+    },
+    "Pull": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zug"
+          }
+        }
+      }
+    },
+    "Push": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Druck"
           }
         }
       }
@@ -1371,6 +1631,16 @@
         }
       }
     },
+    "Rest days count": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ruhetage zählen mit"
+          }
+        }
+      }
+    },
     "Rest done": {
       "localizations": {
         "de": {
@@ -1427,6 +1697,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Auf der Karte ansehen"
+          }
+        }
+      }
+    },
+    "Self-attested on": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Selbst bestätigt am"
           }
         }
       }
@@ -1497,6 +1777,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Satz %lld"
+          }
+        }
+      }
+    },
+    "Shoulder": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schulter"
           }
         }
       }
@@ -1691,6 +1981,16 @@
         }
       }
     },
+    "Total": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gesamt"
+          }
+        }
+      }
+    },
     "Try another name.": {
       "localizations": {
         "de": {
@@ -1721,6 +2021,16 @@
         }
       }
     },
+    "Unlocked on": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Freigeschaltet am"
+          }
+        }
+      }
+    },
     "Unlocked on %@": {
       "localizations": {
         "de": {
@@ -1731,12 +2041,42 @@
         }
       }
     },
+    "Value": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wert"
+          }
+        }
+      }
+    },
     "Week %lld": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Woche %lld"
+          }
+        }
+      }
+    },
+    "Wrist": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Handgelenk"
+          }
+        }
+      }
+    },
+    "XP": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "XP"
           }
         }
       }
@@ -1771,6 +2111,26 @@
         }
       }
     },
+    "day": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tag"
+          }
+        }
+      }
+    },
+    "days": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tage"
+          }
+        }
+      }
+    },
     "form %lld+": {
       "localizations": {
         "de": {
@@ -1787,6 +2147,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "kg"
+          }
+        }
+      }
+    },
+    "of %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "von %@"
+          }
+        }
+      }
+    },
+    "reps": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wdh."
           }
         }
       }

@@ -48,6 +48,16 @@ targets:
         CFBundleDisplayName: Hefesto
         # English and German (brief §10); strings are in Localizable.xcstrings.
         CFBundleLocalizations: [en, de]
+        # One dark, warm world (ADR 0020); the launch screen follows it.
+        UIUserInterfaceStyle: Dark
+        # Barlow and Barlow Condensed (Hefesto/Fonts, SIL Open Font License).
+        UIAppFonts:
+          - Barlow-Regular.ttf
+          - Barlow-Medium.ttf
+          - Barlow-SemiBold.ttf
+          - BarlowCondensed-Medium.ttf
+          - BarlowCondensed-SemiBold.ttf
+          - BarlowCondensed-Bold.ttf
         UILaunchScreen: {}
         UIApplicationSceneManifest:
           UIApplicationSupportsMultipleScenes: false
@@ -67,3 +77,17 @@ targets:
     scheme:
       testTargets: []
       gatherCoverageData: false
+
+schemes:
+  # The app on seeded demo data, offline and signed in, in German: for
+  # looking at the design without a server (Hefesto/DemoMode.swift).
+  Hefesto Demo:
+    build:
+      targets:
+        Hefesto: all
+    run:
+      config: Debug
+      commandLineArguments:
+        "-HefestoDemo YES": true
+        "-AppleLanguages (de)": true
+        "-AppleLocale de_CH": true

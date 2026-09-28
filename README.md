@@ -49,6 +49,13 @@ cd ios/Packages/HefestoKit && swift test   # the logic, no simulator needed
 
 A Debug build talks to `http://localhost:8080`, which is the API from `make up`.
 
+To look at the app without a server, run the **Hefesto Demo** scheme: it opens
+on seeded demo data, signed in and offline, in German (ADR 0020). Add
+`-HefestoDemoScreen map` (or `logger`, `detail`, `history`, ...) to its launch
+arguments to start on one screen. `scripts/ios-screenshots.sh` captures every
+screen in the simulator; the `ios-screenshots` workflow runs it on the
+self-hosted Mac when the views change.
+
 ## Deploying
 
 Production is a single Hetzner instance behind Caddy, deployed from a version

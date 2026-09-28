@@ -1,0 +1,48 @@
+name: ios-screenshots
+
+# Screenshots of the iOS app's screens for design review (ADR 0020), taken on
+# the self-hosted Mac. The app runs in its demo mode on seeded local data
+# (ios/Hefesto/DemoMode.swift): no server, no account. The runner is the
+# owner's machine: besides its workspace, the job keeps one simulator named
+# "Hefesto Screenshots", created on the first run and shut down after each.
+on:
+  push:
+    branches: [main, "claude/**"]
+    paths:
+      - "ios/Hefesto/**"
+      - "ios/project.yml"
+      - "scripts/ios-screenshots.sh"
+      - ".github/workflows/ios-screenshots.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-screenshots-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  screenshots:
+    name: Demo screens in the simulator (self-hosted Mac)
+    runs-on: self-hosted
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Keep ios/.derived-screenshots between runs (git-ignored).
+          clean: false
+
+      - name: generate the project
+        working-directory: ios
+        run: xcodegen generate
+
+      - name: take the screenshots
+        run: scripts/ios-screenshots.sh ios/screenshots
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ios-screenshots
+          path: ios/screenshots/*.png
+          retention-days: 14
+          if-no-files-found: error

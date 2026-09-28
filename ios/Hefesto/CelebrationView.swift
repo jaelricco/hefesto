@@ -1,4 +1,3 @@
-import HefestoAPI
 import SwiftUI
 
 /// What a completed session earned, once the server has evaluated it. It
@@ -11,9 +10,7 @@ struct CelebrationView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var shown = false
 
-    private var result: Components.Schemas.CompletionResult { celebration.result }
-    private var xp: Int { result.xpAwarded.reduce(0) { $0 + $1.amount } }
-    private var unlocked: Bool { !result.unlocked.isEmpty }
+    private var unlocked: Bool { !celebration.unlocked.isEmpty }
 
     var body: some View {
         NavigationStack {
@@ -24,7 +21,7 @@ struct CelebrationView: View {
                             ForEach(0..<8, id: \.self) { i in
                                 Image(systemName: "sparkle")
                                     .font(.title3)
-                                    .foregroundStyle(.yellow)
+                                    .foregroundStyle(Palette.gold)
                                     .offset(y: shown ? -86 : -20)
                                     .rotationEffect(.degrees(Double(i) * 45))
                                     .opacity(shown ? 0 : 1)
@@ -32,8 +29,8 @@ struct CelebrationView: View {
                         }
                         Image(systemName: unlocked ? "star.circle.fill" : "checkmark.seal.fill")
                             .font(.system(size: 88))
-                            .foregroundStyle(unlocked ? Color.yellow : Color.green)
-                            .shadow(color: unlocked ? .yellow.opacity(0.7) : .clear, radius: shown ? 24 : 0)
+                            .foregroundStyle(unlocked ? Palette.gold : Palette.ember)
+                            .shadow(color: unlocked ? Palette.gold.opacity(0.6) : .clear, radius: shown ? 24 : 0)
                             .scaleEffect(shown || reduceMotion ? 1 : 0.4)
                     }
                     .frame(height: 180)
@@ -41,32 +38,47 @@ struct CelebrationView: View {
 
                     VStack(spacing: 6) {
                         Text(unlocked ? LocalizedStringKey("New skill unlocked") : "Session saved")
-                            .font(.title.bold())
-                        if xp > 0 { Text("+\(xp) XP").font(.headline).foregroundStyle(.secondary) }
+                            .font(.displayTitle)
+                            .foregroundStyle(Palette.text)
+                            .multilineTextAlignment(.center)
+                        if celebration.xp > 0 {
+                            Text("+\(celebration.xp) XP")
+                                .font(.metricSmall)
+                                .monospacedDigit()
+                                .foregroundStyle(Palette.gold)
+                        }
                     }
 
                     if unlocked {
-                        VStack(spacing: 12) {
-                            ForEach(result.unlocked, id: \.levelId) { u in
+                        VStack(spacing: 10) {
+                            ForEach(celebration.unlocked, id: \.levelId) { u in
                                 VStack(spacing: 2) {
-                                    Text(verbatim: u.levelName).font(.title3.weight(.semibold))
-                                    Text(verbatim: u.skillName).foregroundStyle(.secondary)
+                                    Text(verbatim: u.levelName)
+                                        .font(Typeface.text(20, .semibold, relativeTo: .title3))
+                                        .foregroundStyle(Palette.text)
+                                    Text(verbatim: u.skillName)
+                                        .font(.capsLabel)
+                                        .tracking(1.2)
+                                        .textCase(.uppercase)
+                                        .foregroundStyle(Palette.gold)
                                 }
                                 .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(.yellow.opacity(0.12), in: .rect(cornerRadius: 16))
+                                .padding(16)
+                                .background(Palette.goldWash, in: .rect(cornerRadius: 16))
                                 .accessibilityElement(children: .combine)
                             }
                         }
                     }
-                    if !result.newlyAvailable.isEmpty {
-                        Text("\(result.newlyAvailable.count) new levels are open to work towards.")
+                    if celebration.newlyAvailable > 0 {
+                        Text("\(celebration.newlyAvailable) new levels are open to work towards.")
+                            .font(.detailText)
                             .multilineTextAlignment(.center)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Palette.textSecondary)
                     }
-                    if result.streak.currentDays > 1 {
-                        Label("\(result.streak.currentDays)-day streak", systemImage: "flame.fill")
-                            .foregroundStyle(.orange)
+                    if celebration.streakDays > 1 {
+                        Label("\(celebration.streakDays)-day streak", systemImage: "flame.fill")
+                            .font(Typeface.condensed(18, .semibold, relativeTo: .headline))
+                            .foregroundStyle(Palette.ember)
                     }
 
                     if unlocked {
@@ -74,13 +86,14 @@ struct CelebrationView: View {
                             model.tab = .map
                             dismiss()
                         } label: {
-                            Text("See it on the map").font(.headline).frame(maxWidth: .infinity, minHeight: 50)
+                            Label("See it on the map", systemImage: "sparkles")
                         }
-                        .buttonStyle(.borderedProminent)
+                        .buttonStyle(PrimaryButtonStyle())
                     }
                 }
-                .padding()
+                .padding(20)
             }
+            .themedScreen()
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
             }
