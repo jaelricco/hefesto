@@ -29,7 +29,7 @@ func TestTiredCheckIn(t *testing.T) {
 	}
 	var ve *planning.ValidationError
 	if err := planning.ValidateCheckIn(planning.CheckIn{SleepH: f(25), Fatigue: n(0)}); !errors.As(err, &ve) ||
-		ve.Fields["/sleep_hours"] == "" || ve.Fields["/fatigue"] == "" {
+		ve.Fields["/check_in/sleep_hours"] == "" || ve.Fields["/check_in/fatigue"] == "" {
 		t.Errorf("out of range: %v", err)
 	}
 	if err := planning.ValidateCheckIn(planning.CheckIn{SleepH: f(0), Fatigue: n(10)}); err != nil {
@@ -49,6 +49,7 @@ func TestTechnique(t *testing.T) {
 			{ID: "probe", Exercise: "planche-advanced-tuck", Stimulus: planning.StimSkill, Kind: planning.KindWorking, Sets: 1, HoldS: 3, Offer: true},
 			{ID: "limit", Exercise: "front-lever-tuck", Stimulus: planning.StimSkill, Kind: planning.KindWorking, Sets: 3, HoldS: 2},
 			{ID: "reps", Exercise: "pull-up", Stimulus: planning.StimSkillReps, Kind: planning.KindWorking, Sets: 3, Reps: 5, Reserve: 2},
+			{ID: "lean", Exercise: "planche-lean", Stimulus: planning.StimConditioning, Kind: planning.KindWorking, Sets: 4, HoldS: 21, Reserve: 9},
 		}},
 		{Role: planning.BlockStrength, Items: []planning.Item{
 			{ID: "dip", Exercise: "dip", Stimulus: planning.StimStrength, Kind: planning.KindWorking, Sets: 3, Reps: 8, Reserve: 2},
@@ -59,13 +60,17 @@ func TestTechnique(t *testing.T) {
 		t.Fatal("nothing changed")
 	}
 	maxB := out.Blocks[1]
-	if len(maxB.Items) != 2 || maxB.Items[0].ID != "hold" || maxB.Items[1].ID != "reps" {
+	if len(maxB.Items) != 3 || maxB.Items[0].ID != "hold" || maxB.Items[1].ID != "reps" || maxB.Items[2].ID != "lean" {
 		t.Fatalf("max block %+v, want the hold as technique and the rep skill", maxB.Items)
 	}
 	// d = 10 + 4 = 14: h = min(0.5 · 14, 10) = 7, three tries, reserve 7.
 	if h := maxB.Items[0]; h.Stimulus != planning.StimTechnique || h.HoldS != 7 || h.Sets != 3 || h.Reserve != 7 ||
 		h.Intensity() != "moderate" || h.Calibration {
 		t.Errorf("technique %+v", h)
+	}
+	// A conditioning hold too: d = 30, h = min(15, 10) = 10, reserve 20.
+	if l := maxB.Items[2]; l.Stimulus != planning.StimTechnique || l.HoldS != 10 || l.Sets != 3 || l.Reserve != 20 {
+		t.Errorf("conditioning as technique %+v", l)
 	}
 	if !reflect.DeepEqual(maxB.Items[1], ps.Blocks[1].Items[3]) || !reflect.DeepEqual(out.Blocks[2], ps.Blocks[2]) ||
 		!reflect.DeepEqual(out.Blocks[0], ps.Blocks[0]) {

@@ -22,14 +22,15 @@ const (
 	maxFatigue = 10
 )
 
-// ValidateCheckIn checks the ranges of a check-in.
+// ValidateCheckIn checks the ranges of a check-in; its pointers name the
+// check-in in the start request.
 func ValidateCheckIn(c CheckIn) error {
 	f := fields{}
 	if c.SleepH != nil && (math.IsNaN(*c.SleepH) || *c.SleepH < 0 || *c.SleepH > maxSleepH) {
-		f.add("/sleep_hours", "must be 0–24")
+		f.add("/check_in/sleep_hours", "must be 0–24")
 	}
 	if c.Fatigue != nil && (*c.Fatigue < minFatigue || *c.Fatigue > maxFatigue) {
-		f.add("/fatigue", "must be 1–10")
+		f.add("/check_in/fatigue", "must be 1–10")
 	}
 	return f.err()
 }
@@ -42,11 +43,12 @@ func (k *Knowledge) Tired(c CheckIn) bool {
 }
 
 // Technique makes a planned session lighter after a tired check-in
-// (ADAPT-17; PAR-E-43, PAR-E-19): in its max blocks, offers go and a skill
-// hold becomes submaximal technique, min(0.5 · d, 10 s) for three tries
-// (DOSE-09, PAR-S-26), where d = hold + reserve is the dose value the plan
-// used. A hold that would leave no reserve goes. Strength work, rep skills
-// and every other block stay: upper-body strength was unaffected by short
+// (ADAPT-17; PAR-E-43, PAR-E-19): in its max blocks, offers go and every
+// hold, skill or conditioning, becomes submaximal technique,
+// min(0.5 · d, 10 s) for three tries (DOSE-09, PAR-S-26), where
+// d = hold + reserve is the dose value the plan used. A hold that would
+// leave no reserve goes. Rep work (strength, rep skills, eccentrics) and
+// every other block stay: upper-body strength was unaffected by short
 // sleep (PAR-E-42). Item IDs stay, so the plan and a draft started from it
 // agree. changed is false when the session has nothing to make lighter.
 // Applying it twice changes nothing more.
@@ -65,7 +67,7 @@ func (k *Knowledge) Technique(ps PlannedSession) (out PlannedSession, changed bo
 			case it.Offer:
 				changed = true
 				continue
-			case it.Stimulus == StimSkill && it.HoldS > 0:
+			case (it.Stimulus == StimSkill || it.Stimulus == StimConditioning) && it.HoldS > 0:
 				changed = true
 				tech, ok := k.techniqueHold(it)
 				if !ok {
