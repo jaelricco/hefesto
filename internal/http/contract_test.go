@@ -2,6 +2,7 @@ package http
 
 import (
 	"net/http"
+	"slices"
 	"sort"
 	"strings"
 	"testing"
@@ -11,6 +12,7 @@ import (
 
 	"github.com/jaelricco/hefesto/api"
 	"github.com/jaelricco/hefesto/internal/auth"
+	"github.com/jaelricco/hefesto/internal/domain/planning"
 	"github.com/jaelricco/hefesto/internal/store"
 )
 
@@ -110,5 +112,57 @@ func TestOptionalDistinguishesAbsentNullAndValue(t *testing.T) {
 	}
 	if in.A.Set || !in.B.Set || !in.B.Null || in.B.Ptr() != nil || !in.C.Set || *in.C.Ptr() != 3 {
 		t.Fatalf("got %+v", in)
+	}
+}
+
+// TestPlannerVocabulariesMatchTheCore keeps the closed vocabularies of the
+// onboarding answers in api/openapi.yaml equal to the ones the planner's
+// core checks.
+func TestPlannerVocabulariesMatchTheCore(t *testing.T) {
+	var doc struct {
+		Components struct {
+			Schemas map[string]struct {
+				Enum       []string `yaml:"enum"`
+				Properties map[string]struct {
+					Enum []string `yaml:"enum"`
+				} `yaml:"properties"`
+			} `yaml:"schemas"`
+		} `yaml:"components"`
+	}
+	if err := yaml.Unmarshal(api.OpenAPI, &doc); err != nil {
+		t.Fatal(err)
+	}
+	s := doc.Components.Schemas
+	complaint := s["Complaint"].Properties
+	mobility := make([]string, 0, len(s["MobilityChecks"].Properties))
+	for k := range s["MobilityChecks"].Properties {
+		mobility = append(mobility, k)
+	}
+	spec := map[string][]string{
+		"equipment":                 s["Equipment"].Enum,
+		"training_level":            s["TrainingLevel"].Enum,
+		"calisthenics_training_age": s["TrainingAge"].Enum,
+		"last_regular_training":     s["LastRegularTraining"].Enum,
+		"data_confidence":           s["DataConfidence"].Enum,
+		"mobility_checks":           mobility,
+		"mobility_answer":           s["MobilityAnswer"].Enum,
+		"onset":                     complaint["onset"].Enum,
+		"suspected_serious":         complaint["suspected_serious"].Enum,
+		"professional_assessment":   complaint["professional_assessment"].Enum,
+		"restrictions":              s["Restriction"].Enum,
+		"timepoint":                 s["PainTimepoint"].Enum,
+	}
+	core := planning.Vocabularies()
+	if len(core) != len(spec) {
+		t.Errorf("the core has %d vocabularies, the test compares %d", len(core), len(spec))
+	}
+	for name, want := range core {
+		got := slices.Clone(spec[name])
+		slices.Sort(got)
+		want = slices.Clone(want)
+		slices.Sort(want)
+		if !slices.Equal(got, want) {
+			t.Errorf("%s: spec %v, core %v", name, got, want)
+		}
 	}
 }
