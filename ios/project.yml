@@ -48,6 +48,16 @@ targets:
         CFBundleDisplayName: Hefesto
         # English and German (brief §10); strings are in Localizable.xcstrings.
         CFBundleLocalizations: [en, de]
+        # One dark, warm world (ADR 0020); the launch screen follows it.
+        UIUserInterfaceStyle: Dark
+        # Barlow and Barlow Condensed (Hefesto/Fonts, SIL Open Font License).
+        UIAppFonts:
+          - Barlow-Regular.ttf
+          - Barlow-Medium.ttf
+          - Barlow-SemiBold.ttf
+          - BarlowCondensed-Medium.ttf
+          - BarlowCondensed-SemiBold.ttf
+          - BarlowCondensed-Bold.ttf
         UILaunchScreen: {}
         UIApplicationSceneManifest:
           UIApplicationSupportsMultipleScenes: false
