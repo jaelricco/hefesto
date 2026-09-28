@@ -3205,6 +3205,16 @@ components:
           type: integer
         streak:
           $ref: "#/components/schemas/Streak"
+        plan_changes:
+          description: |
+            What the training planner changed after the completion (spec
+            §10.2, ADR 0018). Absent when the planner did not run: without
+            an onboarding, while it is unavailable, for a rest day, or when
+            it failed; the next `GET /v1/me/plan` catches the session up.
+            A repeated completion answers with the changes of the first.
+          type: array
+          items:
+            $ref: "#/components/schemas/PlanChange"
 
     AttestRequest:
       description: |

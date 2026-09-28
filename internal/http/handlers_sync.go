@@ -233,7 +233,9 @@ func (h *handlers) runSyncOp(r *http.Request, op syncOpIn) error {
 		if err != nil {
 			return err
 		}
-		return completed{completionFrom(c)}
+		out := completionFrom(c)
+		out.PlanChanges = h.planChangesFor(ctx, principalFrom(ctx).UserID, op.ID)
+		return completed{out}
 	case "session.delete":
 		return h.Store.DeleteSession(ctx, writer(r, nil), op.ID)
 	case "block.put":

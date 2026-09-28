@@ -1,10 +1,13 @@
 package http
 
 import (
+	"context"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -227,6 +230,31 @@ func (h *handlers) getPlannedSession(w http.ResponseWriter, r *http.Request) err
 	WriteJSON(w, r, http.StatusOK, plannedSessionDetailOut{PlanID: p.ID, WeekStart: dateOut(p.WeekStart),
 		RulesetVersion: p.RulesetVersion, Session: plannedSessionFrom(k, s), Disclaimer: p.Disclaimer})
 	return nil
+}
+
+// planChangesFor lets the planner adapt to a session the log completed
+// (spec §10.2, ADR 0018). The completion is committed and stays valid
+// whatever happens here: without a planner, before the onboarding, for a
+// rest day or on a failure there are no plan changes, and the next plan
+// request catches the session up.
+func (h *handlers) planChangesFor(ctx context.Context, userID, sessionID uuid.UUID) *[]changeOut {
+	svc, err := h.planner()
+	if err != nil {
+		return nil
+	}
+	out, applied, err := svc.CompleteLoggedSession(ctx, userID, sessionID)
+	switch {
+	case errors.Is(err, planning.ErrNotOnboarded), errors.Is(err, planning.ErrUnavailable):
+		return nil
+	case err != nil:
+		slog.WarnContext(ctx, "planner after a completion", "session_id", sessionID, "err", err,
+			"request_id", RequestIDFrom(ctx))
+		return nil
+	case !applied:
+		return nil
+	}
+	cs := changesFrom(out.Changes)
+	return &cs
 }
 
 // startPlannedSession writes a planned session into the log as a draft

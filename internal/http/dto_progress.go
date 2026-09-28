@@ -202,6 +202,7 @@ type completionOut struct {
 	XPAwarded        []xpAwardOut `json:"xp_awarded"`
 	XPTotal          int          `json:"xp_total"`
 	Streak           streakOut    `json:"streak"`
+	PlanChanges      *[]changeOut `json:"plan_changes,omitempty"`
 }
 
 type attestIn struct{}

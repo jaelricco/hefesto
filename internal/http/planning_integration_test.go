@@ -561,3 +561,68 @@ func TestStartPlannedSession(t *testing.T) {
 	}
 	a.call("POST", "/v1/me/plan/sessions/"+next+"/start", u.access, start(newID())).problem(409, "training-stopped")
 }
+
+// Completing a started session answers with what the planner changed, over
+// REST and sync; the plan shows it completed (ADR 0018).
+func TestCompletePlannedSession(t *testing.T) {
+	a := newAPI(t, withPlanner(&fixedClock{plannerMonday}))
+	u := onboarded(t, a, "complete@example.com")
+	sessions := a.call("GET", "/v1/me/plan", u.access, nil).ok(200, "TrainingPlan")["sessions"].([]any)
+	if len(sessions) < 2 {
+		t.Fatalf("%d sessions planned", len(sessions))
+	}
+	// start begins a planned session and performs its first set at target.
+	start := func(i int) string {
+		t.Helper()
+		logID := newID()
+		sess := a.call("POST", "/v1/me/plan/sessions/"+sessions[i].(map[string]any)["id"].(string)+"/start", u.access,
+			map[string]any{"id": logID, "timezone": "Europe/Zurich", "started_at": plannerMonday.Add(10 * time.Hour).Format(time.RFC3339)}).
+			ok(201, "Session")
+		set := sess["blocks"].([]any)[0].(map[string]any)["sets"].([]any)[0].(map[string]any)
+		el := set["elements"].([]any)[0].(map[string]any)
+		a.call("PUT", "/v1/sessions/"+logID+"/sets/"+set["id"].(string), u.access, map[string]any{
+			"block_id": set["block_id"], "order_index": set["order_index"], "kind": set["kind"], "is_planned": false,
+			"completed_at": plannerMonday.Add(10*time.Hour + 5*time.Minute).Format(time.RFC3339),
+			"elements": []any{map[string]any{"id": el["id"], "exercise_id": el["exercise_id"], "measure": el["measure"],
+				"reps": el["reps"], "hold_seconds": el["hold_seconds"]}},
+		}).ok(200, "SetEntry")
+		return logID
+	}
+
+	finish := map[string]any{"completed_at": plannerMonday.Add(11 * time.Hour).Format(time.RFC3339)}
+	first := start(0)
+	done := a.call("POST", "/v1/sessions/"+first+"/complete", u.access, finish).ok(200, "CompletionResult")
+	changes, ok := done["plan_changes"].([]any)
+	if !ok {
+		t.Fatalf("no plan_changes in %v", done)
+	}
+	again := a.call("POST", "/v1/sessions/"+first+"/complete", u.access, finish).ok(200, "CompletionResult")
+	if again["already_completed"] != true || !reflect.DeepEqual(again["plan_changes"], done["plan_changes"]) {
+		t.Errorf("repeat: %v, first %v", again["plan_changes"], changes)
+	}
+	sessions = a.call("GET", "/v1/me/plan", u.access, nil).ok(200, "TrainingPlan")["sessions"].([]any)
+	if now := sessions[0].(map[string]any); now["status"] != "completed" || now["workout_session_id"] != first {
+		t.Errorf("planned session after the completion: %v %v", now["status"], now["workout_session_id"])
+	}
+
+	// The same through sync, on the new plan.
+	second := start(1)
+	res := a.push(u, "complete-"+second, map[string]any{"op": "complete", "entity": "session", "id": second, "data": finish}).
+		ok(200, "SyncPushResult")
+	r := results(t, res)[0]
+	if r["status"] != "applied" {
+		t.Fatalf("sync completion %v", r)
+	}
+	if _, ok := r["completion"].(map[string]any)["plan_changes"].([]any); !ok {
+		t.Errorf("no plan_changes in the sync completion %v", r["completion"])
+	}
+
+	// Without an onboarding the planner stays out of it.
+	other := a.register("complete-other@example.com")
+	free := newID()
+	a.call("POST", "/v1/sessions", other.access, map[string]any{"id": free, "started_at": plannerMonday.Format(time.RFC3339),
+		"timezone": "UTC"}).ok(201, "Session")
+	if out := a.call("POST", "/v1/sessions/"+free+"/complete", other.access, map[string]any{}).ok(200, "CompletionResult"); out["plan_changes"] != nil {
+		t.Errorf("plan changes without an onboarding: %v", out["plan_changes"])
+	}
+}
