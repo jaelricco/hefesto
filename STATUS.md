@@ -19,7 +19,7 @@ that stands.
   #8. Its open questions (rest-day logging, the bodyweight time zone, wiping
   the database on sign-out) still stand.
 
-## Parallel track: training-plan algorithm (stage 5 of 5, review decisions implemented, awaiting review)
+## Parallel track: training-plan algorithm (stage 5 done; Postgres adapter and migration, awaiting review)
 
 A separate track, with its own five-stage plan, researches, specifies and
 implements a planner that turns an onboarding and the logs into individual
@@ -64,8 +64,20 @@ documents are in German.
   in spec §15.4. The session cap (`PAR-S-48` with the smallest set) now
   limits straight-arm volume most; some personas train on fewer days than
   they chose.
-- **Not yet built:** the migration, the Postgres store, the HTTP endpoints and
-  the OpenAPI spec. They follow after this review (ADR 0007).
+- **Postgres adapter and migration (this checkpoint, ADR 0013):**
+  - Migration `00009_planning.sql` adds the planner's tables: profile,
+    goals, health data, constraints, capacities, ladders, phase, pause,
+    history, plans and the decision log.
+  - `internal/store/planning.go` stores and reads the snapshot, the plans
+    and the decisions.
+  - Every call of the planning service runs in one transaction with a lock
+    per user, so events of one user apply one at a time.
+  - Integration tests against real Postgres: a full snapshot reads back
+    byte-identical, and the service produces the same snapshots, plans and
+    changes on Postgres as in memory.
+- **Not yet built:** the HTTP endpoints and the OpenAPI spec, the sync of
+  the tables clients will write, and the withdrawal of the health-data
+  consent. They follow after this review (ADR 0007).
 - **Still blocking production:**
   - The content review of the knowledge base (ENT-10). Until then it stays
     `draft_placeholder`, and production refuses it.

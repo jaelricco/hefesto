@@ -139,7 +139,8 @@ in v1 (OE-6).
 Umgesetzt sind der reine Kern (`internal/domain/planning`), die Wissensbasis
 unter `content/training/` mit JSON-Schemas und Validierung (`internal/content`,
 `contentlint`) und der Anwendungsdienst `internal/planning` mit In-Memory-
-Adaptern. Migration, Store, HTTP und OpenAPI folgen nach eigenem Review
+Adaptern. Migration und Store folgten am 28.09.2026 (ADR 0013); HTTP und
+OpenAPI folgen nach eigenem Review
 (ADR 0007). Die Abweichungen von der Spezifikation stehen einzeln in
 `spec.md` §15.2 (U-1 bis U-35); die folgenden betreffen dieses ADR:
 

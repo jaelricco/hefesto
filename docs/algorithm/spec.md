@@ -694,6 +694,24 @@ Widerruf der Einwilligung gelöscht und mit dem Konto kaskadiert. Aufbewahrung
 und Rechtsgrundlage sind rechtlich zu klären (ENT-4, OE-2); bis dahin gilt:
 nur speichern, was eine Planentscheidung braucht.
 
+**Umsetzung** (Migration `00009_planning.sql`, ADR 0013, U-36 bis U-38): Die
+Tabellen folgen der Skizze mit diesen Abweichungen:
+- Das Equipment ist eine Spalte des Profils.
+- `planned_sessions` ist nur der adressierbare Griff; der Inhalt steht im
+  Plan-Payload.
+- `plan_decisions` hat eine Zeile je Ereignis.
+- Neu sind `user_capacity_estimates` und `user_ladder_states` mit allen
+  Feldern des Kerns, dazu `user_planner_states` (Phase, Spielraum,
+  Einstiegs-Konten, erreichte Stufen), `user_training_breaks` und
+  `planner_sessions` (Verlauf als Kopie, bis die Übungen des Planers
+  Content-Zeilen sind).
+- Noch nicht angelegt sind `user_bands`, `user_red_flag_answers`,
+  `planner_knowledge`, die neuen Spalten an `workout_sessions` und
+  `set_entries` und die Sync-Spalten. Sie kommen mit den Endpunkten.
+
+Skills, Stufen, Übungen und Regionen sind Slugs der Wissensbasis mit
+Format-`CHECK`, keine Fremdschlüssel.
+
 ## 5. Plangenerierung
 
 ### 5.1 Ablauf
@@ -1849,6 +1867,14 @@ type IDSource interface{ New() uuid.UUID }
 Fehler werden mit `%w` gewickelt; der Kern gibt Fehler nur für ungültige
 Eingaben zurück (z. B. Snapshot verweist auf unbekannte Übung), nie `panic`.
 
+**Umsetzung** (U-21, U-37): `Adapt` gibt den ganzen Snapshot zurück, und
+`SnapshotStore` speichert ihn ganz. Jeder Aufruf des Dienstes läuft über den
+Port `Transactor` in einer Transaktion, die eine Sperre je User hält
+(`pg_advisory_xact_lock`). Laden, «schon gesehen», `Adapt`, Speichern,
+Protokoll und Plan wirken dadurch ganz oder gar nicht, und Ereignisse eines
+Users laufen nacheinander. `IDSource` (UUIDv7) gibt Zeilen, die der Planer
+selbst anlegt, ihre ID.
+
 ### 10.2 Einbindung ins Log-System
 
 - **Start** (`POST /v1/me/plan/sessions/{id}/start`): Der Dienst erzeugt aus
@@ -2031,6 +2057,8 @@ Phase 5 dokumentiert die erzeugten Pläne je Persona und ihre Plausibilität in
    Review.
 2. **Danach:** OpenAPI-Erweiterung (zuerst), Migration, Store-Adapter,
    HTTP-Handler, DSL-Erweiterungen mit Golden Files, Client-Anbindung.
+   Migration und Store-Adapter kamen auf Auftrag vor OpenAPI (28.09.2026,
+   ADR 0013); sie ändern keine Route und keine Antwort.
 
 ### 13.2 Migration
 
@@ -2041,6 +2069,9 @@ Phase 5 dokumentiert die erzeugten Pläne je Persona und ihre Plausibilität in
   während eines Deploys kompatibel (CLAUDE.md, «Expand, deploy, contract»).
 - Inhalte kommen nie über Migrationen, sondern über den Seed (CLAUDE.md).
 - `sqlc` nach der Schemaänderung neu erzeugen (`make sqlc`).
+- Stand: `00009_planning.sql` legt die Tabellen des Planers an (§4.9,
+  ADR 0013). Die drei Spalten an `workout_sessions` und `set_entries` kommen
+  mit dem Start einer geplanten Einheit (§10.2).
 
 ### 13.3 Rollout
 
@@ -2089,8 +2120,10 @@ Umgesetzt nach ENT-S-2 (a): der reine Kern `internal/domain/planning`, die
 Wissensbasis `content/training/` mit JSON-Schemas (`content/schema/training/`),
 Loader und Validierung (`internal/content`, `cmd/contentlint`) sowie der
 Anwendungsdienst `internal/planning` mit den Ports aus §10.1 und
-In-Memory-Adaptern. Nicht umgesetzt: Migration, Store, HTTP-Endpunkte und
-OpenAPI (nach eigenem Review, ADR 0007), `Materialize`.
+In-Memory-Adaptern. Danach (28.09.2026): Migration `00009_planning.sql` und
+der Postgres-Adapter `internal/store/planning.go` mit Integrationstests gegen
+echtes Postgres (ADR 0013, U-36 bis U-38). Nicht umgesetzt: HTTP-Endpunkte
+und OpenAPI (nach eigenem Review, ADR 0007), `Materialize`.
 
 Tests: sechs Personas als Golden Files (`internal/domain/planning/testdata/`),
 die Eigenschaften I-1 bis I-11 für jeden erzeugten Plan, zwölf simulierte
@@ -2144,6 +2177,9 @@ U-35 setzen die Entscheidungen ENT-R-1, ENT-R-2 und ENT-R-5 um (§15.5).
 | U-33 | §6.11, §7.2 | ENT-R-1: Eine Pause aus dem Onboarding rampt die Straight-Arm- und Handgelenk-Konten auf dem Zielvolumen der ersten Woche, beim Onboarding eingefroren; Anteil = 0.25 + (Stufe − 0.25) · f(a); 72 h und Sprosse unter `pre_break_level` wie U-25 | Review C: die Basis wächst nicht mit einer neuen Sprosse (A-3, A-4), f(a) wirkt wieder (A-3); Persona 4 kam vorher zwölf Wochen nicht über einen Straight-Arm-Satz je Woche hinaus |
 | U-34 | §7.2 | ENT-R-2: Mindestschritt LOAD-12 (`PAR-S-49`); eine geplante Deload-Woche zählt als gehalten, auch ohne Logs; der Satz geht an eine gekürzte Arbeitsübung mit Straight-Arm-Last zurück, und nur ihr Einheitsdeckel darf um diesen Satz über M liegen | ADR 0003: Eine Deload-Woche darf den Schritt nicht verschieben; bei Deloads alle 4–5 Wochen (§15.4) kam sonst fast nie ein Fenster von 3 Wochen zustande. Ohne die Ausnahme beim Einheitsdeckel blockierte `PAR-S-48` (kleinster Satz) den Schritt in jeder Einheit mit leichteren Sätzen derselben Struktur |
 | U-35 | §5.4 | ENT-R-5: Mindestinhalt WEEK-09 (`PAR-S-50`); verschoben wird nur, was die Abstände nicht ändert (dieselbe Übung und Klasse, oder eine leichte Übung); eine Einheit, die eine Rampe zählt, bleibt; Prehab bleibt in ≥ 2 Einheiten (PAR-D-37) | Der erste Versuch vor dem Review störte die Zählung der Rampenstufen (PAR-D-26); die Ausnahme für Rampen-Einheiten verhindert das. Die Frequenz der verschobenen Übung sinkt, was ENT-R-5 in Kauf nimmt |
+| U-36 | §4.9 | Tabellen nach ADR 0013 (Migration `00009_planning.sql`) mit den Abweichungen in §4.9; Slugs der Wissensbasis mit Format-`CHECK` statt Fremdschlüsseln; Zeitpunkte als `timestamptz` (Kalendertage als Mitternacht UTC), berechnete Zahlen als `double precision` | Die Übungen des Planers sind noch keine Content-Zeilen (U-1). Ein Snapshot muss byte-gleich zurückkommen, sonst ändert sich der `input_hash` |
+| U-37 | §10.1 | Port `Transactor`: jeder Aufruf in einer Transaktion mit einer Advisory-Sperre je User; der Dienst rundet seine Uhr auf Mikrosekunden; `IDSource` für eigene Zeilen | «Schon gesehen» und Schreiben waren getrennt, zwei gleichzeitige Ereignisse konnten doppelt wirken. Die Zeile in `users` sperrt `touch_sync` bei jedem Sync |
+| U-38 | §4.1, §10.2 | Der Verlauf ist eine Kopie im Planer (`planner_sessions`, Sätze als `jsonb` mit Slugs, Fremdschlüssel auf `workout_sessions`); `PainReport` bekommt eine `ID`, die der Kern nicht liest | Die Log-Tabellen können die Übungen des Planers noch nicht aufnehmen; Verlauf und Schmerzberichte wachsen nur und brauchen eine Identität, damit ein Speichern sie nicht doppelt anlegt |
 
 ### 15.3 Nicht umgesetzt
 
