@@ -222,6 +222,47 @@
           },
           "sources": {
             "$ref": "common.schema.json#/$defs/sources"
+          },
+          "followup": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "urgency",
+              "action",
+              "question",
+              "advice"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^RF-[0-9]{2}-[a-z]+$"
+              },
+              "urgency": {
+                "type": "string",
+                "enum": [
+                  "N",
+                  "D",
+                  "A"
+                ]
+              },
+              "action": {
+                "type": "string",
+                "enum": [
+                  "stop",
+                  "lock",
+                  "rtt0"
+                ]
+              },
+              "question": {
+                "type": "string",
+                "minLength": 1
+              },
+              "advice": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
           }
         }
       },

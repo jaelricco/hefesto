@@ -75,6 +75,9 @@ type OnboardingResult struct {
 	Realism   []Realism  `json:"realism,omitempty"`
 	Hints     []Reason   `json:"hints,omitempty"`
 	Reasons   []Reason   `json:"reasons,omitempty"`
+	// Disclaimer travels with every result, because red-flag advice and
+	// referral hints may be part of it (spec §9.3).
+	Disclaimer string `json:"disclaimer"`
 }
 
 // Onboarding statuses.
@@ -128,7 +131,7 @@ func Start(k *Knowledge, a Answers, now time.Time) (Snapshot, OnboardingResult, 
 		PreferredDays:   slices.Clone(a.PreferredDays),
 		Mobility:        cloneMap(a.Mobility),
 	}
-	res := OnboardingResult{Status: OnboardingComplete}
+	res := OnboardingResult{Status: OnboardingComplete, Disclaimer: k.Disclaimer()}
 
 	// Safety first (O-4): exertion symptoms, screening, red flags.
 	s.Screening = Screening{ExertionSymptoms: a.ExertionSymptoms, AnyYes: slices.Contains(a.Screening, true)}
@@ -144,10 +147,14 @@ func Start(k *Knowledge, a Answers, now time.Time) (Snapshot, OnboardingResult, 
 
 	// Capacities from the answer classes.
 	widen := a.LastRegular == "7_to_16_weeks" || a.LastRegular == "17_to_26_weeks" || a.LastRegular == "gt_26_weeks"
+	unknown := map[string]bool{} // capacities from "don't know" answers
 	for _, q := range k.onboarding.Questions {
 		key, ok := a.Classes[q.Key]
 		if !ok {
 			continue
+		}
+		if key == "unknown" {
+			unknown[CapKey(q.Exercise, AssistNone)] = true
 		}
 		ex := k.exercises[q.Exercise]
 		e, ok := k.classPrior(ex, q.Classes, key, a.DataConfidence, today)
@@ -199,6 +206,7 @@ func Start(k *Knowledge, a Answers, now time.Time) (Snapshot, OnboardingResult, 
 			}
 			if e, ok := k.classPrior(ex, sq.Classes, st.Class, a.DataConfidence, today); ok {
 				s.Capacities[CapKey(ex.Slug, AssistNone)] = e
+				unknown[CapKey(ex.Slug, AssistNone)] = st.Class == "unknown"
 			}
 		}
 		s.Ladders[g.Skill] = LadderState{Claimed: ex.Slug, Status: StatusClaimed, Since: today}
@@ -232,10 +240,11 @@ func Start(k *Knowledge, a Answers, now time.Time) (Snapshot, OnboardingResult, 
 		}
 	}
 
-	// Entry ramp for current trainers (LOAD-04b).
+	// Entry ramp for current trainers (LOAD-04b): only a stated capacity
+	// qualifies, not a "don't know" (spec §7.4).
 	if a.LastRegular == "current_or_lt_3_weeks" && !minor {
 		for key, e := range s.Capacities {
-			if e.Mu <= 0 {
+			if e.Mu <= 0 || unknown[key] {
 				continue
 			}
 			ex := k.exercises[strings.SplitN(key, "|", 2)[0]]
@@ -479,10 +488,18 @@ func (k *Knowledge) startRegions(s *Snapshot, a Answers, minor bool, today time.
 		default:
 			rs.State = StateRTT1
 			rs.StartFraction = k.T.RTTStart
-			if c.Assessment == "yes_overuse_or_tendon" || c.Assessment == "yes_other" {
+			// After a professional assessment, or with training pain above
+			// the acceptable limit, the ramp starts at a quarter (PAR-D-33,
+			// PAR-D-15).
+			if c.Assessment == "yes_overuse_or_tendon" || c.Assessment == "yes_other" || c.PainTraining > k.T.PainAccept {
 				rs.StartFraction = k.T.RTTStartReferral
 			}
 			rs.Step = k.startStep(rs.StartFraction)
+		}
+		// The daily pain is the first baseline of the monitoring (PAR-D-13,
+		// PAR-D-16); stored only with consent to health data.
+		if a.HealthConsent {
+			s.Pain = append(s.Pain, PainReport{Region: id, Timepoint: PainDaily, NRS: c.PainDaily, At: today})
 		}
 		if c.DurationWeeks > 4 {
 			rs.Referral = "advise"

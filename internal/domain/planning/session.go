@@ -275,14 +275,31 @@ func (g *gen) skillHold(a *active, reasons []Reason) Item {
 	k := g.k
 	it := g.baseItem(a, a.rung, StimSkill, reasons)
 	d := k.Dose(a.cap)
-	if !a.hasCap || d < 2*k.T.MinSetHold {
-		// Calibration start without a usable value (§4.3, PAR-S-39).
+	switch {
+	case !a.hasCap:
+		// Calibration start without any value (§4.3, PAR-S-39).
 		it.HoldS, it.Sets, it.Reserve, it.Calibration = int(k.T.VolumeHoldMin), int(k.T.MinSets), 2, true
-	} else {
+	case d < 2*k.T.MinSetHold:
+		// Under 4 s and no easier rung or band left (08 §4): short technique
+		// holds from the estimate itself (DOSE-09), calibrating; with no
+		// reserve even at the shortest hold the rung is not trained yet.
+		mu := a.cap.Mu
+		h := math.Max(k.T.MinSetHold, math.Floor(math.Min(float64(k.T.TechniqueFrac*mu), k.T.TechniqueMax)))
+		it.HoldS, it.Sets, it.Calibration = int(h), int(k.T.TechniqueTries), true
+		it.Reserve = int(math.Max(0, math.Floor(mu-h)))
+		if it.Reserve < 1 {
+			it.Sets = 0
+			g.plan.Hints = append(g.plan.Hints, k.reason(RuleHoldRung, "exercise", a.rung.Name, "dose", d))
+		}
+		it.Reasons = append(it.Reasons, k.reason(RuleDoseTech, "hold_s", it.HoldS))
+	default:
 		h := g.holdFor(d)
 		if capped, ok := g.holdGrowthCap(a.rung, h); ok {
 			h = capped
 			it.Reasons = append(it.Reasons, k.reason(RuleHoldGrowth))
+		}
+		if t := g.modifiedHold(a, d); t < h {
+			h = t
 		}
 		it.HoldS = int(h)
 		it.Sets = int(clamp(math.Round(k.T.TargetTotalHold/h), k.T.MinSets, k.T.MaxSets))
@@ -295,6 +312,18 @@ func (g *gen) skillHold(a *active, reasons []Reason) Item {
 	it.StopRules = stopRules()
 	it.Reasons = append(it.Reasons, k.reason(RuleDoseMaxHold, "hold_s", it.HoldS, "max_s", math.Floor(d), "sets", it.Sets))
 	return it
+}
+
+// modifiedHold is the hold of a ladder with an M cell in a complaint ramp:
+// shorter holds at the technique dose (INJ-05, DOSE-09), so the time under
+// load does not grow while the ramp holds the volume. Otherwise it returns
+// +Inf.
+func (g *gen) modifiedHold(a *active, d float64) float64 {
+	k := g.k
+	if !a.modify {
+		return math.Inf(1)
+	}
+	return math.Max(k.T.MinSetHold, math.Floor(math.Min(float64(k.T.TechniqueFrac*d), k.T.TechniqueMax)))
 }
 
 // holdGrowthCap applies ADAPT-04: within a rung the set hold grows by at

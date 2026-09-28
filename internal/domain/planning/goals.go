@@ -439,9 +439,10 @@ func (g *gen) selectRung(a *active) {
 	if fallback != nil {
 		e, has := g.capacity(fallback, AssistNone)
 		if g.hasBands && fallback.Assistable {
-			if eb, ok := g.capacity(fallback, AssistBand); ok {
-				e, has = eb, true
-			}
+			// With the band the unassisted value does not apply: its own
+			// value, or a calibration start (§4.3).
+			eb, okb := g.capacity(fallback, AssistBand)
+			e, has = eb, okb
 			a.assist = AssistBand
 			g.setRung(a, fallback, e, verdicts[fallback.Slug])
 		} else {
@@ -490,6 +491,15 @@ func (g *gen) setRung(a *active, ex *Exercise, e Estimate, v regionVerdict) {
 			a.reasons = append(a.reasons, a.region)
 		}
 	}
+	if a.modify && ex.Measure == MeasureReps && !ex.Eccentric && g.hasBands && ex.Assistable && a.assist != AssistBand {
+		// M for repetitions: a band takes load off the structure (SEL-10,
+		// INJ-05).
+		if eb, ok := g.capacity(ex, AssistBand); ok {
+			a.cap = eb
+		}
+		a.assist = AssistBand
+		a.reasons = append(a.reasons, a.region)
+	}
 	// Probe offer (ADAPT-05, ADAPT-10) when the ladder earned it and
 	// ADAPT-06a allows: the next rung, or for a band-assisted rung the same
 	// rung without the band.
@@ -519,10 +529,13 @@ func (g *gen) lowerRung(ex *Exercise) *Exercise {
 	return nil
 }
 
-func (g *gen) nextRung(ex *Exercise) *Exercise {
-	sk := g.k.skills[ex.Skill]
+func (g *gen) nextRung(ex *Exercise) *Exercise { return g.k.nextRungOf(ex) }
+
+// nextRungOf returns the next harder non-eccentric rung of the same measure.
+func (k *Knowledge) nextRungOf(ex *Exercise) *Exercise {
+	sk := k.skills[ex.Skill]
 	for r := ex.Rung + 1; r < len(sk.Rungs); r++ {
-		c := g.k.exercises[sk.Rungs[r]]
+		c := k.exercises[sk.Rungs[r]]
 		if !c.Eccentric && c.Measure == ex.Measure {
 			return c
 		}
@@ -530,23 +543,37 @@ func (g *gen) nextRung(ex *Exercise) *Exercise {
 	return nil
 }
 
-// probesAllowed applies ADAPT-06a: region normal, no ramp on the accounts,
-// not in the first week of a new load, no screening or consent limits.
+// probesAllowed applies ADAPT-06a for this plan.
 func (g *gen) probesAllowed(ex *Exercise) bool {
-	s := g.s
+	return g.k.probeGate(g.s, g.hist, ex, g.week)
+}
+
+// probeGate is ADAPT-06a: region normal, no ramp on the accounts (after a
+// pause: no straight-arm or wrist load), not in the first week of a new
+// load, no screening or consent limits. Plan and adaptation share it, so an
+// announced offer is one the plan can show.
+func (k *Knowledge) probeGate(s Snapshot, h loadHistory, ex *Exercise, week time.Time) bool {
 	if s.Screening.AnyYes && !s.Screening.Cleared || !s.Profile.HealthConsent {
 		return false
 	}
-	if s.Break != nil && ex.StraightArm != ArmNone {
-		return false
+	loads := k.setLoad(ex, KindWorking, 0, s.Profile.BodyweightKg)
+	if b := s.Break; b != nil {
+		if ex.StraightArm != ArmNone {
+			return false
+		}
+		for acc := range loads {
+			if isStraightAccount(acc) && b.StraightDays >= k.T.LayoffDays {
+				return false
+			}
+		}
 	}
-	for acc := range g.k.setLoad(ex, KindWorking, 0, s.Profile.BodyweightKg) {
-		for _, r := range g.k.regionsOf(acc) {
+	for acc := range loads {
+		for _, r := range k.regionsOf(acc) {
 			if rs, ok := s.Regions[r]; ok && rs.State != StateNormal {
 				return false
 			}
 		}
-		if ref, _ := g.k.reference(g.hist, acc, g.week); ref == 0 {
+		if ref, _ := k.reference(h, acc, week); ref == 0 {
 			return false
 		}
 	}

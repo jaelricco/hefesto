@@ -3,32 +3,23 @@ week 1: 3 sessions, 12 sets (0 straight-arm)
   changes: probe_offered
 week 2: 3 sessions, 12 sets (0 straight-arm)
   push-up=push-up-incline wrist-conditioning=plank-hold
-  changes: target_changed×2
 week 3: 3 sessions, 13 sets (0 straight-arm)
   push-up=push-up-incline wrist-conditioning=plank-hold
-  changes: target_changed×2
 week 4: 3 sessions, 13 sets (0 straight-arm)
   push-up=push-up-incline wrist-conditioning=plank-hold
-  changes: target_changed×2
 week 5: 3 sessions, 13 sets (0 straight-arm)
   push-up=push-up-incline wrist-conditioning=plank-hold
-  changes: target_changed×2
 week 6: 3 sessions, 10 sets (0 straight-arm), deload planned
   push-up=push-up-incline wrist-conditioning=plank-hold
 week 7: 3 sessions, 14 sets (0 straight-arm)
   push-up=push-up-incline wrist-conditioning=plank-hold
-  changes: target_changed×2
 week 8: 3 sessions, 14 sets (0 straight-arm)
   push-up=push-up-incline wrist-conditioning=plank-hold
-  changes: target_changed×2
 week 9: 3 sessions, 14 sets (0 straight-arm)
   push-up=push-up-incline wrist-conditioning=plank-hold
-  changes: target_changed×2
 week 10: 3 sessions, 14 sets (0 straight-arm)
   push-up=push-up-incline wrist-conditioning=plank-hold
-  changes: target_changed×2
 week 11: 3 sessions, 14 sets (0 straight-arm)
   push-up=push-up-incline wrist-conditioning=plank-hold
-  changes: target_changed×2
 week 12: 3 sessions, 10 sets (0 straight-arm), deload planned
   push-up=push-up-incline wrist-conditioning=plank-hold

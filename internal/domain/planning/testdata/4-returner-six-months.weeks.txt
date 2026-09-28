@@ -1,6 +1,6 @@
 week 1: 3 sessions, 11 sets (1 straight-arm)
   planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
-  changes: probe_offered ramp_step
+  changes: ramp_step
   regions after: break=119 days/step 1
 week 2: 3 sessions, 11 sets (1 straight-arm)
   planche=planche-tuck pull-up=pull-up wrist-conditioning=plank-hold

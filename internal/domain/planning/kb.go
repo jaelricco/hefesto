@@ -137,15 +137,27 @@ const (
 
 // RedFlag is one warning-sign question (research 05 §9).
 type RedFlag struct {
-	ID string `yaml:"id"`
+	ID string `yaml:"id" json:"id"`
 	// Regions lists where the question is asked; "*" means every region.
-	Regions   []string `yaml:"regions"`
-	MinorOnly bool     `yaml:"minor_only,omitempty"`
-	Urgency   string   `yaml:"urgency"` // N, D or A
-	Action    string   `yaml:"action"`  // stop, lock or rtt0
-	Question  string   `yaml:"question"`
-	Advice    string   `yaml:"advice"`
-	Sources   []string `yaml:"sources,omitempty"`
+	Regions   []string `yaml:"regions" json:"regions"`
+	MinorOnly bool     `yaml:"minor_only,omitempty" json:"minor_only,omitempty"`
+	Urgency   string   `yaml:"urgency" json:"urgency"` // N, D or A
+	Action    string   `yaml:"action" json:"action"`   // stop, lock or rtt0
+	Question  string   `yaml:"question" json:"question"`
+	Advice    string   `yaml:"advice" json:"advice"`
+	Sources   []string `yaml:"sources,omitempty" json:"sources,omitempty"`
+	// Followup is asked after a yes and raises the urgency when answered
+	// yes too (RF-05: a joint that looks displaced is N).
+	Followup *FlagFollowup `yaml:"followup,omitempty" json:"followup,omitempty"`
+}
+
+// FlagFollowup is the follow-up question of a red flag.
+type FlagFollowup struct {
+	ID       string `yaml:"id" json:"id"`
+	Urgency  string `yaml:"urgency" json:"urgency"`
+	Action   string `yaml:"action" json:"action"`
+	Question string `yaml:"question" json:"question"`
+	Advice   string `yaml:"advice" json:"advice"`
 }
 
 // Red-flag urgencies and actions.
@@ -516,15 +528,23 @@ func (b *builder) body(body Body) {
 	}
 	has := map[string]map[string]bool{}
 	for _, rf := range body.RedFlags {
-		switch rf.Urgency {
-		case UrgencyNow, UrgencySoon, UrgencyAdvise:
-		default:
-			b.errf("KB-10", rf.ID, "urgency must be N, D or A")
+		urgencies, actions := []string{rf.Urgency}, []string{rf.Action}
+		if f := rf.Followup; f != nil {
+			urgencies, actions = append(urgencies, f.Urgency), append(actions, f.Action)
 		}
-		switch rf.Action {
-		case FlagStop, FlagLock, FlagRTT0:
-		default:
-			b.errf("KB-10", rf.ID, "unknown action %q", rf.Action)
+		for _, u := range urgencies {
+			switch u {
+			case UrgencyNow, UrgencySoon, UrgencyAdvise:
+			default:
+				b.errf("KB-10", rf.ID, "urgency must be N, D or A")
+			}
+		}
+		for _, a := range actions {
+			switch a {
+			case FlagStop, FlagLock, FlagRTT0:
+			default:
+				b.errf("KB-10", rf.ID, "unknown action %q", a)
+			}
 		}
 		for _, r := range rf.Regions {
 			if r != "*" {
@@ -775,6 +795,9 @@ func (b *builder) language() {
 	}
 	for _, rf := range b.kb.redFlags {
 		check(rf.ID, rf.Question+" "+rf.Advice)
+		if f := rf.Followup; f != nil {
+			check(f.ID, f.Question+" "+f.Advice)
+		}
 	}
 }
 

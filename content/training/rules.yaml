@@ -25,12 +25,12 @@ rules:
   evidence: H
 - id: SAFE-05
   title: Region pausiert
-  text: Solange die Angabe für {region} nicht abgeklärt ist, plant die App dort keine Belastung.
+  text: Solange deine Angabe {region} nicht abgeklärt ist, plant die App dort keine Belastung.
   params: [PAR-D-21, PAR-S-22]
   evidence: H
 - id: SAFE-06
   title: Region in der Rampe, Stufe 0
-  text: Für {region} plant die App im Moment nur Übungen mit geringer Last in dieser Region.
+  text: Wegen deiner Beschwerden {region} plant die App dort im Moment nur Übungen mit geringer Last.
   params: [PAR-S-22]
   evidence: H
 - {id: SAFE-07, title: Kein Plan für Minderjährige, text: Für Personen unter 18 Jahren erstellt die App
@@ -172,8 +172,8 @@ rules:
   evidence: –}
 - {id: SEL-02, title: Equipment, text: '{exercise} braucht Ausrüstung, die du nicht angegeben hast.',
   evidence: –}
-- {id: SEL-03, title: Angaben zu Beschwerden, text: 'Wegen deiner Angabe zu {region} wählt die App hier
-    eine andere Übung oder eine leichtere Variante.', evidence: H}
+- {id: SEL-03, title: Angaben zu Beschwerden, text: 'Wegen deiner Angabe {region} wählt die App hier eine
+    andere Übung oder eine leichtere Variante.', evidence: H}
 - id: SEL-04
   title: Untergriff mit gestreckten Armen
   text: Varianten mit Untergriff und gestreckten Armen kommen erst ab einer höheren Stufe in den Plan,
@@ -264,7 +264,7 @@ rules:
   evidence: H
 - id: DOSE-10
   title: Dosis Prehab
-  text: Prehab für {region}. {label}
+  text: Prehab-Übungen {region}. {label}
   params: [PAR-B-78, PAR-B-44, PAR-D-37]
   evidence: B
 - id: DOSE-12
@@ -294,7 +294,8 @@ rules:
   evidence: H/A (Reha)
 - id: DOSE-23
   title: Stopp bei Schmerz
-  text: Beende die Übung, wenn Schmerz über 5 von 10 steigt oder deutlich zunimmt.
+  text: Beende die Übung, wenn Schmerz über 5 von 10 steigt, deutlich zunimmt oder plötzlich stechend
+    auftritt.
   params: *id001
   evidence: H/A (Reha)
 - id: LOAD-01
@@ -304,8 +305,9 @@ rules:
   evidence: H
 - id: LOAD-02
   title: Wochengrenze
-  text: Die Belastung steigt pro Woche nur um einen kleinen Anteil über dein Mittel der letzten Wochen,
-    damit sich Sehnen und Gelenke anpassen können.
+  text: Die Belastung steigt pro Woche nur um einen kleinen Anteil über dein Mittel der letzten Wochen.
+    Die Grenze ist vorsichtig gewählt, weil sich Sehnen und Gelenke vermutlich langsamer an mehr Last
+    gewöhnen als Muskeln.
   params: [PAR-D-02, PAR-D-04, PAR-D-09, PAR-D-10, PAR-D-11, PAR-D-23, PAR-B-55, PAR-S-14, PAR-S-15, PAR-S-25,
     PAR-S-35, PAR-S-40]
   evidence: H
@@ -446,8 +448,8 @@ rules:
   evidence: H
 - id: ADAPT-16
   title: Wiedereinstieg
-  text: Nach einer Pause steigt die Belastung schrittweise wieder an, weil sich Sehnen langsamer anpassen
-    als Muskeln.
+  text: Nach einer Pause steigt die Belastung schrittweise wieder an. Das ist vorsichtig gewählt, weil
+    Sehnen in einer Pause vermutlich schneller an Belastbarkeit verlieren als Muskeln an Kraft.
   params: [PAR-B-59, PAR-B-60, PAR-B-61, PAR-B-62, PAR-D-29, PAR-D-33, PAR-S-41]
   evidence: B/H
 - id: ADAPT-17
@@ -459,7 +461,7 @@ rules:
     zeigt, was du erreicht hast.', evidence: –}
 - id: INJ-01
   title: Fragen zu Warnzeichen
-  text: Zu deiner Angabe bei {region} stellt die App kurze Fragen zu Warnzeichen.
+  text: Zu deiner Angabe {region} stellt die App kurze Fragen zu Warnzeichen.
   params: &id003 [PAR-D-21]
   evidence: B/H
 - id: INJ-02
@@ -469,31 +471,31 @@ rules:
   evidence: B/H
 - id: INJ-03
   title: Stand der Region
-  text: Stand für {region} aktualisiert.
+  text: Der Stand deiner Beschwerden {region} ist aktualisiert.
   params: [PAR-D-14, PAR-D-19, PAR-D-21, PAR-D-24, PAR-D-26, PAR-D-28, PAR-D-29, PAR-D-33, PAR-S-32]
   evidence: B/H
-- {id: INJ-04, title: Übung pausiert, text: 'Diese Übung ist pausiert, solange du Beschwerden bei {region}
+- {id: INJ-04, title: Übung pausiert, text: 'Diese Übung ist pausiert, solange du Beschwerden {region}
     meldest.', evidence: H}
 - id: INJ-05
   title: Übung angepasst
-  text: Wegen deiner Angabe zu {region} plant die App eine angepasste Variante.
+  text: Wegen deiner Angabe {region} plant die App eine angepasste Variante.
   params: [PAR-C-27, PAR-D-41]
   evidence: B/H
 - id: INJ-06
   title: Rampe
-  text: Die Belastung für {region} steigt in Stufen wieder an; die nächste Stufe folgt, wenn Einheiten
-    ohne Zunahme der Beschwerden gelingen.
+  text: Wegen deiner Beschwerden {region} steigt die Belastung dort in Stufen wieder an; die nächste Stufe
+    folgt, wenn Einheiten ohne Zunahme der Beschwerden gelingen.
   params: [PAR-D-24, PAR-D-25, PAR-D-26, PAR-D-27, PAR-D-33, PAR-D-34, PAR-S-47]
   evidence: B/H
 - id: INJ-07
   title: Schmerzregel
-  text: Deine Angaben zu {region} liegen über der Schmerzregel; die Belastung dort sinkt vorübergehend.
+  text: Deine Schmerzangaben {region} liegen über der Schmerzregel; die Belastung dort sinkt vorübergehend.
   params: [PAR-D-13, PAR-D-14, PAR-D-15, PAR-D-16, PAR-D-17, PAR-D-18, PAR-D-28, PAR-D-39, PAR-D-40, PAR-S-34,
     PAR-S-42, PAR-S-47]
   evidence: A (Reha)/H
 - id: INJ-08
   title: Fachperson
-  text: Deine Beschwerden bei {region} bestehen trotz angepasster Belastung. Eine Abklärung bei einer
+  text: Deine Beschwerden {region} bestehen schon länger oder kommen wieder. Eine Abklärung bei einer
     Fachperson ist sinnvoll.
   params: [PAR-D-19, PAR-D-20, PAR-D-32]
   evidence: A/B/H
@@ -502,5 +504,5 @@ rules:
   text: Für Personen unter 18 Jahren gelten zusätzliche Fragen und Grenzen.
   params: [PAR-D-22, PAR-D-23, PAR-D-42]
   evidence: H
-- {id: INJ-10, title: Vorgaben einer Fachperson, text: 'Die Vorgaben deiner Fachperson für {region} gelten
-    im Plan.', evidence: H}
+- {id: INJ-10, title: Vorgaben einer Fachperson, text: 'Die Vorgaben deiner Fachperson zu deinen Beschwerden
+    {region} gelten im Plan.', evidence: H}

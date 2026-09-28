@@ -159,8 +159,9 @@ type FlagOutcome struct {
 	Reasons []Reason `json:"reasons,omitempty"`
 }
 
-// EvaluateRedFlags turns the answers for one region into actions. RF-05 is
-// N only when the joint looks displaced (answer key "RF-05-displaced").
+// EvaluateRedFlags turns the answers for one region into actions. A yes to
+// a flag's follow-up takes the follow-up's urgency, action and advice (RF-05:
+// a joint that looks displaced is N).
 func (k *Knowledge) EvaluateRedFlags(region string, answers map[string]bool, minor bool) FlagOutcome {
 	var out FlagOutcome
 	rank := map[string]int{UrgencyAdvise: 1, UrgencySoon: 2, UrgencyNow: 3}
@@ -169,8 +170,8 @@ func (k *Knowledge) EvaluateRedFlags(region string, answers map[string]bool, min
 			continue
 		}
 		urgency, action := rf.Urgency, rf.Action
-		if rf.ID == "RF-05" && answers["RF-05-displaced"] {
-			urgency, action = UrgencyNow, FlagStop
+		if f := rf.Followup; f != nil && answers[f.ID] {
+			urgency, action, rf.Advice = f.Urgency, f.Action, f.Advice
 		}
 		out.Flags = append(out.Flags, rf.ID)
 		if rank[urgency] > rank[out.Urgency] {

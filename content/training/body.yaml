@@ -393,9 +393,11 @@ red_flags:
   action: lock
   question: Hast du eine deutliche Schwellung, einen grossen Bluterguss oder eine Formveränderung an einem
     Gelenk?
-  advice: Lass das in den nächsten Tagen abklären. Wirkt ein Gelenk sichtbar verschoben oder ausgerenkt,
-    such sofort ärztliche Hilfe. Bis du eine Freigabe bestätigst, plant die App für diese Region keine
-    Belastung.
+  advice: Lass das in den nächsten Tagen abklären. Bis du eine Freigabe bestätigst, plant die App für
+    diese Region keine Belastung.
+  followup: {id: RF-05-displaced, urgency: N, action: stop, question: 'Wirkt das Gelenk sichtbar verschoben
+      oder ausgerenkt?', advice: 'Bitte such sofort ärztliche Hilfe. Die App plant kein Training, bis
+      du eine Freigabe bestätigst.'}
   sources: [D-73, D-70, D-90]
 - id: RF-06
   regions: ['*']
@@ -434,8 +436,8 @@ red_flags:
   urgency: N
   action: stop
   question: Hattest du bei Belastung Brustschmerz, ungewohnte Atemnot, Schwindel oder eine Ohnmacht?
-  advice: Bitte lass das ärztlich abklären, bevor du weiter trainierst. Die App plant kein Training, bis
-    du eine Freigabe bestätigst.
+  advice: Bitte lass das sofort ärztlich abklären, bevor du weiter trainierst. Die App plant kein Training,
+    bis du eine Freigabe bestätigst.
   sources: [D-91]
 - id: RF-11
   regions: []

@@ -1,6 +1,7 @@
 package planning_test
 
 import (
+	"slices"
 	"strings"
 	"testing"
 	"time"
@@ -371,8 +372,10 @@ func TestRampPainRules(t *testing.T) {
 			{Timepoint: planning.PainBefore, NRS: 1}, {Timepoint: planning.PainDuring, NRS: 1}, {Timepoint: planning.PainMorning, NRS: 1}}},
 		{name: "soreness above the baseline does not count", state: planning.StateRTT2, step: 2, sessions: 1, reports: []planning.PainReport{
 			{Timepoint: planning.PainBefore, NRS: 0}, {Timepoint: planning.PainDuring, NRS: 2}, {Timepoint: planning.PainMorning, NRS: 0}}},
-		{name: "next-day soreness repeats the step and rests a day", state: planning.StateRTT2, step: 2, restUntil: 2, reports: []planning.PainReport{
-			{Timepoint: planning.PainDuring, NRS: 0}, {Timepoint: planning.PainMorning, NRS: 1}}},
+		{name: "next-day soreness repeats the step, rests a day and breaks the morning rule", state: planning.StateRTT2, step: 2, restUntil: 2, deload: true, reports: []planning.PainReport{
+			{Timepoint: planning.PainBefore, NRS: 0}, {Timepoint: planning.PainDuring, NRS: 0}, {Timepoint: planning.PainMorning, NRS: 1}}},
+		{name: "the onboarding value is the baseline", state: planning.StateRTT3, step: 2, reports: []planning.PainReport{
+			{Timepoint: planning.PainDuring, NRS: 1}, {Timepoint: planning.PainMorning, NRS: 1}}},
 		{name: "pain lasting over an hour", state: planning.StateRTT2, step: 2, restUntil: 2, reports: []planning.PainReport{
 			{Timepoint: planning.PainAfter, NRS: 2, LastedOver: true}}},
 		{name: "warm-up pain over 15 min goes a step back and rests two days", state: planning.StateRTT2, step: 1, restUntil: 3, reports: []planning.PainReport{
@@ -452,5 +455,52 @@ func TestRestingRegionIsNotPlanned(t *testing.T) {
 	}
 	if !planned {
 		t.Error("the planche is not planned after the rest either")
+	}
+}
+
+// Spec §8.3: stage 0 ends with daily pain within the green limit and
+// negative red-flag answers; after a referral only a confirmed clearance
+// ends it.
+func TestStageZeroExit(t *testing.T) {
+	k := kb(t)
+	day := monday.AddDate(0, 0, 3)
+	adapt := func(s planning.Snapshot, ev planning.Event) (planning.Snapshot, []planning.Change) {
+		t.Helper()
+		s, ch, err := planning.Adapt(k, s, ev)
+		if err != nil {
+			t.Fatal(err)
+		}
+		return s, ch
+	}
+	a := persona3()
+	c := a.Complaints["elbow_inner"]
+	c.PainDaily, c.DurationWeeks = 3, 2 // over 4 weeks would already refer
+	a.Complaints["elbow_inner"] = c
+	s, _ := start(t, k, a)
+	if st := s.Regions["elbow_inner"].State; st != planning.StateRTT0 {
+		t.Fatalf("daily pain 3 starts in %s, want rtt_0", st)
+	}
+	s, ch := adapt(s, planning.Event{Kind: planning.EventPain, At: day, Pain: &planning.PainReport{Region: "elbow_inner", Timepoint: planning.PainDaily, NRS: 1, At: day}})
+	if !slices.ContainsFunc(ch, func(c planning.Change) bool { return c.Kind == planning.ChangeRedFlags }) {
+		t.Error("a green daily report in stage 0 does not ask the red-flag questions")
+	}
+	s, _ = adapt(s, planning.Event{Kind: planning.EventRedFlags, At: day, Region: "elbow_inner", Answers: map[string]bool{}})
+	if rs := s.Regions["elbow_inner"]; rs.State != planning.StateRTT1 || rs.StartFraction != 0.5 {
+		t.Errorf("after negative answers: %s at %.2f, want rtt_1 at 0.5", rs.State, rs.StartFraction)
+	}
+
+	// Night pain (RF-04, A) refers; negative answers later do not end it.
+	s, _ = adapt(s, planning.Event{Kind: planning.EventRedFlags, At: day, Region: "elbow_inner", Answers: map[string]bool{"RF-04": true}})
+	if st := s.Regions["elbow_inner"].State; st != planning.StateRTT0 {
+		t.Fatalf("RF-04 gives %s, want rtt_0", st)
+	}
+	s, _ = adapt(s, planning.Event{Kind: planning.EventPain, At: day.AddDate(0, 0, 1), Pain: &planning.PainReport{Region: "elbow_inner", Timepoint: planning.PainDaily, NRS: 0, At: day.AddDate(0, 0, 1)}})
+	s, _ = adapt(s, planning.Event{Kind: planning.EventRedFlags, At: day.AddDate(0, 0, 1), Region: "elbow_inner", Answers: map[string]bool{}})
+	if st := s.Regions["elbow_inner"].State; st != planning.StateRTT0 {
+		t.Errorf("after a referral negative answers end stage 0 (%s)", st)
+	}
+	s, _ = adapt(s, planning.Event{Kind: planning.EventClearance, At: day.AddDate(0, 0, 2), Region: "elbow_inner"})
+	if rs := s.Regions["elbow_inner"]; rs.State != planning.StateRTT1 || rs.StartFraction != 0.25 {
+		t.Errorf("after the clearance: %s at %.2f, want rtt_1 at 0.25", rs.State, rs.StartFraction)
 	}
 }

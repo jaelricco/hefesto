@@ -176,6 +176,12 @@ func renderOnboarding(res planning.OnboardingResult) string {
 	for _, r := range res.Reasons {
 		b.WriteString("  [" + r.RuleID + "] " + r.Text + "\n")
 	}
+	for _, r := range res.Hints {
+		b.WriteString("  hint [" + r.RuleID + "] " + r.Text + "\n")
+	}
+	if res.Disclaimer == "" {
+		b.WriteString("  MISSING DISCLAIMER\n")
+	}
 	return b.String()
 }
 

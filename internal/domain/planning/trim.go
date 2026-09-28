@@ -93,13 +93,25 @@ func (g *gen) weekCap(a string, target float64) (float64, string) {
 	}
 	switch {
 	case g.s.Entry[a] && g.weekIdx < 3:
+		// The steps are shares of the target, but never more than their
+		// ratio above the week logged before, so a target that grows with a
+		// new rung does not enlarge the step (PAR-S-43).
 		steps := []float64{k.T.EntryStep1, k.T.EntryStep2, k.T.EntryStep3}
 		idx := max(0, min(g.weekIdx-g.breachWeeks(a), 2))
 		cp, rule = float64(steps[idx]*target), RuleEntryRamp
+		if prev := g.hist.weekly[g.week.AddDate(0, 0, -7)][a]; idx > 0 && prev > 0 {
+			cp = math.Min(cp, float64(prev*steps[idx]/steps[idx-1]))
+		}
 	case R == 0:
 		cp, rule = float64(k.T.NewTypeFraction*target), RuleNewLoad
 	default:
 		cp = float64(R*(1+float64(k.capRate(a)*g.weekFactor(a)))) + g.s.Headroom[a]
+		// Right after the entry ramp the mean still holds the ramp weeks;
+		// until it is made of full weeks the cap does not fall below the
+		// week logged before (PAR-S-43).
+		if g.s.Entry[a] && float64(g.weekIdx) < 3+k.T.RefWeeks {
+			cp = math.Max(cp, g.hist.weekly[g.week.AddDate(0, 0, -7)][a])
+		}
 	}
 	// Break ramp (§6.11). With a logged level before the pause, the ramp
 	// fractions of that level replace the cap of straight-arm and wrist

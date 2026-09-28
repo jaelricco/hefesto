@@ -222,11 +222,15 @@ func (a *adapter) progression(ls *LadderState, top *Exercise, sets []LoggedSet, 
 			}
 		}
 		if all {
-			ls.RepTarget = math.Min(target+1, k.T.RepToLoad)
+			next := math.Min(target+1, k.T.RepToLoad)
 			if target >= k.T.NoviceRepsHi {
-				ls.RepTarget = target // the next rung takes over once its dose allows (ADAPT-07)
+				next = target // the next rung takes over once its dose allows (ADAPT-07)
 			}
-			a.change(Change{Kind: ChangeTarget, Skill: top.Skill, To: formatNum(ls.RepTarget), Reasons: []Reason{k.reason(RuleDoubleProg, "reps", ls.RepTarget)}})
+			// Announce only a new target inside the novice range.
+			if next != ls.RepTarget && next <= k.T.NoviceRepsHi {
+				a.change(Change{Kind: ChangeTarget, Skill: top.Skill, To: formatNum(next), Reasons: []Reason{k.reason(RuleDoubleProg, "reps", next)}})
+			}
+			ls.RepTarget = next
 		} else if ls.RepTarget == 0 {
 			ls.RepTarget = target
 		}
@@ -241,7 +245,14 @@ func (a *adapter) progression(ls *LadderState, top *Exercise, sets []LoggedSet, 
 		prevOK := a.lastFirstSetOK(top, sess.ID)
 		if x >= k.T.StageOffer && good && prevOK && !ls.ProbeOffer {
 			ls.ProbeOffer = true
-			a.change(Change{Kind: ChangeProbe, Skill: top.Skill, From: top.Slug, Reasons: []Reason{k.reason(RuleProbe, "exercise", top.Name)}})
+			// The offer is the next rung, or this rung without the band.
+			probe := top
+			if f.Assist != AssistBand {
+				if next := k.nextRungOf(top); next != nil {
+					probe = next
+				}
+			}
+			a.offer(top, probe, RuleProbe)
 		}
 	}
 	// ADAPT-12: form below 3 or two failures in this and the previous session.
@@ -310,6 +321,18 @@ func (a *adapter) previousBad(ex *Exercise, skip string, bad func([]LoggedSet) b
 	return false
 }
 
+// offer announces a probe offer when next week's plan can show it
+// (ADAPT-06a).
+func (a *adapter) offer(from, probe *Exercise, rule string) {
+	k := a.k
+	week := weekStart(civil(a.at, time.UTC)).AddDate(0, 0, 7)
+	if !k.probeGate(a.s, k.history(a.s, week), probe, week) {
+		return
+	}
+	a.change(Change{Kind: ChangeProbe, Skill: from.Skill, From: from.Slug, To: probe.Slug,
+		Reasons: []Reason{k.reason(rule, "exercise", probe.Name)}})
+}
+
 // eccentric lengthens eccentric reps and offers the first concentric
 // attempt (ADAPT-10).
 func (a *adapter) eccentric(ls *LadderState, sets []LoggedSet) {
@@ -326,7 +349,11 @@ func (a *adapter) eccentric(ls *LadderState, sets []LoggedSet) {
 			ls.EccS += k.T.EccentricStep
 		} else if !ls.ProbeOffer {
 			ls.ProbeOffer = true
-			a.change(Change{Kind: ChangeProbe, Skill: ex.Skill, From: ex.Slug, Reasons: []Reason{k.reason(RuleEccToConc, "exercise", ex.Name)}})
+			probe := ex
+			if next := k.nextRungOf(ex); next != nil {
+				probe = next
+			}
+			a.offer(ex, probe, RuleEccToConc)
 		}
 		return
 	}
@@ -491,7 +518,11 @@ func (a *adapter) pain(r PainReport) {
 	}
 	name := k.regions[r.Region].Name
 	ask := r.SuddenSharp || r.NRS > k.T.PainAccept || (r.Timepoint == PainDaily && r.NRS > k.T.PainGreen) || !rs.Complaint
-	if ask && (r.NRS > 0 || r.SuddenSharp) {
+	// Stage 0 without a referral ends with daily pain within the green limit
+	// and negative red-flag answers (spec §8.3), so a green daily report asks
+	// the questions again.
+	exit0 := rs.State == StateRTT0 && rs.Referral != "advise" && r.Timepoint == PainDaily && r.NRS <= k.T.PainGreen
+	if ask && (r.NRS > 0 || r.SuddenSharp) || exit0 {
 		a.change(Change{Kind: ChangeRedFlags, Region: r.Region, Reasons: []Reason{regional(k.reason(RuleRedFlagAsk, "region", name), r.Region)}})
 	}
 	day := civil(r.At, time.UTC)
@@ -706,6 +737,17 @@ func (a *adapter) redFlags(id string, answers map[string]bool) {
 	}
 	from := rs.State
 	noStructures := len(k.regions[id].Structures) == 0
+	if len(out.Flags) == 0 {
+		// All negative: stage 0 without a referral ends once daily pain is
+		// within the green limit (spec §8.3).
+		if rs.State == StateRTT0 && rs.Referral != "advise" && a.dailyGreen(id) {
+			a.enterRamp(&rs, id, k.T.RTTStart, day, "red_flags_negative")
+			if s.Profile.HealthConsent {
+				s.Regions[id] = rs
+			}
+		}
+		return
+	}
 	switch {
 	case out.Stop || noStructures && out.Urgency != "" && out.Urgency != UrgencyAdvise:
 		rs.State = StateLocked
@@ -736,17 +778,15 @@ func (a *adapter) redFlags(id string, answers map[string]bool) {
 func (a *adapter) clearance(id string) {
 	k, s := a.k, &a.s
 	day := civil(a.at, time.UTC)
+	// A clearance moves a locked region, or one in stage 0, to stage 1 at
+	// the start share after a referral (PAR-D-33).
 	unlock := func(r string) {
 		rs, ok := s.Regions[r]
-		if !ok || rs.State != StateLocked {
+		if !ok || rs.State != StateLocked && rs.State != StateRTT0 {
 			return
 		}
-		rs.State, rs.StartFraction = StateRTT1, k.T.RTTStartReferral
-		rs.Step, rs.StepSessions, rs.StepSince, rs.Since = k.startStep(rs.StartFraction), 0, day, day
-		rs.EnteredVia = "clearance"
+		a.enterRamp(&rs, r, k.T.RTTStartReferral, day, "clearance")
 		s.Regions[r] = rs
-		a.change(Change{Kind: ChangeRegion, Region: r, From: StateLocked, To: StateRTT1,
-			Reasons: []Reason{regional(k.reason(RuleRegionState, "region", k.regions[r].Name, "state", StateRTT1), r)}})
 	}
 	if id == "" {
 		s.Constraints = slices.DeleteFunc(s.Constraints, func(c Constraint) bool { return c.Kind == ConstraintStopped || c.Kind == ConstraintLocked })
@@ -762,6 +802,29 @@ func (a *adapter) clearance(id string) {
 		return (c.Kind == ConstraintLocked || c.Kind == ConstraintStopped) && c.Region == id
 	})
 	unlock(id)
+}
+
+// enterRamp moves a region to stage 1 at a start share.
+func (a *adapter) enterRamp(rs *RegionState, id string, start float64, day time.Time, via string) {
+	k := a.k
+	from := rs.State
+	rs.State, rs.StartFraction, rs.EnteredVia = StateRTT1, start, via
+	rs.Step, rs.StepSessions, rs.StepSince, rs.Since = k.startStep(start), 0, day, day
+	a.change(Change{Kind: ChangeRegion, Region: id, From: from, To: StateRTT1,
+		Reasons: []Reason{regional(k.reason(RuleRegionState, "region", k.regions[id].Name, "state", StateRTT1), id)}})
+}
+
+// dailyGreen reports whether the latest daily report of a region is within
+// the green limit (PAR-D-14).
+func (a *adapter) dailyGreen(id string) bool {
+	var last *PainReport
+	for i := range a.s.Pain {
+		r := &a.s.Pain[i]
+		if r.Region == id && r.Timepoint == PainDaily && (last == nil || !r.At.Before(last.At)) {
+			last = r
+		}
+	}
+	return last != nil && last.NRS <= a.k.T.PainGreen
 }
 
 // week runs the week-start bookkeeping: mesocycle, deload weeks, pauses,
