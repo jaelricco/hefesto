@@ -1,8 +1,10 @@
 package planning_test
 
 import (
+	"math"
 	"path/filepath"
 	"slices"
+	"strings"
 	"testing"
 	"time"
 
@@ -31,8 +33,9 @@ func athleteFor(name string) *athlete {
 // painFree reports mild, stable pain after every session for the regions
 // with a complaint, so ramps can advance (a missing report holds them,
 // PAR-S-34).
-func painFree(t *testing.T, k *planning.Knowledge, nrs float64) func(int, planning.PlannedSession, planning.Snapshot) planning.Snapshot {
-	return func(i int, ps planning.PlannedSession, s planning.Snapshot) planning.Snapshot {
+func painFree(t *testing.T, k *planning.Knowledge, nrs float64) hookFunc {
+	return func(i int, ps planning.PlannedSession, s planning.Snapshot) (planning.Snapshot, []planning.Change) {
+		var all []planning.Change
 		for id, rs := range s.Regions {
 			if !rs.Complaint {
 				continue
@@ -42,14 +45,16 @@ func painFree(t *testing.T, k *planning.Knowledge, nrs float64) func(int, planni
 				{Region: id, Timepoint: planning.PainMorning, NRS: nrs, At: ps.Date.Add(32 * time.Hour)},
 			} {
 				r.SessionID = sessionID(ps)
+				var ch []planning.Change
 				var err error
-				s, _, err = planning.Adapt(k, s, planning.Event{Kind: planning.EventPain, At: r.At, Pain: &r})
+				s, ch, err = planning.Adapt(k, s, planning.Event{Kind: planning.EventPain, At: r.At, Pain: &r})
 				if err != nil {
 					t.Fatalf("pain: %v", err)
 				}
+				all = append(all, ch...)
 			}
 		}
-		return s
+		return s, all
 	}
 }
 
@@ -69,38 +74,93 @@ func TestPersonaWeeks(t *testing.T) {
 	}
 }
 
-// Spec §12.5: persona 4 over eight weeks without complaints ramps its
-// straight-arm accounts 0.25 → 0.5 → 0.75 → 1.0, at least seven days per
-// step, then returns to the normal caps.
+// Spec §12.5: persona 4 returns after six months without logs. The ramp
+// steps 0.25 → 0.5 → 0.75 → 1.0 advance weekly, but without a logged level
+// before the pause they only bound LOAD-04 and LOAD-02 (§7.2); the ramp
+// ends once its last step has held for the reference weeks.
 func TestScenarioReturnerRamp(t *testing.T) {
 	k := kb(t)
 	s, _ := start(t, k, persona4())
+	var steps []int
 	weeks, end := simulate(t, k, s, athleteFor("4-returner-six-months"), 10, nil)
-	var fractions []float64
 	for _, w := range weeks {
-		f := -1.0
 		for _, l := range w.plan.Loads {
-			if l.Account == "biceps_distal/SA" && l.Rule == "ADAPT-16" && l.Target > 0 {
-				f = l.Cap / l.Target
+			if l.Account == "biceps_distal/SA" && l.Cap > 0.25*l.Target+1e-3 && l.Rule == "LOAD-04" {
+				t.Errorf("week 1 cap %.3f above the ramp share of %.3f", l.Cap, l.Target)
 			}
 		}
-		fractions = append(fractions, f)
 	}
-	want := []float64{0.25, 0.5, 0.75, 1}
-	for i, f := range want {
-		if i >= len(fractions) || fractions[i] < f-1e-3 || fractions[i] > f+1e-3 {
-			t.Fatalf("week %d ramp fraction %v, want %v (all: %v)", i+1, fractions[i], f, fractions)
+	for _, w := range weeks[:4] {
+		if w.after.Break != nil {
+			steps = append(steps, w.after.Break.Step)
 		}
+	}
+	if want := []int{1, 2, 3, 3}; !slices.Equal(steps, want) {
+		t.Errorf("ramp steps %v, want %v", steps, want)
 	}
 	if end.Break != nil {
 		t.Errorf("break still active after 10 weeks: %+v", end.Break)
 	}
-	last := weeks[len(weeks)-1].plan
-	for _, l := range last.Loads {
-		if l.Rule == "ADAPT-16" {
-			t.Errorf("week 10 still under the break ramp: %+v", l)
+	for _, l := range weeks[len(weeks)-1].plan.Loads {
+		if l.Rule == "ADAPT-16" && l.Account == "wrist" && l.Cap > l.Target+1e-3 {
+			t.Errorf("wrist cap %.3f above its target %.3f", l.Cap, l.Target)
 		}
 	}
+}
+
+// Spec §6.11 with a logged level: persona 2 trains four weeks, then pauses.
+// The pause keeps growing while the user is away, a pause of 28 days or more
+// starts the straight-arm accounts at 25 % of the level before the pause,
+// and a longer pause never allows more load.
+func TestScenarioLoggedBreak(t *testing.T) {
+	k := kb(t)
+	s0, _ := start(t, k, persona2())
+	_, s0 = simulate(t, k, s0, athleteFor("2-advanced-gym-planche-front-lever"), 4, nil)
+	last := s0.History[len(s0.History)-1].Date
+	prev := math.Inf(1)
+	for _, days := range []int{10, 20, 30, 37, 44, 51, 65, 90, 130} {
+		s := s0
+		back := weekOf(last.AddDate(0, 0, days))
+		for wk := weekOf(last).AddDate(0, 0, 7); !wk.After(back); wk = wk.AddDate(0, 0, 7) {
+			var err error
+			if s, _, err = planning.Adapt(k, s, planning.Event{Kind: planning.EventWeek, At: wk}); err != nil {
+				t.Fatal(err)
+			}
+		}
+		p, err := planning.Generate(k, s, back.Add(7*time.Hour), back)
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, v := range planning.CheckInvariants(k, s, back.Add(7*time.Hour), back, p) {
+			t.Errorf("%d days: %s", days, v)
+		}
+		if s.Break == nil && days >= 15 {
+			t.Fatalf("%d days: no break", days)
+		}
+		var sa float64
+		for _, l := range p.Loads {
+			if strings.HasSuffix(l.Account, "/SA") || l.Account == "wrist" {
+				sa += l.Cap
+				if days >= 28+7 && l.Rule == "ADAPT-16" {
+					if ref := s.Break.Reference[l.Account]; ref > 0 && math.Abs(l.Cap-0.25*ref) > 2e-3 {
+						t.Errorf("%d days: %s cap %.3f, want 25 %% of %.3f", days, l.Account, l.Cap, ref)
+					}
+				}
+			}
+		}
+		if sa > prev+1e-6 {
+			t.Errorf("%d days away allow %.2f straight-arm units, more than a shorter pause (%.2f)", days, sa, prev)
+		}
+		prev = sa
+	}
+}
+
+func weekOf(d time.Time) time.Time {
+	wd := int(d.Weekday())
+	if wd == 0 {
+		wd = 7
+	}
+	return d.AddDate(0, 0, -(wd - 1))
 }
 
 // Spec §12.5: persona 3 reports 6/10 during session 2 → red-flag questions,
@@ -109,7 +169,7 @@ func TestScenarioElbowPain(t *testing.T) {
 	k := kb(t)
 	s, _ := start(t, k, persona3())
 	var changes []planning.Change
-	hook := func(i int, ps planning.PlannedSession, s planning.Snapshot) planning.Snapshot {
+	hook := func(i int, ps planning.PlannedSession, s planning.Snapshot) (planning.Snapshot, []planning.Change) {
 		nrs := 1.0
 		if i >= 1 && i <= 3 {
 			nrs = 6
@@ -121,7 +181,7 @@ func TestScenarioElbowPain(t *testing.T) {
 			t.Fatal(err)
 		}
 		changes = append(changes, ch...)
-		return s
+		return s, ch
 	}
 	_, end := simulate(t, k, s, athleteFor("3-elbow-inner-planche"), 2, hook)
 	kinds := map[string]int{}

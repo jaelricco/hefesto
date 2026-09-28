@@ -136,12 +136,23 @@ func CheckInvariants(k *Knowledge, s Snapshot, now, week time.Time, p Plan) []st
 					l.Cap, k.T.NewTypeFraction*l.Target)
 			}
 		}
+		// A break ramp without a logged level before the pause only bounds
+		// LOAD-04 and LOAD-02 (§7.2), so a new straight-arm account stays at
+		// the ramp share of its target.
+		if b := s.Break; b != nil && b.StraightDays >= k.T.LayoffDays && b.Reference[l.Account] == 0 && isStraightAccount(l.Account) {
+			steps := []float64{k.T.RampStep1, k.T.RampStep2, k.T.RampStep3, k.T.RampStep4}
+			if R, _ := k.reference(g.hist, l.Account, week); R == 0 && l.Cap > steps[min(b.Step, 3)]*l.Target+2e-3 {
+				fail("I-11: %s may grow to %.3f after a pause without a logged level", l.Account, l.Cap)
+			}
+		}
 	}
 
 	// I-4 spacing between planned days and against the log.
 	type mark struct {
-		day   time.Time
-		class int
+		day      time.Time
+		class    int
+		straight bool
+		planned  bool
 	}
 	byStructure := map[string][]mark{}
 	for _, ps := range p.Sessions {
@@ -151,22 +162,22 @@ func CheckInvariants(k *Knowledge, s Snapshot, now, week time.Time, p Plan) []st
 					continue
 				}
 				for _, st := range k.structuresAt(k.exercises[it.Exercise]) {
-					byStructure[st] = append(byStructure[st], mark{ps.Date, it.Class})
+					byStructure[st] = append(byStructure[st], mark{ps.Date, it.Class, k.exercises[it.Exercise].StraightArm != ArmNone, true})
 				}
 			}
 		}
 	}
 	for st, marks := range byStructure {
 		for _, h := range g.hist.hardAt[st] {
-			marks = append(marks, mark(h))
+			marks = append(marks, mark{h.day, h.class, h.straight, false})
 		}
 		slices.SortFunc(marks, func(a, b mark) int { return a.day.Compare(b.day) })
 		for i := 1; i < len(marks); i++ {
 			gap := marks[i].day.Sub(marks[i-1].day).Hours()
-			if gap == 0 {
-				continue // same session or day
+			if gap == 0 || !marks[i].planned {
+				continue // same session or day; two logged sessions are history
 			}
-			if need := g.spacing(marks[i-1].class, st); gap < need {
+			if need := g.spacing(marks[i-1].class, st, marks[i-1].straight); gap < need {
 				fail("I-4: %s loaded %s and %s (%.0f h, needs %.0f h)", st,
 					marks[i-1].day.Format("Mon"), marks[i].day.Format("Mon"), gap, need)
 			}

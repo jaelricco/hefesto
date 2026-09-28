@@ -102,8 +102,9 @@ type loadHistory struct {
 }
 
 type hardMark struct {
-	day   time.Time
-	class int
+	day      time.Time
+	class    int
+	straight bool
 }
 
 func (k *Knowledge) history(s Snapshot, today time.Time) loadHistory {
@@ -143,7 +144,7 @@ func (k *Knowledge) history(s Snapshot, today time.Time) loadHistory {
 			if cls > classLight {
 				for _, st := range k.structures {
 					if float64(k.rEff(ex, st)) >= k.T.SpacingRating {
-						h.hardAt[st] = append(h.hardAt[st], hardMark{sess.Date, cls})
+						h.hardAt[st] = append(h.hardAt[st], hardMark{sess.Date, cls, ex.StraightArm != ArmNone})
 					}
 				}
 			}
@@ -161,7 +162,7 @@ func (k *Knowledge) history(s Snapshot, today time.Time) loadHistory {
 // without week-level deloads, within the monitoring window (PAR-S-14).
 func (k *Knowledge) reference(h loadHistory, a string, week time.Time) (float64, int) {
 	var vals []float64
-	for i := 1; i <= int(k.T.WindowWeeks) && len(vals) < 3; i++ {
+	for i := 1; i <= int(k.T.WindowWeeks) && float64(len(vals)) < k.T.RefWeeks; i++ {
 		wk := week.AddDate(0, 0, -7*i)
 		if h.deloadWeek[wk] {
 			continue

@@ -118,6 +118,7 @@ type Tuning struct {
 	EntryStep1, EntryStep2, EntryStep3 float64 // PAR-S-43
 	EntrySpike                         float64 // PAR-S-43
 	WindowWeeks                        float64 // PAR-B-73
+	RefWeeks                           float64 // PAR-S-14
 	SpikeDays                          float64 // PAR-D-31 window
 	NewRungWeeks                       float64 // PAR-D-06
 	SupinatedMinOG                     float64 // PAR-A-23 intermediate
@@ -128,6 +129,8 @@ type Tuning struct {
 	PainAccept                                 float64 // PAR-D-15
 	PainDeloadVol                              float64 // PAR-D-18 (1 − 0.30)
 	PainDeloadDays                             float64 // PAR-D-18
+	RestNextDay                                float64 // PAR-D-28
+	RestWarmup                                 float64 // PAR-D-28
 	RTTStart                                   float64 // PAR-D-24
 	RTTStartReferral                           float64 // PAR-D-33
 	RampStep1, RampStep2, RampStep3, RampStep4 float64 // PAR-D-25
@@ -331,6 +334,7 @@ func resolveTuning(k *Knowledge, issues []Issue) (Tuning, []Issue) {
 		{&t.EntryStep3, "PAR-S-43", "step3"},
 		{&t.EntrySpike, "PAR-S-43", "spike"},
 		{&t.WindowWeeks, "PAR-B-73", ""},
+		{&t.RefWeeks, "PAR-S-14", ""},
 		{&t.SpikeDays, "PAR-D-31", "window_days"},
 		{&t.NewRungWeeks, "PAR-D-06", ""},
 		{&t.SupinatedMinOG, "PAR-A-23", "intermediate_lo"},
@@ -340,6 +344,8 @@ func resolveTuning(k *Knowledge, issues []Issue) (Tuning, []Issue) {
 		{&t.PainAccept, "PAR-D-15", ""},
 		{&t.PainDeloadVol, "PAR-D-18", "volume_factor"},
 		{&t.PainDeloadDays, "PAR-D-18", "days"},
+		{&t.RestNextDay, "PAR-D-28", "rest_days_next_day"},
+		{&t.RestWarmup, "PAR-D-28", "rest_days_warmup"},
 		{&t.RTTStart, "PAR-D-24", ""},
 		{&t.RTTStartReferral, "PAR-D-33", ""},
 		{&t.RampStep1, "PAR-D-25", "s1"},

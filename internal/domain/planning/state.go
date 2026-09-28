@@ -28,17 +28,19 @@ type Snapshot struct {
 }
 
 // BreakState is a return after a pause (spec §6.11). Straight-arm and wrist
-// accounts ramp from 25 % (PAR-D-29, PAR-D-33); the others follow the
-// stream-B ramp. It is the "entered_via = break" case of the region
-// automaton, kept per account rather than per region because a pause
-// affects every region at once.
+// accounts ramp from 25 % (PAR-D-29, PAR-D-33) after a pause of their own of
+// at least PAR-D-29; the others follow the stream-B ramp. It is the
+// "entered_via = break" case of the region automaton, kept for the whole
+// user because a pause affects every region at once.
 type BreakState struct {
-	Days         float64   `json:"days"`  // length of the pause
-	Since        time.Time `json:"since"` // first week back
-	Step         int       `json:"step"`
-	StepSince    time.Time `json:"step_since"`
-	StepSessions int       `json:"step_sessions"`
-	Logged       bool      `json:"logged"` // the pre-break reference comes from logs
+	Days         float64            `json:"days"`          // pause of any training
+	StraightDays float64            `json:"straight_days"` // pause of the straight-arm and wrist accounts
+	Since        time.Time          `json:"since"`         // first week back
+	Step         int                `json:"step"`
+	StepSince    time.Time          `json:"step_since"`
+	StepSessions int                `json:"step_sessions"`
+	Logged       bool               `json:"logged"`              // detected from the log
+	Reference    map[string]float64 `json:"reference,omitempty"` // R per account before the pause
 }
 
 // Profile is the onboarding profile with its derived fields (spec §4.2).
@@ -136,14 +138,14 @@ type RegionState struct {
 	Step          int                `json:"step,omitempty"` // index into the PAR-D-25 steps
 	StepSince     time.Time          `json:"step_since"`
 	StepSessions  int                `json:"step_sessions,omitempty"`
-	BreakOnly     bool               `json:"break_only,omitempty"` // ramp only for SA and wrist accounts
-	Reference     map[string]float64 `json:"reference,omitempty"`  // logged pre-complaint R per account
+	Reference     map[string]float64 `json:"reference,omitempty"` // logged pre-complaint R per account
 	PriorInjury   bool               `json:"prior_injury,omitempty"`
 	Complaint     bool               `json:"complaint,omitempty"`
 	ComplaintAt   time.Time          `json:"complaint_at"`
 	Restrictions  []string           `json:"restrictions,omitempty"`
 	Breaches      []time.Time        `json:"breaches,omitempty"`
 	PainDeloadTo  time.Time          `json:"pain_deload_to"`
+	RestUntil     time.Time          `json:"rest_until"`            // no load on the region before this day (PAR-D-28)
 	HoldAtRef     bool               `json:"hold_at_ref,omitempty"` // cap 1.0 × R until a green week (PAR-S-40)
 	Referral      string             `json:"referral,omitempty"`    // soft, advise
 }
@@ -317,6 +319,7 @@ func (s Snapshot) clone() Snapshot {
 	out.History = append([]LoggedSession(nil), s.History...)
 	if s.Break != nil {
 		b := *s.Break
+		b.Reference = cloneMap(b.Reference)
 		out.Break = &b
 	}
 	return out

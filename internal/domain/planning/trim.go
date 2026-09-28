@@ -101,22 +101,28 @@ func (g *gen) weekCap(a string, target float64) (float64, string) {
 	default:
 		cp = float64(R*(1+float64(k.capRate(a)*g.weekFactor(a)))) + g.s.Headroom[a]
 	}
-	// Break ramp (§6.11). For straight-arm and wrist accounts the ramp
-	// fractions replace the weekly cap, as LOAD-04b does for current
-	// trainers: the pre-break level is the tolerated level, and a trailing
-	// mean over the first ramp weeks would otherwise hold the volume near
-	// 25 % for months. Bent-arm accounts follow the stream-B factors as an
-	// upper bound.
+	// Break ramp (§6.11). With a logged level before the pause, the ramp
+	// fractions of that level replace the cap of straight-arm and wrist
+	// accounts: the athlete returns to a load they tolerated (05 §6.2).
+	// Without one there is no tolerated level, so LOAD-04 and LOAD-02 stay
+	// and the ramp only adds a bound (§7.2). Bent-arm accounts follow the
+	// stream-B factors as an upper bound.
 	if b := g.s.Break; b != nil {
 		weeks := math.Max(0, math.Floor(daysBetween(b.Since, g.week)/7))
-		base := target
-		if b.Logged && R > 0 {
-			base = R
-		}
-		if isStraightAccount(a) && b.Days >= k.T.LayoffDays {
+		ref := b.Reference[a]
+		if isStraightAccount(a) && b.StraightDays >= k.T.LayoffDays {
 			steps := []float64{k.T.RampStep1, k.T.RampStep2, k.T.RampStep3, k.T.RampStep4}
-			cp, rule = float64(steps[min(b.Step, 3)]*base), RuleBreak
+			frac := steps[min(b.Step, 3)]
+			if ref > 0 {
+				cp, rule = float64(frac*ref), RuleBreak
+			} else {
+				tighten(float64(frac*target), RuleBreak)
+			}
 		} else if f := g.breakFactor(b.Days); f < 1 {
+			base := target
+			if ref > 0 {
+				base = ref
+			}
 			tighten(math.Min(1, float64(f*math.Pow(k.T.BreakGrowth, weeks)))*base, RuleBreak)
 		}
 	}
@@ -135,7 +141,7 @@ func (g *gen) weekCap(a string, target float64) (float64, string) {
 			}
 		}
 		st := rttStage(rs.State)
-		if st < 1 || st > 4 || !slices.Contains(k.rampAccounts(r, rs.BreakOnly), a) {
+		if st < 1 || st > 4 || !slices.Contains(k.rampAccounts(r), a) {
 			continue
 		}
 		frac := k.rampFraction(rs)
@@ -179,24 +185,51 @@ func (g *gen) breachWeeks(a string) int {
 	return n
 }
 
-// sessionCap is the spike cap of a structure in one session (LOAD-03).
-func (g *gen) sessionCap(structure string, target float64) float64 {
+// sessionCap is the spike cap of a structure in session si (LOAD-03). It
+// always admits one whole set more than the 30-day maximum, the smallest
+// set of the structure in the session (PAR-S-48).
+func (g *gen) sessionCap(si int, structure string, target float64) float64 {
 	k := g.k
+	unit := g.smallestSet(si, structure)
 	m := g.hist.sessionMax[structure]
 	if m == 0 {
-		return float64(k.T.NewTypeFraction * target)
+		return math.Max(float64(k.T.NewTypeFraction*target), unit)
 	}
+	spike := 1 + k.T.SpikeCap
 	for a := range g.s.Entry {
 		if accountStructure(a) == structure && g.weekIdx < 3 {
-			return float64(m * k.T.EntrySpike)
+			spike = k.T.EntrySpike
 		}
 	}
 	// The break ramp steps like the entry ramp, so its session cap is the
 	// same (PAR-S-43).
-	if b := g.s.Break; b != nil && b.Days >= k.T.LayoffDays && b.Step < 3 {
-		return float64(m * k.T.EntrySpike)
+	if g.breakRamp() {
+		spike = k.T.EntrySpike
 	}
-	return float64(m * (1 + k.T.SpikeCap))
+	return math.Max(float64(m*spike), m+unit)
+}
+
+// smallestSet is the load of the smallest working set on a structure in
+// session si.
+func (g *gen) smallestSet(si int, structure string) float64 {
+	best := 0.0
+	for _, b := range g.plan.Sessions[si].Blocks {
+		for _, it := range b.Items {
+			if it.Sets <= 0 || it.Kind != KindWorking {
+				continue
+			}
+			u := 0.0
+			for a, v := range g.itemLoad(it) {
+				if accountStructure(a) == structure {
+					u += v / float64(it.Sets)
+				}
+			}
+			if u > eps && (best == 0 || u < best) {
+				best = u
+			}
+		}
+	}
+	return best
 }
 
 // budget is the straight-arm set budget of a session (LOAD-06).
@@ -285,7 +318,7 @@ func (g *gen) findViolation(caps map[string]float64, rules map[string]string, ta
 	for si := range g.plan.Sessions {
 		sl := g.sessionLoads(si)
 		for _, st := range sortedKeys(sl) {
-			c := g.sessionCap(st, targetSess[si][st])
+			c := g.sessionCap(si, st, targetSess[si][st])
 			if sl[st] > c+eps {
 				return violation{kind: "session", account: st, session: si, rule: RuleSessionCap, cap: c}, true
 			}
@@ -325,13 +358,16 @@ func (g *gen) contributes(v violation, r itemRef, it *Item) bool {
 // set count that step may reach. Working items keep at least one set until
 // step 7, so a halved first week (LOAD-04) plans fewer sets of every
 // exercise rather than fewer exercises.
-func (g *gen) cutStep(it *Item, block string) (int, int) {
+func (g *gen) cutStep(si int, it *Item, block string) (int, int) {
 	switch {
 	case it.Kind == KindWarmup:
 		return 1, 0
 	case it.Offer:
 		// Offers belong to the max block (ADAPT-05) and go last in it.
 		return 5, 0
+	case it.Calibration && it.Exercise != g.ladderRung(it.Skill) && g.hasWork(si, it.Skill):
+		// A calibration set at another rung on top of the work goes first.
+		return 1, 0
 	case it.Role == RoleSupport && it.Stimulus != StimPrehab:
 		return 1, 1
 	case it.Stimulus == StimBalance || it.Stimulus == StimTechnique || it.Stimulus == StimPrehab:
@@ -359,7 +395,7 @@ func (g *gen) cut(v violation) bool {
 		if !g.contributes(v, r, it) {
 			return
 		}
-		step, floor := g.cutStep(it, g.plan.Sessions[r.s].Blocks[r.b].Role)
+		step, floor := g.cutStep(r.s, it, g.plan.Sessions[r.s].Blocks[r.b].Role)
 		cands = append(cands, cand{r, step, floor})
 	})
 	slices.SortStableFunc(cands, func(a, b cand) int {
@@ -389,14 +425,15 @@ func (g *gen) cut(v violation) bool {
 			return true
 		}
 	}
-	// Step 6: one rung lower for held max items.
+	// Step 6: one rung lower for held max items. A calibration set at
+	// another rung measures that rung and is not lowered.
 	for _, c := range cands {
 		it := g.item(c.ref)
-		if g.plan.Sessions[c.ref.s].Blocks[c.ref.b].Role != BlockMax || it.Stimulus != StimSkill {
+		if g.plan.Sessions[c.ref.s].Blocks[c.ref.b].Role != BlockMax || it.Stimulus != StimSkill || it.Exercise != g.ladderRung(it.Skill) {
 			continue
 		}
 		ex := k.exercises[it.Exercise]
-		if lower := g.lowerRung(ex); lower != nil {
+		if lower := g.lowerRung(ex); lower != nil && g.lighter(lower, ex, v) {
 			if ok, _, _ := g.feasible(lower, lower.OG); ok {
 				it.Exercise = lower.Slug
 				g.note(it, k.reason(RuleNewRung, "exercise", lower.Name), v.rule)
@@ -421,6 +458,39 @@ func (g *gen) cut(v violation) bool {
 		}
 	}
 	return false
+}
+
+// hasWork reports whether session si has working sets of a skill at its
+// working rung.
+func (g *gen) hasWork(si int, skill string) bool {
+	rung := g.ladderRung(skill)
+	for _, b := range g.plan.Sessions[si].Blocks {
+		for _, it := range b.Items {
+			if it.Skill == skill && it.Exercise == rung && it.Kind == KindWorking && it.Sets > 0 {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+// lighter reports whether a set of lower loads the violated quantity less
+// than a set of ex.
+func (g *gen) lighter(lower, ex *Exercise, v violation) bool {
+	if v.kind == "budget" {
+		return lower.StraightArm != ArmStraight
+	}
+	bw := g.s.Profile.BodyweightKg
+	sum := func(e *Exercise) float64 {
+		t := 0.0
+		for a, u := range g.k.setLoad(e, KindWorking, 0, bw) {
+			if a == v.account || v.kind == "session" && accountStructure(a) == v.account {
+				t += u
+			}
+		}
+		return t
+	}
+	return sum(lower) < sum(ex)-eps
 }
 
 func (g *gen) note(it *Item, r Reason, capRule string) {

@@ -279,8 +279,9 @@ exercises:
     measure: reps
     requires: [wall]
     og_ordinal: 0
+    bw_fraction: 0.55
     sources: [A-44, A-45]
-    note: Ohne gemessenen Lastanteil; Skalierung 1.0 (vorsichtige Seite).
+    note: Ohne gemessenen Lastanteil; höchstens der Anteil der erhöhten Liegestütze (0.55, PAR-C-20), damit die leichtere Sprosse nie schwerer zählt.
   - slug: push-up-incline
     name: Liegestütz mit erhöhten Händen
     status: draft_placeholder
@@ -511,8 +512,9 @@ exercises:
     hold_class: skill_static
     requires: [floor]
     og_ordinal: 0
+    torque_ratio: 0.59
     sources: [A-40, A-35, P-01]
-    note: Kein OG-Level; unter dem Frog Stand (OG 3) eingeordnet. Das Moment hängt vom Vorlagewinkel ab (PAR-C-10) und ist je Satz nicht bekannt, deshalb Skalierung 1.0 (vorsichtige Seite).
+    note: Kein OG-Level; unter dem Frog Stand (OG 3) eingeordnet. Das Moment hängt vom Vorlagewinkel ab und ist je Satz nicht bekannt; 0.59 ist die Lean bei 31° (PAR-C-10, «Lean 31° ≈ Tuck»), die steilste Lean vor der Tuck. So zählt die Lean nie schwerer als die Tuck.
   - slug: planche-tuck
     name: Tuck Planche
     status: draft_placeholder

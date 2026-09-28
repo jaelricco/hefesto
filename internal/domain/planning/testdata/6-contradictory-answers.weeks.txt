@@ -2,35 +2,33 @@ week 1: 3 sessions, 20 sets (0 straight-arm)
   hang-foundation=dead-hang hollow-body=hollow-hold-tuck pull-up=pull-up-negative push-up=push-up-incline row=row-vertical wrist-conditioning=plank-hold
   changes: probe_offered×2 target_changed×2
 week 2: 3 sessions, 21 sets (0 straight-arm)
-  hang-foundation=dead-hang hollow-body=hollow-hold,hollow-hold-tuck pull-up=pull-up-negative push-up=push-up-wall row=row-incline,row-vertical wrist-conditioning=plank-hold
-  changes: target_changed×3 probe_offered
-week 3: 3 sessions, 24 sets (0 straight-arm)
-  hang-foundation=dead-hang hollow-body=hollow-hold pull-up=pull-up-negative push-up=push-up-incline,push-up-wall row=row-horizontal,row-incline wrist-conditioning=plank-hold
-  changes: probe_offered target_changed×4
-week 4: 3 sessions, 20 sets (0 straight-arm)
-  hang-foundation=dead-hang hollow-body=hollow-hold pull-up=pull-up-negative push-up=push-up-incline,push-up-wall row=row-horizontal,row-incline wrist-conditioning=plank-hold
-  changes: target_changed×4
-week 5: 3 sessions, 23 sets (0 straight-arm)
-  hang-foundation=dead-hang hollow-body=hollow-hold pull-up=pull-up-negative push-up=push-up-incline,push-up-wall row=row-horizontal,row-incline wrist-conditioning=plank-hold
-  changes: target_changed×4
-week 6: 3 sessions, 17 sets (0 straight-arm), deload planned
-  hang-foundation=dead-hang hollow-body=hollow-hold pull-up=pull-up-negative push-up=push-up-incline,push-up-wall row=row-horizontal,row-incline wrist-conditioning=plank-hold
-  changes: target_changed×4
-week 7: 3 sessions, 23 sets (0 straight-arm)
-  hang-foundation=dead-hang hollow-body=hollow-hold pull-up=pull-up-negative push-up=push-up-incline,push-up-wall row=row-horizontal,row-incline wrist-conditioning=plank-hold
-  changes: target_changed×4
-week 8: 3 sessions, 23 sets (0 straight-arm)
-  hang-foundation=dead-hang hollow-body=hollow-hold pull-up=pull-up-negative push-up=push-up-incline,push-up-wall row=row-horizontal,row-incline wrist-conditioning=plank-hold
-  changes: target_changed×4
-week 9: 3 sessions, 23 sets (0 straight-arm)
-  hang-foundation=dead-hang hollow-body=hollow-hold pull-up=pull-up-negative push-up=push-up-incline,push-up-wall row=row-horizontal,row-incline wrist-conditioning=plank-hold
-  changes: target_changed×4
-week 10: 3 sessions, 23 sets (0 straight-arm)
-  hang-foundation=dead-hang hollow-body=hollow-hold pull-up=pull-up-negative push-up=push-up-incline,push-up-wall row=row-horizontal,row-incline wrist-conditioning=plank-hold
-  changes: target_changed×4
-week 11: 3 sessions, 23 sets (0 straight-arm)
-  hang-foundation=dead-hang hollow-body=hollow-hold pull-up=pull-up-negative push-up=push-up-incline,push-up-wall row=row-horizontal,row-incline wrist-conditioning=plank-hold
+  hang-foundation=dead-hang hollow-body=hollow-hold,hollow-hold-tuck pull-up=pull-up-negative push-up=push-up-wall row=row-vertical wrist-conditioning=plank-hold
   changes: target_changed×4 probe_offered
-week 12: 3 sessions, 17 sets (0 straight-arm), deload planned
-  hang-foundation=dead-hang hollow-body=hollow-hold pull-up=pull-up-negative push-up=push-up-incline,push-up-wall row=row-horizontal,row-incline wrist-conditioning=plank-hold
+week 3: 3 sessions, 24 sets (0 straight-arm)
+  hang-foundation=dead-hang hollow-body=hollow-hold pull-up=pull-up-negative push-up=push-up-wall row=row-vertical wrist-conditioning=plank-hold
+  changes: probe_offered target_changed×4
+week 4: 3 sessions, 21 sets (0 straight-arm)
+  hang-foundation=dead-hang hollow-body=hollow-hold pull-up=pull-up,pull-up-negative push-up=push-up-wall row=row-vertical wrist-conditioning=plank-hold
+  changes: probe_offered target_changed×2
+week 5: 3 sessions, 24 sets (0 straight-arm)
+  hang-foundation=dead-hang hollow-body=hollow-hold pull-up=pull-up,pull-up-negative push-up=push-up-wall row=row-vertical wrist-conditioning=plank-hold
+  changes: target_changed×2
+week 6: 3 sessions, 16 sets (0 straight-arm), deload planned
+  hang-foundation=dead-hang hollow-body=hollow-hold pull-up=pull-up push-up=push-up-wall wrist-conditioning=plank-hold
+week 7: 3 sessions, 24 sets (0 straight-arm)
+  hang-foundation=dead-hang hollow-body=hollow-hold pull-up=pull-up,pull-up-negative push-up=push-up-wall row=row-vertical wrist-conditioning=plank-hold
+  changes: target_changed×2
+week 8: 3 sessions, 25 sets (0 straight-arm)
+  hang-foundation=dead-hang hollow-body=hollow-hold pull-up=pull-up,pull-up-negative push-up=push-up-wall row=row-vertical wrist-conditioning=plank-hold
+  changes: target_changed×2
+week 9: 3 sessions, 25 sets (0 straight-arm)
+  hang-foundation=dead-hang hollow-body=hollow-hold pull-up=pull-up,pull-up-negative push-up=push-up-wall row=row-vertical wrist-conditioning=plank-hold
+  changes: target_changed×2
+week 10: 3 sessions, 25 sets (0 straight-arm)
+  hang-foundation=dead-hang hollow-body=hollow-hold pull-up=pull-up,pull-up-negative push-up=push-up-wall row=row-vertical wrist-conditioning=plank-hold
   changes: target_changed×4
+week 11: 3 sessions, 25 sets (0 straight-arm)
+  hang-foundation=dead-hang hollow-body=hollow-hold pull-up=pull-up,pull-up-negative push-up=push-up-wall row=row-vertical wrist-conditioning=plank-hold
+  changes: target_changed×4 probe_offered
+week 12: 3 sessions, 16 sets (0 straight-arm), deload planned
+  hang-foundation=dead-hang hollow-body=hollow-hold pull-up=pull-up push-up=push-up-wall wrist-conditioning=plank-hold

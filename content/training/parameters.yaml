@@ -1399,6 +1399,7 @@ parameters:
   key: rtt_regress_on_breach
   text: 'Schmerz > 1 h danach oder am Folgetag: 1 Tag Pause, Stufe wiederholen; Schmerz im Aufwärmen >
     15 min: stoppen, 2 Tage Pause, 1 Stufe zurück'
+  values: {rest_days_next_day: 1, rest_days_warmup: 2, back_steps: 1}
   unit: Regel
   sources: [D-53, D-54]
   evidence: B (Expertenprotokoll)
@@ -2229,8 +2230,8 @@ parameters:
   rationale: Bereiche aus PAR-B-17 und PAR-B-19, Beispiel 15/10/5 (B-115); Reihenfolge trennt die schweren
     Tage
 - {id: PAR-S-14, key: reference_week_mean, text: 'bis zu 3 Wochen mit Last > 0, ohne Deload, im 6-Wochen-Fenster',
-  evidence: Heuristik, heuristic: true, rationale: 'PAR-D-09–11 (3-Wochen-Mittel), PAR-B-73 (6 Wochen),
-    PAR-B-59 (kurze Pausen ohne Rampe)'}
+  value: 3, unit: weeks, evidence: Heuristik, heuristic: true, rationale: 'PAR-D-09–11 (3-Wochen-Mittel),
+    PAR-B-73 (6 Wochen), PAR-B-59 (kurze Pausen ohne Rampe)'}
 - {id: PAR-S-15, key: load_accounts_and_rates, text: '§4.5, §7.1: alle SA-Konten und `wrist` +10 %, alle
     BA-Konten +20 %', evidence: Heuristik, heuristic: true, rationale: 'PAR-D-09–11; Konten trennen gestreckte
     und gebeugte Arme, damit der strengere Deckel nur die Straight-Arm-Last bremst; für SA-Strukturen
@@ -2309,7 +2310,8 @@ parameters:
     Sehnenlast hängt an der Lasthöhe (C-65, S-2)
 - id: PAR-S-31
   key: lower_bound_observation
-  text: wirkt nur, wenn b > μ, dann wie x = b; Halte zählen voll nur mit SIR ≤ 0.5 × Halt
+  text: 'wirkt nur, wenn b > μ, dann wie x = b; Halte zählen voll nur mit SIR ≤ max(3 s, 0.5 × Halt);
+    grössere Reserven zählen als Untergrenze bis zu dieser Grenze (Wdh.: bis RIR 3)'
   values: {abs_s: 3, frac: 0.5}
   sources: [F-08]
   evidence: Heuristik
@@ -2392,3 +2394,15 @@ parameters:
   heuristic: true, rationale: 'R-2 (`onboarding.md` §5.5): eine Vorstufe gilt als plausibel, wenn ihre
     Schätzung mindestens die Hälfte ihrer Schwelle erreicht; die Hälfte entspricht dem Startanteil neuer
     Belastung (PAR-D-12) und lässt Messrauschen der Selbstauskunft (PAR-F-20: 30 %) Platz'}
+- {id: PAR-S-47, key: soreness_definition, text: '«Soreness» in PAR-D-26 und PAR-D-28: ein Wert während,
+    nach oder am Folgetag über dem Wert vor der Einheit (Basiswert nach PAR-D-16; ohne Basiswert 0) sowie
+    jede Angabe «hielt länger als 1 h an» oder «hält länger als 15 min an»; eine Einheit zählt für die
+    Rampe nur ohne Soreness und mit allen Werten ≤ PAR-D-14', evidence: Heuristik, heuristic: true, rationale: '**Review.**
+    PAR-D-28 nennt «Schmerz am Folgetag» ohne Schwelle; wörtlich genommen käme, wer mit stabilem Grundschmerz
+    trainiert, nie aus der Rampe. Der Vergleich mit dem Wert vor der Einheit folgt PAR-D-16 und ist strenger
+    als PAR-D-14 allein (`08` §4: strengerer Wert)'}
+- {id: PAR-S-48, key: session_cap_whole_set, text: LOAD-03 lässt je Einheit und Struktur mindestens M
+    plus den kleinsten geplanten Satz dieser Struktur in der Einheit zu (bei M = 0 diesen Satz), evidence: Heuristik,
+  heuristic: true, rationale: '**Review.** PAR-D-31 (10 %) gilt für Volumen; mit ganzen Sätzen wäre bei
+    1–2 Sätzen je Einheit jede Steigerung > 10 %, und das Volumen bliebe beim halbierten Einstieg stehen.
+    PAR-B-55 erlaubt +1 Satz je Übung; das Wochenwachstum begrenzt weiter LOAD-02'}

@@ -1,6 +1,7 @@
 package planning
 
 import (
+	"math"
 	"slices"
 	"time"
 )
@@ -111,17 +112,14 @@ func (k *Knowledge) regionsOf(a string) []string {
 }
 
 // rampAccounts returns the accounts a region's ramp governs (spec §4.6).
-func (k *Knowledge) rampAccounts(region string, breakOnly bool) []string {
+func (k *Knowledge) rampAccounts(region string) []string {
 	var out []string
 	for _, st := range k.regions[region].Structures {
 		if st == wrist {
 			out = append(out, wrist)
 			continue
 		}
-		out = append(out, account(st, true))
-		if !breakOnly {
-			out = append(out, account(st, false))
-		}
+		out = append(out, account(st, true), account(st, false))
 	}
 	slices.Sort(out)
 	return out
@@ -202,22 +200,33 @@ const (
 	painBreach
 )
 
+// painVerdict is what the reports around one session say about a region.
+type painVerdict struct {
+	status    painStatus // thresholds and morning rule (PAR-D-14–PAR-D-16)
+	sore      bool       // a value above the pre-session baseline (PAR-S-47)
+	nextDay   bool       // the next morning above the baseline (PAR-D-28)
+	lasted    bool       // pain lasted over 1 h after the session (PAR-D-28)
+	persisted bool       // warm-up pain persisted over 15 min (PAR-D-28)
+}
+
 // sessionPain evaluates the reports of a region tied to one session plus
-// the following morning.
-func (k *Knowledge) sessionPain(reports []PainReport, region, sessionID string, baseline float64) (painStatus, bool, bool) {
-	status := painNone
-	lasted, persisted := false, false
+// the following morning. A baseline below 0 means none is known: the
+// morning rule (PAR-D-16) is not judged then, and soreness counts from 0
+// (PAR-S-47).
+func (k *Knowledge) sessionPain(reports []PainReport, region, sessionID string, baseline float64) painVerdict {
+	var v painVerdict
 	worst := func(st painStatus) {
-		if st > status {
-			status = st
+		if st > v.status {
+			v.status = st
 		}
 	}
+	sore := math.Max(baseline, 0)
 	for _, r := range reports {
 		if r.Region != region || r.SessionID != sessionID {
 			continue
 		}
-		lasted = lasted || r.LastedOver
-		persisted = persisted || r.Persisted
+		v.lasted = v.lasted || r.LastedOver
+		v.persisted = v.persisted || r.Persisted
 		switch r.Timepoint {
 		case PainDuring, PainAfter, PainWarmup:
 			switch {
@@ -228,6 +237,7 @@ func (k *Knowledge) sessionPain(reports []PainReport, region, sessionID string, 
 			default:
 				worst(painGreen)
 			}
+			v.sore = v.sore || r.NRS > sore
 		case PainMorning:
 			switch {
 			case baseline >= 0 && r.NRS > baseline:
@@ -237,12 +247,13 @@ func (k *Knowledge) sessionPain(reports []PainReport, region, sessionID string, 
 			default:
 				worst(painGreen)
 			}
-		}
-		if r.LastedOver || r.Persisted {
-			worst(painBreach)
+			if r.NRS > sore {
+				v.sore, v.nextDay = true, true
+			}
 		}
 	}
-	return status, lasted, persisted
+	v.sore = v.sore || v.lasted || v.persisted
+	return v
 }
 
 // weeklyTrendRising reports whether the mean "after" value of the week

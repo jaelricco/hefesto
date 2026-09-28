@@ -57,6 +57,12 @@ func (g *gen) buildSessions() {
 			case !sl.full:
 				continue
 			case a.role == RoleGoal && (a.stim == StimSkill || a.stim == StimSkillReps || a.stim == StimConditioning || a.stim == StimEccentric || a.stim == StimStrength):
+				if it, ok := g.breakCalibration(a, idx); ok {
+					maxB = append(maxB, it)
+					if g.setUnits(k.exercises[it.Exercise]) <= g.setUnits(a.rung)*(1+k.T.SpikeCap) {
+						continue
+					}
+				}
 				maxB = append(maxB, g.nextRungCalibration(a, idx)...)
 				maxB = append(maxB, g.primary(a, idx, reasons)...)
 				if tpl.VolumeBlocks && a.stim == StimSkill {
@@ -182,6 +188,57 @@ func (g *gen) nextRungCalibration(a *active, idx int) []Item {
 	it.Sets, it.Reps, it.Reserve, it.Calibration = 1, int(k.T.NoviceRestart), int(k.T.RIRStrength), true
 	it.RestS = g.rest(k.T.RestStrengthNovice)
 	return []Item{it}
+}
+
+// breakCalibration is the weekly calibration set at the next rung of a
+// straight-arm hold ladder after the first week of a break (§6.11): the rung
+// follows calibration sets (reserve 2–3), never tests or probes, up to the
+// cap of the ramp (one rung under the level before the pause until the ramp
+// reaches 1.0). A set no heavier than a working set (within PAR-D-31) takes
+// the place of the ladder's first exposure; a heavier one comes on top and is
+// the first set LOAD-10 cuts.
+func (g *gen) breakCalibration(a *active, idx int) (Item, bool) {
+	k := g.k
+	b := g.s.Break
+	if idx != 0 || b == nil || b.StraightDays < k.T.LayoffDays || !g.week.After(b.Since) || g.deload != "" ||
+		a.rung.StraightArm != ArmStraight || a.rung.Measure != MeasureHold {
+		return Item{}, false
+	}
+	capEx := k.exercises[g.s.Ladders[a.skill.Slug].CapRung]
+	next := g.nextRung(a.rung)
+	if capEx == nil || next == nil {
+		return Item{}, false
+	}
+	top := capEx.Rung
+	if g.breakRamp() {
+		top--
+	}
+	if next.Rung > top {
+		return Item{}, false
+	}
+	if ok, _, _ := g.feasible(next, next.OG); !ok {
+		return Item{}, false
+	}
+	if _, own := g.s.Capacities[CapKey(next.Slug, AssistNone)]; own {
+		return Item{}, false // measured; the rung choice decides
+	}
+	it := g.baseItem(a, next, StimSkill, []Reason{k.reason(RuleBreak)})
+	it.Sets, it.HoldS, it.Reserve, it.Calibration = 1, int(k.T.VolumeHoldMin), int(k.T.RIRStrength), true
+	it.RestS = g.rest(k.T.RestMax)
+	it.StopRules = stopRules()
+	return it, true
+}
+
+// setUnits is the load of one working set on the straight-arm and wrist
+// accounts.
+func (g *gen) setUnits(ex *Exercise) float64 {
+	t := 0.0
+	for a, u := range g.k.setLoad(ex, KindWorking, 0, g.s.Profile.BodyweightKg) {
+		if isStraightAccount(a) {
+			t += u
+		}
+	}
+	return t
 }
 
 // secondary doses feeder and support ladders in the strength block.
@@ -467,7 +524,7 @@ func (g *gen) techniqueFits(a *active, sl *slot) bool {
 				continue
 			}
 			if c, ok := other.cls[st]; ok && c > classLight {
-				if dayGap(other.day, sl.day) < g.spacing(c, st) || dayGap(sl.day, other.day) < g.k.T.SpacingModerate {
+				if dayGap(other.day, sl.day) < g.spacing(c, st, other.straight[st]) || dayGap(sl.day, other.day) < g.k.T.SpacingModerate {
 					return false
 				}
 			}
@@ -624,10 +681,16 @@ func (g *gen) plate(kg float64) float64 {
 	return math.Max(p, math.Ceil(kg/p)*p)
 }
 
-// applyDeload scales a deload week and regional pain deloads (WEEK-07,
-// ADAPT-14).
+// applyDeload scales the trimmed week for a deload week and regional pain
+// deloads (WEEK-07, ADAPT-14). It runs after the caps, so a deload is always
+// lighter than the week it replaces: sets × 0.6 (at least one), and the
+// reserve +2 comes off the reps or the hold. A deload week drops offers and
+// calibration sets at other rungs and carries the headroom unchanged.
 func (g *gen) applyDeload() {
 	k := g.k
+	if g.deload != "" {
+		g.plan.Headroom = cloneMap(g.s.Headroom)
+	}
 	for si := range g.plan.Sessions {
 		ps := &g.plan.Sessions[si]
 		if g.deload != "" && ps.Kind == SessionFull {
@@ -636,13 +699,27 @@ func (g *gen) applyDeload() {
 		for bi := range ps.Blocks {
 			for ii := range ps.Blocks[bi].Items {
 				it := &ps.Blocks[bi].Items[ii]
-				if it.Kind != KindWorking || it.Offer {
+				if it.Kind != KindWorking || it.Sets <= 0 || it.Stimulus == StimPrehab {
 					continue
 				}
 				if g.deload != "" {
-					it.Sets = max(1, int(math.Floor(float64(float64(it.Sets)*k.T.DeloadSets))))
-					it.Reserve += int(k.T.DeloadReserve)
 					it.Reasons = append(it.Reasons, k.reason(RuleDeload, "kind", g.deload))
+					if it.Offer || it.Calibration && it.Exercise != g.ladderRung(it.Skill) {
+						it.Sets = 0
+						continue
+					}
+					it.Sets = max(1, int(math.Floor(float64(float64(it.Sets)*k.T.DeloadSets))))
+					if !it.Calibration {
+						d := int(k.T.DeloadReserve)
+						before := it.HoldS + it.Reps
+						switch {
+						case it.HoldS > 0 && it.Reps == 0:
+							it.HoldS = max(int(k.T.MinSetHold), it.HoldS-d)
+						case it.Reps > 0:
+							it.Reps = max(1, it.Reps-d)
+						}
+						it.Reserve += before - it.HoldS - it.Reps
+					}
 				}
 				ex := k.exercises[it.Exercise]
 				for _, id := range sortedKeys(g.s.Regions) {
@@ -655,6 +732,16 @@ func (g *gen) applyDeload() {
 			}
 		}
 	}
+}
+
+// ladderRung is the working rung of a skill's ladder in this plan.
+func (g *gen) ladderRung(skill string) string {
+	for _, a := range g.ladders {
+		if a.skill.Slug == skill && a.rung != nil {
+			return a.rung.Slug
+		}
+	}
+	return ""
 }
 
 func clamp(v, lo, hi float64) float64 { return math.Max(lo, math.Min(hi, v)) }

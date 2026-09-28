@@ -122,14 +122,18 @@ func (a *athlete) grow(k *planning.Knowledge, p planning.Plan) {
 type week struct {
 	plan    planning.Plan
 	changes []planning.Change
+	regions string // region states after the week
+	after   planning.Snapshot
 }
 
+// hookFunc adds events after a session (index across the whole run) and
+// returns the snapshot to continue with and the changes the events made.
+type hookFunc func(i int, ps planning.PlannedSession, s planning.Snapshot) (planning.Snapshot, []planning.Change)
+
 // simulate runs n weeks from s: plan, perform every session, adapt, then the
-// week_start event with the plan's headroom. hook may add events after a
-// session (index across the whole run) and returns the snapshot to continue
-// with.
-func simulate(t testing.TB, k *planning.Knowledge, s planning.Snapshot, a *athlete, n int,
-	hook func(i int, ps planning.PlannedSession, s planning.Snapshot) planning.Snapshot) ([]week, planning.Snapshot) {
+// week_start event with the plan's headroom. hook may add events after each
+// session.
+func simulate(t testing.TB, k *planning.Knowledge, s planning.Snapshot, a *athlete, n int, hook hookFunc) ([]week, planning.Snapshot) {
 	t.Helper()
 	var out []week
 	start := monday
@@ -154,7 +158,8 @@ func simulate(t testing.TB, k *planning.Knowledge, s planning.Snapshot, a *athle
 			}
 			changes = append(changes, ch...)
 			if hook != nil {
-				s = hook(idx, ps, s)
+				s, ch = hook(idx, ps, s)
+				changes = append(changes, ch...)
 			}
 			idx++
 		}
@@ -166,7 +171,7 @@ func simulate(t testing.TB, k *planning.Knowledge, s planning.Snapshot, a *athle
 			t.Fatal(err)
 		}
 		changes = append(changes, ch...)
-		out = append(out, week{plan: p, changes: changes})
+		out = append(out, week{plan: p, changes: changes, regions: regionStates(s), after: s})
 	}
 	return out, s
 }
@@ -219,8 +224,27 @@ func summary(k *planning.Knowledge, weeks []week) string {
 		if len(kinds) > 0 {
 			fmt.Fprintf(&b, "  changes: %s\n", strings.Join(dedupe(kinds), " "))
 		}
+		if w.regions != "" {
+			fmt.Fprintf(&b, "  regions after: %s\n", w.regions)
+		}
 	}
 	return b.String()
+}
+
+// regionStates lists the regions that are not normal, with their ramp step.
+func regionStates(s planning.Snapshot) string {
+	var parts []string
+	for id, rs := range s.Regions {
+		if rs.State == planning.StateNormal || rs.State == "" {
+			continue
+		}
+		parts = append(parts, fmt.Sprintf("%s=%s/step %d", id, rs.State, rs.Step))
+	}
+	if b := s.Break; b != nil {
+		parts = append(parts, fmt.Sprintf("break=%.0f days/step %d", b.Days, b.Step))
+	}
+	sort.Strings(parts)
+	return strings.Join(parts, " ")
 }
 
 func dedupe(in []string) []string {

@@ -1362,6 +1362,13 @@ je Struktur (beide Konten zusammen) (PAR-D-31, `08` §4). In der Rampe bezieht
 sich M auf das geloggte beschwerdefreie Maximum vor der Beschwerde (`05`
 §6.2); gibt es keins, gilt LOAD-04.
 
+**Ganze Sätze** (`PAR-S-48`, Review). Geplant werden ganze Sätze. Der Deckel
+lässt deshalb je Einheit und Struktur mindestens M plus den kleinsten
+geplanten Satz dieser Struktur in der Einheit zu (bei M = 0: mindestens diesen
+einen Satz). Ohne diese Regel wächst eine Einheit mit einem oder zwei Sätzen
+nie, weil schon ein zusätzlicher Satz mehr als 10 % ist. Das Wochenwachstum
+begrenzt weiter LOAD-02.
+
 ### 7.4 Neue Belastungsart (LOAD-04)
 
 Ist R(a) = 0 (keine Last in den letzten 6 Wochen), gilt für die erste Woche
@@ -1545,8 +1552,9 @@ Eine eigene Region «Brust» ist ENT-S-9.
 | `locked` | User bestätigt Freigabe durch eine Fachperson (`POST /v1/me/regions/{region}/clearance`; nach einem N-Stopp hebt `POST /v1/me/screening/clearance` den Stopp auf und setzt gesperrte Regionen auf `rtt_1`) | `rtt_1` mit 0.25 | `05` §6.2 (Stufe 0 nach Verweis), PAR-D-33 |
 | `rtt_0` | Alltagsschmerz ≤ 2 und Red-Flag-Fragen negativ | `rtt_1` | `05` §6.2 |
 | `rtt_n` (1–4) | PAR-D-26 erfüllt (≥ 2 Einheiten der Stufe ohne Beschwerden während, nach und am Folgetag; Schmerzregeln eingehalten; ≥ 7 Tage seit dem letzten Wechsel) | nächster Volumenschritt; ist der Schritt 0.75 der Stufe 2 erreicht und erfüllt, `rtt_{n+1}` | PAR-D-25, PAR-D-26 |
-| `rtt_n` (1–5) | Schmerz > 1 h danach (`lasted_over_1h`) oder am Folgetag höher als vor der Einheit | Stufe bzw. Schritt wiederholen, 1 Tag Pause der Struktur | PAR-D-28 |
-| `rtt_n` (1–5) | Schmerz im Aufwärmen, der > 15 min anhält (`persisted_over_15min`) | eine Stufe zurück, 2 Tage Pause der Struktur | PAR-D-28 |
+| `rtt_n` (1–5) | Soreness am Folgetag (`PAR-S-47`) oder Schmerz > 1 h danach (`lasted_over_1h`) | Stufe bzw. Schritt wiederholen (Zähler und 7-Tage-Frist beginnen neu), 1 Tag Pause der Region | PAR-D-28, `PAR-S-47` |
+| `rtt_n` (1–5) | Schmerz im Aufwärmen, der > 15 min anhält (`persisted_over_15min`) | einen Volumenschritt bzw. eine Stufe zurück (in `rtt_1` auf den nächstkleineren Anteil, mindestens 0.25), 2 Tage Pause der Region | PAR-D-28 |
+| `rtt_n` (1–5) | Schmerzregel PAR-D-15, PAR-D-16 oder PAR-D-17 verletzt | Schmerz-Deload (§6.9); Zähler und 7-Tage-Frist des Schritts beginnen neu; bei Soreness zusätzlich die Zeilen darüber | PAR-D-18, PAR-D-26 |
 | `rtt_5` | 2 Wochen ohne Regelverletzung | `normal` (normale Deckel gegen die dann gültige Referenz) | **Heuristik** (`PAR-S-32`) |
 
 ### 8.4 Matrix anwenden (INJ-04)
@@ -1605,9 +1613,9 @@ neutral, freiwillig und ohne Streak-Folgen.
 
 | Regel | Bedingung | Folge | Grundlage |
 |---|---|---|---|
-| grün | alle Werte ≤ 2 | Progression erlaubt; zählt für PAR-D-26 | PAR-D-14 |
+| grün | alle Werte ≤ 2 und keine Soreness (`PAR-S-47`) | Progression erlaubt; zählt für PAR-D-26 | PAR-D-14, `PAR-S-47` |
 | akzeptabel | während/nach ≤ 5, am Morgen nicht höher als vor der Einheit, Wochentrend nicht steigend | weiter ohne Progression | PAR-D-15, PAR-D-16, PAR-D-17 |
-| verletzt | eine der Bedingungen verfehlt | ab der nächsten Einheit: betroffene Strukturen 1 Sprosse leichter, −30 % Volumen, 7 Tage (als Deload erfasst); in der Rampe PAR-D-28 | PAR-D-18, PAR-D-28 |
+| verletzt | eine der Bedingungen verfehlt | ab der nächsten Einheit: betroffene Strukturen 1 Sprosse leichter, −30 % Volumen, 7 Tage (als Deload erfasst); in der Rampe zusätzlich §8.3 | PAR-D-18, PAR-D-28 |
 | kein Bericht | Region mit Beschwerde | keine Progression der Rampe; Plan läuft weiter | `PAR-S-34` (konservativ, ohne Strafe) |
 
 Ohne Red Flags wird nie komplett pausiert; die Last wird reduziert
@@ -2123,7 +2131,7 @@ Evidenz: A–D nach `00_sources.md`; H = Heuristik (Begründung im Abschnitt).
 | DOSE-20–23 | Stoppregeln | §5.9 | PAR-E-15–17, PAR-D-15 | H/A (Reha) |
 | LOAD-01 | Belastungseinheit | §4.5 | PAR-C-27, 40, 44, 45, 47, PAR-B-79, PAR-S-08, PAR-S-15 | H |
 | LOAD-02 | Wochendeckel, Rampen, ganze Sätze | §7.2 | PAR-D-02, 04, 09–11, 23, PAR-B-55, PAR-S-14, 15, 25, 35, 40 | H |
-| LOAD-03 | Einheitsdeckel | §7.3 | PAR-D-31 | B (Analogie) |
+| LOAD-03 | Einheitsdeckel | §7.3 | PAR-D-31, PAR-S-48 | B (Analogie) |
 | LOAD-04 | Neue Belastungsart | §7.4 | PAR-D-12 | H |
 | LOAD-04b | Einstieg für aktuell Trainierende | §7.4 | PAR-D-12, PAR-D-25, PAR-S-43 | H |
 | LOAD-05 | Abstände | §7.5 | PAR-D-03, 08, 34, PAR-B-38, PAR-E-13, 14, PAR-S-07, PAR-S-30 | B/H |
@@ -2154,8 +2162,8 @@ Evidenz: A–D nach `00_sources.md`; H = Heuristik (Begründung im Abschnitt).
 | INJ-03 | Zustandsautomat | §8.3 | PAR-D-14, 19, 21, 24, 26, 28, 29, 33, PAR-S-32 | B/H |
 | INJ-04 | Matrix | §8.4 | `05` §8 | H |
 | INJ-05 | Modifikation und Ersatz | §8.5 | PAR-C-27, PAR-D-41 | B/H |
-| INJ-06 | Rampe | §8.6 | PAR-D-24–27, 33, 34 | B/H |
-| INJ-07 | Schmerz-Monitoring | §8.6 | PAR-D-13–18, 28, 39, 40, PAR-S-34, PAR-S-42 | A (Reha)/H |
+| INJ-06 | Rampe | §8.6 | PAR-D-24–27, 33, 34, PAR-S-47 | B/H |
+| INJ-07 | Schmerz-Monitoring | §8.6 | PAR-D-13–18, 28, 39, 40, PAR-S-34, PAR-S-42, PAR-S-47 | A (Reha)/H |
 | INJ-08 | Verweise | §8.7 | PAR-D-19, 20, 32 | A/B/H |
 | INJ-09 | Minderjährige | §8.8 | PAR-D-22, 23, 42 | H |
 | INJ-10 | Vorgaben von Fachpersonen | §8.9 | – | H |
@@ -2215,6 +2223,8 @@ festgemacht ist.
 | PAR-S-44 | `plausibility_widening_factor` | σ × 1.25 | `onboarding.md` §5.2 (Verbreiterung bei widersprüchlichen Angaben, R-2, und nach Pausen ab 7 Wochen); Faktor ist dort als Heuristik festgelegt |
 | PAR-S-45 | `unknown_answer_sigma_frac` | σ ≥ 0.5 × μ | `onboarding.md` §5.2, Zeile «weiss nicht»: Populations-Prior mit breiter Unsicherheit |
 | PAR-S-46 | `prerequisite_plausibility_fraction` | 0.5 | R-2 (`onboarding.md` §5.5): eine Vorstufe gilt als plausibel, wenn ihre Schätzung mindestens die Hälfte ihrer Schwelle erreicht; die Hälfte entspricht dem Startanteil neuer Belastung (PAR-D-12) und lässt Messrauschen der Selbstauskunft (PAR-F-20: 30 %) Platz |
+| PAR-S-47 | `soreness_definition` | «Soreness» in PAR-D-26 und PAR-D-28: ein Wert während, nach oder am Folgetag über dem Wert vor der Einheit (Basiswert nach PAR-D-16; ohne Basiswert 0) sowie jede Angabe «hielt länger als 1 h an» oder «hält länger als 15 min an»; eine Einheit zählt für die Rampe nur ohne Soreness und mit allen Werten ≤ PAR-D-14 | **Review.** PAR-D-28 nennt «Schmerz am Folgetag» ohne Schwelle; wörtlich genommen käme, wer mit stabilem Grundschmerz trainiert, nie aus der Rampe. Der Vergleich mit dem Wert vor der Einheit folgt PAR-D-16 und ist strenger als PAR-D-14 allein (`08` §4: strengerer Wert) |
+| PAR-S-48 | `session_cap_whole_set` | LOAD-03 lässt je Einheit und Struktur mindestens M plus den kleinsten geplanten Satz dieser Struktur in der Einheit zu (bei M = 0 diesen Satz) | **Review.** PAR-D-31 (10 %) gilt für Volumen; mit ganzen Sätzen wäre bei 1–2 Sätzen je Einheit jede Steigerung > 10 %, und das Volumen bliebe beim halbierten Einstieg stehen. PAR-B-55 erlaubt +1 Satz je Übung; das Wochenwachstum begrenzt weiter LOAD-02 |
 
 ## Anhang C: Index der verwendeten Forschungsparameter
 

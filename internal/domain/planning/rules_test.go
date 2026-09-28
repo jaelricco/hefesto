@@ -352,3 +352,105 @@ func TestHoldGrowthCap(t *testing.T) {
 		t.Fatal("no tuck front lever planned")
 	}
 }
+
+// Spec §8.3 with PAR-D-18, PAR-D-26, PAR-D-28 and PAR-S-47: what one
+// session's pain reports do to a region in the ramp.
+func TestRampPainRules(t *testing.T) {
+	k := kb(t)
+	day := monday.AddDate(0, 0, 14)
+	for _, c := range []struct {
+		name      string
+		reports   []planning.PainReport
+		state     string
+		step      int
+		sessions  int  // step sessions afterwards (one before)
+		restUntil int  // days after the session, 0 = no rest
+		deload    bool // PAR-D-18 pain deload
+	}{
+		{name: "no soreness counts and completes the step", state: planning.StateRTT3, step: 2, reports: []planning.PainReport{
+			{Timepoint: planning.PainBefore, NRS: 1}, {Timepoint: planning.PainDuring, NRS: 1}, {Timepoint: planning.PainMorning, NRS: 1}}},
+		{name: "soreness above the baseline does not count", state: planning.StateRTT2, step: 2, sessions: 1, reports: []planning.PainReport{
+			{Timepoint: planning.PainBefore, NRS: 0}, {Timepoint: planning.PainDuring, NRS: 2}, {Timepoint: planning.PainMorning, NRS: 0}}},
+		{name: "next-day soreness repeats the step and rests a day", state: planning.StateRTT2, step: 2, restUntil: 2, reports: []planning.PainReport{
+			{Timepoint: planning.PainDuring, NRS: 0}, {Timepoint: planning.PainMorning, NRS: 1}}},
+		{name: "pain lasting over an hour", state: planning.StateRTT2, step: 2, restUntil: 2, reports: []planning.PainReport{
+			{Timepoint: planning.PainAfter, NRS: 2, LastedOver: true}}},
+		{name: "warm-up pain over 15 min goes a step back and rests two days", state: planning.StateRTT2, step: 1, restUntil: 3, reports: []planning.PainReport{
+			{Timepoint: planning.PainWarmup, NRS: 3, Persisted: true}}},
+		{name: "a broken threshold deloads and restarts the step", state: planning.StateRTT2, step: 2, deload: true, reports: []planning.PainReport{
+			{Timepoint: planning.PainDuring, NRS: 6}}},
+		{name: "8/10 lasting over an hour does both", state: planning.StateRTT2, step: 2, restUntil: 2, deload: true, reports: []planning.PainReport{
+			{Timepoint: planning.PainAfter, NRS: 8, LastedOver: true}}},
+	} {
+		t.Run(c.name, func(t *testing.T) {
+			s, _ := start(t, k, persona3())
+			rs := s.Regions["elbow_inner"]
+			rs.State, rs.Step, rs.StartFraction, rs.StepSessions, rs.StepSince = planning.StateRTT2, 2, 0.25, 1, day.AddDate(0, 0, -14)
+			s.Regions["elbow_inner"] = rs
+			sess := planning.LoggedSession{ID: "s", Date: day, Sets: []planning.LoggedSet{
+				{ID: "1", Exercise: "planche-lean", Kind: planning.KindWorking, Assist: planning.AssistNone, Value: 5, Reserve: f64(3)}}}
+			var err error
+			s, _, err = planning.Adapt(k, s, planning.Event{Kind: planning.EventSession, At: day.Add(19 * time.Hour), Session: &sess})
+			if err != nil {
+				t.Fatal(err)
+			}
+			for _, r := range c.reports {
+				r.Region, r.SessionID = "elbow_inner", "s"
+				r.At = day.Add(18 * time.Hour)
+				if r.Timepoint == planning.PainBefore {
+					r.At = day.Add(17 * time.Hour)
+				}
+				if r.Timepoint == planning.PainMorning {
+					r.At = day.Add(31 * time.Hour)
+				}
+				if s, _, err = planning.Adapt(k, s, planning.Event{Kind: planning.EventPain, At: r.At, Pain: &r}); err != nil {
+					t.Fatal(err)
+				}
+			}
+			got := s.Regions["elbow_inner"]
+			if got.State != c.state || got.Step != c.step || got.StepSessions != c.sessions {
+				t.Errorf("state %s step %d sessions %d, want %s step %d sessions %d", got.State, got.Step, got.StepSessions, c.state, c.step, c.sessions)
+			}
+			wantRest := time.Time{}
+			if c.restUntil > 0 {
+				wantRest = day.AddDate(0, 0, c.restUntil)
+			}
+			if !got.RestUntil.Equal(wantRest) {
+				t.Errorf("rest until %v, want %v", got.RestUntil, wantRest)
+			}
+			if deload := got.PainDeloadTo.After(day); deload != c.deload {
+				t.Errorf("pain deload %v, want %v", deload, c.deload)
+			}
+		})
+	}
+}
+
+// PAR-D-28: a resting region gets no load until its rest ends.
+func TestRestingRegionIsNotPlanned(t *testing.T) {
+	k := kb(t)
+	s, _ := start(t, k, persona3())
+	rs := s.Regions["elbow_inner"]
+	rs.RestUntil = monday.AddDate(0, 0, 3)
+	s.Regions["elbow_inner"] = rs
+	p, err := planning.Generate(k, s, now, monday)
+	if err != nil {
+		t.Fatal(err)
+	}
+	planned := false
+	for _, ps := range p.Sessions {
+		for _, b := range ps.Blocks {
+			for _, it := range b.Items {
+				if it.Exercise != "planche-lean" && it.Exercise != "planche-tuck" {
+					continue
+				}
+				planned = true
+				if ps.Date.Before(rs.RestUntil) {
+					t.Errorf("%s planned on %s during the rest", it.Exercise, ps.Date.Format(time.DateOnly))
+				}
+			}
+		}
+	}
+	if !planned {
+		t.Error("the planche is not planned after the rest either")
+	}
+}

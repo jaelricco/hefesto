@@ -278,9 +278,16 @@ func (g *gen) selectRung(a *active) {
 	sk := a.skill
 	ls := g.s.Ladders[sk.Slug]
 	top := len(sk.Rungs) - 1
+	// §6.11: the rung before the pause caps the ladder during a break; in
+	// the ramp steps before 1.0 one rung below it, because the ramp stages
+	// before the target rung are regressions (05 §6.2).
 	if ls.CapRung != "" && g.s.Break != nil {
 		if e := k.exercises[ls.CapRung]; e != nil {
-			top = min(top, e.Rung)
+			c := e.Rung
+			if g.breakRamp() && e.StraightArm == ArmStraight {
+				c = max(c-1, 0)
+			}
+			top = min(top, c)
 		}
 	}
 	// PAR-B-57: at most one step up per ladder and week.
@@ -310,6 +317,24 @@ func (g *gen) selectRung(a *active) {
 	}
 	top = min(top, claimCap)
 	lo := k.T.MinSetHold * 2 // 08 §4: set ≥ 2 s plus reserve ≥ 2 s
+	// WEEK-07: a deload week holds the rung of the week before.
+	if g.deload != "" {
+		if ex := k.exercises[ls.Rung]; ex != nil && ex.Skill == sk.Slug && ex.Rung <= top {
+			if ok, _, v := g.feasible(ex, ex.OG); ok {
+				e, has := g.capacity(ex, AssistNone)
+				if ex.Measure == MeasureHold && (!has || k.Dose(e) < lo) && g.hasBands && ex.Assistable {
+					if eb, okb := g.capacity(ex, AssistBand); okb {
+						e, has = eb, true
+					}
+					a.assist = AssistBand
+				}
+				g.setRung(a, ex, e, v)
+				a.hasCap = has
+				a.reasons = append(a.reasons, k.reason(RuleDeloadWeek, "kind", g.deload))
+				return
+			}
+		}
+	}
 	repLo := k.T.HeavyLo
 	if g.exp == ExpNovice {
 		repLo = k.T.NoviceRepsLo
@@ -469,7 +494,7 @@ func (g *gen) setRung(a *active, ex *Exercise, e Estimate, v regionVerdict) {
 	// ADAPT-06a allows: the next rung, or for a band-assisted rung the same
 	// rung without the band.
 	ls := g.s.Ladders[a.skill.Slug]
-	if ls.ProbeOffer && g.probesAllowed(ex) {
+	if ls.ProbeOffer && g.deload == "" && g.probesAllowed(ex) {
 		next := g.nextRung(ex)
 		if a.assist == AssistBand {
 			next = ex

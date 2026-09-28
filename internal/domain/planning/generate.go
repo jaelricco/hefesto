@@ -188,8 +188,8 @@ func Generate(k *Knowledge, s Snapshot, now, week time.Time) (Plan, error) {
 	g.planDays()
 	g.allocate()
 	g.buildSessions()
-	g.applyDeload()
 	g.trimLoads()
+	g.applyDeload()
 	g.trimTime()
 	g.finish()
 	return *g.plan, nil

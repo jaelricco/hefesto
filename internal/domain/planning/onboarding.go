@@ -219,7 +219,7 @@ func Start(k *Knowledge, a Answers, now time.Time) (Snapshot, OnboardingResult, 
 
 	// Pause from the onboarding (spec §6.11, PAR-S-41).
 	if days, ok := breakDays(k, a.LastRegular); ok && days > 0 {
-		s.Break = &BreakState{Days: days, Since: weekStart(today), StepSince: today}
+		s.Break = &BreakState{Days: days, StraightDays: days, Since: weekStart(today), StepSince: today}
 		for skill, lvl := range a.PreBreak {
 			if l := k.level(skill + "/" + lvl); l != nil {
 				ls := s.Ladders[skill]

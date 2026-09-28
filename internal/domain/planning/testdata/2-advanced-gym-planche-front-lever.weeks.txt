@@ -1,26 +1,26 @@
 week 1: 4 sessions, 25 sets (9 straight-arm)
   front-lever=front-lever-tuck+band hollow-body=hollow-hold planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
   changes: calibration_due probe_offered×4
-week 2: 4 sessions, 35 sets (19 straight-arm)
+week 2: 4 sessions, 31 sets (15 straight-arm)
   front-lever=front-lever-tuck,front-lever-tuck+band hollow-body=hollow-hold planche=planche-advanced-tuck,planche-tuck wrist-conditioning=plank-hold
-week 3: 4 sessions, 40 sets (20 straight-arm)
+week 3: 4 sessions, 36 sets (16 straight-arm)
   front-lever=front-lever-advanced-tuck,front-lever-tuck hollow-body=hollow-hold planche=planche-tuck wrist-conditioning=plank-hold
-week 4: 4 sessions, 27 sets (18 straight-arm)
+week 4: 4 sessions, 25 sets (15 straight-arm)
   front-lever=front-lever-tuck planche=planche-tuck wrist-conditioning=plank-hold
-week 5: 4 sessions, 32 sets (22 straight-arm)
+week 5: 4 sessions, 26 sets (17 straight-arm)
   front-lever=front-lever-tuck planche=planche-tuck wrist-conditioning=plank-hold
-week 6: 4 sessions, 30 sets (21 straight-arm), deload planned
-  front-lever=front-lever-tuck hollow-body=hollow-hold planche=planche-tuck,planche-lean wrist-conditioning=plank-hold
-week 7: 4 sessions, 32 sets (22 straight-arm)
-  front-lever=front-lever-tuck planche=planche-tuck wrist-conditioning=plank-hold
-week 8: 4 sessions, 32 sets (22 straight-arm)
-  front-lever=front-lever-tuck planche=planche-tuck wrist-conditioning=plank-hold
-week 9: 4 sessions, 34 sets (22 straight-arm)
+week 6: 4 sessions, 18 sets (6 straight-arm), deload planned
   front-lever=front-lever-tuck hollow-body=hollow-hold planche=planche-tuck wrist-conditioning=plank-hold
-  changes: deload_scheduled×2
-week 10: 4 sessions, 28 sets (22 straight-arm), deload stagnation
-  front-lever=front-lever-tuck,front-lever-tuck+band planche=planche-tuck,planche-lean wrist-conditioning=plank-hold
-week 11: 4 sessions, 31 sets (22 straight-arm)
+week 7: 4 sessions, 27 sets (18 straight-arm)
   front-lever=front-lever-tuck planche=planche-tuck wrist-conditioning=plank-hold
-week 12: 4 sessions, 31 sets (22 straight-arm)
+week 8: 4 sessions, 26 sets (17 straight-arm)
+  front-lever=front-lever-tuck planche=planche-tuck wrist-conditioning=plank-hold
+week 9: 4 sessions, 27 sets (18 straight-arm)
+  front-lever=front-lever-tuck planche=planche-tuck wrist-conditioning=plank-hold
+  changes: deload_scheduled×2
+week 10: 4 sessions, 15 sets (6 straight-arm), deload stagnation
+  front-lever=front-lever-tuck planche=planche-tuck wrist-conditioning=plank-hold
+week 11: 4 sessions, 28 sets (18 straight-arm)
+  front-lever=front-lever-tuck planche=planche-tuck wrist-conditioning=plank-hold
+week 12: 4 sessions, 28 sets (18 straight-arm)
   front-lever=front-lever-tuck planche=planche-tuck wrist-conditioning=plank-hold

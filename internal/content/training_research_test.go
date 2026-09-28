@@ -56,6 +56,70 @@ func TestTrainingParametersMatchResearch(t *testing.T) {
 	}
 }
 
+// The PAR-S parameters are the specification's own heuristics; their key
+// and text must match spec appendix B, where each one is justified.
+func TestTrainingHeuristicsMatchSpec(t *testing.T) {
+	files, issues, err := ReadTraining("../../content")
+	if err != nil || HasErrors(issues, false) {
+		t.Fatalf("reading the knowledge base: %v %v", err, issues)
+	}
+	rows := specRows(t, "../../docs/algorithm/spec.md")
+	checked := 0
+	for _, p := range files.Parameters {
+		if !strings.HasPrefix(p.ID, "PAR-S-") {
+			continue
+		}
+		row, ok := rows[p.ID]
+		if !ok {
+			t.Errorf("%s is not in spec appendix B", p.ID)
+			continue
+		}
+		checked++
+		if p.Key != row.key {
+			t.Errorf("%s: key %q, spec %q", p.ID, p.Key, row.key)
+		}
+		if p.Text != row.text {
+			t.Errorf("%s: text %q, spec %q", p.ID, p.Text, row.text)
+		}
+	}
+	if checked != len(rows) {
+		t.Errorf("%d heuristics in the catalogue, %d in spec appendix B", checked, len(rows))
+	}
+}
+
+var specParamRow = regexp.MustCompile(`^\| (PAR-S-\d+) \|`)
+
+func specRows(t *testing.T, path string) map[string]researchRow {
+	t.Helper()
+	raw, err := os.ReadFile(path) //nolint:gosec // test fixture under docs/algorithm
+	if err != nil {
+		t.Fatal(err)
+	}
+	text := string(raw)
+	start := strings.Index(text, "\n## Anhang B")
+	if start < 0 {
+		t.Fatal("spec appendix B not found")
+	}
+	section := text[start+1:]
+	if end := strings.Index(section[1:], "\n## "); end >= 0 {
+		section = section[:end+1]
+	}
+	out := map[string]researchRow{}
+	for _, line := range strings.Split(section, "\n") {
+		m := specParamRow.FindStringSubmatch(line)
+		if m == nil {
+			continue
+		}
+		cells := splitRow(line)
+		if len(cells) != 4 {
+			t.Errorf("spec: %s has %d cells", m[1], len(cells))
+			continue
+		}
+		out[m[1]] = researchRow{key: strings.Trim(cells[1], "`"), text: cells[2]}
+	}
+	return out
+}
+
 type researchRow struct {
 	key, text string
 	sources   []string

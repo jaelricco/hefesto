@@ -406,32 +406,25 @@ func (a *adapter) fatigue() {
 	}
 }
 
-// rampSessions counts pain-free sessions at a ramp step and advances it
-// (PAR-D-25, PAR-D-26).
+// rampSessions counts the sessions of a break ramp: those that loaded a
+// straight-arm or wrist account (PAR-D-26 counts sessions of the step). A
+// ramp after a complaint counts on the next morning's report instead (pain).
 func (a *adapter) rampSessions(sess LoggedSession) {
-	k, s := a.k, &a.s
-	for _, id := range sortedKeys(s.Regions) {
-		rs := s.Regions[id]
-		st := rttStage(rs.State)
-		if st < 1 || st > 4 || !a.touches(sess, id) {
-			continue
-		}
-		// A ramp after a break without a complaint counts the session now;
-		// a complaint counts it when the next morning's report arrives
-		// (pain, below), because PAR-D-26 asks about the following day.
-		if !rs.BreakOnly {
-			continue
-		}
-		base := baselineBefore(s.Pain, id, sess.ID, sess.Date)
-		if status, _, _ := k.sessionPain(s.Pain, id, sess.ID, base); status == painBreach {
-			continue
-		}
-		rs.StepSessions++
-		a.advance(&rs, id, sess.Date)
-		s.Regions[id] = rs
+	b := a.s.Break
+	if b == nil {
+		return
 	}
-	if b := s.Break; b != nil {
-		b.StepSessions++
+	for _, set := range sess.Sets {
+		ex, ok := a.k.exercises[set.Exercise]
+		if !ok || set.Kind == KindWarmup {
+			continue
+		}
+		for acc := range a.k.setLoad(ex, set.Kind, set.LoadKg, a.s.Profile.BodyweightKg) {
+			if isStraightAccount(acc) {
+				b.StepSessions++
+				return
+			}
+		}
 	}
 }
 
@@ -511,7 +504,7 @@ func (a *adapter) pain(r PainReport) {
 			if r.Timepoint == PainDaily && r.NRS > k.T.PainGreen {
 				rs.State = StateRTT0
 			}
-			rs.Reference = a.references(r.Region, false)
+			rs.Reference = a.references(r.Region)
 			a.change(Change{Kind: ChangeRegion, Region: r.Region, From: StateNormal, To: rs.State, Reasons: []Reason{regional(k.reason(RuleRegionState, "region", name, "state", rs.State), r.Region)}})
 		}
 		s.Regions[r.Region] = rs
@@ -520,12 +513,20 @@ func (a *adapter) pain(r PainReport) {
 	// A session-bound report of a region with a complaint.
 	if r.SessionID != "" && (r.Timepoint == PainMorning || r.Timepoint == PainAfter || r.Timepoint == PainDuring || r.Timepoint == PainWarmup) {
 		base := baselineBefore(s.Pain, r.Region, r.SessionID, r.At)
-		status, lasted, persisted := k.sessionPain(s.Pain, r.Region, r.SessionID, base)
-		trend := k.weeklyTrendRising(s.Pain, r.Region, r.At)
-		if status == painBreach || trend {
-			a.breach(&rs, r.Region, day, lasted, persisted)
-		} else if r.Timepoint == PainMorning && status == painGreen && rttStage(rs.State) >= 1 && rttStage(rs.State) <= 4 {
-			// The morning report completes a green session (PAR-D-26).
+		v := k.sessionPain(s.Pain, r.Region, r.SessionID, base)
+		ruleBroken := v.status == painBreach || k.weeklyTrendRising(s.Pain, r.Region, r.At)
+		st := rttStage(rs.State)
+		ramp := st >= 1 && st <= 5
+		switch {
+		case ruleBroken || ramp && (v.lasted || v.persisted || v.nextDay):
+			restFrom := day
+			if r.Timepoint != PainMorning {
+				restFrom = day.AddDate(0, 0, 1)
+			}
+			a.breach(&rs, r.Region, day, restFrom, ruleBroken, v)
+		case r.Timepoint == PainMorning && v.status == painGreen && !v.sore && st >= 1 && st <= 4:
+			// The morning report completes a session without soreness
+			// (PAR-D-26, PAR-S-47).
 			for _, h := range s.History {
 				if h.ID == r.SessionID && a.touches(h, r.Region) {
 					rs.StepSessions++
@@ -542,26 +543,42 @@ func (a *adapter) pain(r PainReport) {
 	s.Regions[r.Region] = rs
 }
 
-// breach handles a violated pain rule (PAR-D-18, PAR-D-20, PAR-D-28).
-func (a *adapter) breach(rs *RegionState, id string, day time.Time, lasted, persisted bool) {
+// breach handles a violated pain rule: the pain deload when a threshold,
+// the morning rule or the weekly trend is broken (PAR-D-18), and in the ramp
+// the soreness rules (PAR-D-28): repeat the step and rest the region a day,
+// or after persisting warm-up pain go one step back and rest two days. Every
+// breach restarts the step (PAR-D-26).
+func (a *adapter) breach(rs *RegionState, id string, day, restFrom time.Time, deload bool, v painVerdict) {
 	k, s := a.k, &a.s
+	name := k.regions[id].Name
+	if st := rttStage(rs.State); st >= 1 && st <= 5 {
+		from := rs.State
+		rest := 0.0
+		switch {
+		case v.persisted:
+			a.retreat(rs)
+			rest = k.T.RestWarmup
+		case v.lasted || v.nextDay:
+			rest = k.T.RestNextDay
+		}
+		if until := restFrom.AddDate(0, 0, int(rest)); rest > 0 && until.After(rs.RestUntil) {
+			rs.RestUntil = until
+		}
+		rs.StepSessions, rs.StepSince = 0, day
+		if rest > 0 {
+			a.change(Change{Kind: ChangeRamp, Region: id, From: from, To: rs.State,
+				Reasons: []Reason{regional(k.reason(RulePain, "region", name), id)}})
+		}
+	}
 	if n := len(rs.Breaches); n > 0 && rs.Breaches[n-1].Equal(day) {
 		return
 	}
 	rs.Breaches = append(rs.Breaches, day)
-	name := k.regions[id].Name
-	st := rttStage(rs.State)
-	switch {
-	case st >= 1 && persisted:
-		rs.State = rttState(max(st-1, 1))
-		rs.StepSessions, rs.StepSince = 0, day
-	case st >= 1 && lasted:
-		rs.StepSessions = 0
-	default:
+	if deload {
 		rs.PainDeloadTo = day.AddDate(0, 0, int(k.T.PainDeloadDays))
 		rs.HoldAtRef = true
 		if rs.Reference == nil {
-			rs.Reference = a.references(id, false)
+			rs.Reference = a.references(id)
 		}
 		for skill, ls := range s.Ladders {
 			cur := k.exercises[ls.Rung]
@@ -577,8 +594,8 @@ func (a *adapter) breach(rs *RegionState, id string, day time.Time, lasted, pers
 				}
 			}
 		}
+		a.change(Change{Kind: ChangeDeload, Region: id, To: DeloadPain, Reasons: []Reason{regional(k.reason(RulePain, "region", name), id)}})
 	}
-	a.change(Change{Kind: ChangeDeload, Region: id, To: DeloadPain, Reasons: []Reason{regional(k.reason(RulePain, "region", name), id)}})
 	recent := 0
 	for _, t := range rs.Breaches {
 		if daysBetween(t, day) <= k.T.BreachWindow {
@@ -590,6 +607,24 @@ func (a *adapter) breach(rs *RegionState, id string, day time.Time, lasted, pers
 	if float64(recent) == k.T.BreachCount {
 		rs.Referral = "advise"
 		a.change(Change{Kind: ChangeReferral, Region: id, Reasons: []Reason{regional(k.reason(RuleReferral, "region", name), id)}})
+	}
+}
+
+// retreat moves a region one volume step or stage back (PAR-D-28), the
+// inverse of advance; in stage 1 the start share drops one step.
+func (a *adapter) retreat(rs *RegionState) {
+	start := a.k.startStep(rs.StartFraction)
+	switch st := rttStage(rs.State); {
+	case st >= 4:
+		rs.State = rttState(st - 1)
+	case st == 3:
+		rs.State, rs.Step = StateRTT2, 2
+	case st == 2 && rs.Step > start+1:
+		rs.Step--
+	case st == 2:
+		rs.State, rs.Step = StateRTT1, start
+	case st == 1:
+		rs.Step = max(rs.Step-1, 0)
 	}
 }
 
@@ -641,12 +676,12 @@ func (a *adapter) painDays(id string, day time.Time) int {
 }
 
 // references returns the logged pre-complaint R of a region's ramp accounts.
-func (a *adapter) references(id string, breakOnly bool) map[string]float64 {
+func (a *adapter) references(id string) map[string]float64 {
 	k := a.k
 	week := weekStart(civil(a.at, time.UTC))
 	h := k.history(a.s, week)
 	out := map[string]float64{}
-	for _, acc := range k.rampAccounts(id, breakOnly) {
+	for _, acc := range k.rampAccounts(id) {
 		if r, _ := k.reference(h, acc, week); r > 0 {
 			out[acc] = r
 		}
@@ -757,22 +792,7 @@ func (a *adapter) week(week time.Time, headroom map[string]float64) {
 	if n >= 4 {
 		s.Profile.TrainingMonths += 7.0 / 30.0
 	}
-	// Pauses from the log (ADAPT-16).
-	if s.Break == nil && len(s.History) > 0 {
-		last := s.History[len(s.History)-1].Date
-		days := daysBetween(last, week)
-		if days >= k.T.BreakMid {
-			s.Break = &BreakState{Days: days, Since: week, StepSince: week, Logged: true}
-			a.change(Change{Kind: ChangeBreak, To: formatNum(days), Reasons: []Reason{k.reason(RuleBreak, "days", days)}})
-		}
-	} else if b := s.Break; b != nil {
-		a.breakStep(week)
-		weeks := math.Floor(daysBetween(b.Since, week) / 7)
-		grown := k.breakFactorFor(b.Days) * math.Pow(k.T.BreakGrowth, weeks)
-		if (b.Step >= 3 || b.Days < k.T.LayoffDays) && grown >= 1 {
-			s.Break = nil
-		}
-	}
+	a.breaks(week)
 	// Stage 5 back to normal after two weeks without a breach (PAR-S-32).
 	for _, id := range sortedKeys(s.Regions) {
 		rs := s.Regions[id]
@@ -797,6 +817,70 @@ func (a *adapter) week(week time.Time, headroom map[string]float64) {
 		e := s.Capacities[key]
 		if !e.At.IsZero() && daysBetween(e.At, week) >= 7*k.T.CalibrationWeeks && !slices.Contains(ph.Calibrate, key) {
 			ph.Calibrate = append(ph.Calibrate, key)
+		}
+	}
+}
+
+// breaks detects a pause from the log at a week start, keeps it current
+// while the user stays away, advances its ramp and ends it (ADAPT-16,
+// spec §6.11). The pause of the straight-arm and wrist accounts counts from
+// their own last load, so a pause of only those accounts ramps them too.
+func (a *adapter) breaks(week time.Time) {
+	k, s := a.k, &a.s
+	if len(s.History) == 0 {
+		return
+	}
+	h := k.history(*s, week)
+	lastAny := s.History[len(s.History)-1].Date
+	var lastStraight time.Time
+	for acc, t := range h.lastLoad {
+		if isStraightAccount(acc) && t.After(lastStraight) {
+			lastStraight = t
+		}
+	}
+	days := daysBetween(lastAny, week)
+	straight := 0.0
+	if !lastStraight.IsZero() && daysBetween(lastStraight, week) >= k.T.LayoffDays {
+		straight = daysBetween(lastStraight, week)
+	}
+	b := s.Break
+	switch {
+	case b == nil && (days >= k.T.BreakMid || straight > 0):
+		ref := map[string]float64{}
+		for acc, t := range h.lastLoad {
+			if r, _ := k.reference(h, acc, weekStart(t).AddDate(0, 0, 7)); r > 0 {
+				ref[acc] = r
+			}
+		}
+		s.Break = &BreakState{Days: days, StraightDays: straight, Since: week, StepSince: week, Logged: true, Reference: ref}
+		// The rung before the pause caps the ladder during the ramp.
+		for _, skill := range sortedKeys(s.Ladders) {
+			ls := s.Ladders[skill]
+			if ex := k.exercises[ls.Rung]; ex != nil && ex.StraightArm == ArmStraight {
+				ls.CapRung = ls.Rung
+				s.Ladders[skill] = ls
+			}
+		}
+		a.change(Change{Kind: ChangeBreak, To: formatNum(math.Max(days, straight)), Reasons: []Reason{k.reason(RuleBreak, "days", math.Max(days, straight))}})
+	case b != nil && b.Logged && lastAny.Before(b.Since):
+		// Still away: the pause grows and the ramp starts in the week the
+		// user comes back.
+		b.Days = days
+		if straight > 0 {
+			b.StraightDays = straight
+		}
+		b.Since, b.Step, b.StepSince, b.StepSessions = week, 0, week, 0
+	case b != nil:
+		a.breakStep(week)
+		weeks := math.Floor(daysBetween(b.Since, week) / 7)
+		grown := k.breakFactorFor(b.Days) * math.Pow(k.T.BreakGrowth, weeks)
+		// The ramp ends when its last step (1.0) has held for the weeks of
+		// the reference mean, so LOAD-02 takes over from a mean of full
+		// weeks rather than of ramp weeks (PAR-S-14).
+		rampDone := b.StraightDays < k.T.LayoffDays ||
+			b.Step >= 3 && daysBetween(b.StepSince, week) >= 7*k.T.RefWeeks
+		if rampDone && grown >= 1 {
+			s.Break = nil
 		}
 	}
 }

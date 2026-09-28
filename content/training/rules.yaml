@@ -312,7 +312,7 @@ rules:
 - id: LOAD-03
   title: Grenze je Einheit
   text: Eine einzelne Einheit liegt höchstens knapp über deiner grössten Einheit der letzten 30 Tage.
-  params: [PAR-D-31]
+  params: [PAR-D-31, PAR-S-48]
   evidence: B (Analogie)
 - id: LOAD-04
   title: Neue Belastung
@@ -483,13 +483,13 @@ rules:
   title: Rampe
   text: Die Belastung für {region} steigt in Stufen wieder an; die nächste Stufe folgt, wenn Einheiten
     ohne Zunahme der Beschwerden gelingen.
-  params: [PAR-D-24, PAR-D-25, PAR-D-26, PAR-D-27, PAR-D-33, PAR-D-34]
+  params: [PAR-D-24, PAR-D-25, PAR-D-26, PAR-D-27, PAR-D-33, PAR-D-34, PAR-S-47]
   evidence: B/H
 - id: INJ-07
   title: Schmerzregel
   text: Deine Angaben zu {region} liegen über der Schmerzregel; die Belastung dort sinkt vorübergehend.
   params: [PAR-D-13, PAR-D-14, PAR-D-15, PAR-D-16, PAR-D-17, PAR-D-18, PAR-D-28, PAR-D-39, PAR-D-40, PAR-S-34,
-    PAR-S-42]
+    PAR-S-42, PAR-S-47]
   evidence: A (Reha)/H
 - id: INJ-08
   title: Fachperson

@@ -26,11 +26,12 @@ func experience(p Profile) string {
 
 // slot is one training day of the week.
 type slot struct {
-	day     time.Weekday
-	date    time.Time
-	full    bool
-	ladders []*active
-	cls     map[string]int // structure → highest class planned that day
+	day      time.Weekday
+	date     time.Time
+	full     bool
+	ladders  []*active
+	cls      map[string]int  // structure → highest class planned that day
+	straight map[string]bool // structure → a straight-arm stimulus planned that day
 }
 
 // weekdayOrder sorts Monday first.
@@ -50,7 +51,7 @@ func (g *gen) planDays() {
 	fullSet := bestSpread(days, nFull)
 	for i, d := range days {
 		off := weekdayOrder(d)
-		g.slots = append(g.slots, &slot{day: d, date: g.week.AddDate(0, 0, off), full: fullSet[i], cls: map[string]int{}})
+		g.slots = append(g.slots, &slot{day: d, date: g.week.AddDate(0, 0, off), full: fullSet[i], cls: map[string]int{}, straight: map[string]bool{}})
 	}
 	g.fullCount = nFull
 	if nFull < len(days) {
@@ -110,17 +111,19 @@ func popcount(x int) int {
 }
 
 // spacing returns the hours a stimulus of class c needs before the next
-// hard or moderate stimulus of the same structure (LOAD-05).
-func (g *gen) spacing(c int, structure string) float64 {
+// hard or moderate stimulus of the same structure (LOAD-05); straight is a
+// straight-arm stimulus, which a break ramp spaces like a complaint ramp.
+func (g *gen) spacing(c int, structure string, straight bool) float64 {
 	k := g.k
+	ramp := g.inRamp(structure) || straight && g.breakRamp()
 	switch c {
 	case classHard:
-		if g.inRamp(structure) {
+		if ramp {
 			return k.T.SpacingRamp
 		}
 		return k.T.SpacingHard
 	case classModerate:
-		if g.inRamp(structure) {
+		if ramp {
 			return k.T.SpacingRamp
 		}
 		return k.T.SpacingModerate
@@ -128,10 +131,28 @@ func (g *gen) spacing(c int, structure string) float64 {
 	return 0
 }
 
+// breakRamp reports whether the straight-arm and wrist accounts are in the
+// steps of a break ramp before 1.0 (PAR-D-34 applies, spec §6.11).
+func (g *gen) breakRamp() bool {
+	b := g.s.Break
+	return b != nil && b.StraightDays >= g.k.T.LayoffDays && b.Step < 3
+}
+
 // inRamp reports whether a structure belongs to a region in the ramp.
 func (g *gen) inRamp(structure string) bool {
 	for id, rs := range g.s.Regions {
 		if st := rttStage(rs.State); st >= 1 && st <= 4 && g.k.regionHas(id, structure) {
+			return true
+		}
+	}
+	return false
+}
+
+// resting reports whether an exercise loads a region that rests on date
+// after a soreness breach (PAR-D-28).
+func (g *gen) resting(ex *Exercise, date time.Time) bool {
+	for id, rs := range g.s.Regions {
+		if date.Before(rs.RestUntil) && float64(g.k.maxRating(id, ex)) >= g.k.T.SpacingRating {
 			return true
 		}
 	}
@@ -163,6 +184,9 @@ func (g *gen) fits(a *active, i int) bool {
 			return false
 		}
 	}
+	if g.resting(a.rung, sl.date) {
+		return false
+	}
 	if a.class == classLight {
 		return true
 	}
@@ -175,13 +199,14 @@ func (g *gen) fits(a *active, i int) bool {
 			if !ok || oc == classLight {
 				continue
 			}
-			if dayGap(sl.day, other.day) < g.spacing(a.class, st) || dayGap(other.day, sl.day) < g.spacing(oc, st) {
+			straight := a.rung.StraightArm != ArmNone
+			if dayGap(sl.day, other.day) < g.spacing(a.class, st, straight) || dayGap(other.day, sl.day) < g.spacing(oc, st, other.straight[st]) {
 				return false
 			}
 		}
 		for _, m := range g.hist.hardAt[st] {
 			gap := sl.date.Sub(m.day).Hours()
-			if gap >= 0 && gap < g.spacing(m.class, st) {
+			if gap >= 0 && gap < g.spacing(m.class, st, m.straight) {
 				return false
 			}
 		}
@@ -197,6 +222,9 @@ func (g *gen) place(a *active, i int) {
 	for _, st := range g.k.structuresAt(a.rung) {
 		if a.class > sl.cls[st] || sl.cls[st] == 0 {
 			sl.cls[st] = max(sl.cls[st], a.class)
+		}
+		if a.rung.StraightArm != ArmNone && a.class > classLight {
+			sl.straight[st] = true
 		}
 	}
 }
