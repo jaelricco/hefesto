@@ -118,7 +118,7 @@ CREATE TABLE user_region_status (
         CHECK (state IN ('normal','locked','rtt_0','rtt_1','rtt_2','rtt_3','rtt_4','rtt_5')),
     entered_via    text                 NULL
         CONSTRAINT user_region_status_via_ck
-        CHECK (entered_via IN ('onboarding','pain_report','red_flag','red_flags_negative','break','clearance')),
+        CHECK (entered_via IN ('onboarding','pain_report','red_flag','red_flags_negative','break','clearance','consent')),
     since          timestamptz          NULL,
     start_fraction double precision NOT NULL DEFAULT 0
         CONSTRAINT user_region_status_fraction_ck CHECK (start_fraction BETWEEN 0 AND 1),
@@ -345,7 +345,7 @@ CREATE TABLE plan_decisions (
     trigger     text        NOT NULL
         CONSTRAINT plan_decisions_trigger_ck
         CHECK (trigger IN ('onboarding','session_completed','pain_report','red_flags',
-                           'clearance','symptoms','week_start')),
+                           'clearance','symptoms','week_start','consent')),
     source_id   text        NOT NULL
         CONSTRAINT plan_decisions_source_ck CHECK (source_id <> ''),
     occurred_at timestamptz NOT NULL,

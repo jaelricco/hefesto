@@ -128,6 +128,11 @@ DELETE FROM user_region_status WHERE user_id = $1 AND region = $2;
 -- name: ListPainReports :many
 SELECT * FROM user_pain_reports WHERE user_id = $1 ORDER BY position;
 
+-- A withdrawn consent deletes the reports (spec §4.9); keep holds the ones
+-- the snapshot still has.
+-- name: DeletePainReportsExcept :exec
+DELETE FROM user_pain_reports WHERE user_id = @user_id AND NOT (id = ANY(@keep::uuid[]));
+
 -- name: NextPainPosition :one
 SELECT coalesce(max(position) + 1, 0)::int AS next FROM user_pain_reports WHERE user_id = $1;
 

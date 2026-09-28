@@ -34,6 +34,7 @@ const (
 	TriggerClearance  = "clearance"
 	TriggerSymptoms   = "symptoms"
 	TriggerWeek       = "week_start"
+	TriggerConsent    = "consent"
 )
 
 // Onboard turns the onboarding answers into the start state and the first
@@ -339,6 +340,14 @@ func (s *Service) AnswerRedFlags(ctx context.Context, userID uuid.UUID, answersI
 // clearance for a region, or for everything when region is empty.
 func (s *Service) ConfirmClearance(ctx context.Context, userID uuid.UUID, clearanceID, region string) (Outcome, error) {
 	return s.apply(ctx, userID, TriggerClearance, clearanceID, planning.Event{Kind: planning.EventClearance, At: s.Clock.Now(), Region: region}, nil)
+}
+
+// SetConsent grants or withdraws the consent to keep health data. A
+// withdrawal deletes the health data and keeps the constraints (spec §4.9,
+// ENT-S-7); a grant takes the screening and past injuries again.
+func (s *Service) SetConsent(ctx context.Context, userID uuid.UUID, changeID string, c planning.ConsentChange) (Outcome, error) {
+	return s.apply(ctx, userID, TriggerConsent, changeID, planning.Event{Kind: planning.EventConsent, At: s.Clock.Now(), Consent: &c},
+		func(kb *planning.Knowledge, _ planning.Snapshot) error { return kb.ValidateConsent(c) })
 }
 
 // ReportSymptoms stops training after exertion symptoms (RF-10, SAFE-02).

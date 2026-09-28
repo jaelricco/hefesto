@@ -515,7 +515,7 @@ func plannerAnswers(kind string) domain.Answers {
 		Classes: map[string]string{"push_up_class": "21_30", "pull_up_class": "12_15", "dip_class": "13_20"},
 		Stages:  map[string]domain.StageAnswer{"planche": {Level: "tuck", Class: "10_19"}}}
 	switch kind {
-	case "complaint":
+	case "complaint", "consent":
 		a.BodyMap = map[string]domain.BodyMapEntry{"elbow_inner": {Current: true}}
 		a.Complaints = map[string]domain.Complaint{"elbow_inner": {PainDaily: 1.5, PainTraining: 3.5, Onset: "gradual",
 			DurationWeeks: 2, Suspected: "no", Assessment: "no"}}
@@ -580,7 +580,7 @@ func perform(ps domain.PlannedSession, sessionID uuid.UUID) domain.LoggedSession
 func TestPlannerServiceMatchesMemory(t *testing.T) {
 	kb := planning.LoadContentKnowledge(filepath.Join(pgtest.RepoRoot(), "content"), false,
 		slog.New(slog.NewTextHandler(io.Discard, nil)))
-	for _, kind := range []string{"advanced", "complaint", "returner", "redflags", "stopped"} {
+	for _, kind := range []string{"advanced", "complaint", "returner", "redflags", "stopped", "consent"} {
 		t.Run(kind, func(t *testing.T) {
 			db := pgtest.New(t)
 			pg, mem := store.NewPlanner(db), memory.New()
@@ -641,6 +641,23 @@ func TestPlannerServiceMatchesMemory(t *testing.T) {
 				both("screening clearance", func(svc *planning.Service) (any, error) {
 					return svc.ConfirmClearance(ctx, user, "cl-1", "")
 				})
+			case "consent":
+				// A withdrawal deletes the health rows and keeps the
+				// constraints (spec §4.9, ENT-S-7).
+				rid := id().String()
+				both("daily pain", func(svc *planning.Service) (any, error) {
+					return svc.ReportPain(ctx, user, rid, domain.PainReport{Region: "elbow_inner",
+						Timepoint: domain.PainDaily, NRS: 2, At: clk.t})
+				})
+				both("withdrawal", func(svc *planning.Service) (any, error) {
+					return svc.SetConsent(ctx, user, "consent-1", domain.ConsentChange{})
+				})
+				for table, want := range map[string]int{"user_pain_reports": 0, "user_region_status": 0, "user_screening": 0,
+					"planning_constraints": 1} {
+					if n := count(t, db, `SELECT count(*) FROM `+table+` WHERE user_id = $1`, user); n != want {
+						t.Errorf("%s has %d rows after the withdrawal, want %d", table, n, want)
+					}
+				}
 			}
 			for week := 0; week < 3; week++ {
 				var plan domain.Plan
@@ -668,6 +685,12 @@ func TestPlannerServiceMatchesMemory(t *testing.T) {
 				clk.t = monday.AddDate(0, 0, 7*(week+1)).Add(7 * time.Hour)
 				both(fmt.Sprintf("week %d start", week+2), func(svc *planning.Service) (any, error) {
 					return svc.StartWeek(ctx, user)
+				})
+			}
+			if kind == "consent" {
+				both("grant", func(svc *planning.Service) (any, error) {
+					return svc.SetConsent(ctx, user, "consent-2", domain.ConsentChange{Granted: true,
+						Screening: make([]bool, 6), PastInjuries: []string{"knee"}})
 				})
 			}
 			both("profile", func(svc *planning.Service) (any, error) {

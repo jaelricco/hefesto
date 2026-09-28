@@ -243,7 +243,8 @@ func (t *plannerTx) read(ctx context.Context) (domain.Snapshot, *plannerRows, bo
 }
 
 // SaveSnapshot writes a snapshot. Rows that did not change since the read
-// are not written; the history and the pain reports only gain rows.
+// are not written. The history only gains rows; so do the pain reports,
+// until a withdrawn consent drops them.
 func (t *plannerTx) SaveSnapshot(ctx context.Context, userID uuid.UUID, s domain.Snapshot) error {
 	if err := t.check(userID); err != nil {
 		return err
@@ -433,6 +434,9 @@ func (t *plannerTx) saveConstraints(ctx context.Context, prev []dbgen.PlanningCo
 // the snapshot.
 func (t *plannerTx) savePain(ctx context.Context, have map[uuid.UUID]bool, reports []domain.PainReport) error {
 	q, user := t.q, t.user
+	if err := t.deleteWithdrawnPain(ctx, have, reports); err != nil {
+		return err
+	}
 	var pos int32 = -1
 	for _, r := range reports {
 		id, err := uuid.Parse(r.ID)
@@ -463,6 +467,33 @@ func (t *plannerTx) savePain(ctx context.Context, have map[uuid.UUID]bool, repor
 		}
 		pos++
 		have[id] = true
+	}
+	return nil
+}
+
+// deleteWithdrawnPain deletes the stored reports the snapshot no longer has.
+// Pain reports only grow, except when the consent is withdrawn and the core
+// drops them all (spec §4.9).
+func (t *plannerTx) deleteWithdrawnPain(ctx context.Context, have map[uuid.UUID]bool, reports []domain.PainReport) error {
+	keep := make([]uuid.UUID, 0, len(reports))
+	kept := map[uuid.UUID]bool{}
+	for _, r := range reports {
+		if id, err := uuid.Parse(r.ID); err == nil {
+			keep, kept[id] = append(keep, id), true
+		}
+	}
+	gone := false
+	for id := range have {
+		if !kept[id] {
+			gone = true
+			delete(have, id)
+		}
+	}
+	if !gone {
+		return nil
+	}
+	if err := t.q.DeletePainReportsExcept(ctx, dbgen.DeletePainReportsExceptParams{UserID: t.user, Keep: keep}); err != nil {
+		return fmt.Errorf("deleting pain reports: %w", err)
 	}
 	return nil
 }

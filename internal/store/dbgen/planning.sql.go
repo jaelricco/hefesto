@@ -56,6 +56,22 @@ func (q *Queries) DeleteLadderState(ctx context.Context, arg DeleteLadderStatePa
 	return err
 }
 
+const deletePainReportsExcept = `-- name: DeletePainReportsExcept :exec
+DELETE FROM user_pain_reports WHERE user_id = $1 AND NOT (id = ANY($2::uuid[]))
+`
+
+type DeletePainReportsExceptParams struct {
+	UserID uuid.UUID
+	Keep   []uuid.UUID
+}
+
+// A withdrawn consent deletes the reports (spec §4.9); keep holds the ones
+// the snapshot still has.
+func (q *Queries) DeletePainReportsExcept(ctx context.Context, arg DeletePainReportsExceptParams) error {
+	_, err := q.db.Exec(ctx, deletePainReportsExcept, arg.UserID, arg.Keep)
+	return err
+}
+
 const deleteRegionStatus = `-- name: DeleteRegionStatus :exec
 DELETE FROM user_region_status WHERE user_id = $1 AND region = $2
 `

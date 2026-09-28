@@ -42,6 +42,9 @@ type Querier interface {
 	// are deleted outright.
 	DeleteInjuryRisksNotIn(ctx context.Context, arg DeleteInjuryRisksNotInParams) error
 	DeleteLadderState(ctx context.Context, arg DeleteLadderStateParams) error
+	// A withdrawn consent deletes the reports (spec §4.9); keep holds the ones
+	// the snapshot still has.
+	DeletePainReportsExcept(ctx context.Context, arg DeletePainReportsExceptParams) error
 	DeleteRegionStatus(ctx context.Context, arg DeleteRegionStatusParams) error
 	DeleteScreening(ctx context.Context, userID uuid.UUID) error
 	// Associations carry no user data, so they are replaced wholesale.
