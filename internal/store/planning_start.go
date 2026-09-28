@@ -49,7 +49,7 @@ func (t *plannerTx) StartSession(ctx context.Context, userID uuid.UUID, in plann
 	w := Writer{UserID: userID, DeviceID: in.DeviceID, At: in.At}
 	row, err := q.InsertPlannedWorkoutSession(ctx, dbgen.InsertPlannedWorkoutSessionParams{
 		ID: in.SessionID, UserID: userID, StartedAt: in.StartedAt, Timezone: in.Timezone,
-		LocalDate: dateOf(in.LocalDate), Title: in.Draft.Title, PlannedSessionID: &in.PlannedSessionID,
+		LocalDate: dateOf(in.LocalDate), PlannedSessionID: &in.PlannedSessionID,
 		ClientID: w.DeviceID, UpdatedAt: w.At,
 	})
 	if errors.Is(err, pgx.ErrNoRows) {

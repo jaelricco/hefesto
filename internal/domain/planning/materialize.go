@@ -16,10 +16,12 @@ func (k *Knowledge) StopRule(s Snapshot, now time.Time) string {
 }
 
 // SessionDraft is a planned session as the training log records it (spec
-// §10.2): its blocks in order, one set entry per planned set, each with one
-// element that carries the targets.
+// §10.2): its blocks with sets in order, one set entry per planned set, each
+// with one element that carries the targets. A block without planned sets
+// (a general warm-up, a block of offers) is not written; the plan shows it.
+// The log session has no title: the app names it from the plan, in the
+// athlete's language.
 type SessionDraft struct {
-	Title  string
 	Blocks []DraftBlock
 }
 
@@ -67,7 +69,7 @@ const maxRIR = 10
 // only on the athlete's active choice, which the client asks for. newID
 // gives every block, set and element its ID.
 func Materialize(k *Knowledge, p PlannedSession, newID func() string) SessionDraft {
-	d := SessionDraft{Title: "Geplante Einheit"}
+	var d SessionDraft
 	for _, b := range p.Blocks {
 		db := DraftBlock{ID: newID(), Role: b.Role, Kind: DraftStraight}
 		var items []Item
@@ -99,7 +101,9 @@ func Materialize(k *Knowledge, p PlannedSession, newID func() string) SessionDra
 				}
 			}
 		}
-		d.Blocks = append(d.Blocks, db)
+		if len(db.Sets) > 0 {
+			d.Blocks = append(d.Blocks, db)
+		}
 	}
 	return d
 }

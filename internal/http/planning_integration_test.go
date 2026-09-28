@@ -448,7 +448,8 @@ func TestHealthConsentWithdrawAndGrant(t *testing.T) {
 func TestStartPlannedSession(t *testing.T) {
 	a := newAPI(t, withPlanner(&fixedClock{plannerMonday}))
 	u := onboarded(t, a, "start@example.com")
-	plan := a.call("GET", "/v1/me/plan", u.access, nil).ok(200, "TrainingPlan")
+	pr := a.call("GET", "/v1/me/plan", u.access, nil)
+	plan := pr.ok(200, "TrainingPlan")
 	sessions := plan["sessions"].([]any)
 	if len(sessions) < 2 {
 		t.Fatalf("%d sessions planned", len(sessions))
@@ -496,10 +497,13 @@ func TestStartPlannedSession(t *testing.T) {
 	if again["id"] != logID {
 		t.Errorf("second start gave %v, want %v", again["id"], logID)
 	}
-	now := a.call("GET", "/v1/me/plan", u.access, nil).ok(200, "TrainingPlan")["sessions"].([]any)[0].(map[string]any)
+	// The plan shows the start, and its ETag changes with it.
+	ar := a.callWith("GET", "/v1/me/plan", u.access, map[string]string{"If-None-Match": pr.header.Get("ETag")})
+	now := ar.ok(200, "TrainingPlan")["sessions"].([]any)[0].(map[string]any)
 	if now["status"] != "started" || now["workout_session_id"] != logID {
 		t.Errorf("planned session after the start: %v %v", now["status"], now["workout_session_id"])
 	}
+	a.callWith("GET", "/v1/me/plan", u.access, map[string]string{"If-None-Match": ar.header.Get("ETag")}).ok(304, "")
 
 	// Performing a planned set goes through the log API and keeps its item.
 	el := set["elements"].([]any)[0].(map[string]any)

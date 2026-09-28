@@ -775,13 +775,18 @@ func TestPlannerStartsAPlannedSession(t *testing.T) {
 		t.Fatalf("log session %+v", sess)
 	}
 	items := map[string]domain.Item{}
-	want := 0
+	want, blocks := 0, 0
 	for _, b := range ps.Blocks {
+		n := 0
 		for _, it := range b.Items {
 			items[it.ID] = it
 			if !it.Offer {
-				want += it.Sets
+				n += it.Sets
 			}
+		}
+		want += n
+		if n > 0 {
+			blocks++
 		}
 	}
 	sets := 0
@@ -812,8 +817,8 @@ func TestPlannerStartsAPlannedSession(t *testing.T) {
 			}
 		}
 	}
-	if sets != want || len(sess.Blocks) != len(ps.Blocks) {
-		t.Fatalf("%d sets in %d blocks, want %d in %d", sets, len(sess.Blocks), want, len(ps.Blocks))
+	if sets != want || len(sess.Blocks) != blocks {
+		t.Fatalf("%d sets in %d blocks, want %d in %d", sets, len(sess.Blocks), want, blocks)
 	}
 	// Planned sets are no evidence for the skill map (ADR 0008).
 	if n := count(t, db, `SELECT count(*) FROM set_entries WHERE session_id = $1 AND NOT is_planned`, first); n != 0 {

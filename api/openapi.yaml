@@ -1280,7 +1280,8 @@ paths:
         only on events. `week` asks for an earlier week's plan as it ended.
         A plan whose training is stopped (SAFE-02, SAFE-07) has
         `stopped: true`, no sessions, and says why. The `ETag` names this
-        plan; a matching `If-None-Match` returns 304.
+        plan and the starts of its sessions; a matching `If-None-Match`
+        returns 304.
       parameters:
         - name: week
           in: query

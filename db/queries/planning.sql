@@ -303,9 +303,9 @@ WHERE id = @id AND user_id = @user_id;
 
 -- name: InsertPlannedWorkoutSession :one
 INSERT INTO workout_sessions (
-    id, user_id, started_at, timezone, local_date, title, planned_session_id, client_id, updated_at
+    id, user_id, started_at, timezone, local_date, planned_session_id, client_id, updated_at
 ) VALUES (
-    @id, @user_id, @started_at, @timezone, @local_date, @title, @planned_session_id, @client_id, @updated_at
+    @id, @user_id, @started_at, @timezone, @local_date, @planned_session_id, @client_id, @updated_at
 )
 ON CONFLICT (id) DO NOTHING
 RETURNING *;

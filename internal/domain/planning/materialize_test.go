@@ -35,11 +35,8 @@ func TestMaterialize(t *testing.T) {
 			}
 			d := planning.Materialize(k, ps, counter())
 			seen := map[string]bool{}
-			if len(d.Blocks) != len(ps.Blocks) || d.Title == "" {
-				t.Fatalf("%s: %d blocks for %d planned", pa.name, len(d.Blocks), len(ps.Blocks))
-			}
-			for bi, b := range ps.Blocks {
-				db := d.Blocks[bi]
+			bi := 0
+			for _, b := range ps.Blocks {
 				want, items := 0, map[string]planning.Item{}
 				for _, it := range b.Items {
 					if !it.Offer {
@@ -47,8 +44,17 @@ func TestMaterialize(t *testing.T) {
 						items[it.ID] = it
 					}
 				}
-				if len(db.Sets) != want {
-					t.Errorf("%s: block %s has %d sets, want %d", pa.name, b.Role, len(db.Sets), want)
+				if want == 0 {
+					checked["empty"] = true
+					continue // not written
+				}
+				if bi >= len(d.Blocks) {
+					t.Fatalf("%s: %d blocks written, block %s missing", pa.name, len(d.Blocks), b.Role)
+				}
+				db := d.Blocks[bi]
+				bi++
+				if db.Role != b.Role || len(db.Sets) != want {
+					t.Errorf("%s: block %s has %d sets, want %d of %s", pa.name, db.Role, len(db.Sets), want, b.Role)
 				}
 				if b.Paired && len(items) > 1 {
 					checked["superset"] = true
@@ -85,9 +91,12 @@ func TestMaterialize(t *testing.T) {
 					}
 				}
 			}
+			if bi != len(d.Blocks) {
+				t.Errorf("%s: %d blocks written, %d with planned sets", pa.name, len(d.Blocks), bi)
+			}
 		}
 	}
-	for _, c := range []string{"hold", "reps"} {
+	for _, c := range []string{"hold", "reps", "empty"} {
 		if !checked[c] {
 			t.Errorf("no persona plan exercised the %s case", c)
 		}

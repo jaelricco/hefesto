@@ -1,6 +1,8 @@
 package http
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -172,8 +174,7 @@ func (h *handlers) getTrainingPlan(w http.ResponseWriter, r *http.Request) error
 	if err != nil {
 		return err
 	}
-	// A plan never changes; a new one has a new ID.
-	if notModified(w, r, p.ID) {
+	if notModified(w, r, planETag(p)) {
 		return nil
 	}
 	WriteJSON(w, r, http.StatusOK, planFrom(k, p))
@@ -189,9 +190,25 @@ func (h *handlers) regenerateTrainingPlan(w http.ResponseWriter, r *http.Request
 	if err != nil {
 		return err
 	}
-	w.Header().Set("ETag", `"`+p.ID+`"`)
+	w.Header().Set("ETag", `"`+planETag(p)+`"`)
 	WriteJSON(w, r, http.StatusOK, planFrom(k, p))
 	return nil
+}
+
+// planETag names a plan and the starts of its sessions. A plan never
+// changes, a new one has a new ID; but starting a session changes what the
+// plan shows (ADR 0016).
+func planETag(p core.Plan) string {
+	h := sha256.New()
+	started := false
+	for _, s := range p.Sessions {
+		started = started || s.WorkoutSessionID != ""
+		fmt.Fprintf(h, "%s %s %s\n", s.ID, s.Status, s.WorkoutSessionID)
+	}
+	if !started {
+		return p.ID
+	}
+	return p.ID + "." + hex.EncodeToString(h.Sum(nil))[:16]
 }
 
 func (h *handlers) getPlannedSession(w http.ResponseWriter, r *http.Request) error {

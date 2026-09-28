@@ -555,9 +555,9 @@ func (q *Queries) InsertPlannedSetEntry(ctx context.Context, arg InsertPlannedSe
 
 const insertPlannedWorkoutSession = `-- name: InsertPlannedWorkoutSession :one
 INSERT INTO workout_sessions (
-    id, user_id, started_at, timezone, local_date, title, planned_session_id, client_id, updated_at
+    id, user_id, started_at, timezone, local_date, planned_session_id, client_id, updated_at
 ) VALUES (
-    $1, $2, $3, $4, $5, $6, $7, $8, $9
+    $1, $2, $3, $4, $5, $6, $7, $8
 )
 ON CONFLICT (id) DO NOTHING
 RETURNING id, user_id, started_at, ended_at, timezone, local_date, title, notes, perceived_fatigue, bodyweight_kg, status, is_rest_day, template_id, completed_at, client_id, updated_at, server_updated_at, server_seq, deleted_at, planned_session_id
@@ -569,7 +569,6 @@ type InsertPlannedWorkoutSessionParams struct {
 	StartedAt        time.Time
 	Timezone         string
 	LocalDate        pgtype.Date
-	Title            string
 	PlannedSessionID *uuid.UUID
 	ClientID         *uuid.UUID
 	UpdatedAt        time.Time
@@ -582,7 +581,6 @@ func (q *Queries) InsertPlannedWorkoutSession(ctx context.Context, arg InsertPla
 		arg.StartedAt,
 		arg.Timezone,
 		arg.LocalDate,
-		arg.Title,
 		arg.PlannedSessionID,
 		arg.ClientID,
 		arg.UpdatedAt,
