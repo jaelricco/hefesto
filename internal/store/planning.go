@@ -457,9 +457,11 @@ func (t *plannerTx) savePain(ctx context.Context, have map[uuid.UUID]bool, repor
 		if err != nil {
 			return fmt.Errorf("storing pain report %s: %w", r.ID, err)
 		}
-		if n == 1 {
-			pos++
+		if n == 0 {
+			// The user's own reports are in have; this ID is another user's.
+			return fmt.Errorf("pain report %s: %w", r.ID, ErrAlreadyExists)
 		}
+		pos++
 		have[id] = true
 	}
 	return nil

@@ -276,6 +276,20 @@ func TestPlannerRejectsBadIDsAndOtherUsers(t *testing.T) {
 	if ok {
 		t.Fatal("a failed save left a snapshot behind")
 	}
+
+	// A pain report ID another user already holds is a conflict, not a
+	// report silently left out.
+	mine, pain := id(), id()
+	workoutSession(t, db, other, mine, monday)
+	s = fullSnapshot(mine, pain)
+	inTx(t, p, other, func(st planning.Stores) error { return st.Snapshots.SaveSnapshot(ctx, other, s) })
+	ours := id()
+	workoutSession(t, db, user, ours, monday)
+	s = fullSnapshot(ours, pain)
+	err = p.InTx(ctx, user, func(st planning.Stores) error { return st.Snapshots.SaveSnapshot(ctx, user, s) })
+	if !errors.Is(err, store.ErrAlreadyExists) {
+		t.Fatalf("stored a pain report under another user's ID: %v", err)
+	}
 }
 
 func TestPlannerPlans(t *testing.T) {
