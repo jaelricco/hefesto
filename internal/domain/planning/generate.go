@@ -28,18 +28,22 @@ type Plan struct {
 	Disclaimer     string             `json:"disclaimer"`
 }
 
-// PlannedSession is one session of the plan. Status and WorkoutSessionID
-// are the store's: whether the session was started, and its log session.
+// PlannedSession is one session of the plan. Status, WorkoutSessionID and
+// CheckIn are the store's: whether the session was started, its log
+// session, and whether a check-in made it lighter.
 type PlannedSession struct {
-	ID               string    `json:"id,omitempty"`
-	Status           string    `json:"status,omitempty"`
-	WorkoutSessionID string    `json:"workout_session_id,omitempty"`
-	Index            int       `json:"index"`
-	Date             time.Time `json:"date"`
-	Kind             string    `json:"kind"` // full, light, deload
-	EstMinutes       float64   `json:"est_minutes"`
-	Blocks           []Block   `json:"blocks"`
-	Reasons          []Reason  `json:"reasons,omitempty"`
+	ID               string `json:"id,omitempty"`
+	Status           string `json:"status,omitempty"`
+	WorkoutSessionID string `json:"workout_session_id,omitempty"`
+	// CheckIn is set when a tired check-in at the start made the session
+	// lighter (ADAPT-17); the store keeps it with the start.
+	CheckIn    bool      `json:"check_in,omitempty"`
+	Index      int       `json:"index"`
+	Date       time.Time `json:"date"`
+	Kind       string    `json:"kind"` // full, light, deload
+	EstMinutes float64   `json:"est_minutes"`
+	Blocks     []Block   `json:"blocks"`
+	Reasons    []Reason  `json:"reasons,omitempty"`
 }
 
 // Session kinds.
