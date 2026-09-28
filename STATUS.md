@@ -127,8 +127,9 @@ documents are in German.
   - A planned hold carries its target reserve there, and a completed hold's
     `sir_s` becomes its reserve in the planner's history. Holds count as
     full observations again where the reserve allows.
-  - The iOS app does not send it yet; without it a hold stays a lower
-    bound, as before.
+  - The iOS app asks for it when a set holds exactly one hold (U-67): an
+    optional "Reserve" picker, 0–60 s. It is stored locally and synced both
+    ways. Repeating the last set does not copy it.
 - **A started draft follows the plan (this checkpoint, ADR 0017):**
   - Every new plan of the week reconciles the drafts of started sessions in
     the same transaction. Their open planned sets follow the day's session
@@ -164,7 +165,8 @@ documents are in German.
   (U-39 to U-46), the consent decisions in ADR 0015 (U-47 to U-49), the
   start decisions in ADR 0016 (U-50 to U-54), the reconciliation in
   ADR 0017 (U-55 to U-57), the completion in ADR 0018 (U-58 to U-61), the
-  check-in in ADR 0019 (U-62 to U-64), and these findings in spec §15.4:
+  check-in in ADR 0019 (U-62 to U-64), the hold reserve (U-65 to U-67),
+  and these findings in spec §15.4:
   - sets with partner or machine assistance reach neither the capacities
     nor the load history;
   - a set performed offline after the server replaced or removed it is
@@ -172,6 +174,8 @@ documents are in German.
     push its outbox before an event; otherwise ADR 0009 needs an exception;
   - WEEK-08 regenerates the whole week, not only from the next session that
     has not started;
+  - the iOS app does not ask for RIR, so its rep sets reach the planner as
+    lower bounds; only tests and sets to failure count in full;
   - no exercise carries `restriction_tags`, so a professional's
     restrictions from the onboarding are stored but do not yet exclude
     anything;
