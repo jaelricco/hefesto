@@ -690,7 +690,8 @@ Client offline schreibt. Die DDL entsteht als eigene, additive Migration
 | `set_entries` | **neu**: `sir_s` (optional, 0–60), `planned_item_id` (optional; Verweis auf das Plan-Item, §10.2) | Client | ja | – |
 
 Gesundheitsangaben (Tabellen mit «ja» in der Spalte Einwilligung) werden beim
-Widerruf der Einwilligung gelöscht und mit dem Konto kaskadiert. Aufbewahrung
+Widerruf der Einwilligung gelöscht und mit dem Konto kaskadiert (umgesetzt in
+ADR 0015, U-47). Aufbewahrung
 und Rechtsgrundlage sind rechtlich zu klären (ENT-4, OE-2); bis dahin gilt:
 nur speichern, was eine Planentscheidung braucht.
 
@@ -1917,6 +1918,7 @@ selbst anlegt, ihre ID.
 | `GET /v1/me/regions` | Zustand je Region mit Namen, Auflagen, Red-Flag-Fragen und Disclaimer | ohne Einwilligung nur die Auflagen (`tracked: false`) |
 | `POST /v1/me/regions/{region}/red-flags` | Antworten auf die Red-Flag-Fragen | jede gestellte Frage beantwortet (U-43); ohne Einwilligung nur flüchtig ausgewertet |
 | `POST /v1/me/regions/{region}/clearance`, `POST /v1/me/screening/clearance` | User bestätigt die Freigabe durch eine Fachperson | Zustandswechsel §8.3 |
+| `POST /v1/me/health-consent` | Einwilligung zu Gesundheitsdaten erteilen oder widerrufen | Widerruf löscht Gesundheitsangaben, Auflagen bleiben; Erteilung fragt Screening und Vorverletzungen neu (U-47, ADR 0015) |
 | `GET /v1/me/capacity` | Kapazitäten mit Konfidenzklasse | für «Profil verfeinern» |
 | `GET /v1/planner/rules`, `GET /v1/planner/sources`, `GET /v1/planner/parameters`, `GET /v1/planner/catalogue` | Katalog für die Erklärungen; `catalogue` mit Skills, Übungen, Regionen und Antwortklassen des Planers (U-46) | öffentlich lesbar, versioniert über `ETag` (`ruleset_version`) |
 
@@ -2129,7 +2131,8 @@ In-Memory-Adaptern. Danach (28.09.2026): Migration `00009_planning.sql` und
 der Postgres-Adapter `internal/store/planning.go` mit Integrationstests gegen
 echtes Postgres (ADR 0013, U-36 bis U-38), dann die Endpunkte unter dem Tag
 `planning` mit OpenAPI-Schema und einem Integrationstest je Endpunkt
-(ADR 0014, U-39 bis U-46). Nicht umgesetzt: `Materialize` und der Start einer
+(ADR 0014, U-39 bis U-46), dann Widerruf und Erteilung der Einwilligung
+(ADR 0015, U-47 bis U-49). Nicht umgesetzt: `Materialize` und der Start einer
 geplanten Einheit (§15.3).
 
 Tests: sechs Personas als Golden Files (`internal/domain/planning/testdata/`),
@@ -2195,6 +2198,9 @@ U-35 setzen die Entscheidungen ENT-R-1, ENT-R-2 und ENT-R-5 um (§15.5).
 | U-44 | §13.4 | Schmerzberichte ohne Einwilligung: `409 consent-required` | Der Kern verwirft sie ohne Einwilligung; die API sagt es, statt still nichts zu tun |
 | U-45 | §4 | `Start` und `Adapt` geben leere Listen als `nil` zurück | Der Speicher kann eine leere Zeilenmenge nicht von einer fehlenden unterscheiden; sonst änderte sich der `input_hash` nach dem Lesen |
 | U-46 | §10.3 | `GET /v1/planner/catalogue` liefert Skills, Übungen, Regionen mit Red-Flag-Fragen und Antwortklassen des Planers; Pläne nennen den Namen jeder Übung | Die Skills und Übungen des Planers sind noch keine Content-Zeilen (U-1) und fehlen in `/v1/skills` |
+| U-47 | §4.9, §13.4 | `POST /v1/me/health-consent`: Der Widerruf löscht Regionszustände, Screening und Schmerzberichte; eine gesperrte Region bleibt gesperrt, eine Region mit Beschwerde oder in der Rampe wird ausgeschlossen, ein Stopp bleibt. Die Erteilung fragt die sechs Screening-Fragen und die Vorverletzungen neu und macht aus jedem Ausschluss eine verfolgte Region in `rtt_0` | ENT-S-7; ohne neue Antworten würde ein früheres «Ja» im Screening Tests erlauben; `rtt_0` schliesst dieselben Übungen aus wie der Ausschluss, hat aber den Ausgang aus §8.3 |
+| U-48 | §8.3, SAFE-04 | Ohne Einwilligung lässt die Freigabe einer Sperre ohne gespeicherten Zustand einen Ausschluss zurück, und eine Red Flag mit der Aktion «Stufe 0» schliesst die Region aus; mit Einwilligung führt eine solche Freigabe in die Rampe | Vorher war die Region nach der Freigabe sofort frei, und eine A-Red-Flag hinterliess nichts, weil ohne Einwilligung kein Zustand gespeichert wird |
+| U-49 | Anhang A (SAFE-04) | Text: «Er speichert keine Beschwerden und keine Schmerzwerte, nur Sperren und Ausschlüsse aus den Sicherheitsfragen.» | Der alte Text («keine Einschränkungen dauerhaft») widersprach ENT-S-7 |
 
 ### 15.3 Nicht umgesetzt
 
@@ -2214,8 +2220,8 @@ Minderjährige bekommen keinen Plan (SAFE-07); INJ-09 ist deshalb nicht aktiv.
 Aus §10 fehlen der Start einer geplanten Einheit (`Materialize`,
 `POST /v1/me/plan/sessions/{id}/start`) und `plan_changes[]` am Abschluss
 (beides braucht die Übungen des Planers im Log, U-1), der Sync der
-Schmerzberichte, das Ändern und der Widerruf der Einwilligung (ENT-S-7) und
-`?explain=trace` (ADR 0014).
+Schmerzberichte und `?explain=trace` (ADR 0014), sowie ein Nachweis der
+Einwilligung mit Zeitpunkt und Textversion (ADR 0015).
 PAR-D-28 enthält zwei der vier Soreness Rules aus `05` §6.1; Schmerz im
 Aufwärmen, der in 15 min verschwindet, hat keine eigene Regel. Ein
 angekündigtes Angebot (ADAPT-05) kann bei knappen Deckeln im Plan fehlen,
@@ -2248,6 +2254,12 @@ weil die Adaption die Kürzung nicht vorhersieht.
   den sechs Kategorien ist Inhalt und braucht eine fachliche Prüfung
   (ENT-10); bis dahin sollte die App die Frage nicht stellen oder sagen, dass
   der Planer die Angabe noch nicht berücksichtigt.
+- **Abgeleitete Gesundheitsangaben nach einem Widerruf.** Der Widerruf
+  löscht die Gesundheitstabellen (U-47), aber `plan_decisions` (Änderungen
+  mit Region und Zustand) und `training_plans` (Begründungen mit Region)
+  bleiben. Das Protokoll ist nur anhängbar und trägt die Idempotenz der
+  Ereignisse. Ob diese Angaben geschwärzt oder gelöscht werden müssen,
+  gehört zur rechtlichen Prüfung (ENT-4, ADR 0015).
 - **Weniger Trainingstage.** Mit WEEK-09 (ENT-R-5) haben Persona 2 meist
   drei statt vier, Persona 3 meist zwei statt vier und Persona 5 zwei statt
   drei Trainingstage, weil die übrigen Tage nur einen Satz hätten. Das

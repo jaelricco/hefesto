@@ -61,7 +61,7 @@ Noch nicht gebaut, jeweils mit Grund:
   diesem Schritt.
 - Einwilligung ändern oder widerrufen: Ein Widerruf muss Gesundheitsdaten
   löschen und Auflagen behalten (ENT-S-7); das braucht einen eigenen
-  Endpunkt.
+  Endpunkt. Nachgezogen in ADR 0015.
 - `?explain=trace`: Der Kern zeichnet noch keine Spur auf.
 
 ### 2. Das Onboarding läuft einmal

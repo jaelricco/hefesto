@@ -95,13 +95,25 @@ documents are in German.
     endpoints answer 503.
   - Every endpoint has an integration test against real Postgres that checks
     each response against its schema.
+- **Health-data consent (this checkpoint, ADR 0015):**
+  - `POST /v1/me/health-consent` grants or withdraws the consent.
+  - A withdrawal deletes region states, screening and pain reports. Locks,
+    stops and exclusions of regions with a complaint stay as constraints.
+  - A grant asks the screening and past injuries again and tracks every
+    excluded region in stage 0 of the return ramp.
+  - Without consent a cleared lock and a stage-0 red flag now leave the
+    region excluded; before, the region was left unprotected.
 - **Open for review:** the API decisions in ADR 0014 and spec §15.2
-  (U-39 to U-46), and a new finding in spec §15.4: no exercise carries
-  `restriction_tags`, so a professional's restrictions from the onboarding
-  are stored but do not yet exclude anything.
+  (U-39 to U-46), the consent decisions in ADR 0015 (U-47 to U-49), and two
+  findings in spec §15.4:
+  - no exercise carries `restriction_tags`, so a professional's
+    restrictions from the onboarding are stored but do not yet exclude
+    anything;
+  - after a withdrawal the decision log and past plans still name regions
+    and states; whether they must be redacted is a legal question (ENT-4).
 - **Not yet built:** starting a planned session and `plan_changes` on
   completion (the log cannot hold the planner's exercises yet), the sync of
-  pain reports, changing or withdrawing the health-data consent, and
+  pain reports, a record of the consent text agreed to, and
   `?explain=trace`.
 - **Still blocking production:**
   - The content review of the knowledge base (ENT-10). Until then it stays
