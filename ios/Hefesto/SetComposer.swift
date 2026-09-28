@@ -85,12 +85,14 @@ struct SetComposer: View {
                                     Text("Not rated").tag(Int?.none)
                                     ForEach(Self.rirChoices, id: \.self) { Text($0, format: .number).tag(Int?.some($0)) }
                                 }
+                                .themedPicker()
                             }
                             if asksSIR {
                                 Picker("Seconds left", selection: $sirS) {
                                     Text("Not rated").tag(Int?.none)
                                     ForEach(Self.sirChoices, id: \.self) { Text("\($0) s").tag(Int?.some($0)) }
                                 }
+                                .themedPicker()
                             }
                         }
                         .themedRow()
@@ -233,13 +235,16 @@ struct ElementFields: View {
 
         Stepper(value: $draft.loadKg, in: 0...300, step: 2.5) {
             LabeledContent("Added load") {
-                Text("\(draft.loadKg.formatted(.number.precision(.fractionLength(0...1)))) kg").monospacedDigit()
+                Text("\(draft.loadKg.formatted(.number.precision(.fractionLength(0...1)))) kg")
+                    .monospacedDigit()
+                    .foregroundStyle(Palette.textSecondary)
             }
         }
 
         Picker("Assistance", selection: $draft.assistance) {
             ForEach(AssistanceKind.all, id: \.self) { Text(AssistanceKind.label($0)).tag($0) }
         }
+        .themedPicker()
         if draft.assistance != "none" {
             LabeledContent("Estimated assist") {
                 TextField("kg", value: $draft.assistKg, format: .number)
@@ -252,6 +257,7 @@ struct ElementFields: View {
             Text("Not rated").tag(Int?.none)
             ForEach(1...5, id: \.self) { Text(FormQuality.label($0)).tag(Int?.some($0)) }
         }
+        .themedPicker()
         Toggle("To failure", isOn: $draft.failed)
     }
 }

@@ -298,7 +298,7 @@ No server code or API spec changed in this phase.
 Polish: localization, an accessibility pass, a TestFlight build, importing
 the researched seed content, and a load smoke test.
 
-## Design pass: direction B, "Glut" (merged in #11; the set composer follows, awaiting review)
+## Design pass: direction B, "Glut" (merged in #11 and #12; grey pickers awaiting review)
 
 The owner chose direction B of three mockups. The decisions are in ADR 0020.
 It is developed on `claude/awesome-wright-gqa9pe`, next to the planner track,
@@ -322,7 +322,9 @@ and touches only the app's views, its project file and its strings.
   section has landed (#10). Its sections carry the same caps labels as every
   other list in the app. The composer can open on an exercise already chosen,
   and the demo's `reserve` screen uses that to open it on a hold, so the
-  screenshots show the reserve question.
+  screenshots show the reserve question. Merged in #12.
+- **Pickers show their choice in grey**, the secondary text colour, like any
+  other value. Ember stays for actions (the owner's call on review, ADR 0020).
 
 ### Verification
 
@@ -334,12 +336,12 @@ On the self-hosted Mac (Xcode 26.4.1, iOS 26.4 simulator):
 - At c720d95, the set composer on top of the planner (#10): `ios` (run 48)
   passes 63 tests in 15 suites and builds the app; `ios-screenshots` (run 7)
   captures all 13 demo screens, the new `reserve` screen among them.
+- At 6d0936f, grey pickers: `ios` (run 51) and `ios-screenshots` (run 9)
+  pass. On the `reserve` screen, the pickers' values and the added load now
+  measure #A89F95, the palette's secondary text; they were ember (#FF7A33)
+  and the system's grey.
 
 ### Open questions for review
 
 1. **Light mode.** There is none now (ADR 0020). Should a light palette
    follow for training outdoors?
-2. **Choices in ember.** The composer's pickers (assistance, form, reserve)
-   show their values in ember, because iOS tints them with the app's accent.
-   Elsewhere ember marks the one action on a screen. Keep them, or set them in
-   the secondary text colour?
