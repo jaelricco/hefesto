@@ -146,8 +146,8 @@ in `00009_planning.sql`.
   - Der Offline-Start aus §10.5: Die Sync-Operationen tragen weder
     `planned_session_id` noch `planned_item_id`. Offline angelegte Sessions
     bleiben ohne Verweis auf den Plan.
-- **Befund für den Review (Sicherheit):** Der Server ändert einen
-  gestarteten Draft nicht. Das Ereignis bleibt dabei für den Plan wirksam;
+- **Befund für den Review (Sicherheit), behoben in ADR 0017:** Der Server
+  ändert einen gestarteten Draft nicht. Das Ereignis bleibt dabei für den Plan wirksam;
   nur der Draft zeigt es nicht. Beispiel: Während einer Einheit meldet der
   User Schmerz oder Symptome, und der neue Plan schliesst eine Region aus
   oder stoppt das Training.

@@ -120,14 +120,23 @@ documents are in German.
     A new plan of the week keeps a start on the same day.
   - Offers, and blocks without sets, are not written. A band target stays in
     the plan item, because the log needs the actual band.
+- **A started draft follows the plan (this checkpoint, ADR 0017):**
+  - Every new plan of the week reconciles the drafts of started sessions in
+    the same transaction. Their open planned sets follow the day's session
+    in the new plan, less what is done.
+  - Unchanged items keep their sets and the athlete's own edits.
+  - A changed target replaces the open sets, and dropped items lose theirs.
+    New items come in a new block.
+  - Without a session on the day, as after a stop, every open planned set
+    goes. Performed sets never change.
+  - The event answers `session_adjusted` with the session (rule ADAPT-19).
 - **Open for review:** the API decisions in ADR 0014 and spec §15.2
   (U-39 to U-46), the consent decisions in ADR 0015 (U-47 to U-49), the
-  start decisions in ADR 0016 (U-50 to U-54), and these findings in
-  spec §15.4:
-  - a started draft does not follow the plan. If pain or symptoms during a
-    session exclude a region or stop training, the draft keeps its open
-    planned sets. The app must reconcile them; a server-side proposal is in
-    ADR 0016;
+  start decisions in ADR 0016 (U-50 to U-54), the reconciliation in
+  ADR 0017 (U-55 to U-57), and these findings in spec §15.4:
+  - a set performed offline after the server replaced or removed it is
+    refused by sync, because deletions are final (ADR 0009). The app should
+    push its outbox before an event; otherwise ADR 0009 needs an exception;
   - WEEK-08 regenerates the whole week, not only from the next session that
     has not started;
   - no exercise carries `restriction_tags`, so a professional's

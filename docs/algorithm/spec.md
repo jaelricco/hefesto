@@ -1155,6 +1155,7 @@ Kombination bleibt ein Satz-Eintrag mit mehreren Elementen (CLAUDE.md).
 | Profil-, Ziel-, Equipmentänderung | Neuerzeugung ab der nächsten nicht begonnenen Einheit (WEEK-08) | je Änderung |
 | Freigabe einer Region oder des Screenings | Zustandswechsel (§8.3) | je Freigabe |
 | neue Content- oder Regelversion | Neuerzeugung zu Wochenbeginn | je Version |
+| jeder neue Plan der Woche während einer gestarteten Einheit | offene geplante Sätze des Entwurfs folgen dem neuen Plan, ausgeführte bleiben (ADAPT-19, §10.2) | mit dem auslösenden Ereignis |
 
 Die Adaption läuft nach dem Commit der auslösenden Transaktion. Scheitert sie,
 bleibt der Abschluss der Einheit gültig; die Adaption wird beim nächsten
@@ -1897,6 +1898,11 @@ selbst anlegt, ihre ID.
 - **Ausführen** läuft unverändert über die Log-API bzw. den Sync (ADR 0007,
   0009): Aus einem geplanten Satz wird ein ausgeführter (`is_planned = false`,
   `completed_at`, Istwerte). Zielwerte bleiben im Plan erhalten.
+- **Abgleich** (ADAPT-19, ADR 0017): Jeder neue Plan der Woche gleicht die
+  Entwürfe gestarteter Einheiten ab. Die offenen geplanten Sätze folgen der
+  Einheit desselben Tages im neuen Plan, abzüglich des Erledigten. Ohne
+  Einheit an dem Tag, etwa nach einem Stopp, gehen sie. Ausgeführte Sätze
+  bleiben. Das Ereignis meldet `session_adjusted` mit der Session.
 - **Abschluss** (`POST /v1/sessions/{id}/complete`, unverändert idempotent):
   Nach dem Commit ruft der Dienst `Adapt`; die Antwort bekommt das optionale,
   additive Feld `plan_changes[]`. Über den Sync abgeschlossene Einheiten lösen
@@ -2144,7 +2150,8 @@ echtes Postgres (ADR 0013, U-36 bis U-38), dann die Endpunkte unter dem Tag
 (ADR 0014, U-39 bis U-46), dann Widerruf und Erteilung der Einwilligung
 (ADR 0015, U-47 bis U-49), dann der Start einer geplanten Einheit im
 Trainings-Log mit `Materialize` und den Übungen des Planers im Katalog
-(ADR 0016, U-50 bis U-54).
+(ADR 0016, U-50 bis U-54), und der Abgleich eines gestarteten Entwurfs mit
+jedem neuen Plan (ADR 0017, U-55 bis U-57).
 
 Tests: sechs Personas als Golden Files (`internal/domain/planning/testdata/`),
 die Eigenschaften I-1 bis I-11 für jeden erzeugten Plan, zwölf simulierte
@@ -2217,6 +2224,9 @@ U-35 setzen die Entscheidungen ENT-R-1, ENT-R-2 und ENT-R-5 um (§15.5).
 | U-52 | §10.2 | Band-Unterstützung und die Reserve eines Halts bleiben im Plan-Item; Angebote und Blöcke ohne geplanten Satz werden nicht geschrieben; die Session hat keinen Titel | Das Log verlangt für ein Band die `band_id`, die der Planer nicht kennt, und hat keine Spalte für eine Halte-Reserve; Angebote gelten nur auf aktive Wahl (U-10); ein Titel im Code umginge die Texte der Wissensbasis (KB-11) |
 | U-53 | §10.2, §10.3 | Der Start steht in `planned_sessions` (Status, Session), nicht im Plan-Payload; das `ETag` des Plans nimmt die Starts auf | Ein gespeicherter Plan ändert sich nie (U-41); ohne die Starts im `ETag` sähe ein Client mit Cache den Start nicht |
 | U-54 | §5.4 WEEK-08 | Ein neuer Plan übernimmt Status und Session einer gestarteten Einheit am selben Tag | Jedes Ereignis erzeugt einen neuen Plan; ohne Übernahme wäre ein Start nach einem Schmerzbericht nicht mehr sichtbar |
+| U-55 | §10.2 | Jeder neue Plan der Woche gleicht die Entwürfe gestarteter Einheiten ab: Verglichen werden die Plan-Items (Block-Rolle, Übung, Art), nicht die Werte im Log; unveränderte Items behalten ihre Sätze und die Anpassungen des Users, geänderte Ziele ersetzen die offenen Sätze, entfallene Items verlieren sie, neue kommen in einen neuen Block; ohne Einheit an dem Tag gehen alle offenen geplanten Sätze; ausgeführte Sätze bleiben | Sicherheitsbefund aus ADR 0016; der Server ändert nie die Werte eines Elements (ADR 0009), ein neues Ziel ist deshalb ein neuer Satz |
+| U-56 | §10.2 | Erledigt ist, was nicht mehr offen ist (geplante Sätze des alten Items minus offene); ausgeführte und vom User gelöschte Sätze kommen nicht zurück | Der User hat entschieden; eigene Sätze des Users haben kein Item und zählen nicht |
+| U-57 | §6.1, §10.3 | Die Änderung `session_adjusted` (ADAPT-19, Projektvorgabe) nennt die Session und steht im Änderungsprotokoll des Ereignisses; ein nur neu verknüpfter Satz ist keine Änderung | Die App soll die Session neu laden; eine Wiederholung des Ereignisses antwortet gleich |
 
 ### 15.3 Nicht umgesetzt
 
@@ -2277,13 +2287,14 @@ weil die Adaption die Kürzung nicht vorhersieht.
   bleiben. Das Protokoll ist nur anhängbar und trägt die Idempotenz der
   Ereignisse. Ob diese Angaben geschwärzt oder gelöscht werden müssen,
   gehört zur rechtlichen Prüfung (ENT-4, ADR 0015).
-- **Ein gestarteter Draft folgt dem Plan nicht.** Meldet der User während
-  einer Einheit Schmerz oder Symptome, schliesst der neue Plan vielleicht
-  eine Region aus oder stoppt das Training; der Draft im Log behält seine
-  offenen geplanten Sätze (ADR 0016). Die App muss die Antwort des
-  Ereignisses zeigen und die offenen Sätze mit dem neuen Plan abgleichen.
-  Vorschlag: Der Server ersetzt beim Speichern eines neuen Plans die offenen
-  geplanten Sätze eines gestarteten Drafts und löscht sie bei einem Stopp.
+- **Offline ausgeführte Sätze nach einem Abgleich.** Ein gestarteter Entwurf
+  folgt jedem neuen Plan (U-55, behoben nach ADR 0016). Löschungen sind aber
+  endgültig (ADR 0009): Führt der User einen Satz offline aus, den der Server
+  inzwischen ersetzt oder gelöscht hat, lehnt der Sync die Ausführung ab.
+  Betroffen sind nur Sätze, deren Item sich geändert hat oder entfallen ist.
+  Die App sollte ihren Ausgang synchronisieren, bevor sie ein Ereignis sendet.
+  Reicht das nicht, bräuchte ADR 0009 eine Ausnahme: Ein vor der Löschung
+  ausgeführter Satz belebt einen Grabstein des Servers wieder.
 - **WEEK-08 erzeugt die ganze Woche neu.** «Ab der nächsten nicht begonnenen
   Einheit» ist nicht umgesetzt: Eine gestartete Einheit behält ihre Session
   (U-54), die neue Einheit desselben Tages kann aber anders aussehen, und ohne
@@ -2406,6 +2417,7 @@ Evidenz: A–D nach `00_sources.md`; H = Heuristik (Begründung im Abschnitt).
 | ADAPT-16 | Pausen und Wiedereinstieg, Pause aus dem Onboarding | §6.11 | PAR-B-59–62, PAR-D-29, 33, PAR-S-41 | B/H |
 | ADAPT-17 | Check-in | §6.12 | PAR-E-19, 41–43, PAR-S-28 | A/H |
 | ADAPT-18 | Unlocks und Profiländerungen | §6.13 | – | – |
+| ADAPT-19 | Laufende Einheit folgt dem Plan | §10.2 | – | Projektvorgabe |
 | INJ-01, INJ-02 | Red Flags: wann, welche, Aktion | §8.2 | PAR-D-21, RF-01–RF-13 | B/H |
 | INJ-03 | Zustandsautomat | §8.3 | PAR-D-14, 19, 21, 24, 26, 28, 29, 33, PAR-S-32 | B/H |
 | INJ-04 | Matrix | §8.4 | `05` §8 | H |
