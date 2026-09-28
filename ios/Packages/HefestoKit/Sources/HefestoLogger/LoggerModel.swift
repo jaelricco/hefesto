@@ -60,24 +60,27 @@ public final class LoggerModel {
 
     // MARK: sets
 
-    /// Logs a performed set of one element: 8 pull-ups, a 20 s hold. `sirS`
-    /// is a hold's seconds in reserve, when the athlete gives them.
+    /// Logs a performed set of one element: 8 pull-ups, a 20 s hold. The
+    /// reserve is what the athlete says was left, when they say it: `rir` in
+    /// repetitions for reps, `sirS` in seconds for a hold.
     @discardableResult
     public func logSet(
-        in blockId: String, element: ElementDraft, restPlannedSeconds: Int? = nil, sirS: Int? = nil
+        in blockId: String, element: ElementDraft, restPlannedSeconds: Int? = nil, rir: Int? = nil,
+        sirS: Int? = nil
     ) throws -> String {
-        try logCombo(in: blockId, elements: [element], restPlannedSeconds: restPlannedSeconds, sirS: sirS)
+        try logCombo(in: blockId, elements: [element], restPlannedSeconds: restPlannedSeconds, rir: rir, sirS: sirS)
     }
 
     /// Logs a performed combo: one set, its elements in order.
     @discardableResult
     public func logCombo(
-        in blockId: String, elements: [ElementDraft], restPlannedSeconds: Int? = nil, sirS: Int? = nil
+        in blockId: String, elements: [ElementDraft], restPlannedSeconds: Int? = nil, rir: Int? = nil,
+        sirS: Int? = nil
     ) throws -> String {
         let at = now()
         var entry = SetEntry(
             sessionId: session.id, blockId: blockId, orderIndex: nextSetIndex(in: blockId),
-            restAfterPlannedS: restPlannedSeconds, sirS: sirS, completedAt: at)
+            restAfterPlannedS: restPlannedSeconds, rir: rir, sirS: sirS, completedAt: at)
         entry = try closeRest(before: entry, at: at)
         let set = SetWithElements(
             entry: entry,

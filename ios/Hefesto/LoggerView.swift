@@ -106,10 +106,11 @@ struct LoggerView: View {
         }
     }
 
-    private func log(_ drafts: [ElementDraft], rest: Int, reserve: Int?, in blockId: String) {
+    private func log(_ drafts: [ElementDraft], rest: Int, reserve: SetReserve, in blockId: String) {
         guard let logger else { return }
         attempt {
-            try logger.logCombo(in: blockId, elements: drafts, restPlannedSeconds: rest, sirS: reserve)
+            try logger.logCombo(
+                in: blockId, elements: drafts, restPlannedSeconds: rest, rir: reserve.rir, sirS: reserve.sirS)
             loggedCount += 1
             if let end = logger.rest?.endsAt { RestNotifier.schedule(at: end) }
         }

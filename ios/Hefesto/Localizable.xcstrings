@@ -891,6 +891,16 @@
         }
       }
     },
+    "How many more clean reps you could have done.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wie viele saubere Wiederholungen du noch geschafft hättest."
+          }
+        }
+      }
+    },
     "How much longer you could have held with clean form.": {
       "localizations": {
         "de": {
@@ -1297,6 +1307,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Diesen Satz wiederholen"
+          }
+        }
+      }
+    },
+    "Reps left": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wiederholungen übrig"
           }
         }
       }

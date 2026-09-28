@@ -119,6 +119,25 @@ func logger(_ clock: TestClock) throws -> (AppDatabase, LoggerModel) {
         #expect(again.entry.sirS == nil, "a reserve is rated per set, never copied")
     }
 
+    @Test func aComboKeepsBothReservesAndARepeatNeither() throws {
+        let clock = TestClock()
+        let (_, model) = try logger(clock)
+        let block = model.tree.blocks[0].id
+        let id = try model.logCombo(in: block, elements: [
+            ElementDraft(exerciseId: "pull-up", measure: "reps", reps: 6),
+            ElementDraft(exerciseId: "l-sit", measure: "hold_seconds", holdSeconds: 10),
+        ], rir: 2, sirS: 4)
+        let set = try #require(model.tree.blocks[0].sets.first { $0.id == id })
+        #expect(set.entry.rir == 2)
+        #expect(set.entry.sirS == 4)
+
+        clock.advance(90)
+        let repeated = try #require(try model.repeatLastSet(of: "pull-up", in: block))
+        let again = try #require(model.tree.blocks[0].sets.first { $0.id == repeated })
+        #expect(again.entry.rir == nil)
+        #expect(again.entry.sirS == nil)
+    }
+
     @Test func addingAnElementMakesACombo() throws {
         let clock = TestClock()
         let (_, model) = try logger(clock)
