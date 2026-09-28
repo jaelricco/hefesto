@@ -188,6 +188,17 @@ const (
 	classHard
 )
 
+// Intensity names the item's spacing class: light, moderate or hard.
+func (it Item) Intensity() string {
+	switch it.Class {
+	case classHard:
+		return "hard"
+	case classModerate:
+		return "moderate"
+	}
+	return "light"
+}
+
 // loggedClass infers the spacing class of a logged set.
 func (k *Knowledge) loggedClass(ex *Exercise, set LoggedSet) int {
 	if set.Kind == KindWarmup {

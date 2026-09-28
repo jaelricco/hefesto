@@ -6,7 +6,9 @@ import (
 	"net/http"
 
 	"github.com/jaelricco/hefesto/internal/auth"
+	core "github.com/jaelricco/hefesto/internal/domain/planning"
 	"github.com/jaelricco/hefesto/internal/domain/training"
+	"github.com/jaelricco/hefesto/internal/planning"
 	"github.com/jaelricco/hefesto/internal/store"
 )
 
@@ -38,6 +40,7 @@ func problemFor(r *http.Request, err error) (p Problem, known bool) {
 	var (
 		bad errBadRequest
 		ve  *training.ValidationError
+		pve *core.ValidationError
 	)
 	switch {
 	case errors.As(err, &bad):
@@ -45,7 +48,22 @@ func problemFor(r *http.Request, err error) (p Problem, known bool) {
 	case errors.As(err, &ve):
 		p = problem("validation", "Validation failed", http.StatusUnprocessableEntity, "")
 		p.Errors = ve.Fields
-	case errors.Is(err, store.ErrNotFound):
+	case errors.As(err, &pve):
+		p = problem("validation", "Validation failed", http.StatusUnprocessableEntity, "")
+		p.Errors = pve.Fields
+	case errors.Is(err, planning.ErrUnavailable):
+		p = problem("planning-unavailable", "Planning unavailable", http.StatusServiceUnavailable,
+			"the planner's knowledge base is missing or invalid")
+	case errors.Is(err, planning.ErrNotOnboarded), errors.Is(err, core.ErrOnboardingRequired):
+		p = problem("onboarding-required", "Onboarding required", http.StatusConflict,
+			"answer the onboarding first: POST /v1/me/onboarding")
+	case errors.Is(err, planning.ErrAlreadyOnboarded):
+		p = problem("already-onboarded", "Already onboarded", http.StatusConflict,
+			"the onboarding runs once; change the training profile or the goals instead")
+	case errors.Is(err, planning.ErrConsentRequired):
+		p = problem("consent-required", "Consent required", http.StatusConflict,
+			"pain reports are health data and need the consent to keep them")
+	case errors.Is(err, store.ErrNotFound), errors.Is(err, planning.ErrNotFound):
 		p = problem("not-found", "Not found", http.StatusNotFound, "")
 	case errors.Is(err, store.ErrAlreadyExists):
 		p = problem("already-exists", "Already exists", http.StatusConflict, "a resource with this id already exists")

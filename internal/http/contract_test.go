@@ -87,6 +87,10 @@ func TestEveryRequestSchemaCompiles(t *testing.T) {
 		"Session", "SessionPage", "Block", "SetEntry", "LastSet", "Problem",
 		"SessionComplete", "AttestRequest", "CompletionResult", "AttestResult", "SkillGraph", "SkillDetail", "SkillMap", "Progress",
 		"SyncPage", "SyncOp", "SyncPush", "SyncPushResult", "SessionPut", "BodyweightWrite", "MediaUploadRequest", "MediaUpload", "Media",
+		"OnboardingAnswers", "OnboardingResult", "TrainingProfile", "TrainingProfileUpdate", "TrainingGoalsUpdate",
+		"TrainingGoalList", "TrainingPlan", "PlannedSessionDetail", "PlanDecisionPage", "PlanEventCreate", "PlanEventResult",
+		"PainReportCreate", "PainReportPage", "RedFlagAnswers", "RegionOverview", "CapacityList", "PlannerRuleList",
+		"PlannerSourceList", "PlannerParameterList", "PlannerCatalogue",
 	} {
 		if _, err := schemas.Schema(name); err != nil {
 			t.Errorf("%s: %v", name, err)
