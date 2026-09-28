@@ -142,7 +142,7 @@ in `00009_planning.sql`.
   - `completed` und `plan_changes[]` beim Abschluss: `Adapt` nach dem
     Abschluss einer gestarteten Session. `planned_session_id` ist der
     Anknüpfungspunkt.
-  - Der Check-in beim Start (ADAPT-17, optional).
+  - Der Check-in beim Start (ADAPT-17, optional), nachgezogen in ADR 0019.
   - Der Offline-Start aus §10.5: Die Sync-Operationen tragen weder
     `planned_session_id` noch `planned_item_id`. Offline angelegte Sessions
     bleiben ohne Verweis auf den Plan.

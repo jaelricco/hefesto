@@ -1368,6 +1368,15 @@ bleiben (Oberkörperkraft war unter Schlafmangel unbeeinflusst, PAR-E-42). Der
 Check-in hat keine Folgen für Streak, XP oder Fortschritt und wird ohne
 Einwilligung nicht gespeichert.
 
+**Umsetzung** (ADR 0019, U-62 bis U-64):
+- Die Tagesform ist die Ermüdung auf der Skala von `perceived_fatigue`
+  (1 frisch, 10 erschöpft).
+- Im Maximalblock gehen Angebote, und jeder Halt, Skill- wie Konditionshalt,
+  wird Technik nach DOSE-09 aus dem Dosiswert des Plans. Wiederholungsarbeit
+  bleibt.
+- Die Antworten werden nie gespeichert, auch mit Einwilligung nicht; die
+  geplante Einheit hält nur fest, dass der Check-in sie leichter gemacht hat.
+
 ### 6.13 Unlocks und Profiländerungen (ADAPT-18)
 
 Die Unlock-Engine läuft unverändert beim Abschluss (ADR 0008). Ein neuer Unlock
@@ -1924,7 +1933,7 @@ selbst anlegt, ihre ID.
 | `GET /v1/me/plan` | Plan der laufenden Woche; `?week=YYYY-MM-DD` für frühere Wochen | `ETag` ist die Plan-ID (U-41); erzeugt den Plan, falls keiner existiert; `?explain=trace` folgt (§15.3) |
 | `POST /v1/me/plan/regenerate` | Plan der laufenden Woche neu erzeugen | gleiche Eingaben → gleiche Einheiten, neue IDs |
 | `GET /v1/me/plan/sessions/{id}` | eine geplante Einheit eines aktiven Plans | – |
-| `POST /v1/me/plan/sessions/{id}/start` | Draft-Session erzeugen (§10.2); optional Check-in (ADAPT-17) | einmal je geplanter Einheit, ein zweiter Start antwortet `200` mit derselben Session (U-51); gestoppt → `training-stopped`; der Check-in fehlt noch (§15.3) |
+| `POST /v1/me/plan/sessions/{id}/start` | Draft-Session erzeugen (§10.2); optional Check-in (ADAPT-17) | einmal je geplanter Einheit, ein zweiter Start antwortet `200` mit derselben Session (U-51); gestoppt → `training-stopped`; ein müder Check-in macht die Einheit leichter (`check_in_applied`, U-62 bis U-64) |
 | `GET /v1/me/plan/decisions` | Änderungsprotokoll | Cursor-Paginierung, neueste zuerst |
 | `POST /v1/me/pain-reports`, `GET /v1/me/pain-reports` | Schmerzberichte | nur mit Einwilligung (`consent-required`, U-44); der Sync folgt (§15.3) |
 | `POST /v1/me/symptoms` | «Symptome beim Training melden» (Belastungssymptome, RF-10) | wirkt sofort (SAFE-02); ohne Einwilligung nur als Auflage gespeichert |
@@ -2152,7 +2161,8 @@ echtes Postgres (ADR 0013, U-36 bis U-38), dann die Endpunkte unter dem Tag
 Trainings-Log mit `Materialize` und den Übungen des Planers im Katalog
 (ADR 0016, U-50 bis U-54), und der Abgleich eines gestarteten Entwurfs mit
 jedem neuen Plan (ADR 0017, U-55 bis U-57), und der Abschluss einer Einheit, der den Planer
-erreicht (ADR 0018, U-58 bis U-61).
+erreicht (ADR 0018, U-58 bis U-61), und der Check-in beim Start (ADR 0019, U-62 bis
+U-64).
 
 Tests: sechs Personas als Golden Files (`internal/domain/planning/testdata/`),
 die Eigenschaften I-1 bis I-11 für jeden erzeugten Plan, zwölf simulierte
@@ -2232,6 +2242,9 @@ U-35 setzen die Entscheidungen ENT-R-1, ENT-R-2 und ENT-R-5 um (§15.5).
 | U-59 | §4.1, §4.3 | Der Verlauf übernimmt ausgeführte Sätze in der Reihenfolge der Ausführung: Wiederholungen oder Sekunden, ohne Unterstützung oder mit Band, das RIR eines Wiederholungssatzes, Form, Zusatzlast; andere Unterstützung und Distanzen fallen weg; RPE wird nicht umgerechnet; ein Halt ohne Reserve zählt als Untergrenze | Partner, Maschine und Co. messen weder die unassistierte noch die Band-Kapazität (PAR-A-21); die Wissensbasis hat keine Umrechnung von RPE; das Log hat keine Spalte für die Reserve eines Halts |
 | U-60 | §10.2 | Der Abschluss markiert die geplante Einheit in jedem Plan als `completed`, bei einer Deload-Einheit den Tag als Deload-Tag, und wendet die Einheit einmal als Ereignis an | Idempotenz über das Änderungsprotokoll: ein wiederholter Abschluss antwortet gleich |
 | U-61 | §6.1 | Ohne Onboarding, bei nicht verfügbarem Planer oder bei einem Fehler fehlt `plan_changes`; `GET /v1/me/plan` holt verpasste Abschlüsse nach (höchstens 20, je eigene Transaktion, ein Fehler blockiert den Plan nicht) | Der Abschluss im Log bleibt gültig, was immer im Planer geschieht |
+| U-62 | §6.12 | `fatigue` hat die Skala von `perceived_fatigue` (10 erschöpft); müde ist Schlaf ≤ PAR-E-41 oder Ermüdung ≥ `PAR-S-28` | `PAR-S-28` ist auf dieser Skala definiert, wie PAR-B-49 b |
+| U-63 | §6.12 | Im Block `skill_max` gehen Angebote, jeder Halt (Skill und Kondition) wird Technik: `min(0.5 · d, 10 s)`, drei Versuche, `d` = Halt + Reserve, ohne Reserve fällt er weg; gleiche Sprosse; Wiederholungsarbeit (Kraft, Wiederholungs-Skills, Exzentrik) und alle anderen Blöcke bleiben | Der Maximalblock einer Ziel-Leiter hält auch Konditionshalte; die Technik-Dosis des Plans (DOSE-09) ist schon weit unter der Grenze; Kraft war unter Schlafmangel unbeeinflusst (PAR-E-42) |
+| U-64 | §6.12, §10.2 | Die Antworten werden nie gespeichert; `planned_sessions.check_in_applied` hält die Entscheidung, die Plan-Ansichten zeigen die leichtere Einheit, ein neuer Plan übernimmt sie, der Abgleich macht beide Seiten leichter | Ohne das Flag ersetzte der nächste Abgleich die Technik-Sätze wieder durch Maximalsätze (ADR 0017) |
 
 ### 15.3 Nicht umgesetzt
 
@@ -2248,8 +2261,8 @@ Kapazität), ADAPT-09, ADAPT-11, ADAPT-17, der Mobilitätsblock und Texte in
 weiteren Sprachen (KB-11). Für die Ellbogen-Regionen gibt es kein Prehab: Die
 Recherche nennt Programme, aber keine übertragbare Übung (`05` §10).
 Minderjährige bekommen keinen Plan (SAFE-07); INJ-09 ist deshalb nicht aktiv.
-Aus §10 fehlen der Check-in beim Start (ADAPT-17), die Reserve eines Halts
-im Log (`set_entries.sir_s`), der Offline-Start
+Aus §10 fehlen die Reserve eines Halts im Log (`set_entries.sir_s`), der
+Offline-Start
 über den Sync (§10.5; die Sync-Operationen tragen `planned_session_id` und
 `planned_item_id` nicht), der Sync der Schmerzberichte und `?explain=trace`
 (ADR 0014, ADR 0016), sowie ein Nachweis der Einwilligung mit Zeitpunkt und

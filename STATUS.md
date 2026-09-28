@@ -141,11 +141,21 @@ documents are in German.
   - `POST /v1/sessions/{id}/complete` and sync answer with `plan_changes`.
     If the planner fails, the completion stays valid and the next
     `GET /v1/me/plan` catches it up.
+- **Check-in at the start (this checkpoint, ADR 0019):**
+  - The start takes an optional check-in: hours slept and fatigue 1–10.
+    Six hours or less, or fatigue 8 or more, makes the session lighter
+    (ADAPT-17).
+  - In the max block, offers go and every hold becomes submaximal technique
+    (DOSE-09). Rep work (strength, rep skills, eccentrics) and the other
+    blocks stay.
+  - The answers are never stored. The planned session keeps only
+    `check_in_applied`, so plans, new plans and the reconciliation keep the
+    session lighter. Streak, XP and progress are not affected.
 - **Open for review:** the API decisions in ADR 0014 and spec §15.2
   (U-39 to U-46), the consent decisions in ADR 0015 (U-47 to U-49), the
   start decisions in ADR 0016 (U-50 to U-54), the reconciliation in
-  ADR 0017 (U-55 to U-57), the completion in ADR 0018 (U-58 to U-61), and
-  these findings in spec §15.4:
+  ADR 0017 (U-55 to U-57), the completion in ADR 0018 (U-58 to U-61), the
+  check-in in ADR 0019 (U-62 to U-64), and these findings in spec §15.4:
   - sets with partner or machine assistance reach neither the capacities
     nor the load history;
   - a set performed offline after the server replaced or removed it is
@@ -160,7 +170,6 @@ documents are in German.
     and states; whether they must be redacted is a legal question (ENT-4).
 - **Not yet built:**
   - the reserve of a hold in the log (`set_entries.sir_s`);
-  - the check-in at the start (ADAPT-17);
   - starting a session offline through sync;
   - the sync of pain reports;
   - a record of the consent text agreed to;
