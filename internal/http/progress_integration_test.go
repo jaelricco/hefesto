@@ -27,11 +27,16 @@ func newTrainer(t *testing.T, email string) trainer {
 }
 
 // day is when a session daysAgo days back starts: local noon, or half an hour
-// ago for today so nothing lands in the future.
+// ago for today so nothing lands in the future. Just after midnight, today's
+// starts at midnight instead, so it stays today's.
 func (tr trainer) day(daysAgo int) time.Time {
 	now := time.Now().In(tr.loc)
 	if daysAgo == 0 {
-		return now.Add(-30 * time.Minute)
+		midnight := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, tr.loc)
+		if at := now.Add(-30 * time.Minute); at.After(midnight) {
+			return at
+		}
+		return midnight
 	}
 	d := now.AddDate(0, 0, -daysAgo)
 	return time.Date(d.Year(), d.Month(), d.Day(), 12, 0, 0, 0, tr.loc)
@@ -52,8 +57,14 @@ func (tr trainer) log(at time.Time, restDay bool, sets ...[]map[string]any) (str
 	tr.a.call("PUT", "/v1/sessions/"+session+"/blocks/"+block, tr.u.access, map[string]any{"order_index": 0}).ok(201, "Block")
 	for i, els := range sets {
 		id := newID()
+		// A minute apart, but never after now: the evaluator ignores sets from
+		// the future, and a session started at midnight may have no room yet.
+		done := at.Add(time.Duration(i+1) * time.Minute)
+		if now := time.Now(); done.After(now) {
+			done = now
+		}
 		tr.a.call("PUT", "/v1/sessions/"+session+"/sets/"+id, tr.u.access, map[string]any{
-			"block_id": block, "order_index": i, "completed_at": at.Add(time.Duration(i+1) * time.Minute).UTC().Format(time.RFC3339),
+			"block_id": block, "order_index": i, "completed_at": done.UTC().Format(time.RFC3339),
 			"elements": els,
 		}).ok(201, "SetEntry")
 		ids = append(ids, id)
