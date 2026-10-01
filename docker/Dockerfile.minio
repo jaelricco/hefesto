@@ -7,7 +7,7 @@
 # Hetzner Object Storage.
 
 # --- build -------------------------------------------------------------------
-FROM golang:1.24-alpine AS build
+FROM golang:1.27-alpine AS build
 ARG MINIO_MODULE=github.com/minio/minio@v0.0.0-20260212201848-7aac2a2c5b7c
 ARG MC_MODULE=github.com/minio/mc@v0.0.0-20251106162529-77f82e18b540
 ENV CGO_ENABLED=0 GOBIN=/out
