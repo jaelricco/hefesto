@@ -21,6 +21,10 @@ that stands.
 - **Phase 6** — skill map, skill detail, celebration, history and stats
   (ADR 0011). Merged in #9. Its open questions (showing `stale_since`,
   self-attestation for levels with criteria, stats on the device) still stand.
+- **Phase 7** — localization, accessibility, the TestFlight pipeline, the
+  content release gate and the load smoke test (ADR 0025). Merged in #20.
+  `docs/REVIEW_DECISIONS.md` has recommendations for its open questions
+  (D-20 to D-22); the skill research question still stands.
 
 ## Parallel track: training-plan algorithm (stage 5 done; persistence, API and the log link, awaiting review)
 
@@ -218,120 +222,105 @@ documents are in German.
   - The legal questions on minors, health data and screening wording.
 
 
-## Current phase: 7 — polish (complete, awaiting review)
+## Current phase: 8 — release prep (complete, awaiting review)
 
-The decisions are in ADR 0025 (numbered after the planner track's 0022–0024). This phase was built before the planner and the
-Glut design pass reached `main`, and merged with both afterwards.
+The decisions are in ADR 0026. The owner chose: staging on the production
+host, internal TestFlight builds against staging, a recommendations page for
+the open review questions, and a first deploy that the owner runs. Part 1 was
+merged in #21.
 
-- **Localization**
-  - `ios/scripts/check-strings.py` checks:
-    - every user-facing literal is in the string catalog;
-    - every key has a translated German entry with matching placeholders;
-    - no key is unused;
-    - counts before nouns have plural forms in both languages.
-  - It runs in CI on every push.
-  - With the planner and design pass merged it found stale keys and two
-    "of N levels" strings that read "1 of 1 levels"; those now use plural
-    substitutions. There are 205 keys, all translated. `DemoMode.swift` is
-    fixture data and is not checked.
-- **Accessibility**
-  - The skill map:
-    - respects Reduce Motion;
-    - reads top to bottom with VoiceOver;
-    - has a **list view** grouped by standing, in the Glut theme, remembered
-      per device.
-  - Level rows and the rest banner no longer swallow their buttons into one
-    VoiceOver element.
-  - The rest clock scales with Dynamic Type. The effort sheet drops to three
-    columns at accessibility sizes and scrolls.
-  - Chart bars read as "date, value".
-  - Logging a set, a finished rest and sign-in errors are announced.
-  - A UI test target runs Apple's accessibility audit on every demo screen
-    (`DemoMode.swift`, opened by `-HefestoDemoScreen`), in English, at the
-    largest accessibility size, and in German. It runs on the simulator the
-    screenshot job already keeps ("Hefesto Screenshots") and creates no other.
-  - Contrast and Dynamic Type for the rest of the app came with the Glut
-    design pass (ADR 0020).
-- **TestFlight**
-  - `testflight.yml` runs on a GitHub-hosted Mac: automatic signing with an
-    App Store Connect API key, build number = run number, upload with
-    `xcodebuild -exportArchive`.
-  - The app now has an icon (a generated placeholder), an export-compliance
-    declaration, a privacy manifest, and version 0.7.0.
-  - Setup is in `docs/DEPLOYMENT.md`.
-- **Content import**
-  - `contentlint` reports how much content is still placeholder (today all 3
-    skills and 56 exercises, including the 49 generated from the planner's
-    knowledge base).
-  - It warns when a researched skill uses a placeholder exercise.
-  - `make content-release-check` fails on any placeholder.
-  - `CONTENT_AUTHORING.md` describes the import and the slugs production may
-    already hold.
-- **Load smoke test**
-  - `cmd/loadsmoke`: virtual athletes log sessions through sync batches and
-    REST, pull, and read the map. It fails on any error or a p95 over budget
-    (300 ms reads, 400 ms writes, 1.5 s completion and sync batches).
-  - CI runs 25 athletes for 60 s against the release build on a seeded
-    Postgres.
-  - `HEFESTO_AUTH_PER_MINUTE` makes the auth rate limit configurable. The
-    default is unchanged at 10.
+- **Open review questions.** `docs/REVIEW_DECISIONS.md` recommends an answer
+  for each of the 22 questions Phases 1–7 left open.
+  - Most confirm what was built.
+  - It recommends changing D-9 (weekly streak), D-10 (occurrences as
+    sessions), D-13 (photo retention), D-15 (a time zone on bodyweight) and
+    D-20 (the audit on pushes to `main`). These wait for the owner.
+  - D-16 is built here as a bug fix (below).
+- **Staging** runs on the production host as its own Compose project
+  (`docker-compose.staging.yml`): its own database, env file and bucket.
+  - Production's Caddy serves it at `api-staging.hefesto.fit` over a shared
+    Docker network.
+  - `deploy-staging.yml` deploys every green commit on `main`, once the
+    repository variable `STAGING_DEPLOY` is `true`.
+- **TestFlight.** The app has a third configuration, `Staging`: a release
+  build against the staging API.
+  - `testflight.yml` archives it for internal testers, and `Release` for
+    external ones.
+  - The Mac CI job builds it on every run.
+- **Every pull request rehearses a deploy** (`scripts/deploy-rehearsal.sh`),
+  on a runner's Docker, through the real scripts, Compose files and Caddyfile:
+  1. production, then staging beside it, then a redeploy;
+  2. the first logical dump, restored into a scratch database and over the
+     live one;
+  3. the first pgBackRest backup, and a point-in-time recovery.
+- **Point-in-time recovery.**
+  - Production Postgres archives WAL to an encrypted pgBackRest repository
+    (`docker/Dockerfile.postgres`).
+  - A `pitr` sidecar takes weekly full and daily differential backups.
+  - `scripts/pitr-restore.sh` recovers to a moment.
+  - The nightly logical dump stays beside it.
+- **Restores.** `scripts/restore.sh` restores a dump into a new database by
+  default, or over the live one with `--into-live`.
+- **The first deploy** opens `docs/DEPLOYMENT.md` as ten ordered steps.
+  `make preflight` checks the server before it: env files, DNS, ports, and
+  every bucket's credential, by writing, reading and deleting a probe.
+- **Bugs fixed that would have broken the first deploy:**
+  - **Caddy wouldn't start.** The Caddyfile had `exclude` inside `log`.
+  - **Backups never uploaded.** `backup.sh` called `mc`; Alpine names the
+    client `mcli`.
+  - **Operator commands failed.** `make prod-ps`, `prod-logs`, `prod-psql`
+    and `restore.sh` lacked the image tag. `scripts/compose.sh` now supplies
+    the live tag.
+  - **A Postgres password could break `DATABASE_URL`.** The templates said to
+    generate it with base64, and a `/` breaks the URL. They now say hex.
+- **Bugs fixed in the app:**
+  - **Device id.** A second account couldn't sign in on the same phone; the
+    device id now rotates on sign-out.
+  - **Wipe on sign-out (D-16).** Signing out now erases the local database,
+    so the next account neither sees the last one's log nor uploads its
+    queued changes. Unsynced changes are counted first, with an offer to
+    sync.
 
 ### Verification
 
-- **Load smoke, locally.** Release build, Postgres 16, 25 athletes for 30 s:
-  17,322 requests (577/s) with 0 errors.
-  - p95 was 6–44 ms for reads and single writes.
-  - It was 62 ms for completing a session.
-  - It was 228 ms for a whole-session sync batch.
-- **Go unit tests** cover the load smoke's percentiles and pass/fail rules,
-  and the content readiness and release checks. `golangci-lint` is clean.
-- **String check**: 205 keys, 0 problems. It caught every string added in this
-  phase before its translation existed.
-- **Swift** — on the self-hosted Mac runner, ios run 59 on `1b6b432` (this
-  phase merged with the planner and the Glut design pass):
-  - `swift test` passes for HefestoKit;
-  - the app and the accessibility UI test target build for the iOS Simulator
-    under Swift 6 strict concurrency (`build-for-testing`);
-  - the audit itself runs only when the ios workflow is dispatched with
-    `ui_tests`, and has not run yet.
-- **The Mac runner** lost contact with GitHub ten minutes into cold Xcode
-  builds four times. The long steps now run under `caffeinate -i` at lower
-  priority; the first run after that change passed.
+- **CI on Ubuntu:**
+  - the deploy rehearsal, all seven steps;
+  - `golangci-lint` v2.15.0 and `shellcheck`;
+  - the Caddyfile validated by `caddy:2-alpine`;
+  - both Compose files.
+- **The preflight**, run against scratch env files, reported every planted
+  fault: blank and missing keys, file mode, a URL-unsafe password, a short
+  signing key, and secrets shared with staging.
+- **Swift.** `AuthTests.theNextSignInUsesTheNewDeviceId` and the app build
+  passed on the Mac at 27bca53 (run 39172723246).
+  - The self-hosted Mac has been offline since 22:59 UTC on 18 October.
+  - Not yet run there: the Staging build, `EraseTests`, the sign-out changes
+    and the accessibility audit's per-issue report.
 
 ### Deliberately not in this phase
 
-- **The skill research itself.** The planner's research (`docs/research`,
-  `content/training`) is in, but the skills, levels and unlock criteria the map
-  needs are still placeholders, and nothing may be invented (CLAUDE.md). The
-  import path and the release gate are ready for them.
-- **A TestFlight upload.** The workflow needs the App Store Connect app record
-  and four repository secrets, which only the owner can create. Until then it
-  stops at its first step and names what is missing.
-- **Running the accessibility audit on every push.** It runs when the ios
-  workflow is dispatched with `ui_tests`. See the open questions.
-- **A designed app icon.** The generated one is a placeholder.
+- **The server, DNS, buckets and secrets.** They are the owner's accounts.
+  `docs/DEPLOYMENT.md` lists each step, and `make preflight` checks them.
+- **D-9, D-10, D-13, D-15 and D-20.** They change behaviour, and wait for the
+  owner's answer in `docs/REVIEW_DECISIONS.md`.
+- **The skill research**, as in Phase 7: the map's skills, levels and
+  criteria are still placeholders, and nothing may be invented.
 
 ### Open questions for review
 
-1. **The skill research.** When do the skills, levels and unlock criteria
-   arrive, and in what form? The import expects YAML per
-   `CONTENT_AUTHORING.md`, keeping today's skill, level and exercise slugs.
-2. **The accessibility audit on every push.** It reuses the screenshot job's
-   simulator, so it adds nothing to the Mac beyond run time (39 launches,
-   several minutes). Should it run on every push instead of on request?
-3. **TestFlight on a hosted runner.** GitHub-hosted macOS minutes count ten
-   times against the plan's allowance, about 15 minutes per build. Is that
-   acceptable, or should releases use the self-hosted Mac despite the signing
-   state it would leave there?
-4. **Load budgets.** Are 300 ms, 400 ms and 1.5 s the right p95 budgets for
-   reads, writes and completion, and should the smoke test also run against
-   production-sized data?
+1. **The recommendations** in `docs/REVIEW_DECISIONS.md`, above all D-9 and
+   D-10, which change how streaks and unlocks are earned.
+2. **Staging on the production host.** It shares CPU and memory with
+   production. When should it move to its own server?
+3. **The rehearsal's cost.** It adds about ten minutes of CI to every pull
+   request. Keep it on every PR, or run it only when deploy files change?
 
 ## Next
 
-Phase 7 is the last phase in the brief. After review: the open questions
-above and from earlier phases, the research import, and the first TestFlight
-build.
+The brief's phases are done. Next, in the owner's hands:
+- the first deploy, following `docs/DEPLOYMENT.md`;
+- answers in `docs/REVIEW_DECISIONS.md`;
+- the research import, and the first TestFlight build.
 
 ## Design pass: direction B, "Glut" (done; merged in #11, #12 and #13)
 
