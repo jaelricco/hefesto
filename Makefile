@@ -150,7 +150,8 @@ check: lint test content-validate ## What CI runs on every push
 PROD_HOST ?= $(shell git config --get hefesto.prodhost)
 PROD_USER ?= deploy
 PROD_DIR  ?= /srv/hefesto
-PROD_COMPOSE := docker compose -f $(PROD_DIR)/docker-compose.prod.yml --env-file $(PROD_DIR)/.env.prod
+# The Compose file needs the live tag; scripts/compose.sh supplies it.
+PROD_COMPOSE := DEPLOY_DIR=$(PROD_DIR) $(PROD_DIR)/scripts/compose.sh
 
 .PHONY: release
 release: ## Tag and push a release, which triggers the deploy: make release version=v0.2.0

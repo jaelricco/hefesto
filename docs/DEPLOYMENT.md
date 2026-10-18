@@ -139,7 +139,7 @@ shared `hefesto-edge` Docker network. Internal TestFlight builds talk to it.
 
 ```sh
 gh workflow run deploy-staging.yml -f ref=<branch-or-sha>   # deploy any ref by hand
-docker compose -f docker-compose.staging.yml --env-file .env.staging logs -f api   # on the server
+DEPLOY_ENV=staging ./scripts/compose.sh logs -f api       # on the server, in /srv/hefesto
 ```
 
 A failed staging deploy never touches production. While staging is down,
@@ -181,8 +181,7 @@ database and never touches the live one:
 It prints row counts of the restored database. `--into-live` stops the API,
 restores with `--clean`, and starts it again. CI rehearses both paths on every
 pull request (above). Drop a scratch database when you are done with it:
-`docker compose -f docker-compose.prod.yml --env-file .env.prod exec postgres
-dropdb -U hefesto hefesto_restore_<stamp>`.
+`./scripts/compose.sh exec postgres dropdb -U hefesto hefesto_restore_<stamp>`.
 
 ## Operating
 
@@ -192,6 +191,11 @@ make prod-logs          # tail the api
 make prod-psql          # psql on production — think before you type
 make prod-backup-now    # force a backup off-schedule
 ```
+
+On the server, run Compose through `scripts/compose.sh` (`./scripts/compose.sh
+ps`, `DEPLOY_ENV=staging ./scripts/compose.sh logs api`). The Compose files
+need the live image tag, which a bare `docker compose` does not have; the
+wrapper reads it from `.deployed-tag`.
 
 Logs are JSON on stdout, capped at 10 MB × 5 files per service by Docker's
 json-file driver. There is no log aggregation yet; when it is needed, that gets

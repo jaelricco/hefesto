@@ -55,8 +55,9 @@ uuid7() { # time-ordered, as the app makes them
     r=$(hex 10)
     printf '%s-%s-7%s-%x%s-%s\n' "${ms:0:8}" "${ms:8:4}" "${r:0:3}" $(( 8 + RANDOM % 4 )) "${r:3:3}" "${r:6:12}"
 }
-prod()    { docker compose -f "$work/docker-compose.prod.yml" --env-file "$work/.env.prod" "$@"; }
-staging() { docker compose -f "$work/docker-compose.staging.yml" --env-file "$work/.env.staging" "$@"; }
+# Through scripts/compose.sh, as an operator on the server would.
+prod()    { DEPLOY_DIR="$work" DEPLOY_ENV=production "$work/scripts/compose.sh" "$@"; }
+staging() { DEPLOY_DIR="$work" DEPLOY_ENV=staging "$work/scripts/compose.sh" "$@"; }
 psql_prod() { prod exec -T postgres psql -U hefesto -At -c "$2" "$1"; }
 
 cleanup() {
@@ -70,8 +71,9 @@ cleanup() {
         cat "$diag" "$fail" >&2
         annotate
     fi
-    staging down -v --remove-orphans >/dev/null 2>&1 || true
-    prod down -v --remove-orphans >/dev/null 2>&1 || true
+    # The tag is given: a deploy that failed recorded none.
+    HEFESTO_TAG="$tag" staging down -v --remove-orphans >/dev/null 2>&1 || true
+    HEFESTO_TAG="$tag" prod down -v --remove-orphans >/dev/null 2>&1 || true
     docker network rm hefesto-edge >/dev/null 2>&1 || true
     docker rm -f "$registry" >/dev/null 2>&1 || true
     rm -rf "$work" "$diag" "$fail"
@@ -79,15 +81,19 @@ cleanup() {
 }
 trap cleanup EXIT
 
-# Through Caddy, as a phone would reach it.
+# Through Caddy, as a phone would reach it. Prints the status code; the body
+# goes to $body, and $token, when set, is sent as the bearer.
+body="$work/body.json"
+token=""
 https() { # https <host> <method> <path> [json]
-    local args=(-sS -k --max-time 15 --resolve "$1:443:127.0.0.1" -X "$2" -o /dev/stderr -w '%{http_code}')
+    local args=(-sS -k --max-time 15 --resolve "$1:443:127.0.0.1" -X "$2" -o "$body" -w '%{http_code}')
     [[ $# -ge 4 ]] && args+=(-H 'Content-Type: application/json' --data "$4")
-    curl "${args[@]}" "https://$1$3" 2>/dev/null
+    [[ -n "$token" ]] && args+=(-H "Authorization: Bearer $token")
+    curl "${args[@]}" "https://$1$3" 2>/dev/null || true
 }
 wait_ready() { # wait_ready <host>
     for _ in $(seq 1 60); do
-        [[ "$(https "$1" GET /readyz 2>/dev/null)" == 200 ]] && return 0
+        [[ "$(https "$1" GET /readyz)" == 200 ]] && return 0
         sleep 2
     done
     die "$1 never became ready through Caddy"
@@ -150,22 +156,22 @@ log "1. deploy production"
 DEPLOY_DIR="$work" "$work/scripts/deploy.sh" "$tag" 2>&1 | tee -a "$diag"
 wait_ready api.localhost
 register='{"email":"rehearsal@example.test","password":"rehearsal correct horse","timezone":"Europe/Zurich","device":{"id":"'"$(uuid7)"'","platform":"ios"}}'
-out=$(https api.localhost POST /v1/auth/register "$register" 2>"$work/register.json")
-[[ "$out" == 201 ]] || die "register on production answered $out: $(cat "$work/register.json")"
-token=$(sed -E 's/.*"access_token":"([^"]+)".*/\1/' "$work/register.json")
+out=$(https api.localhost POST /v1/auth/register "$register")
+[[ "$out" == 201 ]] || die "register on production answered $out: $(head -c 300 "$body")"
+token=$(sed -nE 's/.*"access_token":"([^"]+)".*/\1/p' "$body")
+[[ -n "$token" ]] || die "register answered no access token: $(head -c 300 "$body")"
 session='{"id":"'"$(uuid7)"'","started_at":"2026-10-18T07:00:00Z","timezone":"Europe/Zurich","title":"Rehearsal"}'
-code=$(curl -sS -k --resolve api.localhost:443:127.0.0.1 -o /dev/null -w '%{http_code}' \
-    -H "Authorization: Bearer $token" -H 'Content-Type: application/json' \
-    --data "$session" https://api.localhost/v1/sessions)
-[[ "$code" == 201 ]] || die "creating a session answered $code"
+out=$(https api.localhost POST /v1/sessions "$session")
+[[ "$out" == 201 ]] || die "creating a session answered $out: $(head -c 300 "$body")"
+token=""
 
 log "2. deploy staging beside it"
 DEPLOY_ENV=staging DEPLOY_DIR="$work" "$work/scripts/deploy.sh" "$tag" 2>&1 | tee -a "$diag"
 wait_ready api-staging.localhost
 # Its own database: the address registered on production is free here.
-out=$(https api-staging.localhost POST /v1/auth/register "$register" 2>/dev/null)
+out=$(https api-staging.localhost POST /v1/auth/register "$register")
 [[ "$out" == 201 ]] || die "staging shares production's users (register answered $out)"
-[[ "$(https api.localhost GET /readyz 2>/dev/null)" == 200 ]] || die "production went down when staging deployed"
+[[ "$(https api.localhost GET /readyz)" == 200 ]] || die "production went down when staging deployed"
 
 log "3. redeploy production"
 DEPLOY_DIR="$work" "$work/scripts/deploy.sh" "$tag" 2>&1 | tee -a "$diag"
@@ -191,7 +197,7 @@ log "6. restore over the live database"
 (cd "$work" && DEPLOY_DIR="$work" ./scripts/restore.sh latest --into-live --yes) 2>&1 | tee -a "$diag"
 wait_ready api.localhost
 login='{"email":"rehearsal@example.test","password":"rehearsal correct horse"}'
-[[ "$(https api.localhost POST /v1/auth/login "$login" 2>/dev/null)" == 200 ]] \
+[[ "$(https api.localhost POST /v1/auth/login "$login")" == 200 ]] \
     || die "the account is gone after restoring over the live database"
 
 log "rehearsal passed: deploy, staging, redeploy, backup, two restores"

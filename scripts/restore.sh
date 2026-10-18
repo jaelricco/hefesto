@@ -22,8 +22,7 @@
 set -Eeuo pipefail
 
 DEPLOY_DIR="${DEPLOY_DIR:-/srv/hefesto}"
-COMPOSE_FILE="${COMPOSE_FILE:-docker-compose.prod.yml}"
-ENV_FILE="${ENV_FILE:-.env.prod}"
+export DEPLOY_DIR DEPLOY_ENV=production
 
 log()  { printf '\033[1;34m==>\033[0m %s\n' "$*"; }
 die()  { printf '\033[1;31mxx\033[0m %s\n' "$*" >&2; exit 1; }
@@ -55,8 +54,9 @@ fi
 [[ "$target" =~ ^[a-z_][a-z0-9_]*$ || -z "$target" ]] || die "target database must be lowercase letters, digits and _"
 
 cd "$DEPLOY_DIR" || die "deploy directory $DEPLOY_DIR does not exist"
-[[ -f "$ENV_FILE" ]] || die "$DEPLOY_DIR/$ENV_FILE is missing"
-compose() { docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" "$@"; }
+[[ -f .env.prod ]] || die "$DEPLOY_DIR/.env.prod is missing"
+# The running tag's image, which has the backup script and its credentials.
+compose() { "$DEPLOY_DIR/scripts/compose.sh" "$@"; }
 
 if [[ "$into_live" == true ]]; then
     [[ -z "$target" ]] || die "--into-live restores over the live database; do not name a target"
