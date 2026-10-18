@@ -143,7 +143,7 @@ func probe() int {
 		addr = ":8080"
 	}
 	client := &stdhttp.Client{Timeout: 3 * time.Second}
-	resp, err := client.Get("http://127.0.0.1" + addr + "/healthz")
+	resp, err := client.Get("http://127.0.0.1" + addr + "/healthz") //nolint:gosec // the server's own address from its config, on loopback
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "healthcheck:", err)
 		return 1
