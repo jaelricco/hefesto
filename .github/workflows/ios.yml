@@ -79,6 +79,23 @@ jobs:
             exit 1
           fi
 
+      # What TestFlight archives: a release-type build (no DEBUG code, the
+      # optimizer on). Staging differs from Release only in the API address.
+      - name: build the Staging configuration for the simulator
+        working-directory: ios
+        run: |
+          set -o pipefail
+          caffeinate -i nice -n 10 xcodebuild build \
+            -project Hefesto.xcodeproj -scheme Hefesto -configuration Staging \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath .derived \
+            -skipPackagePluginValidation -skipMacroValidation \
+            CODE_SIGNING_ALLOWED=NO 2>&1 | tee staging-build.log | grep -E 'error:|BUILD SUCCEEDED|BUILD FAILED' || true
+          if ! grep -q 'BUILD SUCCEEDED \*\*' staging-build.log; then
+            grep -B2 -A12 -E 'error:|Undefined symbols' staging-build.log | tail -150
+            exit 1
+          fi
+
       # Only on request: the audit needs a booted simulator (see the input).
       - name: accessibility audit (UI tests)
         if: ${{ inputs.ui_tests }}
