@@ -41,6 +41,7 @@ struct CelebrationView: View {
                             .font(.displayTitle)
                             .foregroundStyle(Palette.text)
                             .multilineTextAlignment(.center)
+                            .accessibilityAddTraits(.isHeader)
                         if celebration.xp > 0 {
                             Text("+\(celebration.xp) XP")
                                 .font(.metricSmall)

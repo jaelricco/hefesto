@@ -188,6 +188,7 @@ struct LoggerView: View {
             try logger.logCombo(
                 in: blockId, elements: drafts, restPlannedSeconds: rest, rir: reserve.rir, sirS: reserve.sirS)
             loggedCount += 1
+            AccessibilityNotification.Announcement(String(localized: "Set logged")).post()
             if let end = logger.rest?.endsAt { RestNotifier.schedule(at: end) }
         }
     }
@@ -197,6 +198,7 @@ struct LoggerView: View {
         attempt {
             if try logger.repeatLastSet(of: first.exerciseId, in: blockId) != nil {
                 loggedCount += 1
+                AccessibilityNotification.Announcement(String(localized: "Set logged")).post()
                 if let end = logger.rest?.endsAt { RestNotifier.schedule(at: end) }
             }
         }
@@ -389,6 +391,7 @@ struct RestCard: View {
                             .lineLimit(1)
                             .minimumScaleFactor(0.6)
                     }
+                    .accessibilityElement(children: .combine)
                     Spacer(minLength: 8)
                     Button(action: onSkip) {
                         Text("Skip")
@@ -418,7 +421,10 @@ struct RestCard: View {
                 }
             }
             .sensoryFeedback(.impact(weight: .heavy), trigger: done) { old, new in !old && new }
-            .accessibilityElement(children: .combine)
+            .onChange(of: done) { old, new in
+                // The haptic's counterpart for VoiceOver.
+                if !old && new { AccessibilityNotification.Announcement(String(localized: "Rest done")).post() }
+            }
         }
     }
 
@@ -436,13 +442,16 @@ struct RestCard: View {
 struct FinishSheet: View {
     let onFinish: (Int?) -> Void
     @State private var fatigue: Int?
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     Text("How hard did it feel?").font(.displayTitle).foregroundStyle(Palette.text)
-                    LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 5), spacing: 8) {
+                    // Fewer columns at the largest text sizes, so numbers are not clipped.
+                    LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8),
+                                             count: typeSize.isAccessibilitySize ? 3 : 5), spacing: 8) {
                         ForEach(1...10, id: \.self) { n in
                             Button {
                                 fatigue = fatigue == n ? nil : n
@@ -455,6 +464,7 @@ struct FinishSheet: View {
                                     .background(fatigue == n ? Palette.ember : Palette.surface, in: .rect(cornerRadius: 12))
                             }
                             .buttonStyle(.plain)
+                            .accessibilityLabel(Text("\(n) of 10"))
                             .accessibilityAddTraits(fatigue == n ? .isSelected : [])
                         }
                     }
