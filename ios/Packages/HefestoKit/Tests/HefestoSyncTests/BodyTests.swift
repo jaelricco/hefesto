@@ -8,7 +8,7 @@ import Testing
 // The body in the app (ADR 0028): events go to the server at once, a retry
 // keeps its id, and the screens read their own types.
 
-func flagJSON(_ id: String, followup: String = "null") -> String {
+func regionFlagJSON(_ id: String, followup: String = "null") -> String {
     #"""
     {"id":"\#(id)","urgency":"D","action":"lock","question":"Q \#(id)?","advice":"A \#(id).","minor_only":false,
      "followup":\#(followup)}
@@ -21,7 +21,7 @@ func regionsJSON(state: String = "rtt_2", constraints: String = "[]", referral: 
     {"regions":[{"region":"elbow_inner","name":"innen am Ellbogen","tracked":true,"state":"\#(state)",
       "entered_via":"onboarding","since":"2026-10-05","start_fraction":0.25,"complaint":true,"prior_injury":false,
       "restrictions":["hang_pull"],"referral":\#(referral),"rest_until":null,"constraints":\#(constraints),
-      "red_flags":[\#(flagJSON("RF-01", followup: followup)),\#(flagJSON("RF-10"))]}],
+      "red_flags":[\#(regionFlagJSON("RF-01", followup: followup)),\#(regionFlagJSON("RF-10"))]}],
      "disclaimer":"Educational, not medical advice."}
     """#
 }

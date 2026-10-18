@@ -190,6 +190,13 @@ documents are in German.
   - Logger and history name a set's band. The demo holds two bands of its
     own; a new screen (`band`) joins the screenshots.
   - Not built: bands offline, editing a band, the anchor.
+- **The plan's settings in the iOS app (this checkpoint, ADR 0029):**
+  - Goals, time, equipment and body weight change on the onboarding's own
+    pages, reached from the account menu once there is a plan.
+  - Only what changed is sent, goals and profile apart; the profile sends
+    back what the screen does not edit, since the server clears missing
+    optional fields. Each change plans the week anew.
+  - A new demo screen (`settings`) joins the screenshots.
 - **The body in the iOS app (this checkpoint, ADR 0028):**
   - Symptoms during training, pain reports, a region's warning signs and a
     professional's clearance go to the server at once, each with its own id;
@@ -288,7 +295,8 @@ documents are in German.
   screens in ADR 0022 (U-72 to U-75), the onboarding in the app in
   ADR 0023 (U-76 to U-79), the band choice in ADR 0024 (U-80), the
   offline start in ADR 0027 (U-81 to U-85), the body in the app in
-  ADR 0028 (U-86 to U-89), and these findings in spec §15.4:
+  ADR 0028 (U-86 to U-89), the plan's settings in ADR 0029 (U-90), and
+  these findings in spec §15.4:
   - sets with partner or machine assistance reach neither the capacities
     nor the load history;
   - a set performed offline after the server replaced or removed it is

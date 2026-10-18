@@ -25,6 +25,8 @@ enum DemoScreen: String, CaseIterable {
     // The body (ADR 0028): the regions, a pain report and the symptoms
     // report.
     case body, pain, symptoms
+    // The plan's settings (ADR 0029).
+    case settings
 
     var tab: AppTab {
         switch self {
@@ -69,6 +71,8 @@ struct DemoRun {
     let onboardingForm: OnboardingForm?
     /// The body's regions in the API's JSON.
     var bodyOverview: String?
+    /// The plan's settings as the demo athlete set them.
+    var settingsForm: OnboardingForm?
 
     var opensLogger: Bool { screen.opensLogger }
     var onboardingPage: OnboardingPage? { screen.onboardingPage }
@@ -316,7 +320,8 @@ extension DemoRun {
                 : nil,
             catalogue: try OnboardingCatalogue(json: Data(DemoCatalogue.json.utf8)),
             onboardingForm: screen.onboardingPage == nil ? nil : DemoOnboarding.form(for: screen),
-            bodyOverview: DemoBody.overview)
+            bodyOverview: DemoBody.overview,
+            settingsForm: DemoOnboarding.settings)
     }
 }
 
@@ -357,6 +362,18 @@ enum DemoBands {
 /// The onboarding's answers so far, as far as each demo screen has come.
 /// Names follow the knowledge base (content/training).
 enum DemoOnboarding {
+    /// The demo athlete's settings after the onboarding: goals, time,
+    /// equipment and body weight.
+    static var settings: OnboardingForm {
+        var f = OnboardingForm()
+        f.goals = [.init(skill: "planche", targetLevel: "tuck"), .init(skill: "handstand", targetLevel: "free-10s")]
+        f.sessionsPerWeek = 3
+        f.sessionMinutes = 60
+        f.equipment = ["floor", "wall", "pull_up_bar", "parallettes", "rings"]
+        f.bodyweightKg = 74
+        return f
+    }
+
     static func form(for screen: DemoScreen) -> OnboardingForm {
         var f = OnboardingForm()
         f.birthYear = 1994

@@ -24,6 +24,8 @@ final class AppModel {
     let onboarding: OnboardingModel
     /// The body's regions and the events about them (ADR 0028).
     let body: BodyModel
+    /// The plan's settings after the onboarding (ADR 0029).
+    let settings: PlanSettingsModel
 
     private(set) var isSignedIn = false
     private(set) var isSyncing = false
@@ -71,6 +73,8 @@ final class AppModel {
         body = BodyModel(
             sync: demo == nil ? sync : nil, plan: plan, catalogue: demo?.catalogue,
             overview: demo?.bodyOverview.map { Data($0.utf8) })
+        settings = PlanSettingsModel(
+            sync: demo == nil ? sync : nil, plan: plan, catalogue: demo?.catalogue, form: demo?.settingsForm)
         if let form = demo?.onboardingForm { onboarding.form = form }
     }
 

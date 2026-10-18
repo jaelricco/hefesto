@@ -3471,6 +3471,16 @@
         }
       }
     },
+    "Plan settings": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einstellungen des Plans"
+          }
+        }
+      }
+    },
     "Planned": {
       "localizations": {
         "de": {
@@ -3837,6 +3847,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sichern"
+          }
+        }
+      }
+    },
+    "Saved. Your plan for the week is new.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gespeichert. Dein Plan für die Woche ist neu."
+          }
+        }
+      }
+    },
+    "Saving plans your week anew. A session you started keeps what you did.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speichern plant deine Woche neu. Eine begonnene Einheit behält, was du gemacht hast."
           }
         }
       }
@@ -4427,6 +4457,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Die Meldung liess sich nicht annehmen. Prüfe deine Antworten."
+          }
+        }
+      }
+    },
+    "The server could not take these settings. Check them and try again.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Server konnte diese Einstellungen nicht annehmen. Prüfe sie und versuch es nochmals."
           }
         }
       }
@@ -5167,6 +5207,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dein Plan ruht heute. Ruhetage zählen zur Serie."
+          }
+        }
+      }
+    },
+    "Your plan's settings change online. Try again when you have a connection.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Einstellungen deines Plans ändern sich online. Versuch es nochmals, wenn du eine Verbindung hast."
+          }
+        }
+      }
+    },
+    "Your plan's settings come with the onboarding. Answer it first.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Einstellungen deines Plans kommen mit dem Onboarding. Beantworte es zuerst."
           }
         }
       }
