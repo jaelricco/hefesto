@@ -1,6 +1,6 @@
 name: deploy-staging
 
-# Deploys every green commit on main to staging (ADR 0023): the same image as
+# Deploys every green commit on main to staging (ADR 0026): the same image as
 # production, on the same host, as its own Compose project
 # (docker-compose.staging.yml). Internal TestFlight builds talk to it.
 #

@@ -12,7 +12,7 @@ options:
     iOS: "17.0"
   developmentLanguage: en
   createIntermediateGroups: true
-# Staging is a release build that talks to the staging API (ADR 0023): what
+# Staging is a release build that talks to the staging API (ADR 0026): what
 # internal TestFlight testers get. Release talks to production.
 configs:
   Debug: debug

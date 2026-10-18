@@ -8,7 +8,7 @@
 #   ./scripts/deploy.sh v1.4.2                                # production
 #   DEPLOY_ENV=staging ./scripts/deploy.sh sha-<commit>       # staging
 #
-# Staging (ADR 0023) is its own Compose project on the same host, with its own
+# Staging (ADR 0026) is its own Compose project on the same host, with its own
 # database and .env.staging. It has no Caddy and no backup sidecar; production's
 # Caddy serves it over the shared hefesto-edge network.
 #

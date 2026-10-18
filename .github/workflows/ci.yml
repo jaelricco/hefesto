@@ -228,7 +228,7 @@ jobs:
 
   # The first deploy to the real host must not be the first time the deploy
   # scripts, both Compose files, the Caddyfile, the backup sidecar and the
-  # restore run (ADR 0023). This runs all of them on the runner's Docker.
+  # restore run (ADR 0026). This runs all of them on the runner's Docker.
   deploy-rehearsal:
     name: deploy rehearsal (production, staging, backup, restore)
     runs-on: ubuntu-latest

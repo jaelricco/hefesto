@@ -6,7 +6,7 @@
 #   - Postgres is NOT published; it is reachable only on the internal network
 #   - no mailpit, no pgweb, no minio (Hetzner Object Storage replaces MinIO)
 #   - a backup sidecar dumps the database to object storage nightly
-#   - Caddy also serves staging (docker-compose.staging.yml, ADR 0023) over
+#   - Caddy also serves staging (docker-compose.staging.yml, ADR 0026) over
 #     the shared hefesto-edge network
 #
 # Used on the server as:

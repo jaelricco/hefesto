@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Rehearse a deploy on a throwaway machine: production, staging, a backup and
-# two restores, through the real scripts and Compose files (ADR 0023). CI runs
+# two restores, through the real scripts and Compose files (ADR 0026). CI runs
 # it on every pull request, so the first deploy to the real host is not the
 # first time any of this has run.
 #
@@ -31,8 +31,17 @@ registry="hefesto-rehearsal-registry"
 image="localhost:5000/hefesto"
 tag="rehearsal-$(date -u +%s)"
 
-log()  { printf '\033[1;35m## %s\033[0m\n' "$*"; }
-die()  { printf '\033[1;31mxx\033[0m %s\n' "$*" >&2; exit 1; }
+diag="$(mktemp)"
+log()  { printf '\033[1;35m## %s\033[0m\n' "$*"; echo "## $*" >> "$diag"; }
+die()  { printf '\033[1;31mxx\033[0m %s\n' "$*" >&2; echo "xx $*" >> "$diag"; exit 1; }
+# In CI, a failure also becomes an annotation: the step, the error and the
+# last log lines, readable without the job log.
+annotate() {
+    [[ -n "${GITHUB_ACTIONS:-}" ]] || return 0
+    local body
+    body=$(tail -n 120 "$diag" | sed -e 's/%/%25/g' | awk '{ printf "%s%%0A", $0 }')
+    echo "::error title=deploy rehearsal failed::$body"
+}
 hex()  { od -An -N"$1" -tx1 /dev/urandom | tr -d ' \n'; }
 uuid7() { # time-ordered, as the app makes them
     local ms r
@@ -47,17 +56,17 @@ psql_prod() { prod exec -T postgres psql -U hefesto -At -c "$2" "$1"; }
 cleanup() {
     status=$?
     if [[ $status -ne 0 ]]; then
-        log "failed; state of both projects"
-        prod ps -a || true
-        staging ps -a || true
-        prod logs --tail 60 || true
-        staging logs --tail 40 api || true
+        echo "failed at line ${BASH_LINENO[0]:-?} (exit $status); state of both projects" >> "$diag"
+        { prod ps -a; staging ps -a; prod logs --no-color --tail 40; staging logs --no-color --tail 20 api; } \
+            >> "$diag" 2>&1 || true
+        cat "$diag" >&2
+        annotate
     fi
     staging down -v --remove-orphans >/dev/null 2>&1 || true
     prod down -v --remove-orphans >/dev/null 2>&1 || true
     docker network rm hefesto-edge >/dev/null 2>&1 || true
     docker rm -f "$registry" >/dev/null 2>&1 || true
-    rm -rf "$work"
+    rm -rf "$work" "$diag"
     exit $status
 }
 trap cleanup EXIT
@@ -77,10 +86,12 @@ wait_ready() { # wait_ready <host>
 }
 
 log "image $image:$tag"
-docker run -d --name "$registry" -p 127.0.0.1:5000:5000 registry:2 >/dev/null
-docker build -q -f "$root/docker/Dockerfile" -t "$image:$tag" \
-    --build-arg VERSION="$tag" --build-arg COMMIT="$(git -C "$root" rev-parse HEAD)" "$root" >/dev/null
-docker push -q "$image:$tag" >/dev/null
+{
+    docker run -d --name "$registry" -p 127.0.0.1:5000:5000 registry:2
+    docker build -q -f "$root/docker/Dockerfile" -t "$image:$tag" \
+        --build-arg VERSION="$tag" --build-arg COMMIT="$(git -C "$root" rev-parse HEAD)" "$root"
+    docker push -q "$image:$tag"
+} >> "$diag" 2>&1
 
 # The deploy directory, as the deploy workflows rsync it to /srv/hefesto.
 mkdir -p "$work/docker"
@@ -128,7 +139,7 @@ envfile "$root/.env.staging.example" "$work/.env.staging" \
 ! grep -E '^[A-Z_]+=$' "$work/.env.prod" "$work/.env.staging" || die "a key is left blank above"
 
 log "1. deploy production"
-DEPLOY_DIR="$work" "$work/scripts/deploy.sh" "$tag"
+DEPLOY_DIR="$work" "$work/scripts/deploy.sh" "$tag" 2>&1 | tee -a "$diag"
 wait_ready api.localhost
 register='{"email":"rehearsal@example.test","password":"rehearsal correct horse","timezone":"Europe/Zurich","device":{"id":"'"$(uuid7)"'","platform":"ios"}}'
 out=$(https api.localhost POST /v1/auth/register "$register" 2>"$work/register.json")
@@ -141,7 +152,7 @@ code=$(curl -sS -k --resolve api.localhost:443:127.0.0.1 -o /dev/null -w '%{http
 [[ "$code" == 201 ]] || die "creating a session answered $code"
 
 log "2. deploy staging beside it"
-DEPLOY_ENV=staging DEPLOY_DIR="$work" "$work/scripts/deploy.sh" "$tag"
+DEPLOY_ENV=staging DEPLOY_DIR="$work" "$work/scripts/deploy.sh" "$tag" 2>&1 | tee -a "$diag"
 wait_ready api-staging.localhost
 # Its own database: the address registered on production is free here.
 out=$(https api-staging.localhost POST /v1/auth/register "$register" 2>/dev/null)
@@ -149,7 +160,7 @@ out=$(https api-staging.localhost POST /v1/auth/register "$register" 2>/dev/null
 [[ "$(https api.localhost GET /readyz 2>/dev/null)" == 200 ]] || die "production went down when staging deployed"
 
 log "3. redeploy production"
-DEPLOY_DIR="$work" "$work/scripts/deploy.sh" "$tag"
+DEPLOY_DIR="$work" "$work/scripts/deploy.sh" "$tag" 2>&1 | tee -a "$diag"
 wait_ready api.localhost
 
 log "4. the first backup"
@@ -160,7 +171,7 @@ done
 prod logs backup | grep "uploaded hefesto-" || die "the backup sidecar never uploaded a dump"
 
 log "5. restore into a scratch database"
-(cd "$work" && DEPLOY_DIR="$work" ./scripts/restore.sh latest hefesto_rehearsal)
+(cd "$work" && DEPLOY_DIR="$work" ./scripts/restore.sh latest hefesto_rehearsal) 2>&1 | tee -a "$diag"
 for table in users workout_sessions content_versions; do
     live=$(psql_prod hefesto "SELECT count(*) FROM $table")
     restored=$(psql_prod hefesto_rehearsal "SELECT count(*) FROM $table")
@@ -169,7 +180,7 @@ for table in users workout_sessions content_versions; do
 done
 
 log "6. restore over the live database"
-(cd "$work" && DEPLOY_DIR="$work" ./scripts/restore.sh latest --into-live --yes)
+(cd "$work" && DEPLOY_DIR="$work" ./scripts/restore.sh latest --into-live --yes) 2>&1 | tee -a "$diag"
 wait_ready api.localhost
 login='{"email":"rehearsal@example.test","password":"rehearsal correct horse"}'
 [[ "$(https api.localhost POST /v1/auth/login "$login" 2>/dev/null)" == 200 ]] \

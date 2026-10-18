@@ -1,7 +1,7 @@
 name: testflight
 
 # Archives the app and uploads it to App Store Connect for TestFlight
-# (ADR 0022). Run it by hand, or push a tag like ios-v0.7.0.
+# (ADR 0025). Run it by hand, or push a tag like ios-v0.7.0.
 #
 # It runs on a GitHub-hosted Mac, not the self-hosted runner: signing
 # creates certificates and downloads provisioning profiles, and that must not
@@ -42,7 +42,7 @@ jobs:
     timeout-minutes: 60
     env:
       # Internal testers get Staging (the staging API), external testers
-      # Release (production), ADR 0023. A tag push builds Staging.
+      # Release (production), ADR 0026. A tag push builds Staging.
       CONFIGURATION: ${{ inputs.external && 'Release' || 'Staging' }}
       APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
       ASC_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}

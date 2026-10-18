@@ -1,5 +1,5 @@
 # Staging: the same image as production, on the same host, as its own Compose
-# project (ADR 0023). Its own database volume, its own secrets file
+# project (ADR 0026). Its own database volume, its own secrets file
 # (.env.staging), its own object storage bucket. It has no Caddy: production's
 # Caddy reaches the staging API over the shared `hefesto-edge` network and
 # serves it as HEFESTO_STAGING_API_DOMAIN. It has no backup sidecar: staging
