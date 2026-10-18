@@ -112,6 +112,14 @@ public final class BodyModel {
         }
     }
 
+    /// Forgets the regions and the events waiting for an answer, on
+    /// sign-out. The catalogue and the disclaimer are content and stay.
+    public func forget() {
+        regions = []
+        status = .loading
+        pending = [:]
+    }
+
     public func region(_ id: String) -> BodyRegion? {
         regions.first { $0.id == id }
     }

@@ -148,6 +148,19 @@ func bodyModel(_ server: ScriptedServer) throws -> (BodyModel, AppDatabase) {
         #expect(server.requests("confirmScreeningClearance").count == 1)
     }
 
+    @Test func signingOutForgetsTheRegions() async throws {
+        let server = ScriptedServer { r in
+            r.operation == "listMyRegions" ? (200, regionsJSON()) : (200, catalogueJSON)
+        }
+        let (model, _) = try bodyModel(server)
+        await model.load()
+
+        model.forget()
+
+        #expect(model.regions.isEmpty && model.status == .loading)
+        #expect(model.catalogue != nil, "the body map is content, not the athlete's")
+    }
+
     @Test func aDemoSendsNothing() async throws {
         let model = BodyModel(sync: nil, plan: nil)
 

@@ -70,6 +70,15 @@ public final class PlanSettingsModel {
             || editor.form.equipment != loaded.equipment || editor.form.bodyweightKg != loaded.bodyweightKg
     }
 
+    /// Forgets the settings as loaded and as edited, on sign-out.
+    public func forget() {
+        editor.forget()
+        status = .loading
+        realism = []
+        kept = nil
+        loaded = OnboardingForm()
+    }
+
     /// Fetches the catalogue, the profile and the goals.
     public func load() async {
         guard let sync else { return }

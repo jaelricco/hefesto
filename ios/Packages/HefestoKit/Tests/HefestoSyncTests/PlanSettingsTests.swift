@@ -100,6 +100,25 @@ func goalsJSON(_ goals: [(String, String)] = [("pull-up", "strict-5")]) -> Strin
         #expect(server.requests("updateTrainingProfile").isEmpty)
     }
 
+    @Test func signingOutForgetsTheSettings() async throws {
+        let server = ScriptedServer { r in
+            switch r.operation {
+            case "getTrainingProfile": (200, profileJSON())
+            case "getTrainingGoals": (200, goalsJSON())
+            default: (200, catalogueJSON)
+            }
+        }
+        let model = try settings(server)
+        await model.load()
+        model.editor.form.sessionsPerWeek = 4
+
+        model.forget()
+
+        #expect(model.status == .loading)
+        #expect(model.editor.form == OnboardingForm(), "the next account starts empty")
+        #expect(!model.hasChanges)
+    }
+
     @Test func withoutAnOnboardingThereIsNothingToSet() async throws {
         let server = ScriptedServer { r in
             r.operation == "getPlannerCatalogue"

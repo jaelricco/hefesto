@@ -115,8 +115,19 @@ final class AppModel {
         if demo == nil {
             await auth.logout()
             await auth.useDevice(id: Self.newDeviceId())
+            forgetAthlete()
         }
         isSignedIn = false
+    }
+
+    /// Forgets what the screens hold of the athlete in memory: answers, body
+    /// regions, settings and the week shown. Wherever the local database is
+    /// erased for another account (REVIEW_DECISIONS D-16), this goes with it.
+    private func forgetAthlete() {
+        plan.forget()
+        onboarding.forget()
+        body.forget()
+        settings.forget()
     }
 
     // MARK: sync
