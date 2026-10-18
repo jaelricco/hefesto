@@ -388,7 +388,7 @@ struct PlannedSetRow: View {
     }
 
     private var names: String {
-        set.elements.map { exercises[$0.exerciseId]?.name ?? String(localized: "Exercise") }.joined(separator: " + ")
+        self.set.elements.map { exercises[$0.exerciseId]?.name ?? String(localized: "Exercise") }.joined(separator: " + ")
     }
 
     private var line: String {
