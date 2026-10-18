@@ -61,8 +61,8 @@ enum OpPayload {
             return make(data(set: .init(
                 blockId: e.blockId, orderIndex: e.orderIndex, roundIndex: e.roundIndex, kind: try req(e.kind),
                 isPlanned: e.isPlanned, restAfterPlannedS: e.restAfterPlannedS, restAfterActualS: e.restAfterActualS,
-                rpe: e.rpe, rir: e.rir, completedAt: e.completedAt, notes: e.notes, updatedAt: e.updatedAt,
-                elements: try elements.map(element))))
+                rpe: e.rpe, rir: e.rir, sirS: e.sirS, completedAt: e.completedAt, notes: e.notes,
+                updatedAt: e.updatedAt, elements: try elements.map(element))))
         case .bodyweight:
             guard let b = try Bodyweight.fetchOne(db, key: op.rowId) else { return nil }
             return make(data(bodyweight: .init(
@@ -113,7 +113,8 @@ enum ServerRows {
             id: s.id, startedAt: s.startedAt, endedAt: s.endedAt, timezone: s.timezone, localDate: s.localDate,
             title: s.title, notes: s.notes, perceivedFatigue: s.perceivedFatigue, bodyweightKg: s.bodyweightKg,
             status: s.status.rawValue, isRestDay: s.isRestDay, templateId: s.templateId,
-            completedAt: s.completedAt, updatedAt: s.updatedAt, serverSeq: s.serverSeq, deletedAt: s.deletedAt)
+            plannedSessionId: s.plannedSessionId, completedAt: s.completedAt, updatedAt: s.updatedAt,
+            serverSeq: s.serverSeq, deletedAt: s.deletedAt)
     }
 
     static func block(_ b: Components.Schemas.SyncBlock) -> Block {
@@ -129,8 +130,8 @@ enum ServerRows {
                 id: s.id, sessionId: s.sessionId, blockId: s.blockId, orderIndex: s.orderIndex,
                 roundIndex: s.roundIndex, kind: s.kind.rawValue, isPlanned: s.isPlanned,
                 restAfterPlannedS: s.restAfterPlannedS, restAfterActualS: s.restAfterActualS, rpe: s.rpe,
-                rir: s.rir, completedAt: s.completedAt, notes: s.notes, updatedAt: s.updatedAt,
-                serverSeq: s.serverSeq, deletedAt: s.deletedAt),
+                rir: s.rir, sirS: s.sirS, plannedItemId: s.plannedItemId, completedAt: s.completedAt,
+                notes: s.notes, updatedAt: s.updatedAt, serverSeq: s.serverSeq, deletedAt: s.deletedAt),
             elements: s.elements.map { element($0, setEntryId: s.id) })
     }
 
@@ -161,7 +162,8 @@ enum ServerRows {
             id: s.id, startedAt: s.startedAt, endedAt: s.endedAt, timezone: s.timezone, localDate: s.localDate,
             title: s.title, notes: s.notes, perceivedFatigue: s.perceivedFatigue, bodyweightKg: s.bodyweightKg,
             status: s.status.rawValue, isRestDay: s.isRestDay, templateId: s.templateId,
-            completedAt: s.completedAt, updatedAt: s.updatedAt, serverSeq: nil, deletedAt: nil)
+            plannedSessionId: s.plannedSessionId, completedAt: s.completedAt, updatedAt: s.updatedAt,
+            serverSeq: nil, deletedAt: nil)
         return SessionTree(session: session, blocks: s.blocks.map { b in
             BlockWithSets(
                 block: Block(
@@ -174,8 +176,9 @@ enum ServerRows {
                             id: e.id, sessionId: s.id, blockId: e.blockId, orderIndex: e.orderIndex,
                             roundIndex: e.roundIndex, kind: e.kind.rawValue, isPlanned: e.isPlanned,
                             restAfterPlannedS: e.restAfterPlannedS, restAfterActualS: e.restAfterActualS,
-                            rpe: e.rpe, rir: e.rir, completedAt: e.completedAt, notes: e.notes,
-                            updatedAt: e.updatedAt, serverSeq: nil, deletedAt: nil),
+                            rpe: e.rpe, rir: e.rir, sirS: e.sirS, plannedItemId: e.plannedItemId,
+                            completedAt: e.completedAt, notes: e.notes, updatedAt: e.updatedAt,
+                            serverSeq: nil, deletedAt: nil),
                         elements: e.elements.map { element($0, setEntryId: e.id) })
                 })
         })

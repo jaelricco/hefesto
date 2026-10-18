@@ -37,6 +37,19 @@ type Tree struct {
 	Exercises []Exercise `json:"exercises"`
 	Bands     []Band     `json:"bands"`
 	Skills    []Skill    `json:"skills"`
+
+	// Planner lists the exercises of the planner's knowledge base
+	// (training/exercises.yaml). They are logged like any other exercise, so
+	// each must be in the catalogue with the same measure. They are not part
+	// of the content version.
+	Planner []PlannerExercise `json:"-"`
+}
+
+// PlannerExercise is an exercise the planner plans, as its knowledge base
+// names it.
+type PlannerExercise struct {
+	Slug    string `yaml:"slug"`
+	Measure string `yaml:"measure"`
 }
 
 // Family is one entry of the shared push/pull/core/... vocabulary.

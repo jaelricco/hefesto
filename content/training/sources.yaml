@@ -1,0 +1,1820 @@
+# Source register, generated from docs/research/00_sources.md. Clients show
+# titles only for reasons that are not tied to a region with a complaint
+# (EXPL-07).
+sources:
+- {id: P-01, title: Program Planche & Maltese — BEGINNER (3 S.), authors: Daï-Long Huynh, year: o. J.,
+  url: 'Anhang des Auftrags (PDF, lokal)', type: Praxisquelle (PDF), evidence: C}
+- {id: P-02, title: Program Planche & Maltese — INTERMEDIATE (4 S.), authors: Daï-Long Huynh, year: o.
+    J., url: 'Anhang des Auftrags (PDF, lokal)', type: Praxisquelle (PDF), evidence: C}
+- {id: P-03, title: Program Planche & Maltese — ADVANCED (4 S.), authors: Daï-Long Huynh, year: o. J.,
+  url: 'Anhang des Auftrags (PDF, lokal)', type: Praxisquelle (PDF), evidence: C}
+- {id: P-04, title: 'Program Planche & Maltese — DAÏ-LONG, persönliche Workouts (1 S.)', authors: Daï-Long
+    Huynh, year: o. J., url: 'Anhang des Auftrags (PDF, lokal)', type: Praxisquelle (PDF), evidence: C}
+- {id: A-01, title: 'Effect of Progressive Calisthenic Push-up Training on Muscle Strength and Thickness
+    [Abs.]', authors: 'Kotarsky CJ, Christensen BK, Miller JS, Hackney KJ', year: '2018', url: 'https://doi.org/10.1519/JSC.0000000000002345',
+  type: RCT, evidence: A}
+- {id: A-02, title: 'Bench press and push-up at comparable levels of muscle activity results in similar
+    strength gains [Abs.]', authors: 'Calatayud J, Borreani S, Colado JC, Martin F, Tella V, Andersen
+    LL', year: '2015', url: 'https://doi.org/10.1519/JSC.0000000000000589', type: RCT, evidence: A}
+- {id: A-03, title: 'Biomechanical analyses of the handstand: a systematic review [VT]', authors: 'MacDonald
+    M, Baker JS, Gu Y, Ugbolue UC', year: '2025', url: 'https://doi.org/10.3389/fspor.2025.1694648', type: Systematic
+    Review, evidence: A}
+- {id: A-04, title: 'A Systematic Review of Dynamic, Kinematic, and Muscle Activity during Gymnastic Still
+    Rings Elements [Abs.]', authors: 'Malíř R, Chrudimský J, Šteffl M, Stastny P', year: '2023', url: 'https://doi.org/10.3390/sports11030050',
+  type: Systematic Review, evidence: A}
+- {id: A-05, title: 'Kinetic analysis of several variations of push-ups [Abs.]', authors: 'Ebben WP, Wurm
+    B, VanderZanden TL, Spadavecchia ML, Durocher JJ, Bickham CT, Petushek EJ', year: '2011', url: 'https://doi.org/10.1519/JSC.0b013e31820c8587',
+  type: Biomechanik-Studie, evidence: B}
+- {id: A-06, title: 'The effect of position on the percentage of body mass supported during traditional
+    and modified push-up variants [Abs.; Zahlen (S)]', authors: 'Suprak DN, Dawes J, Stephenson MD', year: '2011',
+  url: 'https://doi.org/10.1519/JSC.0b013e3181bde2cf', type: Biomechanik-Studie, evidence: B}
+- {id: A-07, title: 'An electromyographical analysis of the scapular stabilizing synergists during a push-up
+    progression [Abs.]', authors: 'Lear LJ, Gross MT', year: '1998', url: 'https://doi.org/10.2519/jospt.1998.28.3.146',
+  type: EMG-Studie, evidence: B}
+- {id: A-08, title: 'Surface electromyographic activation patterns and elbow joint motion during a pull-up,
+    chin-up, or perfect-pullup rotational exercise [Abs.]', authors: 'Youdas JW, Amundson CL, Cicero KS,
+    Hahn JJ, Harezlak DT, Hollman JH', year: '2010', url: 'https://doi.org/10.1519/JSC.0b013e3181f1598c',
+  type: EMG-Studie, evidence: B}
+- {id: A-09, title: 'Avoiding high-risk rotator cuff loading: Muscle force during three pull-up techniques
+    [Abs.]', authors: 'Urbanczyk CA, Prinold JAI, Reilly P, Bull AMJ', year: '2020', url: 'https://doi.org/10.1111/sms.13780',
+  type: Biomechanik-Studie, evidence: B}
+- {id: A-10, title: 'Alterations in kinematics and muscle activation patterns with the addition of a kipping
+    action during a pull-up activity [Abs.]', authors: 'Dinunzio C, Porter N, Van Scoy J, Cordice D, McCulloch
+    RS', year: '2019', url: 'https://doi.org/10.1080/14763141.2018.1452971', type: Biomechanik-Studie,
+  evidence: B}
+- {id: A-11, title: 'Relationship of lat-pull repetitions and pull-ups to maximal lat-pull and pull-up
+    strength in men and women [Abs.]', authors: 'Johnson D, Lynch J, Nash K, Cygan J, Mayhew JL', year: '2009',
+  url: 'https://doi.org/10.1519/JSC.0b013e3181a2d7f5', type: Querschnittstudie, evidence: B}
+- {id: A-12, title: 'Activation of spinal stabilizers and shoulder complex muscles during an inverted
+    row using a portable pull-up device and body weight resistance [Abs.]', authors: 'Youdas JW, Keith
+    JM, Nonn DE, Squires AC, Hollman JH', year: '2016', url: 'https://doi.org/10.1519/JSC.0000000000001210',
+  type: EMG-Studie, evidence: B}
+- {id: A-13, title: 'Comparison of Muscle Activity During a Ring Muscle Up and a Bar Muscle Up [VT]',
+  authors: 'Walker CW, Bruenger AJ, Tucker WS, Lee HR', year: '2023', url: 'https://doi.org/10.70252/FJQL7859',
+  type: EMG-Studie, evidence: B}
+- {id: A-14, title: 'Strategies for maintaining a handstand in the anterior-posterior direction [Abs.]',
+  authors: 'Kerwin DG, Trewartha G', year: '2001', url: 'https://doi.org/10.1097/00005768-200107000-00016',
+  type: Biomechanik-Studie, evidence: B}
+- {id: A-15, title: 'Balance control strategies during perturbed and unperturbed balance in standing and
+    handstand [Abs.]', authors: 'Blenkinsop GM, Pain MTG, Hiley MJ', year: '2017', url: 'https://doi.org/10.1098/rsos.161018',
+  type: Biomechanik-Studie, evidence: B}
+- {id: A-16, title: 'Changes in the Muscle Activity of Gymnasts During a Handstand on Various Apparatus
+    [Abs.]', authors: 'Kochanowicz A, Niespodziński B, Mieszkowski J, Marina M, Kochanowicz K, Zasada
+    M', year: '2019', url: 'https://doi.org/10.1519/JSC.0000000000002124', type: EMG-Studie, evidence: B}
+- {id: A-17, title: 'Kinematics and joints moments profile during straight arm press to handstand in male
+    gymnasts [Abs.]', authors: 'Mizutori H, Kashiwagi Y, Hakamada N, Tachibana Y, Funato K', year: '2021',
+  url: 'https://doi.org/10.1371/journal.pone.0253951', type: Biomechanik-Studie, evidence: B}
+- {id: A-18, title: 'How does fatigue affect handstand balance? A non-linear approach to study fatigue
+    influence in handstand performance [Abs.]', authors: 'Sabido R, García-Aguilar F, Caballero C, Moreno
+    FJ', year: '2024', url: 'https://doi.org/10.1186/s12984-024-01442-6', type: Biomechanik-Studie, evidence: B}
+- {id: A-19, title: 'Are the shoulder joint function, stability, and mobility tests predictive of handstand
+    execution? [Abs.]', authors: 'Malíř R, Chrudimský J, Provazník A, Třebický V', year: '2024', url: 'https://doi.org/10.1371/journal.pone.0302922',
+  type: Querschnittstudie, evidence: B}
+- {id: A-20, title: 'Relationship between swallow, support scale and iron cross on rings and their specific
+    preconditioning strengthening exercises [Abs.]', authors: 'Hübner K, Schärer C', year: '2015', url: 'https://doi.org/10.52165/sgj.7.3.59-68',
+  type: Querschnittstudie, evidence: B}
+- {id: A-21, title: 'Maximum Strength Benchmarks for Difficult Static Elements on Rings in Male Elite
+    Gymnastics [VT]', authors: 'Schärer C, Huber S, Bucher P, Capelli C, Hübner K', year: '2021', url: 'https://doi.org/10.3390/sports9060078',
+  type: Querschnittstudie, evidence: B}
+- {id: A-22, title: 'Preparatory Strength Benchmarks for "Inverted Cross on Rings" in Male Elite and Junior
+    Artistic Gymnasts [VT]', authors: 'Schärer C, Yusof E, Capelli C', year: '2025', url: 'https://doi.org/10.3390/sports13050146',
+  type: Querschnittstudie, evidence: B}
+- {id: A-23, title: 'Relationship Between Bench Press and Iron Cross Maximal Isometric Contraction – How
+    to Develop the Strength to Perform the Iron Cross on Rings [Abs.]', authors: 'Lecocq T, Gouelle A,
+    Schärer C, Mochizuki L, Tordi N', year: '2025', url: 'https://doi.org/10.1002/ejsc.70002', type: Querschnittstudie,
+  evidence: B}
+- {id: A-24, title: 'Electromyographic Analysis of the Support Scale in Gymnastics and Its Related Preconditioning
+    Strengthening Exercises [VT]', authors: 'Rosaci G, Nigro F, Cortesi M, Ciacci S, Bartolomei S, Fantozzi
+    S', year: '2025', url: 'https://doi.org/10.1519/JSC.0000000000005074', type: EMG-Studie, evidence: B}
+- {id: A-25, title: 'Can shoulder muscle coordination during the support scale at ring height be replicated
+    during training exercises in gymnastics? [Abs.]', authors: 'Bernasconi SM, Tordi NR, Parratte BM,
+    Rouillon JD', year: '2009', url: 'https://doi.org/10.1519/JSC.0b013e3181bac69f', type: EMG-Studie,
+  evidence: B}
+- {id: A-26, title: 'Specific Eccentric-Isokinetic Cluster Training Improves Static Strength Elements
+    on Rings for Elite Gymnasts [Abs.]', authors: 'Schärer C, Tacchelli L, Göpfert B, Gross M, Lüthy F,
+    Taube W, Hübner K', year: '2019', url: 'https://doi.org/10.3390/ijerph16224571', type: Kohortenstudie,
+  evidence: B}
+- {id: A-27, title: 'Combined Eccentric-Isokinetic and Isoinertial Training Leads to Large Ring-Specific
+    Strength Gains in Elite Gymnasts [Abs.]', authors: 'Schärer C, Bucher P, Lüthy F, Hübner K', year: '2022',
+  url: 'https://doi.org/10.3390/sports10040049', type: Kohortenstudie, evidence: B}
+- {id: A-28, title: 'Insights from a Nine-Segment Biomechanical Model and Its Simulation for Anthropometrical
+    Influence on Individualized Planche Learning and Training in Gymnastics [VT]', authors: 'Wang X, Shan
+    G', year: '2023', url: 'https://doi.org/10.3390/bioengineering10070761', type: Biomechanik-Studie,
+  evidence: B}
+- {id: A-29, title: 'Men''s Artistic Gymnastics – 2025-2028 Code of Points [VT]', authors: Fédération
+    Internationale de Gymnastique (FIG), year: '2025', url: 'https://www.gymnastics.sport/publicdir/rules/files/en_1.1%20-%20MAG%20Code%20of%20Points%202025-2028.pdf',
+  type: Positionspapier/Konsensus, evidence: B}
+- {id: A-30, title: 'Overcoming Gravity: A Systematic Approach to Gymnastics and Bodyweight Strength,
+    2nd ed. [Leseprobe Kap. 1–3, S. 21–25 gelesen]', authors: Low S, year: '2016', url: 'https://stevenlow.org/wp-content/uploads/2018/09/OG2-preview-TOC-Intro-Ch1-3.pdf',
+  type: Coaching-Buch, evidence: C}
+- {id: A-31, title: 'Overcoming Gravity 2nd Edition Exercise Charts [VT]', authors: Low S, year: '2016',
+  url: 'https://docs.google.com/spreadsheets/d/19l4tVfdTJLheLMwZBYqcw1oeEBPRh8mxngqrCz2YnVg', type: Coaching-Buch,
+  evidence: C}
+- {id: A-32, title: 'Kinetic analysis of several variations of push-ups (ISBS-Proceedings-Fassung) [VT]',
+  authors: 'Wurm B, VanderZanden TL, Spadavecchia M, Durocher J, Bickham C, Petushek EJ, Ebben WP', year: '2010',
+  url: 'https://ojs.ub.uni-konstanz.de/cpa/article/view/4457', type: Biomechanik-Studie, evidence: B}
+- {id: A-33, title: 'WSWCF Calisthenics Freestyle World Championship – Official Competition Rules [VT]',
+  authors: World Street Workout & Calisthenics Federation (WSWCF), year: '2024', url: 'https://wswcf.org/wp-content/uploads/2024/11/WSWCF_FREESTYLE-WORLD-CHAMPIONSHIP-RULES.pdf',
+  type: Positionspapier/Konsensus, evidence: C}
+- {id: A-34, title: 'Freestyle Calisthenics Rules [VT]', authors: Calisthenics Cup, year: '2024', url: 'https://calisthenics-cup.com/freestyle-calisthenics-rules/',
+  type: Positionspapier/Konsensus, evidence: D}
+- {id: A-35, title: 'How To Train For The Planche: Tuck To Straddle Progression [VT]', authors: Hurst
+    R (GMB Fitness), year: '2026', url: 'https://gmb.io/planche/', type: Coaching-Artikel, evidence: C}
+- {id: A-36, title: 'L-Sit Progression: 6 Steps To A Rock Solid Core [VT]', authors: Hurst R (GMB Fitness),
+  year: '2026', url: 'https://gmb.io/l-sit/', type: Coaching-Artikel, evidence: C}
+- {id: A-37, title: 'How To Do A Handstand – Best Progression [VT]', authors: Hurst R (GMB Fitness), year: '2026',
+  url: 'https://gmb.io/handstand/', type: Coaching-Artikel, evidence: C}
+- {id: A-38, title: 'How To Build Up To Pull-Ups: A 3-Step Bodyweight Progression [VT]', authors: Hurst
+    R (GMB Fitness), year: '2026', url: 'https://gmb.io/pull-ups/', type: Coaching-Artikel, evidence: C}
+- {id: A-39, title: '12 Wrist Mobility And Strength Exercises [VT]', authors: Ilano J (GMB Fitness), year: '2026',
+  url: 'https://gmb.io/wrists/', type: Coaching-Artikel, evidence: C}
+- {id: A-40, title: 'How To Achieve A Planche – The Most Effective Planche Progression [VT]', authors: The
+    Movement Athlete, year: '2025', url: 'https://themovementathlete.com/planche-progression-training/',
+  type: Coaching-Artikel, evidence: D}
+- {id: A-41, title: 'The Most Effective Front Lever Progression: Master This Elite Skill in 12 Months
+    (2025 Guide) [VT]', authors: The Movement Athlete, year: '2025', url: 'https://themovementathlete.com/front-lever-progression/',
+  type: Coaching-Artikel, evidence: D}
+- {id: A-42, title: 'Master the Back Lever: Complete Step-by-Step Progression Guide (2025 Edition) [VT]',
+  authors: The Movement Athlete, year: '2025', url: 'https://themovementathlete.com/back-lever-progressions/',
+  type: Coaching-Artikel, evidence: D}
+- {id: A-43, title: 'The Ultimate Ring Dips Guide: Master This Elite Exercise in 30 Days (2025 Method)
+    [VT]', authors: The Movement Athlete, year: '2025', url: 'https://themovementathlete.com/ring-dip-guide/',
+  type: Coaching-Artikel, evidence: D}
+- {id: A-44, title: 'Recommended Routine (r/bodyweightfitness-Wiki, GitHub-Spiegel) [VT]', authors: r/bodyweightfitness-Community,
+  year: o. J., url: 'https://github.com/redditbwf/redditbwf.github.io/blob/master/wiki/recommended_routine.md',
+  type: Forum/Wiki, evidence: D}
+- {id: A-45, title: 'Reddit''s Bodyweight Fitness Recommended Routine (App-Programmseite) [VT; vollständige
+    Leitern nur (S)]', authors: Boostcamp, year: o. J., url: 'https://www.boostcamp.app/coaches/r-bodyweightfitness/r-bodyweight-recommended-routine',
+  type: Forum/Wiki, evidence: D}
+- {id: A-46, title: 'Reddit''s Bodyweight Routine (Programmseite) [VT]', authors: Fitloop, year: '2026',
+  url: 'https://fitloop.app/programs/reddit-recommended-routine', type: Forum/Wiki, evidence: D}
+- {id: A-47, title: 'Overcoming Gravity 2nd Edition & Progression Charts (Autorenseite) [VT]', authors: Low
+    S, year: o. J., url: 'https://stevenlow.org/overcoming-gravity/', type: Coaching-Artikel, evidence: C}
+- {id: A-48, title: 'Performance Optimization in Streetlifting: The Combined Role of Nutrition, Lean Mass,
+    and Sleep [Abs.]', authors: 'Stranieri C, Bulbarelli A, Lonati E, Palestini P, Cazzaniga E', year: '2025',
+  url: 'https://doi.org/10.3390/nu18010105', type: Narratives Review, evidence: B}
+- {id: A-49, title: 'Endurance time is joint-specific: a modelling and meta-analysis investigation [VT,
+    Tabelle 2]', authors: 'Frey Law LA, Avin KG', year: '2010', url: 'https://doi.org/10.1080/00140130903389068',
+  type: Meta-Analyse, evidence: A}
+- {id: A-50, title: 'Training college-age women to perform the pull-up exercise [Abs.]', authors: 'Flanagan
+    SP, Vanderburgh PM, Borchers SG, Kohstall CD', year: '2003', url: 'https://doi.org/10.1080/02701367.2003.10609064',
+  type: Kohortenstudie, evidence: B}
+- {id: A-51, title: 'Determinant factors of pull-up performance in trained athletes [Abs.]', authors: 'Sanchez-Moreno
+    M, Pareja-Blanco F, Diaz-Cueli D, González-Badillo JJ', year: '2016', url: 'https://pubmed.ncbi.nlm.nih.gov/26176615/',
+  type: Querschnittstudie, evidence: B}
+- {id: A-52, title: 'Effects of Velocity Loss During Body Mass Prone-Grip Pull-up Training on Strength
+    and Endurance Performance [Abs.]', authors: 'Sánchez-Moreno M, Cornejo-Daza PJ, González-Badillo JJ,
+    Pareja-Blanco F', year: '2020', url: 'https://doi.org/10.1519/JSC.0000000000003500', type: RCT, evidence: A}
+- {id: A-53, title: 'Acute Effects of Post-Activation Performance Enhancement of 5RM Weighted Pull-Ups
+    and One Arm Pull-Ups on Specific Upper Body Climbing Performance [VT]', authors: 'Sas-Nowosielski
+    K, Kandzia K', year: '2022', url: 'https://doi.org/10.2478/hukin-2022-0097', type: Querschnittstudie,
+  evidence: B}
+- {id: A-54, title: 'Bench, Bar, and Ring Dips: Do Kinematics and Muscle Activity Differ? [VT]', authors: 'McKenzie
+    A, Crowley-McHattan Z, Meir R, Whitting J, Volschenk W', year: '2022', url: 'https://doi.org/10.3390/ijerph192013211',
+  type: EMG-Studie, evidence: B}
+- {id: A-55, title: 'Relative balance of serratus anterior and upper trapezius muscle activity during
+    push-up exercises [Abs.]', authors: 'Ludewig PM, Hoff MS, Osowski EE, Meschke SA, Rundquist PJ', year: '2004',
+  url: 'https://doi.org/10.1177/0363546503258911', type: EMG-Studie, evidence: B}
+- {id: A-56, title: 'Low-load bench press and push-up induce similar muscle hypertrophy and strength gain
+    [VT]', authors: 'Kikuchi N, Nakazato K', year: '2017', url: 'https://doi.org/10.1016/j.jesf.2017.06.003',
+  type: RCT, evidence: A}
+- {id: A-57, title: 'Relationship between postural control and muscle activity during a handstand in young
+    and adult gymnasts [Abs.]', authors: 'Kochanowicz A, Niespodziński B, Marina M, Mieszkowski J, Biskup
+    L, Kochanowicz K', year: '2018', url: 'https://doi.org/10.1016/j.humov.2018.02.007', type: EMG-Studie,
+  evidence: B}
+- {id: A-58, title: 'Efficacy of Wrist Strategy Coaching on Handstand Performances in Novices: Inverting
+    Explicit and Implicit Learning of Skill-Related Motor Tasks [VT]', authors: 'Rohleder J, Vogt T',
+  year: '2019', url: 'https://doi.org/10.52165/sgj.11.2.209-222', type: Kohortenstudie, evidence: B}
+- {id: A-59, title: 'Dynamics of expertise level: Coordination in handstand [Abs.]', authors: 'Gautier
+    G, Marin L, Leroy D, Thouvarecq R', year: '2009', url: 'https://doi.org/10.1016/j.humov.2008.05.003',
+  type: Biomechanik-Studie, evidence: B}
+- {id: A-60, title: 'The Wrist as a Weightbearing Joint in Adult Handstand Practitioners: A Cross-Sectional
+    Survey of Chronic Pain and Training-Related Factors [Abs.]', authors: 'Martonovich N, Maman D, Mahamid
+    A, Alfandari L, Behrbalk E', year: '2025', url: 'https://doi.org/10.3390/jfmk10040372', type: Querschnittstudie,
+  evidence: B}
+- {id: A-61, title: 'Benefits of Training the Iron Cross With Herdos Devices and External Load Added to
+    Body Weight for Young Nonachiever Gymnasts [Abs.]', authors: 'Marina M, Torrado P, Ferrer-Uris B,
+    Busquets A', year: '2023', url: 'https://doi.org/10.1123/ijspp.2023-0183', type: EMG-Studie, evidence: B}
+- {id: A-62, title: 'Surface electromyography of nine shoulder muscles in two iron cross conditions in
+    gymnastics [Abs.]', authors: 'Bernasconi S, Tordi N, Parratte B, Rouillon JD, Monnier G', year: '2004',
+  url: 'https://pubmed.ncbi.nlm.nih.gov/15756161/', type: EMG-Studie, evidence: B}
+- {id: A-63, title: 'Prilepin tables for bodyweight strength isometric and eccentric exercises (mit der
+    Isometrietabelle aus Overcoming Gravity, 2. Aufl.) [VT]', authors: Low S, year: '2017', url: 'https://stevenlow.org/prilepin-tables-for-bodyweight-strength-isometric-and-eccentric-exercises/',
+  type: Coaching-Artikel, evidence: C}
+- {id: A-64, title: 'How To Do A Strict Rings Muscle-Up [VT]', authors: Hurst R (GMB Fitness), year: '2023',
+  url: 'https://gmb.io/muscle-up/', type: Coaching-Artikel, evidence: C}
+- {id: A-65, title: 'Pistol Squat Progression That Works – Bottom-Up Method [VT]', authors: Hurst R (GMB
+    Fitness), year: '2026', url: 'https://gmb.io/pistol-squat/', type: Coaching-Artikel, evidence: C}
+- {id: A-66, title: 'All Calisthenics Static Holds Explained + Full Diagram [VT]', authors: Belt A (Calisteniapp),
+  year: '2025', url: 'https://calisteniapp.com/articles/calisthenics-statics', type: Coaching-Artikel,
+  evidence: D}
+- {id: A-67, title: 'This is a realistic time frame for you to unlock calisthenics skills [VT]', authors: Refael
+    (The Bodyweight Tribe), year: '2024', url: 'https://www.thebodyweighttribe.com/blog/this-is-how-long-unlocking-calisthenics-skills-will-take-for-you',
+  type: Coaching-Artikel, evidence: D}
+- {id: A-68, title: 'How to train maltese [VT]', authors: Sampaoli M (Caliathletics), year: '2019', url: 'https://caliathletics.com/knowledge/how-to-train-maltese/',
+  type: Coaching-Artikel, evidence: D}
+- {id: A-69, title: 'Frequently Asked Questions (r/bodyweightfitness-FAQ, GitHub-Pages-Spiegel) [VT]',
+  authors: r/bodyweightfitness-Community, year: o. J., url: 'https://asdjflk.github.io/r/bodyweightfitness/wiki/faq.html',
+  type: Forum/Wiki, evidence: D}
+- {id: A-70, title: 'Bodyweight Strength Foundation (BWSF) Routine: Info Hub [VT]', authors: Nick-E, year: o.
+    J., url: 'https://nick-e.com/exercise-library/routines/bwsf/', type: Coaching-Artikel, evidence: D}
+- {id: A-71, title: 'Arthur Zanetti (Wikipedia; Infobox «Eponymous skills: Zanetti (Still rings)») [VT]',
+  authors: Wikipedia-Autorinnen und -Autoren, year: '2026', url: 'https://en.wikipedia.org/wiki/Arthur_Zanetti',
+  type: Forum/Wiki, evidence: D}
+- {id: A-72, title: 'Men''s Artistic Gymnastics – 2022-2024 Code of Points (Wertetabelle Ringe, EG II,
+    S. 86) [VT]', authors: Fédération Internationale de Gymnastique (FIG), year: '2022', url: 'https://www.gymnastics.sport/publicdir/rules/files/en_%202022-2024%20MAG%20CoP.pdf',
+  type: Positionspapier/Konsensus, evidence: B}
+- {id: B-01, title: 'Comparison of Periodized and Non-Periodized Resistance Training on Maximal Strength:
+    A Meta-Analysis', authors: 'Williams TD, Tolusso DV, Fedewa MV, Esco MR', year: '2017', url: 'https://doi.org/10.1007/s40279-017-0734-y',
+  type: Meta-Analyse, evidence: A}
+- {id: B-02, title: 'Effects of Periodization on Strength and Muscle Hypertrophy in Volume-Equated Resistance
+    Training Programs: A Systematic Review and Meta-analysis', authors: 'Moesgaard L, Beck MM, Christiansen
+    L, Aagaard P, Lundbye-Jensen J', year: '2022', url: 'https://doi.org/10.1007/s40279-021-01636-1',
+  type: Meta-Analyse, evidence: A}
+- {id: B-03, title: Systematic review and meta-analysis of linear and undulating periodized resistance
+    training programs on muscular strength, authors: 'Harries SK, Lubans DR, Callister R', year: '2015',
+  url: 'https://doi.org/10.1519/jsc.0000000000000712', type: Meta-Analyse, evidence: A}
+- {id: B-04, title: 'Effects of linear and daily undulating periodized resistance training programs on
+    measures of muscle hypertrophy: a systematic review and meta-analysis', authors: 'Grgic J, Mikulic
+    P, Podnar H, Pedisic Z', year: '2017', url: 'https://doi.org/10.7717/peerj.3695', type: Meta-Analyse,
+  evidence: A}
+- {id: B-05, title: 'A Systematic Review of Meta-Analyses Comparing Periodized and Non-periodized Exercise
+    Programs: Why We Should Go Back to Original Research', authors: 'Afonso J, Rocha T, Nikolaidis PT,
+    Clemente FM, Rosemann T, Knechtle B', year: '2019', url: 'https://doi.org/10.3389/fphys.2019.01023',
+  type: Systematic Review, evidence: A}
+- {id: B-06, title: 'Periodization paradigms in the 21st century: evidence-led or tradition-driven?',
+  authors: Kiely J, year: '2012', url: 'https://doi.org/10.1123/ijspp.7.3.242', type: Narratives Review,
+  evidence: B}
+- {id: B-07, title: New horizons for the methodology and physiology of training periodization, authors: Issurin
+    VB, year: '2010', url: 'https://doi.org/10.2165/11319770-000000000-00000', type: Narratives Review,
+  evidence: B}
+- {id: B-08, title: 'Isometric training and long-term adaptations: Effects of muscle length, intensity,
+    and intent: A systematic review', authors: 'Oranchuk DJ, Storey AG, Nelson AR, Cronin JB', year: '2019',
+  url: 'https://doi.org/10.1111/sms.13375', type: Systematic Review, evidence: A}
+- {id: B-09, title: 'Brief Review: Effects of Isometric Strength Training on Strength and Dynamic Performance',
+  authors: 'Lum D, Barbosa TM', year: '2019', url: 'https://doi.org/10.1055/a-0863-4539', type: Narratives
+    Review, evidence: B}
+- {id: B-10, title: 'Endurance time is joint-specific: a modelling and meta-analysis investigation', authors: 'Frey
+    Law LA, Avin KG', year: '2010', url: 'https://doi.org/10.1080/00140130903389068', type: Meta-Analyse,
+  evidence: A}
+- {id: B-11, title: Effects of different duration isometric contractions on tendon elasticity in human
+    quadriceps muscles, authors: 'Kubo K, Kanehisa H, Fukunaga T', year: '2001', url: 'https://doi.org/10.1111/j.1469-7793.2001.0649c.xd',
+  type: Kohortenstudie, evidence: B}
+- {id: B-12, title: 'Human tendon adaptation in response to mechanical loading: a systematic review and
+    meta-analysis of exercise intervention studies on healthy adults', authors: 'Bohm S, Mersmann F, Arampatzis
+    A', year: '2015', url: 'https://doi.org/10.1186/s40798-015-0009-9', type: Meta-Analyse, evidence: A}
+- {id: B-13, title: Specificity of joint angle in isometric training, authors: 'Kitai TA, Sale DG', year: '1989',
+  url: 'https://doi.org/10.1007/bf00637386', type: Kohortenstudie, evidence: B}
+- {id: B-14, title: 'Is the joint-angle specificity of isometric resistance training real? And if so,
+    does it have a neural basis?', authors: 'Lanza MB, Balshaw TG, Folland JP', year: '2019', url: 'https://doi.org/10.1007/s00421-019-04229-z',
+  type: Kohortenstudie, evidence: B}
+- {id: B-15, title: 'Effects of isometric vs. dynamic resistance training on isometric and isokinetic
+    muscular strength: A systematic review with meta-analysis', authors: 'Ghayomzadeh M, Li J, Eidy F,
+    Keshavarz M, Sabag A, Fornusek C et al.', year: '2025', url: 'https://doi.org/10.1016/j.jsams.2025.07.011',
+  type: Meta-Analyse, evidence: A}
+- {id: B-16, title: 'The Relationship Between Isometric and Dynamic Strength Following Resistance Training:
+    A Systematic Review, Meta-Analysis, and Level of Agreement', authors: 'James LP, Weakley J, Comfort
+    P, Huynh M', year: '2024', url: 'https://doi.org/10.1123/ijspp.2023-0066', type: Meta-Analyse, evidence: A}
+- {id: B-17, title: 'Effect of daily 3-s maximum voluntary isometric, concentric, or eccentric contraction
+    on elbow flexor strength', authors: 'Sato S, Yoshida R, Murakoshi F, Sasaki Y, Yahata K, Nosaka K
+    et al.', year: '2022', url: 'https://doi.org/10.1111/sms.14138', type: Kohortenstudie, evidence: B}
+- {id: B-18, title: Greater effects by performing a small number of eccentric contractions daily than
+    a larger number of them once a week, authors: 'Yoshida R, Sato S, Kasahara K, Murakami Y, Murakoshi
+    F, Aizawa K et al.', year: '2022', url: 'https://doi.org/10.1111/sms.14220', type: Kohortenstudie,
+  evidence: B}
+- {id: B-19, title: Maximum Strength Benchmarks for Difficult Static Elements on Rings in Male Elite Gymnastics,
+  authors: 'Schärer C, Huber S, Bucher P, Capelli C, Hübner K', year: '2021', url: 'https://doi.org/10.3390/sports9060078',
+  type: Querschnittstudie, evidence: B}
+- {id: B-20, title: 'Dose-response relationship between weekly resistance training volume and increases
+    in muscle mass: A systematic review and meta-analysis', authors: 'Schoenfeld BJ, Ogborn D, Krieger
+    JW', year: '2017', url: 'https://doi.org/10.1080/02640414.2016.1210197', type: Meta-Analyse, evidence: A}
+- {id: B-21, title: 'The Effect of Weekly Set Volume on Strength Gain: A Meta-Analysis', authors: 'Ralston
+    GW, Kilgore L, Wyatt FB, Baker JS', year: '2017', url: 'https://doi.org/10.1007/s40279-017-0762-7',
+  type: Meta-Analyse, evidence: A}
+- {id: B-22, title: A Systematic Review of The Effects of Different Resistance Training Volumes on Muscle
+    Hypertrophy, authors: 'Baz-Valle E, Balsalobre-Fernández C, Alix-Fages C, Santos-Concejero J', year: '2022',
+  url: 'https://doi.org/10.2478/hukin-2022-0017', type: Meta-Analyse, evidence: A}
+- {id: B-23, title: 'The Resistance Training Dose Response: Meta-Regressions Exploring the Effects of
+    Weekly Volume and Frequency on Muscle Hypertrophy and Strength Gains', authors: 'Pelland JC, Remmert
+    JF, Robinson ZP, Hinson SR, Zourdos MC', year: '2026', url: 'https://doi.org/10.1007/s40279-025-02344-w',
+  type: Meta-Analyse, evidence: A}
+- {id: B-24, title: 'Is There Too Much of a Good Thing? Meta-Regressions of the Effect of Per-Session
+    Volume on Hypertrophy and Strength (Preprint, SportRxiv, nicht begutachtet)', authors: 'Remmert JF,
+    Pelland JC, Robinson ZP, Hinson SR, Zourdos MC', year: '2025', url: 'https://doi.org/10.51224/srxiv.537',
+  type: Meta-Analyse, evidence: B}
+- {id: B-25, title: 'Exploring the Dose-Response Relationship Between Estimated Resistance Training Proximity
+    to Failure, Strength Gain, and Muscle Hypertrophy: A Series of Meta-Regressions', authors: 'Robinson
+    ZP, Pelland JC, Remmert JF, Refalo MC, Jukic I, Steele J et al.', year: '2024', url: 'https://doi.org/10.1007/s40279-024-02069-2',
+  type: Meta-Analyse, evidence: A}
+- {id: B-26, title: 'Influence of Resistance Training Proximity-to-Failure on Skeletal Muscle Hypertrophy:
+    A Systematic Review with Meta-analysis', authors: 'Refalo MC, Helms ER, Trexler ET, Hamilton DL, Fyfe
+    JJ', year: '2023', url: 'https://doi.org/10.1007/s40279-022-01784-y', type: Meta-Analyse, evidence: A}
+- {id: B-27, title: 'Effects of resistance training performed to repetition failure or non-failure on
+    muscular strength and hypertrophy: A systematic review and meta-analysis', authors: 'Grgic J, Schoenfeld
+    BJ, Orazem J, Sabol F', year: '2022', url: 'https://doi.org/10.1016/j.jshs.2021.01.007', type: Meta-Analyse,
+  evidence: A}
+- {id: B-28, title: Similar muscle hypertrophy following eight weeks of resistance training to momentary
+    muscular failure or with repetitions-in-reserve in resistance-trained individuals, authors: 'Refalo
+    MC, Helms ER, Robinson ZP, Hamilton DL, Fyfe JJ', year: '2024', url: 'https://doi.org/10.1080/02640414.2024.2321021',
+  type: RCT, evidence: A}
+- {id: B-29, title: 'Resistance Training Load Effects on Muscle Hypertrophy and Strength Gain: Systematic
+    Review and Network Meta-analysis', authors: 'Lopez P, Radaelli R, Taaffe DR, Newton RU, Galvão DA,
+    Trajano GS et al.', year: '2021', url: 'https://doi.org/10.1249/mss.0000000000002585', type: Meta-Analyse,
+  evidence: A}
+- {id: B-30, title: 'Resistance training prescription for muscle strength and hypertrophy in healthy adults:
+    a systematic review and Bayesian network meta-analysis', authors: 'Currier BS, Mcleod JC, Banfield
+    L, Beyene J, Welton NJ, D''Souza AC et al.', year: '2023', url: 'https://doi.org/10.1136/bjsports-2023-106807',
+  type: Meta-Analyse, evidence: A}
+- {id: B-31, title: 'American College of Sports Medicine Position Stand. Resistance Training Prescription
+    for Muscle Function, Hypertrophy, and Physical Performance in Healthy Adults: An Overview of Reviews',
+  authors: 'Currier BS, D''Souza AC, Singh MAF, Lowisz CV, Rawson ES, Schoenfeld BJ et al.', year: '2026',
+  url: 'https://doi.org/10.1249/mss.0000000000003897', type: Positionspapier/Konsensus, evidence: B}
+- {id: B-32, title: American College of Sports Medicine position stand. Progression models in resistance
+    training for healthy adults, authors: American College of Sports Medicine, year: '2009', url: 'https://doi.org/10.1249/mss.0b013e3181915670',
+  type: Positionspapier/Konsensus, evidence: B}
+- {id: B-33, title: 'Loading Recommendations for Muscle Strength, Hypertrophy, and Local Endurance: A
+    Re-Examination of the Repetition Continuum', authors: 'Schoenfeld BJ, Grgic J, Van Every DW, Plotkin
+    DL', year: '2021', url: 'https://doi.org/10.3390/sports9020032', type: Narratives Review, evidence: B}
+- {id: B-34, title: 'Maximal Number of Repetitions at Percentages of the One Repetition Maximum: A Meta-Regression
+    and Moderator Analysis of Sex, Age, Training Status, and Exercise', authors: 'Nuzzo JL, Pinto MD,
+    Nosaka K, Steele J', year: '2024', url: 'https://doi.org/10.1007/s40279-023-01937-7', type: Meta-Analyse,
+  evidence: A}
+- {id: B-35, title: Novel Resistance Training-Specific Rating of Perceived Exertion Scale Measuring Repetitions
+    in Reserve, authors: 'Zourdos MC, Klemp A, Dolan C, Quiles JM, Schau KA, Jo E et al.', year: '2016',
+  url: 'https://doi.org/10.1519/jsc.0000000000001049', type: Querschnittstudie, evidence: B}
+- {id: B-36, title: Application of the Repetitions in Reserve-Based Rating of Perceived Exertion Scale
+    for Resistance Training, authors: 'Helms ER, Cronin J, Storey A, Zourdos MC', year: '2016', url: 'https://doi.org/10.1519/ssc.0000000000000218',
+  type: Narratives Review, evidence: B}
+- {id: B-37, title: 'Accuracy in Predicting Repetitions to Task Failure in Resistance Exercise: A Scoping
+    Review and Exploratory Meta-analysis', authors: 'Halperin I, Malleron T, Har-Nir I, Androulakis-Korakakis
+    P, Wolf M, Fisher J et al.', year: '2022', url: 'https://doi.org/10.1007/s40279-021-01559-x', type: Meta-Analyse,
+  evidence: A}
+- {id: B-38, title: Accuracy of Predicted Intraset Repetitions in Reserve (RIR) in Single- and Multi-Joint
+    Resistance Exercises Among Trained and Untrained Men and Women, authors: 'Remmert JF, Laurson KR,
+    Zourdos MC', year: '2023', url: 'https://doi.org/10.1177/00315125231169868', type: Querschnittstudie,
+  evidence: B}
+- {id: B-39, title: Accuracy of Intraset Repetitions-in-Reserve Predictions During the Bench Press Exercise
+    in Resistance-Trained Male and Female Subjects, authors: 'Refalo MC, Remmert JF, Pelland JC, Robinson
+    ZP, Zourdos MC, Hamilton DL et al.', year: '2024', url: 'https://doi.org/10.1519/jsc.0000000000004653',
+  type: Querschnittstudie, evidence: B}
+- {id: B-40, title: 'The Effect of Load and Volume Autoregulation on Muscular Strength and Hypertrophy:
+    A Systematic Review and Meta-Analysis', authors: 'Hickmott LM, Chilibeck PD, Shaw KA, Butcher SJ',
+  year: '2022', url: 'https://doi.org/10.1186/s40798-021-00404-9', type: Meta-Analyse, evidence: A}
+- {id: B-41, title: 'Auto-Regulation Method vs. Fixed-Loading Method in Maximum Strength Training for
+    Athletes: A Systematic Review and Meta-Analysis', authors: 'Zhang X, Li H, Bi S, Luo Y, Cao Y, Zhang
+    G', year: '2021', url: 'https://doi.org/10.3389/fphys.2021.651112', type: Meta-Analyse, evidence: A}
+- {id: B-42, title: 'RPE vs. Percentage 1RM Loading in Periodized Programs Matched for Sets and Repetitions
+    (kontrollierte Studie, Zuteilung nach 1RM ausbalanciert, nicht randomisiert)', authors: 'Helms ER,
+    Byrnes RK, Cooke DM, Haischer MH, Carzoli JP, Johnson TK et al.', year: '2018', url: 'https://doi.org/10.3389/fphys.2018.00247',
+  type: Kohortenstudie, evidence: B}
+- {id: B-43, title: The effect of autoregulatory progressive resistance exercise vs. linear periodization
+    on strength improvement in college athletes, authors: 'Mann JB, Thyfault JP, Ivey PA, Sayers SP',
+  year: '2010', url: 'https://doi.org/10.1519/jsc.0b013e3181def4a6', type: Kohortenstudie, evidence: B}
+- {id: B-44, title: 'Without Fail: Muscular Adaptations in Single-Set Resistance Training Performed to
+    Failure or with Repetitions-in-Reserve', authors: 'Hermann T, Mohan AE, Enes A, Sapuppo M, Piñero
+    A, Zamanzadeh A et al.', year: '2025', url: 'https://doi.org/10.1249/mss.0000000000003728', type: RCT,
+  evidence: A}
+- {id: B-45, title: 'Effects of Resistance Training Frequency on Measures of Muscle Hypertrophy: A Systematic
+    Review and Meta-Analysis', authors: 'Schoenfeld BJ, Ogborn D, Krieger JW', year: '2016', url: 'https://doi.org/10.1007/s40279-016-0543-8',
+  type: Meta-Analyse, evidence: A}
+- {id: B-46, title: 'How many times per week should a muscle be trained to maximize muscle hypertrophy?
+    A systematic review and meta-analysis of studies examining the effects of resistance training frequency',
+  authors: 'Schoenfeld BJ, Grgic J, Krieger J', year: '2019', url: 'https://doi.org/10.1080/02640414.2018.1555906',
+  type: Meta-Analyse, evidence: A}
+- {id: B-47, title: 'Effect of Resistance Training Frequency on Gains in Muscular Strength: A Systematic
+    Review and Meta-Analysis', authors: 'Grgic J, Schoenfeld BJ, Davies TB, Lazinica B, Krieger JW, Pedisic
+    Z', year: '2018', url: 'https://doi.org/10.1007/s40279-018-0872-x', type: Meta-Analyse, evidence: A}
+- {id: B-48, title: 'Weekly Training Frequency Effects on Strength Gain: A Meta-Analysis', authors: 'Ralston
+    GW, Kilgore L, Wyatt FB, Buchan D, Baker JS', year: '2018', url: 'https://doi.org/10.1186/s40798-018-0149-9',
+  type: Meta-Analyse, evidence: A}
+- {id: B-49, title: 'Efficacy of Split Versus Full-Body Resistance Training on Strength and Muscle Growth:
+    A Systematic Review With Meta-Analysis', authors: 'Ramos-Campo DJ, Benito-Peinado PJ, Andreu-Caravaca
+    L, Rojo-Tirado MA, Rubio-Arias JÁ', year: '2024', url: 'https://doi.org/10.1519/jsc.0000000000004774',
+  type: Meta-Analyse, evidence: A}
+- {id: B-50, title: 'What influence does resistance exercise order have on muscular strength gains and
+    muscle hypertrophy? A systematic review and meta-analysis', authors: 'Nunes JP, Grgic J, Cunha PM,
+    Ribeiro AS, Schoenfeld BJ, de Salles BF et al.', year: '2021', url: 'https://doi.org/10.1080/17461391.2020.1733672',
+  type: Meta-Analyse, evidence: A}
+- {id: B-51, title: Fatigue induces long-lasting detrimental changes in motor-skill learning, authors: 'Branscheidt
+    M, Kassavetis P, Anaya M, Rogers D, Huang HD, Lindquist MA et al.', year: '2019', url: 'https://doi.org/10.7554/elife.40578',
+  type: Kohortenstudie, evidence: B}
+- {id: B-52, title: Practicing the Test Produces Strength Equivalent to Higher Volume Training, authors: 'Mattocks
+    KT, Buckner SL, Jessee MB, Dankel SJ, Mouser JG, Loenneke JP', year: '2017', url: 'https://doi.org/10.1249/mss.0000000000001300',
+  type: RCT, evidence: A}
+- {id: B-53, title: Rest interval between sets in strength training, authors: 'de Salles BF, Simão R,
+    Miranda F, Novaes Jda S, Lemos A, Willardson JM', year: '2009', url: 'https://doi.org/10.2165/11315230-000000000-00000',
+  type: Narratives Review, evidence: B}
+- {id: B-54, title: 'The effects of short versus long inter-set rest intervals in resistance training
+    on measures of muscle hypertrophy: A systematic review', authors: 'Grgic J, Lazinica B, Mikulic P,
+    Krieger JW, Schoenfeld BJ', year: '2017', url: 'https://doi.org/10.1080/17461391.2017.1340524', type: Systematic
+    Review, evidence: A}
+- {id: B-55, title: 'Effects of Rest Interval Duration in Resistance Training on Measures of Muscular
+    Strength: A Systematic Review', authors: 'Grgic J, Schoenfeld BJ, Skrepnik M, Davies TB, Mikulic P',
+  year: '2018', url: 'https://doi.org/10.1007/s40279-017-0788-x', type: Systematic Review, evidence: A}
+- {id: B-56, title: Longer Interset Rest Periods Enhance Muscle Strength and Hypertrophy in Resistance-Trained
+    Men, authors: 'Schoenfeld BJ, Pope ZK, Benik FM, Hester GM, Sellers J, Nooner JL et al.', year: '2016',
+  url: 'https://doi.org/10.1519/jsc.0000000000001272', type: RCT, evidence: A}
+- {id: B-57, title: 'Give it a rest: a systematic review with Bayesian meta-analysis on the effect of
+    inter-set rest interval duration on muscle hypertrophy', authors: 'Singer A, Wolf M, Generoso L, Arias
+    E, Delcastillo K, Echevarria E et al.', year: '2024', url: 'https://doi.org/10.3389/fspor.2024.1429789',
+  type: Meta-Analyse, evidence: A}
+- {id: B-58, title: Time course of recovery following resistance training leading or not to failure, authors: 'Morán-Navarro
+    R, Pérez CE, Mora-Rodríguez R, de la Cruz-Sánchez E, González-Badillo JJ, Sánchez-Medina L et al.',
+  year: '2017', url: 'https://doi.org/10.1007/s00421-017-3725-7', type: Kohortenstudie, evidence: B}
+- {id: B-59, title: Time Course of Recovery From Resistance Exercise With Different Set Configurations,
+  authors: 'Pareja-Blanco F, Rodríguez-Rosell D, Aagaard P, Sánchez-Medina L, Ribas-Serna J, Mora-Custodio
+    R et al.', year: '2020', url: 'https://doi.org/10.1519/jsc.0000000000002756', type: Kohortenstudie,
+  evidence: B}
+- {id: B-60, title: 'The time course for elevated muscle protein synthesis following heavy resistance
+    exercise (akutes Experiment, kontralateraler Kontrollarm)', authors: 'MacDougall JD, Gibala MJ, Tarnopolsky
+    MA, MacDonald JR, Interisano SA, Yarasheski KE', year: '1995', url: 'https://doi.org/10.1139/h95-038',
+  type: Kohortenstudie, evidence: B}
+- {id: B-61, title: 'Effects of Consecutive Versus Non-consecutive Days of Resistance Training on Strength,
+    Body Composition, and Red Blood Cells', authors: 'Yang Y, Bay PB, Wang YR, Huang J, Teo HWJ, Goh J',
+  year: '2018', url: 'https://doi.org/10.3389/fphys.2018.00725', type: RCT, evidence: A}
+- {id: B-62, title: 'Integrating Deloading into Strength and Physique Sports Training Programmes: An International
+    Delphi Consensus Approach', authors: 'Bell L, Strafford BW, Coleman M, Androulakis Korakakis P, Nolan
+    D', year: '2023', url: 'https://doi.org/10.1186/s40798-023-00633-0', type: Positionspapier/Konsensus,
+  evidence: B}
+- {id: B-63, title: '"You can''t shoot another bullet until you''ve reloaded the gun": Coaches'' perceptions,
+    practices and experiences of deloading in strength and physique sports', authors: 'Bell L, Nolan D,
+    Immonen V, Helms E, Dallamore J, Wolf M et al.', year: '2022', url: 'https://doi.org/10.3389/fspor.2022.1073223',
+  type: Querschnittstudie, evidence: B}
+- {id: B-64, title: 'Deloading Practices in Strength and Physique Sports: A Cross-sectional Survey', authors: 'Rogerson
+    D, Nolan D, Androulakis Korakakis P, Immonen V, Wolf M, Bell L', year: '2024', url: 'https://doi.org/10.1186/s40798-024-00691-y',
+  type: Querschnittstudie, evidence: B}
+- {id: B-65, title: 'Gaining more from doing less? The effects of a one-week deload period during supervised
+    resistance training on muscular adaptations', authors: 'Coleman M, Burke R, Augustin F, Piñero A,
+    Maldonado J, Fisher JP et al.', year: '2024', url: 'https://doi.org/10.7717/peerj.16777', type: RCT,
+  evidence: A}
+- {id: B-66, title: 'Are Deloads Useless? (Blog-Zusammenfassung des Deload-RCT)', authors: Schoenfeld
+    B, year: '2024', url: 'https://www.lookgreatnaked.com/blog/are-deloads-useless/', type: Coaching-Artikel,
+  evidence: C}
+- {id: B-67, title: 'Effects of warming-up on physical performance: a systematic review with meta-analysis',
+  authors: 'Fradkin AJ, Zazryn TR, Smoliga JM', year: '2010', url: 'https://doi.org/10.1519/jsc.0b013e3181c643a0',
+  type: Meta-Analyse, evidence: A}
+- {id: B-68, title: A systematic review of the effects of upper body warm-up on performance and injury,
+  authors: 'McCrary JM, Ackermann BJ, Halaki M', year: '2015', url: 'https://doi.org/10.1136/bjsports-2014-094228',
+  type: Systematic Review, evidence: A}
+- {id: B-69, title: 'Acute effects of muscle stretching on physical performance, range of motion, and
+    injury incidence in healthy active individuals: a systematic review', authors: 'Behm DG, Blazevich
+    AJ, Kay AD, McHugh M', year: '2016', url: 'https://doi.org/10.1139/apnm-2015-0235', type: Systematic
+    Review, evidence: A}
+- {id: B-70, title: 'Effectiveness of Warm-Up Intervention Programs to Prevent Sports Injuries among Children
+    and Adolescents: A Systematic Review and Meta-Analysis', authors: 'Ding L, Luo J, Smith DM, Mackey
+    M, Fu H, Davis M et al.', year: '2022', url: 'https://doi.org/10.3390/ijerph19106336', type: Meta-Analyse,
+  evidence: A}
+- {id: B-71, title: 'International Expert Consensus on Warm-Up Protocols for Athletes: A Delphi Study',
+  authors: 'Boullosa D, Gil-Calvo M, Xenofondos A, Patikas DA, Blazevich AJ, Afonso J et al.', year: '2026',
+  url: 'https://doi.org/10.1123/ijspp.2025-0647', type: Positionspapier/Konsensus, evidence: B}
+- {id: B-72, title: Effect of different warm-up procedures on the performance of resistance training exercises
+    (akutes Crossover-Experiment), authors: 'Ribeiro AS, Romanzini M, Schoenfeld BJ, Souza MF, Avelar
+    A, Cyrino ES', year: '2014', url: 'https://doi.org/10.2466/25.29.pms.119c17z7', type: RCT, evidence: B}
+- {id: B-73, title: 'Progressive overload without progressing load? The effects of load or repetition
+    progression on muscular adaptations', authors: 'Plotkin D, Coleman M, Van Every D, Maldonado J, Oberlin
+    D, Israetel M et al.', year: '2022', url: 'https://doi.org/10.7717/peerj.14142', type: RCT, evidence: A}
+- {id: B-74, title: Progressive Overload Affects the Magnitude of Muscle Hypertrophy, authors: 'Kassiano
+    W, Santos-Melo V, Manske I, Lisboa F, Miguel A, Gomes F et al.', year: '2026', url: 'https://doi.org/10.1249/mss.0000000000003968',
+  type: RCT, evidence: A}
+- {id: B-75, title: 'Effects of Different Weekly Set Progressions on Muscular Adaptations in Trained Males:
+    Is There a Dose-Response Effect?', authors: 'Enes A, DE Souza EO, Souza-Junior TP', year: '2024',
+  url: 'https://doi.org/10.1249/mss.0000000000003317', type: RCT, evidence: A}
+- {id: B-76, title: The effectiveness of 0.5-lb increments in progressive resistance exercise, authors: 'Hostler
+    D, Crill MT, Hagerman FC, Staron RS', year: '2001', url: 'https://pubmed.ncbi.nlm.nih.gov/11708713/',
+  type: RCT, evidence: A}
+- {id: B-77, title: 'No effect of a graded training program on the number of running-related injuries
+    in novice runners: a randomized controlled trial', authors: 'Buist I, Bredeweg SW, van Mechelen W,
+    Lemmink KA, Pepping GJ, Diercks RL', year: '2008', url: 'https://doi.org/10.1177/0363546507307505',
+  type: RCT, evidence: A}
+- {id: B-78, title: 'Excessive progression in weekly running distance and risk of running-related injuries:
+    an association which varies according to type of injury', authors: 'Nielsen RØ, Parner ET, Nohr EA,
+    Sørensen H, Lind M, Rasmussen S', year: '2014', url: 'https://doi.org/10.2519/jospt.2014.5164', type: Kohortenstudie,
+  evidence: B}
+- {id: B-79, title: 'How much running is too much? Identifying high-risk running sessions in a 5200-person
+    cohort study', authors: 'Schuster Brandt Frandsen J, Hulme A, Parner ET, Møller M, Lindman I, Abrahamson
+    J et al.', year: '2025', url: 'https://doi.org/10.1136/bjsports-2024-109380', type: Kohortenstudie,
+  evidence: B}
+- {id: B-80, title: 'Acute:Chronic Workload Ratio: Conceptual Issues and Fundamental Pitfalls', authors: 'Impellizzeri
+    FM, Tenan MS, Kempton T, Novak A, Coutts AJ', year: '2020', url: 'https://doi.org/10.1123/ijspp.2019-0864',
+  type: Narratives Review, evidence: B}
+- {id: B-81, title: 'Detraining: loss of training-induced physiological and performance adaptations. Part
+    I: short term insufficient training stimulus', authors: 'Mujika I, Padilla S', year: '2000', url: 'https://doi.org/10.2165/00007256-200030020-00002',
+  type: Narratives Review, evidence: B}
+- {id: B-82, title: 'Detraining: loss of training-induced physiological and performance adaptations. Part
+    II: Long term insufficient training stimulus', authors: 'Mujika I, Padilla S', year: '2000', url: 'https://doi.org/10.2165/00007256-200030030-00001',
+  type: Narratives Review, evidence: B}
+- {id: B-83, title: 'Effect of training cessation on muscular performance: a meta-analysis', authors: 'Bosquet
+    L, Berryman N, Dupuy O, Mekary S, Arvisais D, Bherer L et al.', year: '2013', url: 'https://doi.org/10.1111/sms.12047',
+  type: Meta-Analyse, evidence: A}
+- {id: B-84, title: 'The development, retention and decay rates of strength and power in elite rugby union,
+    rugby league and American football: a systematic review', authors: 'McMaster DT, Gill N, Cronin J,
+    McGuigan M', year: '2013', url: 'https://doi.org/10.1007/s40279-013-0031-3', type: Systematic Review,
+  evidence: A}
+- {id: B-85, title: Resistance Training-Induced Elevations in Muscular Strength in Trained Men Are Maintained
+    After 2 Weeks of Detraining and Not Differentially Affected by Whey Protein Supplementation (randomisiert
+    nur Protein vs. Kohlenhydrat; Detraining ohne Vergleichsgruppe), authors: 'Hwang PS, Andre TL, McKinley-Barnard
+    SK, Morales Marroquín FE, Gann JJ, Song JJ et al.', year: '2017', url: 'https://doi.org/10.1519/jsc.0000000000001807',
+  type: RCT, evidence: B}
+- {id: B-86, title: Comparison of muscle hypertrophy following 6-month of continuous and periodic strength
+    training, authors: 'Ogasawara R, Yasuda T, Ishii N, Abe T', year: '2013', url: 'https://doi.org/10.1007/s00421-012-2511-9',
+  type: RCT, evidence: A}
+- {id: B-87, title: Effects of different strength training frequencies during reduced training period
+    on strength and muscle cross-sectional area, authors: 'Tavares LD, de Souza EO, Ugrinowitsch C, Laurentino
+    GC, Roschel H, Aihara AY et al.', year: '2017', url: 'https://doi.org/10.1080/17461391.2017.1298673',
+  type: RCT, evidence: A}
+- {id: B-88, title: Strength and skeletal muscle adaptations in heavy-resistance-trained women after detraining
+    and retraining, authors: 'Staron RS, Leonardi MJ, Karapondo DL, Malicky ES, Falkel JE, Hagerman FC
+    et al.', year: '1991', url: 'https://doi.org/10.1152/jappl.1991.70.2.631', type: Kohortenstudie, evidence: B}
+- {id: B-89, title: 'Effects of training, detraining, and retraining on strength, hypertrophy, and myonuclear
+    number in human skeletal muscle', authors: 'Psilander N, Eftestøl E, Cumming KT, Juvkam I, Ekblom
+    MM, Sunding K et al.', year: '2019', url: 'https://doi.org/10.1152/japplphysiol.00917.2018', type: Kohortenstudie,
+  evidence: B}
+- {id: B-90, title: 'The effect of resistance training, detraining and retraining on muscle strength and
+    power, myofibre size, satellite cells and myonuclei in older men', authors: 'Blocquiaux S, Gorski
+    T, Van Roie E, Ramaekers M, Van Thienen R, Nielens H et al.', year: '2020', url: 'https://doi.org/10.1016/j.exger.2020.110860',
+  type: Kohortenstudie, evidence: B}
+- {id: B-91, title: 'Use It or Lose It? A Meta-Analysis on the Effects of Resistance Training Cessation
+    (Detraining) on Muscle Size in Older Adults', authors: Grgic J, year: '2022', url: 'https://doi.org/10.3390/ijerph192114048',
+  type: Meta-Analyse, evidence: A}
+- {id: B-92, title: Human Skeletal Muscle Possesses an Epigenetic Memory of Hypertrophy, authors: 'Seaborne
+    RA, Strauss J, Cocks M, Shepherd S, O''Brien TD, van Someren KA et al.', year: '2018', url: 'https://doi.org/10.1038/s41598-018-20287-3',
+  type: Kohortenstudie, evidence: B}
+- {id: B-93, title: 'Procedural skill retention and decay: A meta-analytic review', authors: 'Tatel CE,
+    Ackerman PL', year: '2025', url: 'https://doi.org/10.1037/bul0000481', type: Meta-Analyse, evidence: A}
+- {id: B-94, title: Exercise dosing to retain resistance training adaptations in young and older adults,
+  authors: 'Bickel CS, Cross JM, Bamman MM', year: '2011', url: 'https://doi.org/10.1249/mss.0b013e318207c15d',
+  type: RCT, evidence: A}
+- {id: B-95, title: 'No Time to Lift? Designing Time-Efficient Training Programs for Strength and Hypertrophy:
+    A Narrative Review', authors: 'Iversen VM, Norum M, Schoenfeld BJ, Fimland MS', year: '2021', url: 'https://doi.org/10.1007/s40279-021-01490-1',
+  type: Narratives Review, evidence: B}
+- {id: B-96, title: 'The Minimum Effective Training Dose Required to Increase 1RM Strength in Resistance-Trained
+    Men: A Systematic Review and Meta-Analysis', authors: 'Androulakis-Korakakis P, Fisher JP, Steele
+    J', year: '2020', url: 'https://doi.org/10.1007/s40279-019-01236-0', type: Meta-Analyse, evidence: A}
+- {id: B-97, title: Long-Term Time-Course of Strength Adaptation to Minimal Dose Resistance Training Through
+    Retrospective Longitudinal Growth Modeling, authors: 'Steele J, Fisher JP, Giessing J, Androulakis-Korakakis
+    P, Wolf M, Kroeske B et al.', year: '2023', url: 'https://doi.org/10.1080/02701367.2022.2070592',
+  type: Kohortenstudie, evidence: B}
+- {id: B-98, title: 'Maintaining Physical Performance: The Minimal Dose of Exercise Needed to Preserve
+    Endurance and Strength Over Time', authors: 'Spiering BA, Mujika I, Sharp MA, Foulis SA', year: '2021',
+  url: 'https://doi.org/10.1519/jsc.0000000000003964', type: Narratives Review, evidence: B}
+- {id: B-99, title: 'Resistance Exercise Minimal Dose Strategies for Increasing Muscle Strength in the
+    General Population: an Overview', authors: 'Nuzzo JL, Pinto MD, Kirk BJC, Nosaka K', year: '2024',
+  url: 'https://doi.org/10.1007/s40279-024-02009-0', type: Narratives Review, evidence: B}
+- {id: B-100, title: 'Minimalist Training: Is Lower Dosage or Intensity Resistance Training Effective
+    to Improve Physical Fitness? A Narrative Review', authors: 'Behm DG, Granacher U, Warneke K, Aragão-Santos
+    JC, Da Silva-Grigoletto ME, Konrad A', year: '2024', url: 'https://doi.org/10.1007/s40279-023-01949-3',
+  type: Narratives Review, evidence: B}
+- {id: B-101, title: 'Superset Versus Traditional Resistance Training Prescriptions: A Systematic Review
+    and Meta-analysis Exploring Acute and Chronic Effects on Mechanical, Metabolic, and Perceptual Variables',
+  authors: 'Zhang X, Weakley J, Li H, Li Z, García-Ramos A', year: '2025', url: 'https://doi.org/10.1007/s40279-025-02176-8',
+  type: Meta-Analyse, evidence: A}
+- {id: B-102, title: 'The effects of traditional, superset, and tri-set resistance training structures
+    on perceived intensity and physiological responses (akutes Crossover-Experiment)', authors: 'Weakley
+    JJS, Till K, Read DB, Roe GAB, Darrall-Jones J, Phibbs PJ et al.', year: '2017', url: 'https://doi.org/10.1007/s00421-017-3680-3',
+  type: RCT, evidence: B}
+- {id: B-103, title: A new approach to monitoring exercise training, authors: 'Foster C, Florhaug JA,
+    Franklin J, Gottschall L, Hrovatin LA, Parker S et al.', year: '2001', url: 'https://pubmed.ncbi.nlm.nih.gov/11708692/',
+  type: Querschnittstudie, evidence: B}
+- {id: B-104, title: Monitoring training in athletes with reference to overtraining syndrome, authors: Foster
+    C, year: '1998', url: 'https://doi.org/10.1097/00005768-199807000-00023', type: Kohortenstudie, evidence: B}
+- {id: B-105, title: 'Session-RPE Method for Training Load Monitoring: Validity, Ecological Usefulness,
+    and Influencing Factors', authors: 'Haddad M, Stylianides G, Djaoui L, Dellal A, Chamari K', year: '2017',
+  url: 'https://doi.org/10.3389/fnins.2017.00612', type: Narratives Review, evidence: B}
+- {id: B-106, title: Quantitation of resistance training using the session rating of perceived exertion
+    method, authors: 'Sweet TW, Foster C, McGuigan MR, Brice G', year: '2004', url: 'https://doi.org/10.1519/14153.1',
+  type: Querschnittstudie, evidence: B}
+- {id: B-107, title: 'Monitoring the athlete training response: subjective self-reported measures trump
+    commonly used objective measures: a systematic review', authors: 'Saw AE, Main LC, Gastin PB', year: '2016',
+  url: 'https://doi.org/10.1136/bjsports-2015-094758', type: Systematic Review, evidence: A}
+- {id: B-108, title: Effect of Progressive Calisthenic Push-up Training on Muscle Strength and Thickness,
+  authors: 'Kotarsky CJ, Christensen BK, Miller JS, Hackney KJ', year: '2018', url: 'https://doi.org/10.1519/jsc.0000000000002345',
+  type: RCT, evidence: A}
+- {id: B-109, title: Bench press and push-up at comparable levels of muscle activity results in similar
+    strength gains, authors: 'Calatayud J, Borreani S, Colado JC, Martin F, Tella V, Andersen LL', year: '2015',
+  url: 'https://doi.org/10.1519/jsc.0000000000000589', type: RCT, evidence: A}
+- {id: B-110, title: Low-load bench press and push-up induce similar muscle hypertrophy and strength gain,
+  authors: 'Kikuchi N, Nakazato K', year: '2017', url: 'https://doi.org/10.1016/j.jesf.2017.06.003', type: RCT,
+  evidence: A}
+- {id: B-111, title: Effects of Velocity Loss During Body Mass Prone-Grip Pull-up Training on Strength
+    and Endurance Performance, authors: 'Sánchez-Moreno M, Cornejo-Daza PJ, González-Badillo JJ, Pareja-Blanco
+    F', year: '2020', url: 'https://doi.org/10.1519/jsc.0000000000003500', type: RCT, evidence: A}
+- {id: B-112, title: 'Overcoming Gravity: A Systematic Approach to Gymnastics and Bodyweight Strength,
+    2. Auflage (Buchseite mit Inhaltsbeschreibung und Progressionstabellen)', authors: Low S, year: 'o.
+    J. (2. Aufl., vor 02/2017)', url: 'https://stevenlow.org/overcoming-gravity/', type: Coaching-Buch,
+  evidence: C}
+- {id: B-113, title: Prilepin tables for bodyweight strength isometric and eccentric exercises, authors: Low
+    S, year: '2017', url: 'https://stevenlow.org/prilepin-tables-for-bodyweight-strength-isometric-and-eccentric-exercises/',
+  type: Coaching-Artikel, evidence: C}
+- {id: B-114, title: The Fundamentals of Bodyweight Strength Training (aktualisiert 2017 und 2022), authors: Low
+    S, year: '2017', url: 'https://stevenlow.org/the-fundamentals-of-bodyweight-strength-training/', type: Coaching-Artikel,
+  evidence: C}
+- {id: B-115, title: How to program for advanced isometric movements after a plateau, authors: Low S,
+  year: '2018', url: 'https://stevenlow.org/how-to-program-for-advanced-isometric-movements-after-a-plateau/',
+  type: Coaching-Artikel, evidence: C}
+- {id: B-116, title: Split routines tend to be sub-optimal for beginners, authors: Low S, year: '2017',
+  url: 'https://stevenlow.org/split-routines-tend-to-be-sub-optimal-for-beginners/', type: Coaching-Artikel,
+  evidence: C}
+- {id: B-117, title: 'Is There Too Much Of A Good Thing? Effects Of Per-session Volume On Strength Gain
+    (Kongress-Abstract, ACSM 2026)', authors: 'Dunsmore KA, Remmert JF, Pelland JC, Robinson ZP, Hinson
+    SR, Zourdos MC', year: '2026', url: 'https://doi.org/10.1249/01.mss.0001259680.21951.ab', type: Meta-Analyse,
+  evidence: B}
+- {id: B-118, title: 'Is There Too Much Of A Good Thing? Effects Of Per-session Volume On Muscle Hypertrophy
+    (Kongress-Abstract, ACSM 2026)', authors: 'Joachim JM, Remmert JF, Pelland JC, Robinson ZP, Hinson
+    SR, Zourdos MC', year: '2026', url: 'https://doi.org/10.1249/01.mss.0001259712.79343.1b', type: Meta-Analyse,
+  evidence: B}
+- {id: B-119, title: Pull-Up Performance Is Affected Differently by the Muscle Contraction Regimens Practiced
+    during Training among Climbers, authors: 'Vigouroux L, Devise M', year: '2024', url: 'https://doi.org/10.3390/bioengineering11010085',
+  type: RCT, evidence: A}
+- {id: B-120, title: High-frequency resistance training improves maximal lower-limb strength more than
+    low frequency, authors: 'Pedersen H, Iversen VM, Vereide PF, Stien N, Saeterbakken AH, Fimland MS
+    et al.', year: '2024', url: 'https://doi.org/10.1002/ejsc.12055', type: RCT, evidence: A}
+- {id: B-121, title: Resistance Training Frequencies of 3 and 6 Times Per Week Produce Similar Muscular
+    Adaptations in Resistance-Trained Men, authors: 'Saric J, Lisica D, Orlic I, Grgic J, Krieger JW,
+    Vuk S et al.', year: '2019', url: 'https://doi.org/10.1519/jsc.0000000000002909', type: RCT, evidence: A}
+- {id: B-122, title: 'Training Volume, Not Frequency, Indicative of Maximal Strength Adaptations to Resistance
+    Training', authors: 'Colquhoun RJ, Gai CM, Aguilar D, Bove D, Dolan J, Vargas A et al.', year: '2018',
+  url: 'https://doi.org/10.1519/jsc.0000000000002414', type: RCT, evidence: A}
+- {id: B-123, title: Exercise Order in Resistance Training, authors: 'Simão R, de Salles BF, Figueiredo
+    T, Dias I, Willardson JM', year: '2012', url: 'https://doi.org/10.2165/11597240-000000000-00000',
+  type: Narratives Review, evidence: B}
+- {id: B-124, title: 'Agonist-Antagonist Paired Set Resistance Training: A Brief Review', authors: 'Robbins
+    DW, Young WB, Behm DG, Payne WR', year: '2010', url: 'https://doi.org/10.1519/jsc.0b013e3181f00bfc',
+  type: Narratives Review, evidence: B}
+- {id: B-125, title: Volume Load and Neuromuscular Fatigue During an Acute Bout of Agonist-Antagonist
+    Paired-Set vs. Traditional-Set Training (akutes Crossover-Experiment), authors: 'Paz GA, Robbins DW,
+    de Oliveira CG, Bottaro M, Miranda H', year: '2017', url: 'https://doi.org/10.1519/jsc.0000000000001059',
+  type: RCT, evidence: B}
+- {id: B-126, title: The Effect of Different Rest Intervals Between Agonist-Antagonist Paired Sets on
+    Training Performance and Efficiency, authors: 'Behenck C, Sant''Ana H, Pinto de Castro JB, Willardson
+    JM, Miranda H', year: '2022', url: 'https://doi.org/10.1519/jsc.0000000000003648', type: Kohortenstudie,
+  evidence: B}
+- {id: B-127, title: Consolidation in human motor memory, authors: 'Brashers-Krug T, Shadmehr R, Bizzi
+    E', year: '1996', url: 'https://doi.org/10.1038/382252a0', type: Kohortenstudie, evidence: B}
+- {id: B-128, title: Failure to Consolidate the Consolidation Theory of Learning for Sensorimotor Adaptation
+    Tasks, authors: 'Caithness G, Osu R, Bays P, Chase H, Klassen J, Kawato M et al.', year: '2004', url: 'https://doi.org/10.1523/jneurosci.2214-04.2004',
+  type: Kohortenstudie, evidence: B}
+- {id: B-129, title: 'High contextual interference improves retention in motor learning: systematic review
+    and meta-analysis', authors: 'Czyż SH, Wójcik AM, Solarská P, Kiper P', year: '2024', url: 'https://doi.org/10.1038/s41598-024-65753-3',
+  type: Meta-Analyse, evidence: A}
+- {id: B-130, title: Changes in Intraset Repetitions in Reserve Prediction Accuracy During Six Weeks of
+    Bench Press Training in Trained Men, authors: 'Remmert JF, Robinson ZP, Pelland JC, John TA, Dinh
+    S, Hinson SR et al.', year: '2023', url: 'https://doi.org/10.1177/00315125231189098', type: Kohortenstudie,
+  evidence: B}
+- {id: B-131, title: Movement Velocity as Indicator of Relative Intensity and Level of Effort Attained
+    During the Set in Pull-Up Exercise, authors: 'Sánchez-Moreno M, Rodríguez-Rosell D, Pareja-Blanco
+    F, Mora-Custodio R, González-Badillo JJ', year: '2017', url: 'https://doi.org/10.1123/ijspp.2016-0791',
+  type: Querschnittstudie, evidence: B}
+- {id: B-132, title: Progression of volume load and muscular adaptation during resistance exercise, authors: 'Peterson
+    MD, Pistilli E, Haff GG, Hoffman EP, Gordon PM', year: '2011', url: 'https://doi.org/10.1007/s00421-010-1735-9',
+  type: Kohortenstudie, evidence: B}
+- {id: B-133, title: Combination of General and Specific Warm-Ups Improves Leg-Press One Repetition Maximum
+    Compared With Specific Warm-Up in Trained Individuals (akutes Crossover-Experiment), authors: 'Abad
+    CC, Prado ML, Ugrinowitsch C, Tricoli V, Barroso R', year: '2011', url: 'https://doi.org/10.1519/jsc.0b013e3181e8611b',
+  type: RCT, evidence: B}
+- {id: B-134, title: 'Strength and Hypertrophy Adaptations Between Low- vs. High-Load Resistance Training:
+    A Systematic Review and Meta-analysis', authors: 'Schoenfeld BJ, Grgic J, Ogborn D, Krieger JW', year: '2017',
+  url: 'https://doi.org/10.1519/jsc.0000000000002200', type: Meta-Analyse, evidence: A}
+- {id: B-135, title: 'Muscle memory in humans: evidence for myonuclear permanence and long-term transcriptional
+    regulation after strength training', authors: 'Cumming KT, Reitzner SM, Hanslien M, Skilnand K, Seynnes
+    OR, Horwath O et al.', year: '2024', url: 'https://doi.org/10.1113/jp285675', type: Kohortenstudie,
+  evidence: B}
+- {id: C-01, title: Adjustments to Zatsiorsky-Seluyanov's segment inertia parameters, authors: de Leva
+    P, year: '1996', url: 'https://doi.org/10.1016/0021-9290(95)00178-6', type: Biomechanik-Studie, evidence: B}
+- {id: C-02, title: 'Body segment parameters (Notebook und Datentabellen BSPmale/BSPfemale_ZdeLeva, BSP_DempsterWinter)',
+  authors: 'Duarte M (BMClab, Federal University of ABC)', year: o. J. (abgerufen 2026), url: 'https://github.com/BMClab/BMC/blob/master/notebooks/BodySegmentParameters.ipynb',
+  type: Lehrbuch, evidence: B}
+- {id: C-03, title: Insights from a Nine-Segment Biomechanical Model and Its Simulation for Anthropometrical
+    Influence on Individualized Planche Learning and Training in Gymnastics, authors: 'Wang X, Shan G',
+  year: '2023', url: 'https://doi.org/10.3390/bioengineering10070761', type: Biomechanik-Studie, evidence: B}
+- {id: C-04, title: Electromyographic Analysis of the Support Scale in Gymnastics and Its Related Preconditioning
+    Strengthening Exercises, authors: 'Rosaci G, Nigro F, Cortesi M, Ciacci S, Bartolomei S, Fantozzi
+    S', year: '2025', url: 'https://doi.org/10.1519/JSC.0000000000005074', type: EMG-Studie, evidence: B}
+- {id: C-05, title: 'The Inverted Swallow in Artistic Gymnastics and Its Related Preconditioning Strengthening
+    Exercises: Electromyographic Analysis, Muscle Synergies and Training Implications', authors: 'Rosaci
+    G, Bartolomei S, Fantozzi S, Schärer C', year: '2025', url: 'https://doi.org/10.3390/app15137537',
+  type: EMG-Studie, evidence: B}
+- {id: C-06, title: Surface electromyography of nine shoulder muscles in two iron cross conditions in
+    gymnastics, authors: 'Bernasconi S, Tordi N, Parratte B, Rouillon JD, Monnier G', year: '2004', url: 'https://pubmed.ncbi.nlm.nih.gov/15756161/',
+  type: EMG-Studie, evidence: B}
+- {id: C-07, title: 'Can shoulder muscle coordination during the support scale at ring height be replicated
+    during training exercises in gymnastics?', authors: 'Bernasconi SM, Tordi NR, Parratte BM, Rouillon
+    JD', year: '2009', url: 'https://doi.org/10.1519/JSC.0b013e3181bac69f', type: EMG-Studie, evidence: B}
+- {id: C-08, title: Benefits of Training the Iron Cross With Herdos Devices and External Load Added to
+    Body Weight for Young Nonachiever Gymnasts, authors: 'Marina M, Torrado P, Ferrer-Uris B, Busquets
+    A', year: '2023', url: 'https://doi.org/10.1123/ijspp.2023-0183', type: EMG-Studie, evidence: B}
+- {id: C-09, title: Maximum Strength Benchmarks for Difficult Static Elements on Rings in Male Elite Gymnastics,
+  authors: 'Schärer C, Huber S, Bucher P, Capelli C, Hübner K', year: '2021', url: 'https://doi.org/10.3390/sports9060078',
+  type: Querschnittstudie, evidence: B}
+- {id: C-10, title: 'Relationship between swallow, support scale and iron cross on rings and their specific
+    preconditioning strengthening exercises', authors: 'Hübner K, Schärer C', year: '2015', url: 'https://doi.org/10.52165/sgj.7.3.59-68',
+  type: Querschnittstudie, evidence: B}
+- {id: C-11, title: 'Relative strength requirement for swallow element proper execution: a predictive
+    test', authors: Gorosito MA, year: '2013', url: 'https://doi.org/10.52165/sgj.5.3.59-67', type: Querschnittstudie,
+  evidence: B}
+- {id: C-12, title: Relationship Between Bench Press and Iron Cross Maximal Isometric Contraction - How
+    to Develop the Strength to Perform the Iron Cross on Rings, authors: 'Lecocq T, Gouelle A, Schärer
+    C, Mochizuki L, Tordi N', year: '2025', url: 'https://doi.org/10.1002/ejsc.70002', type: Querschnittstudie,
+  evidence: B}
+- {id: C-13, title: Strength Performance Assessment in a Simulated Men's Gymnastics Still Rings Cross,
+  authors: 'Dunlavy JK, Sands WA, McNeal JR, Stone MH, Smith SL, Jemni M, Haff GG', year: '2007', url: 'https://pubmed.ncbi.nlm.nih.gov/24149230/',
+  type: Querschnittstudie, evidence: B}
+- {id: C-14, title: 'A Systematic Review of Dynamic, Kinematic, and Muscle Activity during Gymnastic Still
+    Rings Elements', authors: 'Malíř R, Chrudimský J, Šteffl M, Stastny P', year: '2023', url: 'https://doi.org/10.3390/sports11030050',
+  type: Systematic Review, evidence: A}
+- {id: C-15, title: The effect of gymnastic training on muscle strength and co-activation during isometric
+    elbow and glenohumeral flexion/extension, authors: 'Kochanowicz A, Niespodziński B, Mieszkowski J,
+    Kochanowicz K, Sawczyn S', year: '2018', url: 'https://doi.org/10.23736/S0022-4707.17.06916-X', type: Querschnittstudie,
+  evidence: B}
+- {id: C-16, title: Changes in the Muscle Activity of Gymnasts During a Handstand on Various Apparatus,
+  authors: 'Kochanowicz A, Niespodziński B, Mieszkowski J, Marina M, Kochanowicz K, Zasada M', year: '2019',
+  url: 'https://doi.org/10.1519/JSC.0000000000002124', type: EMG-Studie, evidence: B}
+- {id: C-17, title: Kinematics and joints moments profile during straight arm press to handstand in male
+    gymnasts, authors: 'Mizutori H, Kashiwagi Y, Hakamada N, Tachibana Y, Funato K', year: '2021', url: 'https://doi.org/10.1371/journal.pone.0253951',
+  type: Biomechanik-Studie, evidence: B}
+- {id: C-18, title: 'Surface electromyographic activation patterns and elbow joint motion during a pull-up,
+    chin-up, or perfect-pullup rotational exercise', authors: 'Youdas JW, Amundson CL, Cicero KS, Hahn
+    JJ, Harezlak DT, Hollman JH', year: '2010', url: 'https://doi.org/10.1519/JSC.0b013e3181f1598c', type: EMG-Studie,
+  evidence: B}
+- {id: C-19, title: Electromyographic analysis of muscle activation during pull-up variations, authors: 'Dickie
+    JA, Faulkner JA, Barnes MJ, Lark SD', year: '2017', url: 'https://doi.org/10.1016/j.jelekin.2016.11.004',
+  type: EMG-Studie, evidence: B}
+- {id: C-20, title: 'Electromyographical Comparison of a Traditional, Suspension Device, and Towel Pull-Up',
+  authors: 'Snarr RL, Hallmark AV, Casey JC, Esco MR', year: '2017', url: 'https://doi.org/10.1515/hukin-2017-0068',
+  type: EMG-Studie, evidence: B}
+- {id: C-21, title: 'Avoiding high-risk rotator cuff loading: Muscle force during three pull-up techniques',
+  authors: 'Urbanczyk CA, Prinold JAI, Reilly P, Bull AMJ', year: '2020', url: 'https://doi.org/10.1111/sms.13780',
+  type: Biomechanik-Studie, evidence: B}
+- {id: C-22, title: 'Scapula kinematics of pull-up techniques: Avoiding impingement risk with training
+    changes', authors: 'Prinold JA, Bull AM', year: '2016', url: 'https://doi.org/10.1016/j.jsams.2015.08.002',
+  type: Biomechanik-Studie, evidence: B}
+- {id: C-23, title: Activation of Spinal Stabilizers and Shoulder Complex Muscles During an Inverted Row
+    Using a Portable Pull-up Device and Body Weight Resistance, authors: 'Youdas JW, Keith JM, Nonn DE,
+    Squires AC, Hollman JH', year: '2016', url: 'https://doi.org/10.1519/JSC.0000000000001210', type: EMG-Studie,
+  evidence: B}
+- {id: C-24, title: 'Comparison of different rowing exercises: trunk muscle activation and lumbar spine
+    motion, load, and stiffness', authors: 'Fenwick CM, Brown SH, McGill SM', year: '2009', url: 'https://doi.org/10.1519/JSC.0b013e3181b07334',
+  type: EMG-Studie, evidence: B}
+- {id: C-25, title: 'Bench, Bar, and Ring Dips: Do Kinematics and Muscle Activity Differ?', authors: 'McKenzie
+    A, Crowley-McHattan Z, Meir R, Whitting J, Volschenk W', year: '2022', url: 'https://doi.org/10.3390/ijerph192013211',
+  type: EMG-Studie, evidence: B}
+- {id: C-26, title: Kinetic analysis of several variations of push-ups, authors: 'Ebben WP, Wurm B, VanderZanden
+    TL, Spadavecchia ML, Durocher JJ, Bickham CT, Petushek EJ', year: '2011', url: 'https://doi.org/10.1519/JSC.0b013e31820c8587',
+  type: Biomechanik-Studie, evidence: B}
+- {id: C-27, title: 'The Biomechanics of the Push-up: Implications for Resistance Training Programs',
+  authors: 'Contreras B, Schoenfeld BJ, Mike J, Tiryaki-Sonmez G, Cronin JB, Vaino E', year: '2012', url: 'https://doi.org/10.1519/SSC.0b013e31826d877b',
+  type: Narratives Review, evidence: B}
+- {id: C-28, title: The effect of position on the percentage of body mass supported during traditional
+    and modified push-up variants, authors: 'Suprak DN, Dawes J, Stephenson MD', year: '2011', url: 'https://doi.org/10.1519/JSC.0b013e3181bde2cf',
+  type: Biomechanik-Studie, evidence: B}
+- {id: C-29, title: Dynamic and electromyographical analysis in variants of push-up exercise, authors: 'Gouvali
+    MK, Boudolos K', year: '2005', url: 'https://doi.org/10.1519/14733.1', type: Biomechanik-Studie, evidence: B}
+- {id: C-30, title: 'Kinetic analysis of push-up exercises: a systematic review with practical recommendations',
+  authors: 'Dhahbi W, Chaabene H, Chaouachi A, Padulo J, Behm DG, Cochrane J, Burnett A, Chamari K', year: '2022',
+  url: 'https://doi.org/10.1080/14763141.2018.1512149', type: Systematic Review, evidence: A}
+- {id: C-31, title: A predictive model for vertical ground reaction force during incline push-ups, authors: 'Wu
+    H, Zhai H, Ma R, Wei H', year: '2025', url: 'https://doi.org/10.1038/s41598-025-28012-7', type: Biomechanik-Studie,
+  evidence: B}
+- {id: C-32, title: 'Shoulder electromyography activity during push-up variations: a scoping review',
+  authors: 'Kowalski KL, Connelly DM, Jakobi JM, Sadi J', year: '2022', url: 'https://doi.org/10.1177/17585732211019373',
+  type: Systematic Review, evidence: B}
+- {id: C-33, title: 'Electromyography of shoulder muscles in individuals without scapular dyskinesis during
+    closed kinetic chain exercises on stable and unstable surfaces: a systematic review and meta-analysis',
+  authors: 'Arghadeh R, Alizadeh MH, Minoonejad H, Sheikhhoseini R, Asgari M, Jaitner T', year: '2024',
+  url: 'https://doi.org/10.3389/fspor.2024.1385693', type: Meta-Analyse, evidence: A}
+- {id: C-34, title: Electromyographic comparison of traditional and suspension push-ups, authors: 'Snarr
+    RL, Esco MR', year: '2013', url: 'https://doi.org/10.2478/hukin-2013-0070', type: EMG-Studie, evidence: B}
+- {id: C-35, title: Muscle Activation during Push-Ups with Different Suspension Training Systems, authors: 'Calatayud
+    J, Borreani S, Colado JC, Martín FF, Rogers ME, Behm DG, Andersen LL', year: '2014', url: 'https://pubmed.ncbi.nlm.nih.gov/25177174/',
+  type: EMG-Studie, evidence: B}
+- {id: C-36, title: Recruitment of Shoulder Prime Movers and Torso Stabilizers During Push-Up Exercises
+    Using a Suspension Training System, authors: 'Youdas JW, Baartman HE, Gahlon BJ, Kohnen TJ, Sparling
+    RJ, Hollman JH', year: '2020', url: 'https://doi.org/10.1123/jsr.2019-0381', type: EMG-Studie, evidence: B}
+- {id: C-37, title: 'Muscle activation in suspension training: a systematic review', authors: 'Aguilera-Castells
+    J, Buscà B, Fort-Vanmeerhaeghe A, Montalvo AM, Peña J', year: '2020', url: 'https://doi.org/10.1080/14763141.2018.1472293',
+  type: Systematic Review, evidence: A}
+- {id: C-38, title: Quantifying muscle patterns and spine load during various forms of the push-up, authors: 'Freeman
+    S, Karpowicz A, Gray J, McGill S', year: '2006', url: 'https://doi.org/10.1249/01.mss.0000189317.08635.1b',
+  type: Biomechanik-Studie, evidence: B}
+- {id: C-39, title: 'Muscle activity and spine load during anterior chain whole body linkage exercises:
+    the body saw, hanging leg raise and walkout from a push-up', authors: 'McGill S, Andersen J, Cannon
+    J', year: '2015', url: 'https://doi.org/10.1080/02640414.2014.946437', type: Biomechanik-Studie, evidence: B}
+- {id: C-40, title: 'Low back loads over a variety of abdominal exercises: searching for the safest abdominal
+    challenge', authors: 'Axler CT, McGill SM', year: '1997', url: 'https://doi.org/10.1097/00005768-199706000-00011',
+  type: Biomechanik-Studie, evidence: B}
+- {id: C-41, title: Hand position affects elbow joint load during push-up exercise, authors: 'Donkers
+    MJ, An KN, Chao EY, Morrey BF', year: '1993', url: 'https://doi.org/10.1016/0021-9290(93)90026-B',
+  type: Biomechanik-Studie, evidence: B}
+- {id: C-42, title: Load transmission through the wrist in the extended position, authors: 'Majima M,
+    Horii E, Matsuki H, Hirata H, Genda E', year: '2008', url: 'https://doi.org/10.1016/j.jhsa.2007.10.018',
+  type: Biomechanik-Studie, evidence: B}
+- {id: C-43, title: Effect of Push-Up Position on Wrist Joint Pressures in the Intact Wrist and Following
+    Scapholunate Interosseous Ligament Sectioning, authors: 'Daly BT, Werner FW, Cavallaro SM, Tucci ER,
+    Harley BJ', year: '2018', url: 'https://doi.org/10.1016/j.jhsa.2017.10.019', type: Biomechanik-Studie,
+  evidence: B}
+- {id: C-44, title: 'The Wrist as a Weightbearing Joint in Adult Handstand Practitioners: A Cross-Sectional
+    Survey of Chronic Pain and Training-Related Factors', authors: 'Martonovich N, Maman D, Mahamid A,
+    Alfandari L, Behrbalk E', year: '2025', url: 'https://doi.org/10.3390/jfmk10040372', type: Querschnittstudie,
+  evidence: B}
+- {id: C-45, title: 'Wrist pain, distal radial physeal injury, and ulnar variance in the young gymnast',
+  authors: 'DiFiori JP, Caine DJ, Malina RM', year: '2006', url: 'https://doi.org/10.1177/0363546505284848',
+  type: Narratives Review, evidence: B}
+- {id: C-46, title: Chronic stress injuries of the elbow in young gymnasts, authors: 'Chan D, Aldridge
+    MJ, Maffulli N, Davies AM', year: '1991', url: 'https://doi.org/10.1259/0007-1285-64-768-1113', type: Fallserie,
+  evidence: B}
+- {id: C-47, title: Comparative study of elbow disorders in young high-performance gymnasts, authors: 'Dexel
+    J, Marschner K, Beck H, Platzek I, Wasnik S, Schuler M, Nasreddin A, Kasten P', year: '2014', url: 'https://doi.org/10.1055/s-0034-1371835',
+  type: Querschnittstudie, evidence: B}
+- {id: C-48, title: 'Evaluation of Men''s and Women''s Gymnastics Injuries: A 10-Year Observational Study',
+  authors: 'Westermann RW, Giblin M, Vaske A, Grosso K, Wolf BR', year: '2015', url: 'https://doi.org/10.1177/1941738114559705',
+  type: Kohortenstudie, evidence: B}
+- {id: C-49, title: Injury Profile Among Street Workout Practitioners, authors: 'Ngo JK, Solis-Urra P,
+    Sanchez-Martinez J', year: '2021', url: 'https://doi.org/10.1177/2325967121990926', type: Querschnittstudie,
+  evidence: B}
+- {id: C-50, title: Exploring handstand walking biomechanics and shoulder pain, authors: 'Angioi M, Hinds
+    N, Twycross-Lewis R, Farmer C, Birn-Jeffery AV', year: '2026', url: 'https://doi.org/10.1038/s41598-026-51612-w',
+  type: Biomechanik-Studie, evidence: B}
+- {id: C-51, title: 'Function of the long head of the biceps at the shoulder: electromyographic analysis',
+  authors: 'Levy AS, Kelly BT, Lintner SA, Osbahr DC, Speer KP', year: '2001', url: 'https://doi.org/10.1067/mse.2001.113087',
+  type: EMG-Studie, evidence: B}
+- {id: C-52, title: The role of the long head of the biceps muscle and superior glenoid labrum in anterior
+    stability of the shoulder, authors: 'Rodosky MW, Harner CD, Fu FH', year: '1994', url: 'https://doi.org/10.1177/036354659402200119',
+  type: Biomechanik-Studie, evidence: B}
+- {id: C-53, title: 'The long head of biceps at the shoulder: a scoping review', authors: 'Diplock B,
+    Hing W, Marks D', year: '2023', url: 'https://doi.org/10.1186/s12891-023-06346-5', type: Systematic
+    Review, evidence: B}
+- {id: C-54, title: Patellofemoral joint force and stress during the wall squat and one-leg squat, authors: 'Escamilla
+    RF, Zheng N, Macleod TD, Edwards WB, Imamura R, Hreljac A, Fleisig GS, Wilk KE, Moorman CT, Andrews
+    JR', year: '2009', url: 'https://doi.org/10.1249/MSS.0b013e31818e7ead', type: Biomechanik-Studie,
+  evidence: B}
+- {id: C-55, title: Biomechanical analysis of the single-leg decline squat, authors: 'Zwerver J, Bredeweg
+    SW, Hof AL', year: '2007', url: 'https://doi.org/10.1136/bjsm.2006.032482', type: Biomechanik-Studie,
+  evidence: B}
+- {id: C-56, title: Analysis of the load on the knee joint and vertebral column with changes in squatting
+    depth and weight load, authors: 'Hartmann H, Wirth K, Klusemann M', year: '2013', url: 'https://doi.org/10.1007/s40279-013-0073-6',
+  type: Narratives Review, evidence: B}
+- {id: C-57, title: Comparison of lower extremity EMG between the 2-leg squat and modified single-leg
+    squat in female athletes, authors: 'McCurdy K, O''Kelley E, Kutz M, Langford G, Ernest J, Torres M',
+  year: '2010', url: 'https://doi.org/10.1123/jsr.19.1.57', type: EMG-Studie, evidence: B}
+- {id: C-58, title: 'Muscle strength testing: use of normalisation for body size', authors: Jaric S, year: '2002',
+  url: 'https://doi.org/10.2165/00007256-200232100-00002', type: Narratives Review, evidence: B}
+- {id: C-59, title: 'Movement performance and body size: the relationship for different groups of tests',
+  authors: 'Markovic G, Jaric S', year: '2004', url: 'https://doi.org/10.1007/s00421-004-1076-7', type: Querschnittstudie,
+  evidence: B}
+- {id: C-60, title: The Effect of Experimental Alterations in Excess Mass on Pull-up Performance in Fit
+    Young Men, authors: 'Vanderburgh PM, Edmonds T', year: '1997', url: 'https://doi.org/10.1519/00124278-199711000-00005',
+  type: Querschnittstudie, evidence: B}
+- {id: C-61, title: Training college-age women to perform the pull-up exercise, authors: 'Flanagan SP,
+    Vanderburgh PM, Borchers SG, Kohstall CD', year: '2003', url: 'https://doi.org/10.1080/02701367.2003.10609064',
+  type: Kohortenstudie, evidence: B}
+- {id: C-62, title: Determinant factors of pull-up performance in trained athletes, authors: 'Sánchez-Moreno
+    M, Pareja-Blanco F, Díaz-Cueli D, González-Badillo JJ', year: '2016', url: 'https://pubmed.ncbi.nlm.nih.gov/26176615/',
+  type: Querschnittstudie, evidence: B}
+- {id: C-63, title: Morphological Differences of Street Workout Athletes According to the Training Experience,
+  authors: 'Sanchez-Martinez J, Hernández-Jaña S', year: '2022', url: 'https://www.intjmorphol.com/wp-content/uploads/2022/04/art_06_402.pdf',
+  type: Querschnittstudie, evidence: B}
+- {id: C-64, title: 'Muscular strength and anthropometry in calisthenics athletes (Preprint, nicht begutachtet)',
+  authors: 'Lozada-Medina JL, Martelo-Sierra E, Hoyos-Espitia C', year: '2024', url: 'https://doi.org/10.51224/SRXIV.449',
+  type: Querschnittstudie, evidence: B}
+- {id: C-65, title: 'Human tendon adaptation in response to mechanical loading: a systematic review and
+    meta-analysis of exercise intervention studies on healthy adults', authors: 'Bohm S, Mersmann F, Arampatzis
+    A', year: '2015', url: 'https://doi.org/10.1186/s40798-015-0009-9', type: Meta-Analyse, evidence: A}
+- {id: C-66, title: 'Imbalances in the Development of Muscle and Tendon as Risk Factor for Tendinopathies
+    in Youth Athletes: A Review of Current Evidence and Concepts of Prevention', authors: 'Mersmann F,
+    Bohm S, Arampatzis A', year: '2017', url: 'https://doi.org/10.3389/fphys.2017.00987', type: Narratives
+    Review, evidence: B}
+- {id: C-67, title: 'Anatomy and Physiology 2e, Kapitel 11.4–11.6 (Muskeln von Rumpf, Schultergürtel/Arm,
+    Becken/Bein)', authors: 'Betts JG, Young KA, Wise JA, Johnson E, Poe B, Kruse DH, Korol O, Johnson
+    JE, Womble M, DeSaix P', year: '2022', url: 'https://openstax.org/books/anatomy-and-physiology-2e/pages/11-5-muscles-of-the-pectoral-girdle-and-upper-limbs',
+  type: Lehrbuch, evidence: B}
+- {id: C-68, title: 'Overcoming Gravity, 2. Auflage: Progression Charts (Buchseiten 30–33; Buch 2016,
+    Chart-PDF 2017)', authors: Low S, year: '2016', url: 'https://stevenlow.org/wp-content/uploads/2017/02/OG2ChartsPrint.pdf',
+  type: Coaching-Buch, evidence: C}
+- {id: C-69, title: Comprehensive Handstand Tutorial (Text eingesehen über die Archivkopie github.com/benjaminheng/link-archive),
+  authors: Kizirian A (antranik.org), year: o. J., url: 'https://antranik.org/comprehensive-handstand-tutorial/',
+  type: Coaching-Artikel, evidence: C}
+- {id: C-70, title: Strategies for maintaining a handstand in the anterior-posterior direction, authors: 'Kerwin
+    DG, Trewartha G', year: '2001', url: 'https://doi.org/10.1097/00005768-200107000-00016', type: Biomechanik-Studie,
+  evidence: B}
+- {id: C-71, title: 'Distal Biceps Tendon Ruptures: An Epidemiological Analysis Using a Large Population
+    Database', authors: 'Kelly MP, Perkinson SG, Ablove RH, Tueting JL', year: '2015', url: 'https://doi.org/10.1177/0363546515587738',
+  type: Kohortenstudie, evidence: B}
+- {id: C-72, title: 'Are the shoulder joint function, stability, and mobility tests predictive of handstand
+    execution?', authors: 'Malíř R, Chrudimský J, Provazník A, Třebický V', year: '2024', url: 'https://doi.org/10.1371/journal.pone.0302922',
+  type: Querschnittstudie, evidence: B}
+- {id: C-73, title: Kinematic and kinetic analysis of push-up exercise, authors: 'An KN, Korinek SL, Kilpela
+    T, Edis S', year: '1990', url: 'https://pubmed.ncbi.nlm.nih.gov/2334780/', type: Biomechanik-Studie,
+  evidence: B}
+- {id: C-74, title: Exploring forearm muscle coordination and training applications of various grip positions
+    during maximal isometric finger dead-hangs in rock climbers, authors: 'Ferrer-Uris B, Arias D, Torrado
+    P, Marina M, Busquets A', year: '2023', url: 'https://doi.org/10.7717/peerj.15464', type: EMG-Studie,
+  evidence: B}
+- {id: C-75, title: Comparison of Muscle Activity During a Ring Muscle Up and a Bar Muscle Up, authors: 'Walker
+    CW, Bruenger AJ, Tucker WS, Lee HR', year: '2023', url: 'https://doi.org/10.70252/fjql7859 (PMID 38288256)',
+  type: EMG-Studie, evidence: B}
+- {id: C-76, title: Alterations in kinematics and muscle activation patterns with the addition of a kipping
+    action during a pull-up activity, authors: 'Dinunzio C, Porter N, Van Scoy J, Cordice D, McCulloch
+    RS', year: '2019', url: 'https://doi.org/10.1080/14763141.2018.1452971 (PMID 29768093)', type: EMG-Studie,
+  evidence: B}
+- {id: C-77, title: Isometric shoulder strength reference values for physically active collegiate males
+    and females, authors: 'Westrick RB, Duffey ML, Cameron KL, Gerber JP, Owens BD', year: '2013', url: 'https://doi.org/10.1177/1941738112456280
+    (PMID 24381696)', type: Querschnittstudie, evidence: B}
+- {id: C-78, title: Skeletal muscle mass and distribution in 468 men and women aged 18-88 yr, authors: 'Janssen
+    I, Heymsfield SB, Wang ZM, Ross R', year: '2000', url: 'https://doi.org/10.1152/jappl.2000.89.1.81',
+  type: Querschnittstudie, evidence: B}
+- {id: C-79, title: 'Thera-band elastic band tension: reference values for physical activity', authors: 'Uchida
+    MC, Nishida MM, Sampaio RA, Moritani T, Arai H', year: '2016', url: 'https://doi.org/10.1589/jpts.28.1266
+    (PMID 27190465)', type: Biomechanik-Studie, evidence: B}
+- {id: C-80, title: Quantification of rubber and chain-based resistance modes, authors: 'McMaster DT,
+    Cronin J, McGuigan MR', year: '2010', url: 'https://doi.org/10.1519/JSC.0b013e3181dc4200 (PMID 20613648)',
+  type: Biomechanik-Studie, evidence: B}
+- {id: C-81, title: Impact shoulder angles correlate with impact wrist angles in standing back handsprings
+    in preadolescent and adolescent female gymnasts, authors: 'McLaren K, Byrd E, Herzog M, Polikandriotis
+    JA, Willimon SC', year: '2015', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4458921/ (PMID 26075149)',
+  type: Querschnittstudie, evidence: B}
+- {id: C-82, title: 'Biomechanical analyses of the handstand: a systematic review', authors: 'MacDonald
+    M, Baker JS, Gu Y, Ugbolue UC', year: '2025', url: 'https://doi.org/10.3389/fspor.2025.1694648 (PMID
+    41473027)', type: Systematic Review, evidence: A}
+- {id: C-83, title: Wrist loading patterns during pommel horse exercises, authors: 'Markolf KL, Shapiro
+    MS, Mandelbaum BR, Teurlings L', year: '1990', url: 'https://doi.org/10.1016/0021-9290(90)90315-T
+    (PMID 2229083)', type: Biomechanik-Studie, evidence: B}
+- {id: C-84, title: Gender differences in strength and muscle fiber characteristics, authors: 'Miller
+    AE, MacDougall JD, Tarnopolsky MA, Sale DG', year: '1993', url: 'https://doi.org/10.1007/BF00235103
+    (PMID 8477683)', type: Querschnittstudie, evidence: B}
+- {id: C-85, title: 'Acute Effects of Elastic Bands as Resistance or Assistance on EMG, Kinetics, and
+    Kinematics During Deadlift in Resistance-Trained Men', authors: 'Andersen V, Pedersen H, Fimland MS,
+    Shaw MP, Solstad TEJ, Stien N, Cumming KT, Saeterbakken AH', year: '2020', url: 'https://doi.org/10.3389/fspor.2020.598284
+    (PMID 33345180)', type: EMG-Studie, evidence: B}
+- {id: C-86, title: 'Abnormal Wrist Sagittal Kinematics in Gymnasts With Dorsal Wrist Pain: A New Syndrome',
+  authors: 'Sekiguchi T, Saito S, Ogura T, Tsuchiya A, Shiratsuchi H', year: '2024', url: 'https://doi.org/10.1177/03635465231204361
+    (PMID 38164673)', type: Querschnittstudie, evidence: B}
+- {id: C-87, title: Characterization of Axial Forces to the Head During Kipping Handstand Push-ups, authors: Bove
+    G, year: '2025', url: 'https://doi.org/10.58524/jcss.v4i2.623', type: Querschnittstudie, evidence: B}
+- {id: D-01, title: 'Injury incidence and patterns among Dutch calisthenics athletes: a cross-sectional
+    observational study', authors: 'Mohammad YS, Mehrab M, Weir A', year: '2025', url: 'https://doi.org/10.23736/S0022-4707.24.16122-1
+    (PMID 39652047)', type: Querschnittstudie, evidence: B}
+- {id: D-02, title: Injury Profile Among Street Workout Practitioners, authors: 'Ngo JK, Solis-Urra P,
+    Sanchez-Martinez J', year: '2021', url: 'https://doi.org/10.1177/2325967121990926', type: Querschnittstudie,
+  evidence: B}
+- {id: D-03, title: 'Calisthenics: Epidemiology of Injury Patterns and Their Risk Factors', authors: 'McDonald-Wedding
+    L, Goodwin L, Preston A, McKay G, Williams C', year: '2023', url: 'https://doi.org/10.2147/OAJSM.S394044
+    (PMID 37252647)', type: Querschnittstudie, evidence: B}
+- {id: D-04, title: 'Evaluation of Men''s and Women''s Gymnastics Injuries: A 10-Year Observational Study',
+  authors: 'Westermann RW, Giblin M, Vaske A, Grosso K, Wolf BR', year: '2015', url: 'https://doi.org/10.1177/1941738114559705
+    (PMID 25984262)', type: Kohortenstudie, evidence: B}
+- {id: D-05, title: 'Injury epidemiology and risk factors in competitive artistic gymnasts: a systematic
+    review', authors: 'Campbell RA, Bradshaw EJ, Ball NB, Pease DL, Spratford W', year: '2019', url: 'https://doi.org/10.1136/bjsports-2018-099547
+    (PMID 30670379)', type: Systematic Review, evidence: A}
+- {id: D-06, title: 'Epidemiology and Risk Factors of Wrist Pain and Injury in Adolescent Artistic Gymnasts:
+    A Systematic Review and Meta-analysis', authors: 'DiLeo SDF, Noori A, Day E, Burkhart TA, Paul RA,
+    Chan AHW', year: '2026', url: 'https://doi.org/10.1177/23259671251395329 (PMID 41552624)', type: Meta-Analyse,
+  evidence: A}
+- {id: D-07, title: 'Wrist pain, distal radial physeal injury, and ulnar variance in the young gymnast',
+  authors: 'DiFiori JP, Caine DJ, Malina RM', year: '2006', url: 'https://doi.org/10.1177/0363546505284848
+    (PMID 16493174)', type: Narratives Review, evidence: B}
+- {id: D-08, title: Gymnastic wrist injuries, authors: 'Webb BG, Rettig LA', year: '2008', url: 'https://doi.org/10.1249/JSR.0b013e3181870471
+    (PMID 18772690)', type: Narratives Review, evidence: B}
+- {id: D-09, title: A critical review of the incidence and risk factors for finger injuries in rock climbing,
+  authors: 'Jones G, Johnson MI', year: '2016', url: 'https://doi.org/10.1249/JSR.0000000000000304 (PMID
+    27841811)', type: Narratives Review, evidence: B}
+- {id: D-10, title: Finger Flexor Pulley Injuries in Rock Climbers, authors: 'Miro PH, vanSonnenberg E,
+    Sabb DM, Schöffl V', year: '2021', url: 'https://doi.org/10.1016/j.wem.2021.01.011 (PMID 33966972)',
+  type: Narratives Review, evidence: B}
+- {id: D-11, title: 'Risk factors and injury prevention strategies for overuse injuries in adult climbers:
+    a systematic review', authors: 'Quarmby A, Zhang M, Geisler M, Javorsky T, Mugele H, Cassel M, Lawley
+    J', year: '2023', url: 'https://doi.org/10.3389/fspor.2023.1269870', type: Systematic Review, evidence: A}
+- {id: D-12, title: 'Injury in CrossFit®: A Systematic Review of Epidemiology and Risk Factors', authors: 'Ángel
+    Rodríguez M, García-Calleja P, Terrados N, Crespo I, Del Valle M, Olmedillas H', year: '2022', url: 'https://doi.org/10.1080/00913847.2020.1864675
+    (PMID 33322981)', type: Systematic Review, evidence: A}
+- {id: D-13, title: Shoulder Injuries in Individuals Who Participate in CrossFit Training, authors: 'Summitt
+    RJ, Cotton RA, Kays AC, Slaven EJ', year: '2016', url: 'https://doi.org/10.1177/1941738116666073 (PMID
+    27578854)', type: Querschnittstudie, evidence: B}
+- {id: D-14, title: Injury Rate and Patterns Among CrossFit Athletes, authors: 'Weisenthal BM, Beck CA,
+    Maloney MD, DeHaven KE, Giordano BD', year: '2014', url: 'https://doi.org/10.1177/2325967114531177
+    (PMID 26535325)', type: Querschnittstudie, evidence: B}
+- {id: D-15, title: 'Musculoskeletal injuries in CrossFit®: a systematic review and meta-analysis of injury
+    rates and locations', authors: 'Hülsmann M, Reinecke K, Barthel T, Reinsberger C', year: '2021', url: 'https://www.germanjournalsportsmedicine.com/archive/archive-2021/issue-7/musculoskeletal-injuries-in-crossfitr-a-systematic-review-and-meta-analysis-of-injury-rates-and-locations/
+    (DOI 10.5960/dzsm.2021.504 laut Verlag, bei doi.org nicht auflösbar)', type: Meta-Analyse, evidence: A}
+- {id: D-16, title: Dr Laura McDonald-Wedding (Profilseite der Erstautorin von D-03; Calisthenics- und
+    Tanz-Hintergrund), authors: MP Sports Physicians, year: o. J., url: 'https://www.mpsportsphysicians.com.au/dr-laura-mcdonald-wedding/',
+  type: Coaching-Artikel, evidence: D}
+- {id: D-17, title: 'Human tendon adaptation in response to mechanical loading: a systematic review and
+    meta-analysis of exercise intervention studies on healthy adults', authors: 'Bohm S, Mersmann F, Arampatzis
+    A', year: '2015', url: 'https://doi.org/10.1186/s40798-015-0009-9', type: Meta-Analyse, evidence: A}
+- {id: D-18, title: Time course of changes in muscle and tendon properties during strength training and
+    detraining, authors: 'Kubo K, Ikebukuro T, Yata H, Tsunoda N, Kanehisa H', year: '2010', url: 'https://doi.org/10.1519/JSC.0b013e3181c865e2',
+  type: Kohortenstudie, evidence: B}
+- {id: D-19, title: Time course of changes in the human Achilles tendon properties and metabolism during
+    training and detraining in vivo, authors: 'Kubo K, Ikebukuro T, Maki A, Yata H, Tsunoda N', year: '2012',
+  url: 'https://doi.org/10.1007/s00421-011-2248-x', type: Kohortenstudie, evidence: B}
+- {id: D-20, title: 'The pathogenesis of tendinopathy: balancing the response to loading', authors: 'Magnusson
+    SP, Langberg H, Kjaer M', year: '2010', url: 'https://doi.org/10.1038/nrrheum.2010.43', type: Narratives
+    Review, evidence: B}
+- {id: D-21, title: Coordinated collagen and muscle protein synthesis in human patella tendon and quadriceps
+    muscle after exercise, authors: 'Miller BF, Olesen JL, Hansen M, Døssing S, Crameri RM, Welling RJ,
+    Langberg H, Flyvbjerg A, Kjaer M, Babraj JA, Smith K, Rennie MJ', year: '2005', url: 'https://doi.org/10.1113/jphysiol.2005.093690',
+  type: Kohortenstudie, evidence: B}
+- {id: D-22, title: Type I collagen synthesis and degradation in peritendinous tissue after exercise determined
+    by microdialysis in humans, authors: 'Langberg H, Skovgaard D, Petersen LJ, Bulow J, Kjaer M', year: '1999',
+  url: 'https://doi.org/10.1111/j.1469-7793.1999.00299.x', type: Kohortenstudie, evidence: B}
+- {id: D-23, title: Tendinopathy in sport, authors: 'Ackermann PW, Renström P', year: '2012', url: 'https://doi.org/10.1177/1941738112440957',
+  type: Narratives Review, evidence: B}
+- {id: D-24, title: Lack of tissue renewal in human adult Achilles tendon is revealed by nuclear bomb
+    14C, authors: 'Heinemeier KM, Schjerling P, Heinemeier J, Magnusson SP, Kjaer M', year: '2013', url: 'https://doi.org/10.1096/fj.12-225599',
+  type: Querschnittstudie, evidence: B}
+- {id: D-25, title: 'Imbalances in the Development of Muscle and Tendon as Risk Factor for Tendinopathies
+    in Youth Athletes: A Review of Current Evidence and Concepts of Prevention', authors: 'Mersmann F,
+    Bohm S, Arampatzis A', year: '2017', url: 'https://doi.org/10.3389/fphys.2017.00987', type: Narratives
+    Review, evidence: B}
+- {id: D-26, title: 'Human Achilles tendon plasticity in response to cyclic strain: effect of rate and
+    duration', authors: 'Bohm S, Mersmann F, Tettke M, Kraft M, Arampatzis A', year: '2014', url: 'https://doi.org/10.1242/jeb.112268',
+  type: Kohortenstudie, evidence: B}
+- {id: D-27, title: 'The training-injury prevention paradox: should athletes be training smarter and harder?',
+  authors: Gabbett TJ, year: '2016', url: 'https://doi.org/10.1136/bjsports-2015-095788', type: Narratives
+    Review, evidence: B}
+- {id: D-28, title: 'How much is too much? (Part 1) International Olympic Committee consensus statement
+    on load in sport and risk of injury', authors: 'Soligard T, Schwellnus M, Alonso JM, Bahr R, Clarsen
+    B, Dijkstra HP, Gabbett T, Gleeson M, et al.', year: '2016', url: 'https://doi.org/10.1136/bjsports-2016-096581',
+  type: Positionspapier/Konsensus, evidence: B}
+- {id: D-29, title: 'Acute:Chronic Workload Ratio: Conceptual Issues and Fundamental Pitfalls', authors: 'Impellizzeri
+    FM, Tenan MS, Kempton T, Novak A, Coutts AJ', year: '2020', url: 'https://doi.org/10.1123/ijspp.2019-0864',
+  type: Narratives Review, evidence: B}
+- {id: D-30, title: 'What Role Do Chronic Workloads Play in the Acute to Chronic Workload Ratio? Time
+    to Dismiss ACWR and Its Underlying Theory', authors: 'Impellizzeri FM, Woodcock S, Coutts AJ, Fanchini
+    M, McCall A, Vigotsky AD', year: '2021', url: 'https://doi.org/10.1007/s40279-020-01378-6', type: Kohortenstudie,
+  evidence: B}
+- {id: D-31, title: 'Is the Acute: Chronic Workload Ratio (ACWR) Associated with Risk of Time-Loss Injury
+    in Professional Team Sports? A Systematic Review of Methodology, Variables and Injury Risk in Practical
+    Situations', authors: 'Andrade R, Wik EH, Rebelo-Marques A, Blanch P, Whiteley R, Espregueira-Mendes
+    J, Gabbett TJ', year: '2020', url: 'https://doi.org/10.1007/s40279-020-01308-6', type: Systematic
+    Review, evidence: A}
+- {id: D-32, title: 'The Association Between the Acute:Chronic Workload Ratio and Injury and its Application
+    in Team Sports: A Systematic Review', authors: 'Griffin A, Kenny IC, Comyns TM, Lyons M', year: '2020',
+  url: 'https://doi.org/10.1007/s40279-019-01218-2', type: Systematic Review, evidence: A}
+- {id: D-33, title: 'No effect of a graded training program on the number of running-related injuries
+    in novice runners: a randomized controlled trial', authors: 'Buist I, Bredeweg SW, van Mechelen W,
+    Lemmink KA, Pepping GJ, Diercks RL', year: '2008', url: 'https://doi.org/10.1177/0363546507307505',
+  type: RCT, evidence: A}
+- {id: D-34, title: 'Excessive progression in weekly running distance and risk of running-related injuries:
+    an association which varies according to type of injury', authors: 'Nielsen RØ, Parner ET, Nohr EA,
+    Sørensen H, Lind M, Rasmussen S', year: '2014', url: 'https://doi.org/10.2519/jospt.2014.5164', type: Kohortenstudie,
+  evidence: B}
+- {id: D-35, title: 'The Association Between Changes in Weekly Running Distance and Running-Related Injury:
+    Preparing for a Half Marathon', authors: 'Damsted C, Parner ET, Sørensen H, Malisoux L, Hulme A, Nielsen
+    RØ', year: '2019', url: 'https://doi.org/10.2519/jospt.2019.8541', type: Kohortenstudie, evidence: B}
+- {id: D-36, title: 'How much running is too much? Identifying high-risk running sessions in a 5200-person
+    cohort study', authors: 'Schuster Brandt Frandsen J, Hulme A, Parner ET, Møller M, Lindman I, Abrahamson
+    J, et al., Nielsen RO', year: '2025', url: 'https://doi.org/10.1136/bjsports-2024-109380', type: Kohortenstudie,
+  evidence: B}
+- {id: D-37, title: 'Training errors and running related injuries: a systematic review', authors: 'Nielsen
+    RO, Buist I, Sørensen H, Lind M, Rasmussen S', year: '2012', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC3290924/
+    (PMID 22389869)', type: Systematic Review, evidence: A}
+- {id: D-38, title: 'The effectiveness of exercise interventions to prevent sports injuries: a systematic
+    review and meta-analysis of randomised controlled trials', authors: 'Lauersen JB, Bertelsen DM, Andersen
+    LB', year: '2014', url: 'https://doi.org/10.1136/bjsports-2013-092538', type: Meta-Analyse, evidence: A}
+- {id: D-39, title: 'Strength training as superior, dose-dependent and safe prevention of acute and overuse
+    sports injuries: a systematic review, qualitative analysis and meta-analysis', authors: 'Lauersen
+    JB, Andersen TE, Andersen LB', year: '2018', url: 'https://doi.org/10.1136/bjsports-2018-099078',
+  type: Meta-Analyse, evidence: A}
+- {id: D-40, title: 'Continued sports activity, using a pain-monitoring model, during rehabilitation in
+    patients with Achilles tendinopathy: a randomized controlled study', authors: 'Silbernagel KG, Thomeé
+    R, Eriksson BI, Karlsson J', year: '2007', url: 'https://doi.org/10.1177/0363546506298279', type: RCT,
+  evidence: A}
+- {id: D-41, title: 'Current Clinical Concepts: Conservative Management of Achilles Tendinopathy', authors: 'Silbernagel
+    KG, Hanlon S, Sprague A', year: '2020', url: 'https://doi.org/10.4085/1062-6050-356-19', type: Narratives
+    Review, evidence: B}
+- {id: D-42, title: 'Pain-guided activity modification during treatment for patellar tendinopathy: a feasibility
+    and pilot randomized clinical trial', authors: 'Sprague AL, Couppé C, Pohlig RT, Snyder-Mackler L,
+    Silbernagel KG', year: '2021', url: 'https://doi.org/10.1186/s40814-021-00792-5', type: RCT, evidence: A}
+- {id: D-43, title: 'Return to Sport in Athletes with Midportion Achilles Tendinopathy: A Qualitative
+    Systematic Review Regarding Definitions and Criteria', authors: 'Habets B, van den Broek AG, Huisstede
+    BMA, Backx FJG, van Cingel REH', year: '2018', url: 'https://doi.org/10.1007/s40279-017-0833-9', type: Systematic
+    Review, evidence: A}
+- {id: D-44, title: 'No Difference in Clinical Effects When Comparing Alfredson Eccentric and Silbernagel
+    Combined Concentric-Eccentric Loading in Achilles Tendinopathy: A Randomized Controlled Trial', authors: 'Habets
+    B, van Cingel REH, Backx FJG, van Elten HJ, Zuithoff P, Huisstede BMA', year: '2021', url: 'https://doi.org/10.1177/23259671211031254',
+  type: RCT, evidence: A}
+- {id: D-45, title: 'Effect of specific exercise strategy on need for surgery in patients with subacromial
+    impingement syndrome: randomised controlled study', authors: 'Holmgren T, Björnsson Hallgren H, Öberg
+    B, Adolfsson L, Johansson K', year: '2012', url: 'https://doi.org/10.1136/bmj.e787', type: RCT, evidence: A}
+- {id: D-46, title: 'Effectiveness of progressive tendon-loading exercise therapy in patients with patellar
+    tendinopathy: a randomised clinical trial', authors: 'Breda SJ, Oei EHG, Zwerver J, Visser E, Waarsing
+    E, Krestin GP, de Vos RJ', year: '2021', url: 'https://doi.org/10.1136/bjsports-2020-103403', type: RCT,
+  evidence: A}
+- {id: D-47, title: 'Evidence-Based High-Loading Tendon Exercise for 12 Weeks Leads to Increased Tendon
+    Stiffness and Cross-Sectional Area in Achilles Tendinopathy: A Controlled Clinical Trial', authors: 'Radovanović
+    G, Bohm S, Peper KK, Arampatzis A, Legerlotz K', year: '2022', url: 'https://doi.org/10.1186/s40798-022-00545-5',
+  type: Kohortenstudie, evidence: B}
+- {id: D-48, title: A comprehensive treatment approach for patellofemoral pain syndrome in young women,
+  authors: Thomeé R, year: '1997', url: 'https://doi.org/10.1093/ptj/77.12.1690', type: RCT, evidence: A}
+- {id: D-49, title: 'Should exercises be painful in the management of chronic musculoskeletal pain? A
+    systematic review and meta-analysis', authors: 'Smith BE, Hendrick P, Smith TO, Bateman M, Moffatt
+    F, Rathleff MS, Selfe J, Logan P', year: '2017', url: 'https://doi.org/10.1136/bjsports-2016-097383',
+  type: Meta-Analyse, evidence: A}
+- {id: D-50, title: '2016 Consensus statement on return to sport from the First World Congress in Sports
+    Physical Therapy, Bern', authors: 'Ardern CL, Glasgow P, Schneiders A, Witvrouw E, Clarsen B, Cools
+    A, Gojanovic B, Griffin S, et al.', year: '2016', url: 'https://doi.org/10.1136/bjsports-2016-096278',
+  type: Positionspapier/Konsensus, evidence: B}
+- {id: D-51, title: 'Defining Return to Sport: A Systematic Review', authors: 'Doege J, Ayres JM, Mackay
+    MJ, Tarakemeh A, Brown SM, Vopat BG, Mulcahey MK', year: '2021', url: 'https://doi.org/10.1177/23259671211009589',
+  type: Systematic Review, evidence: A}
+- {id: D-52, title: Strategic Assessment of Risk and Risk Tolerance (StARRT) framework for return-to-play
+    decision-making, authors: Shrier I, year: '2015', url: 'https://doi.org/10.1136/bjsports-2014-094569',
+  type: Narratives Review, evidence: B}
+- {id: D-53, title: Common upper extremity gymnastics injuries and gymnastic specific return to play protocols,
+  authors: 'Hart E, Bauer AS, Bae DS', year: '2024', url: 'https://doi.org/10.1016/j.jposna.2024.100016',
+  type: Narratives Review, evidence: B}
+- {id: D-54, title: Data-based interval throwing programs for baseball players, authors: 'Axe M, Hurd
+    W, Snyder-Mackler L', year: '2009', url: 'https://doi.org/10.1177/1941738108331198', type: Narratives
+    Review, evidence: B}
+- {id: D-55, title: Isometric exercise induces analgesia and reduces inhibition in patellar tendinopathy,
+  authors: 'Rio E, Kidgell D, Purdam C, Gaida J, Moseley GL, Pearce AJ, Cook J', year: '2015', url: 'https://doi.org/10.1136/bjsports-2014-094386',
+  type: RCT, evidence: A}
+- {id: D-56, title: 'Isometric exercise and pain in patellar tendinopathy: A randomized crossover trial',
+  authors: 'Holden S, Lyng K, Graven-Nielsen T, Riel H, Olesen JL, Larsen LH, Rathleff MS', year: '2020',
+  url: 'https://doi.org/10.1016/j.jsams.2019.09.015', type: RCT, evidence: A}
+- {id: D-57, title: 'Do isometric and isotonic exercise programs reduce pain in athletes with patellar
+    tendinopathy in-season? A randomised clinical trial', authors: 'van Ark M, Cook JL, Docking SI, Zwerver
+    J, Gaida JE, van den Akker-Scheek I, Rio E', year: '2016', url: 'https://doi.org/10.1016/j.jsams.2015.11.006',
+  type: RCT, evidence: A}
+- {id: D-58, title: 'Effectiveness of isometric exercise in the management of tendinopathy: a systematic
+    review and meta-analysis of randomised trials', authors: 'Clifford C, Challoumas D, Paul L, Syme G,
+    Millar NL', year: '2020', url: 'https://doi.org/10.1136/bmjsem-2020-000760', type: Meta-Analyse, evidence: A}
+- {id: D-59, title: Unsupervised Isometric Exercise versus Wait-and-See for Lateral Elbow Tendinopathy,
+  authors: 'Vuvan V, Vicenzino B, Mellor R, Heales LJ, Coombes BK', year: '2020', url: 'https://doi.org/10.1249/MSS.0000000000002128',
+  type: RCT, evidence: A}
+- {id: D-60, title: 'Corticosteroid injections, eccentric decline squat training and heavy slow resistance
+    training in patellar tendinopathy', authors: 'Kongsgaard M, Kovanen V, Aagaard P, Doessing S, Hansen
+    P, Laursen AH, Kaldau NC, Kjaer M, Magnusson SP', year: '2009', url: 'https://doi.org/10.1111/j.1600-0838.2009.00949.x',
+  type: RCT, evidence: A}
+- {id: D-61, title: 'Heavy Slow Resistance Versus Eccentric Training as Treatment for Achilles Tendinopathy:
+    A Randomized Controlled Trial', authors: 'Beyer R, Kongsgaard M, Hougs Kjær B, Øhlenschlæger T, Kjær
+    M, Magnusson SP', year: '2015', url: 'https://doi.org/10.1177/0363546515584760', type: RCT, evidence: A}
+- {id: D-62, title: 'Achilles and patellar tendinopathy loading programmes: a systematic review comparing
+    clinical outcomes and identifying potential mechanisms for effectiveness', authors: 'Malliaras P,
+    Barton CJ, Reeves ND, Langberg H', year: '2013', url: 'https://doi.org/10.1007/s40279-013-0019-z',
+  type: Systematic Review, evidence: A}
+- {id: D-63, title: Current concepts in examination and treatment of elbow tendon injury, authors: 'Ellenbecker
+    TS, Nirschl R, Renstrom P', year: '2013', url: 'https://doi.org/10.1177/1941738112464761', type: Narratives
+    Review, evidence: B}
+- {id: D-64, title: 'Medial epicondylitis: evaluation and management', authors: 'Amin NH, Kumar NS, Schickendantz
+    MS', year: '2015', url: 'https://doi.org/10.5435/JAAOS-D-14-00145', type: Narratives Review, evidence: B}
+- {id: D-65, title: 'Prevalence and determinants of lateral and medial epicondylitis: a population study',
+  authors: 'Shiri R, Viikari-Juntura E, Varonen H, Heliövaara M', year: '2006', url: 'https://doi.org/10.1093/aje/kwj325',
+  type: Querschnittstudie, evidence: B}
+- {id: D-66, title: 'Management of Lateral Elbow Tendinopathy: One Size Does Not Fit All', authors: 'Coombes
+    BK, Bisset L, Vicenzino B', year: '2015', url: 'https://doi.org/10.2519/jospt.2015.5841', type: Narratives
+    Review, evidence: B}
+- {id: D-67, title: 'Distal biceps tendon ruptures: incidence, demographics, and the effect of smoking',
+  authors: 'Safran MR, Graham SM', year: '2002', url: 'https://pubmed.ncbi.nlm.nih.gov/12439270/', type: Kohortenstudie,
+  evidence: B}
+- {id: D-68, title: Challenging the mechanism of distal biceps tendon rupture using a video analysis study,
+  authors: 'Jukes C, Dirckx M, Bellringer S, Chaundy W, Phadnis J', year: '2022', url: 'https://doi.org/10.1302/2633-1462.310.BJO-2022-0123.R1',
+  type: Fallserie, evidence: B}
+- {id: D-69, title: Distal biceps tendon ruptures occur with the almost extended elbow and supinated forearm
+    - an online video analytic study, authors: 'Lappen S, Siebenlist S, Kadantsev P, Hinz M, Seilern Und
+    Aspang J, Lutz PM, Imhoff AB, Geyer S', year: '2022', url: 'https://doi.org/10.1186/s12891-022-05546-9',
+  type: Fallserie, evidence: B}
+- {id: D-70, title: 'Acute complete and partial distal biceps tendon ruptures: what have we learned? A
+    review', authors: 'Caekebeke P, Duerinckx J, van Riet R', year: '2021', url: 'https://doi.org/10.1302/2058-5241.6.200145',
+  type: Narratives Review, evidence: B}
+- {id: D-71, title: 'Die Turnerschulter [The gymnastics shoulder]', authors: 'Gerhardt C, Doyscher R,
+    Boschert HP, Scheibel M', year: '2014', url: 'https://doi.org/10.1007/s00132-013-2145-6', type: Narratives
+    Review, evidence: B}
+- {id: D-72, title: 'Associations between work-related factors and specific disorders of the shoulder:
+    a systematic review of the literature', authors: 'van Rijn RM, Huisstede BM, Koes BW, Burdorf A',
+  year: '2010', url: 'https://doi.org/10.5271/sjweh.2895', type: Systematic Review, evidence: A}
+- {id: D-73, title: Subacromial shoulder pain, authors: 'Kulkarni R, Gibson J, Brownson P, Thomas M, Rangan
+    A, Carr AJ, Rees JL', year: '2015', url: 'https://doi.org/10.1177/1758573215576456', type: Positionspapier/Konsensus,
+  evidence: B}
+- {id: D-74, title: 'Risk factors for, and prevention of, shoulder injuries in overhead sports: a systematic
+    review with best-evidence synthesis', authors: 'Asker M, Brooke HL, Waldén M, Tranaeus U, Johansson
+    F, Skillgate E, Holm LW', year: '2018', url: 'https://doi.org/10.1136/bjsports-2017-098254', type: Systematic
+    Review, evidence: A}
+- {id: D-75, title: 'Preventing overuse shoulder injuries among throwing athletes: a cluster-randomised
+    controlled trial in 660 elite handball players', authors: 'Andersson SH, Bahr R, Clarsen B, Myklebust
+    G', year: '2017', url: 'https://doi.org/10.1136/bjsports-2016-096226', type: RCT, evidence: A}
+- {id: D-76, title: 'Reduced glenohumeral rotation, external rotation weakness and scapular dyskinesis
+    are risk factors for shoulder injuries among elite male handball players: a prospective cohort study',
+  authors: 'Clarsen B, Bahr R, Andersson SH, Munk R, Myklebust G', year: '2014', url: 'https://doi.org/10.1136/bjsports-2014-093702',
+  type: Kohortenstudie, evidence: B}
+- {id: D-77, title: 'Risk factors for overuse shoulder injuries in a mixed-sex cohort of 329 elite handball
+    players: previous findings could not be confirmed', authors: 'Andersson SH, Bahr R, Clarsen B, Myklebust
+    G', year: '2018', url: 'https://doi.org/10.1136/bjsports-2017-097648', type: Kohortenstudie, evidence: B}
+- {id: D-78, title: 'Effectiveness of shoulder injury prevention programs in an overhead athletic population:
+    A systematic review', authors: 'Wright AA, Ness BM, Donaldson M, Hegedus EJ, Salamh P, Cleland JA',
+  year: '2021', url: 'https://doi.org/10.1016/j.ptsp.2021.09.004', type: Systematic Review, evidence: A}
+- {id: D-79, title: '2022 Bern Consensus Statement on Shoulder Injury Prevention, Rehabilitation, and
+    Return to Sport for Athletes at All Participation Levels', authors: 'Schwank A, Blazey P, Asker M,
+    Møller M, Hägglund M, Gard S, Skazalski C, Haugsbø Andersson S, et al., Ardern CL', year: '2022',
+  url: 'https://doi.org/10.2519/jospt.2022.10952', type: Positionspapier/Konsensus, evidence: B}
+- {id: D-80, title: Efficacy of a Prevention Program for Medial Elbow Injuries in Youth Baseball Players,
+  authors: 'Sakata J, Nakamura E, Suzuki T, Suzukawa M, Akaike A, Shimizu K, Hirose N', year: '2018',
+  url: 'https://doi.org/10.1177/0363546517738003', type: Kohortenstudie, evidence: B}
+- {id: D-81, title: Preseason Upper Extremity Range of Motion and Strength in Relation to In-Season Injuries
+    in NCAA Division I Gymnasts, authors: 'Heck K, Zeppieri G, Bruner M, Moser M, Farmer KW, Pozzi F',
+  year: '2021', url: 'https://doi.org/10.1177/2325967120977090', type: Kohortenstudie, evidence: B}
+- {id: D-82, title: Spondylolysis in the female gymnast, authors: 'Jackson DW, Wiltse LL, Cirincione RJ',
+  year: '1976', url: 'https://doi.org/10.1097/00003086-197606000-00008', type: Querschnittstudie, evidence: B}
+- {id: D-83, title: Spine injuries in the sport of gymnastics, authors: 'Kruse D, Lemmen B', year: '2009',
+  url: 'https://doi.org/10.1249/JSR.0b013e3181967ca6', type: Narratives Review, evidence: B}
+- {id: D-84, title: 'Diagnostic utility of patient history and physical examination data to detect spondylolysis
+    and spondylolisthesis in athletes with low back pain: A systematic review', authors: 'Grødahl LH,
+    Fawcett L, Nazareth M, Smith R, Spencer S, Heneghan N, Rushton A', year: '2016', url: 'https://doi.org/10.1016/j.math.2016.03.011',
+  type: Systematic Review, evidence: A}
+- {id: D-85, title: International Framework for Red Flags for Potential Serious Spinal Pathologies, authors: 'Finucane
+    LM, Downie A, Mercer C, Greenhalgh SM, Boissonnault WG, Pool-Goudzwaard AL, Beneciuk JM, Leech RL,
+    Selfe J', year: '2020', url: 'https://doi.org/10.2519/jospt.2020.9971', type: Positionspapier/Konsensus,
+  evidence: B}
+- {id: D-86, title: 'Red flags presented in current low back pain guidelines: a review', authors: 'Verhagen
+    AP, Downie A, Popal N, Maher C, Koes BW', year: '2016', url: 'https://doi.org/10.1007/s00586-016-4684-0',
+  type: Systematic Review, evidence: A}
+- {id: D-87, title: 'Red flags to screen for malignancy and fracture in patients with low back pain: systematic
+    review', authors: 'Downie A, Williams CM, Henschke N, Hancock MJ, Ostelo RW, de Vet HC, Macaskill
+    P, Irwig L, et al., Maher CG', year: '2013', url: 'https://doi.org/10.1136/bmj.f7095', type: Systematic
+    Review, evidence: A}
+- {id: D-88, title: 'Clinical practice guidelines for the management of non-specific low back pain in
+    primary care: an updated overview', authors: 'Oliveira CB, Maher CG, Pinto RZ, Traeger AC, Lin CC,
+    Chenot JF, van Tulder M, Koes BW', year: '2018', url: 'https://doi.org/10.1007/s00586-018-5673-2',
+  type: Systematic Review, evidence: A}
+- {id: D-89, title: 'Cauda equina syndrome: a literature review of its definition and clinical presentation',
+  authors: 'Fraser S, Roberts L, Murphy E', year: '2009', url: 'https://doi.org/10.1016/j.apmr.2009.03.021',
+  type: Narratives Review, evidence: B}
+- {id: D-90, title: 'Complete Pectoralis Major Tendon Rupture in a Calisthenics Athlete: A Case Report',
+  authors: 'Choo CH, Ng WN', year: '2021', url: 'https://doi.org/10.5704/moj.2103.019', type: Fallserie,
+  evidence: B}
+- {id: D-91, title: Updating ACSM's Recommendations for Exercise Preparticipation Health Screening, authors: 'Riebe
+    D, Franklin BA, Thompson PD, Garber CE, Whitfield GP, Magal M, Pescatello LS', year: '2015', url: 'https://doi.org/10.1249/MSS.0000000000000664',
+  type: Positionspapier/Konsensus, evidence: B}
+- {id: D-92, title: A comparison of available guidelines for the detection of cauda equina syndrome and
+    assessing the need for further clinical guidance in Ireland, authors: 'Gavin L, Curran MG, McCabe
+    JP', year: '2024', url: 'https://doi.org/10.1007/s11845-024-03633-5 (PMC11294425)', type: Narratives
+    Review, evidence: B}
+- {id: E-01, title: The knowns and unknowns of neural adaptations to resistance training, authors: 'Škarabot
+    J, Brownstein CG, Casolo A, Del Vecchio A, Ansdell P', year: '2021', url: 'https://doi.org/10.1007/s00421-020-04567-3',
+  type: Narratives Review, evidence: B}
+- {id: E-02, title: 'Determining the Sites of Neural Adaptations to Resistance Training: A Systematic
+    Review and Meta-analysis', authors: 'Siddique U, Rahman S, Frazer AK, Pearce AJ, Howatson G, Kidgell
+    DJ', year: '2020', url: 'https://doi.org/10.1007/s40279-020-01258-z', type: Meta-Analyse, evidence: A}
+- {id: E-03, title: 'Corticospinal responses following strength training: a systematic review and meta-analysis',
+  authors: 'Kidgell DJ, Bonanno DR, Frazer AK, Howatson G, Pearce AJ', year: '2017', url: 'https://doi.org/10.1111/ejn.13710',
+  type: Meta-Analyse, evidence: A}
+- {id: E-04, title: 'Corticospinal adaptations following resistance training and its relationship with
+    strength: A systematic review and multivariate meta-analysis', authors: 'Gómez-Feria J, Martín-Rodríguez
+    JF, Mir P', year: '2023', url: 'https://pubmed.ncbi.nlm.nih.gov/37353049/', type: Meta-Analyse, evidence: A}
+- {id: E-05, title: The increase in muscle force after 4 weeks of strength training is mediated by adaptations
+    in motor unit recruitment and rate coding, authors: 'Del Vecchio A, Casolo A, Negro F, Scorcelletti
+    M, Bazzucchi I, Enoka R, Felici F, Farina D', year: '2019', url: 'https://doi.org/10.1113/JP277250',
+  type: EMG-Studie, evidence: B}
+- {id: E-06, title: 'The Effect of Resistance Training on Motor Unit Firing Properties: A Systematic Review
+    and Meta-Analysis', authors: 'Elgueta-Cancino E, Evans E, Martinez-Valdes E, Falla D', year: '2022',
+  url: 'https://doi.org/10.3389/fphys.2022.817631', type: Meta-Analyse, evidence: A}
+- {id: E-07, title: 'Neural adaptation to resistance training: changes in evoked V-wave and H-reflex responses',
+  authors: 'Aagaard P, Simonsen EB, et al.', year: '2002', url: 'https://doi.org/10.1152/japplphysiol.01185.2001',
+  type: EMG-Studie, evidence: B}
+- {id: E-08, title: Adaptations in coactivation after isometric resistance training, authors: 'Carolan
+    B, Cafarelli E', year: '1992', url: 'https://doi.org/10.1152/jappl.1992.73.3.911', type: RCT, evidence: A}
+- {id: E-09, title: Motor unit synchronization measured by cross-correlation is not influenced by short-term
+    strength training of a hand muscle, authors: 'Kidgell DJ, Sale MV, Semmler JG', year: '2006', url: 'https://doi.org/10.1007/s00221-006-0724-z',
+  type: EMG-Studie, evidence: B}
+- {id: E-10, title: Motor-unit synchronization increases EMG amplitude and decreases force steadiness
+    of simulated contractions, authors: 'Yao W, Fuglevand AJ, Enoka RM', year: '2000', url: 'https://doi.org/10.1152/jn.2000.83.1.441',
+  type: Biomechanik-Studie, evidence: B}
+- {id: E-11, title: Neural factors versus hypertrophy in the time course of muscle strength gain, authors: 'Moritani
+    T, deVries HA', year: '1979', url: 'https://pubmed.ncbi.nlm.nih.gov/453338/', type: Kohortenstudie,
+  evidence: B}
+- {id: E-12, title: Early skeletal muscle hypertrophy and architectural changes in response to high-intensity
+    resistance training, authors: 'Seynnes OR, de Boer M, Narici MV', year: '2007', url: 'https://doi.org/10.1152/japplphysiol.00789.2006',
+  type: Kohortenstudie, evidence: B}
+- {id: E-13, title: Early resistance training-induced increases in muscle cross-sectional area are concomitant
+    with edema-induced muscle swelling, authors: 'Damas F, Phillips SM, Lixandrão ME, Vechin FC, Libardi
+    CA, et al.', year: '2016', url: 'https://doi.org/10.1007/s00421-015-3243-4', type: Kohortenstudie,
+  evidence: B}
+- {id: E-14, title: 'The adaptations to strength training: morphological and neurological contributions
+    to increased strength', authors: 'Folland JP, Williams AG', year: '2007', url: 'https://doi.org/10.2165/00007256-200737020-00004',
+  type: Narratives Review, evidence: B}
+- {id: E-15, title: Exercise-Induced Changes in Muscle Size do not Contribute to Exercise-Induced Changes
+    in Muscle Strength, authors: 'Loenneke JP, Buckner SL, Dankel SJ, Abe T', year: '2019', url: 'https://doi.org/10.1007/s40279-019-01106-9',
+  type: Narratives Review, evidence: B}
+- {id: E-16, title: Exercise-Induced Myofibrillar Hypertrophy is a Contributory Cause of Gains in Muscle
+    Strength, authors: 'Taber CB, Vigotsky A, Nuckols G, Haun CT', year: '2019', url: 'https://doi.org/10.1007/s40279-019-01107-8',
+  type: Narratives Review, evidence: B}
+- {id: E-17, title: Interpreting Signal Amplitudes in Surface Electromyography Studies in Sport and Rehabilitation
+    Sciences, authors: 'Vigotsky AD, Halperin I, Lehman GJ, Trajano GS, Vieira TM', year: '2018', url: 'https://doi.org/10.3389/fphys.2017.00985',
+  type: Narratives Review, evidence: B}
+- {id: E-18, title: 'Resistance training-induced adaptations in the neuromuscular system: Physiological
+    mechanisms and implications for human performance', authors: 'Lecce E, Amoruso P, Felici F, Bazzucchi
+    I', year: '2026', url: 'https://doi.org/10.1113/JP289716', type: Narratives Review, evidence: B}
+- {id: E-19, title: 'Cross-education of muscular strength following unilateral resistance training: a
+    meta-analysis', authors: 'Manca A, Dragone D, Dvir Z, Deriu F', year: '2017', url: 'https://doi.org/10.1007/s00421-017-3720-z',
+  type: Meta-Analyse, evidence: A}
+- {id: E-20, title: The role of learning and coordination in strength training, authors: 'Rutherford OM,
+    Jones DA', year: '1986', url: 'https://doi.org/10.1007/BF00422902', type: Kohortenstudie, evidence: B}
+- {id: E-21, title: Specificity of joint angle in isometric training, authors: 'Kitai TA, Sale DG', year: '1989',
+  url: 'https://doi.org/10.1007/BF00637386', type: Kohortenstudie, evidence: B}
+- {id: E-22, title: 'Is the joint-angle specificity of isometric resistance training real? And if so,
+    does it have a neural basis?', authors: 'Lanza MB, Balshaw TG, Folland JP', year: '2019', url: 'https://doi.org/10.1007/s00421-019-04229-z',
+  type: Kohortenstudie, evidence: B}
+- {id: E-23, title: 'Isometric training and long-term adaptations: Effects of muscle length, intensity,
+    and intent: A systematic review', authors: 'Oranchuk DJ, Storey AG, Nelson AR, Cronin JB', year: '2019',
+  url: 'https://doi.org/10.1111/sms.13375', type: Systematic Review, evidence: A}
+- {id: E-24, title: 'Effects of isometric vs. dynamic resistance training on isometric and isokinetic
+    muscular strength: A systematic review with meta-analysis', authors: 'Ghayomzadeh M, Li J, Eidy F,
+    Keshavarz M, Sabag A, Fornusek C, Hackett DA', year: '2025', url: 'https://pubmed.ncbi.nlm.nih.gov/40817007/',
+  type: Meta-Analyse, evidence: A}
+- {id: E-25, title: Practicing the Test Produces Strength Equivalent to Higher Volume Training, authors: 'Mattocks
+    KT, Buckner SL, Jessee MB, Dankel SJ, Mouser JG, Loenneke JP', year: '2017', url: 'https://doi.org/10.1249/MSS.0000000000001300',
+  type: RCT, evidence: A}
+- {id: E-26, title: 'What influence does resistance exercise order have on muscular strength gains and
+    muscle hypertrophy? A systematic review and meta-analysis', authors: 'Nunes JP, Grgic J, Cunha PM,
+    Ribeiro AS, Schoenfeld BJ, de Salles BF, Cyrino ES', year: '2021', url: 'https://doi.org/10.1080/17461391.2020.1733672',
+  type: Meta-Analyse, evidence: A}
+- {id: E-27, title: Exercise order in resistance training, authors: 'Simão R, de Salles BF, Figueiredo
+    T, Dias I, Willardson JM', year: '2012', url: 'https://doi.org/10.2165/11597240-000000000-00000',
+  type: Narratives Review, evidence: B}
+- {id: E-28, title: Fatigue induces long-lasting detrimental changes in motor-skill learning, authors: 'Branscheidt
+    M, Kassavetis P, Anaya M, Rogers D, Huang HD, Lindquist MA, Celnik P', year: '2019', url: 'https://doi.org/10.7554/eLife.40578',
+  type: Kohortenstudie, evidence: B}
+- {id: E-29, title: Human Performance, authors: 'Fitts PM, Posner MI', year: '1967', url: 'https://openlibrary.org/works/OL6554807W',
+  type: Lehrbuch, evidence: B}
+- {id: E-30, title: The role of strategies in motor learning, authors: 'Taylor JA, Ivry RB', year: '2012',
+  url: 'https://doi.org/10.1111/j.1749-6632.2011.06430.x', type: Narratives Review, evidence: B}
+- {id: E-31, title: Neuroplasticity subserving motor skill learning, authors: 'Dayan E, Cohen LG', year: '2011',
+  url: 'https://doi.org/10.1016/j.neuron.2011.10.008', type: Narratives Review, evidence: B}
+- {id: E-32, title: Stages of motor skill learning, authors: 'Luft AR, Buitrago MM', year: '2005', url: 'https://doi.org/10.1385/MN:32:3:205',
+  type: Narratives Review, evidence: B}
+- {id: E-33, title: 'Freezing Degrees of Freedom During Motor Learning: A Systematic Review', authors: 'Guimarães
+    AN, Ugrinowitsch H, Dascal JB, Porto AB, Okazaki VHA', year: '2020', url: 'https://doi.org/10.1123/mc.2019-0060',
+  type: Systematic Review, evidence: A}
+- {id: E-34, title: 'Learning-performance distinction and memory processes for motor skills: a focused
+    review and perspective', authors: 'Kantak SS, Winstein CJ', year: '2012', url: 'https://doi.org/10.1016/j.bbr.2011.11.028',
+  type: Narratives Review, evidence: B}
+- {id: E-35, title: 'Challenge point: a framework for conceptualizing the effects of various practice
+    conditions in motor learning', authors: 'Guadagnoli MA, Lee TD', year: '2004', url: 'https://doi.org/10.3200/JMBR.36.2.212-224',
+  type: Narratives Review, evidence: B}
+- {id: E-36, title: 'Contextual interference: a meta-analytic study', authors: Brady F, year: '2004',
+  url: 'https://doi.org/10.2466/pms.99.1.116-126', type: Meta-Analyse, evidence: A}
+- {id: E-37, title: 'High contextual interference improves retention in motor learning: systematic review
+    and meta-analysis', authors: 'Czyż SH, Wójcik AM, Solarská P, Kiper P', year: '2024', url: 'https://doi.org/10.1038/s41598-024-65753-3',
+  type: Meta-Analyse, evidence: A}
+- {id: E-38, title: The effect of contextual interference on transfer in motor learning - a systematic
+    review and meta-analysis, authors: 'Czyż SH, Wójcik AM, Solarská P', year: '2024', url: 'https://doi.org/10.3389/fpsyg.2024.1377122',
+  type: Meta-Analyse, evidence: A}
+- {id: E-39, title: 'The Effects of Contextual Interference Learning on the Acquisition and Relatively
+    Permanent Gains in Skilled Performance: A Critical Systematic Review with Multilevel Meta-Analysis',
+  authors: 'Ammar A, Trabelsi K, Boujelbane MA, Salem A, Boukhris O, Glenn JM, Zmijewski P, Jahrami H,
+    et al.', year: '2024', url: 'https://doi.org/10.1007/s10648-024-09892-z', type: Meta-Analyse, evidence: A}
+- {id: E-40, title: 'Advancing Contextual Interference: Addressing Methodological Debates, Reflecting
+    on Meta-Analytic Practices and Generalizability, and Guiding Future Directions in Motor Learning',
+  authors: 'Ammar A, Trabelsi K, Salem A, Jahrami H, Schöllhorn WI', year: '2025', url: 'https://doi.org/10.1007/s10648-025-10043-1',
+  type: Narratives Review, evidence: B}
+- {id: E-41, title: Contextual interference effects on the acquisition of skill and strength of the bench
+    press, authors: 'Naimo MA, Zourdos MC, Wilson JM, Kim JS, Ward EG, Eccles DW, Panton LB', year: '2013',
+  url: 'https://doi.org/10.1016/j.humov.2013.02.002', type: Kohortenstudie, evidence: B}
+- {id: E-42, title: Systematically increasing contextual interference is beneficial for learning sport
+    skills, authors: 'Porter JM, Magill RA', year: '2010', url: 'https://doi.org/10.1080/02640414.2010.502946',
+  type: RCT, evidence: A}
+- {id: E-43, title: 'Unveiling the acute neurophysiological responses to strength training: An exploratory
+    study on novices performing weightlifting bouts with different motor learning models', authors: 'Ammar
+    A, Boujelbane MA, Simak ML, Fraile-Fuente I, Rizzi N, Washif JA, Zmijewski P, Jahrami H, Schöllhorn
+    WI', year: '2024', url: 'https://doi.org/10.5114/biolsport.2024.133481', type: Kohortenstudie, evidence: B}
+- {id: E-44, title: How variability shapes learning and generalization, authors: 'Raviv L, Lupyan G, Green
+    SC', year: '2022', url: 'https://doi.org/10.1016/j.tics.2022.03.007', type: Narratives Review, evidence: B}
+- {id: E-45, title: 'Constant or variable practice: recreating the especial skill effect', authors: 'Breslin
+    G, Hodges NJ, Steenson A, Williams AM', year: '2012', url: 'https://doi.org/10.1016/j.actpsy.2012.04.002',
+  type: RCT, evidence: A}
+- {id: E-46, title: 'Distribution of practice in motor skill acquisition: different effects for discrete
+    and continuous tasks', authors: 'Lee TD, Genovese ED', year: '1989', url: 'https://doi.org/10.1080/02701367.1989.10607414',
+  type: Kohortenstudie, evidence: B}
+- {id: E-47, title: Distribution of practice and metacognition in learning and long-term retention of
+    a discrete motor task, authors: 'Dail TK, Christina RW', year: '2004', url: 'https://doi.org/10.1080/02701367.2004.10609146',
+  type: Kohortenstudie, evidence: B}
+- {id: E-48, title: 'Teaching surgical skills: what kind of practice makes perfect? A randomized, controlled
+    trial', authors: 'Moulton CA, Dubrowski A, Macrae H, Graham B, Grober E, Reznick R', year: '2006',
+  url: 'https://doi.org/10.1097/01.sla.0000234808.85789.6a', type: RCT, evidence: A}
+- {id: E-49, title: 'Avoiding Surgical Skill Decay: A Systematic Review on the Spacing of Training Sessions',
+  authors: 'Cecilio-Fernandes D, Cnossen F, Jaarsma DADC, Tio RA', year: '2018', url: 'https://doi.org/10.1016/j.jsurg.2017.08.002',
+  type: Systematic Review, evidence: A}
+- {id: E-50, title: 'Towards best practice in developing motor skills: a systematic review on spacing
+    in VR simulator-based psychomotor training for surgical novices', authors: 'Fahl JT, Duvivier R, Reinke
+    L, Pierie JEN, Schönrock-Adema J', year: '2023', url: 'https://doi.org/10.1186/s12909-023-04046-1',
+  type: Systematic Review, evidence: A}
+- {id: E-51, title: Spacing practice sessions across days earlier rather than later in training improves
+    performance of a visuomotor skill, authors: 'Goedert KM, Miller J', year: '2008', url: 'https://doi.org/10.1007/s00221-008-1414-9',
+  type: Kohortenstudie, evidence: B}
+- {id: E-52, title: 'Spacing Repetitions Over Long Timescales: A Review and a Reconsolidation Explanation',
+  authors: 'Smith CD, Scarf D', year: '2017', url: 'https://doi.org/10.3389/fpsyg.2017.00962', type: Narratives
+    Review, evidence: B}
+- {id: E-53, title: 'Effect of Resistance Training Frequency on Gains in Muscular Strength: A Systematic
+    Review and Meta-Analysis', authors: 'Grgic J, Schoenfeld BJ, Davies TB, Lazinica B, Krieger JW, Pedisic
+    Z', year: '2018', url: 'https://doi.org/10.1007/s40279-018-0872-x', type: Meta-Analyse, evidence: A}
+- {id: E-54, title: 'The Resistance Training Dose Response: Meta-Regressions Exploring the Effects of
+    Weekly Volume and Frequency on Muscle Hypertrophy and Strength Gains', authors: 'Pelland JC, Remmert
+    JF, Robinson ZP, Hinson SR, Zourdos MC', year: '2026', url: 'https://doi.org/10.1007/s40279-025-02344-w',
+  type: Meta-Analyse, evidence: A}
+- {id: E-55, title: 'Effects of Variations in Resistance Training Frequency on Strength Development in
+    Well-Trained Populations and Implications for In-Season Athlete Training: A Systematic Review and
+    Meta-analysis', authors: 'Cuthbert M, Haff GG, Arent SM, Ripley N, McMahon JJ, Evans M, Comfort P',
+  year: '2021', url: 'https://doi.org/10.1007/s40279-021-01460-7', type: Meta-Analyse, evidence: A}
+- {id: E-56, title: Higher Training Frequency Is Important for Gaining Muscular Strength Under Volume-Matched
+    Training, authors: 'Ochi E, Maruo M, Tsuchiya Y, Ishii N, Miura K, Sasaki K', year: '2018', url: 'https://doi.org/10.3389/fphys.2018.00744',
+  type: Kohortenstudie, evidence: B}
+- {id: E-57, title: 'Effect of daily 3-s maximum voluntary isometric, concentric, or eccentric contraction
+    on elbow flexor strength', authors: 'Sato S, Yoshida R, Murakoshi F, Sasaki Y, Yahata K, Nosaka K,
+    Nakamura M', year: '2022', url: 'https://doi.org/10.1111/sms.14138', type: Kohortenstudie, evidence: B}
+- {id: E-58, title: Greater effects by performing a small number of eccentric contractions daily than
+    a larger number of them once a week, authors: 'Yoshida R, Sato S, Kasahara K, Murakami Y, Murakoshi
+    F, Aizawa K, Koizumi R, Nosaka K, Nakamura M', year: '2022', url: 'https://doi.org/10.1111/sms.14220',
+  type: Kohortenstudie, evidence: B}
+- {id: E-59, title: 'Dose-response relationships of balance training in healthy young adults: a systematic
+    review and meta-analysis', authors: 'Lesinski M, Hortobágyi T, Muehlbauer T, Gollhofer A, Granacher
+    U', year: '2015', url: 'https://doi.org/10.1007/s40279-014-0284-5', type: Meta-Analyse, evidence: A}
+- {id: E-60, title: American College of Sports Medicine position stand. Progression models in resistance
+    training for healthy adults, authors: American College of Sports Medicine, year: '2009', url: 'https://doi.org/10.1249/MSS.0b013e3181915670',
+  type: Positionspapier/Konsensus, evidence: B}
+- {id: E-61, title: 'Practice with sleep makes perfect: sleep-dependent motor skill learning', authors: 'Walker
+    MP, Brakefield T, Morgan A, Hobson JA, Stickgold R', year: '2002', url: 'https://doi.org/10.1016/S0896-6273(02)00746-8',
+  type: Kohortenstudie, evidence: B}
+- {id: E-62, title: Sleep does not enhance motor sequence learning, authors: 'Rickard TC, Cai DJ, Rieth
+    CA, Jones J, Ard MC', year: '2008', url: 'https://doi.org/10.1037/0278-7393.34.4.834', type: Kohortenstudie,
+  evidence: B}
+- {id: E-63, title: Consolidating the effects of waking and sleep on motor-sequence learning, authors: 'Brawn
+    TP, Fenn KM, Nusbaum HC, Margoliash D', year: '2010', url: 'https://doi.org/10.1523/JNEUROSCI.3295-10.2010',
+  type: Kohortenstudie, evidence: B}
+- {id: E-64, title: 'The role of sleep in motor sequence consolidation: stabilization rather than enhancement',
+  authors: 'Nettersheim A, Hallschmid M, Born J, Diekelmann S', year: '2015', url: 'https://doi.org/10.1523/JNEUROSCI.1236-14.2015',
+  type: Kohortenstudie, evidence: B}
+- {id: E-65, title: 'Sleep and motor learning: Is there room for consolidation?', authors: 'Pan SC, Rickard
+    TC', year: '2015', url: 'https://doi.org/10.1037/bul0000009', type: Meta-Analyse, evidence: A}
+- {id: E-66, title: A Rapid Form of Offline Consolidation in Skill Learning, authors: 'Bönstrup M, Iturrate
+    I, Thompson R, Cruciani G, Censor N, Cohen LG', year: '2019', url: 'https://doi.org/10.1016/j.cub.2019.02.049',
+  type: Kohortenstudie, evidence: B}
+- {id: E-67, title: Dissipation of reactive inhibition is sufficient to explain post-rest improvements
+    in motor sequence learning, authors: 'Gupta MW, Rickard TC', year: '2022', url: 'https://doi.org/10.1038/s41539-022-00140-z',
+  type: Kohortenstudie, evidence: B}
+- {id: E-68, title: 'Adult Gross Motor Learning and Sleep: Is There a Mutual Benefit?', authors: 'Christova
+    M, Aftenberger H, Nardone R, Gallasch E', year: '2018', url: 'https://doi.org/10.1155/2018/3076986',
+  type: Narratives Review, evidence: B}
+- {id: E-69, title: The impact of diurnal sleep on the consolidation of a complex gross motor adaptation
+    task, authors: 'Hoedlmoser K, Birklbauer J, Schabus M, Eibenberger P, Rigler S, Mueller E', year: '2015',
+  url: 'https://doi.org/10.1111/jsr.12207', type: Kohortenstudie, evidence: B}
+- {id: E-70, title: 'Effects of Acute Sleep Loss on Physical Performance: A Systematic and Meta-Analytical
+    Review', authors: 'Craven J, McCartney D, Desbrow B, Sabapathy S, Bellinger P, Roberts L, Irwin C',
+  year: '2022', url: 'https://doi.org/10.1007/s40279-022-01706-y', type: Meta-Analyse, evidence: A}
+- {id: E-71, title: 'Inadequate sleep and muscle strength: Implications for resistance training', authors: 'Knowles
+    OE, Drinkwater EJ, Urwin CS, Lamon S, Aisbett B', year: '2018', url: 'https://doi.org/10.1016/j.jsams.2018.01.012',
+  type: Systematic Review, evidence: A}
+- {id: E-72, title: 'Sleep and the athlete: narrative review and 2021 expert consensus recommendations',
+  authors: 'Walsh NP, Halson SL, Sargent C, Roach GD, Nédélec M, Gupta L, Leeder J, Fullagar HH, et al.',
+  year: '2020', url: 'https://doi.org/10.1136/bjsports-2020-102025', type: Positionspapier/Konsensus,
+  evidence: B}
+- {id: E-73, title: Spinal and supraspinal factors in human muscle fatigue, authors: Gandevia SC, year: '2001',
+  url: 'https://doi.org/10.1152/physrev.2001.81.4.1725', type: Narratives Review, evidence: B}
+- {id: E-74, title: 'Supraspinal factors in human muscle fatigue: evidence for suboptimal output from
+    the motor cortex', authors: 'Gandevia SC, Allen GM, Butler JE, Taylor JL', year: '1996', url: 'https://doi.org/10.1113/jphysiol.1996.sp021164',
+  type: EMG-Studie, evidence: B}
+- {id: E-75, title: A comparison of central aspects of fatigue in submaximal and maximal voluntary contractions,
+  authors: 'Taylor JL, Gandevia SC', year: '2008', url: 'https://doi.org/10.1152/japplphysiol.01053.2007',
+  type: Narratives Review, evidence: B}
+- {id: E-76, title: Assessing voluntary muscle activation with the twitch interpolation technique, authors: 'Shield
+    A, Zhou S', year: '2004', url: 'https://doi.org/10.2165/00007256-200434040-00005', type: Narratives
+    Review, evidence: B}
+- {id: E-77, title: 'Counterpoint: the interpolated twitch does not provide a valid measure of the voluntary
+    activation of muscle', authors: 'de Haan A, Gerrits KH, de Ruiter CJ', year: '2009', url: 'https://doi.org/10.1152/japplphysiol.91220.2008a',
+  type: Narratives Review, evidence: B}
+- {id: E-78, title: 'Quantification of Neuromuscular Fatigue: What Do We Do Wrong and Why?', authors: 'Place
+    N, Millet GY', year: '2020', url: 'https://doi.org/10.1007/s40279-019-01203-9', type: Narratives Review,
+  evidence: B}
+- {id: E-79, title: Translating Fatigue to Human Performance, authors: 'Enoka RM, Duchateau J', year: '2016',
+  url: 'https://doi.org/10.1249/MSS.0000000000000929', type: Narratives Review, evidence: B}
+- {id: E-80, title: 'Neural Contributions to Muscle Fatigue: From the Brain to the Muscle and Back Again',
+  authors: 'Taylor JL, Amann M, Duchateau J, Meeusen R, Rice CL', year: '2016', url: 'https://doi.org/10.1249/MSS.0000000000000923',
+  type: Narratives Review, evidence: B}
+- {id: E-81, title: Recovery of central and peripheral neuromuscular fatigue after exercise, authors: 'Carroll
+    TJ, Taylor JL, Gandevia SC', year: '2017', url: 'https://doi.org/10.1152/japplphysiol.00775.2016',
+  type: Narratives Review, evidence: B}
+- {id: E-82, title: 'Neuromuscular Fatigue and Recovery after Heavy Resistance, Jump, and Sprint Training
+    (akutes Crossover-Experiment)', authors: 'Thomas K, Brownstein CG, Dent J, Parker P, Goodall S, Howatson
+    G', year: '2018', url: 'https://doi.org/10.1249/MSS.0000000000001733', type: RCT, evidence: B}
+- {id: E-83, title: Time course of recovery following resistance training leading or not to failure, authors: 'Morán-Navarro
+    R, Pérez CE, Mora-Rodríguez R, de la Cruz-Sánchez E, González-Badillo JJ, Sánchez-Medina L, Pallarés
+    JG', year: '2017', url: 'https://doi.org/10.1007/s00421-017-3725-7', type: Kohortenstudie, evidence: B}
+- {id: E-84, title: 'Central fatigue: the serotonin hypothesis and beyond', authors: 'Meeusen R, Watson
+    P, Hasegawa H, Roelands B, Piacentini MF', year: '2006', url: 'https://doi.org/10.2165/00007256-200636100-00006',
+  type: Narratives Review, evidence: B}
+- {id: E-85, title: 'Prevention, diagnosis, and treatment of the overtraining syndrome: joint consensus
+    statement of the European College of Sport Science and the American College of Sports Medicine', authors: 'Meeusen
+    R, Duclos M, Foster C, Fry A, Gleeson M, Nieman D, Raglin J, Rietjens G, Steinacker J, Urhausen A',
+  year: '2013', url: 'https://doi.org/10.1249/MSS.0b013e318279a10a', type: Positionspapier/Konsensus,
+  evidence: B}
+- {id: E-86, title: 'Effects of Rest Interval Duration in Resistance Training on Measures of Muscular
+    Strength: A Systematic Review', authors: 'Grgic J, Schoenfeld BJ, Skrepnik M, Davies TB, Mikulic P',
+  year: '2018', url: 'https://doi.org/10.1007/s40279-017-0788-x', type: Systematic Review, evidence: A}
+- {id: E-87, title: Rest interval between sets in strength training, authors: 'de Salles BF, Simão R,
+    Miranda F, Novaes JS, Lemos A, Willardson JM', year: '2009', url: 'https://doi.org/10.2165/11315230-000000000-00000',
+  type: Narratives Review, evidence: B}
+- {id: E-88, title: 'A brief review: factors affecting the length of the rest interval between resistance
+    exercise sets', authors: Willardson JM, year: '2006', url: 'https://doi.org/10.1519/R-17995.1', type: Narratives
+    Review, evidence: B}
+- {id: E-89, title: 'The Acute and Chronic Effects of Implementing Velocity Loss Thresholds During Resistance
+    Training: A Systematic Review, Meta-Analysis, and Critical Evaluation of the Literature', authors: 'Jukic
+    I, Castilla AP, Ramos AG, Van Hooren B, McGuigan MR, Helms ER', year: '2023', url: 'https://doi.org/10.1007/s40279-022-01754-4',
+  type: Meta-Analyse, evidence: A}
+- {id: E-90, title: 'Effects of velocity loss during resistance training on athletic performance, strength
+    gains and muscle adaptations', authors: 'Pareja-Blanco F, Rodríguez-Rosell D, Sánchez-Medina L, Sanchis-Moysi
+    J, Dorado C, Mora-Custodio R, et al.', year: '2017', url: 'https://doi.org/10.1111/sms.12678', type: RCT,
+  evidence: A}
+- {id: E-91, title: 'Post-activation Potentiation Versus Post-activation Performance Enhancement in Humans:
+    Historical Perspective, Underlying Mechanisms, and Current Issues', authors: 'Blazevich AJ, Babault
+    N', year: '2019', url: 'https://doi.org/10.3389/fphys.2019.01359', type: Narratives Review, evidence: B}
+- {id: E-92, title: 'Factors Modulating Post-Activation Potentiation of Jump, Sprint, Throw, and Upper-Body
+    Ballistic Performances: A Systematic Review with Meta-Analysis', authors: 'Seitz LB, Haff GG', year: '2016',
+  url: 'https://doi.org/10.1007/s40279-015-0415-7', type: Meta-Analyse, evidence: A}
+- {id: E-93, title: 'Meta-analysis of postactivation potentiation and power: effects of conditioning activity,
+    volume, gender, rest periods, and training status', authors: 'Wilson JM, Duncan NM, Marin PJ, Brown
+    LE, Loenneke JP, Wilson SM, Jo E, Lowery RP, Ugrinowitsch C', year: '2013', url: 'https://doi.org/10.1519/JSC.0b013e31825c2bdb',
+  type: Meta-Analyse, evidence: A}
+- {id: E-94, title: 'Warm-Up Strategies for Sport and Exercise: Mechanisms and Applications', authors: 'McGowan
+    CJ, Pyne DB, Thompson KG, Rattray B', year: '2015', url: 'https://doi.org/10.1007/s40279-015-0376-x',
+  type: Narratives Review, evidence: B}
+- {id: E-95, title: 'Effects of warming-up on physical performance: a systematic review with meta-analysis',
+  authors: 'Fradkin AJ, Zazryn TR, Smoliga JM', year: '2010', url: 'https://doi.org/10.1519/JSC.0b013e3181c643a0',
+  type: Meta-Analyse, evidence: A}
+- {id: E-96, title: 'Acute effects of muscle stretching on physical performance, range of motion, and
+    injury incidence in healthy active individuals: a systematic review', authors: 'Behm DG, Blazevich
+    AJ, Kay AD, McHugh M', year: '2016', url: 'https://doi.org/10.1139/apnm-2015-0235', type: Systematic
+    Review, evidence: A}
+- {id: E-97, title: Combination of general and specific warm-ups improves leg-press one repetition maximum
+    compared with specific warm-up in trained individuals (akutes Crossover-Experiment), authors: 'Abad
+    CC, Prado ML, Ugrinowitsch C, Tricoli V, Barroso R', year: '2011', url: 'https://doi.org/10.1519/JSC.0b013e3181e8611b',
+  type: RCT, evidence: B}
+- {id: E-98, title: 'Variable, but not free-weight, resistance back squat exercise potentiates jump performance
+    following a comprehensive task-specific warm-up (akutes Crossover-Experiment)', authors: 'Mina MA,
+    Blazevich AJ, Tsatalas T, Giakas G, Seitz LB, Kay AD', year: '2019', url: 'https://doi.org/10.1111/sms.13341',
+  type: RCT, evidence: B}
+- {id: E-99, title: Specificity of training for motor skill under physical fatigue, authors: 'Williams
+    LR, Daniell-Smith JH, Gunson LK', year: '1976', url: 'https://doi.org/10.1249/00005768-197600830-00005',
+  type: RCT, evidence: A}
+- {id: E-100, title: The Case for Grease-the-Groove Jump Training, authors: Tsatsouline P, year: '2015',
+  url: 'https://www.strongfirst.com/jump/', type: Coaching-Artikel, evidence: C}
+- {id: E-101, title: Two Powerful Methods for Improving Your Pull-Up, authors: Allen D, year: '2018',
+  url: 'https://www.strongfirst.com/two-powerful-methods-for-improving-your-pull-up/', type: Coaching-Artikel,
+  evidence: C}
+- {id: E-102, title: How to Increase your Pullups by 50 Percent (at Least), authors: Tanskey A, year: '2018',
+  url: 'https://www.strongfirst.com/how-to-increase-your-pull-ups-50-percent/', type: Coaching-Artikel,
+  evidence: C}
+- {id: E-103, title: How to Get Stronger by Greasing the Groove, authors: 'McKay B, McKay K', year: '2022',
+  url: 'https://www.artofmanliness.com/strength/fitness/get-stronger-by-greasing-the-groove/', type: Coaching-Artikel,
+  evidence: D}
+- {id: E-104, title: Strategies for maintaining a handstand in the anterior-posterior direction, authors: 'Kerwin
+    DG, Trewartha G', year: '2001', url: 'https://doi.org/10.1097/00005768-200107000-00016', type: Biomechanik-Studie,
+  evidence: B}
+- {id: E-105, title: Balance control strategies during perturbed and unperturbed balance in standing and
+    handstand, authors: 'Blenkinsop GM, Pain MTG, Hiley MJ', year: '2017', url: 'https://doi.org/10.1098/rsos.161018',
+  type: Biomechanik-Studie, evidence: B}
+- {id: F-01, title: 'Reliability of Field-Based Fitness Tests in Adults: A Systematic Review', authors: 'Cuenca-Garcia
+    M, Marin-Jimenez N, Perez-Bey A, Sánchez-Oliva D, Camiletti-Moiron D, Alvarez-Gallardo IC, Ortega
+    FB, Castro-Piñero J', year: '2022', url: 'https://doi.org/10.1007/s40279-021-01635-2', type: Systematic
+    Review, evidence: A}
+- {id: F-02, title: 'Criterion-Related Validity of Field-Based Fitness Tests in Adults: A Systematic Review',
+  authors: 'Castro-Piñero J, Marin-Jimenez N, Fernandez-Santos JR, Martin-Acosta F, Segura-Jimenez V,
+    Izquierdo-Gomez R, Ruiz JR, Cuenca-Garcia M', year: '2021', url: 'https://doi.org/10.3390/jcm10163743',
+  type: Systematic Review, evidence: A}
+- {id: F-03, title: Reliability of field-based fitness tests in youth, authors: 'Artero EG, España-Romero
+    V, Castro-Piñero J, Ortega FB, Suni J, Castillo-Garzon MJ, Ruiz JR', year: '2011', url: 'https://doi.org/10.1055/s-0030-1268488',
+  type: Systematic Review, evidence: A}
+- {id: F-04, title: 'Criterion-related validity of field-based fitness tests in youth: a systematic review',
+  authors: 'Castro-Piñero J, Artero EG, España-Romero V, Ortega FB, Sjöström M, Suni J, Ruiz JR', year: '2010',
+  url: 'https://doi.org/10.1136/bjsm.2009.058321', type: Systematic Review, evidence: A}
+- {id: F-05, title: 'Feasibility and Safety of Field-Based Physical Fitness Tests: A Systematic Review',
+  authors: 'Cruz-León C, Expósito-Carrillo P, Sánchez-Parente S, Jiménez-Iglesias J, Borges-Cosic M, Cuenca-Garcia
+    M, Castro-Piñero J', year: '2025', url: 'https://doi.org/10.1186/s40798-024-00799-1', type: Systematic
+    Review, evidence: A}
+- {id: F-06, title: 'Test-Retest Reliability of the One-Repetition Maximum (1RM) Strength Assessment:
+    a Systematic Review', authors: 'Grgic J, Lazinica B, Schoenfeld BJ, Pedisic Z', year: '2020', url: 'https://doi.org/10.1186/s40798-020-00260-z',
+  type: Systematic Review, evidence: A}
+- {id: F-07, title: 'Maximal Number of Repetitions at Percentages of the One Repetition Maximum: A Meta-Regression
+    and Moderator Analysis of Sex, Age, Training Status, and Exercise', authors: 'Nuzzo JL, Pinto MD,
+    Nosaka K, Steele J', year: '2024', url: 'https://doi.org/10.1007/s40279-023-01937-7', type: Meta-Analyse,
+  evidence: A}
+- {id: F-08, title: 'Accuracy in Predicting Repetitions to Task Failure in Resistance Exercise: A Scoping
+    Review and Exploratory Meta-analysis', authors: 'Halperin I, Malleron T, Har-Nir I, Androulakis-Korakakis
+    P, Wolf M, Fisher J, Steele J', year: '2022', url: 'https://doi.org/10.1007/s40279-021-01559-x', type: Meta-Analyse,
+  evidence: A}
+- {id: F-09, title: 'Kinetic analysis of push-up exercises: a systematic review with practical recommendations',
+  authors: 'Dhahbi W, Chaabene H, Chaouachi A, Padulo J, Behm DG, Cochrane J, Burnett A, Chamari K', year: '2022',
+  url: 'https://doi.org/10.1080/14763141.2018.1512149', type: Systematic Review, evidence: A}
+- {id: F-10, title: 'Reliability and minimal detectable change of the weight-bearing lunge test: A systematic
+    review', authors: 'Powden CJ, Hoch JM, Hoch MC', year: '2015', url: 'https://doi.org/10.1016/j.math.2015.01.004',
+  type: Systematic Review, evidence: A}
+- {id: F-11, title: 'Reliability and validity of clinically accessible smartphone applications to measure
+    joint range of motion: A systematic review', authors: 'Keogh JWL, Cox A, Anderson S, Liew B, Olsen
+    A, Schram B, Furness J', year: '2019', url: 'https://doi.org/10.1371/journal.pone.0215806', type: Systematic
+    Review, evidence: A}
+- {id: F-12, title: 'Criterion-Related Validity of Sit-and-Reach Tests for Estimating Hamstring and Lumbar
+    Extensibility: a Meta-Analysis', authors: 'Mayorga-Vega D, Merino-Marban R, Viciana J', year: '2014',
+  url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC3918544/', type: Meta-Analyse, evidence: A}
+- {id: F-13, title: 'A comparison of direct versus self-report measures for assessing physical activity
+    in adults: a systematic review', authors: 'Prince SA, Adamo KB, Hamel ME, Hardt J, Connor Gorber S,
+    Tremblay M', year: '2008', url: 'https://doi.org/10.1186/1479-5868-5-56', type: Systematic Review,
+  evidence: A}
+- {id: F-14, title: 'Reliability of questionnaire The International Fitness Scale: a systematic review
+    and meta-analysis', authors: 'Pereira DA, Correia Júnior JL, Carvas Junior N, Freitas-Dias R', year: '2020',
+  url: 'https://doi.org/10.31744/einstein_journal/2020rw5232', type: Meta-Analyse, evidence: A}
+- {id: F-15, title: 'Is subsequent lower limb injury associated with previous injury? A systematic review
+    and meta-analysis', authors: 'Toohey LA, Drew MK, Cook JL, Finch CF, Gaida JE', year: '2017', url: 'https://doi.org/10.1136/bjsports-2017-097500',
+  type: Meta-Analyse, evidence: A}
+- {id: F-16, title: 'Objectivity, Reliability, and Validity for a Revised Push-Up Test Protocol', authors: 'Baumgartner
+    TA, Oh S, Chung H, Hales D', year: '2002', url: 'https://doi.org/10.1207/S15327841MPEE0604_2', type: Querschnittstudie,
+  evidence: B}
+- {id: F-17, title: 'Reliability, minimal detectable change, and normative values for tests of upper extremity
+    function and power', authors: 'Negrete RJ, Hanney WJ, Kolber MJ, Davies GJ, Ansley MK, McBride AB,
+    Overstreet AL', year: '2010', url: 'https://doi.org/10.1519/JSC.0b013e3181e7259c', type: Querschnittstudie,
+  evidence: B}
+- {id: F-18, title: Reliability of fitness tests using methods and time periods common in sport and occupational
+    management, authors: 'Burnstein BD, Steele RJ, Shrier I', year: '2011', url: 'https://doi.org/10.4085/1062-6050-46.5.505',
+  type: Kohortenstudie, evidence: B}
+- {id: F-19, title: Reliability of pull up and dip maximal strength tests, authors: 'Coyne JOC, Tran TT,
+    Secomb JL, Lundgren L, Farley ORL, Newton RU, Sheppard JM', year: '2015', url: 'https://ro.ecu.edu.au/ecuworkspost2013/2422/',
+  type: Querschnittstudie, evidence: B}
+- {id: F-20, title: 'Reproducibility of strength performance and strength-endurance profiles: A test-retest
+    study', authors: 'Mitter B, Csapo R, Bauer P, Tschan H', year: '2022', url: 'https://doi.org/10.1371/journal.pone.0268074',
+  type: Querschnittstudie, evidence: B}
+- {id: F-21, title: Validity and reliability of upper body push and pull tests to determine one-repetition
+    maximum, authors: 'Sigvaldsen E, Loturco I, Larsen F, Bruusgaard J, Kalhovde JM, Haugen T', year: '2023',
+  url: 'https://doi.org/10.1371/journal.pone.0288649', type: Querschnittstudie, evidence: B}
+- {id: F-22, title: Relationship of lat-pull repetitions and pull-ups to maximal lat-pull and pull-up
+    strength in men and women, authors: 'Johnson D, Lynch J, Nash K, Cygan J, Mayhew JL', year: '2009',
+  url: 'https://doi.org/10.1519/JSC.0b013e3181a2d7f5', type: Querschnittstudie, evidence: B}
+- {id: F-23, title: Prediction of one repetition maximum strength from multiple repetition maximum testing
+    and anthropometry, authors: 'Reynolds JM, Gordon TJ, Robergs RA', year: '2006', url: 'https://doi.org/10.1519/R-15304.1',
+  type: Querschnittstudie, evidence: B}
+- {id: F-24, title: Validity of field tests of upper body muscular strength, authors: 'Pate RR, Burgess
+    ML, Woods JA, Ross JG, Baumgartner T', year: '1993', url: 'https://doi.org/10.1080/02701367.1993.10608774',
+  type: Querschnittstudie, evidence: B}
+- {id: F-25, title: The effect of position on the percentage of body mass supported during traditional
+    and modified push-up variants, authors: 'Suprak DN, Dawes J, Stephenson MD', year: '2011', url: 'https://doi.org/10.1519/JSC.0b013e3181bde2cf',
+  type: Biomechanik-Studie, evidence: B}
+- {id: F-26, title: Kinetic analysis of several variations of push-ups, authors: 'Ebben WP, Wurm B, VanderZanden
+    TL, Spadavecchia ML, Durocher JJ, Bickham CT, Petushek EJ', year: '2011', url: 'https://doi.org/10.1519/JSC.0b013e31820c8587',
+  type: Biomechanik-Studie, evidence: B}
+- {id: F-27, title: 'Measuring fitness in female gymnasts: the gymnastics functional measurement tool',
+  authors: 'Sleeper MD, Kenyon LK, Casey E', year: '2012', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC3325636/',
+  type: Querschnittstudie, evidence: B}
+- {id: F-28, title: 'Measuring sport-specific physical abilities in male gymnasts: the Men''s Gymnastics
+    Functional Measurement Tool', authors: 'Sleeper MD, Kenyon LK, Elliott JM, Cheng MS', year: '2016',
+  url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC5159633/', type: Querschnittstudie, evidence: B}
+- {id: F-29, title: Construct validity and inter-rater reliability of the Gymnastic Functional Measurement
+    Tool in the classification of female competitive gymnasts in Canada, authors: 'Kaldas J, Bisson C,
+    Hogue AC, Apinis C, Berbiche D, Gaudreault N', year: '2017', url: 'https://doi.org/10.1016/j.ptsp.2017.07.006',
+  type: Querschnittstudie, evidence: B}
+- {id: F-30, title: 'The prone bridge test: Performance, validity, and reliability among older and younger
+    adults', authors: 'Bohannon RW, Steffl M, Glenney SS, Green M, Cashwell L, Prajerova K, Bunn J', year: '2018',
+  url: 'https://doi.org/10.1016/j.jbmt.2017.07.005', type: Querschnittstudie, evidence: B}
+- {id: F-31, title: Sport-specific endurance plank test for evaluation of global core muscle function,
+  authors: 'Tong TK, Wu S, Nie J', year: '2014', url: 'https://doi.org/10.1016/j.ptsp.2013.03.003', type: Querschnittstudie,
+  evidence: B}
+- {id: F-32, title: 'The reliability and concurrent validity of shoulder mobility measurements using a
+    digital inclinometer and goniometer: a technical report', authors: 'Kolber MJ, Hanney WJ', year: '2012',
+  url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC3362980/', type: Querschnittstudie, evidence: B}
+- {id: F-33, title: 'Reliability and concurrent validity of a new iPhone goniometric application for measuring
+    active wrist range of motion: a cross-sectional study in asymptomatic subjects', authors: 'Pourahmadi
+    MR, Ebrahimi Takamjani I, Sarrafzadeh J, et al.', year: '2017', url: 'https://doi.org/10.1111/joa.12568',
+  type: Querschnittstudie, evidence: B}
+- {id: F-34, title: Remote self-measurement of wrist range of motion performed on normal wrists by a minimally
+    trained individual using the iPhone level application only demonstrated good reliability in measuring
+    wrist flexion and extension, authors: Alford SL, year: '2021', url: 'https://doi.org/10.1016/j.jht.2020.05.001',
+  type: Querschnittstudie, evidence: B}
+- {id: F-35, title: Reliability and Validity of a Smartphone Device and Clinical Tools for Thoracic Spine
+    Mobility Assessments, authors: 'van Baalen GB, Vanwanseele B, Venter RR', year: '2023', url: 'https://doi.org/10.3390/s23177622',
+  type: Querschnittstudie, evidence: B}
+- {id: F-36, title: Self-reported and measured cardiorespiratory fitness similarly predict cardiovascular
+    disease risk in young adults, authors: 'Ortega FB, Sánchez-López M, Solera-Martínez M, et al.', year: '2013',
+  url: 'https://doi.org/10.1111/j.1600-0838.2012.01454.x', type: Querschnittstudie, evidence: B}
+- {id: F-37, title: 'Ability to predict repetitions to momentary failure is not perfectly accurate, though
+    improves with resistance training experience', authors: 'Steele J, Endres A, Fisher J, Gentil P, Giessing
+    J', year: '2017', url: 'https://doi.org/10.7717/peerj.4105', type: Querschnittstudie, evidence: B}
+- {id: F-38, title: Proximity to Failure and Total Repetitions Performed in a Set Influences Accuracy
+    of Intraset Repetitions in Reserve-Based Rating of Perceived Exertion, authors: 'Zourdos MC, Goldsmith
+    JA, Helms ER, Trepeck C, Halle JL, Mendez KM, Cooke DM, Haischer MH, Sousa CA, Klemp A, Byrnes RK',
+  year: '2021', url: 'https://doi.org/10.1519/JSC.0000000000002995', type: Querschnittstudie, evidence: B}
+- {id: F-39, title: Accuracy of Predicted Intraset Repetitions in Reserve (RIR) in Single- and Multi-Joint
+    Resistance Exercises Among Trained and Untrained Men and Women, authors: 'Remmert JF, Laurson KR,
+    Zourdos MC', year: '2023', url: 'https://doi.org/10.1177/00315125231169868', type: Querschnittstudie,
+  evidence: B}
+- {id: F-40, title: Maximum Strength Benchmarks for Difficult Static Elements on Rings in Male Elite Gymnastics,
+  authors: 'Schärer C, Huber S, Bucher P, Capelli C, Hübner K', year: '2021', url: 'https://doi.org/10.3390/sports9060078',
+  type: Querschnittstudie, evidence: B}
+- {id: F-41, title: Updating ACSM's Recommendations for Exercise Preparticipation Health Screening, authors: 'Riebe
+    D, Franklin BA, Thompson PD, Garber CE, Whitfield GP, Magal M, Pescatello LS', year: '2015', url: 'https://doi.org/10.1249/MSS.0000000000000664',
+  type: Positionspapier/Konsensus, evidence: B}
+- {id: F-42, title: 'Evidence-based risk assessment and recommendations for physical activity clearance:
+    Consensus Document 2011', authors: 'Warburton DE, Gledhill N, Jamnik VK, Bredin SS, McKenzie DC, Stone
+    J, Charlesworth S, et al.', year: '2011', url: 'https://doi.org/10.1139/h11-062', type: Positionspapier/Konsensus,
+  evidence: B}
+- {id: F-43, title: 'PAR-Q+ and ePARmed-X+: International Standard for Pre-Participation Screening (offizielle
+    Website)', authors: PAR-Q+ Collaboration, year: '2026', url: 'https://eparmedx.com/', type: Positionspapier/Konsensus,
+  evidence: B}
+- {id: F-44, title: 'Development and validation of a new method for the registration of overuse injuries
+    in sports injury epidemiology: the Oslo Sports Trauma Research Centre (OSTRC) overuse injury questionnaire',
+  authors: 'Clarsen B, Myklebust G, Bahr R', year: '2013', url: 'https://doi.org/10.1136/bjsports-2012-091524',
+  type: Kohortenstudie, evidence: B}
+- {id: F-45, title: 'Defining Training and Performance Caliber: A Participant Classification Framework',
+  authors: 'McKay AKA, Stellingwerff T, Smith ES, Martin DT, Mujika I, Goosey-Tolfrey VL, Sheppard J,
+    et al.', year: '2022', url: 'https://doi.org/10.1123/ijspp.2021-0451', type: Positionspapier/Konsensus,
+  evidence: B}
+- {id: F-46, title: Measures of reliability in sports medicine and science, authors: Hopkins WG, year: '2000',
+  url: 'https://doi.org/10.2165/00007256-200030010-00001', type: Narratives Review, evidence: B}
+- {id: F-47, title: Quantifying test-retest reliability using the intraclass correlation coefficient and
+    the SEM, authors: Weir JP, year: '2005', url: 'https://doi.org/10.1519/15184.1', type: Narratives
+    Review, evidence: B}
+- {id: F-48, title: A Guideline of Selecting and Reporting Intraclass Correlation Coefficients for Reliability
+    Research, authors: 'Koo TK, Li MY', year: '2016', url: 'https://doi.org/10.1016/j.jcm.2016.02.012',
+  type: Narratives Review, evidence: B}
+- {id: F-49, title: 'A Statistical Framework to Interpret Individual Response to Intervention: Paving
+    the Way for Personalized Nutrition and Exercise Prescription', authors: 'Swinton PA, Hemingway BS,
+    Saunders B, Gualano B, Dolan E', year: '2018', url: 'https://doi.org/10.3389/fnut.2018.00041', type: Narratives
+    Review, evidence: B}
+- {id: F-50, title: 'The International Fitness Scale (IFIS): usefulness of self-reported fitness in youth',
+  authors: 'Ortega FB, Ruiz JR, España-Romero V, et al.', year: '2011', url: 'https://doi.org/10.1093/ije/dyr039',
+  type: Querschnittstudie, evidence: B}
+- {id: F-51, title: The validity of self-reported physical fitness test scores, authors: 'Jones SB, Knapik
+    JJ, Sharp MA, Darakjy S, Jones BH', year: '2007', url: 'https://doi.org/10.7205/milmed.172.2.115',
+  type: Querschnittstudie, evidence: B}
+- {id: F-52, title: Validity of Self-Reported Physical Fitness and Body Mass Index in a Military Population,
+  authors: 'Martin RC, Grier T, Canham-Chervak M, Anderson MK, Bushman TT, DeGroot DW, Jones BH', year: '2016',
+  url: 'https://doi.org/10.1519/JSC.0000000000001026', type: Querschnittstudie, evidence: B}
+- {id: F-53, title: Relationship between self-reported and objectively measured physical fitness in young
+    men and women, authors: Aandstad A, year: '2023', url: 'https://doi.org/10.1080/17461391.2021.2012597',
+  type: Querschnittstudie, evidence: B}
+- {id: F-54, title: 'How long can you hold on? Physical self-efficacy predicts performance estimation
+    accuracy independent of leisure-time physical activity', authors: 'Meixner F, Wölfle S, Hawat N',
+  year: '2025', url: 'https://doi.org/10.3389/fpsyg.2025.1545582', type: Querschnittstudie, evidence: B}
+- {id: F-55, title: Feasibility and validity of the push-up test for synchronous and asynchronous strength
+    tele-assessment in spinal cord injury individuals with paraplegia, authors: 'Gomes Costa RR, Dorneles
+    JR, Veloso JHCL, Gonçalves CWP, Neto FR', year: '2024', url: 'https://doi.org/10.1080/10790268.2022.2124651',
+  type: Querschnittstudie, evidence: B}
+- {id: F-56, title: Construct Validity of Two Different Methods of Scoring and Performing Push-ups, authors: Clemons
+    J, year: '2019', url: 'https://doi.org/10.1519/JSC.0000000000002843', type: Querschnittstudie, evidence: B}
+- {id: F-57, title: Construct validity of a modification of the flexed arm hang test, authors: Clemons
+    JM, year: '2014', url: 'https://doi.org/10.1519/JSC.0000000000000601', type: Querschnittstudie, evidence: B}
+- {id: F-58, title: The Influence of Resistance Training Experience on the Between-Day Reliability of
+    Commonly Used Strength Measures in Male Youth Athletes, authors: 'Weakley JJS, Till K, Darrall-Jones
+    J, Roe GAB, Phibbs PJ, Read DB, Jones BL', year: '2017', url: 'https://doi.org/10.1519/JSC.0000000000001883',
+  type: Querschnittstudie, evidence: B}
+- {id: F-59, title: A comparison of two isometric tests of trunk flexor endurance, authors: 'Durall CJ,
+    Greene PF, Kernozek TW', year: '2012', url: 'https://doi.org/10.1519/JSC.0b013e318237ea1c', type: Querschnittstudie,
+  evidence: B}
+- {id: F-60, title: 'Endurance times for low back stabilization exercises: clinical targets for testing
+    and training from a normal database', authors: 'McGill SM, Childs A, Liebenson C', year: '1999', url: 'https://doi.org/10.1016/S0003-9993(99)90087-4',
+  type: Querschnittstudie, evidence: B}
+- {id: F-61, title: 'Preparation For Flight: The Physical Profile of Pre-Professional and Professional
+    Circus Artists in the United States', authors: 'Greenspan SJ, Stuckey MI', year: '2024', url: 'https://doi.org/10.26603/001c.116332',
+  type: Querschnittstudie, evidence: B}
+- {id: F-62, title: 'Visual assessment of movement quality in the single leg squat test: a review and
+    meta-analysis of inter-rater and intrarater reliability', authors: 'Ressman J, Grooten WJA, Rasmussen
+    Barr E', year: '2019', url: 'https://doi.org/10.1136/bmjsem-2019-000541', type: Meta-Analyse, evidence: A}
+- {id: F-63, title: 'Are the shoulder joint function, stability, and mobility tests predictive of handstand
+    execution?', authors: 'Malíř R, Chrudimský J, Provazník A, Třebický V', year: '2024', url: 'https://doi.org/10.1371/journal.pone.0302922',
+  type: Querschnittstudie, evidence: B}
+- {id: F-64, title: 'Relationship between swallow, support scale and iron cross on rings and their specific
+    preconditioning strengthening exercises', authors: 'Hübner K, Schärer C', year: '2015', url: 'https://doi.org/10.52165/sgj.7.3.59-68',
+  type: Querschnittstudie, evidence: B}
+- {id: F-65, title: Effects of Angle Variations in Suspension Push-up Exercise, authors: Gulmez I, year: '2017',
+  url: 'https://doi.org/10.1519/JSC.0000000000001401', type: Biomechanik-Studie, evidence: B}
+- {id: F-66, title: 'Can different variations of suspension exercises provide adequate loads and muscle
+    activations for upper body training?', authors: 'Vural F, Erman B, Ranisavljev I, Yuzbasioglu Y, Ćopić
+    N, Aksit T, Dopsaj M, Ozkol MZ', year: '2023', url: 'https://doi.org/10.1371/journal.pone.0291608',
+  type: Biomechanik-Studie, evidence: B}
+- {id: F-67, title: Evaluation of Training Load During Suspension Exercise, authors: 'Giancotti GF, Fusco
+    A, Varalda C, Capelli G, Cortis C', year: '2021', url: 'https://doi.org/10.1519/JSC.0000000000003100',
+  type: Biomechanik-Studie, evidence: B}
+- {id: F-68, title: 'Overcoming Gravity 2nd Edition: Progression Charts (Druck-PDF, S. 30–33 des Buchs)',
+  authors: Low S, year: '2016', url: 'https://stevenlow.org/wp-content/uploads/2017/02/OG2ChartsPrint.pdf',
+  type: Coaching-Buch, evidence: C}
+- {id: F-69, title: 'Overcoming Gravity 2nd Edition: Leseprobe (Inhalt, Einleitung, Kap. 1–3; gelesen
+    S. 21–25)', authors: Low S, year: '2016', url: 'https://stevenlow.org/wp-content/uploads/2018/09/OG2-preview-TOC-Intro-Ch1-3.pdf',
+  type: Coaching-Buch, evidence: C}
+- {id: F-70, title: 'How To Muscle-Up (Pro-Coach-Artikel, URL «developing-a-muscle-up»)', authors: CrossFit,
+  year: '2024', url: 'https://www.crossfit.com/pro-coach/developing-a-muscle-up', type: Coaching-Artikel,
+  evidence: C}
+- {id: F-71, title: 'How to Do a Muscle Up: The Complete Progression', authors: 'Lorenz A (Byline «El
+    Eggs»), CALI MOVE Blog', year: '2026', url: 'https://blog.calimove.com/2026/09/14/muscle-up-progression-guide/',
+  type: Coaching-Artikel, evidence: C}
+- {id: F-72, title: The Most Effective Front Lever Progression, authors: The Movement Athlete, year: '2025',
+  url: 'https://themovementathlete.com/front-lever-progression/', type: Coaching-Artikel, evidence: D}
+- {id: F-73, title: How To Achieve A Planche – The Most Effective Planche Progression, authors: The Movement
+    Athlete, year: '2025', url: 'https://themovementathlete.com/planche-progression-training/', type: Coaching-Artikel,
+  evidence: D}
+- {id: F-74, title: Skill prerequisites — what you need before the big seven, authors: bodyproskills (anonym),
+  year: '2026', url: 'https://bodyproskills.com/articles/muscle-up-prerequisites/', type: Coaching-Artikel,
+  evidence: D}
+- {id: F-75, title: Mathematical Model - Weighted Pullups to Front Lever (Forumsthread), authors: 'StrongFirst-Forum,
+    Thread von «Yak», Auswertung von «Hung»', year: '2021', url: 'https://www.strongfirst.com/community/threads/mathematical-model-weighted-pullups-to-front-lever.19107/',
+  type: Forum/Wiki, evidence: D}
+- {id: F-76, title: What YOU NEED To Know About The Front Lever!, authors: '«JR», Straight Talking Fitness
+    (Blog)', year: '2018', url: 'https://straighttalkingfitness.com/2018/03/18/what-you-need-to-know-about-the-front-lever/',
+  type: Coaching-Artikel, evidence: D}
+- {id: F-77, title: Validity of Different Velocity-Based Methods and Repetitions-to-Failure Equations
+    for Predicting the 1 Repetition Maximum During 2 Upper-Body Pulling Exercises, authors: 'Pérez-Castilla
+    A, Suzovic D, Domanovic A, Fernandes JFT, García-Ramos A', year: '2021', url: 'https://doi.org/10.1519/JSC.0000000000003076',
+  type: Querschnittstudie, evidence: B}

@@ -6,6 +6,10 @@ struct HefestoApp: App {
     @State private var failure: String?
     @Environment(\.scenePhase) private var scenePhase
 
+    init() {
+        Appearance.apply()
+    }
+
     var body: some Scene {
         WindowGroup {
             Group {
@@ -18,10 +22,14 @@ struct HefestoApp: App {
                     ProgressView()
                 }
             }
+            // One dark, warm world (ADR 0020): system controls, sheets and
+            // alerts follow it too.
+            .preferredColorScheme(.dark)
+            .tint(Palette.ember)
             .task {
                 guard model == nil else { return }
                 do {
-                    let m = try Self.makeModel()
+                    let m = try AppModel()
                     model = m
                     await m.start()
                 } catch {
@@ -32,16 +40,6 @@ struct HefestoApp: App {
                 if phase == .active, let model { Task { await model.syncNow() } }
             }
         }
-    }
-}
-
-extension HefestoApp {
-    @MainActor
-    static func makeModel() throws -> AppModel {
-        #if DEBUG
-        if UITestFixture.isRequested { return try UITestFixture.model() }
-        #endif
-        return try AppModel()
     }
 }
 

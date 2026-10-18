@@ -1,0 +1,10 @@
+# PLACEHOLDER — generated from content/training/exercises.yaml, the planner's
+# knowledge base (ENT-10). Replace with researched content.
+slug: planche-lean
+status: draft_placeholder
+name: Planche Lean
+family: push
+default_measure: hold_seconds
+summary: Placeholder entry from the planner's knowledge base; not coaching content.
+tempo_applicable: false
+equipment: [floor]

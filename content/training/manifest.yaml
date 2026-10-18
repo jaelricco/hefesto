@@ -1,0 +1,6 @@
+# Knowledge base of the training planner (spec §2). The loader in
+# internal/content reads the files below; internal/domain/planning validates
+# them (KB-01 … KB-13). Version rules: spec §2.5.
+ruleset_version: 0.1.0
+status: draft_placeholder
+files: [parameters.yaml, rules.yaml, sources.yaml, body.yaml, exercises.yaml, skills.yaml, sessions.yaml, onboarding.yaml]

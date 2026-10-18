@@ -1,4 +1,4 @@
-# ADR 0012 — Polish, the TestFlight build and the load smoke test
+# ADR 0022 — Polish, the TestFlight build and the load smoke test
 
 - Status: accepted
 - Date: 2026-09-27
@@ -47,8 +47,6 @@ The code-visible problems are fixed:
 - **Screens that clip at accessibility sizes.** The effort grid drops to three
   columns and scrolls.
 - **Motion that ignored Reduce Motion.** The map's unlock animation now does.
-- **Low-contrast labels.** Locked labels on the map are now above 4.5:1
-  contrast.
 - **Silent changes.** Logging a set, a finished rest and sign-in errors are
   now announced.
 
@@ -56,14 +54,20 @@ The skill map also gets a **list view**, grouped by standing. A canvas of
 positioned nodes is hard to read with VoiceOver or at large text sizes, and
 the list carries the same information.
 
-A UI test target runs Apple's `performAccessibilityAudit` on every main screen
-three times: at the default size, at the largest accessibility size, and in
-German. It runs on a **Debug-only offline fixture** (`-uiTestFixture`: signed
-in, in-memory data, no server).
+A UI test target runs Apple's `performAccessibilityAudit` on every screen of
+the **demo mode** (ADR 0020, `DemoMode.swift`: signed in, in-memory data, no
+server), three times: in English, at the largest accessibility size, and in
+German. Each screen is opened by its launch argument, so the audit never
+depends on how a screen is reached.
 
-CI **builds** the UI tests on every run. It **runs** them only when the ios
-workflow is dispatched with `ui_tests`, because booting a simulator writes
-simulator state outside the runner's workspace.
+CI **builds** the UI tests on every run. It **runs** them when the ios workflow
+is dispatched with `ui_tests`, on the one simulator the screenshot job keeps
+on the self-hosted Mac ("Hefesto Screenshots"). It creates no simulator of its
+own.
+
+The Glut design pass (ADR 0020) set contrast and Dynamic Type for every
+screen. This phase adds what a palette cannot: element structure,
+announcements, Reduce Motion and the list view.
 
 ### TestFlight builds run on a GitHub-hosted Mac
 

@@ -64,6 +64,9 @@ func ValidateSet(s *SetEntry) error {
 	if s.RPE != nil && math.Mod(*s.RPE*2, 1) != 0 {
 		errs["/rpe"] = "RPE is given in half steps, e.g. 7.5"
 	}
+	if s.SIR != nil && (*s.SIR < 0 || *s.SIR > MaxSIR) {
+		errs["/sir_s"] = fmt.Sprintf("seconds in reserve are between 0 and %d", MaxSIR)
+	}
 
 	seen := map[uuid.UUID]bool{}
 	for i := range s.Elements {

@@ -1,7 +1,7 @@
 name: testflight
 
 # Archives the app and uploads it to App Store Connect for TestFlight
-# (ADR 0012). Run it by hand, or push a tag like ios-v0.7.0.
+# (ADR 0022). Run it by hand, or push a tag like ios-v0.7.0.
 #
 # It runs on a GitHub-hosted Mac, not the self-hosted runner: signing
 # creates certificates and downloads provisioning profiles, and that must not

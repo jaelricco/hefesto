@@ -7,17 +7,30 @@ import SwiftUI
 struct SetComposer: View {
     let db: AppDatabase
     let defaultRest: Int
-    let onSave: ([ElementDraft], Int) -> Void
+    /// The elements, the planned rest and what the athlete had left.
+    let onSave: ([ElementDraft], Int, SetReserve) -> Void
 
     @Environment(\.dismiss) private var dismiss
-    @State private var elements: [Draft] = [Draft()]
+    @State private var elements: [Draft]
     @State private var rest: Int
+    @State private var rir: Int?
+    @State private var sirS: Int?
     @State private var picking: Int?
 
-    init(db: AppDatabase, defaultRest: Int, onSave: @escaping ([ElementDraft], Int) -> Void) {
+    /// The choices for reps in reserve, the log's 0–10.
+    static let rirChoices = Array(0...10)
+    /// The choices for a hold's reserve, within the log's 0–60 s.
+    static let sirChoices = [0, 1, 2, 3, 4, 5, 6, 8, 10, 15, 20, 30, 45, 60]
+
+    /// `exercise`, if given, is chosen for the first element already.
+    init(db: AppDatabase, defaultRest: Int, exercise: Exercise? = nil,
+         onSave: @escaping ([ElementDraft], Int, SetReserve) -> Void) {
         self.db = db
         self.defaultRest = defaultRest
         self.onSave = onSave
+        var first = Draft()
+        if let exercise { first.choose(exercise) }
+        _elements = State(initialValue: [first])
         _rest = State(initialValue: defaultRest)
     }
 
@@ -32,20 +45,23 @@ struct SetComposer: View {
                         } label: {
                             HStack {
                                 Text(verbatim: draft.exercise?.name ?? String(localized: "Choose an exercise"))
-                                    .foregroundStyle(draft.exercise == nil ? .secondary : .primary)
+                                    .font(.rowTitle)
+                                    .foregroundStyle(draft.exercise == nil ? Palette.textSecondary : Palette.text)
                                 Spacer()
-                                Image(systemName: "chevron.right").foregroundStyle(.tertiary)
+                                Image(systemName: "chevron.right").foregroundStyle(Palette.textTertiary)
                             }
                             .frame(minHeight: 44)
                         }
+                        .themedRow()
                         if draft.exercise != nil { ElementFields(draft: $draft) }
                     } header: {
-                        Text(elements.count > 1 ? LocalizedStringKey("Combo, part \(index + 1)") : "Set")
+                        CapsLabel(elements.count > 1 ? LocalizedStringKey("Combo, part \(index + 1)") : "Set")
                     } footer: {
                         if elements.count > 1 {
                             Button("Remove this part", role: .destructive) {
                                 elements.removeAll { $0.id == draft.id }
                             }
+                            .font(.detailText)
                         }
                     }
                 }
@@ -54,26 +70,70 @@ struct SetComposer: View {
                     Button("Add an exercise to make a combo", systemImage: "plus.square.on.square") {
                         elements.append(Draft())
                     }
+                    .font(.bodyMedium)
+                    .foregroundStyle(Palette.ember)
                     .frame(minHeight: 44)
+                    .themedRow()
                 }
 
-                Section("Rest after") {
-                    Stepper(value: $rest, in: 0...600, step: 15) {
-                        Text(Duration.seconds(rest).formatted(.time(pattern: .minuteSecond)))
-                            .font(.title3.monospacedDigit())
+                if asksRIR || asksSIR {
+                    Section {
+                        // A group so the theme reaches every row it makes.
+                        Group {
+                            if asksRIR {
+                                Picker("Reps left", selection: $rir) {
+                                    Text("Not rated").tag(Int?.none)
+                                    ForEach(Self.rirChoices, id: \.self) { Text($0, format: .number).tag(Int?.some($0)) }
+                                }
+                                .themedPicker()
+                            }
+                            if asksSIR {
+                                Picker("Seconds left", selection: $sirS) {
+                                    Text("Not rated").tag(Int?.none)
+                                    ForEach(Self.sirChoices, id: \.self) { Text("\($0) s").tag(Int?.some($0)) }
+                                }
+                                .themedPicker()
+                            }
+                        }
+                        .themedRow()
+                    } header: {
+                        CapsLabel("Reserve")
+                    } footer: {
+                        VStack(alignment: .leading) {
+                            if asksRIR { Text("How many more clean reps you could have done.") }
+                            if asksSIR { Text("How much longer you could have held with clean form.") }
+                        }
+                        .font(.detailText)
+                        .foregroundStyle(Palette.textSecondary)
                     }
                 }
+
+                Section {
+                    Stepper(value: $rest, in: 0...600, step: 15) {
+                        Text(Duration.seconds(rest).formatted(.time(pattern: .minuteSecond)))
+                            .font(.metricSmall)
+                            .monospacedDigit()
+                            .foregroundStyle(Palette.text)
+                    }
+                    .themedRow()
+                } header: {
+                    CapsLabel("Rest after")
+                }
             }
+            .themedScreen()
             .navigationTitle("Log a set")
             .navigationBarTitleDisplayMode(.inline)
+            .font(.bodyText)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
-                        onSave(elements.compactMap(\.element), rest)
+                        onSave(
+                            elements.compactMap(\.element), rest,
+                            SetReserve(rir: asksRIR ? rir : nil, sirS: asksSIR ? sirS : nil))
                         dismiss()
                     }
-                    .bold()
+                    .fontWeight(.semibold)
                     .disabled(!elements.allSatisfy { $0.element != nil })
                 }
             }
@@ -85,6 +145,24 @@ struct SetComposer: View {
             }
         }
     }
+
+    private var asksRIR: Bool { asksReserve(of: "reps") }
+    private var asksSIR: Bool { asksReserve(of: "hold_seconds") }
+
+    /// A reserve belongs to the set, so it is asked only when exactly one
+    /// element has the measure: with two, it would not say which one. An
+    /// element taken to failure had nothing left.
+    private func asksReserve(of measure: String) -> Bool {
+        let matching = elements.filter { $0.exercise != nil && $0.measure == measure }
+        return matching.count == 1 && !matching[0].failed
+    }
+}
+
+/// What the athlete had left after a set: reps for a rep element, seconds
+/// for a hold. Either may be unrated.
+struct SetReserve {
+    var rir: Int?
+    var sirS: Int?
 }
 
 private struct Picking: Identifiable {
@@ -129,20 +207,26 @@ struct ElementFields: View {
     @Binding var draft: Draft
 
     var body: some View {
+        // A group so the theme reaches every row it makes.
+        Group { fields }.themedRow()
+    }
+
+    @ViewBuilder
+    private var fields: some View {
         switch draft.measure {
         case "reps":
             Stepper(value: $draft.reps, in: 0...500) {
-                Text("\(draft.reps) reps").font(.title2.monospacedDigit().bold())
+                Text("\(draft.reps) reps").font(.metricSmall).monospacedDigit()
             }
             .frame(minHeight: 56)
         case "hold_seconds":
             Stepper(value: $draft.holdSeconds, in: 0...3600, step: 5) {
-                Text("\(draft.holdSeconds) s hold").font(.title2.monospacedDigit().bold())
+                Text("\(draft.holdSeconds) s hold").font(.metricSmall).monospacedDigit()
             }
             .frame(minHeight: 56)
         case "distance_m":
             Stepper(value: $draft.distanceM, in: 0...10000, step: 5) {
-                Text("\(draft.distanceM) m").font(.title2.monospacedDigit().bold())
+                Text("\(draft.distanceM) m").font(.metricSmall).monospacedDigit()
             }
             .frame(minHeight: 56)
         default:
@@ -151,13 +235,16 @@ struct ElementFields: View {
 
         Stepper(value: $draft.loadKg, in: 0...300, step: 2.5) {
             LabeledContent("Added load") {
-                Text("\(draft.loadKg.formatted(.number.precision(.fractionLength(0...1)))) kg").monospacedDigit()
+                Text("\(draft.loadKg.formatted(.number.precision(.fractionLength(0...1)))) kg")
+                    .monospacedDigit()
+                    .foregroundStyle(Palette.textSecondary)
             }
         }
 
         Picker("Assistance", selection: $draft.assistance) {
             ForEach(AssistanceKind.all, id: \.self) { Text(AssistanceKind.label($0)).tag($0) }
         }
+        .themedPicker()
         if draft.assistance != "none" {
             LabeledContent("Estimated assist") {
                 TextField("kg", value: $draft.assistKg, format: .number)
@@ -171,6 +258,7 @@ struct ElementFields: View {
             Text("Not rated").tag(Int?.none)
             ForEach(1...5, id: \.self) { Text(FormQuality.label($0)).tag(Int?.some($0)) }
         }
+        .themedPicker()
         Toggle("To failure", isOn: $draft.failed)
     }
 }
@@ -220,13 +308,16 @@ struct ExercisePicker: View {
                     onPick(e)
                 } label: {
                     VStack(alignment: .leading) {
-                        Text(verbatim: e.name).font(.headline)
-                        Text(verbatim: e.family).font(.caption).foregroundStyle(.secondary)
+                        Text(verbatim: e.name).font(.rowTitle).foregroundStyle(Palette.text)
+                        Text(verbatim: FamilyText.label(e.family)).font(.fine).foregroundStyle(Palette.textSecondary)
                     }
-                    .frame(minHeight: 44)
+                    .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                    .contentShape(.rect)
                 }
-                .foregroundStyle(.primary)
+                .buttonStyle(.plain)
+                .themedRow()
             }
+            .themedScreen()
             .overlay {
                 if results.isEmpty {
                     ContentUnavailableView(

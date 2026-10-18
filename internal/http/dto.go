@@ -234,6 +234,7 @@ type sessionOut struct {
 	Status           string     `json:"status"`
 	IsRestDay        bool       `json:"is_rest_day"`
 	TemplateID       *uuid.UUID `json:"template_id"`
+	PlannedSessionID *uuid.UUID `json:"planned_session_id"`
 	CompletedAt      *time.Time `json:"completed_at"`
 	UpdatedAt        time.Time  `json:"updated_at"`
 	ServerUpdatedAt  time.Time  `json:"server_updated_at"`
@@ -245,7 +246,7 @@ func sessionFrom(s training.Session) sessionOut {
 		ID: s.ID, StartedAt: utc(s.StartedAt), EndedAt: utcPtr(s.EndedAt), Timezone: s.Timezone,
 		LocalDate: s.LocalDate.Format(dateLayout), Title: s.Title, Notes: s.Notes,
 		PerceivedFatigue: s.PerceivedFatigue, BodyweightKg: s.BodyweightKg, Status: s.Status,
-		IsRestDay: s.IsRestDay, TemplateID: s.TemplateID, CompletedAt: utcPtr(s.CompletedAt),
+		IsRestDay: s.IsRestDay, TemplateID: s.TemplateID, PlannedSessionID: s.PlannedSessionID, CompletedAt: utcPtr(s.CompletedAt),
 		UpdatedAt: utc(s.UpdatedAt), ServerUpdatedAt: utc(s.ServerUpdatedAt), Blocks: make([]blockOut, len(s.Blocks)),
 	}
 	for i, b := range s.Blocks {
@@ -316,6 +317,7 @@ type setIn struct {
 	RestAfterActualS  *int        `json:"rest_after_actual_s"`
 	RPE               *float64    `json:"rpe"`
 	RIR               *int        `json:"rir"`
+	SIR               *int        `json:"sir_s"`
 	CompletedAt       *time.Time  `json:"completed_at"`
 	Notes             string      `json:"notes"`
 	UpdatedAt         *time.Time  `json:"updated_at"`
@@ -354,7 +356,7 @@ func (s setIn) toDomain(id, sessionID uuid.UUID) training.SetEntry {
 	out := training.SetEntry{
 		ID: id, SessionID: sessionID, BlockID: s.BlockID, OrderIndex: s.OrderIndex, RoundIndex: s.RoundIndex,
 		Kind: orDefault(s.Kind, "working"), IsPlanned: s.IsPlanned, RestAfterPlannedS: s.RestAfterPlannedS,
-		RestAfterActualS: s.RestAfterActualS, RPE: s.RPE, RIR: s.RIR, CompletedAt: s.CompletedAt, Notes: s.Notes,
+		RestAfterActualS: s.RestAfterActualS, RPE: s.RPE, RIR: s.RIR, SIR: s.SIR, CompletedAt: s.CompletedAt, Notes: s.Notes,
 		Elements: make([]training.Element, len(s.Elements)),
 	}
 	for i, e := range s.Elements {
@@ -386,6 +388,8 @@ type setOut struct {
 	RestAfterActualS  *int         `json:"rest_after_actual_s"`
 	RPE               *float64     `json:"rpe"`
 	RIR               *int         `json:"rir"`
+	SIR               *int         `json:"sir_s"`
+	PlannedItemID     *uuid.UUID   `json:"planned_item_id"`
 	CompletedAt       *time.Time   `json:"completed_at"`
 	Notes             string       `json:"notes"`
 	UpdatedAt         time.Time    `json:"updated_at"`
@@ -396,8 +400,8 @@ func setFrom(s training.SetEntry) setOut {
 	out := setOut{
 		ID: s.ID, BlockID: s.BlockID, OrderIndex: s.OrderIndex, RoundIndex: s.RoundIndex, Kind: s.Kind,
 		IsPlanned: s.IsPlanned, RestAfterPlannedS: s.RestAfterPlannedS, RestAfterActualS: s.RestAfterActualS,
-		RPE: s.RPE, RIR: s.RIR, CompletedAt: utcPtr(s.CompletedAt), Notes: s.Notes, UpdatedAt: utc(s.UpdatedAt),
-		Elements: make([]elementOut, len(s.Elements)),
+		RPE: s.RPE, RIR: s.RIR, SIR: s.SIR, PlannedItemID: s.PlannedItemID, CompletedAt: utcPtr(s.CompletedAt), Notes: s.Notes,
+		UpdatedAt: utc(s.UpdatedAt), Elements: make([]elementOut, len(s.Elements)),
 	}
 	for i, e := range s.Elements {
 		out.Elements[i] = elementFrom(e)

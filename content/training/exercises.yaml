@@ -1,0 +1,799 @@
+# Exercises the planner can place (spec §2.2). In phase 5 the planner keeps
+# its own list; merging it into content/exercises/*.yaml as a `training:`
+# block comes with the content import (the existing tree is placeholder
+# content, and new exercises there would be orphans until skills use them).
+#
+# og_ordinal: OG level from research 02 §3 (PAR-A-25 … PAR-A-37); 0 = below
+# OG level 1 (research 02 §3.4). Where the source gives a range the lower
+# bound is used and the note says so.
+# torque_ratio: moment relative to the full stage (PAR-C-03 … PAR-C-08).
+# bw_fraction: share of body weight moved (PAR-C-18 … PAR-C-22). Without a
+# value the load scale is 1.0 (spec §4.5), the conservative side.
+# All entries are draft content until a human review (ENT-10).
+exercises:
+  # --- hang-foundation (research 02 §4.2) ---
+  - slug: dead-hang
+    name: Dead Hang
+    status: draft_placeholder
+    pattern: grip_hang
+    straight_arm: straight_arm_axial
+    direction: pull
+    load_family: hang
+    complaint_family: hang_grip
+    measure: hold_seconds
+    hold_class: endurance
+    requires: [pull_up_bar]
+    og_ordinal: 0
+    bw_fraction: 1.0
+    sources: [A-44, A-41]
+  - slug: scapular-pull-up
+    name: Scapula-Pull-up
+    status: draft_placeholder
+    pattern: grip_hang
+    straight_arm: straight_arm_axial
+    direction: pull
+    load_family: hang
+    complaint_family: hang_grip
+    measure: reps
+    requires: [pull_up_bar]
+    og_ordinal: 0
+    bw_fraction: 1.0
+    sources: [A-45, A-44, A-38]
+  - slug: arch-hang
+    name: Arch Hang
+    status: draft_placeholder
+    pattern: grip_hang
+    straight_arm: straight_arm_axial
+    direction: pull
+    load_family: hang
+    complaint_family: hang_grip
+    measure: reps
+    requires: [pull_up_bar]
+    og_ordinal: 0
+    bw_fraction: 1.0
+    sources: [A-44]
+
+  # --- pull-up (research 02 §4.8) ---
+  - slug: pull-up-negative
+    name: Negativer Klimmzug
+    status: draft_placeholder
+    pattern: vertical_pull
+    straight_arm: none
+    direction: pull
+    load_family: pull_up
+    complaint_family: pull_up_row
+    measure: reps
+    requires: [pull_up_bar]
+    og_ordinal: 2
+    bw_fraction: 1.0
+    eccentric: true
+    sources: [A-31, A-38]
+  - slug: pull-up
+    name: Klimmzug
+    status: draft_placeholder
+    pattern: vertical_pull
+    straight_arm: none
+    direction: pull
+    load_family: pull_up
+    complaint_family: pull_up_row
+    measure: reps
+    requires: [pull_up_bar]
+    og_ordinal: 3
+    bw_fraction: 1.0
+    assistable: true
+    loadable: true
+    gtg_allowed: true
+    sources: [A-31, A-44]
+  - slug: pull-up-l-sit
+    name: L-Klimmzug
+    status: draft_placeholder
+    pattern: vertical_pull
+    straight_arm: none
+    direction: pull
+    load_family: pull_up
+    complaint_family: pull_up_row
+    measure: reps
+    requires: [pull_up_bar]
+    og_ordinal: 4
+    bw_fraction: 1.0
+    sources: [A-31]
+
+  # --- row (research 02 §4.7) ---
+  - slug: row-vertical
+    name: Rudern, fast aufrecht
+    status: draft_placeholder
+    pattern: horizontal_pull
+    straight_arm: none
+    direction: pull
+    load_family: inverted_row
+    complaint_family: pull_up_row
+    measure: reps
+    requires: [low_bar]
+    og_ordinal: 0
+    sources: [A-44, A-45]
+  - slug: row-incline
+    name: Rudern, schräg
+    status: draft_placeholder
+    pattern: horizontal_pull
+    straight_arm: none
+    direction: pull
+    load_family: inverted_row
+    complaint_family: pull_up_row
+    measure: reps
+    requires: [low_bar]
+    og_ordinal: 0
+    gtg_allowed: true
+    sources: [A-44]
+  - slug: row-horizontal
+    name: Rudern, waagrecht
+    status: draft_placeholder
+    pattern: horizontal_pull
+    straight_arm: none
+    direction: pull
+    load_family: inverted_row
+    complaint_family: pull_up_row
+    measure: reps
+    requires: [low_bar]
+    og_ordinal: 2
+    gtg_allowed: true
+    sources: [A-44, A-31]
+    note: OG 2 ist im Chart das Ringrudern; waagrechtes Rudern an der Stange wird gleich eingestuft (Heuristik).
+  - slug: row-wide
+    name: Rudern, breit
+    status: draft_placeholder
+    pattern: horizontal_pull
+    straight_arm: none
+    direction: pull
+    load_family: inverted_row
+    complaint_family: pull_up_row
+    measure: reps
+    requires: [low_bar]
+    og_ordinal: 3
+    sources: [A-44, A-31]
+  - slug: row-archer
+    name: Archer-Rudern
+    status: draft_placeholder
+    pattern: horizontal_pull
+    straight_arm: none
+    direction: pull
+    load_family: inverted_row
+    complaint_family: pull_up_row
+    measure: reps
+    requires: [low_bar]
+    og_ordinal: 4
+    sources: [A-44, A-31]
+
+  # --- support-hold (research 02 §4.4) ---
+  - slug: support-hold-pb
+    name: Stütz am Barren
+    status: draft_placeholder
+    pattern: vertical_push
+    straight_arm: straight_arm_axial
+    direction: push
+    load_family: support_hold
+    complaint_family: none
+    measure: hold_seconds
+    hold_class: endurance
+    requires: [parallel_bars]
+    og_ordinal: 0
+    bw_fraction: 1.0
+    sources: [A-44, A-45]
+    note: Kein eigenes OG-Level; unter dem Stütz an Ringen (OG 1) eingeordnet, weil Ringe schwerer sind (PAR-A-27).
+  - slug: support-hold-rings
+    name: Stütz an Ringen
+    status: draft_placeholder
+    pattern: vertical_push
+    straight_arm: straight_arm_axial
+    direction: push
+    load_family: support_hold
+    load_modifiers: [rings]
+    complaint_family: none
+    measure: hold_seconds
+    hold_class: endurance
+    requires: [rings]
+    og_ordinal: 1
+    bw_fraction: 1.0
+    sources: [A-43, A-31]
+  - slug: support-hold-rings-rto
+    name: Stütz an Ringen, nach aussen gedreht
+    status: draft_placeholder
+    pattern: vertical_push
+    straight_arm: straight_arm_axial
+    direction: push
+    load_family: support_hold
+    load_modifiers: [rings]
+    complaint_family: none
+    measure: hold_seconds
+    hold_class: endurance
+    requires: [rings]
+    og_ordinal: 2
+    bw_fraction: 1.0
+    sources: [A-31]
+
+  # --- dip (research 02 §4.6) ---
+  - slug: dip-negative
+    name: Negativer Dip
+    status: draft_placeholder
+    pattern: vertical_push
+    straight_arm: none
+    direction: push
+    load_family: dip_bar
+    complaint_family: push_up_dip
+    measure: reps
+    requires: [parallel_bars]
+    og_ordinal: 2
+    bw_fraction: 1.0
+    eccentric: true
+    sources: [A-31, A-44]
+  - slug: dip-pb
+    name: Dip am Barren
+    status: draft_placeholder
+    pattern: vertical_push
+    straight_arm: none
+    direction: push
+    load_family: dip_bar
+    complaint_family: push_up_dip
+    measure: reps
+    requires: [parallel_bars]
+    og_ordinal: 3
+    bw_fraction: 1.0
+    assistable: true
+    loadable: true
+    gtg_allowed: true
+    sources: [A-31, A-54]
+  - slug: dip-rings
+    name: Dip an Ringen
+    status: draft_placeholder
+    pattern: vertical_push
+    straight_arm: none
+    direction: push
+    load_family: dip_ring
+    complaint_family: push_up_dip
+    measure: reps
+    requires: [rings]
+    og_ordinal: 4
+    bw_fraction: 1.0
+    sources: [A-31, A-43, A-54]
+  - slug: dip-rings-l
+    name: Dip an Ringen im L-Sitz
+    status: draft_placeholder
+    pattern: vertical_push
+    straight_arm: none
+    direction: push
+    load_family: dip_ring
+    complaint_family: push_up_dip
+    measure: reps
+    requires: [rings]
+    og_ordinal: 5
+    bw_fraction: 1.0
+    sources: [A-31]
+
+  # --- push-up (research 02 §4.5) ---
+  - slug: push-up-wall
+    name: Liegestütz an der Wand
+    status: draft_placeholder
+    pattern: horizontal_push
+    straight_arm: none
+    direction: push
+    load_family: push_up
+    complaint_family: push_up_dip
+    measure: reps
+    requires: [wall]
+    og_ordinal: 0
+    bw_fraction: 0.55
+    sources: [A-44, A-45]
+    note: Ohne gemessenen Lastanteil; höchstens der Anteil der erhöhten Liegestütze (0.55, PAR-C-20), damit die leichtere Sprosse nie schwerer zählt.
+  - slug: push-up-incline
+    name: Liegestütz mit erhöhten Händen
+    status: draft_placeholder
+    pattern: horizontal_push
+    straight_arm: none
+    direction: push
+    load_family: push_up
+    complaint_family: push_up_dip
+    measure: reps
+    requires: []
+    og_ordinal: 0
+    bw_fraction: 0.55
+    gtg_allowed: true
+    sources: [A-44, A-05]
+    note: Lastanteil 0.55 bei 30,5 cm Erhöhung (PAR-C-20), die schwerere der beiden gemessenen Höhen. Erhöhung beliebig (Bank, niedrige Stange, Tisch).
+  - slug: push-up
+    name: Liegestütz
+    status: draft_placeholder
+    pattern: horizontal_push
+    straight_arm: none
+    direction: push
+    load_family: push_up
+    complaint_family: push_up_dip
+    measure: reps
+    requires: [floor]
+    og_ordinal: 1
+    bw_fraction: 0.66
+    gtg_allowed: true
+    sources: [A-44, A-31, A-05]
+    note: Lastanteil 0.66, der Standardwert von PAR-C-18 (Mittel aus 0,64, 0,664 und 0,69).
+  - slug: push-up-diamond
+    name: Diamant-Liegestütz
+    status: draft_placeholder
+    pattern: horizontal_push
+    straight_arm: none
+    direction: push
+    load_family: push_up
+    complaint_family: push_up_dip
+    measure: reps
+    requires: [floor]
+    og_ordinal: 2
+    sources: [A-44, A-31]
+  - slug: push-up-rings
+    name: Liegestütz an Ringen
+    status: draft_placeholder
+    pattern: horizontal_push
+    straight_arm: none
+    direction: push
+    load_family: push_up
+    load_modifiers: [rings]
+    complaint_family: push_up_dip
+    measure: reps
+    requires: [rings]
+    og_ordinal: 4
+    sources: [A-31]
+  - slug: pseudo-planche-push-up
+    name: Pseudo-Planche-Liegestütz
+    status: draft_placeholder
+    pattern: horizontal_push
+    straight_arm: none
+    direction: push
+    load_family: pseudo_planche_push_up
+    complaint_family: planche_leans
+    measure: reps
+    requires: [floor]
+    og_ordinal: 7
+    sources: [A-44, A-31, P-01, P-03]
+    note: OG 7 gilt im Chart für die Ring-Variante (RTO, 40°); für den Boden gibt es keinen Wert. Die Stufe bleibt oberste Sprosse der Leiter (Heuristik).
+
+  # --- hollow-body (research 02 §4.3) ---
+  - slug: hollow-hold-tuck
+    name: Hollow Hold, gehockt
+    status: draft_placeholder
+    pattern: core_flexion
+    straight_arm: none
+    direction: none
+    load_family: hollow_body
+    complaint_family: none
+    measure: hold_seconds
+    hold_class: core
+    requires: [floor]
+    og_ordinal: 0
+    sources: [A-44]
+  - slug: hollow-hold
+    name: Hollow Hold
+    status: draft_placeholder
+    pattern: core_flexion
+    straight_arm: none
+    direction: none
+    load_family: hollow_body
+    complaint_family: none
+    measure: hold_seconds
+    hold_class: core
+    requires: [floor]
+    og_ordinal: 0
+    sources: [A-41, A-40]
+
+  # --- l-sit (research 02 §5.2) ---
+  - slug: l-sit-tuck
+    name: L-Sitz, gehockt
+    status: draft_placeholder
+    pattern: core_flexion
+    straight_arm: straight_arm_axial
+    direction: push
+    load_family: l_sit
+    complaint_family: none
+    measure: hold_seconds
+    hold_class: core
+    requires: [floor]
+    og_ordinal: 1
+    bw_fraction: 1.0
+    sources: [A-31, A-44]
+  - slug: l-sit-one-leg
+    name: L-Sitz, ein Bein gestreckt
+    status: draft_placeholder
+    pattern: core_flexion
+    straight_arm: straight_arm_axial
+    direction: push
+    load_family: l_sit
+    complaint_family: none
+    measure: hold_seconds
+    hold_class: core
+    requires: [floor]
+    og_ordinal: 2
+    bw_fraction: 1.0
+    sources: [A-31, A-36]
+  - slug: l-sit
+    name: L-Sitz
+    status: draft_placeholder
+    pattern: core_flexion
+    straight_arm: straight_arm_axial
+    direction: push
+    load_family: l_sit
+    complaint_family: none
+    measure: hold_seconds
+    hold_class: core
+    requires: [floor]
+    og_ordinal: 3
+    bw_fraction: 1.0
+    sources: [A-31]
+  - slug: straddle-l-sit
+    name: Gegrätschter L-Sitz
+    status: draft_placeholder
+    pattern: core_flexion
+    straight_arm: straight_arm_axial
+    direction: push
+    load_family: l_sit
+    complaint_family: none
+    measure: hold_seconds
+    hold_class: core
+    requires: [floor]
+    og_ordinal: 4
+    bw_fraction: 1.0
+    sources: [A-31]
+  - slug: l-sit-rings-rto
+    name: L-Sitz an Ringen, nach aussen gedreht
+    status: draft_placeholder
+    pattern: core_flexion
+    straight_arm: straight_arm_axial
+    direction: push
+    load_family: l_sit
+    load_modifiers: [rings]
+    complaint_family: none
+    measure: hold_seconds
+    hold_class: core
+    requires: [rings]
+    og_ordinal: 5
+    bw_fraction: 1.0
+    sources: [A-31, A-29]
+
+  # --- handstand (research 02 §5.1) ---
+  - slug: wall-handstand-hold
+    name: Handstand an der Wand
+    status: draft_placeholder
+    pattern: handbalance
+    straight_arm: straight_arm_axial
+    direction: push
+    load_family: handstand
+    complaint_family: handstand_hspu
+    measure: hold_seconds
+    hold_class: endurance
+    requires: [wall]
+    og_ordinal: 1
+    bw_fraction: 1.0
+    sources: [A-31, A-40]
+    note: OG 1–3 im Chart; untere Grenze.
+  - slug: handstand-chest-to-wall
+    name: Handstand, Bauch zur Wand
+    status: draft_placeholder
+    pattern: handbalance
+    straight_arm: straight_arm_axial
+    direction: push
+    load_family: handstand
+    complaint_family: handstand_hspu
+    measure: hold_seconds
+    hold_class: endurance
+    requires: [wall]
+    og_ordinal: 1
+    bw_fraction: 1.0
+    sources: [A-37, A-03]
+    note: OG 1–3 im Chart; untere Grenze wie der Wand-Handstand.
+  - slug: handstand-freestanding
+    name: Freier Handstand
+    status: draft_placeholder
+    pattern: handbalance
+    straight_arm: straight_arm_axial
+    direction: push
+    load_family: handstand
+    complaint_family: handstand_hspu
+    measure: hold_seconds
+    hold_class: balance
+    requires: [floor]
+    og_ordinal: 4
+    bw_fraction: 1.0
+    gtg_allowed: true
+    sources: [A-31, A-37, A-58]
+    note: OG 4–5 im Chart; untere Grenze.
+
+  # --- planche (research 02 §5.5) ---
+  - slug: planche-lean
+    name: Planche Lean
+    status: draft_placeholder
+    pattern: straight_arm_push
+    straight_arm: straight_arm
+    direction: push
+    load_family: planche_low
+    complaint_family: planche_leans
+    measure: hold_seconds
+    hold_class: endurance
+    requires: [floor]
+    og_ordinal: 0
+    torque_ratio: 0.59
+    sources: [A-40, A-35, P-01]
+    note: Kein OG-Level; unter dem Frog Stand (OG 3) eingeordnet. Das Moment hängt vom Vorlagewinkel ab und ist je Satz nicht bekannt; 0.59 ist die Lean bei 31° (PAR-C-10, «Lean 31° ≈ Tuck»), die steilste Lean vor der Tuck. So zählt die Lean nie schwerer als die Tuck. Dosiert als Konditionshalt (DOSE-04 nennt Leans, PAR-B-76).
+  - slug: planche-tuck
+    name: Tuck Planche
+    status: draft_placeholder
+    pattern: straight_arm_push
+    straight_arm: straight_arm
+    direction: push
+    load_family: planche_low
+    complaint_family: planche_leans
+    measure: hold_seconds
+    hold_class: skill_static
+    requires: [floor]
+    og_ordinal: 5
+    torque_ratio: 0.60
+    assistable: true
+    sources: [A-31, A-40, A-24]
+  - slug: planche-advanced-tuck
+    name: Advanced Tuck Planche
+    status: draft_placeholder
+    pattern: straight_arm_push
+    straight_arm: straight_arm
+    direction: push
+    load_family: planche_low
+    complaint_family: planche_leans
+    measure: hold_seconds
+    hold_class: skill_static
+    requires: [floor]
+    og_ordinal: 6
+    torque_ratio: 0.75
+    assistable: true
+    sources: [A-31, A-40]
+  - slug: planche-straddle
+    name: Straddle Planche
+    status: draft_placeholder
+    pattern: straight_arm_push
+    straight_arm: straight_arm
+    direction: push
+    load_family: planche_high
+    complaint_family: planche_leans
+    measure: hold_seconds
+    hold_class: skill_static
+    requires: [floor]
+    og_ordinal: 8
+    torque_ratio: 0.91
+    assistable: true
+    sources: [A-31, A-29, A-33]
+    note: Momentverhältnis bei 90° Grätsche (PAR-C-07).
+  - slug: planche-half-lay
+    name: Half-Lay Planche
+    status: draft_placeholder
+    pattern: straight_arm_push
+    straight_arm: straight_arm
+    direction: push
+    load_family: planche_high
+    complaint_family: planche_leans
+    measure: hold_seconds
+    hold_class: skill_static
+    requires: [floor]
+    og_ordinal: 9
+    torque_ratio: 0.93
+    assistable: true
+    sources: [A-31]
+  - slug: planche
+    name: Full Planche
+    status: draft_placeholder
+    pattern: straight_arm_push
+    straight_arm: straight_arm
+    direction: push
+    load_family: planche_high
+    complaint_family: planche_leans
+    measure: hold_seconds
+    hold_class: skill_static
+    requires: [floor]
+    og_ordinal: 11
+    torque_ratio: 1.0
+    assistable: true
+    sources: [A-31, A-29, A-40]
+
+  # --- front-lever (research 02 §5.3) ---
+  - slug: front-lever-tuck
+    name: Tuck Front Lever
+    status: draft_placeholder
+    pattern: straight_arm_pull
+    straight_arm: straight_arm
+    direction: pull
+    load_family: front_lever
+    complaint_family: front_lever
+    measure: hold_seconds
+    hold_class: skill_static
+    requires: [pull_up_bar]
+    og_ordinal: 4
+    torque_ratio: 0.60
+    assistable: true
+    sources: [A-31, A-41]
+  - slug: front-lever-advanced-tuck
+    name: Advanced Tuck Front Lever
+    status: draft_placeholder
+    pattern: straight_arm_pull
+    straight_arm: straight_arm
+    direction: pull
+    load_family: front_lever
+    complaint_family: front_lever
+    measure: hold_seconds
+    hold_class: skill_static
+    requires: [pull_up_bar]
+    og_ordinal: 5
+    torque_ratio: 0.75
+    assistable: true
+    sources: [A-31, A-41]
+  - slug: front-lever-straddle
+    name: Straddle Front Lever
+    status: draft_placeholder
+    pattern: straight_arm_pull
+    straight_arm: straight_arm
+    direction: pull
+    load_family: front_lever
+    complaint_family: front_lever
+    measure: hold_seconds
+    hold_class: skill_static
+    requires: [pull_up_bar]
+    og_ordinal: 6
+    torque_ratio: 0.91
+    assistable: true
+    sources: [A-31, A-33]
+    note: Momentverhältnis bei 90° Grätsche (PAR-C-07).
+  - slug: front-lever-one-leg
+    name: One-Leg Front Lever
+    status: draft_placeholder
+    pattern: straight_arm_pull
+    straight_arm: straight_arm
+    direction: pull
+    load_family: front_lever
+    complaint_family: front_lever
+    measure: hold_seconds
+    hold_class: skill_static
+    requires: [pull_up_bar]
+    og_ordinal: 7
+    torque_ratio: 0.88
+    assistable: true
+    sources: [A-31]
+    note: Momentverhältnis 0.88 liegt unter dem der Straddle-Stufe; das OG-Level ist nicht linear im Moment (PAR-C-17, KB-05).
+  - slug: front-lever
+    name: Full Front Lever
+    status: draft_placeholder
+    pattern: straight_arm_pull
+    straight_arm: straight_arm
+    direction: pull
+    load_family: front_lever
+    complaint_family: front_lever
+    measure: hold_seconds
+    hold_class: skill_static
+    requires: [pull_up_bar]
+    og_ordinal: 8
+    torque_ratio: 1.0
+    assistable: true
+    sources: [A-31, A-29, A-33]
+
+  # --- muscle-up, bar (research 02 §6.1) ---
+  - slug: muscle-up-negative
+    name: Negativer Muscle-up
+    status: draft_placeholder
+    pattern: vertical_pull
+    straight_arm: none
+    direction: pull
+    load_family: muscle_up_bar
+    complaint_family: muscle_up
+    measure: reps
+    requires: [pull_up_bar]
+    og_ordinal: 3
+    bw_fraction: 1.0
+    eccentric: true
+    sources: [A-31]
+  - slug: muscle-up-bar-kipping
+    name: Muscle-up an der Stange mit Schwung
+    status: draft_placeholder
+    pattern: vertical_pull
+    straight_arm: none
+    direction: pull
+    load_family: muscle_up_bar
+    complaint_family: muscle_up
+    measure: reps
+    requires: [pull_up_bar]
+    og_ordinal: 4
+    bw_fraction: 1.0
+    assistable: true
+    sources: [A-31, A-13]
+  - slug: muscle-up-bar-strict
+    name: Strikter Muscle-up an der Stange
+    status: draft_placeholder
+    pattern: vertical_pull
+    straight_arm: none
+    direction: pull
+    load_family: muscle_up_bar
+    complaint_family: muscle_up
+    measure: reps
+    requires: [pull_up_bar]
+    og_ordinal: 7
+    bw_fraction: 1.0
+    sources: [A-31, A-10]
+  - slug: muscle-up-l-sit
+    name: Muscle-up im L-Sitz
+    status: draft_placeholder
+    pattern: vertical_pull
+    straight_arm: none
+    direction: pull
+    load_family: muscle_up_bar
+    complaint_family: muscle_up
+    measure: reps
+    requires: [pull_up_bar]
+    og_ordinal: 8
+    bw_fraction: 1.0
+    sources: [A-31]
+
+  # --- wrist-conditioning (research 02 §4.1) ---
+  - slug: plank-hold
+    name: Unterarmstütz mit gestreckten Armen (Plank)
+    status: draft_placeholder
+    pattern: horizontal_push
+    straight_arm: straight_arm_axial
+    direction: push
+    load_family: push_up
+    complaint_family: push_up_dip
+    measure: hold_seconds
+    hold_class: endurance
+    requires: [floor]
+    og_ordinal: 2
+    bw_fraction: 0.69
+    sources: [A-35, A-31]
+    note: Tabelle 2 hat keine Zeile für den Plank; er wird als statischer Liegestütz oben geführt (Lastanteil 0.69, PAR-C-18, Heuristik). OG 2 = Plank 25 s im Chart.
+
+  # --- prehab (research 05 §10; coaching practice, PAR-D-38) ---
+  - slug: wrist-prep-routine
+    name: Handgelenk-Vorbereitung
+    status: draft_placeholder
+    pattern: prehab
+    straight_arm: none
+    direction: none
+    load_family: prehab_light
+    complaint_family: none
+    measure: reps
+    requires: [floor]
+    og_ordinal: 0
+    sources: [A-39, A-44]
+  - slug: quadruped-wrist-rock
+    name: Handgelenk-Wippen im Vierfüsslerstand
+    status: draft_placeholder
+    pattern: prehab
+    straight_arm: none
+    direction: none
+    load_family: prehab_light
+    complaint_family: none
+    measure: reps
+    requires: [floor]
+    og_ordinal: 0
+    sources: [A-39]
+  - slug: push-up-plus
+    name: Push-up Plus
+    status: draft_placeholder
+    pattern: prehab
+    straight_arm: none
+    direction: push
+    load_family: push_up
+    complaint_family: push_up_dip
+    measure: reps
+    requires: [floor]
+    og_ordinal: 0
+    bw_fraction: 0.69
+    sources: [A-55]
+    note: Lastanteil 0.69, die statische obere Position (PAR-C-18).
+  - slug: band-external-rotation
+    name: Aussenrotation mit Band
+    status: draft_placeholder
+    pattern: prehab
+    straight_arm: none
+    direction: none
+    load_family: prehab_light
+    complaint_family: none
+    measure: reps
+    requires: [resistance_bands]
+    og_ordinal: 0
+    sources: [D-75]

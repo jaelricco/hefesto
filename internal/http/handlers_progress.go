@@ -21,6 +21,7 @@ func (h *handlers) completeSession(w http.ResponseWriter, r *http.Request) error
 		return err
 	}
 	out := completionFrom(c)
+	out.PlanChanges = h.planChangesFor(r.Context(), principalFrom(r.Context()).UserID, id)
 	WriteJSON(w, r, http.StatusOK, out)
 	return nil
 }

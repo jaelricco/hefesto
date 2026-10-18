@@ -94,13 +94,14 @@ func count(t *testing.T, pool *pgxpool.Pool, sql string, args ...any) int {
 
 func TestSeedImportsTheRepositoryContent(t *testing.T) {
 	pool := pgtest.New(t)
-	res := seed(t, pool, contentDir(t))
+	dir := contentDir(t)
+	res := seed(t, pool, dir)
 	if res.Unchanged {
 		t.Fatal("first seed reported unchanged")
 	}
 
 	for table, want := range map[string]int{
-		"families": 7, "exercises": 7, "skills": 3, "skill_levels": 4,
+		"families": 7, "exercises": len(load(t, dir).Exercises), "skills": 3, "skill_levels": 4,
 		"skill_edges": 2, "skill_injury_risks": 1, "injury_prehab_exercises": 1,
 		"content_versions": 1,
 	} {
@@ -172,7 +173,11 @@ func TestSeedRetiresRemovedContent(t *testing.T) {
 	dir := contentDir(t)
 	seed(t, pool, dir)
 
-	// Drop the handstand skill and its only exercise.
+	// Drop the handstand skill and its only exercise. The planner plans the
+	// exercise too; without its knowledge base the tree may drop it.
+	if err := os.RemoveAll(filepath.Join(dir, "training")); err != nil {
+		t.Fatal(err)
+	}
 	if err := os.Remove(filepath.Join(dir, "skills/handstand.yaml")); err != nil {
 		t.Fatal(err)
 	}

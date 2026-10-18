@@ -50,6 +50,16 @@ targets:
         CFBundleDisplayName: Hefesto
         # English and German (brief §10); strings are in Localizable.xcstrings.
         CFBundleLocalizations: [en, de]
+        # One dark, warm world (ADR 0020); the launch screen follows it.
+        UIUserInterfaceStyle: Dark
+        # Barlow and Barlow Condensed (Hefesto/Fonts, SIL Open Font License).
+        UIAppFonts:
+          - Barlow-Regular.ttf
+          - Barlow-Medium.ttf
+          - Barlow-SemiBold.ttf
+          - BarlowCondensed-Medium.ttf
+          - BarlowCondensed-SemiBold.ttf
+          - BarlowCondensed-Bold.ttf
         UILaunchScreen: {}
         UIApplicationSceneManifest:
           UIApplicationSupportsMultipleScenes: false
@@ -78,8 +88,8 @@ targets:
       testTargets: [HefestoUITests]
       gatherCoverageData: false
 
-  # Apple's accessibility audit over every main screen, on the app's offline
-  # fixture (Hefesto/UITestFixture.swift, Debug only).
+  # Apple's accessibility audit over every demo screen (Hefesto/DemoMode.swift,
+  # Debug only), so it needs no server.
   HefestoUITests:
     type: bundle.ui-testing
     platform: iOS
@@ -91,3 +101,17 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: fit.hefesto.ios.uitests
         GENERATE_INFOPLIST_FILE: YES
+
+schemes:
+  # The app on seeded demo data, offline and signed in, in German: for
+  # looking at the design without a server (Hefesto/DemoMode.swift).
+  Hefesto Demo:
+    build:
+      targets:
+        Hefesto: all
+    run:
+      config: Debug
+      commandLineArguments:
+        "-HefestoDemo YES": true
+        "-AppleLanguages (de)": true
+        "-AppleLocale de_CH": true

@@ -1,0 +1,31 @@
+onboarding: complete
+week 2026-09-28  ruleset 0.1.0  stopped=false
+  plan: [WEEK-01] Die App verteilt 2 Einheiten so, dass zwischen harten Einheiten möglichst viel Abstand liegt.
+session 1 Mon 28.09. full ~14 min
+  warmup (7 min)
+    Handgelenk-Vorbereitung                2 × 15       res 2  rest  90s  prehab p99 support  [warm-up]  {DOSE-10}
+  strength
+    Negativer Dip                          1 × 3 à 3 s  res 0  rest 180s  eccentric p1 feeder  {GOAL-02 SEL-09 DOSE-07 LOAD-03 LOAD-10}
+    Dead Hang                              1 × 10 s     res 2  rest 120s  conditioning p1 feeder  [calibration]  {GOAL-02 SEL-07 DOSE-04 LOAD-04 LOAD-10 LOAD-03 LOAD-10}
+    Negativer Klimmzug                     1 × 3 à 3 s  res 0  rest 180s  eccentric p1 feeder  {GOAL-02 SEL-09 DOSE-07 LOAD-04b LOAD-10}
+    Stütz am Barren                        1 × 4 s      res 2  rest 120s  conditioning p1 feeder  [calibration]  {GOAL-02 SEL-07 SEL-08 DOSE-04 LOAD-04b LOAD-10 LOAD-03 LOAD-10}
+    Rudern, fast aufrecht                  1 × 5        res 2  rest 120s  accessory p1 support  [calibration]  {SEL-09 SEL-07 DOSE-12 LOAD-04b LOAD-10}
+  end
+    Handgelenk-Wippen im Vierfüsslerstand  2 × 15       res 2  rest  90s  prehab p99 support  {DOSE-10}
+session 2 Thu 01.10. full ~14 min
+  warmup (7 min)
+    Handgelenk-Vorbereitung                2 × 15       res 2  rest  90s  prehab p99 support  [warm-up]  {DOSE-10}
+  strength
+    Negativer Dip                          1 × 3 à 3 s  res 0  rest 180s  eccentric p1 feeder  {GOAL-02 SEL-09 DOSE-07 LOAD-04b LOAD-10}
+    Dead Hang                              1 × 10 s     res 2  rest 120s  conditioning p1 feeder  [calibration]  {GOAL-02 SEL-07 DOSE-04 LOAD-04 LOAD-10}
+    Negativer Klimmzug                     1 × 3 à 3 s  res 0  rest 180s  eccentric p1 feeder  {GOAL-02 SEL-09 DOSE-07 LOAD-04b LOAD-10}
+    Stütz am Barren                        1 × 4 s      res 2  rest 120s  conditioning p1 feeder  [calibration]  {GOAL-02 SEL-07 SEL-08 DOSE-04 LOAD-04b LOAD-10}
+    Rudern, fast aufrecht                  1 × 5        res 2  rest 120s  accessory p1 support  [calibration]  {SEL-09 SEL-07 DOSE-12 LOAD-04b LOAD-10}
+  end
+    Handgelenk-Wippen im Vierfüsslerstand  2 × 15       res 2  rest  90s  prehab p99 support  {DOSE-10}
+rest: Tue Wed Fri Sat Sun
+excluded dip-rings: [SEL-02] Dip an Ringen braucht Ausrüstung, die du nicht angegeben hast.
+excluded dip-rings-l: [SEL-02] Dip an Ringen im L-Sitz braucht Ausrüstung, die du nicht angegeben hast.
+excluded support-hold-rings: [SEL-02] Stütz an Ringen braucht Ausrüstung, die du nicht angegeben hast.
+excluded support-hold-rings-rto: [SEL-02] Stütz an Ringen, nach aussen gedreht braucht Ausrüstung, die du nicht angegeben hast.
+hint: [GOAL-04] Muscle-up: Als Faustregel aus dem Coaching gelten 5 zügige Klimmzüge und 5 saubere Dips; das ist notwendig, aber nicht hinreichend. Das ist ein Hinweis, keine Sperre.

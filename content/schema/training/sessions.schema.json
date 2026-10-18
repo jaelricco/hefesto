@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hefesto.fit/schema/training/sessions.schema.json",
+  "title": "Session templates (content/training/sessions.yaml)",
+  "description": "Templates by minutes and default day patterns (spec §5.4, §5.5).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "templates",
+    "day_patterns"
+  ],
+  "properties": {
+    "templates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "minutes",
+          "warmup_min",
+          "skill_min",
+          "volume_blocks",
+          "antagonist_pairs",
+          "accessories",
+          "params"
+        ],
+        "properties": {
+          "minutes": {
+            "type": "integer",
+            "enum": [
+              20,
+              30,
+              45,
+              60,
+              75,
+              90
+            ]
+          },
+          "warmup_min": {
+            "type": "number",
+            "minimum": 0
+          },
+          "skill_min": {
+            "type": "number",
+            "minimum": 0
+          },
+          "volume_blocks": {
+            "type": "boolean"
+          },
+          "antagonist_pairs": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "accessories": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "params": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/param_id"
+            },
+            "minItems": 1
+          }
+        }
+      },
+      "minItems": 6
+    },
+    "day_patterns": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[1-7]$": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/weekday"
+          },
+          "uniqueItems": true
+        }
+      }
+    }
+  }
+}

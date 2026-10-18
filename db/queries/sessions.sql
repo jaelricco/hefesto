@@ -125,11 +125,11 @@ SELECT * FROM set_entries WHERE id = @id AND user_id = @user_id;
 -- name: UpsertSetEntry :one
 INSERT INTO set_entries AS s (
     id, user_id, session_id, block_id, order_index, round_index, kind, is_planned,
-    rest_after_planned_s, rest_after_actual_s, rpe, rir, completed_at, notes,
+    rest_after_planned_s, rest_after_actual_s, rpe, rir, sir_s, completed_at, notes,
     client_id, updated_at
 ) VALUES (
     @id, @user_id, @session_id, @block_id, @order_index, @round_index, @kind, @is_planned,
-    @rest_after_planned_s, @rest_after_actual_s, @rpe, @rir, @completed_at, @notes,
+    @rest_after_planned_s, @rest_after_actual_s, @rpe, @rir, @sir_s, @completed_at, @notes,
     @client_id, @updated_at
 )
 ON CONFLICT (id) DO UPDATE SET
@@ -137,7 +137,7 @@ ON CONFLICT (id) DO UPDATE SET
     round_index = EXCLUDED.round_index, kind = EXCLUDED.kind, is_planned = EXCLUDED.is_planned,
     rest_after_planned_s = EXCLUDED.rest_after_planned_s,
     rest_after_actual_s = EXCLUDED.rest_after_actual_s,
-    rpe = EXCLUDED.rpe, rir = EXCLUDED.rir, completed_at = EXCLUDED.completed_at,
+    rpe = EXCLUDED.rpe, rir = EXCLUDED.rir, sir_s = EXCLUDED.sir_s, completed_at = EXCLUDED.completed_at,
     notes = EXCLUDED.notes, client_id = EXCLUDED.client_id, updated_at = EXCLUDED.updated_at
 WHERE s.user_id = EXCLUDED.user_id AND s.session_id = EXCLUDED.session_id AND s.deleted_at IS NULL
 RETURNING *, (xmax = 0) AS inserted;

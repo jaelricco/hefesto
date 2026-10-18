@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hefesto.fit/schema/training/onboarding.schema.json",
+  "title": "Onboarding classes (content/training/onboarding.yaml)",
+  "description": "Answer classes and the exercises they estimate (onboarding.md §3.6).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "questions",
+    "stages"
+  ],
+  "properties": {
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "exercise",
+          "classes"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "pattern": "^[a-z_]+$"
+          },
+          "exercise": {
+            "$ref": "common.schema.json#/$defs/slug"
+          },
+          "classes": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/answer_class"
+            },
+            "minItems": 1
+          }
+        }
+      }
+    },
+    "stages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "skill",
+          "classes"
+        ],
+        "properties": {
+          "skill": {
+            "$ref": "common.schema.json#/$defs/slug"
+          },
+          "classes": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/answer_class"
+            },
+            "minItems": 1
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hefesto.fit/schema/training/exercises.schema.json",
+  "title": "Planner exercises (content/training/exercises.yaml)",
+  "description": "Exercises with the metadata the planner needs (spec §2.2).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "exercises"
+  ],
+  "properties": {
+    "exercises": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "slug",
+          "name",
+          "status",
+          "pattern",
+          "straight_arm",
+          "direction",
+          "load_family",
+          "complaint_family",
+          "measure",
+          "requires",
+          "og_ordinal"
+        ],
+        "properties": {
+          "slug": {
+            "$ref": "common.schema.json#/$defs/slug"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "$ref": "common.schema.json#/$defs/status"
+          },
+          "pattern": {
+            "type": "string",
+            "enum": [
+              "vertical_pull",
+              "horizontal_pull",
+              "vertical_push",
+              "horizontal_push",
+              "straight_arm_push",
+              "straight_arm_pull",
+              "handbalance",
+              "core_flexion",
+              "core_extension",
+              "legs",
+              "grip_hang",
+              "mobility",
+              "prehab"
+            ]
+          },
+          "straight_arm": {
+            "type": "string",
+            "enum": [
+              "none",
+              "straight_arm",
+              "straight_arm_axial"
+            ]
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "push",
+              "pull",
+              "none"
+            ]
+          },
+          "load_family": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "load_modifiers": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "neutral_grip",
+                "rings",
+                "wide_or_supinated_grip"
+              ]
+            },
+            "uniqueItems": true
+          },
+          "complaint_family": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "supinated_straight_arm": {
+            "type": "boolean"
+          },
+          "measure": {
+            "$ref": "common.schema.json#/$defs/measure"
+          },
+          "hold_class": {
+            "type": "string",
+            "enum": [
+              "skill_static",
+              "balance",
+              "core",
+              "endurance"
+            ]
+          },
+          "requires": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/equipment"
+            },
+            "uniqueItems": true
+          },
+          "og_ordinal": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 20
+          },
+          "torque_ratio": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 1
+          },
+          "bw_fraction": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 1
+          },
+          "assistable": {
+            "type": "boolean"
+          },
+          "loadable": {
+            "type": "boolean"
+          },
+          "gtg_allowed": {
+            "type": "boolean"
+          },
+          "eccentric": {
+            "type": "boolean"
+          },
+          "restriction_tags": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/id"
+            },
+            "uniqueItems": true
+          },
+          "sources": {
+            "$ref": "common.schema.json#/$defs/sources"
+          },
+          "note": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "minItems": 1
+    }
+  }
+}

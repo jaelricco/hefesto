@@ -56,6 +56,8 @@ func TestValidateSet(t *testing.T) {
 		{"too many elements", SetEntry{Elements: make([]Element, MaxElementsPerSet+1)}, "/elements"},
 		{"planned but completed", SetEntry{IsPlanned: true, CompletedAt: &now, Elements: []Element{element(MeasureNone)}}, "/completed_at"},
 		{"rpe not a half step", SetEntry{RPE: ptr(7.3), Elements: []Element{element(MeasureNone)}}, "/rpe"},
+		{"sir over a minute", SetEntry{SIR: ptr(61), Elements: []Element{element(MeasureHoldSeconds)}}, "/sir_s"},
+		{"negative sir", SetEntry{SIR: ptr(-1), Elements: []Element{element(MeasureHoldSeconds)}}, "/sir_s"},
 		{"value for another measure", SetEntry{Elements: []Element{func() Element { e := element(MeasureReps); e.HoldSeconds = ptr(5.0); return e }()}}, "/elements/0/hold_seconds"},
 		{"bad tempo", SetEntry{Elements: []Element{func() Element { e := element(MeasureReps); e.Tempo = ptr("3-0-X-1"); return e }()}}, "/elements/0/tempo"},
 		{"negative load", SetEntry{Elements: []Element{func() Element { e := element(MeasureReps); e.LoadKg = -10; return e }()}}, "/elements/0/load_kg"},

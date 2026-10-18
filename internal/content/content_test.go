@@ -252,6 +252,18 @@ default_measure: reps
 			want:     `exercise "dip" is not used`,
 		},
 		{
+			name:     "planner exercise missing from the catalogue",
+			files:    with(map[string]string{"training/exercises.yaml": "exercises:\n  - { slug: dip, measure: reps }\n"}),
+			severity: content.SeverityError,
+			want:     `the planner's exercise "dip" is not in the catalogue`,
+		},
+		{
+			name:     "planner exercise measured differently",
+			files:    with(map[string]string{"training/exercises.yaml": "exercises:\n  - { slug: pull-up, measure: hold_seconds }\n"}),
+			severity: content.SeverityError,
+			want:     `exercise "pull-up" is measured in reps, the planner plans it in hold_seconds`,
+		},
+		{
 			name:     "no primary test",
 			files:    with(map[string]string{"skills/pull-up.yaml": strings.Replace(base["skills/pull-up.yaml"], "role: primary_test", "role: progression", 1)}),
 			severity: content.SeverityError,
@@ -326,6 +338,19 @@ default_measure: reps
 			}
 			t.Fatalf("no %s containing %q; got:\n%v", tc.severity, tc.want, issues)
 		})
+	}
+}
+
+// An exercise only the planner plans is used, not an orphan.
+func TestPlannerExercisesAreUsed(t *testing.T) {
+	_, issues := lint(t, with(map[string]string{
+		"exercises/dip.yaml":      "slug: dip\nname: Dip\nfamily: push\ndefault_measure: reps\n",
+		"training/exercises.yaml": "exercises:\n  - { slug: dip, measure: reps }\n",
+	}))
+	for _, i := range issues {
+		if strings.Contains(i.Msg, `"dip"`) {
+			t.Errorf("unexpected issue: %v", i)
+		}
 	}
 }
 

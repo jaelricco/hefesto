@@ -33,7 +33,7 @@ IGNORED = {
 
 # Files that are never shown to athletes.
 EXCLUDED_FILES = {
-    "UITestFixture.swift": "Debug-only data for the UI tests",
+    "DemoMode.swift": "Debug-only fixture data for the demo mode and the UI tests",
 }
 
 SPECIFIER = re.compile(r"%(?:\d+\$)?(?:lld|ld|d|lf|f|@|u|llu)")
@@ -160,14 +160,16 @@ def main() -> int:
         for u in units:
             if u.get("state") != "translated" or not u.get("value", "").strip():
                 errors.append(f"{CATALOG.name}: {key!r} German is not translated")
-            elif placeholders(u["value"]) != placeholders(key) and "variations" not in de:
+            elif placeholders(u["value"]) != placeholders(key) and "variations" not in de \
+                    and "substitutions" not in de:
                 errors.append(f"{CATALOG.name}: {key!r} German {u['value']!r} has different placeholders")
         # "%lld sets" must not read "1 sets": a count before a word needs
         # plural forms, unless the count can never be one (listed below).
         # Unit abbreviations ("%lld m") and "of"/"to" do not inflect.
         if re.search(r"%(?:\d+\$)?lld[ -][a-z]{3,}", key) and key not in SINGULAR_NEVER:
             for lang in ("en", "de"):
-                if "variations" not in locs.get(lang, {}):
+                loc = locs.get(lang, {})
+                if "variations" not in loc and "substitutions" not in loc:
                     errors.append(f"{CATALOG.name}: {key!r} needs plural variations in {lang!r}")
 
     for e in errors:

@@ -39,3 +39,7 @@ ios/Hefesto/Info.plist
 ios/Hefesto/Hefesto.entitlements
 ios/.derived/
 ios/build.log
+# scripts/ios-screenshots.sh
+ios/.derived-screenshots/
+ios/screenshots/
+ios/screenshots-build.log

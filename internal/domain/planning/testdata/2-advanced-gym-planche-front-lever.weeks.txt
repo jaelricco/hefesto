@@ -1,0 +1,27 @@
+week 1: 4 sessions, 23 sets (7 straight-arm)
+  front-lever=front-lever-tuck+band hollow-body=hollow-hold planche=planche-lean pull-up=pull-up wrist-conditioning=plank-hold
+  changes: calibration_due×2 probe_offered×4
+week 2: 4 sessions, 27 sets (9 straight-arm)
+  front-lever=front-lever-tuck+band hollow-body=hollow-hold planche=planche-advanced-tuck,planche-tuck pull-up=pull-up wrist-conditioning=plank-hold
+week 3: 4 sessions, 27 sets (9 straight-arm)
+  front-lever=front-lever-tuck,front-lever-tuck+band hollow-body=hollow-hold planche=planche-advanced-tuck pull-up=pull-up wrist-conditioning=plank-hold
+week 4: 4 sessions, 25 sets (7 straight-arm)
+  front-lever=front-lever-advanced-tuck,front-lever-tuck hollow-body=hollow-hold planche=planche-advanced-tuck pull-up=pull-up wrist-conditioning=plank-hold
+  changes: calibration_due
+week 5: 4 sessions, 19 sets (8 straight-arm)
+  front-lever=front-lever-advanced-tuck planche=planche-advanced-tuck pull-up=pull-up wrist-conditioning=plank-hold
+week 6: 3 sessions, 16 sets (6 straight-arm), deload planned
+  front-lever=front-lever-advanced-tuck planche=planche-advanced-tuck pull-up=pull-up wrist-conditioning=plank-hold
+week 7: 3 sessions, 18 sets (8 straight-arm)
+  front-lever=front-lever-advanced-tuck planche=planche-advanced-tuck pull-up=pull-up wrist-conditioning=plank-hold
+week 8: 3 sessions, 19 sets (9 straight-arm)
+  front-lever=front-lever-advanced-tuck planche=planche-advanced-tuck pull-up=pull-up wrist-conditioning=plank-hold
+week 9: 4 sessions, 20 sets (8 straight-arm)
+  front-lever=front-lever-advanced-tuck planche=planche-advanced-tuck pull-up=pull-up wrist-conditioning=plank-hold
+  changes: deload_scheduled×2
+week 10: 3 sessions, 16 sets (6 straight-arm), deload stagnation
+  front-lever=front-lever-advanced-tuck planche=planche-advanced-tuck pull-up=pull-up wrist-conditioning=plank-hold
+week 11: 3 sessions, 19 sets (9 straight-arm)
+  front-lever=front-lever-advanced-tuck planche=planche-advanced-tuck pull-up=pull-up wrist-conditioning=plank-hold
+week 12: 3 sessions, 20 sets (10 straight-arm)
+  front-lever=front-lever-advanced-tuck planche=planche-advanced-tuck pull-up=pull-up wrist-conditioning=plank-hold

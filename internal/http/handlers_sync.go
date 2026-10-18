@@ -3,12 +3,10 @@ package http
 import (
 	"bytes"
 	"context"
-	"crypto/sha256"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
-	"log/slog"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -62,60 +60,26 @@ func (h *handlers) pushChanges(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return errBadRequest{fmt.Sprintf("body larger than %d bytes or unreadable", maxSyncBodyBytes)}
 	}
-	fp := sha256.Sum256(append([]byte(r.Method+" "+r.URL.Path+"\n"), raw...))
-
-	userID := principalFrom(r.Context()).UserID
-	stored, err := h.Store.ClaimIdempotencyKey(r.Context(), userID, key, fp[:])
-	if err != nil {
-		return err
-	}
-	if stored != nil {
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-		w.Header().Set("Idempotent-Replayed", "true")
-		w.WriteHeader(stored.Status)
-		_, _ = w.Write(stored.Body)
-		return nil
-	}
-
-	finished := false
-	defer func() {
-		if !finished {
-			// Detached from the request: a cancelled request still frees its key.
-			ctx, cancel := context.WithTimeout(context.WithoutCancel(r.Context()), 5*time.Second)
-			defer cancel()
-			if err := h.Store.ReleaseIdempotencyKey(ctx, userID, key); err != nil {
-				slog.ErrorContext(ctx, "releasing an idempotency key failed", "error", err,
-					"request_id", RequestIDFrom(r.Context()))
-			}
-		}
-	}()
-
-	ops, err := parseSyncOps(raw)
-	if err != nil {
-		return err // nothing applied; the key is released and the request may be fixed
-	}
-	out := syncPushOut{Results: make([]syncOpResultOut, len(ops))}
-	for i, op := range ops {
-		res, err := h.applySyncOp(r, op)
+	return h.withIdempotencyKey(w, r, key, raw, func() (int, []byte, error) {
+		ops, err := parseSyncOps(raw)
 		if err != nil {
-			return err
+			return 0, nil, err // nothing applied; the key is released and the request may be fixed
 		}
-		res.Index = i
-		out.Results[i] = res
-	}
-
-	body, err := json.Marshal(out)
-	if err != nil {
-		return fmt.Errorf("encoding sync results: %w", err)
-	}
-	if err := h.Store.FinishIdempotencyKey(r.Context(), userID, key, store.StoredResponse{Status: http.StatusOK, Body: body}); err != nil {
-		return err
-	}
-	finished = true
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write(body)
-	return nil
+		out := syncPushOut{Results: make([]syncOpResultOut, len(ops))}
+		for i, op := range ops {
+			res, err := h.applySyncOp(r, op)
+			if err != nil {
+				return 0, nil, err
+			}
+			res.Index = i
+			out.Results[i] = res
+		}
+		body, err := json.Marshal(out)
+		if err != nil {
+			return 0, nil, fmt.Errorf("encoding sync results: %w", err)
+		}
+		return http.StatusOK, body, nil
+	})
 }
 
 // parseSyncOps checks the envelope. Each op's own validity is judged when it
@@ -269,7 +233,9 @@ func (h *handlers) runSyncOp(r *http.Request, op syncOpIn) error {
 		if err != nil {
 			return err
 		}
-		return completed{completionFrom(c)}
+		out := completionFrom(c)
+		out.PlanChanges = h.planChangesFor(ctx, principalFrom(ctx).UserID, op.ID)
+		return completed{out}
 	case "session.delete":
 		return h.Store.DeleteSession(ctx, writer(r, nil), op.ID)
 	case "block.put":

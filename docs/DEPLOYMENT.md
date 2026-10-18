@@ -155,7 +155,7 @@ its own ADR rather than an agent silently added to the box.
 ## The iOS app on TestFlight
 
 `.github/workflows/testflight.yml` archives the app and uploads it to App
-Store Connect (ADR 0012). It runs on a GitHub-hosted Mac, never on the
+Store Connect (ADR 0022). It runs on a GitHub-hosted Mac, never on the
 self-hosted runner, because signing writes certificates and provisioning
 profiles.
 
