@@ -28,7 +28,7 @@ jobs:
     runs-on: self-hosted
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           # Keep ios/.derived-screenshots between runs (git-ignored).
           clean: false
@@ -42,7 +42,7 @@ jobs:
         # script. Earlier runs lost the runner 10 minutes into the build.
         run: caffeinate -i nice -n 10 scripts/ios-screenshots.sh ios/screenshots
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: ios-screenshots
           path: ios/screenshots/*.png
