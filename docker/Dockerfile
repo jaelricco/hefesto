@@ -28,7 +28,7 @@ RUN CGO_ENABLED=0 go build -trimpath -o /out/seed        ./cmd/seed
 RUN CGO_ENABLED=0 go build -trimpath -o /out/contentlint ./cmd/contentlint
 
 # --- runtime -----------------------------------------------------------------
-FROM alpine:3.20
+FROM alpine:3.24
 
 ARG VERSION=dev
 ARG COMMIT=unknown
