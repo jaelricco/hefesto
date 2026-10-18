@@ -16,6 +16,38 @@ git tag v0.2.0  ──▶  GitHub Actions ──▶  ghcr.io/jaelricco/hefesto:v
                                             └─ record .deployed-tag
 ```
 
+## First deploy, in order
+
+Production has never been deployed. Start to finish it takes about an hour,
+most of it waiting for DNS. Each step is detailed below.
+
+1. **Server:** `make server-bootstrap host=<ip>`, then
+   `git config hefesto.prodhost <ip>` so the `make prod-*` targets find it.
+2. **DNS:** the four records in step 2. Start this early; it propagates while
+   you do the rest.
+3. **Object storage:** in Hetzner Object Storage, create the buckets
+   `hefesto-media`, `hefesto-backups`, `hefesto-pitr` and
+   `hefesto-media-staging`, all private. Then create credentials: one for
+   production media, one for backups (the dump and pgBackRest) and one for
+   staging media.
+4. **Env files:** fill in `.env.prod` and `.env.staging` from their templates.
+   Copy them to `/srv/hefesto/` and `chmod 600` both (steps 3 and 3b). Put
+   `HEFESTO_PITR_CIPHER_PASS` in your password manager too.
+5. **`make preflight`:** run it until it ends "Ready for the first deploy"
+   (step 3c).
+6. **GitHub:** add the deploy secrets (step 4). Optionally, add a
+   `production` environment that needs your approval (step 5).
+7. **Deploy:** `make release version=v0.8.0`, then `make deploy-watch`.
+   `curl https://api.hefesto.fit/healthz` should answer `"status":"ok"`.
+8. **Staging:** set the repository variable `STAGING_DEPLOY` to `true`, then
+   `gh workflow run deploy-staging.yml -f ref=main`.
+9. **Backups:** within a few minutes, `make prod-logs` shows the API.
+   `./scripts/compose.sh logs backup pitr` on the server shows
+   `uploaded hefesto-…` and `full backup done`. Then rehearse one restore:
+   `./scripts/restore.sh`, look at the counts, and drop the scratch database.
+10. **TestFlight:** set up App Store Connect and its four secrets (below).
+    Run the `testflight` workflow, which builds Staging for internal testers.
+
 ## One-time setup
 
 ### 1. The server
@@ -51,13 +83,18 @@ chmod 600 /srv/hefesto/.env.prod
 chown deploy:deploy /srv/hefesto/.env.prod
 ```
 
-Generate each secret with `openssl rand -base64 48`. This file is the only
-place production secrets exist. It is not in the repository, not in CI, and not
-in any backup that leaves the host.
+Generate each secret with `openssl rand -base64 48`, except
+`POSTGRES_PASSWORD`. Generate that one with `openssl rand -hex 32`: it also goes
+into `DATABASE_URL`, where a `/` or `+` would break the URL. This file is the
+only place production secrets exist. It is not in the repository, not in CI,
+and not in any backup that leaves the host.
 
-Use **two separate object-storage credentials**: one for media (the API needs
-it) and one for backups with write access to the backup bucket only. A
+Use **separate object-storage credentials**: one for media, which the API
+needs, and one for backups, with access to the backup and pitr buckets only. A
 compromised API key must not be able to delete the backups.
+
+`HEFESTO_PITR_CIPHER_PASS` encrypts the point-in-time archive. Keep a copy off
+the server, in your password manager. Without it, that archive cannot be read.
 
 The media bucket (`HEFESTO_S3_BUCKET`) must exist and stay **private**: phones
 upload and download through short-lived presigned URLs the API signs
@@ -73,6 +110,26 @@ production file. Use values of its own: a different database password, a
 different JWT signing key, and a separate media bucket
 (`hefesto-media-staging`) with its own credentials. A staging token must not
 work against production.
+
+### 3c. Check the server
+
+```sh
+make preflight
+```
+
+This runs `scripts/preflight.sh` on the server over SSH. It changes nothing
+and prints no secret. It checks:
+- Docker and Compose;
+- both env files: their mode, no blank or missing key, and a `DATABASE_URL`
+  that matches the Postgres settings;
+- that staging shares no secret or bucket with production;
+- that every domain resolves to this server, and that ports 80 and 443 are
+  free;
+- for every bucket, that its credential can list, write, read and delete;
+- that the media bucket refuses anonymous reads.
+
+Fix each `FAIL` it prints and run it again until it ends "Ready for the first
+deploy".
 
 ### 4. GitHub repository secrets
 
@@ -153,7 +210,9 @@ on a runner's Docker before it ever runs on the server:
 - a redeploy;
 - the backup sidecar's first dump to object storage (MinIO);
 - a restore into a scratch database, with row counts compared;
-- a restore over the live database.
+- a restore over the live database;
+- the first pgBackRest full backup, and a point-in-time recovery that removes
+  a row written after the target.
 
 ## Backups
 
@@ -162,9 +221,9 @@ The `backup` sidecar takes a `pg_dump --format=custom` every 24h to
 30 days. It refuses to upload a dump under 4 KB, which is the usual signature
 of a dump that ran against the wrong or an empty database.
 
-This is a **logical** backup: you can restore to the last nightly dump and
-nothing between. Point-in-time recovery via WAL archiving (pgBackRest) is a
-Phase 7 item, and the moment there is real user data it stops being optional.
+A dump is a **logical** backup: it restores to the moment it was taken and
+nothing in between. Point-in-time recovery (below) covers the gap. The dump
+stays as a second, independent path in a different format.
 
 ### Restoring
 
@@ -182,6 +241,29 @@ It prints row counts of the restored database. `--into-live` stops the API,
 restores with `--clean`, and starts it again. CI rehearses both paths on every
 pull request (above). Drop a scratch database when you are done with it:
 `./scripts/compose.sh exec postgres dropdb -U hefesto hefesto_restore_<stamp>`.
+
+### Point-in-time recovery
+
+Production Postgres archives every WAL segment to an encrypted pgBackRest
+repository in `hefesto-pitr`, at least once a minute (ADR 0026). The `pitr`
+sidecar takes a full base backup weekly and a differential daily, and keeps
+two weeks of fulls. Production's Postgres image is `postgres:16-alpine` plus
+pgBackRest (`docker/Dockerfile.postgres`), built on the server by
+`deploy.sh`. Unchanged, the build is cached and a deploy does not restart the
+database.
+
+```sh
+# on the server, in /srv/hefesto
+./scripts/compose.sh exec pitr pgbackrest info      # backups and the WAL range
+./scripts/pitr-restore.sh "2026-10-19 03:12:00+00"  # back to that moment (asks first)
+./scripts/pitr-restore.sh latest                     # to the newest WAL archived
+```
+
+`pitr-restore.sh` stops the API, both sidecars and Postgres. It restores the
+newest base backup before the target, replays WAL up to the target and
+promotes, then starts everything again. **Everything written after the target
+is gone.** If you are unsure of the moment, restore a logical dump into a
+scratch database first (`restore.sh`) and look.
 
 ## Operating
 

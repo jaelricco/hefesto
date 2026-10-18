@@ -189,6 +189,14 @@ deploy-check: ## Validate everything the deploy depends on, without deploying
 	@command -v actionlint >/dev/null && actionlint || echo "actionlint not installed — skipped"
 	@echo "deploy configuration is valid"
 
+.PHONY: preflight
+preflight: ## Check the production host before the first deploy: env files, DNS, ports, buckets
+	@test -n "$(PROD_HOST)" || (echo "set the host first: git config hefesto.prodhost <ip>"; exit 1)
+	ssh $(PROD_USER)@$(PROD_HOST) "DEPLOY_DIR=$(PROD_DIR) \
+		PROD_KEYS='$$(grep -oE '^[A-Z0-9_]+' .env.prod.example | tr '\n' ' ')' \
+		STAGING_KEYS='$$(grep -oE '^[A-Z0-9_]+' .env.staging.example | tr '\n' ' ')' \
+		bash -s" < scripts/preflight.sh
+
 .PHONY: server-bootstrap
 server-bootstrap: ## One-time provisioning of a fresh host: make server-bootstrap host=1.2.3.4
 	@test -n "$(host)" || (echo "usage: make server-bootstrap host=1.2.3.4"; exit 1)

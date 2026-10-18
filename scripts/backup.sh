@@ -6,11 +6,10 @@
 # Runs as a long-lived sidecar rather than a host cron job so that backups are
 # part of the deployed unit and cannot be silently missing on a rebuilt host.
 #
-# This is deliberately a LOGICAL backup (pg_dump), which gives a consistent
-# snapshot per run and nothing between runs. Point-in-time recovery via WAL
-# archiving (pgBackRest) is a Phase 7 item; until this project has real user
-# data, a nightly dump with a documented, rehearsed restore is the honest
-# trade. See docs/DEPLOYMENT.md.
+# This is a LOGICAL backup (pg_dump): a consistent snapshot per run and
+# nothing between runs. Point-in-time recovery is pgBackRest's job
+# (scripts/pitr.sh, ADR 0026); this dump stays as a second, independent path
+# in a different format. Restore it with scripts/restore.sh.
 
 set -eu
 
@@ -33,7 +32,10 @@ mc() { mcli "$@"; }
 
 mc alias set backup "$HEFESTO_BACKUP_ENDPOINT" \
     "$HEFESTO_BACKUP_ACCESS_KEY" "$HEFESTO_BACKUP_SECRET_KEY" >/dev/null
-mc mb --ignore-existing "backup/$HEFESTO_BACKUP_BUCKET" >/dev/null
+# A key that may write only into the bucket may not create it; then the
+# bucket must exist already, and the first upload says so if it does not.
+mc mb --ignore-existing "backup/$HEFESTO_BACKUP_BUCKET" >/dev/null 2>&1 \
+    || log "could not create bucket $HEFESTO_BACKUP_BUCKET; using it as it is"
 
 while :; do
     stamp="$(date -u +%Y%m%dT%H%M%SZ)"
