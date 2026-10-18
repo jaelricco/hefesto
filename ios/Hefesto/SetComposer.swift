@@ -219,7 +219,7 @@ struct SetComposer: View {
     }
 }
 
-/// A planned set to perform (ADR 0025): what the plan asked for.
+/// A planned set to perform (ADR 0022): what the plan asked for.
 struct PlannedTarget {
     let setId: String
     /// The planned elements as drafts, their targets entered.

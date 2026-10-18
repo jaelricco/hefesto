@@ -214,7 +214,7 @@ struct TodayView: View {
     }
 
     /// Starts a planned session here, as planned and without the check-in
-    /// (ADR 0025). The next sync takes it to the server.
+    /// (ADR 0027). The next sync takes it to the server.
     private func startOffline(_ session: PlanSession) -> String? {
         do {
             started = try model.plan.startOffline(session)

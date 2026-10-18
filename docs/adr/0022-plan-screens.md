@@ -1,12 +1,10 @@
-# ADR 0025 — Die Screens des Trainingsplans in der iOS-App
+# ADR 0022 — Die Screens des Trainingsplans in der iOS-App
 
 - Status: proposed (zur Prüfung mit den Screens, 18.10.2026)
 - Date: 2026-10-18
 - Deciders: Jaelricco
 
-Dieses ADR ist auf Deutsch, wie alle Dokumente des Planer-Tracks. Es wurde
-als ADR 0022 eingereicht und umnummeriert, weil `main` die 0022 inzwischen für
-den Feinschliff von Phase 7 vergeben hat (`0022-polish-release-and-load.md`).
+Dieses ADR ist auf Deutsch, wie alle Dokumente des Planer-Tracks.
 
 ## Kontext
 
@@ -183,7 +181,7 @@ Screens zeigen den Plan; `scripts/ios-screenshots.sh` nimmt sie auf:
     Plan. (Gebaut mit ADR 0023.)
   - **Die Wahl des Bands** (Entscheidung 6; gebaut mit ADR 0024).
   - **Der Offline-Start.** Ohne Netz sagt das Blatt, dass der Start eine
-    Verbindung braucht. (Gebaut mit ADR 0026.)
+    Verbindung braucht. (Gebaut mit ADR 0027.)
   - **Ein geplanter Satz lässt sich nicht ausdrücklich auslassen.** Er
     bleibt offen.
 - **Befunde für den Review:**

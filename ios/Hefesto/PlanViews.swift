@@ -2,7 +2,7 @@ import HefestoPlan
 import HefestoSync
 import SwiftUI
 
-// The training plan's screens (ADR 0025): today's planned session on Today,
+// The training plan's screens (ADR 0022): today's planned session on Today,
 // the week below it, a planned session in full, and the check-in before a
 // start. They read HefestoPlan's plain model, never the API's types.
 
@@ -433,7 +433,7 @@ struct PlanItemRow: View {
 /// answers go only into the start request; nothing here keeps them.
 ///
 /// Without a connection the sheet says so and offers the start without the
-/// server (ADR 0025): the session starts as planned, without the check-in.
+/// server (ADR 0027): the session starts as planned, without the check-in.
 struct CheckInSheet: View {
     let session: PlanSession
     /// Starts the session; says why when it could not.

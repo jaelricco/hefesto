@@ -17,7 +17,7 @@ final class AppModel {
     let db: AppDatabase
     let auth: AuthService
     let sync: SyncEngine
-    /// The training plan the screens show (ADR 0025).
+    /// The training plan the screens show (ADR 0022).
     let plan: PlanModel
     /// The onboarding's answers, kept while the app runs, so closing it
     /// loses nothing (ADR 0023).

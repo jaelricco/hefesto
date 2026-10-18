@@ -1973,11 +1973,11 @@ darüber idempotent (U-40). Planungs-Antworten tragen `ruleset_version`;
 - Der Client hält den Plan der laufenden Woche im lokalen Speicher (`ETag`),
   wie die Skill-Karte (ADR 0011). Server-Tabellen des Planers sind für den
   Client nur lesbar. Umsetzung in der iOS-App: ADR 0021, U-69 bis U-71; die
-  Screens: ADR 0025, U-72 bis U-75.
+  Screens: ADR 0022, U-72 bis U-75.
 - Offline startet der Client eine geplante Einheit selbst nach demselben
   Materialisierungsschema (§10.2, neue IDs, `planned_item_id`); der Sync lädt
   sie hoch, der Server verknüpft sie nach dem Commit und passt an. Umsetzung:
-  ADR 0026, U-81 bis U-85.
+  ADR 0027, U-81 bis U-85.
 - Schmerzberichte und Red-Flag-Antworten werden offline erfasst und
   synchronisiert. Der Plan-Payload enthält die Red-Flag-Fragen der Regionen
   mit Dringlichkeit und Aktion; eine N-Antwort beendet die Einheit auch
@@ -2171,9 +2171,9 @@ erreicht (ADR 0018, U-58 bis U-61), und der Check-in beim Start (ADR 0019, U-62 
 U-64), und die Reserve eines Halts im Log (U-65, U-66) und die Reserve in
 der iOS-App (U-67, U-68), und der Unterbau des Plans in der iOS-App
 (ADR 0021, U-69 bis U-71), und die Screens des Plans in der iOS-App
-(ADR 0025, U-72 bis U-75), und das Onboarding in der iOS-App (ADR 0023,
+(ADR 0022, U-72 bis U-75), und das Onboarding in der iOS-App (ADR 0023,
 U-76 bis U-79), und die Wahl des Bands in der iOS-App (ADR 0024, U-80),
-und der Start einer geplanten Einheit ohne Verbindung (ADR 0026, U-81 bis
+und der Start einer geplanten Einheit ohne Verbindung (ADR 0027, U-81 bis
 U-85).
 
 Tests: sechs Personas als Golden Files (`internal/domain/planning/testdata/`),
@@ -2348,7 +2348,7 @@ weil die Adaption die Kürzung nicht vorhersieht.
   Wer das Band wechselt, verschiebt die Schätzung, ohne dass der Planer es
   merkt. Abhilfe bräuchte eine Kapazität je Band oder die geschätzte Hilfe in
   kg; beides ist eine fachliche Entscheidung (ADR 0024).
-- **Der Offline-Start hat Grenzen (ADR 0026).** Verteilt sich ein
+- **Der Offline-Start hat Grenzen (ADR 0027).** Verteilt sich ein
   Offline-Start auf mehrere Pushes (höchstens 200 Ops je Push) und wurde der
   Plan seither ersetzt, kann der Planer den Entwurf verknüpfen, bevor alle
   Sätze da sind: Fehlende Sätze zählen als erledigt, nachkommende behalten

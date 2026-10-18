@@ -154,7 +154,7 @@ documents are in German.
     client of the app now sends the header as HTTP defines it.
   - Not built: the screens, the onboarding in the app, pain reports from
     the app, choosing a band for a planned band set, the offline start.
-- **The plan's screens in the iOS app (this checkpoint, ADR 0025):**
+- **The plan's screens in the iOS app (this checkpoint, ADR 0022):**
   - A new module, `HefestoPlan`, maps the kept plan to the screens' own
     types in one place; views never see the API's types (ADR 0020). The
     plan is fetched again after every sync.
@@ -186,11 +186,11 @@ documents are in German.
   - The set composer offers band assistance again: the band and how many at
     once. A band set cannot be saved without its band.
   - Planned band sets open with the band assistance and can be performed;
-    ADR 0025's lock is lifted (U-75 → U-80).
+    ADR 0022's lock is lifted (U-75 → U-80).
   - Logger and history name a set's band. The demo holds two bands of its
     own; a new screen (`band`) joins the screenshots.
   - Not built: bands offline, editing a band, the anchor.
-- **Starting a planned session offline (this checkpoint, ADR 0026):**
+- **Starting a planned session offline (this checkpoint, ADR 0027):**
   - Sync now carries `planned_session_id` on a session and
     `planned_item_id` on a set. The server takes them when it creates the
     row and keeps them after; an unknown planned session is dropped.
@@ -266,9 +266,9 @@ documents are in German.
   ADR 0017 (U-55 to U-57), the completion in ADR 0018 (U-58 to U-61), the
   check-in in ADR 0019 (U-62 to U-64), the reserve (U-65 to U-68), the
   plan's foundation in the iOS app in ADR 0021 (U-69 to U-71), the plan's
-  screens in ADR 0025 (U-72 to U-75), the onboarding in the app in
+  screens in ADR 0022 (U-72 to U-75), the onboarding in the app in
   ADR 0023 (U-76 to U-79), the band choice in ADR 0024 (U-80), the
-  offline start in ADR 0026 (U-81 to U-85), and these findings in spec §15.4:
+  offline start in ADR 0027 (U-81 to U-85), and these findings in spec §15.4:
   - sets with partner or machine assistance reach neither the capacities
     nor the load history;
   - a set performed offline after the server replaced or removed it is
@@ -292,7 +292,7 @@ documents are in German.
   - the planner does not tell bands apart: a light and a strong band count
     as the same band capacity of an exercise (ADR 0024);
   - the offline start's limits: a start split over two pushes, two devices
-    starting the same session offline, no check-in offline (ADR 0026).
+    starting the same session offline, no check-in offline (ADR 0027).
 - **Not yet built:**
   - the sync of pain reports;
   - a record of the consent text agreed to;

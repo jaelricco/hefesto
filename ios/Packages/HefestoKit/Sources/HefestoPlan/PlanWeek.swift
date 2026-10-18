@@ -3,7 +3,7 @@ import HefestoAPI
 import HefestoStore
 import HefestoSync
 
-// The plan as the screens read it (ADR 0025): plain values, built from the
+// The plan as the screens read it (ADR 0022): plain values, built from the
 // server's plan in one place. A change to the API's plan types stops at the
 // mapping below, as with the celebration (ADR 0020).
 

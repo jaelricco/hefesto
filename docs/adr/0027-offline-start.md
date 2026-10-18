@@ -1,4 +1,4 @@
-# ADR 0026 — Der Start einer geplanten Einheit ohne Verbindung
+# ADR 0027 — Der Start einer geplanten Einheit ohne Verbindung
 
 - Status: proposed (zur Prüfung mit dem Offline-Start, 18.10.2026)
 - Date: 2026-10-18
@@ -15,7 +15,7 @@ Gebaut war das nicht:
 - Die Sync-Operationen trugen `planned_session_id` und `planned_item_id`
   nicht (§15.3).
 - Ohne Netz sagte das Check-in-Blatt nur, dass der Start eine Verbindung
-  braucht (ADR 0025).
+  braucht (ADR 0022).
 
 Wer in einem Keller oder einer Halle ohne Empfang trainiert, konnte seinen
 Plan also nicht starten. Das freie Training ging, aber ohne Ziele und ohne
@@ -124,7 +124,7 @@ Verbindung. Der neue Screen `offlinestart` zeigt das Blatt in diesem Zustand.
 - **Nicht gebaut:**
   - der Check-in ohne Verbindung;
   - der Offline-Start einer Einheit, die nicht von heute ist. Die Screens
-    starten nur heute (ADR 0025).
+    starten nur heute (ADR 0022).
 - **Befunde für den Review:**
   - **Ein Ausgang über mehrere Pushes.** Die App sendet höchstens 200 Ops
     je Push. Liegt die Grenze mitten in einem Offline-Start und wurde der Plan

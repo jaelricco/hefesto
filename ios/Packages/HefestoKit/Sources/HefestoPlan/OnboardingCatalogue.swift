@@ -2,7 +2,7 @@ import Foundation
 import HefestoAPI
 
 // What the onboarding asks with (ADR 0023): the planner's catalogue in plain
-// values, mapped from the API in one place, like the plan (ADR 0025). Names,
+// values, mapped from the API in one place, like the plan (ADR 0022). Names,
 // questions and advice are the knowledge base's texts, shown verbatim.
 
 /// The planner's skills, regions, red flags, screening questions and answer

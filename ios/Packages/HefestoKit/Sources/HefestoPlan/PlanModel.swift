@@ -5,7 +5,7 @@ import HefestoSync
 import Observation
 
 /// The plan the screens show and the one way they start a planned session
-/// (ADR 0025). It reads the plan kept in the local database, so it shows the
+/// (ADR 0022). It reads the plan kept in the local database, so it shows the
 /// week offline, with the starts kept here that the plan does not know yet.
 /// Refreshing needs the network; a start without it is the athlete's choice
 /// (spec §10.5).
