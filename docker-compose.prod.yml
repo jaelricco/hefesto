@@ -6,6 +6,8 @@
 #   - Postgres is NOT published; it is reachable only on the internal network
 #   - no mailpit, no pgweb, no minio (Hetzner Object Storage replaces MinIO)
 #   - a backup sidecar dumps the database to object storage nightly
+#   - Caddy also serves staging (docker-compose.staging.yml, ADR 0026) over
+#     the shared hefesto-edge network
 #
 # Used on the server as:
 #   docker compose -f docker-compose.prod.yml --env-file .env.prod <cmd>
@@ -116,11 +118,15 @@ services:
       HEFESTO_API_DOMAIN: ${HEFESTO_API_DOMAIN:?}
       HEFESTO_SITE_DOMAIN: ${HEFESTO_SITE_DOMAIN:?}
       HEFESTO_SITE_DOMAIN_ALT: ${HEFESTO_SITE_DOMAIN_ALT:?}
+      HEFESTO_STAGING_API_DOMAIN: ${HEFESTO_STAGING_API_DOMAIN:?}
       HEFESTO_ACME_EMAIL: ${HEFESTO_ACME_EMAIL:?}
     volumes:
       - ./docker/Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
       - caddy_config:/config
+    networks:
+      default: {}
+      edge: {}
     depends_on:
       - api
     logging: *default-logging
@@ -147,6 +153,13 @@ services:
       postgres:
         condition: service_healthy
     logging: *default-logging
+
+networks:
+  # Shared with the staging project, whose API Caddy proxies to. Created by
+  # scripts/deploy.sh when missing.
+  edge:
+    name: hefesto-edge
+    external: true
 
 volumes:
   pgdata:

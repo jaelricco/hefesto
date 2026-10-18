@@ -12,6 +12,12 @@ options:
     iOS: "17.0"
   developmentLanguage: en
   createIntermediateGroups: true
+# Staging is a release build that talks to the staging API (ADR 0026): what
+# internal TestFlight testers get. Release talks to production.
+configs:
+  Debug: debug
+  Staging: release
+  Release: release
 settings:
   base:
     SWIFT_VERSION: "6.0"
@@ -82,6 +88,8 @@ targets:
       configs:
         Debug:
           HEFESTO_API_BASE_URL: http://localhost:8080
+        Staging:
+          HEFESTO_API_BASE_URL: https://api-staging.hefesto.fit
         Release:
           HEFESTO_API_BASE_URL: https://api.hefesto.fit
     scheme:

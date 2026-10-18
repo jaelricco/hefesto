@@ -1,7 +1,7 @@
 name: testflight
 
 # Archives the app and uploads it to App Store Connect for TestFlight
-# (ADR 0022). Run it by hand, or push a tag like ios-v0.7.0.
+# (ADR 0025). Run it by hand, or push a tag like ios-v0.7.0.
 #
 # It runs on a GitHub-hosted Mac, not the self-hosted runner: signing
 # creates certificates and downloads provisioning profiles, and that must not
@@ -19,8 +19,10 @@ on:
     inputs:
       external:
         description: >-
-          For external testers: fail unless every skill and exercise is
-          researched content (make content-release-check).
+          For external testers: a Release build against production, and only
+          if every skill and exercise is researched content (make
+          content-release-check). Unticked, it is a Staging build for
+          internal testers, against the staging API.
         type: boolean
         default: false
   push:
@@ -39,6 +41,9 @@ jobs:
     runs-on: macos-15
     timeout-minutes: 60
     env:
+      # Internal testers get Staging (the staging API), external testers
+      # Release (production), ADR 0026. A tag push builds Staging.
+      CONFIGURATION: ${{ inputs.external && 'Release' || 'Staging' }}
       APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
       ASC_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
       ASC_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
@@ -93,7 +98,7 @@ jobs:
         run: |
           set -o pipefail
           xcodebuild archive \
-            -project Hefesto.xcodeproj -scheme Hefesto -configuration Release \
+            -project Hefesto.xcodeproj -scheme Hefesto -configuration "$CONFIGURATION" \
             -destination 'generic/platform=iOS' \
             -archivePath "$RUNNER_TEMP/Hefesto.xcarchive" \
             -derivedDataPath "$RUNNER_TEMP/derived" \
@@ -120,7 +125,7 @@ jobs:
             -authenticationKeyID "$ASC_KEY_ID" \
             -authenticationKeyIssuerID "$ASC_ISSUER_ID" 2>&1 | tee export.log | grep -E 'error:|Upload|EXPORT' || true
           grep -q '\*\* EXPORT SUCCEEDED \*\*' export.log || { tail -80 export.log; exit 1; }
-          echo "uploaded build ${{ github.run_number }}; it appears in TestFlight once Apple has processed it"
+          echo "uploaded build ${{ github.run_number }} ($CONFIGURATION); it appears in TestFlight once Apple has processed it"
 
       - name: remove the API key
         if: always()

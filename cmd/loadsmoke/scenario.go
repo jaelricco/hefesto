@@ -52,6 +52,10 @@ type athlete struct {
 	iter   int
 }
 
+// loadsmokePassword is the password of every synthetic account the load test
+// creates on a throwaway stack; it guards nothing.
+const loadsmokePassword = "loadsmoke correct horse battery" //nolint:gosec // G101: a fixture password for synthetic accounts, not a credential
+
 // register creates the athlete's account. Registration hashes a password
 // with argon2 on purpose, so it is reported but has no latency budget.
 func (a *athlete) register(ctx context.Context, run string) error {
@@ -60,7 +64,7 @@ func (a *athlete) register(ctx context.Context, run string) error {
 		method: "POST", path: "/v1/auth/register", route: "POST /v1/auth/register", class: classAuth,
 		body: map[string]any{
 			"email":    fmt.Sprintf("loadsmoke-%s-%d@example.test", run, a.n),
-			"password": "loadsmoke correct horse battery",
+			"password": loadsmokePassword,
 			"timezone": "Europe/Zurich",
 			"device":   map[string]any{"id": newID(), "platform": "ios"},
 		},

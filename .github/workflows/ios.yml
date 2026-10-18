@@ -79,6 +79,23 @@ jobs:
             exit 1
           fi
 
+      # What TestFlight archives: a release-type build (no DEBUG code, the
+      # optimizer on). Staging differs from Release only in the API address.
+      - name: build the Staging configuration for the simulator
+        working-directory: ios
+        run: |
+          set -o pipefail
+          caffeinate -i nice -n 10 xcodebuild build \
+            -project Hefesto.xcodeproj -scheme Hefesto -configuration Staging \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath .derived \
+            -skipPackagePluginValidation -skipMacroValidation \
+            CODE_SIGNING_ALLOWED=NO 2>&1 | tee staging-build.log | grep -E 'error:|BUILD SUCCEEDED|BUILD FAILED' || true
+          if ! grep -q 'BUILD SUCCEEDED \*\*' staging-build.log; then
+            grep -B2 -A12 -E 'error:|Undefined symbols' staging-build.log | tail -150
+            exit 1
+          fi
+
       # Only on request: the audit needs a booted simulator (see the input).
       - name: accessibility audit (UI tests)
         if: ${{ inputs.ui_tests }}
@@ -96,4 +113,16 @@ jobs:
             -destination "id=$device" \
             -derivedDataPath .derived \
             -resultBundlePath ".derived/a11y-$GITHUB_RUN_ID.xcresult" 2>&1 | tee test.log | grep -E 'error:|Test Case|\*\* TEST' || true
-          grep -q '\*\* TEST SUCCEEDED \*\*' test.log
+          if ! grep -q '\*\* TEST SUCCEEDED \*\*' test.log; then
+            # Each finding also becomes an annotation, readable from the API
+            # without the log. GitHub keeps ten error annotations per step,
+            # so there is one per test, listing its findings.
+            grep -E ': error: ' test.log | sed -E 's/^[^:]*:[0-9]+: error: //' | sort -u > findings.txt || true
+            echo "$(wc -l < findings.txt) findings"
+            for t in testEveryScreen testEveryScreenAtTheLargestTextSize testEveryScreenInGerman; do
+              body=$(grep -F " $t]" findings.txt | sed -E 's/^-\[[^]]*\] : //; s/%/%25/g' | head -80 \
+                | awk '{ printf "%s%%0A", $0 }')
+              if [ -n "$body" ]; then echo "::error title=Accessibility audit: $t::$body"; fi
+            done
+            exit 1
+          fi
