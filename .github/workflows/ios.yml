@@ -51,9 +51,13 @@ jobs:
           fi
           xcodegen --version
 
+      # Long builds run under caffeinate -i (no idle sleep while the command
+      # runs) and at lower priority, so the runner keeps reaching GitHub.
+      # Earlier runs died 10 minutes into a cold build with "lost
+      # communication". Both last only as long as the command.
       - name: swift test (HefestoKit)
         working-directory: ios/Packages/HefestoKit
-        run: swift test --parallel
+        run: caffeinate -i nice -n 10 swift test --parallel
 
       - name: generate the project
         working-directory: ios
@@ -63,7 +67,7 @@ jobs:
         working-directory: ios
         run: |
           set -o pipefail
-          xcodebuild build-for-testing \
+          caffeinate -i nice -n 10 xcodebuild build-for-testing \
             -project Hefesto.xcodeproj -scheme Hefesto \
             -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath .derived \
@@ -87,7 +91,7 @@ jobs:
             | sed -E 's/.*\(([0-9A-F-]{36})\).*/\1/' || true)
           test -n "$device" || { echo "run the ios-screenshots workflow once first; it creates the simulator"; exit 1; }
           trap 'xcrun simctl shutdown "$device" >/dev/null 2>&1 || true' EXIT
-          xcodebuild test-without-building \
+          caffeinate -i nice -n 10 xcodebuild test-without-building \
             -project Hefesto.xcodeproj -scheme Hefesto \
             -destination "id=$device" \
             -derivedDataPath .derived \
