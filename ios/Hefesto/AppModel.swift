@@ -39,16 +39,22 @@ final class AppModel {
 
     init() throws {
         let baseURL = Self.apiBaseURL
+        // A local: an observed property cannot be read before every stored
+        // property is set.
+        let demo: DemoRun?
         #if DEBUG
         if let screen = DemoRun.requestedScreen {
             db = try AppDatabase.inMemory()
             demo = try DemoRun.seed(db, screen: screen)
         } else {
             db = try Self.openDatabase()
+            demo = nil
         }
         #else
         db = try Self.openDatabase()
+        demo = nil
         #endif
+        self.demo = demo
 
         auth = AuthService(
             client: HefestoAPIConfiguration.client(serverURL: baseURL),
