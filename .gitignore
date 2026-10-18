@@ -8,6 +8,7 @@
 .env.*
 !.env.example
 !.env.prod.example
+!.env.staging.example
 *.pem
 *.key
 
@@ -43,3 +44,6 @@ ios/build.log
 ios/.derived-screenshots/
 ios/screenshots/
 ios/screenshots-build.log
+ios/staging-build.log
+ios/test.log
+ios/findings.txt

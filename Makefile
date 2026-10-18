@@ -92,6 +92,10 @@ gen-ios-client: ## Regenerate the Swift client from api/openapi.yaml
 content-validate: ## Schema-check content/, verify slugs, edges and DAG acyclicity
 	go run ./cmd/contentlint -dir ./content
 
+.PHONY: content-release-check
+content-release-check: ## Fail while any content is still a draft placeholder (before an external release)
+	go run ./cmd/contentlint -dir ./content -strict -release
+
 .PHONY: seed
 seed: ## Idempotent upsert of content/ into the database
 	$(COMPOSE) run --rm -e DATABASE_URL="$(DB_URL)" api go run ./cmd/seed -dir ./content
@@ -103,6 +107,7 @@ build: ## Build all binaries into ./bin
 	go build -trimpath -o ./bin/api ./cmd/api
 	go build -trimpath -o ./bin/seed ./cmd/seed
 	go build -trimpath -o ./bin/contentlint ./cmd/contentlint
+	go build -trimpath -o ./bin/loadsmoke ./cmd/loadsmoke
 
 .PHONY: lint
 lint: ## Run golangci-lint
@@ -127,6 +132,12 @@ cover: ## Coverage report (opens coverage.html)
 	go tool cover -html=coverage.out -o coverage.html
 	@echo "wrote coverage.html"
 
+.PHONY: load-smoke
+load-smoke: ## Load smoke test against the local stack (make up first): make load-smoke args="-athletes 50"
+	@# Registration is rate limited per address (HEFESTO_AUTH_PER_MINUTE); the
+	@# tool waits it out, so raise the limit in .env for a faster start.
+	go run ./cmd/loadsmoke -base-url http://localhost:$${API_PORT_HOST:-8080} $(args)
+
 .PHONY: check
 check: lint test content-validate ## What CI runs on every push
 
@@ -139,7 +150,8 @@ check: lint test content-validate ## What CI runs on every push
 PROD_HOST ?= $(shell git config --get hefesto.prodhost)
 PROD_USER ?= deploy
 PROD_DIR  ?= /srv/hefesto
-PROD_COMPOSE := docker compose -f $(PROD_DIR)/docker-compose.prod.yml --env-file $(PROD_DIR)/.env.prod
+# The Compose file needs the live tag; scripts/compose.sh supplies it.
+PROD_COMPOSE := DEPLOY_DIR=$(PROD_DIR) $(PROD_DIR)/scripts/compose.sh
 
 .PHONY: release
 release: ## Tag and push a release, which triggers the deploy: make release version=v0.2.0
@@ -169,6 +181,9 @@ deploy-check: ## Validate everything the deploy depends on, without deploying
 	@sed -E 's/^([A-Z_]+)=$$/\1=placeholder/' .env.prod.example > /tmp/hefesto-check.env
 	@echo 'HEFESTO_TAG=v0.0.0-check' >> /tmp/hefesto-check.env
 	docker compose -f docker-compose.prod.yml --env-file /tmp/hefesto-check.env config --quiet
+	@sed -E 's/^([A-Z_]+)=$$/\1=placeholder/' .env.staging.example > /tmp/hefesto-check.env
+	@echo 'HEFESTO_TAG=sha-check' >> /tmp/hefesto-check.env
+	docker compose -f docker-compose.staging.yml --env-file /tmp/hefesto-check.env config --quiet
 	@rm -f /tmp/hefesto-check.env
 	@command -v shellcheck >/dev/null && shellcheck -e SC1091 scripts/*.sh || echo "shellcheck not installed — skipped"
 	@command -v actionlint >/dev/null && actionlint || echo "actionlint not installed — skipped"

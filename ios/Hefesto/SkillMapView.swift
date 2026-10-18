@@ -8,6 +8,9 @@ import SwiftUI
 /// card, opens it.
 struct SkillMapView: View {
     @Environment(AppModel.self) private var model
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// The same skills as a list: easier with VoiceOver or large text.
+    @AppStorage("skills.showList") private var showList = false
     @State private var map: SkillMapData?
     /// The skill shown in the card below the map.
     @State private var peek: String?
@@ -25,7 +28,9 @@ struct SkillMapView: View {
     var body: some View {
         NavigationStack {
             Group {
-                if let map, !placed(map).isEmpty {
+                if let map, showList, !map.skills.isEmpty {
+                    SkillListView(map: map) { opened = $0 }
+                } else if let map, !placed(map).isEmpty {
                     constellation(map)
                 } else if map == nil {
                     ProgressView()
@@ -39,7 +44,7 @@ struct SkillMapView: View {
             .background(Palette.sky.ignoresSafeArea())
             .safeAreaInset(edge: .top, spacing: 0) { header }
             .overlay(alignment: .bottom) {
-                if let map, let id = peek, let skill = map.skills.first(where: { $0.id == id }) {
+                if !showList, let map, let id = peek, let skill = map.skills.first(where: { $0.id == id }) {
                     PeekCard(skill: skill, map: map) { opened = id }
                         .padding(.horizontal, 12)
                         .padding(.bottom, 12)
@@ -60,14 +65,17 @@ struct SkillMapView: View {
             do {
                 for try await m in model.db.observeSkillMap() {
                     map = m
-                    if revealStart == nil, !m.unseenUnlocks.isEmpty { revealStart = .now }
+                    if revealStart == nil, !m.unseenUnlocks.isEmpty {
+                        // Without motion the lines are simply lit; they still count as shown.
+                        revealStart = reduceMotion ? .distantPast : .now
+                    }
                 }
             } catch {}
         }
         .task(id: revealStart) {
             // Once the lines have lit, the unlocks count as shown.
             guard revealStart != nil, let ids = map?.unseenUnlocks.map(\.levelId) else { return }
-            try? await Task.sleep(for: .seconds(Self.revealSeconds + 0.4))
+            if !reduceMotion { try? await Task.sleep(for: .seconds(Self.revealSeconds + 0.4)) }
             try? model.db.markUnlocksSeen(ids)
             revealStart = nil
         }
@@ -81,22 +89,33 @@ struct SkillMapView: View {
                 .accessibilityAddTraits(.isHeader)
             Spacer()
             ProgressBadge(style: .chips)
-            Button {
-                withAnimation(.snappy) { zoom = 1; offset = .zero }
-            } label: {
-                Image(systemName: "arrow.up.left.and.down.right.magnifyingglass")
-                    .font(.system(size: 17, weight: .medium))
-                    .foregroundStyle(Palette.text)
-                    .frame(width: 44, height: 44)
-                    .background(Palette.surface, in: .circle)
-                    .overlay(Circle().strokeBorder(Palette.hairline))
+            if !showList {
+                headerButton("arrow.up.left.and.down.right.magnifyingglass") {
+                    withAnimation(reduceMotion ? nil : .snappy) { zoom = 1; offset = .zero }
+                }
+                .accessibilityLabel("Fit")
             }
-            .buttonStyle(.plain)
-            .accessibilityLabel("Fit")
+            headerButton(showList ? "sparkles" : "list.bullet") {
+                peek = nil
+                showList.toggle()
+            }
+            .accessibilityLabel(showList ? Text("Show as map") : Text("Show as list"))
         }
         .padding(.leading, 20)
         .padding(.trailing, 12)
         .padding(.vertical, 4)
+    }
+
+    private func headerButton(_ icon: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Image(systemName: icon)
+                .font(.system(size: 17, weight: .medium))
+                .foregroundStyle(Palette.text)
+                .frame(width: 44, height: 44)
+                .background(Palette.surface, in: .circle)
+                .overlay(Circle().strokeBorder(Palette.hairline))
+        }
+        .buttonStyle(.plain)
     }
 
     // MARK: drawing
@@ -116,8 +135,9 @@ struct SkillMapView: View {
                 }
                 .accessibilityHidden(true)
 
-                // One real button per skill: the tap target, and what VoiceOver reads.
-                ForEach(placed(map)) { s in
+                // One real button per skill: the tap target, and what VoiceOver
+                // reads, top to bottom as the map reads.
+                ForEach(readingOrder(map, layout)) { s in
                     let p = layout.point(s.skill)
                     Button { select(s.id) } label: {
                         Color.clear.frame(width: 56, height: 56).contentShape(Circle())
@@ -170,6 +190,13 @@ struct SkillMapView: View {
 
     private func placed(_ map: SkillMapData) -> [SkillWithLevels] {
         map.skills.filter { $0.skill.x != nil && $0.skill.y != nil }
+    }
+
+    private func readingOrder(_ map: SkillMapData, _ layout: MapLayout) -> [SkillWithLevels] {
+        placed(map).sorted {
+            let a = layout.point($0.skill), b = layout.point($1.skill)
+            return abs(a.y - b.y) > 20 ? a.y < b.y : a.x < b.x
+        }
     }
 
     private func drawStars(_ ctx: GraphicsContext, size: CGSize) {
@@ -253,6 +280,57 @@ struct SkillMapView: View {
 
 /// The skill a tap picked, below the map: where the athlete stands and what
 /// comes next. The whole card opens the skill.
+/// The skills as a list, grouped by the athlete's standing: what is in
+/// progress first, then what is open, what is done, and what is still locked.
+struct SkillListView: View {
+    let map: SkillMapData
+    let onSelect: (String) -> Void
+
+    private static let order: [SkillStanding] = [.progressing, .available, .mastered, .locked]
+
+    var body: some View {
+        List {
+            ForEach(Self.order, id: \.self) { standing in
+                let skills = map.skills.filter { map.standing(of: $0) == standing }
+                if !skills.isEmpty {
+                    Section {
+                        ForEach(skills) { s in
+                            Button { onSelect(s.id) } label: { row(s, standing) }
+                                .buttonStyle(.plain)
+                                .themedRow()
+                        }
+                    } header: {
+                        CapsLabel(verbatim: StandingText.label(standing))
+                    }
+                }
+            }
+        }
+        .themedScreen()
+    }
+
+    private func row(_ s: SkillWithLevels, _ standing: SkillStanding) -> some View {
+        let unlocked = s.levels.filter { map.state(of: $0.id) == "unlocked" }.count
+        return HStack {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(verbatim: s.skill.name)
+                    .font(.rowTitle)
+                    .foregroundStyle(standing == .locked ? Palette.textSecondary : Palette.text)
+                if let next = map.nextLevel(of: s) {
+                    Text("Next: \(next.name)").font(.meta).foregroundStyle(Palette.textSecondary)
+                }
+            }
+            Spacer()
+            Text(verbatim: "\(unlocked)/\(s.levels.count)")
+                .font(.meta.monospacedDigit())
+                .foregroundStyle(unlocked > 0 ? Palette.gold : Palette.textSecondary)
+                .accessibilityLabel(Text("\(unlocked) of \(s.levels.count) levels unlocked"))
+        }
+        .frame(minHeight: 44)
+        .contentShape(.rect)
+        .accessibilityElement(children: .combine)
+    }
+}
+
 struct PeekCard: View {
     let skill: SkillWithLevels
     let map: SkillMapData

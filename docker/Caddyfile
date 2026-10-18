@@ -5,6 +5,7 @@
 #   HEFESTO_API_DOMAIN       api.hefesto.fit
 #   HEFESTO_SITE_DOMAIN      hefesto.fit
 #   HEFESTO_SITE_DOMAIN_ALT  hefesto.ch
+#   HEFESTO_STAGING_API_DOMAIN api-staging.hefesto.fit (docker-compose.staging.yml)
 #   HEFESTO_ACME_EMAIL       address Let's Encrypt notifies about expiry
 
 {
@@ -55,11 +56,36 @@
 		max_size 2MB
 	}
 
+	# Health checks would otherwise dominate the log volume.
+	log_skip /healthz
 	log {
 		output stdout
 		format json
-		# Health checks would otherwise dominate the log volume.
-		exclude /healthz
+	}
+}
+
+# --- staging API ---------------------------------------------------------------
+# The staging project's API, reached over the shared hefesto-edge network
+# (ADR 0023). When staging is not running this answers 502; production is
+# unaffected.
+{$HEFESTO_STAGING_API_DOMAIN} {
+	import security_headers
+	encode zstd gzip
+	reverse_proxy staging-api:8080 {
+		transport http {
+			dial_timeout            5s
+			response_header_timeout 30s
+		}
+	}
+	request_body {
+		max_size 2MB
+	}
+	# Never indexed, never mistaken for production.
+	header X-Robots-Tag "noindex"
+	log_skip /healthz
+	log {
+		output stdout
+		format json
 	}
 }
 

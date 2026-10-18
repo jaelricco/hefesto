@@ -250,6 +250,7 @@ struct ElementFields: View {
                 TextField("kg", value: $draft.assistKg, format: .number)
                     .keyboardType(.decimalPad)
                     .multilineTextAlignment(.trailing)
+                    .accessibilityLabel(Text("Estimated assist in kilograms"))
             }
         }
 

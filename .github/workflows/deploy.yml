@@ -38,7 +38,7 @@ permissions:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  GO_VERSION: "1.24"
+  GO_VERSION: "1.27"
 
 jobs:
   # A tag that fails its own tests must not reach production just because it
@@ -140,7 +140,7 @@ jobs:
         run: |
           rsync -az --delete-after \
             -e "ssh -p ${DEPLOY_PORT:-22} -i ~/.ssh/id_ed25519" \
-            --include='docker-compose.prod.yml' \
+            --include='docker-compose.prod.yml' --include='docker-compose.staging.yml' \
             --include='docker/' --include='docker/Caddyfile' \
             --include='scripts/' --include='scripts/*.sh' \
             --exclude='*' \

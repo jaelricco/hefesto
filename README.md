@@ -13,10 +13,14 @@ The logger feeds the map. That coupling is the product.
 
 ## Status
 
-**Phase 6 — the skill map**, awaiting review. The iOS app adds the skill map
-constellation, skill detail with injury notes, the unlock celebration, and
-history and stats. These sit on top of the offline-first logger and sync from
-Phase 5, and on the API's logging, unlock engine, sync and media.
+**Phase 7 — polish**, awaiting review. It adds:
+- an accessibility pass and checked localization (English and German);
+- a TestFlight pipeline;
+- a release gate for placeholder content;
+- a load smoke test in CI.
+
+This builds on the iOS logger, sync and skill map from Phases 5–6, and on the
+API's logging, unlock engine, sync and media.
 Current state and open questions: [`STATUS.md`](STATUS.md).
 
 See [`docs/PROJECT_BRIEF.md`](docs/PROJECT_BRIEF.md) for the full plan,
@@ -56,6 +60,24 @@ arguments to start on one screen. `scripts/ios-screenshots.sh` captures every
 screen in the simulator; the `ios-screenshots` workflow runs it on the
 self-hosted Mac when the views change.
 
+```sh
+python3 ios/scripts/check-strings.py   # every string in English and German
+```
+
+TestFlight builds come from the `testflight` workflow on a GitHub-hosted Mac.
+Setup is in [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md#the-ios-app-on-testflight).
+
+### Load smoke test
+
+```sh
+make up && make load-smoke                  # 25 athletes for a minute
+make load-smoke args="-athletes 50 -duration 2m"
+```
+
+It reports p50/p95/p99 per route and fails on any error or a p95 over budget.
+CI runs it on every pull request. Never point it at production: it creates
+accounts.
+
 ## Deploying
 
 Production is a single Hetzner instance behind Caddy, deployed from a version
@@ -92,7 +114,7 @@ scripts/      server bootstrap, deploy with rollback, backup sidecar
 
 ## Stack
 
-Go 1.24 · chi · pgx/v5 · sqlc · goose · PostgreSQL 16 · OpenAPI 3.1 ·
+Go 1.27 · chi · pgx/v5 · sqlc · goose · PostgreSQL 16 · OpenAPI 3.1 ·
 SwiftUI (iOS 17+) with GRDB · Docker Compose · GitHub Actions.
 
 Rationale in [ADR 0001](docs/adr/0001-stack.md).

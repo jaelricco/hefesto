@@ -13,14 +13,24 @@ final class AuthServer: ClientTransport, @unchecked Sendable {
     var validToken = "access-1"
     var refreshStatus = 200
     var issued = 1
+    /// The device id each sign-in sent.
+    private var signInDevices: [String] = []
+
+    func devicesSignedIn() -> [String] { lock.withLock { signInDevices } }
 
     func calls(_ op: String) -> [(op: String, auth: String?)] { lock.withLock { log.filter { $0.op == op } } }
 
     func send(_ request: HTTPRequest, body: HTTPBody?, baseURL: URL, operationID: String) async throws
         -> (HTTPResponse, HTTPBody?)
     {
-        if let body { _ = try await Data(collecting: body, upTo: 1 << 20) }
+        var data = Data()
+        if let body { data = try await Data(collecting: body, upTo: 1 << 20) }
         lock.withLock { log.append((operationID, request.headerFields[.authorization])) }
+        if operationID == "login",
+           let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+           let device = json["device"] as? [String: Any], let id = device["id"] as? String {
+            lock.withLock { signInDevices.append(id) }
+        }
         switch operationID {
         case "refreshTokens":
             try await Task.sleep(for: .milliseconds(50))
@@ -97,6 +107,20 @@ struct Fixture {
         #expect(f.store.load()?.userId == "0190f0e0-0000-7000-8000-000000000001")
         #expect(f.store.load()?.accessExpiresAt == f.clock.now.addingTimeInterval(900))
         #expect(await f.auth.isSignedIn)
+    }
+
+    @Test func theNextSignInUsesTheNewDeviceId() async throws {
+        let f = Fixture()
+        try await f.auth.login(email: "a@hefesto.fit", password: "correct horse")
+        await f.auth.logout()
+        // The server binds a device id to one account, so another account
+        // signing in on this phone needs a new one.
+        await f.auth.useDevice(id: "0190f0e0-0000-7000-8000-00000000000e")
+        try await f.auth.login(email: "b@hefesto.fit", password: "correct horse")
+        #expect(f.server.devicesSignedIn() == [
+            "0190f0e0-0000-7000-8000-00000000000d", "0190f0e0-0000-7000-8000-00000000000e",
+        ])
+        #expect(await f.auth.deviceId == "0190f0e0-0000-7000-8000-00000000000e")
     }
 
     @Test func aFreshTokenIsUsedAsIs() async throws {

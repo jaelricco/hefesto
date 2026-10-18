@@ -29,6 +29,8 @@ fi
 # commit for `make up`; move both together.
 MINIO_MODULE="github.com/minio/minio@v0.0.0-20260212201848-7aac2a2c5b7c"
 PORT="${HEFESTO_TEST_MINIO_PORT:-9123}"
+# 0.0.0.0 lets containers reach it through the Docker bridge (deploy rehearsal).
+HOST="${HEFESTO_TEST_MINIO_HOST:-127.0.0.1}"
 
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 bin="$root/bin/minio-${MINIO_MODULE##*-}" # the commit, so a new pin rebuilds
@@ -46,7 +48,7 @@ access="test-$(od -An -N8 -tx1 /dev/urandom | tr -d ' \n')"
 secret="$(od -An -N24 -tx1 /dev/urandom | tr -d ' \n')"
 
 MINIO_ROOT_USER="$access" MINIO_ROOT_PASSWORD="$secret" MINIO_BROWSER=off \
-  "$bin" server "$data" --address "127.0.0.1:$PORT" --quiet >"$data.log" 2>&1 &
+  "$bin" server "$data" --address "$HOST:$PORT" --quiet >"$data.log" 2>&1 &
 pid=$!
 cleanup() {
   kill "$pid" 2>/dev/null || true

@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 #
-# Deploy one image tag on the production host.
+# Deploy one image tag on the production host, to production or to staging.
 #
 # Runs ON THE SERVER, from the deploy directory (default /srv/hefesto). The
-# GitHub Actions workflow invokes it over SSH; you can also run it by hand.
+# GitHub Actions workflows invoke it over SSH; you can also run it by hand.
 #
-#   ./scripts/deploy.sh v1.4.2
+#   ./scripts/deploy.sh v1.4.2                                # production
+#   DEPLOY_ENV=staging ./scripts/deploy.sh sha-<commit>       # staging
+#
+# Staging (ADR 0026) is its own Compose project on the same host, with its own
+# database and .env.staging. It has no Caddy and no backup sidecar; production's
+# Caddy serves it over the shared hefesto-edge network.
 #
 # What it does, in order:
 #   1. records the currently running tag so a rollback has somewhere to go
@@ -23,10 +28,28 @@
 set -Eeuo pipefail
 
 DEPLOY_DIR="${DEPLOY_DIR:-/srv/hefesto}"
-COMPOSE_FILE="${COMPOSE_FILE:-docker-compose.prod.yml}"
-ENV_FILE="${ENV_FILE:-.env.prod}"
-STATE_FILE="${STATE_FILE:-.deployed-tag}"
-HEALTH_URL="${HEALTH_URL:-http://127.0.0.1:8080/readyz}"
+DEPLOY_ENV="${DEPLOY_ENV:-production}"
+case "$DEPLOY_ENV" in
+    production)
+        COMPOSE_FILE="${COMPOSE_FILE:-docker-compose.prod.yml}"
+        ENV_FILE="${ENV_FILE:-.env.prod}"
+        STATE_FILE="${STATE_FILE:-.deployed-tag}"
+        PULL_SERVICES=(api migrate seed backup)
+        UP_SERVICES=(api caddy backup)
+        ;;
+    staging)
+        COMPOSE_FILE="${COMPOSE_FILE:-docker-compose.staging.yml}"
+        ENV_FILE="${ENV_FILE:-.env.staging}"
+        STATE_FILE="${STATE_FILE:-.deployed-tag-staging}"
+        PULL_SERVICES=(api migrate seed)
+        UP_SERVICES=(api)
+        ;;
+    *)
+        printf 'DEPLOY_ENV must be production or staging, not %s\n' "$DEPLOY_ENV" >&2
+        exit 1
+        ;;
+esac
+EDGE_NETWORK="hefesto-edge"
 HEALTH_RETRIES="${HEALTH_RETRIES:-30}"
 HEALTH_INTERVAL_S="${HEALTH_INTERVAL_S:-2}"
 
@@ -49,14 +72,22 @@ PREVIOUS_TAG=""
 if [[ -f "$STATE_FILE" ]]; then
     PREVIOUS_TAG="$(cat "$STATE_FILE")"
 fi
-log "current tag: ${PREVIOUS_TAG:-<none>}  →  new tag: $NEW_TAG"
+log "$DEPLOY_ENV: current tag: ${PREVIOUS_TAG:-<none>}  →  new tag: $NEW_TAG"
 
 export HEFESTO_TAG="$NEW_TAG"
 
 # ---------------------------------------------------------------- pull
 log "pulling image"
-compose pull --quiet api migrate seed backup \
+compose pull --quiet "${PULL_SERVICES[@]}" \
     || die "could not pull ${HEFESTO_IMAGE:-image}:$NEW_TAG — is the tag published and is the registry login still valid?"
+
+# ------------------------------------------------------------ network
+# Production's Caddy and the staging API meet on this network. Whichever
+# environment is deployed first creates it.
+if ! docker network inspect "$EDGE_NETWORK" >/dev/null 2>&1; then
+    log "creating network $EDGE_NETWORK"
+    docker network create "$EDGE_NETWORK" >/dev/null
+fi
 
 # ---------------------------------------------------------- database up
 log "ensuring database is up"
@@ -80,7 +111,7 @@ fi
 
 # ------------------------------------------------------------- release
 log "starting api"
-compose up -d --remove-orphans api caddy backup
+compose up -d --remove-orphans "${UP_SERVICES[@]}"
 
 # -------------------------------------------------------------- verify
 log "waiting for readiness (max $((HEALTH_RETRIES * HEALTH_INTERVAL_S))s)"
@@ -106,7 +137,7 @@ if [[ "$healthy" != true ]]; then
 fi
 
 echo "$NEW_TAG" > "$STATE_FILE"
-log "deployed $NEW_TAG"
+log "deployed $NEW_TAG to $DEPLOY_ENV"
 
 # ------------------------------------------------------------- cleanup
 log "pruning images older than 7 days"

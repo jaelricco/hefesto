@@ -4,13 +4,15 @@ on:
   push:
     branches: [main]
   pull_request:
+  # Run the whole suite on a branch before it has a pull request.
+  workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
 env:
-  GO_VERSION: "1.24"
+  GO_VERSION: "1.27"
 
 jobs:
   lint:
@@ -35,7 +37,7 @@ jobs:
           test -z "$(git status --porcelain -- internal/store/dbgen)" || (git status --short -- internal/store/dbgen; echo "run make sqlc and commit the result"; exit 1)
       - uses: golangci/golangci-lint-action@v8
         with:
-          version: v2.5.0
+          version: v2.15.0
           args: --timeout=5m
 
   test:
@@ -114,6 +116,13 @@ jobs:
           cache: true
       - run: go run ./cmd/contentlint -dir ./content -strict
 
+  ios-strings:
+    name: iOS strings are complete (en, de)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 ios/scripts/check-strings.py
+
   openapi:
     name: openapi lint + breaking-change diff
     runs-on: ubuntu-latest
@@ -153,11 +162,92 @@ jobs:
         run: |
           bash <(curl -fsSL https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
           ./actionlint -color
-      - name: production compose is valid
+      # The image production runs. An invalid Caddyfile would stop Caddy, and
+      # with it every public endpoint, at the first deploy.
+      - name: Caddyfile is valid
+        run: |
+          docker run --rm \
+            -e HEFESTO_API_DOMAIN=api.hefesto.fit -e HEFESTO_SITE_DOMAIN=hefesto.fit \
+            -e HEFESTO_SITE_DOMAIN_ALT=hefesto.ch -e HEFESTO_STAGING_API_DOMAIN=api-staging.hefesto.fit \
+            -e HEFESTO_ACME_EMAIL=ops@example.test \
+            -v "$PWD/docker/Caddyfile:/etc/caddy/Caddyfile:ro" \
+            caddy:2-alpine caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
+      - name: production and staging compose are valid
         run: |
           sed -E 's/^([A-Z_]+)=$/\1=placeholder/' .env.prod.example > /tmp/check.env
           echo 'HEFESTO_TAG=v0.0.0-ci' >> /tmp/check.env
           docker compose -f docker-compose.prod.yml --env-file /tmp/check.env config --quiet
+          sed -E 's/^([A-Z_]+)=$/\1=placeholder/' .env.staging.example > /tmp/check-staging.env
+          echo 'HEFESTO_TAG=sha-ci' >> /tmp/check-staging.env
+          docker compose -f docker-compose.staging.yml --env-file /tmp/check-staging.env config --quiet
+
+  load-smoke:
+    name: load smoke test
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: hefesto
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: hefesto
+          POSTGRES_INITDB_ARGS: "--locale-provider=icu --icu-locale=en-US --encoding=UTF8"
+        options: >-
+          --health-cmd "pg_isready -U hefesto"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+        ports: ["5432:5432"]
+    env:
+      DATABASE_URL: postgres://hefesto:ci@localhost:5432/hefesto?sslmode=disable
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+      - name: migrate and seed
+        run: |
+          go install github.com/pressly/goose/v3/cmd/goose@v3.24.1
+          goose -dir db/migrations postgres "$DATABASE_URL" up
+          go run ./cmd/seed -dir ./content
+      - name: start the API
+        # The release build, with production's argon2 cost. Only the auth
+        # rate limit is raised, so 25 athletes can register from one address.
+        env:
+          HEFESTO_HTTP_ADDR: 127.0.0.1:8080
+          HEFESTO_AUTH_PER_MINUTE: "10000"
+          HEFESTO_LOG_LEVEL: warn
+          HEFESTO_DB_MAX_CONNS: "20"
+        run: |
+          go build -trimpath -o ./bin/api ./cmd/api
+          nohup ./bin/api > api.log 2>&1 &
+      - name: 25 athletes for 60 seconds
+        run: go run ./cmd/loadsmoke -base-url http://127.0.0.1:8080 -athletes 25 -duration 60s
+      - name: API log
+        if: always()
+        run: tail -n 200 api.log || true
+
+  # The first deploy to the real host must not be the first time the deploy
+  # scripts, both Compose files, the Caddyfile, the backup sidecar and the
+  # restore run (ADR 0026). This runs all of them on the runner's Docker.
+  deploy-rehearsal:
+    name: deploy rehearsal (production, staging, backup, restore)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+      # MinIO is built from source (scripts/with-minio.sh); keep the binary.
+      - uses: actions/cache@v4
+        with:
+          path: bin
+          key: minio-${{ hashFiles('scripts/with-minio.sh') }}
+      - name: rehearse
+        env:
+          HEFESTO_TEST_MINIO_HOST: 0.0.0.0
+        run: ./scripts/with-minio.sh ./scripts/deploy-rehearsal.sh
 
   docker:
     name: docker image builds
