@@ -142,9 +142,7 @@ struct TodayView: View {
             OnboardingCard { onboarding = true }
         } else if let week = model.plan.week {
             if week.stopped {
-                PlanStoppedCard(
-                    week: week,
-                    onClearance: week.reasons.contains { $0.ruleId == "SAFE-07" } ? nil : { confirmingClearance = true })
+                PlanStoppedCard(week: week, onClearance: clearance(week))
                 if let clearanceFailure {
                     Text(verbatim: clearanceFailure).font(.detailText).foregroundStyle(Palette.text)
                 }
@@ -175,6 +173,13 @@ struct TodayView: View {
         .buttonStyle(.plain)
         .padding(.horizontal, 16)
         .background(Palette.surface, in: .rect(cornerRadius: 16))
+    }
+
+    /// The clearance a stop offers; a minor's stop (SAFE-07) is not lifted
+    /// by one.
+    private func clearance(_ week: PlanWeek) -> (() -> Void)? {
+        if week.reasons.contains(where: { $0.ruleId == "SAFE-07" }) { return nil }
+        return { confirmingClearance = true }
     }
 
     /// A professional cleared the athlete: the stop ends (spec §8.3).
