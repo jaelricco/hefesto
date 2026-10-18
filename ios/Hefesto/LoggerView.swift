@@ -297,6 +297,7 @@ struct LoggerView: View {
         attempt {
             try logger.perform(plannedSet: planned.setId, elements: drafts, rir: reserve.rir, sirS: reserve.sirS)
             loggedCount += 1
+            AccessibilityNotification.Announcement(String(localized: "Set logged")).post()
             if let end = logger.rest?.endsAt { RestNotifier.schedule(at: end) }
         }
     }
