@@ -83,7 +83,8 @@ func (s *Store) CreateSession(ctx context.Context, w Writer, in training.Session
 		row, err := q.InsertSession(ctx, dbgen.InsertSessionParams{
 			ID: in.ID, UserID: w.UserID, StartedAt: in.StartedAt, Timezone: in.Timezone,
 			LocalDate: dateOf(in.LocalDate), Title: in.Title, Notes: in.Notes, BodyweightKg: bw,
-			IsRestDay: in.IsRestDay, TemplateID: in.TemplateID, ClientID: w.DeviceID, UpdatedAt: w.At,
+			IsRestDay: in.IsRestDay, TemplateID: in.TemplateID, PlannedSessionID: in.PlannedSessionID,
+			ClientID: w.DeviceID, UpdatedAt: w.At,
 		})
 		if errors.Is(err, pgx.ErrNoRows) {
 			return ErrAlreadyExists
@@ -327,8 +328,8 @@ func (s *Store) PutSet(ctx context.Context, w Writer, sessionID uuid.UUID, set t
 			OrderIndex: int32(set.OrderIndex), //nolint:gosec // bounded by the API schema
 			RoundIndex: int16Ptr(set.RoundIndex), Kind: set.Kind, IsPlanned: set.IsPlanned,
 			RestAfterPlannedS: int32Ptr(set.RestAfterPlannedS), RestAfterActualS: int32Ptr(set.RestAfterActualS),
-			Rpe: rpe, Rir: int16Ptr(set.RIR), SirS: int16Ptr(set.SIR), CompletedAt: set.CompletedAt, Notes: set.Notes,
-			ClientID: w.DeviceID, UpdatedAt: w.At,
+			Rpe: rpe, Rir: int16Ptr(set.RIR), SirS: int16Ptr(set.SIR), PlannedItemID: set.PlannedItemID,
+			CompletedAt: set.CompletedAt, Notes: set.Notes, ClientID: w.DeviceID, UpdatedAt: w.At,
 		})
 		if errors.Is(err, pgx.ErrNoRows) {
 			return ErrNotFound // belongs to another user

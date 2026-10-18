@@ -678,6 +678,111 @@ func TestCompletePlannedSession(t *testing.T) {
 	}
 }
 
+// A session a client started offline reaches the server through sync with
+// its planned session and items. The planner links it as if it had started
+// online and lets its draft follow the current plan (spec §10.5).
+func TestOfflineStart(t *testing.T) {
+	a := newAPI(t, withPlanner(&fixedClock{plannerMonday}))
+	started := plannerMonday.Add(10 * time.Hour)
+	// offline writes the first item of a planned session as a client does
+	// without the server: its sets, planned, naming the item.
+	offline := func(u user, key string, plannedSession string, ps map[string]any) (string, []string) {
+		t.Helper()
+		var it map[string]any
+		for _, b := range ps["blocks"].([]any) {
+			for _, x := range b.(map[string]any)["items"].([]any) {
+				if x := x.(map[string]any); it == nil && x["offer"] == false && x["sets"].(float64) > 0 {
+					it = x
+				}
+			}
+		}
+		logID, block := newID(), newID()
+		ops := []map[string]any{
+			{"op": "put", "entity": "session", "id": logID, "data": map[string]any{"started_at": at(started),
+				"timezone": "Europe/Zurich", "planned_session_id": plannedSession, "updated_at": at(started)}},
+			{"op": "put", "entity": "block", "id": block, "session_id": logID, "data": map[string]any{"order_index": 0}},
+		}
+		var sets []string
+		for i := range int(it["sets"].(float64)) {
+			el := map[string]any{"id": newID(), "exercise_id": a.exerciseID(it["exercise"].(string)), "measure": "reps",
+				"reps": it["reps"]}
+			if hold, _ := it["hold_s"].(float64); hold > 0 {
+				el = map[string]any{"id": el["id"], "exercise_id": el["exercise_id"], "measure": "hold_seconds", "hold_seconds": it["hold_s"]}
+			}
+			id := newID()
+			sets = append(sets, id)
+			ops = append(ops, map[string]any{"op": "put", "entity": "set", "id": id, "session_id": logID, "data": map[string]any{
+				"block_id": block, "order_index": i, "kind": it["kind"], "is_planned": true, "planned_item_id": it["id"],
+				"rest_after_planned_s": it["rest_s"], "updated_at": at(started), "elements": []any{el}}})
+		}
+		res := a.push(u, key, ops...).ok(200, "SyncPushResult")
+		for _, r := range results(t, res) {
+			if r["status"] != "applied" {
+				t.Fatalf("offline start op %v", r)
+			}
+		}
+		return logID, sets
+	}
+	items := func(ps map[string]any) map[string]bool {
+		out := map[string]bool{}
+		for _, b := range ps["blocks"].([]any) {
+			for _, it := range b.(map[string]any)["items"].([]any) {
+				out[it.(map[string]any)["id"].(string)] = true
+			}
+		}
+		return out
+	}
+
+	// From the plan the server holds: linked, and the sets keep their items.
+	u := onboarded(t, a, "offline@example.com")
+	first := a.call("GET", "/v1/me/plan", u.access, nil).ok(200, "TrainingPlan")["sessions"].([]any)[0].(map[string]any)
+	logID, _ := offline(u, "offline-1", first["id"].(string), first)
+	now := a.call("GET", "/v1/me/plan", u.access, nil).ok(200, "TrainingPlan")["sessions"].([]any)[0].(map[string]any)
+	if now["status"] != "started" || now["workout_session_id"] != logID || now["check_in_applied"] != false {
+		t.Errorf("planned session after the sync: %v %v %v", now["status"], now["workout_session_id"], now["check_in_applied"])
+	}
+	sess := a.call("GET", "/v1/sessions/"+logID, u.access, nil).ok(200, "Session")
+	if sess["planned_session_id"] != first["id"] {
+		t.Errorf("session names planned session %v, want %v", sess["planned_session_id"], first["id"])
+	}
+	for _, s := range sess["blocks"].([]any)[0].(map[string]any)["sets"].([]any) {
+		if s := s.(map[string]any); !items(first)[s["planned_item_id"].(string)] || s["is_planned"] != true {
+			t.Errorf("set %v", s)
+		}
+	}
+	// A start online, from another device, answers with it.
+	again := a.call("POST", "/v1/me/plan/sessions/"+first["id"].(string)+"/start", u.access,
+		map[string]any{"id": newID(), "timezone": "Europe/Zurich", "started_at": at(started)}).ok(200, "Session")
+	if again["id"] != logID {
+		t.Errorf("start after the offline start gave %v, want %v", again["id"], logID)
+	}
+
+	// From a plan a newer one replaced: the push links the day's session of
+	// the new plan, and the draft's sets now name its items.
+	v := onboarded(t, a, "offline-replaced@example.com")
+	old := a.call("GET", "/v1/me/plan", v.access, nil).ok(200, "TrainingPlan")["sessions"].([]any)[0].(map[string]any)
+	fresh := a.call("POST", "/v1/me/plan/regenerate", v.access, nil).ok(200, "TrainingPlan")["sessions"].([]any)[0].(map[string]any)
+	logID, sets := offline(v, "offline-2", old["id"].(string), old)
+	pulled, _, _ := a.pullAll(v, 0, 1000)
+	for _, id := range sets {
+		if s := pulled[id]; s == nil || !items(fresh)[s["planned_item_id"].(string)] {
+			t.Errorf("pulled set %s after the link: %v", id, s)
+		}
+	}
+	now = a.call("GET", "/v1/me/plan", v.access, nil).ok(200, "TrainingPlan")["sessions"].([]any)[0].(map[string]any)
+	if now["id"] != fresh["id"] || now["status"] != "started" || now["workout_session_id"] != logID {
+		t.Errorf("new planned session after the sync: %v %v %v", now["id"], now["status"], now["workout_session_id"])
+	}
+
+	// A planned session the server does not know is dropped.
+	stray := newID()
+	a.push(u, "offline-3", map[string]any{"op": "put", "entity": "session", "id": stray, "data": map[string]any{
+		"started_at": at(started), "timezone": "UTC", "planned_session_id": newID()}}).ok(200, "SyncPushResult")
+	if s := a.call("GET", "/v1/sessions/"+stray, u.access, nil).ok(200, "Session"); s["planned_session_id"] != nil {
+		t.Errorf("unknown planned session kept: %v", s["planned_session_id"])
+	}
+}
+
 // A tired check-in at the start makes the session lighter; the planned
 // session says so and shows what the draft holds (ADAPT-17, ADR 0019).
 func TestStartWithCheckIn(t *testing.T) {

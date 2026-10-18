@@ -1387,6 +1387,11 @@ paths:
         started first, whatever its `id`. After the log session is deleted,
         the planned session can start again. Nothing starts while training
         is stopped (`training-stopped`).
+
+        Without a connection a client starts the session itself, by the same
+        scheme, and syncs it with `planned_session_id` and `planned_item_id`
+        (spec §10.5). The planner links such a start after the commit; a
+        start here then answers with that session.
       requestBody:
         required: true
         content:
@@ -2597,6 +2602,12 @@ components:
           type: [integer, "null"]
           minimum: 0
           maximum: 60
+        planned_item_id:
+          description: |
+            The plan item a set of a session started offline comes from
+            (spec §10.5). Taken when the set is created and kept after: the
+            planner relinks it when a new plan replaces the item.
+          $ref: "#/components/schemas/Id"
         completed_at:
           $ref: "#/components/schemas/NullableTimestamp"
         notes:
@@ -3464,6 +3475,14 @@ components:
         is_rest_day:
           type: boolean
         template_id:
+          $ref: "#/components/schemas/Id"
+        planned_session_id:
+          description: |
+            The planned session a client started this session from while
+            offline (spec §10.5). Taken when the session is created and kept
+            after; a planned session the server does not know is dropped.
+            After the commit the planner links the start to the plan and lets
+            the draft follow the current plan, as after a start online.
           $ref: "#/components/schemas/Id"
         status:
           type: string
