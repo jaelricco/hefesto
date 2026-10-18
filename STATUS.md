@@ -176,6 +176,27 @@ documents are in German.
     `checkin`, `planned`, `target`) join the screenshots.
   - Not built: offers on active choice, the pain question on monitored
     items, the onboarding in the app, choosing a band, the offline start.
+- **The onboarding in the iOS app (this checkpoint, ADR 0023):**
+  - The knowledge base now words the six screening questions (`SCR-01` to
+    `SCR-06`), checked by KB-10 and KB-12. The planner catalogue serves them
+    with the exertion question (RF-10) and the minor age, so the app asks
+    exactly what the server validates.
+  - Without health-data consent the screening may be empty: the design
+    does not ask it then, and the server discards it anyway.
+  - `HefestoPlan` holds the answers in a form that decides which questions
+    apply (onboarding.md §3.6), when a page is complete and what is sent:
+    only answers that still apply, RF-10 once for every region. A retry of
+    the same answers keeps its idempotency key.
+  - The app asks page by page: frame, goals, time, equipment, background,
+    where the athlete stands, health, one page per current complaint with
+    its warning signs, then the result. Knowledge-base texts are shown
+    verbatim; a yes to a red flag shows its advice at once. Clarifications
+    come back on the last page.
+  - Without a plan, Today leads with the onboarding. The demo holds the
+    catalogue; three new screens (`onboarding`, `standing`, `complaint`)
+    join the screenshots.
+  - Not built: the test day, «refine profile», preferred days, free text
+    for «other», confirming a clearance in the app.
 - **A started draft follows the plan (this checkpoint, ADR 0017):**
   - Every new plan of the week reconciles the drafts of started sessions in
     the same transaction. Their open planned sets follow the day's session
@@ -213,7 +234,8 @@ documents are in German.
   ADR 0017 (U-55 to U-57), the completion in ADR 0018 (U-58 to U-61), the
   check-in in ADR 0019 (U-62 to U-64), the reserve (U-65 to U-68), the
   plan's foundation in the iOS app in ADR 0021 (U-69 to U-71), the plan's
-  screens in ADR 0022 (U-72 to U-75),
+  screens in ADR 0022 (U-72 to U-75), the onboarding in the app in
+  ADR 0023 (U-76 to U-79),
   and these findings in spec §15.4:
   - sets with partner or machine assistance reach neither the capacities
     nor the load history;
@@ -229,7 +251,12 @@ documents are in German.
     restrictions from the onboarding are stored but do not yet exclude
     anything;
   - after a withdrawal the decision log and past plans still name regions
-    and states; whether they must be redacted is a legal question (ENT-4).
+    and states; whether they must be redacted is a legal question (ENT-4);
+  - the catalogue does not say which goals bring which onboarding
+    questions; the app holds onboarding.md §3.6 with the knowledge base's
+    skill slugs (ADR 0023);
+  - a minor answers the whole onboarding before learning there is no plan
+    (SAFE-07); an early notice waits on OE-1.
 - **Not yet built:**
   - starting a session offline through sync;
   - the sync of pain reports;

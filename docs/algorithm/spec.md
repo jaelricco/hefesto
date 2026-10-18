@@ -2171,7 +2171,8 @@ erreicht (ADR 0018, U-58 bis U-61), und der Check-in beim Start (ADR 0019, U-62 
 U-64), und die Reserve eines Halts im Log (U-65, U-66) und die Reserve in
 der iOS-App (U-67, U-68), und der Unterbau des Plans in der iOS-App
 (ADR 0021, U-69 bis U-71), und die Screens des Plans in der iOS-App
-(ADR 0022, U-72 bis U-75).
+(ADR 0022, U-72 bis U-75), und das Onboarding in der iOS-App (ADR 0023,
+U-76 bis U-79).
 
 Tests: sechs Personas als Golden Files (`internal/domain/planning/testdata/`),
 die Eigenschaften I-1 bis I-11 für jeden erzeugten Plan, zwölf simulierte
@@ -2265,6 +2266,10 @@ U-35 setzen die Entscheidungen ENT-R-1, ENT-R-2 und ENT-R-5 um (§15.5).
 | U-73 | §10.2, §10.5 | Vor dem Start sendet die App ihren Ausgang; der Check-in fragt Schlaf (4 bis 9 h, Enden «oder weniger»/«oder mehr») und Müdigkeit (1–10), beide freiwillig, und nennt die Schwellen von ADAPT-17; «Weiter» ohne gehaltene Session startet erneut | Der Server plant mit dem letzten Log, und offline ausgeführte Sätze gehen vor einem Abgleich hinaus (§15.4); ein wiederholter Start antwortet mit derselben Session (U-51) |
 | U-74 | §4.3, §10.2 | Der Logger zeigt offene geplante Sätze als Ziele; «Nächster Satz» öffnet den nächsten mit vorbelegten Zielen und geplanter Pause, ohne Kombination; nur der erste Arbeitssatz eines Items mit `calibration` ist ein Kalibrierungssatz und sagt, warum die Reserve zählt; die Reserve bleibt freiwillig; der Verlauf zeigt nur Ausgeführtes | Die Kalibrierung (SEL-08) stützt sich auf den ersten, unermüdeten Satz; eine erzwungene Reserve würde geraten statt angegeben |
 | U-75 | §10.2 | Ein geplanter Satz, dessen Item `assist: band` trägt, lässt sich in der App nicht ausführen, bis sie ein Band wählen kann; er bleibt sichtbar und wird von «Nächster Satz» übersprungen | Das Log verlangt das Band selbst (ADR 0016); ohne Band stünde der Satz als unassistiert im Log und wäre ein Beleg für die Skill-Karte, deren Freischaltungen nie zurückgenommen werden |
+| U-76 | §10.3 | Die sechs Vorabfragen stehen in der Wissensbasis (`body.yaml`, `SCR-01` bis `SCR-06`, geprüft mit KB-10 und KB-12); `GET /v1/planner/catalogue` liefert sie mit der Frage nach Belastungssymptomen (RF-10) und der Altersgrenze für Minderjährige (PAR-D-23) | `onboarding.md` §3.7 nannte nur die Themen; die Texte des Planers kommen aus einer Quelle (KB-11), und ein Client fragt genau, was der Server prüft. Der Wortlaut bleibt Teil der Rechtsfrage OE-3 |
+| U-77 | §10.3 | Ohne Einwilligung darf `screening` leer sein; mit Einwilligung bleiben sechs Antworten Pflicht | Ohne Einwilligung werden die Vorabfragen nicht gestellt und die Antworten verworfen (`onboarding.md` §3.1); die API verlangte Antworten, die niemand gab |
+| U-78 | `onboarding.md` §3.6, §3.7 | Die App fragt nur, was gilt, und sendet nur das: Zusatzfragen nach §3.6, die Stufe vor der Pause ab `7_to_16_weeks`, ohne Einwilligung weder Vorabfragen noch Verletzungen der letzten 12 Monate; RF-10 einmal für alle Regionen; die Dauer einer Beschwerde als 1, 3, 8 oder 13 Wochen je Klasse; Ziele sind Skills mit Meilenstein | Kurzer Pflichtteil (O-1); die Dauer wirkt nur über PAR-D-19, und jede Zahl liegt in ihrer Klasse; Grundlagen ohne Meilenstein sind Weg, nicht Ziel |
+| U-79 | §10.3 | Die App sendet die Antworten mit einem `Idempotency-Key` je Antwortstand; dieselben Antworten nach einer verlorenen Antwort behalten ihn. Ein Ergebnis mit Plan wird gehalten; ohne Plan führt auf «Heute» das Onboarding | Eine Wiederholung soll das erste Ergebnis bringen, neue Antworten ein neues (U-41) |
 
 ### 15.3 Nicht umgesetzt
 
