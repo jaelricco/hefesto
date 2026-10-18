@@ -316,10 +316,10 @@ struct RedFlagSheet: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
-                    if let region = model.body.region(regionId) {
+                    if let region = asked {
                         PageTitle("Warning signs", detail: nil)
                         Text(verbatim: BodyText.title(region.name)).font(.rowTitle).foregroundStyle(Palette.textSecondary)
-                        ForEach(region.redFlags) { flag in
+                        ForEach(region.flags) { flag in
                             VStack(alignment: .leading, spacing: 12) {
                                 YesNoQuestion(question: flag.question, answer: binding(flag.id))
                                 if answers[flag.id] == true {
@@ -361,30 +361,38 @@ struct RedFlagSheet: View {
         }
     }
 
+    /// The region's questions as the server lists them; for a region it
+    /// does not list yet, the body map's, as asked of an adult.
+    private var asked: (name: String, flags: [OnboardingCatalogue.Flag])? {
+        if let region = model.body.region(regionId) { return (region.name, region.redFlags) }
+        guard let region = model.body.catalogue?.region(regionId) else { return nil }
+        return (region.name, region.flags.filter { !$0.minorOnly })
+    }
+
     private func binding(_ id: String) -> Binding<Bool?> {
         Binding(get: { answers[id] }, set: { answers[id] = $0 })
     }
 
     /// Every question answered, and a follow-up exactly when its question
     /// was answered yes.
-    private func complete(_ region: BodyRegion) -> Bool {
-        region.redFlags.allSatisfy { flag in
+    private func complete(_ region: (name: String, flags: [OnboardingCatalogue.Flag])) -> Bool {
+        region.flags.allSatisfy { flag in
             guard let yes = answers[flag.id] else { return false }
             guard yes, let followup = flag.followup else { return true }
             return answers[followup.id] != nil
         }
     }
 
-    private func send(_ region: BodyRegion) async {
+    private func send(_ region: (name: String, flags: [OnboardingCatalogue.Flag])) async {
         var sent: [String: Bool] = [:]
-        for flag in region.redFlags {
+        for flag in region.flags {
             sent[flag.id] = answers[flag.id] ?? false
             if sent[flag.id] == true, let followup = flag.followup { sent[followup.id] = answers[followup.id] ?? false }
         }
         sending = true
         failure = nil
         do {
-            let outcome = try await model.body.answerRedFlags(region: region.id, answers: sent)
+            let outcome = try await model.body.answerRedFlags(region: regionId, answers: sent)
             sending = false
             dismiss()
             onSent(outcome)
