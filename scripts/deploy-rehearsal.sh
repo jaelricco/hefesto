@@ -32,14 +32,20 @@ image="localhost:5000/hefesto"
 tag="rehearsal-$(date -u +%s)"
 
 diag="$(mktemp)"
+fail="$(mktemp)"
+# Pull and build progress would drown the log; errors still show.
+export COMPOSE_PROGRESS=quiet COMPOSE_ANSI=never
 log()  { printf '\033[1;35m## %s\033[0m\n' "$*"; echo "## $*" >> "$diag"; }
-die()  { printf '\033[1;31mxx\033[0m %s\n' "$*" >&2; echo "xx $*" >> "$diag"; exit 1; }
+die()  { printf '\033[1;31mxx\033[0m %s\n' "$*" >&2; echo "xx $*" | tee -a "$diag" >> "$fail"; exit 1; }
 # In CI, a failure also becomes an annotation: the step, the error and the
 # last log lines, readable without the job log.
 annotate() {
     [[ -n "${GITHUB_ACTIONS:-}" ]] || return 0
     local body
-    body=$(tail -n 120 "$diag" | sed -e 's/%/%25/g' | awk '{ printf "%s%%0A", $0 }')
+    # GitHub cuts an annotation at about 4 KB: the error and container states
+    # first, then the last lines of the log.
+    body=$( { cat "$fail"; echo "-- last lines --"; tail -n 25 "$diag"; } | cut -c1-200 | head -c 3800 \
+        | sed -e 's/%/%25/g' | awk '{ printf "%s%%0A", $0 }')
     echo "::error title=deploy rehearsal failed::$body"
 }
 hex()  { od -An -N"$1" -tx1 /dev/urandom | tr -d ' \n'; }
@@ -56,17 +62,19 @@ psql_prod() { prod exec -T postgres psql -U hefesto -At -c "$2" "$1"; }
 cleanup() {
     status=$?
     if [[ $status -ne 0 ]]; then
-        echo "failed at line ${BASH_LINENO[0]:-?} (exit $status); state of both projects" >> "$diag"
-        { prod ps -a; staging ps -a; prod logs --no-color --tail 40; staging logs --no-color --tail 20 api; } \
-            >> "$diag" 2>&1 || true
-        cat "$diag" >&2
+        echo "failed during: $(grep '^## ' "$diag" | tail -1) (exit $status)" >> "$fail"
+        { prod ps -a --format '{{.Service}} {{.State}} {{.Status}}'
+          staging ps -a --format 'staging {{.Service}} {{.State}} {{.Status}}'
+          for svc in api caddy backup; do prod logs --no-color --tail 6 "$svc"; done
+          staging logs --no-color --tail 6 api; } >> "$fail" 2>&1 || true
+        cat "$diag" "$fail" >&2
         annotate
     fi
     staging down -v --remove-orphans >/dev/null 2>&1 || true
     prod down -v --remove-orphans >/dev/null 2>&1 || true
     docker network rm hefesto-edge >/dev/null 2>&1 || true
     docker rm -f "$registry" >/dev/null 2>&1 || true
-    rm -rf "$work" "$diag"
+    rm -rf "$work" "$diag" "$fail"
     exit $status
 }
 trap cleanup EXIT
