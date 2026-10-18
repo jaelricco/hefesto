@@ -42,9 +42,15 @@ jobs:
   build:
     name: build and push image
     runs-on: ubuntu-latest
+    # Only a push to main of this repository. A pull request's ci run
+    # completes here too, and `branches: [main]` matches a fork's branch
+    # named main: its own scripts would then run on the host.
     if: >-
       vars.STAGING_DEPLOY == 'true' &&
-      (github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success')
+      (github.event_name == 'workflow_dispatch' ||
+       (github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.event == 'push' &&
+        github.event.workflow_run.head_repository.full_name == github.repository))
     outputs:
       tag: ${{ steps.tag.outputs.tag }}
       sha: ${{ steps.tag.outputs.sha }}
