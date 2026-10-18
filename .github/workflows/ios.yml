@@ -96,4 +96,16 @@ jobs:
             -destination "id=$device" \
             -derivedDataPath .derived \
             -resultBundlePath ".derived/a11y-$GITHUB_RUN_ID.xcresult" 2>&1 | tee test.log | grep -E 'error:|Test Case|\*\* TEST' || true
-          grep -q '\*\* TEST SUCCEEDED \*\*' test.log
+          if ! grep -q '\*\* TEST SUCCEEDED \*\*' test.log; then
+            # Each finding also becomes an annotation, readable from the API
+            # without the log. GitHub keeps ten error annotations per step,
+            # so there is one per test, listing its findings.
+            grep -E ': error: ' test.log | sed -E 's/^[^:]*:[0-9]+: error: //' | sort -u > findings.txt || true
+            echo "$(wc -l < findings.txt) findings"
+            for t in testEveryScreen testEveryScreenAtTheLargestTextSize testEveryScreenInGerman; do
+              body=$(grep -F " $t]" findings.txt | sed -E 's/^-\[[^]]*\] : //; s/%/%25/g' | head -80 \
+                | awk '{ printf "%s%%0A", $0 }')
+              if [ -n "$body" ]; then echo "::error title=Accessibility audit: $t::$body"; fi
+            done
+            exit 1
+          fi
