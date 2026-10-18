@@ -160,11 +160,24 @@ jobs:
         run: |
           bash <(curl -fsSL https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
           ./actionlint -color
-      - name: production compose is valid
+      # The image production runs. An invalid Caddyfile would stop Caddy, and
+      # with it every public endpoint, at the first deploy.
+      - name: Caddyfile is valid
+        run: |
+          docker run --rm \
+            -e HEFESTO_API_DOMAIN=api.hefesto.fit -e HEFESTO_SITE_DOMAIN=hefesto.fit \
+            -e HEFESTO_SITE_DOMAIN_ALT=hefesto.ch -e HEFESTO_STAGING_API_DOMAIN=api-staging.hefesto.fit \
+            -e HEFESTO_ACME_EMAIL=ops@example.test \
+            -v "$PWD/docker/Caddyfile:/etc/caddy/Caddyfile:ro" \
+            caddy:2-alpine caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
+      - name: production and staging compose are valid
         run: |
           sed -E 's/^([A-Z_]+)=$/\1=placeholder/' .env.prod.example > /tmp/check.env
           echo 'HEFESTO_TAG=v0.0.0-ci' >> /tmp/check.env
           docker compose -f docker-compose.prod.yml --env-file /tmp/check.env config --quiet
+          sed -E 's/^([A-Z_]+)=$/\1=placeholder/' .env.staging.example > /tmp/check-staging.env
+          echo 'HEFESTO_TAG=sha-ci' >> /tmp/check-staging.env
+          docker compose -f docker-compose.staging.yml --env-file /tmp/check-staging.env config --quiet
 
   load-smoke:
     name: load smoke test

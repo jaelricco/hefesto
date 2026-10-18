@@ -180,6 +180,9 @@ deploy-check: ## Validate everything the deploy depends on, without deploying
 	@sed -E 's/^([A-Z_]+)=$$/\1=placeholder/' .env.prod.example > /tmp/hefesto-check.env
 	@echo 'HEFESTO_TAG=v0.0.0-check' >> /tmp/hefesto-check.env
 	docker compose -f docker-compose.prod.yml --env-file /tmp/hefesto-check.env config --quiet
+	@sed -E 's/^([A-Z_]+)=$$/\1=placeholder/' .env.staging.example > /tmp/hefesto-check.env
+	@echo 'HEFESTO_TAG=sha-check' >> /tmp/hefesto-check.env
+	docker compose -f docker-compose.staging.yml --env-file /tmp/hefesto-check.env config --quiet
 	@rm -f /tmp/hefesto-check.env
 	@command -v shellcheck >/dev/null && shellcheck -e SC1091 scripts/*.sh || echo "shellcheck not installed — skipped"
 	@command -v actionlint >/dev/null && actionlint || echo "actionlint not installed — skipped"

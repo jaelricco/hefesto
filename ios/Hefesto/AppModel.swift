@@ -86,7 +86,10 @@ final class AppModel {
     }
 
     func signOut() async {
-        if demo == nil { await auth.logout() }
+        if demo == nil {
+            await auth.logout()
+            await auth.useDevice(id: Self.newDeviceId())
+        }
         isSignedIn = false
     }
 
@@ -110,8 +113,10 @@ final class AppModel {
         } catch {
             // A refresh the server refused signs the device out; anything
             // else is the network, and everything stays queued.
+            let wasSignedIn = isSignedIn
             isSignedIn = await auth.isSignedIn
             isOffline = isSignedIn
+            if wasSignedIn && !isSignedIn { await auth.useDevice(id: Self.newDeviceId()) }
         }
     }
 
@@ -143,15 +148,20 @@ final class AppModel {
         return URL(string: raw) ?? URL(string: "http://localhost:8080")!
     }
 
-    /// A stable id for this install. Not a secret: it names the device's
-    /// tokens so signing out here leaves other devices signed in.
+    /// This install's id for the signed-in account. Not a secret: it names
+    /// the device's tokens so signing out here leaves other devices signed in.
+    /// The server binds it to one account, so a sign-out starts a new one.
     static var deviceId: String {
-        let key = "fit.hefesto.deviceId"
-        if let id = UserDefaults.standard.string(forKey: key) { return id }
+        UserDefaults.standard.string(forKey: deviceIdKey) ?? newDeviceId()
+    }
+
+    static func newDeviceId() -> String {
         let id = UUIDv7.make()
-        UserDefaults.standard.set(id, forKey: key)
+        UserDefaults.standard.set(id, forKey: deviceIdKey)
         return id
     }
+
+    private static let deviceIdKey = "fit.hefesto.deviceId"
 }
 
 enum AppTab: Hashable {
