@@ -227,6 +227,9 @@ struct PlanWeekList: View {
 /// knowledge base's words. The app adds no advice of its own.
 struct PlanStoppedCard: View {
     let week: PlanWeek
+    /// Confirms a professional's clearance (ADR 0028); nil when none can
+    /// lift the stop, as for a minor (SAFE-07).
+    var onClearance: (() -> Void)?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -234,6 +237,12 @@ struct PlanStoppedCard: View {
             Text("Training is paused").font(.displayTitle).foregroundStyle(Palette.text)
             ForEach(Array(week.reasons.enumerated()), id: \.offset) { _, note in
                 Text(verbatim: note.text).font(.detailText).foregroundStyle(Palette.text)
+            }
+            if let onClearance {
+                Button("A professional cleared me", action: onClearance)
+                    .font(.bodyMedium)
+                    .foregroundStyle(Palette.ember)
+                    .frame(minHeight: 44)
             }
             Text(verbatim: week.disclaimer).font(.fine).foregroundStyle(Palette.textSecondary)
         }

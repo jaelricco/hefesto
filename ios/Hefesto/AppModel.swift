@@ -22,6 +22,8 @@ final class AppModel {
     /// The onboarding's answers, kept while the app runs, so closing it
     /// loses nothing (ADR 0023).
     let onboarding: OnboardingModel
+    /// The body's regions and the events about them (ADR 0028).
+    let body: BodyModel
 
     private(set) var isSignedIn = false
     private(set) var isSyncing = false
@@ -63,8 +65,12 @@ final class AppModel {
         let api = HefestoAPIConfiguration.client(serverURL: baseURL, middlewares: [AuthMiddleware(auth: auth)])
         sync = SyncEngine(client: api, db: db)
         // A demo shows the plan it seeded and never reaches the network.
-        plan = PlanModel(db: db, sync: demo == nil ? sync : nil)
+        let plan = PlanModel(db: db, sync: demo == nil ? sync : nil)
+        self.plan = plan
         onboarding = OnboardingModel(sync: demo == nil ? sync : nil, catalogue: demo?.catalogue)
+        body = BodyModel(
+            sync: demo == nil ? sync : nil, plan: plan, catalogue: demo?.catalogue,
+            overview: demo?.bodyOverview.map { Data($0.utf8) })
         if let form = demo?.onboardingForm { onboarding.form = form }
     }
 

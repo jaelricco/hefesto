@@ -881,6 +881,16 @@
         }
       }
     },
+    "A professional cleared me": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eine Fachperson hat mich freigegeben"
+          }
+        }
+      }
+    },
     "A question is still open.": {
       "localizations": {
         "de": {
@@ -981,6 +991,16 @@
         }
       }
     },
+    "After training": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach dem Training"
+          }
+        }
+      }
+    },
     "After your check-in, the hardest block is technique work today.": {
       "localizations": {
         "de": {
@@ -1007,6 +1027,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mit dieser E-Mail gibt es schon ein Konto. Melde dich stattdessen an."
+          }
+        }
+      }
+    },
+    "An assessment by a professional can help.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eine Abklärung durch eine Fachperson kann helfen."
+          }
+        }
+      }
+    },
+    "An assessment by a professional is recommended.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eine Abklärung durch eine Fachperson wird empfohlen."
           }
         }
       }
@@ -1141,6 +1181,16 @@
         }
       }
     },
+    "Before training": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vor dem Training"
+          }
+        }
+      }
+    },
     "Before you start": {
       "localizations": {
         "de": {
@@ -1191,12 +1241,32 @@
         }
       }
     },
+    "Body": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Körper"
+          }
+        }
+      }
+    },
     "Body weight": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Körpergewicht"
+          }
+        }
+      }
+    },
+    "Body: pain and symptoms": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Körper: Schmerz und Symptome"
           }
         }
       }
@@ -1391,6 +1461,26 @@
         }
       }
     },
+    "Confirm only what a doctor or physiotherapist told you. The region then starts its return at the first step.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bestätige nur, was dir eine Ärztin, ein Arzt oder eine Physiotherapeutin gesagt hat. Die Region beginnt ihre Rückkehr dann bei der ersten Stufe."
+          }
+        }
+      }
+    },
+    "Confirm only what a doctor told you. Training then starts again, carefully.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bestätige nur, was dir eine Ärztin oder ein Arzt gesagt hat. Das Training beginnt dann vorsichtig wieder."
+          }
+        }
+      }
+    },
     "Continue": {
       "localizations": {
         "de": {
@@ -1541,12 +1631,52 @@
         }
       }
     },
+    "Did a professional clear this region?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hat eine Fachperson diese Region freigegeben?"
+          }
+        }
+      }
+    },
+    "Did a professional clear you to train?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hat dich eine Fachperson zum Training freigegeben?"
+          }
+        }
+      }
+    },
     "Did a professional restrict any movements? Optional.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Hat dir eine Fachperson Bewegungen eingeschränkt? Freiwillig."
+          }
+        }
+      }
+    },
+    "Did it come suddenly and sharp?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kam er plötzlich und stechend?"
+          }
+        }
+      }
+    },
+    "Did it last longer than an hour?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hielt er länger als eine Stunde an?"
           }
         }
       }
@@ -1677,6 +1807,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dauer"
+          }
+        }
+      }
+    },
+    "During training": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Während des Trainings"
           }
         }
       }
@@ -2011,6 +2151,16 @@
         }
       }
     },
+    "Has it lasted longer than 15 minutes?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hält er länger als 15 Minuten an?"
+          }
+        }
+      }
+    },
     "Hefesto": {
       "localizations": {
         "de": {
@@ -2291,6 +2441,16 @@
         }
       }
     },
+    "How strong, from 0 (none) to 10 (the worst imaginable)?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wie stark, von 0 (keiner) bis 10 (der stärkste vorstellbare)?"
+          }
+        }
+      }
+    },
     "How sure are these numbers?": {
       "localizations": {
         "de": {
@@ -2371,12 +2531,32 @@
         }
       }
     },
+    "I was cleared": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ich wurde freigegeben"
+          }
+        }
+      }
+    },
     "In a lunge with your toes a hand's width from a wall, does your knee touch the wall without the heel lifting?": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Berührt dein Knie im Ausfallschritt die Wand, wenn die Zehen eine Handbreite entfernt sind, ohne dass die Ferse abhebt?"
+          }
+        }
+      }
+    },
+    "In everyday life": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Im Alltag"
           }
         }
       }
@@ -2397,6 +2577,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "In den letzten 12 Monaten"
+          }
+        }
+      }
+    },
+    "In the warm-up": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Im Aufwärmen"
           }
         }
       }
@@ -2441,12 +2631,32 @@
         }
       }
     },
+    "It could not be sent. Try again later.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das liess sich nicht senden. Versuch es später nochmals."
+          }
+        }
+      }
+    },
     "It is being looked into": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Wird gerade abgeklärt"
+          }
+        }
+      }
+    },
+    "Its warning signs pause all training.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ihre Warnzeichen pausieren das ganze Training."
           }
         }
       }
@@ -2901,6 +3111,26 @@
         }
       }
     },
+    "No connection. Reports need one; try again when you are online.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Verbindung. Meldungen brauchen eine; versuch es nochmals, wenn du online bist."
+          }
+        }
+      }
+    },
+    "No connection. Stop training now and follow the advice above; send the report when you are online.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Verbindung. Hör jetzt mit dem Training auf und folge dem Rat oben; sende die Meldung, sobald du online bist."
+          }
+        }
+      }
+    },
     "No connection. Without one, the session starts as planned: making it lighter after short sleep or high tiredness needs the server. Your plan takes the session up at the next sync.": {
       "localizations": {
         "de": {
@@ -2921,12 +3151,42 @@
         }
       }
     },
+    "No limits": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ohne Einschränkung"
+          }
+        }
+      }
+    },
+    "No load on this region until %@.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Belastung dieser Region bis %@."
+          }
+        }
+      }
+    },
     "No match": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Keine Treffer"
+          }
+        }
+      }
+    },
+    "No region has a complaint or a constraint.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Region hat Beschwerden oder Einschränkungen."
           }
         }
       }
@@ -2987,6 +3247,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Unsicher"
+          }
+        }
+      }
+    },
+    "Not tracked": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nicht verfolgt"
           }
         }
       }
@@ -3111,6 +3381,26 @@
         }
       }
     },
+    "Pain and symptoms": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schmerz und Symptome"
+          }
+        }
+      }
+    },
+    "Pain reports are health data. Without your consent to keep health data, Hefesto does not take them.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schmerzberichte sind Gesundheitsdaten. Ohne deine Einwilligung, Gesundheitsdaten zu behalten, nimmt Hefesto sie nicht an."
+          }
+        }
+      }
+    },
     "Palms up under load": {
       "localizations": {
         "de": {
@@ -3167,6 +3457,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Passwort"
+          }
+        }
+      }
+    },
+    "Paused": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pausiert"
           }
         }
       }
@@ -3331,6 +3631,36 @@
         }
       }
     },
+    "Report and pause training": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Melden und Training pausieren"
+          }
+        }
+      }
+    },
+    "Report pain": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schmerz melden"
+          }
+        }
+      }
+    },
+    "Reporting pauses your training at once, until you confirm that a professional has cleared you.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Meldung pausiert dein Training sofort, bis du bestätigst, dass dich eine Fachperson freigegeben hat."
+          }
+        }
+      }
+    },
     "Reps": {
       "localizations": {
         "de": {
@@ -3461,6 +3791,16 @@
         }
       }
     },
+    "Return, step %lld of 5": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rückkehr, Stufe %lld von 5"
+          }
+        }
+      }
+    },
     "Rings": {
       "localizations": {
         "de": {
@@ -3567,6 +3907,36 @@
           "stringUnit": {
             "state": "translated",
             "value": "Antworten senden"
+          }
+        }
+      }
+    },
+    "Send report": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Meldung senden"
+          }
+        }
+      }
+    },
+    "Sent": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gesendet"
+          }
+        }
+      }
+    },
+    "Sent. Your plan takes it into account.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gesendet. Dein Plan berücksichtigt es."
           }
         }
       }
@@ -3881,6 +4251,16 @@
         }
       }
     },
+    "Symptoms during training": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Symptome beim Training"
+          }
+        }
+      }
+    },
     "Sync now": {
       "localizations": {
         "de": {
@@ -3931,6 +4311,26 @@
         }
       }
     },
+    "The body's state comes with your plan. Answer the onboarding first.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Zustand des Körpers kommt mit deinem Plan. Beantworte zuerst das Onboarding."
+          }
+        }
+      }
+    },
+    "The body's state needs a connection. Reporting pain or symptoms does too.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Zustand des Körpers braucht eine Verbindung, ebenso das Melden von Schmerz oder Symptomen."
+          }
+        }
+      }
+    },
     "The catalogue loads with the first sync.": {
       "localizations": {
         "de": {
@@ -3971,6 +4371,36 @@
         }
       }
     },
+    "The plan leaves exercises for this region out.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Plan lässt Übungen für diese Region weg."
+          }
+        }
+      }
+    },
+    "The plan leaves this region out for now.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Plan lässt diese Region vorerst weg."
+          }
+        }
+      }
+    },
+    "The plan leaves this region out until you confirm a clearance.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Plan lässt diese Region weg, bis du eine Freigabe bestätigst."
+          }
+        }
+      }
+    },
     "The planner is not available right now. Try again later.": {
       "localizations": {
         "de": {
@@ -3987,6 +4417,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Die Fragen konnten nicht geladen werden. Für deinen Plan braucht es eine Verbindung."
+          }
+        }
+      }
+    },
+    "The report could not be taken. Check your answers.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Meldung liess sich nicht annehmen. Prüfe deine Antworten."
           }
         }
       }
@@ -4027,6 +4467,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dieses Gerät hält keinen Plan für den Tag. Der Start braucht eine Verbindung."
+          }
+        }
+      }
+    },
+    "This morning": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Heute früh"
+          }
+        }
+      }
+    },
+    "This needs your plan. Answer the onboarding first.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dafür braucht es deinen Plan. Beantworte zuerst das Onboarding."
           }
         }
       }
@@ -4381,6 +4841,16 @@
         }
       }
     },
+    "What a professional advised": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Was eine Fachperson geraten hat"
+          }
+        }
+      }
+    },
     "What could you do before the break: %@?": {
       "localizations": {
         "de": {
@@ -4401,12 +4871,42 @@
         }
       }
     },
+    "When?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wann?"
+          }
+        }
+      }
+    },
+    "Where it hurts, when, and how much. The plan adapts to it; nothing here counts against you.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wo es schmerzt, wann und wie stark. Der Plan passt sich an; nichts davon zählt gegen dich."
+          }
+        }
+      }
+    },
     "Where you stand": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Wo du stehst"
+          }
+        }
+      }
+    },
+    "Where?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wo?"
           }
         }
       }
@@ -4437,6 +4937,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Warum dieses Training"
+          }
+        }
+      }
+    },
+    "Without your consent Hefesto keeps no state for this region. Locks and exclusions still hold.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ohne deine Einwilligung behält Hefesto keinen Zustand für diese Region. Sperren und Ausschlüsse gelten weiter."
           }
         }
       }
@@ -4477,6 +4987,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ja"
+          }
+        }
+      }
+    },
+    "Yes, I was cleared": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ja, ich wurde freigegeben"
           }
         }
       }

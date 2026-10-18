@@ -2174,7 +2174,7 @@ der iOS-App (U-67, U-68), und der Unterbau des Plans in der iOS-App
 (ADR 0022, U-72 bis U-75), und das Onboarding in der iOS-App (ADR 0023,
 U-76 bis U-79), und die Wahl des Bands in der iOS-App (ADR 0024, U-80),
 und der Start einer geplanten Einheit ohne Verbindung (ADR 0027, U-81 bis
-U-85).
+U-85), und Körper und Sicherheit in der iOS-App (ADR 0028, U-86 bis U-89).
 
 Tests: sechs Personas als Golden Files (`internal/domain/planning/testdata/`),
 die Eigenschaften I-1 bis I-11 für jeden erzeugten Plan, zwölf simulierte
@@ -2278,6 +2278,10 @@ U-35 setzen die Entscheidungen ENT-R-1, ENT-R-2 und ENT-R-5 um (§15.5).
 | U-83 | §10.5 | Nach jedem Push mit angewandter Operation, vor jedem Lesen des Plans, vor jedem Start und vor jeder Abschluss-Auswertung verknüpft der Planer unverknüpfte Offline-Starts ab dem Montag der Vorwoche mit der Einheit desselben Tages im aktuellen Plan (`started` oder `completed`); ein Entwurf aus einem ersetzten Plan folgt dem aktuellen, ohne Einheit am Tag gehen die offenen Sätze; ein anderswo zuerst gestarteter Tag behält seine Session | Wie der Übertrag auf einen neuen Plan (ADR 0017); der Pull nach dem Push bringt den angepassten Entwurf; jede Verknüpfung in eigener Transaktion blockiert weder Push noch Plan |
 | U-84 | §10.5 | Die App zeigt einen eigenen Start oder Abschluss auf «Heute», bevor der gehaltene Plan ihn kennt; nennt der Plan eine andere Session, gilt der Plan | Ein Offline-Start soll «Weiter» zeigen, nicht ein zweites «Starten» |
 | U-85 | §10.5 | Erreicht der Start den Server nicht, bietet das Check-in-Blatt «Ohne Verbindung starten» an und sagt, dass die Einheit wie geplant startet und das Leichter-Machen den Server braucht | Die Wahl bleibt beim Athleten; offline gibt es keinen Check-in (§15.4) |
+| U-86 | §8.2, §8.6, §10.3 | Symptome, Schmerzberichte, Warnzeichen und Freigaben sendet die App sofort als einzelne Anfragen mit eigener ID, nicht über den Ausgang; eine Wiederholung nach verlorener Antwort trägt dieselbe ID; danach holt sie Plan und Regionen neu | Sicherheit und Gesundheitsdaten wirken sofort (SAFE-02); idempotent wie jedes Ereignis (U-40). Der Sync der Schmerzberichte bleibt offen (§15.3) |
+| U-87 | §8.6 | Der Schmerzbericht der App fragt Region, Zeitpunkt und 0–10, dazu im Aufwärmen «länger als 15 min», danach «länger als 1 h» und während «plötzlich und stechend»; fragt der Planer `ask_red_flags`, öffnen sich die Warnzeichen der Region gleich danach | Was der Planer zum Zeitpunkt auswertet (PAR-D-16, DOSE-23); freiwillig und ohne Streak-Folgen (ADR 0003) |
+| U-88 | §8.2, §8.3 | Ein Screen «Körper» zeigt jede Region mit Beschwerde oder Einschränkung, ihren Zustand als Wirkung auf den Plan («Ohne Einschränkung», «Rückkehr, Stufe n von 5», «Pausiert»), Pause, empfohlene Abklärung, Einschränkungen und den Disclaimer wörtlich; «Ich wurde freigegeben» erscheint nur, wo die Freigabe etwas ändert | Keine Diagnose, kein eigener Rat; Namen, Fragen und Rat aus der Wissensbasis |
+| U-89 | §8.3, SAFE-02 | Die Karte eines Stopps bietet die Freigabe des ganzen Trainings an (`/v1/me/screening/clearance`), ausser bei SAFE-07 | Ohne sie liess sich ein Stopp in der App nie aufheben; ein Minderjähriger wird nicht durch eine Freigabe frei |
 
 ### 15.3 Nicht umgesetzt
 
@@ -2357,6 +2361,11 @@ weil die Adaption die Kürzung nicht vorhersieht.
   nur die erste; die zweite Session bleibt mit offenen Zielen im Log. Offline
   gibt es keinen Check-in: Wer müde ist und ohne Netz startet, bekommt die
   volle Einheit, wenn er sie wählt; das Blatt sagt es ihm.
+- **Die Freigabe ist eine Selbstauskunft (ADR 0028).** Die App kann nicht
+  prüfen, ob eine Fachperson freigegeben hat; sie fragt nur nach. Symptome
+  ohne Verbindung pausieren den Plan erst, wenn die Meldung den Server
+  erreicht; die App zeigt den Rat aber sofort und sagt, dass man aufhören
+  soll.
 - **Assistierte Sätze ohne Band fehlen dem Planer.** Sätze mit Partner,
   Maschine, Schräge, Gegengewicht oder Fussstütze erreichen weder die
   Kapazitäten noch die Belastungshistorie (U-59). Wer vor allem so trainiert,
