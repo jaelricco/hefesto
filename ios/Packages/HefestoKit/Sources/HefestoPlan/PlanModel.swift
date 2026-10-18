@@ -6,7 +6,9 @@ import Observation
 
 /// The plan the screens show and the one way they start a planned session
 /// (ADR 0022). It reads the plan kept in the local database, so it shows the
-/// week offline; refreshing and starting need the network.
+/// week offline, with the starts kept here that the plan does not know yet.
+/// Refreshing needs the network; a start without it is the athlete's choice
+/// (spec §10.5).
 @MainActor
 @Observable
 public final class PlanModel {
@@ -53,10 +55,11 @@ public final class PlanModel {
         week?.days.first { $0.date == today }?.session
     }
 
-    /// Follows the plan kept for this week until the task is cancelled.
+    /// Follows the plan kept for this week, and the starts kept here, until
+    /// the task is cancelled.
     public func observe() async {
         do {
-            for try await cached in db.observePlan(on: today) { show(cached) }
+            for try await kept in db.observeKeptPlan(on: today) { show(kept) }
         } catch {
             // The database stopped the observation; the last week stays.
         }
@@ -64,7 +67,7 @@ public final class PlanModel {
 
     /// Reads the plan kept for this week once.
     public func reload() throws {
-        show(try db.plan(on: today))
+        show(try db.keptPlan(on: today))
     }
 
     /// Fetches this week's plan. What the planner says becomes the status;
@@ -95,7 +98,9 @@ public final class PlanModel {
     /// Starts a planned session with the check-in the athlete gave, if any,
     /// and returns the log session to open. The server writes the draft
     /// (ADR 0016) and lightens it after a tired check-in (ADR 0019); the
-    /// answers go only into this request.
+    /// answers go only into this request. Without a connection it throws
+    /// `PlanStartError.offline`, and the athlete may start without the
+    /// server (`startOffline`).
     public func start(_ session: PlanSession, sleepHours: Double?, fatigue: Int?) async throws -> String {
         guard let sync else { throw PlanStartError.noServer }
         var checkIn: Components.Schemas.CheckIn?
@@ -113,18 +118,36 @@ public final class PlanModel {
             // A newer plan replaced the session.
             await refresh()
             throw PlanError.notFound
+        } catch let error as PlanError {
+            throw error
+        } catch let error as SyncError {
+            throw error
+        } catch {
+            // The request did not reach the server or its answer got lost.
+            throw PlanStartError.offline
         }
         await refresh()
         return id
     }
 
-    private func show(_ cached: CachedPlan?) {
-        guard let cached else {
+    /// Starts a planned session without the server (spec §10.5): the draft
+    /// is written here as the server would write it, without a check-in, and
+    /// the next sync takes it to the server, which links it to the plan.
+    /// Returns the log session to open; a session started here before is
+    /// that session.
+    public func startOffline(_ session: PlanSession) throws -> String {
+        let id = try db.startPlannedSessionOffline(session.id, on: session.date, timeZone: timeZone, at: now())
+        try reload()
+        return id
+    }
+
+    private func show(_ kept: KeptPlan) {
+        guard let cached = kept.plan else {
             week = nil
             return
         }
         do {
-            week = try PlanWeek(decoding: cached)
+            week = try PlanWeek(decoding: cached).applying(kept.starts)
         } catch {
             // A plan this version cannot read is as good as none; the next
             // refresh replaces it.
@@ -136,4 +159,6 @@ public final class PlanModel {
 public enum PlanStartError: Error, Equatable {
     /// The model has no server to start on, as in a demo.
     case noServer
+    /// The server could not be reached. The session can start without it.
+    case offline
 }

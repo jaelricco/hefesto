@@ -157,6 +157,34 @@ extension PlanWeek {
         disclaimer = p.disclaimer
     }
 
+    /// The week as it stands here: a start or a completion kept here that
+    /// the kept plan does not show yet, as after a start without the server
+    /// (spec §10.5). A session the plan gives to another log session keeps
+    /// it; the plan has the last word once it knows.
+    func applying(_ starts: [PlannedStart]) -> PlanWeek {
+        guard !starts.isEmpty else { return self }
+        var week = self
+        week.sessions = sessions.map { s in
+            let start: PlannedStart?
+            if let id = s.workoutSessionId {
+                start = starts.first { $0.sessionId == id }
+            } else {
+                start = starts.first { $0.plannedSessionId == s.id }
+            }
+            guard let start else { return s }
+            var out = s
+            out.workoutSessionId = start.sessionId
+            if start.completed {
+                out.status = .completed
+            } else if s.status == .planned {
+                out.status = .started
+            }
+            return out
+        }
+        week.days = Self.days(from: weekStart, sessions: week.sessions)
+        return week
+    }
+
     static func days(from weekStart: String, sessions: [PlanSession]) -> [PlanDay] {
         (0..<7).compactMap { offset in
             guard let date = DayString.shifted(weekStart, by: offset) else { return nil }
