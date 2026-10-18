@@ -107,6 +107,18 @@ func TestPlannerCatalogueIsPublicAndCached(t *testing.T) {
 			}
 		}
 	}
+	// The onboarding's safety questions come with the catalogue, in the
+	// order of their answers.
+	if ex := cat["exertion"].(map[string]any); ex["id"] != "RF-10" || ex["question"] == "" {
+		t.Errorf("exertion question %v", ex)
+	}
+	screening := cat["screening"].([]any)
+	if len(screening) != 6 || screening[0].(map[string]any)["id"] != "SCR-01" {
+		t.Errorf("screening %v", screening)
+	}
+	if cat["minor_age_years"] != float64(18) {
+		t.Errorf("minor age %v", cat["minor_age_years"])
+	}
 }
 
 func TestOnboardingFlow(t *testing.T) {

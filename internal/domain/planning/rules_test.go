@@ -213,6 +213,8 @@ func TestKnowledgeBaseValidation(t *testing.T) {
 		{"KB-08", func(f *planning.Files) { f.Skills[1].Levels[0].Exercise = "planche" }},
 		{"KB-09", func(f *planning.Files) { f.Sessions.Templates = f.Sessions.Templates[1:] }},
 		{"KB-10", func(f *planning.Files) { f.Body.RedFlags[0].Regions = []string{"elbow_inner"} }},
+		{"KB-10", func(f *planning.Files) { f.Body.Screening = f.Body.Screening[1:] }},
+		{"KB-12", func(f *planning.Files) { f.Body.Screening[0].Question += " Diagnose?" }},
 		{"KB-12", func(f *planning.Files) { f.Rules[0].Text += " Das heilt deine Sehne." }},
 	} {
 		f := fresh(t)

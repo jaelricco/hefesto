@@ -4860,6 +4860,15 @@ components:
           description: More than `lo`, without an upper bound.
           type: boolean
 
+    ScreeningQuestion:
+      type: object
+      required: [id, question]
+      properties:
+        id:
+          type: string
+        question:
+          type: string
+
     ClassQuestion:
       type: object
       required: [key, exercise, classes]
@@ -4945,12 +4954,29 @@ components:
 
     PlannerCatalogue:
       type: object
-      required: [ruleset_version, disclaimer, skills, exercises, regions, class_questions]
+      required: [ruleset_version, disclaimer, skills, exercises, regions, class_questions, exertion, screening,
+                 minor_age_years]
       properties:
         ruleset_version:
           type: string
         disclaimer:
           type: string
+        exertion:
+          description: |
+            The onboarding's question on exertion symptoms (`exertion_symptoms`).
+            Every region asks it too, under its ID; the answer is the same.
+          $ref: "#/components/schemas/RedFlagQuestion"
+        screening:
+          description: The six further screening questions, in the order of their answers (`screening`).
+          type: array
+          items:
+            $ref: "#/components/schemas/ScreeningQuestion"
+        minor_age_years:
+          description: |
+            A user counts as a minor while the current year minus the birth
+            year is at most this (PAR-D-23). A minor is asked the
+            minor-only red flags.
+          type: integer
         skills:
           type: array
           items:

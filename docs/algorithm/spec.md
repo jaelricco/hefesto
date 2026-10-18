@@ -289,7 +289,7 @@ Laden erneut. Befunde folgen dem bestehenden `content.Issue`-Modell.
 | KB-07 | Jede Übung mit `training:`-Block hat `load_family`, `pattern`, `straight_arm`, `complaint_family`, `requires` | Fehler |
 | KB-08 | Jede Stufe eines Ziel-Skills ist über ihren Primärtest einer Leitersprosse zugeordnet | Fehler |
 | KB-09 | Wertebereiche: Anteile in (0, 1], Ratings 0–3, Pausen > 0, Vorlagen decken alle Minutenoptionen | Fehler |
-| KB-10 | Jede Red-Flag hat Dringlichkeit N/D/A und Aktion; jede Region hat mindestens RF-01–RF-07 und RF-10 | Fehler |
+| KB-10 | Jede Red-Flag hat Dringlichkeit N/D/A und Aktion; jede Region hat mindestens RF-01–RF-07 und RF-10; das Screening hat genau sechs Fragen | Fehler |
 | KB-11 | Texte: jeder Textschlüssel existiert in jeder ausgelieferten Sprache | Warnung (CI: Fehler) |
 | KB-12 | Sprachregeln (§9.3): verbotene Begriffe in Texten | Fehler |
 | KB-13 | `status: draft_placeholder` in Inhalten, die ein Plan benutzt | Warnung; in Produktion Fehler, solange ENT-10 nicht erfüllt ist |
@@ -1947,7 +1947,7 @@ selbst anlegt, ihre ID.
 | `POST /v1/me/regions/{region}/clearance`, `POST /v1/me/screening/clearance` | User bestätigt die Freigabe durch eine Fachperson | Zustandswechsel §8.3 |
 | `POST /v1/me/health-consent` | Einwilligung zu Gesundheitsdaten erteilen oder widerrufen | Widerruf löscht Gesundheitsangaben, Auflagen bleiben; Erteilung fragt Screening und Vorverletzungen neu (U-47, ADR 0015) |
 | `GET /v1/me/capacity` | Kapazitäten mit Konfidenzklasse | für «Profil verfeinern» |
-| `GET /v1/planner/rules`, `GET /v1/planner/sources`, `GET /v1/planner/parameters`, `GET /v1/planner/catalogue` | Katalog für die Erklärungen; `catalogue` mit Skills, Übungen, Regionen und Antwortklassen des Planers (U-46) | öffentlich lesbar, versioniert über `ETag` (`ruleset_version`) |
+| `GET /v1/planner/rules`, `GET /v1/planner/sources`, `GET /v1/planner/parameters`, `GET /v1/planner/catalogue` | Katalog für die Erklärungen; `catalogue` mit Skills, Übungen, Regionen und Antwortklassen des Planers (U-46), dazu der Frage nach Belastungssymptomen, den sechs Screening-Fragen und der Altersgrenze für Minderjährige (U-76) | öffentlich lesbar, versioniert über `ETag` (`ruleset_version`) |
 
 Alle Anfragekörper werden gegen `api/openapi.yaml` validiert; Contract-Tests
 prüfen Routen und Antworten (ADR 0007, ADR 0014). Ereignisse (Schmerzbericht,
