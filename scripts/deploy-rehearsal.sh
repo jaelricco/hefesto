@@ -67,16 +67,18 @@ cleanup() {
     status=$?
     if [[ $status -ne 0 ]]; then
         echo "failed during: $(grep '^## ' "$diag" | tail -1) (exit $status)" >> "$fail"
+        # The tag is given: a deploy that failed recorded none.
+        export HEFESTO_TAG="$tag"
         { prod ps -a --format '{{.Service}} {{.State}} {{.Status}}'
           staging ps -a --format 'staging {{.Service}} {{.State}} {{.Status}}'
-          for svc in api caddy backup; do prod logs --no-color --tail 6 "$svc"; done
+          for svc in api caddy backup pitr postgres; do prod logs --no-color --tail 6 "$svc"; done
           staging logs --no-color --tail 6 api; } >> "$fail" 2>&1 || true
         cat "$diag" "$fail" >&2
         annotate
     fi
-    # The tag is given: a deploy that failed recorded none.
-    HEFESTO_TAG="$tag" staging down -v --remove-orphans >/dev/null 2>&1 || true
-    HEFESTO_TAG="$tag" prod down -v --remove-orphans >/dev/null 2>&1 || true
+    export HEFESTO_TAG="$tag"
+    staging down -v --remove-orphans >/dev/null 2>&1 || true
+    prod down -v --remove-orphans >/dev/null 2>&1 || true
     docker network rm hefesto-edge >/dev/null 2>&1 || true
     docker rm -f "$registry" >/dev/null 2>&1 || true
     if [[ -n "${tls_pid:-}" ]]; then kill "$tls_pid" 2>/dev/null || true; fi
@@ -114,7 +116,7 @@ log "image $image:$tag"
 # The deploy directory, as the deploy workflows rsync it to /srv/hefesto.
 mkdir -p "$work/docker"
 cp "$root"/docker-compose.prod.yml "$root"/docker-compose.staging.yml "$work/"
-cp "$root/docker/Caddyfile" "$work/docker/"
+cp "$root/docker/Caddyfile" "$root/docker/Dockerfile.postgres" "$work/docker/"
 cp -r "$root/scripts" "$work/"
 
 # Containers reach MinIO through the bridge's gateway, which is the host.

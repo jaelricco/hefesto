@@ -230,9 +230,9 @@ jobs:
   # scripts, both Compose files, the Caddyfile, the backup sidecar and the
   # restore run (ADR 0026). This runs all of them on the runner's Docker.
   deploy-rehearsal:
-    name: deploy rehearsal (production, staging, backup, restore)
+    name: deploy rehearsal (production, staging, backups, restores, PITR)
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
