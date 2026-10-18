@@ -3883,9 +3883,11 @@ components:
           description: Chest pain, unusual shortness of breath, dizziness or fainting under exertion (RF-10).
           type: boolean
         screening:
-          description: The six further screening questions, in the order of onboarding.md §3.7.
+          description: |
+            The answers to the six further screening questions, in the order
+            of the catalogue's `screening`. Without health-data consent they
+            are not asked: send none.
           type: array
-          minItems: 6
           maxItems: 6
           items:
             type: boolean
