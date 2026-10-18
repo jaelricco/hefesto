@@ -132,6 +132,9 @@ Der Logger einer geplanten Session heisst «Geplantes Training».
 
 ### 6. Ein geplanter Band-Satz wird noch nicht ausgeführt
 
+> Aufgehoben durch ADR 0024: Der Eingabe-Screen fragt nach dem Band, und
+> geplante Band-Sätze sind ausführbar.
+
 Das Log verlangt für eine Band-Unterstützung das Band selbst (ADR 0016), und
 die App kann noch kein Band wählen. Der Draft trägt das Band nicht, und der
 Eingabe-Screen bietet es nicht an. Ein Band-Satz, wie geplant ausgeführt, stünde

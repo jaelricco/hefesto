@@ -176,6 +176,17 @@ documents are in German.
     `checkin`, `planned`, `target`) join the screenshots.
   - Not built: offers on active choice, the pain question on monitored
     items, the onboarding in the app, choosing a band, the offline start.
+- **Choosing a band in the iOS app (this checkpoint, ADR 0024):**
+  - The app keeps the server's bands, the athlete's own and the
+    catalogue's, and fetches them after every sync; bands are not in the
+    sync feed (ADR 0009). A band is added and removed online.
+  - The set composer offers band assistance again: the band and how many at
+    once. A band set cannot be saved without its band.
+  - Planned band sets open with the band assistance and can be performed;
+    ADR 0022's lock is lifted (U-75 → U-80).
+  - Logger and history name a set's band. The demo holds two bands of its
+    own; a new screen (`band`) joins the screenshots.
+  - Not built: bands offline, editing a band, the anchor.
 - **The onboarding in the iOS app (this checkpoint, ADR 0023):**
   - The knowledge base now words the six screening questions (`SCR-01` to
     `SCR-06`), checked by KB-10 and KB-12. The planner catalogue serves them
@@ -235,7 +246,7 @@ documents are in German.
   check-in in ADR 0019 (U-62 to U-64), the reserve (U-65 to U-68), the
   plan's foundation in the iOS app in ADR 0021 (U-69 to U-71), the plan's
   screens in ADR 0022 (U-72 to U-75), the onboarding in the app in
-  ADR 0023 (U-76 to U-79),
+  ADR 0023 (U-76 to U-79), the band choice in ADR 0024 (U-80),
   and these findings in spec §15.4:
   - sets with partner or machine assistance reach neither the capacities
     nor the load history;
@@ -256,7 +267,9 @@ documents are in German.
     questions; the app holds onboarding.md §3.6 with the knowledge base's
     skill slugs (ADR 0023);
   - a minor answers the whole onboarding before learning there is no plan
-    (SAFE-07); an early notice waits on OE-1.
+    (SAFE-07); an early notice waits on OE-1;
+  - the planner does not tell bands apart: a light and a strong band count
+    as the same band capacity of an exercise (ADR 0024).
 - **Not yet built:**
   - starting a session offline through sync;
   - the sync of pain reports;
