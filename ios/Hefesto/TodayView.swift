@@ -50,9 +50,11 @@ struct TodayView: View {
             .fullScreenCover(item: $open) { LoggerView(sessionId: $0.id) }
             .fullScreenCover(isPresented: $onboarding) { OnboardingView() }
             .sheet(item: $checkingIn, onDismiss: openStarted) { session in
-                CheckInSheet(session: session) { sleep, fatigue in
-                    await start(session, sleepHours: sleep, fatigue: fatigue)
-                }
+                CheckInSheet(
+                    session: session,
+                    onStart: { sleep, fatigue in await start(session, sleepHours: sleep, fatigue: fatigue) },
+                    onStartOffline: { startOffline(session) },
+                    initiallyOffline: model.demo?.screen == .offlinestart)
             }
             .alert("Something went wrong", isPresented: .constant(error != nil)) {
                 Button("OK") { error = nil }
@@ -66,7 +68,7 @@ struct TodayView: View {
                 if demo.onboardingPage != nil { onboarding = true }
                 if let id = demo.opensSessionId { open = OpenSession(id: id) }
                 if let today = model.plan.todaySession {
-                    if demo.screen == .checkin { checkingIn = today }
+                    if demo.screen == .checkin || demo.screen == .offlinestart { checkingIn = today }
                     if demo.screen == .plansession { path = [PlanRoute(sessionId: today.id)] }
                 }
             }
@@ -195,12 +197,27 @@ struct TodayView: View {
     }
 
     /// Starts a planned session after its check-in. What is waiting to sync
-    /// goes first, so the plan adapts to the latest log. Returns a message
-    /// when the start did not happen.
-    private func start(_ session: PlanSession, sleepHours: Double?, fatigue: Int?) async -> String? {
+    /// goes first, so the plan adapts to the latest log. Says why when the
+    /// start did not happen; without a connection the athlete may start
+    /// without the server. A demo never has one.
+    private func start(_ session: PlanSession, sleepHours: Double?, fatigue: Int?) async -> StartFailure? {
         await model.syncNow()
         do {
             started = try await model.plan.start(session, sleepHours: sleepHours, fatigue: fatigue)
+            checkingIn = nil
+            return nil
+        } catch PlanStartError.offline, PlanStartError.noServer {
+            return .offline
+        } catch {
+            return .message(PlanStartMessage.text(error))
+        }
+    }
+
+    /// Starts a planned session here, as planned and without the check-in
+    /// (ADR 0025). The next sync takes it to the server.
+    private func startOffline(_ session: PlanSession) -> String? {
+        do {
+            started = try model.plan.startOffline(session)
             checkingIn = nil
             return nil
         } catch {
@@ -216,10 +233,10 @@ struct TodayView: View {
             return
         }
         Task {
-            if let message = await start(session, sleepHours: nil, fatigue: nil) {
-                error = message
-            } else {
-                openStarted()
+            switch await start(session, sleepHours: nil, fatigue: nil) {
+            case nil: openStarted()
+            case .offline?: error = PlanStartMessage.text(PlanStartError.offline)
+            case let .message(text)?: error = text
             }
         }
     }

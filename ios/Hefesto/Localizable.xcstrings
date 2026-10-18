@@ -1011,6 +1011,16 @@
         }
       }
     },
+    "An exercise of this session is not on this device yet. Starting it needs a connection.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eine Übung dieser Einheit ist noch nicht auf diesem Gerät. Der Start braucht eine Verbindung."
+          }
+        }
+      }
+    },
     "Answer the questions": {
       "localizations": {
         "de": {
@@ -2881,6 +2891,26 @@
         }
       }
     },
+    "No connection. Continuing this session here needs one.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Verbindung. Um hier weiterzumachen, braucht es eine."
+          }
+        }
+      }
+    },
+    "No connection. Without one, the session starts as planned: making it lighter after short sleep or high tiredness needs the server. Your plan takes the session up at the next sync.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Verbindung. Ohne sie startet die Einheit wie geplant: Leichter wird sie nach kurzem Schlaf oder grosser Müdigkeit nur mit dem Server. Dein Plan übernimmt die Einheit beim nächsten Sync."
+          }
+        }
+      }
+    },
     "No exercises yet": {
       "localizations": {
         "de": {
@@ -3791,6 +3821,16 @@
         }
       }
     },
+    "Start without connection": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ohne Verbindung starten"
+          }
+        }
+      }
+    },
     "Started": {
       "localizations": {
         "de": {
@@ -3951,12 +3991,12 @@
         }
       }
     },
-    "The session could not start. Starting a planned session needs a connection.": {
+    "The session could not start. Try again later.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Das Training konnte nicht starten. Ein geplantes Training braucht zum Start eine Verbindung."
+            "value": "Die Einheit konnte nicht starten. Versuch es später nochmals."
           }
         }
       }
@@ -3981,6 +4021,16 @@
         }
       }
     },
+    "This device keeps no plan for the day. Starting needs a connection.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dieses Gerät hält keinen Plan für den Tag. Der Start braucht eine Verbindung."
+          }
+        }
+      }
+    },
     "This session is no longer in your plan": {
       "localizations": {
         "de": {
@@ -3997,6 +4047,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dieses Training wurde gelöscht."
+          }
+        }
+      }
+    },
+    "This session was started on another device. Continuing it here needs a connection.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diese Einheit wurde auf einem anderen Gerät gestartet. Hier weiterzumachen braucht eine Verbindung."
           }
         }
       }

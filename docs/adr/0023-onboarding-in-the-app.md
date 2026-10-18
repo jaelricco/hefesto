@@ -138,7 +138,7 @@ Fehler erscheinen über der Leiste unten. Die Antworten bleiben erhalten.
 Bei «schon beantwortet» ruft die App den Plan ab.
 
 Auf «Heute» führt ohne Plan die Karte «Hol dir deinen Trainingsplan». Das
-freie Training bleibt als zweite Aktion (ADR 0022).
+freie Training bleibt als zweite Aktion (ADR 0025).
 
 ### 6. Demo
 

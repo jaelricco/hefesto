@@ -11,7 +11,9 @@ import XCTest
 final class AccessibilityAuditTests: XCTestCase {
     /// DemoScreen's raw values, as scripts/ios-screenshots.sh walks them.
     private static let screens = [
-        "today", "logger", "composer", "reserve", "finish", "map", "peek", "detail",
+        "today", "plansession", "checkin", "offlinestart", "planned", "target",
+        "onboarding", "standing", "complaint",
+        "logger", "composer", "reserve", "band", "finish", "map", "peek", "detail",
         "history", "session", "stats", "celebration", "signin",
     ]
 

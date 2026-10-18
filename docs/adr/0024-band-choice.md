@@ -17,7 +17,7 @@ Das Log verlangt für eine Band-Unterstützung das Band selbst: `band_id` und
 
 Die App konnte kein Band wählen. Deshalb bot der Eingabe-Screen keine
 Band-Unterstützung an. Ein geplanter Band-Satz liess sich nicht ausführen
-(ADR 0022, Entscheidung 6), denn ohne Band hätte er als unassistiert
+(ADR 0025, Entscheidung 6), denn ohne Band hätte er als unassistiert
 gegolten.
 
 Der globale Katalog ist leer, bis echte Herstellerangaben recherchiert sind
@@ -59,7 +59,7 @@ Ein wiederholter Satz übernimmt Band und Anzahl, wie jede Unterstützung.
 
 ### 4. Geplante Band-Sätze werden ausführbar
 
-Entscheidung 6 von ADR 0022 fällt:
+Entscheidung 6 von ADR 0025 fällt:
 - Ein geplanter Satz, dessen Item `assist: band` trägt, öffnet mit «Band» als
   Unterstützung.
 - Der Eingabe-Screen sagt: «Mit Band geplant. Wähl das Band, das du nutzt,

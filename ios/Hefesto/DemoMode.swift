@@ -10,10 +10,13 @@ enum DemoScreen: String, CaseIterable {
     // so it asks what the athlete had left.
     case today, logger, composer, reserve, finish, map, peek, detail, history, session, stats, celebration
     case signIn = "signin"
-    // The plan (ADR 0022): today's session in full, the check-in before its
+    // The plan (ADR 0025): today's session in full, the check-in before its
     // start, the started session in the logger with its targets, and the
     // composer on the next target, a calibration set.
     case plansession, checkin, planned, target
+    // The check-in without a connection: the start without the server
+    // (ADR 0025).
+    case offlinestart
     // The onboarding (ADR 0023): the goals, where the athlete stands, and a
     // current complaint with its warning signs.
     case onboarding, standing, complaint

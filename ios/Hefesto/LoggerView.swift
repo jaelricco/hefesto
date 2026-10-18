@@ -248,7 +248,7 @@ struct LoggerView: View {
         }
     }
 
-    /// Performs a planned set with what the athlete did (ADR 0022).
+    /// Performs a planned set with what the athlete did (ADR 0025).
     private func perform(_ planned: PlannedTarget, _ drafts: [ElementDraft], reserve: SetReserve) {
         guard let logger else { return }
         attempt {

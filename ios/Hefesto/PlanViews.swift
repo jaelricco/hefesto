@@ -2,7 +2,7 @@ import HefestoPlan
 import HefestoSync
 import SwiftUI
 
-// The training plan's screens (ADR 0022): today's planned session on Today,
+// The training plan's screens (ADR 0025): today's planned session on Today,
 // the week below it, a planned session in full, and the check-in before a
 // start. They read HefestoPlan's plain model, never the API's types.
 
@@ -431,16 +431,25 @@ struct PlanItemRow: View {
 /// Two optional questions before a planned session starts (ADR 0019). After
 /// short sleep or high fatigue, the server makes the session lighter. The
 /// answers go only into the start request; nothing here keeps them.
+///
+/// Without a connection the sheet says so and offers the start without the
+/// server (ADR 0025): the session starts as planned, without the check-in.
 struct CheckInSheet: View {
     let session: PlanSession
-    /// Starts the session; returns a message when it could not.
-    let onStart: (Double?, Int?) async -> String?
+    /// Starts the session; says why when it could not.
+    let onStart: (Double?, Int?) async -> StartFailure?
+    /// Starts the session without the server; returns a message when it
+    /// could not.
+    let onStartOffline: () -> String?
+    /// Opens on the offline choice, as a demo screen does.
+    var initiallyOffline = false
 
     @Environment(\.dismiss) private var dismiss
     @State private var sleep: Int?
     @State private var fatigue: Int?
     @State private var starting = false
     @State private var failure: String?
+    @State private var offline = false
 
     /// Hours of sleep to choose from; the ends stand for less and more.
     static let sleepChoices = [4, 5, 6, 7, 8, 9]
@@ -495,21 +504,21 @@ struct CheckInSheet: View {
                         .foregroundStyle(Palette.text)
                     }
 
-                    Button {
-                        Task {
-                            starting = true
-                            failure = await onStart(sleep.map { Double($0) }, fatigue)
-                            starting = false
+                    if offline {
+                        offlineChoice
+                    } else {
+                        Button {
+                            Task { await start() }
+                        } label: {
+                            if starting {
+                                ProgressView().tint(Palette.emberInk)
+                            } else {
+                                Label("Start session", systemImage: "play.fill")
+                            }
                         }
-                    } label: {
-                        if starting {
-                            ProgressView().tint(Palette.emberInk)
-                        } else {
-                            Label("Start session", systemImage: "play.fill")
-                        }
+                        .buttonStyle(PrimaryButtonStyle())
+                        .disabled(starting)
                     }
-                    .buttonStyle(PrimaryButtonStyle())
-                    .disabled(starting)
                 }
                 .padding(20)
             }
@@ -517,7 +526,54 @@ struct CheckInSheet: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
             }
+            .onAppear { offline = offline || initiallyOffline }
         }
+    }
+
+    /// No connection: the session can start here as planned, and the plan
+    /// catches up at the next sync. The check-in needs the server.
+    private var offlineChoice: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Label {
+                Text("No connection. Without one, the session starts as planned: making it lighter after short sleep or high tiredness needs the server. Your plan takes the session up at the next sync.")
+            } icon: {
+                Image(systemName: "wifi.slash")
+            }
+            .font(.detailText)
+            .foregroundStyle(Palette.text)
+            Button {
+                failure = onStartOffline()
+            } label: {
+                Label("Start without connection", systemImage: "play.fill")
+            }
+            .buttonStyle(PrimaryButtonStyle())
+            Button {
+                Task { await start() }
+            } label: {
+                if starting {
+                    ProgressView().tint(Palette.textSecondary)
+                } else {
+                    Text("Try again")
+                }
+            }
+            .font(.bodyMedium)
+            .foregroundStyle(Palette.textSecondary)
+            .frame(maxWidth: .infinity, minHeight: 44)
+            .disabled(starting)
+        }
+    }
+
+    private func start() async {
+        starting = true
+        failure = nil
+        switch await onStart(sleep.map { Double($0) }, fatigue) {
+        case nil: offline = false
+        case .offline?: offline = true
+        case let .message(text)?:
+            offline = false
+            failure = text
+        }
+        starting = false
     }
 
     private func sleepLabel(_ hours: Int) -> String {
@@ -543,10 +599,31 @@ struct CheckInSheet: View {
     }
 }
 
+/// How a start in the check-in sheet failed.
+enum StartFailure: Equatable {
+    /// Why, in the athlete's words.
+    case message(String)
+    /// No connection: the session can start without the server.
+    case offline
+}
+
 /// Why a start did not happen, in the athlete's terms.
 enum PlanStartMessage {
     static func text(_ error: any Error) -> String {
-        switch error as? PlanError {
+        if let e = error as? OfflineStartError {
+            return switch e {
+            case .noPlan:
+                String(localized: "This device keeps no plan for the day. Starting needs a connection.")
+            case .startedElsewhere:
+                String(localized: "This session was started on another device. Continuing it here needs a connection.")
+            case .unknownExercise:
+                String(localized: "An exercise of this session is not on this device yet. Starting it needs a connection.")
+            }
+        }
+        if (error as? PlanStartError) == .offline {
+            return String(localized: "No connection. Continuing this session here needs one.")
+        }
+        return switch error as? PlanError {
         case .trainingStopped:
             String(localized: "Training is paused. Your plan says why.")
         case .notFound:
@@ -556,7 +633,7 @@ enum PlanStartMessage {
         case .onboardingRequired:
             String(localized: "Your plan needs the onboarding first.")
         case .refused, nil:
-            String(localized: "The session could not start. Starting a planned session needs a connection.")
+            String(localized: "The session could not start. Try again later.")
         }
     }
 }

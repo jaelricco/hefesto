@@ -3,7 +3,7 @@ import HefestoAPI
 import HefestoStore
 import HefestoSync
 
-// The plan as the screens read it (ADR 0022): plain values, built from the
+// The plan as the screens read it (ADR 0025): plain values, built from the
 // server's plan in one place. A change to the API's plan types stops at the
 // mapping below, as with the celebration (ADR 0020).
 
@@ -164,7 +164,7 @@ extension PlanWeek {
     func applying(_ starts: [PlannedStart]) -> PlanWeek {
         guard !starts.isEmpty else { return self }
         var week = self
-        week.sessions = sessions.map { s in
+        week.sessions = sessions.map { (s: PlanSession) -> PlanSession in
             let start: PlannedStart?
             if let id = s.workoutSessionId {
                 start = starts.first { $0.sessionId == id }

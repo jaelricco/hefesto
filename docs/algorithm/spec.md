@@ -1904,7 +1904,8 @@ selbst anlegt, ihre ID.
   Assistenz; `workout_sessions.planned_session_id` verweist auf die geplante
   Einheit. Jeder Satz-Eintrag bekommt eine neue UUIDv7 und in
   `set_entries.planned_item_id` die Item-ID des Plans; so ordnet die Adaption
-  Ist zu Soll zu, auch wenn zwei Geräte dieselbe Einheit offline starten.
+  Ist zu Soll zu. Starten zwei Geräte dieselbe Einheit offline, verknüpft der
+  Planer nur die erste (U-83, §15.4).
   Der Start ist idempotent (bestehender Draft wird zurückgegeben).
   Umsetzung und Abweichungen: ADR 0016, U-50 bis U-54 (das Band bleibt im
   Plan-Item, Angebote und Blöcke ohne Satz werden nicht geschrieben); die
@@ -1972,12 +1973,11 @@ darüber idempotent (U-40). Planungs-Antworten tragen `ruleset_version`;
 - Der Client hält den Plan der laufenden Woche im lokalen Speicher (`ETag`),
   wie die Skill-Karte (ADR 0011). Server-Tabellen des Planers sind für den
   Client nur lesbar. Umsetzung in der iOS-App: ADR 0021, U-69 bis U-71; die
-  Screens: ADR 0022, U-72 bis U-75.
+  Screens: ADR 0025, U-72 bis U-75.
 - Offline startet der Client eine geplante Einheit selbst nach demselben
   Materialisierungsschema (§10.2, neue IDs, `planned_item_id`); der Sync lädt
-  sie hoch, der Server adaptiert nach dem Commit. **Noch nicht gebaut:** Die
-  Sync-Operationen tragen `planned_session_id` und `planned_item_id` nicht
-  (§15.3).
+  sie hoch, der Server verknüpft sie nach dem Commit und passt an. Umsetzung:
+  ADR 0026, U-81 bis U-85.
 - Schmerzberichte und Red-Flag-Antworten werden offline erfasst und
   synchronisiert. Der Plan-Payload enthält die Red-Flag-Fragen der Regionen
   mit Dringlichkeit und Aktion; eine N-Antwort beendet die Einheit auch
@@ -2171,8 +2171,10 @@ erreicht (ADR 0018, U-58 bis U-61), und der Check-in beim Start (ADR 0019, U-62 
 U-64), und die Reserve eines Halts im Log (U-65, U-66) und die Reserve in
 der iOS-App (U-67, U-68), und der Unterbau des Plans in der iOS-App
 (ADR 0021, U-69 bis U-71), und die Screens des Plans in der iOS-App
-(ADR 0022, U-72 bis U-75), und das Onboarding in der iOS-App (ADR 0023,
-U-76 bis U-79), und die Wahl des Bands in der iOS-App (ADR 0024, U-80).
+(ADR 0025, U-72 bis U-75), und das Onboarding in der iOS-App (ADR 0023,
+U-76 bis U-79), und die Wahl des Bands in der iOS-App (ADR 0024, U-80),
+und der Start einer geplanten Einheit ohne Verbindung (ADR 0026, U-81 bis
+U-85).
 
 Tests: sechs Personas als Golden Files (`internal/domain/planning/testdata/`),
 die Eigenschaften I-1 bis I-11 für jeden erzeugten Plan, zwölf simulierte
@@ -2271,6 +2273,11 @@ U-35 setzen die Entscheidungen ENT-R-1, ENT-R-2 und ENT-R-5 um (§15.5).
 | U-78 | `onboarding.md` §3.6, §3.7 | Die App fragt nur, was gilt, und sendet nur das: Zusatzfragen nach §3.6, die Stufe vor der Pause ab `7_to_16_weeks`, ohne Einwilligung weder Vorabfragen noch Verletzungen der letzten 12 Monate; RF-10 einmal für alle Regionen; die Dauer einer Beschwerde als 1, 3, 8 oder 13 Wochen je Klasse; Ziele sind Skills mit Meilenstein | Kurzer Pflichtteil (O-1); die Dauer wirkt nur über PAR-D-19, und jede Zahl liegt in ihrer Klasse; Grundlagen ohne Meilenstein sind Weg, nicht Ziel |
 | U-79 | §10.3 | Die App sendet die Antworten mit einem `Idempotency-Key` je Antwortstand; dieselben Antworten nach einer verlorenen Antwort behalten ihn. Ein Ergebnis mit Plan wird gehalten; ohne Plan führt auf «Heute» das Onboarding | Eine Wiederholung soll das erste Ergebnis bringen, neue Antworten ein neues (U-41) |
 | U-80 | §10.2 | Die App hält die Bänder des Servers lokal und legt neue online an; ein Band-Satz nennt sein Band (`band_id`, `band_count`), ohne Band lässt er sich nicht sichern; geplante Band-Sätze öffnen mit «Band» und sind ausführbar (hebt U-75 auf) | Das Log verlangt das Band selbst (ADR 0016); Bänder haben keine Sync-Spalten (ADR 0009). Der Planer unterscheidet Bänder nicht (§15.4) |
+| U-81 | §10.5 | `SessionPut.planned_session_id` und `SetEntryWrite.planned_item_id` übernimmt der Server nur beim Anlegen der Zeile; eine unbekannte geplante Einheit wird verworfen (`NULL`) | Danach gehören die Verweise dem Server, der Abgleich verlinkt neu (ADR 0017); ein Verweis auf den Plan darf das Log nie blockieren (ADR 0009) |
+| U-82 | §10.2, §10.5 | Die App baut den Offline-Entwurf nach `Materialize` nach (Blöcke, Sätze je Item, Reihenfolge, Runden, Messart, gekappte Reserve, Pause, Zusatzlast, exzentrisch), ohne Check-in; Session, Blöcke und Sätze gehen in einer Transaktion in den Ausgang; ein zweiter Offline-Start derselben Einheit öffnet die erste Session; fehlt eine Übung im lokalen Katalog, startet nichts | Der Planer ordnet Sätze ihren Items zu und zählt sie; ADAPT-17 braucht die Wissensbasis, die nur der Server hat |
+| U-83 | §10.5 | Nach jedem Push mit angewandter Operation, vor jedem Lesen des Plans, vor jedem Start und vor jeder Abschluss-Auswertung verknüpft der Planer unverknüpfte Offline-Starts ab dem Montag der Vorwoche mit der Einheit desselben Tages im aktuellen Plan (`started` oder `completed`); ein Entwurf aus einem ersetzten Plan folgt dem aktuellen, ohne Einheit am Tag gehen die offenen Sätze; ein anderswo zuerst gestarteter Tag behält seine Session | Wie der Übertrag auf einen neuen Plan (ADR 0017); der Pull nach dem Push bringt den angepassten Entwurf; jede Verknüpfung in eigener Transaktion blockiert weder Push noch Plan |
+| U-84 | §10.5 | Die App zeigt einen eigenen Start oder Abschluss auf «Heute», bevor der gehaltene Plan ihn kennt; nennt der Plan eine andere Session, gilt der Plan | Ein Offline-Start soll «Weiter» zeigen, nicht ein zweites «Starten» |
+| U-85 | §10.5 | Erreicht der Start den Server nicht, bietet das Check-in-Blatt «Ohne Verbindung starten» an und sagt, dass die Einheit wie geplant startet und das Leichter-Machen den Server braucht | Die Wahl bleibt beim Athleten; offline gibt es keinen Check-in (§15.4) |
 
 ### 15.3 Nicht umgesetzt
 
@@ -2287,8 +2294,7 @@ Kapazität), ADAPT-09, ADAPT-11, ADAPT-17, der Mobilitätsblock und Texte in
 weiteren Sprachen (KB-11). Für die Ellbogen-Regionen gibt es kein Prehab: Die
 Recherche nennt Programme, aber keine übertragbare Übung (`05` §10).
 Minderjährige bekommen keinen Plan (SAFE-07); INJ-09 ist deshalb nicht aktiv.
-Aus §10 fehlen der Offline-Start über den Sync (§10.5; die Sync-Operationen tragen `planned_session_id` und
-`planned_item_id` nicht), der Sync der Schmerzberichte und `?explain=trace`
+Aus §10 fehlen der Sync der Schmerzberichte und `?explain=trace`
 (ADR 0014, ADR 0016), sowie ein Nachweis der Einwilligung mit Zeitpunkt und
 Textversion (ADR 0015).
 PAR-D-28 enthält zwei der vier Soreness Rules aus `05` §6.1; Schmerz im
@@ -2342,6 +2348,15 @@ weil die Adaption die Kürzung nicht vorhersieht.
   Wer das Band wechselt, verschiebt die Schätzung, ohne dass der Planer es
   merkt. Abhilfe bräuchte eine Kapazität je Band oder die geschätzte Hilfe in
   kg; beides ist eine fachliche Entscheidung (ADR 0024).
+- **Der Offline-Start hat Grenzen (ADR 0026).** Verteilt sich ein
+  Offline-Start auf mehrere Pushes (höchstens 200 Ops je Push) und wurde der
+  Plan seither ersetzt, kann der Planer den Entwurf verknüpfen, bevor alle
+  Sätze da sind: Fehlende Sätze zählen als erledigt, nachkommende behalten
+  ihr altes Item und folgen späteren Plänen nicht; doppelte Sätze entstehen
+  nicht. Starten zwei Geräte dieselbe Einheit offline, verknüpft der Planer
+  nur die erste; die zweite Session bleibt mit offenen Zielen im Log. Offline
+  gibt es keinen Check-in: Wer müde ist und ohne Netz startet, bekommt die
+  volle Einheit, wenn er sie wählt; das Blatt sagt es ihm.
 - **Assistierte Sätze ohne Band fehlen dem Planer.** Sätze mit Partner,
   Maschine, Schräge, Gegengewicht oder Fussstütze erreichen weder die
   Kapazitäten noch die Belastungshistorie (U-59). Wer vor allem so trainiert,

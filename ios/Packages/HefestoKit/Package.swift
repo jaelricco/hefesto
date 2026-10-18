@@ -56,7 +56,7 @@ let package = Package(
             name: "HefestoLogger",
             dependencies: ["HefestoStore"]
         ),
-        // The training plan as the screens read it (ADR 0022).
+        // The training plan as the screens read it (ADR 0025).
         .target(
             name: "HefestoPlan",
             dependencies: ["HefestoAPI", "HefestoStore", "HefestoSync"]

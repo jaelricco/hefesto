@@ -154,7 +154,7 @@ documents are in German.
     client of the app now sends the header as HTTP defines it.
   - Not built: the screens, the onboarding in the app, pain reports from
     the app, choosing a band for a planned band set, the offline start.
-- **The plan's screens in the iOS app (this checkpoint, ADR 0022):**
+- **The plan's screens in the iOS app (this checkpoint, ADR 0025):**
   - A new module, `HefestoPlan`, maps the kept plan to the screens' own
     types in one place; views never see the API's types (ADR 0020). The
     plan is fetched again after every sync.
@@ -186,10 +186,28 @@ documents are in German.
   - The set composer offers band assistance again: the band and how many at
     once. A band set cannot be saved without its band.
   - Planned band sets open with the band assistance and can be performed;
-    ADR 0022's lock is lifted (U-75 → U-80).
+    ADR 0025's lock is lifted (U-75 → U-80).
   - Logger and history name a set's band. The demo holds two bands of its
     own; a new screen (`band`) joins the screenshots.
   - Not built: bands offline, editing a band, the anchor.
+- **Starting a planned session offline (this checkpoint, ADR 0026):**
+  - Sync now carries `planned_session_id` on a session and
+    `planned_item_id` on a set. The server takes them when it creates the
+    row and keeps them after; an unknown planned session is dropped.
+  - The app writes the draft as the server would (Materialize, ported) and
+    queues it parents first. There is no check-in offline: lightening a
+    session needs the server. A test pins the schema on both sides.
+  - The planner links an offline start after the commit: after every push,
+    before a plan is read, before a start and before a completion. The day's
+    session in the current plan points at it, started or completed. A draft
+    from a replaced plan follows the current one; without a session on the
+    day its open sets go. A day started first elsewhere keeps that session.
+  - Today shows a start or completion kept on the device before the plan
+    knows it. Without a connection the check-in sheet offers to start as
+    planned; a new demo screen (`offlinestart`) shows it.
+  - Findings: an offline start split over two pushes after the plan changed
+    can leave late sets on their old item; a second device's offline start
+    of the same session stays unlinked; there is no check-in offline.
 - **The onboarding in the iOS app (this checkpoint, ADR 0023):**
   - The knowledge base now words the six screening questions (`SCR-01` to
     `SCR-06`), checked by KB-10 and KB-12. The planner catalogue serves them
@@ -248,9 +266,9 @@ documents are in German.
   ADR 0017 (U-55 to U-57), the completion in ADR 0018 (U-58 to U-61), the
   check-in in ADR 0019 (U-62 to U-64), the reserve (U-65 to U-68), the
   plan's foundation in the iOS app in ADR 0021 (U-69 to U-71), the plan's
-  screens in ADR 0022 (U-72 to U-75), the onboarding in the app in
-  ADR 0023 (U-76 to U-79), the band choice in ADR 0024 (U-80),
-  and these findings in spec §15.4:
+  screens in ADR 0025 (U-72 to U-75), the onboarding in the app in
+  ADR 0023 (U-76 to U-79), the band choice in ADR 0024 (U-80), the
+  offline start in ADR 0026 (U-81 to U-85), and these findings in spec §15.4:
   - sets with partner or machine assistance reach neither the capacities
     nor the load history;
   - a set performed offline after the server replaced or removed it is
@@ -272,9 +290,10 @@ documents are in German.
   - a minor answers the whole onboarding before learning there is no plan
     (SAFE-07); an early notice waits on OE-1;
   - the planner does not tell bands apart: a light and a strong band count
-    as the same band capacity of an exercise (ADR 0024).
+    as the same band capacity of an exercise (ADR 0024);
+  - the offline start's limits: a start split over two pushes, two devices
+    starting the same session offline, no check-in offline (ADR 0026).
 - **Not yet built:**
-  - starting a session offline through sync;
   - the sync of pain reports;
   - a record of the consent text agreed to;
   - `?explain=trace`.
