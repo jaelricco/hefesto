@@ -55,6 +55,15 @@ zeigt den Screen `settings` mit den Einstellungen ihres Athleten.
 
 - Der Athlet passt Ziele, Zeit, Ausrüstung und Gewicht selbst an, ohne ein
   zweites Onboarding.
+- Beim Abmelden vergisst die App, was ihre Modelle vom Athleten im Speicher
+  halten (REVIEW_DECISIONS D-16):
+  - die Antworten des Onboardings;
+  - die Einstellungen;
+  - die Regionen des Körpers;
+  - die gezeigte Woche.
+
+  Sonst sähe das nächste Konto sie bis zum Neustart der App. Der Katalog
+  bleibt: Er ist Inhalt, nicht Daten des Athleten.
 - **Nicht gebaut:**
   - bevorzugte Tage, Mobilitäts-Checks, Grenze der Zusatzlast und kleinste
     Scheibe bearbeiten. Das Onboarding fragt sie auch nicht (ADR 0023);
