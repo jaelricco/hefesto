@@ -43,7 +43,9 @@ struct SkillDetailView: View {
         // The name is the page's own title; the bar keeps only the way back.
         .navigationBarTitleDisplayMode(.inline)
         .confirmationDialog(
-            "Mark as achieved?", isPresented: .constant(attesting != nil), titleVisibility: .visible,
+            "Mark as achieved?",
+            isPresented: Binding(get: { attesting != nil }, set: { if !$0 { attesting = nil } }),
+            titleVisibility: .visible,
             presenting: attesting
         ) { level in
             Button("I can do \(level.name)") { Task { await attest(level) } }
@@ -288,6 +290,19 @@ struct LevelCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
+            details
+            // Outside the combined element, so VoiceOver keeps it a button.
+            if status == "available" || status == "in_progress" {
+                Button("I can already do this", action: onAttest)
+                    .buttonStyle(SecondaryButtonStyle(height: 48))
+                    .padding(.top, 4)
+            }
+        }
+        .card()
+    }
+
+    private var details: some View {
+        VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .center, spacing: 10) {
                 Image(systemName: icon).font(.system(size: 20)).foregroundStyle(tint).accessibilityHidden(true)
                 Text(verbatim: level.name).font(Typeface.text(18, .semibold, relativeTo: .headline))
@@ -322,13 +337,7 @@ struct LevelCard: View {
                 }
                 .padding(.top, 4)
             }
-            if status == "available" || status == "in_progress" {
-                Button("I can already do this", action: onAttest)
-                    .buttonStyle(SecondaryButtonStyle(height: 48))
-                    .padding(.top, 4)
-            }
         }
-        .card()
         .accessibilityElement(children: .combine)
     }
 

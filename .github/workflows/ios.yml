@@ -12,6 +12,13 @@ on:
     branches: [main, "claude/**"]
     paths: ["ios/**", "api/openapi.yaml", ".github/workflows/ios.yml"]
   workflow_dispatch:
+    inputs:
+      ui_tests:
+        description: >-
+          Also run the accessibility audit UI tests, on the simulator the
+          screenshot job keeps ("Hefesto Screenshots").
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -44,26 +51,49 @@ jobs:
           fi
           xcodegen --version
 
+      # Long builds run under caffeinate -i (no idle sleep while the command
+      # runs) and at lower priority, so the runner keeps reaching GitHub.
+      # Earlier runs died 10 minutes into a cold build with "lost
+      # communication". Both last only as long as the command.
       - name: swift test (HefestoKit)
         working-directory: ios/Packages/HefestoKit
-        run: swift test --parallel
+        run: caffeinate -i nice -n 10 swift test --parallel
 
       - name: generate the project
         working-directory: ios
         run: xcodegen generate
 
-      - name: build the app for the simulator
+      - name: build the app and its UI tests for the simulator
         working-directory: ios
         run: |
           set -o pipefail
-          xcodebuild build \
+          caffeinate -i nice -n 10 xcodebuild build-for-testing \
             -project Hefesto.xcodeproj -scheme Hefesto \
             -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath .derived \
             -skipPackagePluginValidation -skipMacroValidation \
-            CODE_SIGNING_ALLOWED=NO 2>&1 | tee build.log | grep -E 'error:|\*\* BUILD' || true
-          if ! grep -q '\*\* BUILD SUCCEEDED \*\*' build.log; then
+            CODE_SIGNING_ALLOWED=NO 2>&1 | tee build.log | grep -E 'error:|BUILD SUCCEEDED|BUILD FAILED' || true
+          if ! grep -q 'BUILD SUCCEEDED \*\*' build.log; then
             # Linker errors name their symbols on the lines around "error:".
             grep -B2 -A12 -E 'error:|Undefined symbols' build.log | tail -150
             exit 1
           fi
+
+      # Only on request: the audit needs a booted simulator (see the input).
+      - name: accessibility audit (UI tests)
+        if: ${{ inputs.ui_tests }}
+        working-directory: ios
+        run: |
+          set -o pipefail
+          # The simulator the screenshot job keeps ("Hefesto Screenshots",
+          # scripts/ios-screenshots.sh); this job creates no other.
+          device=$(xcrun simctl list devices available | grep -F "    Hefesto Screenshots (" | head -1 \
+            | sed -E 's/.*\(([0-9A-F-]{36})\).*/\1/' || true)
+          test -n "$device" || { echo "run the ios-screenshots workflow once first; it creates the simulator"; exit 1; }
+          trap 'xcrun simctl shutdown "$device" >/dev/null 2>&1 || true' EXIT
+          caffeinate -i nice -n 10 xcodebuild test-without-building \
+            -project Hefesto.xcodeproj -scheme Hefesto \
+            -destination "id=$device" \
+            -derivedDataPath .derived \
+            -resultBundlePath ".derived/a11y-$GITHUB_RUN_ID.xcresult" 2>&1 | tee test.log | grep -E 'error:|Test Case|\*\* TEST' || true
+          grep -q '\*\* TEST SUCCEEDED \*\*' test.log

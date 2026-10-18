@@ -53,10 +53,60 @@
     },
     "%@ · %lld of %lld levels": {
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · %2$lld of %#@total@"
+          },
+          "substitutions": {
+            "total": {
+              "argNum": 3,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg level"
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg levels"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "%1$@ · %2$lld von %3$lld Stufen"
+            "value": "%1$@ · %2$lld von %#@total@"
+          },
+          "substitutions": {
+            "total": {
+              "argNum": 3,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg Stufe"
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg Stufen"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -153,10 +203,40 @@
     },
     "%lld min": {
       "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld min"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld min"
+                }
+              }
+            }
+          }
+        },
         "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld min"
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld min"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld min"
+                }
+              }
+            }
           }
         }
       }
@@ -203,10 +283,60 @@
     },
     "%lld of %lld levels unlocked": {
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld of %#@total@ unlocked"
+          },
+          "substitutions": {
+            "total": {
+              "argNum": 2,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg level"
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg levels"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "%1$lld von %2$lld Stufen freigeschaltet"
+            "value": "%1$lld von %#@total@ freigeschaltet"
+          },
+          "substitutions": {
+            "total": {
+              "argNum": 2,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg Stufe"
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg Stufen"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -443,10 +573,60 @@
     },
     "%lld × %lld reps": {
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld × %#@reps@"
+          },
+          "substitutions": {
+            "reps": {
+              "argNum": 2,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg rep"
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg reps"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "%1$lld × %2$lld Wdh."
+            "value": "%1$lld × %#@reps@"
+          },
+          "substitutions": {
+            "reps": {
+              "argNum": 2,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg Wdh."
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg Wdh."
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -971,16 +1151,6 @@
         }
       }
     },
-    "Best: %@": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bestwert: %@"
-          }
-        }
-      }
-    },
     "Bests": {
       "localizations": {
         "de": {
@@ -1331,16 +1501,6 @@
         }
       }
     },
-    "Day": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tag"
-          }
-        }
-      }
-    },
     "Days": {
       "localizations": {
         "de": {
@@ -1391,22 +1551,22 @@
         }
       }
     },
-    "Difficulty %lld of 10": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Schwierigkeit %lld von 10"
-          }
-        }
-      }
-    },
     "Dip belt": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Dipgürtel"
+          }
+        }
+      }
+    },
+    "Distance (m)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Distanz (m)"
           }
         }
       }
@@ -1597,6 +1757,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Geschätzte Unterstützung"
+          }
+        }
+      }
+    },
+    "Estimated assist in kilograms": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geschätzte Unterstützung in Kilogramm"
           }
         }
       }
@@ -1897,6 +2067,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Verlauf"
+          }
+        }
+      }
+    },
+    "Hold (s)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Halten (s)"
           }
         }
       }
@@ -3121,6 +3301,16 @@
         }
       }
     },
+    "Reps": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wiederholungen"
+          }
+        }
+      }
+    },
     "Reps left": {
       "localizations": {
         "de": {
@@ -3331,16 +3521,6 @@
         }
       }
     },
-    "Self-attested on %@": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Selbst bestätigt am %@"
-          }
-        }
-      }
-    },
     "Self-attested: the log cannot show this one.": {
       "localizations": {
         "de": {
@@ -3411,6 +3591,16 @@
         }
       }
     },
+    "Set logged": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Satz eingetragen"
+          }
+        }
+      }
+    },
     "Shoulder": {
       "localizations": {
         "de": {
@@ -3427,6 +3617,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Anzeigen"
+          }
+        }
+      }
+    },
+    "Show as list": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Als Liste zeigen"
+          }
+        }
+      }
+    },
+    "Show as map": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Als Karte zeigen"
           }
         }
       }
@@ -4011,32 +4221,12 @@
         }
       }
     },
-    "Unlocked on %@": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Freigeschaltet am %@"
-          }
-        }
-      }
-    },
     "Up to": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Bis"
-          }
-        }
-      }
-    },
-    "Value": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Wert"
           }
         }
       }
@@ -4423,20 +4613,80 @@
     },
     "about %lld min": {
       "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "about %lld min"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "about %lld min"
+                }
+              }
+            }
+          }
+        },
         "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "etwa %lld min"
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "etwa %lld min"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "etwa %lld min"
+                }
+              }
+            }
           }
         }
       }
     },
     "and %lld more": {
       "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "and %lld more"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "and %lld more"
+                }
+              }
+            }
+          }
+        },
         "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "und %lld weitere"
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "und %lld weitere"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "und %lld weitere"
+                }
+              }
+            }
           }
         }
       }

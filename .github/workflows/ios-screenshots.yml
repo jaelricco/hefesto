@@ -38,7 +38,9 @@ jobs:
         run: xcodegen generate
 
       - name: take the screenshots
-        run: scripts/ios-screenshots.sh ios/screenshots
+        # caffeinate -i: no idle sleep during the cold build; it ends with the
+        # script. Earlier runs lost the runner 10 minutes into the build.
+        run: caffeinate -i nice -n 10 scripts/ios-screenshots.sh ios/screenshots
 
       - uses: actions/upload-artifact@v4
         with:

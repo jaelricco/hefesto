@@ -197,10 +197,13 @@ struct ExerciseStatsView: View {
                 Section {
                     Chart(stats.days) { day in
                         if let y = chartValue(day) {
-                            BarMark(x: .value("Day", Day.date(day.localDate) ?? .distantPast, unit: .day),
-                                    y: .value("Value", y))
+                            let date = Day.date(day.localDate) ?? .distantPast
+                            BarMark(x: .value("Date", date, unit: .day), y: .value(axisLabel, y))
                                 .foregroundStyle(Palette.ember)
                                 .cornerRadius(3)
+                                // VoiceOver reads each bar as a day and its value.
+                                .accessibilityLabel(Text(date, format: .dateTime.day().month().year()))
+                                .accessibilityValue(Text(verbatim: LevelText.value(y, unit: chartUnit)))
                         }
                     }
                     .chartXAxis {
@@ -281,6 +284,14 @@ struct ExerciseStatsView: View {
         switch measure {
         case "hold_seconds", "distance_m": measure
         default: "reps"
+        }
+    }
+
+    private var axisLabel: LocalizedStringKey {
+        switch measure {
+        case "hold_seconds": "Hold (s)"
+        case "distance_m": "Distance (m)"
+        default: "Reps"
         }
     }
 

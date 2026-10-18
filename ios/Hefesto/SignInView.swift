@@ -10,7 +10,7 @@ struct SignInView: View {
     @State private var password = ""
     @State private var displayName = ""
     @State private var working = false
-    @State private var message: LocalizedStringKey?
+    @State private var message: String?
     @State private var detail: String?
     @State private var nonce = ""
 
@@ -84,7 +84,7 @@ struct SignInView: View {
 
                 if let message {
                     Section {
-                        Text(message).font(.bodyText).foregroundStyle(Palette.ember)
+                        Text(verbatim: message).font(.bodyText).foregroundStyle(Palette.ember)
                         if let detail { Text(verbatim: detail).font(.fine).foregroundStyle(Palette.textSecondary) }
                     }
                     .themedRow()
@@ -92,6 +92,10 @@ struct SignInView: View {
             }
             .themedScreen()
             .navigationTitle("Hefesto")
+            .onChange(of: message) { _, new in
+                // VoiceOver hears what went wrong without hunting for it.
+                if let new { AccessibilityNotification.Announcement(new).post() }
+            }
         }
     }
 
@@ -120,7 +124,7 @@ struct SignInView: View {
               let token = String(data: tokenData, encoding: .utf8)
         else {
             if case let .failure(error) = result, (error as? ASAuthorizationError)?.code == .canceled { return }
-            message = "Sign in with Apple did not complete."
+            message = String(localized: "Sign in with Apple did not complete.")
             return
         }
         let name = credential.fullName.flatMap { PersonNameComponentsFormatter().string(from: $0) }
@@ -138,12 +142,12 @@ struct SignInView: View {
     private func show(_ error: any Error) {
         detail = nil
         switch error as? AuthError {
-        case .invalidCredentials: message = "Email or password is wrong."
-        case .emailTaken: message = "An account with this email exists. Sign in instead."
-        case let .invalid(why): message = "Please check your details."; detail = why
-        case .rateLimited: message = "Too many attempts. Try again in a few minutes."
-        case .forbidden: message = "This account cannot sign in."
-        default: message = "Could not reach Hefesto. Check your connection."
+        case .invalidCredentials: message = String(localized: "Email or password is wrong.")
+        case .emailTaken: message = String(localized: "An account with this email exists. Sign in instead.")
+        case let .invalid(why): message = String(localized: "Please check your details."); detail = why
+        case .rateLimited: message = String(localized: "Too many attempts. Try again in a few minutes.")
+        case .forbidden: message = String(localized: "This account cannot sign in.")
+        default: message = String(localized: "Could not reach Hefesto. Check your connection.")
         }
     }
 
