@@ -1972,7 +1972,7 @@ darüber idempotent (U-40). Planungs-Antworten tragen `ruleset_version`;
 - Der Client hält den Plan der laufenden Woche im lokalen Speicher (`ETag`),
   wie die Skill-Karte (ADR 0011). Server-Tabellen des Planers sind für den
   Client nur lesbar. Umsetzung in der iOS-App: ADR 0021, U-69 bis U-71; die
-  Screens folgen.
+  Screens: ADR 0022, U-72 bis U-75.
 - Offline startet der Client eine geplante Einheit selbst nach demselben
   Materialisierungsschema (§10.2, neue IDs, `planned_item_id`); der Sync lädt
   sie hoch, der Server adaptiert nach dem Commit. **Noch nicht gebaut:** Die
@@ -2170,7 +2170,8 @@ jedem neuen Plan (ADR 0017, U-55 bis U-57), und der Abschluss einer Einheit, der
 erreicht (ADR 0018, U-58 bis U-61), und der Check-in beim Start (ADR 0019, U-62 bis
 U-64), und die Reserve eines Halts im Log (U-65, U-66) und die Reserve in
 der iOS-App (U-67, U-68), und der Unterbau des Plans in der iOS-App
-(ADR 0021, U-69 bis U-71).
+(ADR 0021, U-69 bis U-71), und die Screens des Plans in der iOS-App
+(ADR 0022, U-72 bis U-75).
 
 Tests: sechs Personas als Golden Files (`internal/domain/planning/testdata/`),
 die Eigenschaften I-1 bis I-11 für jeden erzeugten Plan, zwölf simulierte
@@ -2260,6 +2261,10 @@ U-35 setzen die Entscheidungen ENT-R-1, ENT-R-2 und ENT-R-5 um (§15.5).
 | U-69 | §10.5 | Die iOS-App hält den Plan je Woche als Dokument, wie der Server ihn sendet (`cachedPlan`: Wochenbeginn, `ETag`, JSON), und liest ihn mit dem generierten Typ; Pläne mehr als vier Wochen vor dem neuesten gehen; `onboarding-required` löscht alle | Der Plan ist das Lesemodell des Servers, wird ganz ersetzt und lokal nie geändert; Tabellen wie bei der Skill-Karte (ADR 0011) brächten Abbildungen ohne Nutzen und verlören Felder, die die App noch nicht zeigt |
 | U-70 | §10.2, §10.5 | Der Start in der App braucht das Netz; der Draft der Antwort wird ohne Outbox gehalten; hält die App die Session schon (auch gelöscht), bleibt ihre Kopie; die Antworten des Check-ins speichert auch die App nicht | Ein wiederholter Start antwortet mit der ersten Session (U-51); die lokale Kopie kann ungesendete Änderungen tragen. Der Offline-Start bleibt offen (§15.3) |
 | U-71 | §10.2 | Ein geplanter Satz wird an seinem Platz ausgeführt: dieselbe ID, `is_planned = false`, `completed_at`, Istwerte statt Zielen, die angegebene Reserve, die geplante Pause startet; `plannedSessionId` und `plannedItemId` werden gespiegelt, nie gesendet | Der Server behält `planned_item_id` bei jedem Schreiben (ADR 0016); so bleibt die Zuordnung von Ist zu Soll, und es gibt weiter nur einen Pfad für Sätze |
+| U-72 | §10.5 | Auf «Heute» ist der Start der offenen Einheit von heute die Hauptaktion, das freie Training die zweite; ohne Plan, an einem Ruhetag des Plans oder nach erledigter Einheit ist das freie Training wieder die Hauptaktion; ein Stopp zeigt die Gründe wörtlich und lässt das freie Training als zweite Aktion | Eine Hauptaktion je Screen (ADR 0020); der Plan ist ein Angebot, die Wahl bleibt beim Athleten; die App fügt einem Stopp keinen eigenen Rat hinzu |
+| U-73 | §10.2, §10.5 | Vor dem Start sendet die App ihren Ausgang; der Check-in fragt Schlaf (4 bis 9 h, Enden «oder weniger»/«oder mehr») und Müdigkeit (1–10), beide freiwillig, und nennt die Schwellen von ADAPT-17; «Weiter» ohne gehaltene Session startet erneut | Der Server plant mit dem letzten Log, und offline ausgeführte Sätze gehen vor einem Abgleich hinaus (§15.4); ein wiederholter Start antwortet mit derselben Session (U-51) |
+| U-74 | §4.3, §10.2 | Der Logger zeigt offene geplante Sätze als Ziele; «Nächster Satz» öffnet den nächsten mit vorbelegten Zielen und geplanter Pause, ohne Kombination; nur der erste Arbeitssatz eines Items mit `calibration` ist ein Kalibrierungssatz und sagt, warum die Reserve zählt; die Reserve bleibt freiwillig; der Verlauf zeigt nur Ausgeführtes | Die Kalibrierung (SEL-08) stützt sich auf den ersten, unermüdeten Satz; eine erzwungene Reserve würde geraten statt angegeben |
+| U-75 | §10.2 | Ein geplanter Satz, dessen Item `assist: band` trägt, lässt sich in der App nicht ausführen, bis sie ein Band wählen kann; er bleibt sichtbar und wird von «Nächster Satz» übersprungen | Das Log verlangt das Band selbst (ADR 0016); ohne Band stünde der Satz als unassistiert im Log und wäre ein Beleg für die Skill-Karte, deren Freischaltungen nie zurückgenommen werden |
 
 ### 15.3 Nicht umgesetzt
 
@@ -2324,7 +2329,7 @@ weil die Adaption die Kürzung nicht vorhersieht.
   inzwischen ersetzt oder gelöscht hat, lehnt der Sync die Ausführung ab.
   Betroffen sind nur Sätze, deren Item sich geändert hat oder entfallen ist.
   Die App sollte ihren Ausgang synchronisieren, bevor sie ein Ereignis sendet.
-  Reicht das nicht, bräuchte ADR 0009 eine Ausnahme: Ein vor der Löschung
+  Vor einem Start tut sie das seit U-73. Reicht das nicht, bräuchte ADR 0009 eine Ausnahme: Ein vor der Löschung
   ausgeführter Satz belebt einen Grabstein des Servers wieder.
 - **Assistierte Sätze ohne Band fehlen dem Planer.** Sätze mit Partner,
   Maschine, Schräge, Gegengewicht oder Fussstütze erreichen weder die
@@ -2335,9 +2340,9 @@ weil die Adaption die Kürzung nicht vorhersieht.
 - **Die Reserve bleibt freiwillig.** Seit U-68 fragt die App `rir` und
   `sir_s` ab, aber «Nicht bewertet» ist die Vorgabe. Ein Satz ohne Reserve
   bleibt eine Untergrenze (§4.3). Lässt ein User die Frage immer offen, lernt
-  der Planer nur aus Tests und Sätzen bis zum Versagen. Ob die App bei einem
-  Kalibrierungssatz nachfragen soll, ist offen; sie liest den Plan bisher
-  nicht und erkennt deshalb keinen Kalibrierungssatz.
+  der Planer nur aus Tests und Sätzen bis zum Versagen. Seit U-74 erkennt
+  die App einen Kalibrierungssatz und sagt, warum die Reserve dort zählt,
+  erzwingt sie aber nicht. Ob sie es tun soll, ist offen.
 - **WEEK-08 erzeugt die ganze Woche neu.** «Ab der nächsten nicht begonnenen
   Einheit» ist nicht umgesetzt: Eine gestartete Einheit behält ihre Session
   (U-54), die neue Einheit desselben Tages kann aber anders aussehen, und ohne

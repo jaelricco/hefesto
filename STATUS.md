@@ -151,6 +151,31 @@ documents are in German.
     client of the app now sends the header as HTTP defines it.
   - Not built: the screens, the onboarding in the app, pain reports from
     the app, choosing a band for a planned band set, the offline start.
+- **The plan's screens in the iOS app (this checkpoint, ADR 0022):**
+  - A new module, `HefestoPlan`, maps the kept plan to the screens' own
+    types in one place; views never see the API's types (ADR 0020). The
+    plan is fetched again after every sync.
+  - Today leads with the plan: starting today's open session is the main
+    action, a free session the second. Without a plan, on a rest day of the
+    plan or once the session is done, a free session leads again. The week
+    follows, day by day, rest days included. A stop shows the plan's
+    reasons verbatim and adds no advice.
+  - A planned session shows every block and item with sets, target,
+    reserve, rest and the knowledge base's reasons.
+  - Starting asks the two optional check-in questions and says what they
+    change and that they are not stored. The outbox goes out first, so the
+    server plans with the latest log.
+  - The logger shows open planned sets as targets. "Next set" opens the
+    next one with its targets filled in. The first working set of a
+    calibration item says why its reserve matters; the reserve stays
+    optional. History shows only what was done.
+  - A planned band set cannot be performed until the app can name a band.
+    Performed without one, it would read as unassisted and count for the
+    map.
+  - The demo holds a plan of the week; four new screens (`plansession`,
+    `checkin`, `planned`, `target`) join the screenshots.
+  - Not built: offers on active choice, the pain question on monitored
+    items, the onboarding in the app, choosing a band, the offline start.
 - **A started draft follows the plan (this checkpoint, ADR 0017):**
   - Every new plan of the week reconciles the drafts of started sessions in
     the same transaction. Their open planned sets follow the day's session
@@ -187,7 +212,8 @@ documents are in German.
   start decisions in ADR 0016 (U-50 to U-54), the reconciliation in
   ADR 0017 (U-55 to U-57), the completion in ADR 0018 (U-58 to U-61), the
   check-in in ADR 0019 (U-62 to U-64), the reserve (U-65 to U-68), the
-  plan's foundation in the iOS app in ADR 0021 (U-69 to U-71),
+  plan's foundation in the iOS app in ADR 0021 (U-69 to U-71), the plan's
+  screens in ADR 0022 (U-72 to U-75),
   and these findings in spec §15.4:
   - sets with partner or machine assistance reach neither the capacities
     nor the load history;
@@ -197,8 +223,8 @@ documents are in German.
   - WEEK-08 regenerates the whole week, not only from the next session that
     has not started;
   - the reserve stays optional in the app; a set left unrated is a lower
-    bound. The app does not read the plan yet, so it cannot insist on a
-    calibration set;
+    bound. The app now marks a calibration set and says why its reserve
+    matters, but does not insist on it;
   - no exercise carries `restriction_tags`, so a professional's
     restrictions from the onboarding are stored but do not yet exclude
     anything;
