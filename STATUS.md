@@ -305,7 +305,7 @@ documents are in German.
 
 ## Current phase: 7 — polish (complete, awaiting review)
 
-The decisions are in ADR 0022. This phase was built before the planner and the
+The decisions are in ADR 0025 (numbered after the planner track's 0022–0024). This phase was built before the planner and the
 Glut design pass reached `main`, and merged with both afterwards.
 
 - **Localization**

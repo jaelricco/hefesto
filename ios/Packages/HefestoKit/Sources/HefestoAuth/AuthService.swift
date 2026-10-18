@@ -19,7 +19,7 @@ public enum AuthError: Error, Equatable, Sendable {
 public actor AuthService {
     private let client: Client // without the auth middleware: these calls carry no token
     private let store: any TokenStore
-    private let device: Components.Schemas.Device
+    private var device: Components.Schemas.Device
     private let now: @Sendable () -> Date
     private var refreshing: Task<Tokens, any Error>?
 
@@ -35,6 +35,14 @@ public actor AuthService {
     }
 
     public var isSignedIn: Bool { store.load() != nil }
+    public var deviceId: String { device.id }
+
+    /// The device id the next sign-in sends. The server binds a device id to
+    /// one account (ADR 0007), so after a sign-out the app starts a new one;
+    /// otherwise another account could not sign in on the same phone.
+    public func useDevice(id: String) {
+        device.id = id
+    }
     public var userId: String? { store.load()?.userId }
 
     public func register(email: String, password: String, displayName: String?, timezone: String, locale: String?) async throws {

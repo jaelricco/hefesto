@@ -1,4 +1,4 @@
-# ADR 0022 — Polish, the TestFlight build and the load smoke test
+# ADR 0025 — Polish, the TestFlight build and the load smoke test
 
 - Status: accepted
 - Date: 2026-09-27

@@ -22,12 +22,14 @@ RETAIN_DAYS="${HEFESTO_BACKUP_RETAIN_DAYS:-30}"
 
 log() { printf '%s backup: %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$*"; }
 
-# The runtime image is Alpine and carries neither pg_dump nor mc; install once
-# at container start rather than baking a backup toolchain into the API image.
-if ! command -v pg_dump >/dev/null 2>&1; then
+# The runtime image is Alpine and carries neither pg_dump nor the MinIO client;
+# install once at container start rather than baking a backup toolchain into
+# the API image. Alpine ships the client as `mcli`, not `mc`.
+if ! command -v pg_dump >/dev/null 2>&1 || ! command -v mcli >/dev/null 2>&1; then
     log "installing postgresql-client and minio client"
     apk add --no-cache postgresql16-client minio-client >/dev/null
 fi
+mc() { mcli "$@"; }
 
 mc alias set backup "$HEFESTO_BACKUP_ENDPOINT" \
     "$HEFESTO_BACKUP_ACCESS_KEY" "$HEFESTO_BACKUP_SECRET_KEY" >/dev/null
