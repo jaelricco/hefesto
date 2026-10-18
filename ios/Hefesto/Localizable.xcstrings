@@ -91,6 +91,16 @@
         }
       }
     },
+    "%@–%@ kg": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@–%2$@ kg"
+          }
+        }
+      }
+    },
     "%lld XP": {
       "localizations": {
         "de": {
@@ -731,6 +741,26 @@
         }
       }
     },
+    "Add": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hinzufügen"
+          }
+        }
+      }
+    },
+    "Add a band": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Band hinzufügen"
+          }
+        }
+      }
+    },
     "Add a block": {
       "localizations": {
         "de": {
@@ -881,6 +911,46 @@
         }
       }
     },
+    "Band: %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Band: %@"
+          }
+        }
+      }
+    },
+    "Band: %@ ×%lld": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Band: %1$@ ×%2$lld"
+          }
+        }
+      }
+    },
+    "Bands are saved online. Try again when you have a connection.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bänder werden online gespeichert. Versuch es nochmals, wenn du eine Verbindung hast."
+          }
+        }
+      }
+    },
+    "Bands at once": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bänder gleichzeitig"
+          }
+        }
+      }
+    },
     "Before you start": {
       "localizations": {
         "de": {
@@ -961,6 +1031,16 @@
         }
       }
     },
+    "Brand": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Marke"
+          }
+        }
+      }
+    },
     "By a date": {
       "localizations": {
         "de": {
@@ -1001,6 +1081,36 @@
         }
       }
     },
+    "Catalogue": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Katalog"
+          }
+        }
+      }
+    },
+    "Check the figures: the first must not be above the second.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prüf die Zahlen: Die erste darf nicht über der zweiten liegen."
+          }
+        }
+      }
+    },
+    "Choose a band": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Band wählen"
+          }
+        }
+      }
+    },
     "Choose an exercise": {
       "localizations": {
         "de": {
@@ -1037,6 +1147,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Schliessen"
+          }
+        }
+      }
+    },
+    "Colour or name": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Farbe oder Name"
           }
         }
       }
@@ -1617,6 +1737,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Freies Training"
+          }
+        }
+      }
+    },
+    "From": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Von"
           }
         }
       }
@@ -2331,6 +2461,16 @@
         }
       }
     },
+    "Makers often state more than a band gives, and bands of one colour differ.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hersteller geben oft mehr an, als ein Band hergibt, und Bänder derselben Farbe unterscheiden sich."
+          }
+        }
+      }
+    },
     "Mark as achieved?": {
       "localizations": {
         "de": {
@@ -2451,6 +2591,16 @@
         }
       }
     },
+    "My bands": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Meine Bänder"
+          }
+        }
+      }
+    },
     "Name (optional)": {
       "localizations": {
         "de": {
@@ -2477,6 +2627,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Noch nie"
+          }
+        }
+      }
+    },
+    "New band": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neues Band"
           }
         }
       }
@@ -2527,6 +2687,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nein"
+          }
+        }
+      }
+    },
+    "No bands yet. Add the ones you train with.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noch keine Bänder. Füg die hinzu, mit denen du trainierst."
           }
         }
       }
@@ -2821,12 +2991,12 @@
         }
       }
     },
-    "Planned with a band. The app cannot log bands yet.": {
+    "Planned with a band. Choose the one you use, or None if you went without.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Mit Band geplant. Die App kann Bänder noch nicht eintragen."
+            "value": "Mit Band geplant. Wähl das Band, das du nutzt, oder «Keine», wenn du ohne trainiert hast."
           }
         }
       }
@@ -2921,6 +3091,16 @@
         }
       }
     },
+    "Remove": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Entfernen"
+          }
+        }
+      }
+    },
     "Remove this part": {
       "localizations": {
         "de": {
@@ -2967,6 +3147,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Reserve"
+          }
+        }
+      }
+    },
+    "Resistance as the maker states it": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Widerstand laut Hersteller"
           }
         }
       }
@@ -3481,6 +3671,16 @@
         }
       }
     },
+    "The band could not be saved. Try again later.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das Band konnte nicht gespeichert werden. Versuch es später nochmals."
+          }
+        }
+      }
+    },
     "The catalogue loads with the first sync.": {
       "localizations": {
         "de": {
@@ -3627,6 +3827,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Diese Woche"
+          }
+        }
+      }
+    },
+    "To": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bis"
           }
         }
       }
@@ -4057,6 +4267,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ja: etwas anderes"
+          }
+        }
+      }
+    },
+    "You have a band of this brand and colour already.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Du hast schon ein Band dieser Marke und Farbe."
           }
         }
       }

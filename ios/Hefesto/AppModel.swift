@@ -117,6 +117,8 @@ final class AppModel {
         do {
             let report = try await sync.sync()
             try? await sync.refreshExercises()
+            // Bands are not in the sync feed (ADR 0009).
+            try? await sync.refreshBands()
             // States change when a completion is evaluated; content rarely.
             try? await sync.refreshSkillMap()
             // The plan changes with every event the sync carried.
@@ -131,6 +133,24 @@ final class AppModel {
             isSignedIn = await auth.isSignedIn
             isOffline = isSignedIn
         }
+    }
+
+    /// Adds a band to the athlete's collection, online. A demo keeps it here
+    /// only.
+    func createBand(brand: String, colourLabel: String, minKg: Double, maxKg: Double) async throws -> Band {
+        guard demo == nil else {
+            let band = Band(brand: brand, colourLabel: colourLabel, resistanceMinKg: minKg, resistanceMaxKg: maxKg)
+            try db.saveBand(band)
+            return band
+        }
+        return try await sync.createBand(
+            brand: brand, colourLabel: colourLabel, resistanceMinKg: minKg, resistanceMaxKg: maxKg)
+    }
+
+    /// Removes one of the athlete's bands; sets logged with it keep it.
+    func deleteBand(id: String) async throws {
+        guard demo == nil else { return try db.markBandRemoved(id: id) }
+        try await sync.deleteBand(id: id)
     }
 
     /// Fetches a skill's injury notes for offline reading; a demo has them already.

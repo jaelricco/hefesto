@@ -17,6 +17,8 @@ enum DemoScreen: String, CaseIterable {
     // The onboarding (ADR 0023): the goals, where the athlete stands, and a
     // current complaint with its warning signs.
     case onboarding, standing, complaint
+    // A band-assisted pull-up in the composer (ADR 0024).
+    case band
 
     var tab: AppTab {
         switch self {
@@ -26,7 +28,7 @@ enum DemoScreen: String, CaseIterable {
         }
     }
 
-    var opensLogger: Bool { [.logger, .composer, .reserve, .finish].contains(self) }
+    var opensLogger: Bool { [.logger, .composer, .reserve, .finish, .band].contains(self) }
     var opensPlanned: Bool { [.planned, .target].contains(self) }
 
     /// The onboarding page the screen opens on, if it opens the onboarding.
@@ -52,6 +54,9 @@ struct DemoRun {
     let skillId: String
     /// A hold: the stats screen shows it, and the reserve screen chooses it.
     let exerciseId: String
+    /// A band of the athlete's own, and the exercise the band screen assists.
+    let bandId: String
+    let bandExerciseId: String
     let celebration: Celebration?
     /// The planner's catalogue and the answers so far, for the onboarding.
     let catalogue: OnboardingCatalogue?
@@ -124,6 +129,7 @@ extension DemoRun {
                                         isBodyweight: false)
         try db.replaceExercises([pullUp, scapular, tuck, advTuck, bandTuck, curl, wallHold, externalRotation],
                                 contentVersion: "demo")
+        try db.replaceBands(DemoBands.all)
 
         // The map.
         func skill(_ slug: String, _ name: String, _ family: String, tier: Int, milestone: Bool,
@@ -294,7 +300,7 @@ extension DemoRun {
         return DemoRun(
             screen: screen, logger: logger, draftSessionId: draft, plannedSessionId: planned.session.id,
             pastSessionId: past,
-            skillId: frontLever.id, exerciseId: tuck.id,
+            skillId: frontLever.id, exerciseId: tuck.id, bandId: DemoBands.light.id, bandExerciseId: pullUp.id,
             celebration: screen == .celebration
                 ? Celebration(sessionId: draft,
                               unlocked: [.init(levelId: tuckLevel.id, levelName: tuckLevel.name, skillName: frontLever.name)],
@@ -303,6 +309,16 @@ extension DemoRun {
             catalogue: try OnboardingCatalogue(json: Data(DemoCatalogue.json.utf8)),
             onboardingForm: screen.onboardingPage == nil ? nil : DemoOnboarding.form(for: screen))
     }
+}
+
+/// The athlete's own bands in the demo: fixture data, as a test's, not a
+/// manufacturer's figures.
+enum DemoBands {
+    static let light = Band(
+        id: "demo-band-light", brand: "Loop", colourLabel: "Rot", resistanceMinKg: 5, resistanceMaxKg: 15)
+    static let strong = Band(
+        id: "demo-band-strong", brand: "Loop", colourLabel: "Schwarz", resistanceMinKg: 15, resistanceMaxKg: 35)
+    static let all = [light, strong]
 }
 
 /// The onboarding's answers so far, as far as each demo screen has come.

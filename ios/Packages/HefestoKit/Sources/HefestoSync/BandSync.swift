@@ -47,8 +47,8 @@ extension SyncEngine {
         }
     }
 
-    /// Removes one of the athlete's bands. Sets logged with it keep it
-    /// (`ON DELETE RESTRICT` on the server); here it stays for their names.
+    /// Removes one of the athlete's bands. The server deletes it softly, so
+    /// sets logged with it keep it; here it stays for their names.
     public func deleteBand(id: String) async throws {
         switch try await client.deleteMyBand(path: .init(bandId: id)) {
         case .noContent, .notFound: try db.markBandRemoved(id: id)
