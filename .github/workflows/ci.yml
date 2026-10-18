@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
   pull_request:
+  # Run the whole suite on a branch before it has a pull request.
+  workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -223,6 +225,29 @@ jobs:
       - name: API log
         if: always()
         run: tail -n 200 api.log || true
+
+  # The first deploy to the real host must not be the first time the deploy
+  # scripts, both Compose files, the Caddyfile, the backup sidecar and the
+  # restore run (ADR 0023). This runs all of them on the runner's Docker.
+  deploy-rehearsal:
+    name: deploy rehearsal (production, staging, backup, restore)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+      # MinIO is built from source (scripts/with-minio.sh); keep the binary.
+      - uses: actions/cache@v4
+        with:
+          path: bin
+          key: minio-${{ hashFiles('scripts/with-minio.sh') }}
+      - name: rehearse
+        env:
+          HEFESTO_TEST_MINIO_HOST: 0.0.0.0
+        run: ./scripts/with-minio.sh ./scripts/deploy-rehearsal.sh
 
   docker:
     name: docker image builds
