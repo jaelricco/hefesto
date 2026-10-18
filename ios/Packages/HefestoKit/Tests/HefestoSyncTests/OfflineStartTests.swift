@@ -111,7 +111,9 @@ func keepCatalogue(_ db: AppDatabase, holds: [String] = []) throws -> [String: S
         let byCatalogue = straight.sets[1]
         #expect(byCatalogue.elements[0].measure == "hold_seconds", "without a target the catalogue names the measure")
         #expect(byCatalogue.elements[0].holdSeconds == nil && byCatalogue.entry.sirS == 3)
-        #expect(Set(tree.blocks.flatMap { $0.sets.flatMap { [$0.entry.id] + $0.elements.map(\.id) } }).count == 16)
+        let sets = tree.blocks.flatMap(\.sets)
+        let rowIds = sets.map(\.entry.id) + sets.flatMap { $0.elements.map(\.id) }
+        #expect(Set(rowIds).count == 16, "every set and element has its own id")
     }
 
     @Test func anExerciseMissingHereStopsTheStart() throws {
