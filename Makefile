@@ -178,10 +178,10 @@ deploy-check: ## Validate everything the deploy depends on, without deploying
 	@# .env.prod.example leaves every secret blank on purpose, and the prod
 	@# compose file uses ${VAR:?} so a missing one fails loudly. Fill the blanks
 	@# with placeholders just to type-check the file.
-	@sed -E 's/^([A-Z_]+)=$$/\1=placeholder/' .env.prod.example > /tmp/hefesto-check.env
+	@sed -E 's/^([A-Z0-9_]+)=$$/\1=placeholder/' .env.prod.example > /tmp/hefesto-check.env
 	@echo 'HEFESTO_TAG=v0.0.0-check' >> /tmp/hefesto-check.env
 	docker compose -f docker-compose.prod.yml --env-file /tmp/hefesto-check.env config --quiet
-	@sed -E 's/^([A-Z_]+)=$$/\1=placeholder/' .env.staging.example > /tmp/hefesto-check.env
+	@sed -E 's/^([A-Z0-9_]+)=$$/\1=placeholder/' .env.staging.example > /tmp/hefesto-check.env
 	@echo 'HEFESTO_TAG=sha-check' >> /tmp/hefesto-check.env
 	docker compose -f docker-compose.staging.yml --env-file /tmp/hefesto-check.env config --quiet
 	@rm -f /tmp/hefesto-check.env

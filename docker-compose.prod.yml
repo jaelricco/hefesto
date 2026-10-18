@@ -6,6 +6,8 @@
 #   - Postgres is NOT published; it is reachable only on the internal network
 #   - no mailpit, no pgweb, no minio (Hetzner Object Storage replaces MinIO)
 #   - a backup sidecar dumps the database to object storage nightly
+#   - Postgres archives every WAL segment with pgBackRest and a pitr sidecar
+#     takes base backups, for point-in-time recovery (ADR 0026)
 #   - Caddy also serves staging (docker-compose.staging.yml, ADR 0026) over
 #     the shared hefesto-edge network
 #
@@ -20,17 +22,51 @@ x-logging: &default-logging
     max-size: "10m"
     max-file: "5"
 
+# pgBackRest's settings, shared by Postgres (which pushes WAL with them) and
+# the pitr sidecar (which takes base backups). The repository is encrypted:
+# without HEFESTO_PITR_CIPHER_PASS the backups cannot be read, so keep a copy
+# of it off the server.
+x-pgbackrest: &pgbackrest
+  PGBACKREST_STANZA: hefesto
+  PGBACKREST_PG1_PATH: /var/lib/postgresql/data
+  PGBACKREST_PG1_SOCKET_PATH: /var/run/postgresql
+  PGBACKREST_PG1_USER: ${POSTGRES_USER:?}
+  PGBACKREST_REPO1_TYPE: s3
+  PGBACKREST_REPO1_PATH: /pgbackrest
+  PGBACKREST_REPO1_S3_ENDPOINT: ${HEFESTO_PITR_S3_ENDPOINT:?}
+  PGBACKREST_REPO1_S3_REGION: ${HEFESTO_PITR_S3_REGION:?}
+  PGBACKREST_REPO1_S3_BUCKET: ${HEFESTO_PITR_S3_BUCKET:?}
+  PGBACKREST_REPO1_S3_KEY: ${HEFESTO_PITR_S3_KEY:?}
+  PGBACKREST_REPO1_S3_KEY_SECRET: ${HEFESTO_PITR_S3_KEY_SECRET:?}
+  PGBACKREST_REPO1_S3_URI_STYLE: ${HEFESTO_PITR_S3_URI_STYLE:-path}
+  PGBACKREST_REPO1_STORAGE_PORT: ${HEFESTO_PITR_S3_PORT:-443}
+  PGBACKREST_REPO1_STORAGE_VERIFY_TLS: ${HEFESTO_PITR_VERIFY_TLS:-y}
+  PGBACKREST_REPO1_CIPHER_TYPE: aes-256-cbc
+  PGBACKREST_REPO1_CIPHER_PASS: ${HEFESTO_PITR_CIPHER_PASS:?}
+  PGBACKREST_REPO1_RETENTION_FULL: ${HEFESTO_PITR_RETENTION_FULL:-2}
+  PGBACKREST_COMPRESS_TYPE: zst
+  PGBACKREST_LOG_LEVEL_CONSOLE: info
+  PGBACKREST_LOG_LEVEL_FILE: "off"
+  PGBACKREST_LOCK_PATH: /tmp/pgbackrest
+
 services:
   postgres:
-    image: postgres:16-alpine
+    # postgres:16-alpine plus pgBackRest, built here (docker/Dockerfile.postgres).
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.postgres
+    image: hefesto-postgres:16
     restart: unless-stopped
     environment:
+      <<: *pgbackrest
       POSTGRES_USER: ${POSTGRES_USER:?}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?}
       POSTGRES_DB: ${POSTGRES_DB:?}
       POSTGRES_INITDB_ARGS: "--locale-provider=icu --icu-locale=en-US --encoding=UTF8"
     volumes:
       - pgdata:/var/lib/postgresql/data
+      # Shared with the pitr sidecar, which talks to the server over the socket.
+      - pgsocket:/var/run/postgresql
     # No ports: — the database is not reachable from outside the compose network.
     command:
       - "postgres"
@@ -42,6 +78,14 @@ services:
       - "max_connections=60"
       - "-c"
       - "log_min_duration_statement=500"
+      # Every WAL segment goes to the pgBackRest repository, at the latest a
+      # minute after it began: the most a restore can lose.
+      - "-c"
+      - "archive_mode=on"
+      - "-c"
+      - "archive_command=pgbackrest archive-push %p"
+      - "-c"
+      - "archive_timeout=60"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
@@ -154,6 +198,31 @@ services:
         condition: service_healthy
     logging: *default-logging
 
+  # Base backups for point-in-time recovery (scripts/pitr.sh, ADR 0026): a
+  # full backup weekly, a differential daily. It reads the data directory
+  # read-only and reaches Postgres over the shared socket.
+  pitr:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.postgres
+    image: hefesto-postgres:16
+    restart: unless-stopped
+    user: postgres
+    entrypoint: ["/bin/sh", "/srv/pitr.sh"]
+    environment:
+      <<: *pgbackrest
+      HEFESTO_PITR_INTERVAL_S: ${HEFESTO_PITR_INTERVAL_S:-86400}
+      HEFESTO_PITR_FULL_EVERY_S: ${HEFESTO_PITR_FULL_EVERY_S:-604800}
+      PGUSER: ${POSTGRES_USER:?}
+    volumes:
+      - pgdata:/var/lib/postgresql/data:ro
+      - pgsocket:/var/run/postgresql
+      - ./scripts/pitr.sh:/srv/pitr.sh:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    logging: *default-logging
+
 networks:
   # Shared with the staging project, whose API Caddy proxies to. Created by
   # scripts/deploy.sh when missing.
@@ -163,5 +232,6 @@ networks:
 
 volumes:
   pgdata:
+  pgsocket:
   caddy_data:
   caddy_config:

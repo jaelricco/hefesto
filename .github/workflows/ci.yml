@@ -174,10 +174,10 @@ jobs:
             caddy:2-alpine caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
       - name: production and staging compose are valid
         run: |
-          sed -E 's/^([A-Z_]+)=$/\1=placeholder/' .env.prod.example > /tmp/check.env
+          sed -E 's/^([A-Z0-9_]+)=$/\1=placeholder/' .env.prod.example > /tmp/check.env
           echo 'HEFESTO_TAG=v0.0.0-ci' >> /tmp/check.env
           docker compose -f docker-compose.prod.yml --env-file /tmp/check.env config --quiet
-          sed -E 's/^([A-Z_]+)=$/\1=placeholder/' .env.staging.example > /tmp/check-staging.env
+          sed -E 's/^([A-Z0-9_]+)=$/\1=placeholder/' .env.staging.example > /tmp/check-staging.env
           echo 'HEFESTO_TAG=sha-ci' >> /tmp/check-staging.env
           docker compose -f docker-compose.staging.yml --env-file /tmp/check-staging.env config --quiet
 
