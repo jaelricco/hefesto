@@ -20,7 +20,9 @@ no hot loop.
 
 ## Decision
 
-Go 1.24 with:
+Go with the choices below. The version was 1.24 when this was decided and is
+1.27 since October 2026: the dependencies came to need at least 1.26, and CI,
+deploy and the Docker images build with one version.
 
 | Concern | Choice |
 |---|---|

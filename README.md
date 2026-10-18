@@ -92,7 +92,7 @@ scripts/      server bootstrap, deploy with rollback, backup sidecar
 
 ## Stack
 
-Go 1.24 · chi · pgx/v5 · sqlc · goose · PostgreSQL 16 · OpenAPI 3.1 ·
+Go 1.27 · chi · pgx/v5 · sqlc · goose · PostgreSQL 16 · OpenAPI 3.1 ·
 SwiftUI (iOS 17+) with GRDB · Docker Compose · GitHub Actions.
 
 Rationale in [ADR 0001](docs/adr/0001-stack.md).
