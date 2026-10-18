@@ -32,6 +32,20 @@ final class AccessibilityAuditTests: XCTestCase {
         try auditAll(["-AppleLanguages", "(de)", "-AppleLocale", "de_CH"])
     }
 
+    /// "map | Contrast failed | <description> | button 'Fit' id=… at (x, y, w, h)", on one line.
+    private static func describe(_ issue: XCUIAccessibilityAuditIssue, on screen: String) -> String {
+        var element = "no element"
+        if let e = issue.element {
+            let label = e.label.isEmpty ? "" : " '\(e.label)'"
+            let id = e.identifier.isEmpty ? "" : " id=\(e.identifier)"
+            let f = e.frame
+            element = "\(e.elementType)\(label)\(id) at (\(Int(f.minX)), \(Int(f.minY)), \(Int(f.width)), \(Int(f.height)))"
+        }
+        return [screen, issue.compactDescription, issue.detailedDescription, element]
+            .map { $0.replacingOccurrences(of: "\n", with: " ") }
+            .joined(separator: " | ")
+    }
+
     private func auditAll(_ arguments: [String]) throws {
         for screen in Self.screens {
             let app = XCUIApplication()
@@ -43,7 +57,12 @@ final class AccessibilityAuditTests: XCTestCase {
             sleep(2)
             XCTContext.runActivity(named: "Accessibility audit: \(screen)") { _ in
                 do {
-                    try app.performAccessibilityAudit()
+                    // One failure per issue, naming the screen and the element, so
+                    // CI can list them (the default failure names only the type).
+                    try app.performAccessibilityAudit { issue in
+                        XCTFail(Self.describe(issue, on: screen))
+                        return true
+                    }
                 } catch {
                     XCTFail("\(screen): \(error)")
                 }
