@@ -138,7 +138,7 @@ struct SetComposer: View {
                 }
             }
             .themedScreen()
-            .navigationTitle(planned == nil ? "Log a set" : "Planned set")
+            .navigationTitle(planned == nil ? Text("Log a set") : Text("Planned set"))
             .navigationBarTitleDisplayMode(.inline)
             .font(.bodyText)
             .toolbar {

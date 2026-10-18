@@ -149,6 +149,26 @@ struct TodayPlanCard: View {
     }
 }
 
+/// No plan yet: the onboarding that brings one leads on Today.
+struct OnboardingCard: View {
+    let onStart: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            CapsLabel("Your plan", isHeader: false)
+            Text("Get your training plan").font(.displayTitle).foregroundStyle(Palette.text)
+            Text("A few questions, about five minutes. Hefesto then plans your week around your goals, your time and your equipment.")
+                .font(.detailText)
+                .foregroundStyle(Palette.textSecondary)
+            Button(action: onStart) {
+                Label("Answer the questions", systemImage: "sparkles")
+            }
+            .buttonStyle(PrimaryButtonStyle())
+        }
+        .card()
+    }
+}
+
 /// The week of the plan, day by day. A rest day is a day of the plan like
 /// any other (ADR 0003).
 struct PlanWeekList: View {

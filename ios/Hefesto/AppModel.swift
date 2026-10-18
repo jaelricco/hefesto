@@ -19,6 +19,9 @@ final class AppModel {
     let sync: SyncEngine
     /// The training plan the screens show (ADR 0022).
     let plan: PlanModel
+    /// The onboarding's answers, kept while the app runs, so closing it
+    /// loses nothing (ADR 0023).
+    let onboarding: OnboardingModel
 
     private(set) var isSignedIn = false
     private(set) var isSyncing = false
@@ -55,6 +58,8 @@ final class AppModel {
         sync = SyncEngine(client: api, db: db)
         // A demo shows the plan it seeded and never reaches the network.
         plan = PlanModel(db: db, sync: demo == nil ? sync : nil)
+        onboarding = OnboardingModel(sync: demo == nil ? sync : nil, catalogue: demo?.catalogue)
+        if let form = demo?.onboardingForm { onboarding.form = form }
     }
 
     private static func openDatabase() throws -> AppDatabase {

@@ -17,6 +17,7 @@ struct TodayView: View {
     @State private var checkingIn: PlanSession?
     /// The log session a start returned, opened once the check-in is gone.
     @State private var started: String?
+    @State private var onboarding = false
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -47,6 +48,7 @@ struct TodayView: View {
                 PlanSessionView(route: route, onStart: { checkingIn = $0 }, onContinue: resume)
             }
             .fullScreenCover(item: $open) { LoggerView(sessionId: $0.id) }
+            .fullScreenCover(isPresented: $onboarding) { OnboardingView() }
             .sheet(item: $checkingIn, onDismiss: openStarted) { session in
                 CheckInSheet(session: session) { sleep, fatigue in
                     await start(session, sleepHours: sleep, fatigue: fatigue)
@@ -61,6 +63,7 @@ struct TodayView: View {
             .task {
                 guard let demo = model.demo else { return }
                 try? model.plan.reload()
+                if demo.onboardingPage != nil { onboarding = true }
                 if let id = demo.opensSessionId { open = OpenSession(id: id) }
                 if let today = model.plan.todaySession {
                     if demo.screen == .checkin { checkingIn = today }
@@ -108,11 +111,13 @@ struct TodayView: View {
         .frame(minHeight: 44)
     }
 
-    /// Today's planned session, a rest day of the plan, or a stop. Nothing
-    /// without a plan: the onboarding comes first.
+    /// Today's planned session, a rest day of the plan, or a stop. Without a
+    /// plan, the onboarding that brings one.
     @ViewBuilder
     private var plan: some View {
-        if let week = model.plan.week {
+        if model.plan.status == .needsOnboarding {
+            OnboardingCard { onboarding = true }
+        } else if let week = model.plan.week {
             if week.stopped {
                 PlanStoppedCard(week: week)
             } else {
@@ -126,6 +131,7 @@ struct TodayView: View {
     /// The plan's session leads while it is open; a free session is then a
     /// second choice, never a second primary action.
     private var planLeads: Bool {
+        if model.plan.status == .needsOnboarding { return true }
         guard let week = model.plan.week else { return false }
         if week.stopped { return true }
         return model.plan.todaySession.map { $0.status != .completed } ?? false

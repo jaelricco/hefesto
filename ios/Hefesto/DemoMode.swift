@@ -1,5 +1,6 @@
 import Foundation
 import HefestoLogger
+import HefestoPlan
 import HefestoStore
 
 /// A screen a demo run opens on, for design review and the screenshot
@@ -13,6 +14,9 @@ enum DemoScreen: String, CaseIterable {
     // start, the started session in the logger with its targets, and the
     // composer on the next target, a calibration set.
     case plansession, checkin, planned, target
+    // The onboarding (ADR 0023): the goals, where the athlete stands, and a
+    // current complaint with its warning signs.
+    case onboarding, standing, complaint
 
     var tab: AppTab {
         switch self {
@@ -24,6 +28,16 @@ enum DemoScreen: String, CaseIterable {
 
     var opensLogger: Bool { [.logger, .composer, .reserve, .finish].contains(self) }
     var opensPlanned: Bool { [.planned, .target].contains(self) }
+
+    /// The onboarding page the screen opens on, if it opens the onboarding.
+    var onboardingPage: OnboardingPage? {
+        switch self {
+        case .onboarding: .goals
+        case .standing: .performance
+        case .complaint: .region("elbow_inner")
+        default: nil
+        }
+    }
 }
 
 /// What a demo run seeded, so screens can open on it.
@@ -39,8 +53,12 @@ struct DemoRun {
     /// A hold: the stats screen shows it, and the reserve screen chooses it.
     let exerciseId: String
     let celebration: Celebration?
+    /// The planner's catalogue and the answers so far, for the onboarding.
+    let catalogue: OnboardingCatalogue?
+    let onboardingForm: OnboardingForm?
 
     var opensLogger: Bool { screen.opensLogger }
+    var onboardingPage: OnboardingPage? { screen.onboardingPage }
 
     /// The log session the screen opens in the logger, if it opens one.
     var opensSessionId: String? {
@@ -281,7 +299,51 @@ extension DemoRun {
                 ? Celebration(sessionId: draft,
                               unlocked: [.init(levelId: tuckLevel.id, levelName: tuckLevel.name, skillName: frontLever.name)],
                               xp: 45, newlyAvailable: 1, streakDays: 12)
-                : nil)
+                : nil,
+            catalogue: try OnboardingCatalogue(json: Data(DemoCatalogue.json.utf8)),
+            onboardingForm: screen.onboardingPage == nil ? nil : DemoOnboarding.form(for: screen))
+    }
+}
+
+/// The onboarding's answers so far, as far as each demo screen has come.
+/// Names follow the knowledge base (content/training).
+enum DemoOnboarding {
+    static func form(for screen: DemoScreen) -> OnboardingForm {
+        var f = OnboardingForm()
+        f.birthYear = 1994
+        f.healthConsent = true
+        f.disclaimerAck = true
+        f.goals = [.init(skill: "planche", targetLevel: "tuck", targetDate: nil),
+                   .init(skill: "handstand", targetLevel: "free-10s")]
+        guard screen != .onboarding else { return f }
+        f.sessionsPerWeek = 3
+        f.sessionMinutes = 60
+        f.equipment = ["pull_up_bar", "parallettes", "rings"]
+        f.bodyweightKg = 74
+        f.trainingLevel = "recreational"
+        f.trainingAge = "1_to_4_years"
+        f.lastRegular = "current_or_lt_3_weeks"
+        f.classes = ["push_up_class": "13_20", "pull_up_class": "4_7", "dip_class": "4_7", "hollow_hold_class": "15_30"]
+        f.stages = ["planche": .init(level: "tuck", answerClass: "4_9"), "handstand": .init(level: "wall")]
+        f.mobility = ["wrist": "yes"]
+        guard screen == .complaint else { return f }
+        f.stages["handstand"]?.answerClass = "10_19"
+        f.mobility["shoulder"] = "partly"
+        f.dataConfidence = "estimated"
+        f.exertion = false
+        f.screening = ["SCR-01": false, "SCR-02": false, "SCR-03": false, "SCR-04": false, "SCR-05": false,
+                       "SCR-06": false]
+        f.bodyMap = ["elbow_inner": .init(current: true)]
+        var complaint = OnboardingForm.Complaint()
+        complaint.painDaily = 2
+        complaint.painTraining = 4
+        complaint.onset = "gradual"
+        complaint.durationWeeks = 3
+        complaint.suspectedSerious = "no"
+        complaint.assessment = "no"
+        f.complaints = ["elbow_inner": complaint]
+        f.redFlags = ["elbow_inner": ["RF-01": false, "RF-02": false, "RF-03": false, "RF-04": true]]
+        return f
     }
 }
 
@@ -449,7 +511,7 @@ struct DemoPlan {
     }
 
     // The knowledge base's texts (content/training/rules.yaml, body.yaml).
-    static let disclaimer = "Hefesto passt dein Training an und ersetzt keine ärztliche oder physiotherapeutische Beratung."
+    static let disclaimer = DemoCatalogue.disclaimer
     static let orderWhy = reason("SESS-02", "Reihenfolge: Aufwärmen, Balance und Technik, dann die schwersten Halte, "
         + "danach Volumen, Kraft und zuletzt belastende Prehab. Schweres kommt, solange du frisch bist.")
     static let warmupWhy = reason("SESS-03", "Aufwärmen mit allgemeinem Teil, Prehab-Aktivierung und leichten "
