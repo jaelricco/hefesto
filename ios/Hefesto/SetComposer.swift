@@ -7,6 +7,8 @@ import SwiftUI
 struct SetComposer: View {
     let db: AppDatabase
     let defaultRest: Int
+    /// The planned set it performs, if any: its targets fill the fields.
+    let planned: PlannedTarget?
     /// The elements, the planned rest and what the athlete had left.
     let onSave: ([ElementDraft], Int, SetReserve) -> Void
 
@@ -22,21 +24,29 @@ struct SetComposer: View {
     /// The choices for a hold's reserve, within the log's 0–60 s.
     static let sirChoices = [0, 1, 2, 3, 4, 5, 6, 8, 10, 15, 20, 30, 45, 60]
 
-    /// `exercise`, if given, is chosen for the first element already.
-    init(db: AppDatabase, defaultRest: Int, exercise: Exercise? = nil,
+    /// `exercise`, if given, is chosen for the first element already. A
+    /// `planned` set opens on its targets and its planned rest.
+    init(db: AppDatabase, defaultRest: Int, exercise: Exercise? = nil, planned: PlannedTarget? = nil,
          onSave: @escaping ([ElementDraft], Int, SetReserve) -> Void) {
         self.db = db
         self.defaultRest = defaultRest
+        self.planned = planned
         self.onSave = onSave
-        var first = Draft()
-        if let exercise { first.choose(exercise) }
-        _elements = State(initialValue: [first])
-        _rest = State(initialValue: defaultRest)
+        if let planned, !planned.drafts.isEmpty {
+            _elements = State(initialValue: planned.drafts)
+            _rest = State(initialValue: planned.rest ?? defaultRest)
+        } else {
+            var first = Draft()
+            if let exercise { first.choose(exercise) }
+            _elements = State(initialValue: [first])
+            _rest = State(initialValue: defaultRest)
+        }
     }
 
     var body: some View {
         NavigationStack {
             Form {
+                if let planned { targetSection(planned) }
                 ForEach($elements) { $draft in
                     let index = elements.firstIndex { $0.id == draft.id } ?? 0
                     Section {
@@ -66,14 +76,17 @@ struct SetComposer: View {
                     }
                 }
 
-                Section {
-                    Button("Add an exercise to make a combo", systemImage: "plus.square.on.square") {
-                        elements.append(Draft())
+                // A planned set is done as planned: one item of the plan.
+                if planned == nil {
+                    Section {
+                        Button("Add an exercise to make a combo", systemImage: "plus.square.on.square") {
+                            elements.append(Draft())
+                        }
+                        .font(.bodyMedium)
+                        .foregroundStyle(Palette.ember)
+                        .frame(minHeight: 44)
+                        .themedRow()
                     }
-                    .font(.bodyMedium)
-                    .foregroundStyle(Palette.ember)
-                    .frame(minHeight: 44)
-                    .themedRow()
                 }
 
                 if asksRIR || asksSIR {
@@ -99,7 +112,11 @@ struct SetComposer: View {
                     } header: {
                         CapsLabel("Reserve")
                     } footer: {
-                        VStack(alignment: .leading) {
+                        VStack(alignment: .leading, spacing: 6) {
+                            if planned?.calibration == true {
+                                Text("This set calibrates your plan: what you had left shows it where you stand.")
+                                    .foregroundStyle(Palette.text)
+                            }
                             if asksRIR { Text("How many more clean reps you could have done.") }
                             if asksSIR { Text("How much longer you could have held with clean form.") }
                         }
@@ -121,7 +138,7 @@ struct SetComposer: View {
                 }
             }
             .themedScreen()
-            .navigationTitle("Log a set")
+            .navigationTitle(planned == nil ? "Log a set" : "Planned set")
             .navigationBarTitleDisplayMode(.inline)
             .font(.bodyText)
             .toolbar {
@@ -146,6 +163,27 @@ struct SetComposer: View {
         }
     }
 
+    /// What the plan asked for, above the fields that start on it.
+    private func targetSection(_ planned: PlannedTarget) -> some View {
+        Section {
+            VStack(alignment: .leading, spacing: 6) {
+                if let reserve = planned.reserveTarget {
+                    Text(verbatim: reserve).font(.bodyMedium).foregroundStyle(Palette.text)
+                }
+                if planned.calibration {
+                    Chip("Calibration")
+                }
+                Text("Enter what you did; the target is filled in.")
+                    .font(.detailText)
+                    .foregroundStyle(Palette.textSecondary)
+            }
+            .padding(.vertical, 4)
+            .themedRow()
+        } header: {
+            CapsLabel("Target")
+        }
+    }
+
     private var asksRIR: Bool { asksReserve(of: "reps") }
     private var asksSIR: Bool { asksReserve(of: "hold_seconds") }
 
@@ -156,6 +194,18 @@ struct SetComposer: View {
         let matching = elements.filter { $0.exercise != nil && $0.measure == measure }
         return matching.count == 1 && !matching[0].failed
     }
+}
+
+/// A planned set to perform (ADR 0022): what the plan asked for.
+struct PlannedTarget {
+    let setId: String
+    /// The planned elements as drafts, their targets entered.
+    let drafts: [Draft]
+    let rest: Int?
+    /// What should be left: "2 reps in reserve".
+    let reserveTarget: String?
+    /// The set calibrates the plan's estimate, so its reserve matters.
+    let calibration: Bool
 }
 
 /// What the athlete had left after a set: reps for a rep element, seconds
@@ -200,6 +250,23 @@ struct Draft: Identifiable {
             loadKg: loadKg,
             assistance: assistance == "none" ? nil : Assistance(type: assistance, estimatedAssistKg: assistKg > 0 ? assistKg : nil),
             formQuality: formQuality, failed: failed)
+    }
+}
+
+extension Draft {
+    /// A planned element's targets, ready to change into what was done.
+    init(target e: SetElement, exercise: Exercise?) {
+        self.init()
+        self.exercise = exercise
+        measure = e.measure
+        if let r = e.reps { reps = r }
+        if let h = e.holdSeconds { holdSeconds = Int(h.rounded()) }
+        if let d = e.distanceM { distanceM = Int(d.rounded()) }
+        loadKg = e.loadKg
+        if let a = e.assistance, AssistanceKind.all.contains(a.type) {
+            assistance = a.type
+            assistKg = a.estimatedAssistKg ?? 0
+        }
     }
 }
 

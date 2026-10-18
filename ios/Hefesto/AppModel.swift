@@ -2,6 +2,7 @@ import Foundation
 import HefestoAPI
 import HefestoAuth
 import HefestoLogger
+import HefestoPlan
 import HefestoStore
 import HefestoSync
 import Network
@@ -16,6 +17,8 @@ final class AppModel {
     let db: AppDatabase
     let auth: AuthService
     let sync: SyncEngine
+    /// The training plan the screens show (ADR 0022).
+    let plan: PlanModel
 
     private(set) var isSignedIn = false
     private(set) var isSyncing = false
@@ -50,6 +53,8 @@ final class AppModel {
             appVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String)
         let api = HefestoAPIConfiguration.client(serverURL: baseURL, middlewares: [AuthMiddleware(auth: auth)])
         sync = SyncEngine(client: api, db: db)
+        // A demo shows the plan it seeded and never reaches the network.
+        plan = PlanModel(db: db, sync: demo == nil ? sync : nil)
     }
 
     private static func openDatabase() throws -> AppDatabase {
@@ -103,6 +108,8 @@ final class AppModel {
             try? await sync.refreshExercises()
             // States change when a completion is evaluated; content rarely.
             try? await sync.refreshSkillMap()
+            // The plan changes with every event the sync carried.
+            await plan.refresh()
             isOffline = false
             if let done = report.completions.first {
                 celebration = Celebration(sessionId: done.key, result: done.value)

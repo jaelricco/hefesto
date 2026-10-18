@@ -146,7 +146,8 @@ struct SessionDetailView: View {
                 }
                 ForEach(Array(tree.blocks.enumerated()), id: \.element.id) { i, block in
                     Section {
-                        ForEach(Array(block.sets.enumerated()), id: \.element.id) { n, set in
+                        // What was done: planned sets left open were not.
+                        ForEach(Array(block.sets.filter { !$0.entry.isPlanned }.enumerated()), id: \.element.id) { n, set in
                             SetRow(number: n + 1, set: set, exercises: exercises, onRepeat: nil).themedRow()
                         }
                     } header: {
