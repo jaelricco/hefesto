@@ -199,12 +199,13 @@ func pullUps(_ set: SetEntry, reps: Int) -> SetElement {
         try db.saveSet(SetWithElements(entry: entry, elements: [pullUps(entry, reps: 8)]))
         let theirs = Session(startedAt: Date(), timezone: "UTC", localDate: "2026-09-24", serverSeq: 4)
         try db.apply(ServerPage(cursor: 4, sessions: [theirs]))
+        #expect(try db.pendingOpCount() == 3)
 
         try db.eraseAll()
 
         #expect(try db.queuedOps().isEmpty)
         #expect(try db.reader.read { try AppDatabase.recentSessions($0) }.isEmpty)
-        #expect(try db.reader.read { try AppDatabase.pendingOpCount($0) } == 0)
+        #expect(try db.pendingOpCount() == 0)
         #expect(try db.cursor() == 0)
         // The cursor row is back, so the next pull still moves it.
         try db.apply(ServerPage(cursor: 2))

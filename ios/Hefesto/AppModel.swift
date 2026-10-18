@@ -66,6 +66,8 @@ final class AppModel {
             return
         }
         isSignedIn = await auth.isSignedIn
+        // An install from before the database was tied to an account.
+        if isSignedIn, Self.databaseOwner == nil { Self.databaseOwner = await auth.userId }
         watchNetwork()
         await syncNow()
     }
@@ -79,18 +81,44 @@ final class AppModel {
 
     // MARK: auth
 
-    func signedIn() async {
+    func signedIn() async throws {
         guard demo == nil else { isSignedIn = true; return }
+        // The database still holds what the last account left when the server
+        // ended its session. Another account must not see it, nor upload its
+        // queued changes as its own (REVIEW_DECISIONS D-16).
+        let user = await auth.userId
+        if user != Self.databaseOwner {
+            do {
+                try db.eraseAll()
+            } catch {
+                await auth.logout()
+                throw error
+            }
+        }
+        Self.databaseOwner = user
         isSignedIn = await auth.isSignedIn
         await syncNow()
     }
 
-    func signOut() async {
-        if demo == nil {
-            await auth.logout()
-            await auth.useDevice(id: Self.newDeviceId())
-        }
+    /// Signs out and erases everything this phone stored, so the next
+    /// account starts empty (REVIEW_DECISIONS D-16). Changes not yet synced
+    /// are lost: the Today screen offers to sync first.
+    func signOut() async throws {
         isSignedIn = false
+        guard demo == nil else { return }
+        await auth.logout()
+        await auth.useDevice(id: Self.newDeviceId())
+        Self.databaseOwner = nil
+        try db.eraseAll()
+    }
+
+    /// Syncs, and signs out only when nothing is left to send. Returns false,
+    /// still signed in, when something could not be sent.
+    func syncAndSignOut() async throws -> Bool {
+        await syncNow()
+        guard try db.pendingOpCount() == 0 else { return false }
+        try await signOut()
+        return true
     }
 
     // MARK: sync
@@ -162,6 +190,14 @@ final class AppModel {
     }
 
     private static let deviceIdKey = "fit.hefesto.deviceId"
+
+    /// The account whose data the local database holds. Not a secret.
+    private static var databaseOwner: String? {
+        get { UserDefaults.standard.string(forKey: databaseOwnerKey) }
+        set { UserDefaults.standard.set(newValue, forKey: databaseOwnerKey) }
+    }
+
+    private static let databaseOwnerKey = "fit.hefesto.databaseOwner"
 }
 
 enum AppTab: Hashable {
