@@ -125,7 +125,7 @@ struct OnboardingView: View {
                     failure = nil
                     index = min(i + 1, count - 1)
                 } label: {
-                    Label("Next", systemImage: "chevron.right")
+                    Text("Next")
                 }
                 .buttonStyle(PrimaryButtonStyle())
                 .disabled(!app.onboarding.isComplete(page))
