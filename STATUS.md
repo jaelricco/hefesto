@@ -287,7 +287,16 @@ Glut design pass reached `main`, and merged with both afterwards.
   and the content readiness and release checks. `golangci-lint` is clean.
 - **String check**: 205 keys, 0 problems. It caught every string added in this
   phase before its translation existed.
-- **Swift** — on the self-hosted Mac runner: VERIFICATION_PENDING
+- **Swift** — on the self-hosted Mac runner, ios run 59 on `1b6b432` (this
+  phase merged with the planner and the Glut design pass):
+  - `swift test` passes for HefestoKit;
+  - the app and the accessibility UI test target build for the iOS Simulator
+    under Swift 6 strict concurrency (`build-for-testing`);
+  - the audit itself runs only when the ios workflow is dispatched with
+    `ui_tests`, and has not run yet.
+- **The Mac runner** lost contact with GitHub ten minutes into cold Xcode
+  builds four times. The long steps now run under `caffeinate -i` at lower
+  priority; the first run after that change passed.
 
 ### Deliberately not in this phase
 
