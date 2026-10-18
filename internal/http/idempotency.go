@@ -58,5 +58,5 @@ func (h *handlers) withIdempotencyKey(w http.ResponseWriter, r *http.Request, ke
 func writeRaw(w http.ResponseWriter, status int, body []byte) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(status)
-	_, _ = w.Write(body)
+	_, _ = w.Write(body) //nolint:gosec // the server's own JSON response, sent as JSON
 }

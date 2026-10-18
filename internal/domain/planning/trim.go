@@ -100,7 +100,7 @@ func (g *gen) weekCap(a string, target float64) (float64, string) {
 		idx := max(0, min(g.weekIdx-g.breachWeeks(a), 2))
 		cp, rule = float64(steps[idx]*target), RuleEntryRamp
 		if prev := g.hist.weekly[g.week.AddDate(0, 0, -7)][a]; idx > 0 && prev > 0 {
-			cp = math.Min(cp, float64(prev*steps[idx]/steps[idx-1]))
+			cp = math.Min(cp, float64(prev*steps[idx]/steps[idx-1])) //nolint:gosec // idx is 1 or 2 here, steps has 3
 		}
 	case R == 0:
 		cp, rule = float64(k.T.NewTypeFraction*target), RuleNewLoad
