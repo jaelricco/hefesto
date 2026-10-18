@@ -712,3 +712,115 @@ func TestServiceCheckIn(t *testing.T) {
 		t.Error("a rested check-in made the session lighter")
 	}
 }
+
+// A session a client started offline is linked like a start online, and its
+// draft follows the plan of its day (spec §10.5).
+func TestServiceLinksOfflineStarts(t *testing.T) {
+	ctx := context.Background()
+	svc, store, clock := newService(t)
+	kb, err := svc.Knowledge.Current(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	// offline starts the first session of a plan as the client does: the
+	// same draft the server would write, with the client's own IDs.
+	offline := func(user uuid.UUID, ps domain.PlannedSession) planning.SessionStart {
+		in := planning.SessionStart{PlannedSessionID: uuid.MustParse(ps.ID), SessionID: uuid.New(), StartedAt: clock.t,
+			Timezone: "UTC", LocalDate: clock.t, At: clock.t, Draft: domain.Materialize(kb, ps, uuid.NewString)}
+		store.StartOffline(user, in)
+		return in
+	}
+	onboard := func() (uuid.UUID, domain.Plan) {
+		user := uuid.New()
+		_, p, err := svc.Onboard(ctx, user, answers())
+		if err != nil {
+			t.Fatal(err)
+		}
+		return user, *p
+	}
+	linked := func(t *testing.T, user uuid.UUID, want planning.SessionStart, status string) domain.Plan {
+		t.Helper()
+		p, err := svc.Plan(ctx, user)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if s := p.Sessions[0]; s.Status != status || s.WorkoutSessionID != want.SessionID.String() || s.CheckIn {
+			t.Errorf("planned session after the sync: %q %q check-in %v, want %q %s", s.Status, s.WorkoutSessionID, s.CheckIn, status, want.SessionID)
+		}
+		return p
+	}
+
+	t.Run("from the current plan", func(t *testing.T) {
+		user, p := onboard()
+		in := offline(user, p.Sessions[0])
+		linked(t, user, in, planning.SessionStarted)
+		if got, _ := store.Started(in.SessionID); !reflect.DeepEqual(got.Draft, in.Draft) {
+			t.Error("linking changed a draft that follows its plan")
+		}
+		// A start online, from another device, answers with it (U-51).
+		again := in
+		again.SessionID = uuid.New()
+		if id, created, err := svc.StartPlannedSession(ctx, user, in.PlannedSessionID, again); err != nil || created || id != in.SessionID {
+			t.Errorf("start after the offline start: %v %v %v", id, created, err)
+		}
+	})
+
+	t.Run("from a replaced plan", func(t *testing.T) {
+		user, p := onboard()
+		in := offline(user, p.Sessions[0])
+		if _, err := svc.Regenerate(ctx, user); err != nil {
+			t.Fatal(err)
+		}
+		now := linked(t, user, in, planning.SessionStarted)
+		if now.Sessions[0].ID == p.Sessions[0].ID {
+			t.Fatal("the plan was not replaced; the test exercises nothing")
+		}
+		followsPlan(t, kb, store, in.SessionID, now)
+	})
+
+	t.Run("started online first", func(t *testing.T) {
+		user, p := onboard()
+		first := uuid.New()
+		if _, _, err := svc.StartPlannedSession(ctx, user, uuid.MustParse(p.Sessions[0].ID),
+			planning.SessionStart{SessionID: first, StartedAt: clock.t, Timezone: "UTC", LocalDate: clock.t, At: clock.t}); err != nil {
+			t.Fatal(err)
+		}
+		in := offline(user, p.Sessions[0])
+		linked(t, user, planning.SessionStart{SessionID: first}, planning.SessionStarted)
+		if got, _ := store.Started(in.SessionID); !reflect.DeepEqual(got.Draft, in.Draft) {
+			t.Error("the second start's draft changed")
+		}
+	})
+
+	t.Run("after a stop", func(t *testing.T) {
+		user, p := onboard()
+		in := offline(user, p.Sessions[0])
+		if _, err := svc.ReportSymptoms(ctx, user, "sym-1"); err != nil {
+			t.Fatal(err)
+		}
+		now, err := svc.Plan(ctx, user)
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, s := range now.Sessions {
+			if s.WorkoutSessionID != "" {
+				t.Errorf("a stopped plan points at %s", s.WorkoutSessionID)
+			}
+		}
+		if got, _ := store.Started(in.SessionID); len(got.Draft.Blocks) != 0 {
+			t.Errorf("a stop left %d blocks of open sets", len(got.Draft.Blocks))
+		}
+	})
+
+	t.Run("completed offline", func(t *testing.T) {
+		user, p := onboard()
+		in := offline(user, p.Sessions[0])
+		if err := store.Complete(performed(in.SessionID, p.Sessions[0])); err != nil {
+			t.Fatal(err)
+		}
+		if _, applied, err := svc.CompleteLoggedSession(ctx, user, in.SessionID); err != nil || !applied {
+			t.Fatalf("completion: %v %v", applied, err)
+		}
+		linked(t, user, in, planning.SessionCompleted)
+	})
+}

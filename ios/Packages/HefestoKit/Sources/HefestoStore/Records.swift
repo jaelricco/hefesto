@@ -19,8 +19,9 @@ public struct Session: Codable, Sendable, Hashable, Identifiable, FetchableRecor
     public var status: String // draft | completed | abandoned
     public var isRestDay: Bool
     public var templateId: String?
-    /// The planned session it was started from (ADR 0016). Set by the
-    /// server's start and never sent back: the server keeps it.
+    /// The planned session it was started from (ADR 0016): set by the
+    /// server's start, or here by a start without the server (spec §10.5).
+    /// The server takes it only when it creates the session.
     public var plannedSessionId: String?
     public var completedAt: Date?
     public var updatedAt: Date
@@ -85,8 +86,10 @@ public struct SetEntry: Codable, Sendable, Hashable, Identifiable, FetchableReco
     public var rir: Int?
     /// Seconds a hold could have gone on; `rir` stays repetitions.
     public var sirS: Int?
-    /// The plan item the set was planned for (ADR 0016). Set by the server
-    /// and never sent back; performing the set in place keeps it.
+    /// The plan item the set was planned for (ADR 0016): set by the server,
+    /// or here by a start without the server (spec §10.5). The server takes
+    /// it only when it creates the set and relinks it when a new plan
+    /// replaces the item; performing the set in place keeps it.
     public var plannedItemId: String?
     public var completedAt: Date?
     public var notes: String

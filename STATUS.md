@@ -154,6 +154,81 @@ documents are in German.
     client of the app now sends the header as HTTP defines it.
   - Not built: the screens, the onboarding in the app, pain reports from
     the app, choosing a band for a planned band set, the offline start.
+- **The plan's screens in the iOS app (this checkpoint, ADR 0022):**
+  - A new module, `HefestoPlan`, maps the kept plan to the screens' own
+    types in one place; views never see the API's types (ADR 0020). The
+    plan is fetched again after every sync.
+  - Today leads with the plan: starting today's open session is the main
+    action, a free session the second. Without a plan, on a rest day of the
+    plan or once the session is done, a free session leads again. The week
+    follows, day by day, rest days included. A stop shows the plan's
+    reasons verbatim and adds no advice.
+  - A planned session shows every block and item with sets, target,
+    reserve, rest and the knowledge base's reasons.
+  - Starting asks the two optional check-in questions and says what they
+    change and that they are not stored. The outbox goes out first, so the
+    server plans with the latest log.
+  - The logger shows open planned sets as targets. "Next set" opens the
+    next one with its targets filled in. The first working set of a
+    calibration item says why its reserve matters; the reserve stays
+    optional. History shows only what was done.
+  - A planned band set cannot be performed until the app can name a band.
+    Performed without one, it would read as unassisted and count for the
+    map.
+  - The demo holds a plan of the week; four new screens (`plansession`,
+    `checkin`, `planned`, `target`) join the screenshots.
+  - Not built: offers on active choice, the pain question on monitored
+    items, the onboarding in the app, choosing a band, the offline start.
+- **Choosing a band in the iOS app (this checkpoint, ADR 0024):**
+  - The app keeps the server's bands, the athlete's own and the
+    catalogue's, and fetches them after every sync; bands are not in the
+    sync feed (ADR 0009). A band is added and removed online.
+  - The set composer offers band assistance again: the band and how many at
+    once. A band set cannot be saved without its band.
+  - Planned band sets open with the band assistance and can be performed;
+    ADR 0022's lock is lifted (U-75 → U-80).
+  - Logger and history name a set's band. The demo holds two bands of its
+    own; a new screen (`band`) joins the screenshots.
+  - Not built: bands offline, editing a band, the anchor.
+- **Starting a planned session offline (this checkpoint, ADR 0027):**
+  - Sync now carries `planned_session_id` on a session and
+    `planned_item_id` on a set. The server takes them when it creates the
+    row and keeps them after; an unknown planned session is dropped.
+  - The app writes the draft as the server would (Materialize, ported) and
+    queues it parents first. There is no check-in offline: lightening a
+    session needs the server. A test pins the schema on both sides.
+  - The planner links an offline start after the commit: after every push,
+    before a plan is read, before a start and before a completion. The day's
+    session in the current plan points at it, started or completed. A draft
+    from a replaced plan follows the current one; without a session on the
+    day its open sets go. A day started first elsewhere keeps that session.
+  - Today shows a start or completion kept on the device before the plan
+    knows it. Without a connection the check-in sheet offers to start as
+    planned; a new demo screen (`offlinestart`) shows it.
+  - Findings: an offline start split over two pushes after the plan changed
+    can leave late sets on their old item; a second device's offline start
+    of the same session stays unlinked; there is no check-in offline.
+- **The onboarding in the iOS app (this checkpoint, ADR 0023):**
+  - The knowledge base now words the six screening questions (`SCR-01` to
+    `SCR-06`), checked by KB-10 and KB-12. The planner catalogue serves them
+    with the exertion question (RF-10) and the minor age, so the app asks
+    exactly what the server validates.
+  - Without health-data consent the screening may be empty: the design
+    does not ask it then, and the server discards it anyway.
+  - `HefestoPlan` holds the answers in a form that decides which questions
+    apply (onboarding.md §3.6), when a page is complete and what is sent:
+    only answers that still apply, RF-10 once for every region. A retry of
+    the same answers keeps its idempotency key.
+  - The app asks page by page: frame, goals, time, equipment, background,
+    where the athlete stands, health, one page per current complaint with
+    its warning signs, then the result. Knowledge-base texts are shown
+    verbatim; a yes to a red flag shows its advice at once. Clarifications
+    come back on the last page.
+  - Without a plan, Today leads with the onboarding. The demo holds the
+    catalogue; three new screens (`onboarding`, `standing`, `complaint`)
+    join the screenshots.
+  - Not built: the test day, «refine profile», preferred days, free text
+    for «other», confirming a clearance in the app.
 - **A started draft follows the plan (this checkpoint, ADR 0017):**
   - Every new plan of the week reconciles the drafts of started sessions in
     the same transaction. Their open planned sets follow the day's session
@@ -190,8 +265,10 @@ documents are in German.
   start decisions in ADR 0016 (U-50 to U-54), the reconciliation in
   ADR 0017 (U-55 to U-57), the completion in ADR 0018 (U-58 to U-61), the
   check-in in ADR 0019 (U-62 to U-64), the reserve (U-65 to U-68), the
-  plan's foundation in the iOS app in ADR 0021 (U-69 to U-71),
-  and these findings in spec §15.4:
+  plan's foundation in the iOS app in ADR 0021 (U-69 to U-71), the plan's
+  screens in ADR 0022 (U-72 to U-75), the onboarding in the app in
+  ADR 0023 (U-76 to U-79), the band choice in ADR 0024 (U-80), the
+  offline start in ADR 0027 (U-81 to U-85), and these findings in spec §15.4:
   - sets with partner or machine assistance reach neither the capacities
     nor the load history;
   - a set performed offline after the server replaced or removed it is
@@ -200,15 +277,23 @@ documents are in German.
   - WEEK-08 regenerates the whole week, not only from the next session that
     has not started;
   - the reserve stays optional in the app; a set left unrated is a lower
-    bound. The app does not read the plan yet, so it cannot insist on a
-    calibration set;
+    bound. The app now marks a calibration set and says why its reserve
+    matters, but does not insist on it;
   - no exercise carries `restriction_tags`, so a professional's
     restrictions from the onboarding are stored but do not yet exclude
     anything;
   - after a withdrawal the decision log and past plans still name regions
-    and states; whether they must be redacted is a legal question (ENT-4).
+    and states; whether they must be redacted is a legal question (ENT-4);
+  - the catalogue does not say which goals bring which onboarding
+    questions; the app holds onboarding.md §3.6 with the knowledge base's
+    skill slugs (ADR 0023);
+  - a minor answers the whole onboarding before learning there is no plan
+    (SAFE-07); an early notice waits on OE-1;
+  - the planner does not tell bands apart: a light and a strong band count
+    as the same band capacity of an exercise (ADR 0024);
+  - the offline start's limits: a start split over two pushes, two devices
+    starting the same session offline, no check-in offline (ADR 0027).
 - **Not yet built:**
-  - starting a session offline through sync;
   - the sync of pain reports;
   - a record of the consent text agreed to;
   - `?explain=trace`.

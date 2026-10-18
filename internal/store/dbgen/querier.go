@@ -88,6 +88,9 @@ type Querier interface {
 	// the /v1/skills ETag.
 	GetLatestContentVersion(ctx context.Context) (ContentVersion, error)
 	GetMediaAsset(ctx context.Context, arg GetMediaAssetParams) (MediaAsset, error)
+	// A planned session of any plan, a replaced one too: what a client started
+	// offline from the plan it held (spec §10.5).
+	GetPlannedSessionAny(ctx context.Context, arg GetPlannedSessionAnyParams) (GetPlannedSessionAnyRow, error)
 	// ----------------------------------------------------- phase and bookkeeping
 	GetPlannerState(ctx context.Context, userID uuid.UUID) (UserPlannerState, error)
 	// Locks the row: two concurrent refreshes with the same token must not both
@@ -132,6 +135,8 @@ type Querier interface {
 	// sibling from taking its old position (the unique constraint cannot be
 	// partial and deferrable at the same time).
 	// ------------------------------------------------------------- sessions
+	// A session started offline names its planned session (spec §10.5); one the
+	// user has no row of is dropped, so the session stays a session of the log.
 	InsertSession(ctx context.Context, arg InsertSessionParams) (WorkoutSession, error)
 	InsertSkillEdge(ctx context.Context, arg InsertSkillEdgeParams) error
 	InsertSkillLevelExercise(ctx context.Context, arg InsertSkillLevelExerciseParams) error
@@ -141,6 +146,9 @@ type Querier interface {
 	InsertXPEvent(ctx context.Context, arg InsertXPEventParams) (int32, error)
 	// ------------------------------------------------------------- last set
 	LastSetWithExercise(ctx context.Context, arg LastSetWithExerciseParams) (LastSetWithExerciseRow, error)
+	// Points a planned session at a log session started offline: started, or
+	// completed when the log session is. A start offline has no check-in.
+	LinkOfflineStart(ctx context.Context, arg LinkOfflineStartParams) error
 	// ------------------------------------------------------------- constraints
 	ListActiveConstraints(ctx context.Context, userID uuid.UUID) ([]PlanningConstraint, error)
 	// ------------------------------------------------------------------- goals
@@ -177,6 +185,10 @@ type Querier interface {
 	// catch-up when the adaptation after a completion failed (spec §6.1). Only
 	// sessions from the day of the onboarding on; before it, none.
 	ListPendingCompletions(ctx context.Context, arg ListPendingCompletionsParams) ([]uuid.UUID, error)
+	// Log sessions a client started offline from a planned session that no
+	// planned session links yet (spec §10.5), oldest first. Only starts planned
+	// from @since on; an older one stays a session of the log.
+	ListPendingOfflineStarts(ctx context.Context, arg ListPendingOfflineStartsParams) ([]ListPendingOfflineStartsRow, error)
 	// The performed elements of a session in the order performed.
 	ListPerformedElements(ctx context.Context, arg ListPerformedElementsParams) ([]ListPerformedElementsRow, error)
 	// Whether each session of a plan was started, and its log session. A
@@ -308,6 +320,8 @@ type Querier interface {
 	UpsertRegionStatus(ctx context.Context, arg UpsertRegionStatusParams) error
 	UpsertScreening(ctx context.Context, arg UpsertScreeningParams) error
 	UpsertSetElement(ctx context.Context, arg UpsertSetElementParams) (uuid.UUID, error)
+	// planned_item_id is taken when the set is created and kept after: the
+	// planner relinks it when a new plan replaces the item (ADR 0017).
 	UpsertSetEntry(ctx context.Context, arg UpsertSetEntryParams) (UpsertSetEntryRow, error)
 	UpsertSkill(ctx context.Context, arg UpsertSkillParams) (uuid.UUID, error)
 	UpsertSkillLevel(ctx context.Context, arg UpsertSkillLevelParams) (uuid.UUID, error)

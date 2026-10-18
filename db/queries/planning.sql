@@ -405,6 +405,38 @@ FROM planned_sessions s
 JOIN training_plans p ON p.id = s.plan_id AND p.user_id = s.user_id
 WHERE s.id = $1 AND s.user_id = $2 AND p.status = 'active';
 
+-- A planned session of any plan, a replaced one too: what a client started
+-- offline from the plan it held (spec §10.5).
+-- name: GetPlannedSessionAny :one
+SELECT p.id AS plan_id, p.payload, s.order_index
+FROM planned_sessions s
+JOIN training_plans p ON p.id = s.plan_id AND p.user_id = s.user_id
+WHERE s.id = $1 AND s.user_id = $2;
+
+-- Log sessions a client started offline from a planned session that no
+-- planned session links yet (spec §10.5), oldest first. Only starts planned
+-- from @since on; an older one stays a session of the log.
+-- name: ListPendingOfflineStarts :many
+SELECT ws.id, s.id AS planned_session_id, (ws.status = 'completed')::boolean AS completed
+FROM workout_sessions ws
+JOIN planned_sessions s ON s.id = ws.planned_session_id AND s.user_id = ws.user_id
+WHERE ws.user_id = @user_id AND ws.deleted_at IS NULL AND NOT ws.is_rest_day
+  AND ws.status IN ('draft', 'completed')
+  AND s.scheduled_date >= @since
+  AND NOT EXISTS (SELECT 1 FROM planned_sessions x
+                  WHERE x.user_id = ws.user_id AND x.workout_session_id = ws.id)
+ORDER BY ws.started_at, ws.id
+LIMIT @max_rows;
+
+-- Points a planned session at a log session started offline: started, or
+-- completed when the log session is. A start offline has no check-in.
+-- name: LinkOfflineStart :exec
+UPDATE planned_sessions s
+SET workout_session_id = ws.id, check_in_applied = false,
+    status = CASE WHEN ws.status = 'completed' THEN 'completed' ELSE 'started' END
+FROM workout_sessions ws
+WHERE s.id = @id AND s.user_id = @user_id AND ws.id = @workout_session_id AND ws.user_id = s.user_id;
+
 -- --------------------------------------------------------------- decisions
 
 -- name: GetDecision :one

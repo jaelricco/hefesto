@@ -9,6 +9,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"maps"
 	"slices"
 	"strings"
 	"sync"
@@ -32,6 +33,13 @@ type Store struct {
 	completed map[uuid.UUID]planning.LoggedSession
 	deload    map[uuid.UUID]bool
 	users     map[uuid.UUID]*sync.Mutex
+	// planned holds every planned session ever saved, replaced ones too,
+	// by user.
+	planned map[uuid.UUID]map[uuid.UUID][]byte
+	// offline holds the log sessions started offline, by user, with their
+	// planned sessions; linked the log sessions a plan ever pointed at.
+	offline map[uuid.UUID]map[uuid.UUID]uuid.UUID
+	linked  map[uuid.UUID]bool
 }
 
 // New returns an empty store.
@@ -44,6 +52,9 @@ func New() *Store {
 		completed: map[uuid.UUID]planning.LoggedSession{},
 		deload:    map[uuid.UUID]bool{},
 		users:     map[uuid.UUID]*sync.Mutex{},
+		planned:   map[uuid.UUID]map[uuid.UUID][]byte{},
+		offline:   map[uuid.UUID]map[uuid.UUID]uuid.UUID{},
+		linked:    map[uuid.UUID]bool{},
 	}
 }
 
@@ -107,16 +118,55 @@ func (s *Store) ActivePlan(_ context.Context, userID uuid.UUID, week time.Time) 
 	return out, true, nil
 }
 
-// SavePlan replaces the plan of its week.
+// SavePlan replaces the plan of its week. Its sessions stay readable by
+// PlannedSessionAny after a new plan replaces it.
 func (s *Store) SavePlan(_ context.Context, userID uuid.UUID, p planning.Plan) error {
 	raw, err := json.Marshal(p)
 	if err != nil {
 		return fmt.Errorf("encoding plan: %w", err)
 	}
+	sessions := map[uuid.UUID][]byte{}
+	var linked []uuid.UUID
+	for _, ps := range p.Sessions {
+		id, err := uuid.Parse(ps.ID)
+		if err != nil {
+			return fmt.Errorf("planned session id %q: %w", ps.ID, err)
+		}
+		if log, err := uuid.Parse(ps.WorkoutSessionID); err == nil {
+			linked = append(linked, log)
+		}
+		ps.Status, ps.WorkoutSessionID, ps.CheckIn = "", "", false
+		if sessions[id], err = json.Marshal(ps); err != nil {
+			return fmt.Errorf("encoding planned session: %w", err)
+		}
+	}
 	s.mu.Lock()
 	s.plans[planKey(userID, p.WeekStart)] = raw
+	if s.planned[userID] == nil {
+		s.planned[userID] = map[uuid.UUID][]byte{}
+	}
+	maps.Copy(s.planned[userID], sessions)
+	for _, id := range linked {
+		s.linked[id] = true
+	}
 	s.mu.Unlock()
 	return nil
+}
+
+// PlannedSessionAny returns a planned session of any plan saved, as
+// planned.
+func (s *Store) PlannedSessionAny(_ context.Context, userID, sessionID uuid.UUID) (planning.PlannedSession, bool, error) {
+	s.mu.Lock()
+	raw, ok := s.planned[userID][sessionID]
+	s.mu.Unlock()
+	if !ok {
+		return planning.PlannedSession{}, false, nil
+	}
+	var out planning.PlannedSession
+	if err := json.Unmarshal(raw, &out); err != nil {
+		return planning.PlannedSession{}, false, fmt.Errorf("decoding planned session: %w", err)
+	}
+	return out, true, nil
 }
 
 // PlannedSession finds a session of one of the user's active plans.
@@ -352,6 +402,63 @@ func (s *Store) PendingCompletions(ctx context.Context, userID uuid.UUID, limit 
 func civilDay(t time.Time) time.Time {
 	y, m, d := t.UTC().Date()
 	return time.Date(y, m, d, 0, 0, 0, 0, time.UTC)
+}
+
+// StartOffline records a session a client started offline and synced, as
+// the log would after the sync: its draft is kept as given, and no plan
+// points at it until the planner links it (spec §10.5).
+func (s *Store) StartOffline(userID uuid.UUID, in service.SessionStart) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.started[in.SessionID] = in
+	if s.offline[userID] == nil {
+		s.offline[userID] = map[uuid.UUID]uuid.UUID{}
+	}
+	s.offline[userID][in.SessionID] = in.PlannedSessionID
+}
+
+// PendingOfflineStarts lists the recorded offline starts no plan pointed
+// at yet, of planned sessions from since on, oldest first.
+func (s *Store) PendingOfflineStarts(ctx context.Context, userID uuid.UUID, since time.Time, limit int) ([]service.OfflineStart, error) {
+	s.mu.Lock()
+	var out []service.OfflineStart
+	for log, planned := range s.offline[userID] {
+		_, draft := s.started[log]
+		_, done := s.completed[log]
+		if !s.linked[log] && (draft || done) {
+			out = append(out, service.OfflineStart{SessionID: log, PlannedSessionID: planned})
+		}
+	}
+	s.mu.Unlock()
+	slices.SortFunc(out, func(a, b service.OfflineStart) int { return bytes.Compare(a.SessionID[:], b.SessionID[:]) })
+	var recent []service.OfflineStart
+	for _, o := range out {
+		ps, ok, err := s.PlannedSessionAny(ctx, userID, o.PlannedSessionID)
+		if err != nil {
+			return nil, err
+		}
+		if ok && !ps.Date.Before(civilDay(since)) && len(recent) < limit {
+			recent = append(recent, o)
+		}
+	}
+	return recent, nil
+}
+
+// LinkStart points the planned session of an active plan at a log session
+// started offline: completed when the log session is, else started.
+func (s *Store) LinkStart(ctx context.Context, userID, plannedSessionID, sessionID uuid.UUID) error {
+	p, i, ok, err := s.PlannedSession(ctx, userID, plannedSessionID)
+	if err != nil || !ok {
+		return err
+	}
+	s.mu.Lock()
+	_, done := s.completed[sessionID]
+	s.mu.Unlock()
+	p.Sessions[i].Status, p.Sessions[i].WorkoutSessionID, p.Sessions[i].CheckIn = service.SessionStarted, sessionID.String(), false
+	if done {
+		p.Sessions[i].Status = service.SessionCompleted
+	}
+	return s.SavePlan(ctx, userID, p)
 }
 
 // Started returns the start that created a log session.

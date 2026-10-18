@@ -19,6 +19,29 @@ public struct CachedPlan: Codable, Sendable, Hashable, FetchableRecord, Persista
     }
 }
 
+/// A log session kept here that was started from a planned session: by the
+/// server's start, or here without the server (spec §10.5). The kept plan
+/// may not know it yet.
+public struct PlannedStart: Sendable, Hashable {
+    public var sessionId: String
+    public var plannedSessionId: String
+    public var completed: Bool
+
+    public init(sessionId: String, plannedSessionId: String, completed: Bool) {
+        self.sessionId = sessionId; self.plannedSessionId = plannedSessionId; self.completed = completed
+    }
+}
+
+/// A week's kept plan with the starts kept here for its days.
+public struct KeptPlan: Sendable, Hashable {
+    public var plan: CachedPlan?
+    public var starts: [PlannedStart]
+
+    public init(plan: CachedPlan?, starts: [PlannedStart]) {
+        self.plan = plan; self.starts = starts
+    }
+}
+
 extension AppDatabase {
     /// Plans this many days older than the newest kept one are dropped.
     static let planRetentionDays = 28
@@ -69,6 +92,38 @@ extension AppDatabase {
 
     public func observePlan(on day: String) -> AsyncThrowingStream<CachedPlan?, any Error> {
         observe { try Self.plan($0, on: day) }
+    }
+
+    /// The live sessions kept here that were started from a planned session
+    /// on a day of the week starting `weekStart`. As on the server, only a
+    /// deleted session no longer counts as a start.
+    static func plannedStarts(_ db: Database, weekStart: String) throws -> [PlannedStart] {
+        guard let last = Self.day(weekStart, plus: 6) else { return [] }
+        return try Row.fetchAll(db, sql: """
+            SELECT id, plannedSessionId, status FROM session
+            WHERE plannedSessionId IS NOT NULL AND deletedAt IS NULL AND localDate BETWEEN ? AND ?
+            ORDER BY startedAt
+            """, arguments: [weekStart, last]).map {
+            PlannedStart(
+                sessionId: $0["id"], plannedSessionId: $0["plannedSessionId"],
+                completed: ($0["status"] as String) == "completed")
+        }
+    }
+
+    static func keptPlan(_ db: Database, on day: String) throws -> KeptPlan {
+        let plan = try Self.plan(db, on: day)
+        return KeptPlan(plan: plan, starts: try plan.map { try Self.plannedStarts(db, weekStart: $0.weekStart) } ?? [])
+    }
+
+    /// The plan of the week that holds `day`, with the starts kept here.
+    public func keptPlan(on day: String) throws -> KeptPlan {
+        try reader.read { try Self.keptPlan($0, on: day) }
+    }
+
+    /// Follows the kept plan and its starts: a start or a completion here
+    /// shows before the server's plan does.
+    public func observeKeptPlan(on day: String) -> AsyncThrowingStream<KeptPlan, any Error> {
+        observe { try Self.keptPlan($0, on: day) }
     }
 
     /// `day` moved by `days`, both YYYY-MM-DD.

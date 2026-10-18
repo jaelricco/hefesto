@@ -1,5 +1,6 @@
 import Foundation
 import HefestoLogger
+import HefestoPlan
 import HefestoStore
 
 /// A screen a demo run opens on, for design review and the screenshot
@@ -9,6 +10,18 @@ enum DemoScreen: String, CaseIterable {
     // so it asks what the athlete had left.
     case today, logger, composer, reserve, finish, map, peek, detail, history, session, stats, celebration
     case signIn = "signin"
+    // The plan (ADR 0022): today's session in full, the check-in before its
+    // start, the started session in the logger with its targets, and the
+    // composer on the next target, a calibration set.
+    case plansession, checkin, planned, target
+    // The check-in without a connection: the start without the server
+    // (ADR 0027).
+    case offlinestart
+    // The onboarding (ADR 0023): the goals, where the athlete stands, and a
+    // current complaint with its warning signs.
+    case onboarding, standing, complaint
+    // A band-assisted pull-up in the composer (ADR 0024).
+    case band
 
     var tab: AppTab {
         switch self {
@@ -18,7 +31,18 @@ enum DemoScreen: String, CaseIterable {
         }
     }
 
-    var opensLogger: Bool { [.logger, .composer, .reserve, .finish].contains(self) }
+    var opensLogger: Bool { [.logger, .composer, .reserve, .finish, .band].contains(self) }
+    var opensPlanned: Bool { [.planned, .target].contains(self) }
+
+    /// The onboarding page the screen opens on, if it opens the onboarding.
+    var onboardingPage: OnboardingPage? {
+        switch self {
+        case .onboarding: .goals
+        case .standing: .performance
+        case .complaint: .region("elbow_inner")
+        default: nil
+        }
+    }
 }
 
 /// What a demo run seeded, so screens can open on it.
@@ -27,13 +51,29 @@ struct DemoRun {
     /// Today's draft, with a set logged 48 s ago and the rest running.
     let logger: LoggerModel?
     let draftSessionId: String
+    /// Today's planned session as started, with its targets open.
+    let plannedSessionId: String
     let pastSessionId: String
     let skillId: String
     /// A hold: the stats screen shows it, and the reserve screen chooses it.
     let exerciseId: String
+    /// A band of the athlete's own, and the exercise the band screen assists.
+    let bandId: String
+    let bandExerciseId: String
     let celebration: Celebration?
+    /// The planner's catalogue and the answers so far, for the onboarding.
+    let catalogue: OnboardingCatalogue?
+    let onboardingForm: OnboardingForm?
 
     var opensLogger: Bool { screen.opensLogger }
+    var onboardingPage: OnboardingPage? { screen.onboardingPage }
+
+    /// The log session the screen opens in the logger, if it opens one.
+    var opensSessionId: String? {
+        if screen.opensLogger { return draftSessionId }
+        if screen.opensPlanned { return plannedSessionId }
+        return nil
+    }
 }
 
 #if DEBUG
@@ -87,7 +127,12 @@ extension DemoRun {
                             family: "pull", defaultMeasure: "reps", isBodyweight: false)
         let wallHold = Exercise(id: "demo-ex-wall-hs", slug: "wall-handstand-hold", name: "Wall Handstand Hold",
                                 family: "handstand", defaultMeasure: "hold_seconds", isBodyweight: true)
-        try db.replaceExercises([pullUp, scapular, tuck, advTuck, bandTuck, curl, wallHold], contentVersion: "demo")
+        let externalRotation = Exercise(id: "demo-ex-band-er", slug: "band-external-rotation",
+                                        name: "Aussenrotation mit Band", family: "mobility", defaultMeasure: "reps",
+                                        isBodyweight: false)
+        try db.replaceExercises([pullUp, scapular, tuck, advTuck, bandTuck, curl, wallHold, externalRotation],
+                                contentVersion: "demo")
+        try db.replaceBands(DemoBands.all)
 
         // The map.
         func skill(_ slug: String, _ name: String, _ family: String, tier: Int, milestone: Bool,
@@ -215,9 +260,34 @@ extension DemoRun {
         let draft = session(draftStart, minutes: 0, draft: true, [[(pullUp, 8, 120), (pullUp, 7, 125)], []])
         try db.apply(ServerPage(cursor: seq, sessions: sessions, blocks: blocks, sets: sets))
 
+        // The plan of this week, kept as the server would send it, and today's
+        // session started from it, its targets open.
+        let plan = DemoPlan(now: now, calendar: calendar, pastSessionId: past)
+        seq += 1
+        let planned = plan.startedSession(
+            warmup: scapular, hold: advTuck, strength: pullUp, finish: externalRotation, zone: zone, now: now, seq: seq)
+        if screen.opensPlanned {
+            try db.apply(ServerPage(cursor: seq, sessions: [planned.session], blocks: planned.blocks, sets: planned.sets))
+        }
+        try db.savePlan(CachedPlan(
+            weekStart: plan.weekStart, etag: nil,
+            payload: Data(plan.json(startedAs: screen.opensPlanned ? planned.session.id : nil).utf8),
+            fetchedAt: now))
+
         // The logger screens open on the draft with a combo logged 48 s ago:
         // the rest runs, 1:42 of 2:30 left.
         var logger: LoggerModel?
+        if screen.opensPlanned {
+            // The warm-up is done, its last set 48 s ago; the calibration hold is next.
+            let clock: @Sendable () -> Date = { Date().addingTimeInterval(-48) }
+            let model = try LoggerModel(db: db, sessionId: planned.session.id, now: clock)
+            for set in model.openPlannedSets.prefix(2) {
+                let drafts = set.elements.map(ElementDraft.init(copying:))
+                try model.perform(plannedSet: set.id, elements: drafts, rir: set.entry.rir == nil ? nil : 3,
+                                  sirS: set.entry.sirS == nil ? nil : 3)
+            }
+            logger = model
+        }
         if screen.opensLogger {
             let clock: @Sendable () -> Date = { Date().addingTimeInterval(-48) }
             let model = try LoggerModel(db: db, sessionId: draft, now: clock)
@@ -231,13 +301,251 @@ extension DemoRun {
         }
 
         return DemoRun(
-            screen: screen, logger: logger, draftSessionId: draft, pastSessionId: past,
-            skillId: frontLever.id, exerciseId: tuck.id,
+            screen: screen, logger: logger, draftSessionId: draft, plannedSessionId: planned.session.id,
+            pastSessionId: past,
+            skillId: frontLever.id, exerciseId: tuck.id, bandId: DemoBands.light.id, bandExerciseId: pullUp.id,
             celebration: screen == .celebration
                 ? Celebration(sessionId: draft,
                               unlocked: [.init(levelId: tuckLevel.id, levelName: tuckLevel.name, skillName: frontLever.name)],
                               xp: 45, newlyAvailable: 1, streakDays: 12)
-                : nil)
+                : nil,
+            catalogue: try OnboardingCatalogue(json: Data(DemoCatalogue.json.utf8)),
+            onboardingForm: screen.onboardingPage == nil ? nil : DemoOnboarding.form(for: screen))
     }
+}
+
+/// The athlete's own bands in the demo: fixture data, as a test's, not a
+/// manufacturer's figures.
+enum DemoBands {
+    static let light = Band(
+        id: "demo-band-light", brand: "Loop", colourLabel: "Rot", resistanceMinKg: 5, resistanceMaxKg: 15)
+    static let strong = Band(
+        id: "demo-band-strong", brand: "Loop", colourLabel: "Schwarz", resistanceMinKg: 15, resistanceMaxKg: 35)
+    static let all = [light, strong]
+}
+
+/// The onboarding's answers so far, as far as each demo screen has come.
+/// Names follow the knowledge base (content/training).
+enum DemoOnboarding {
+    static func form(for screen: DemoScreen) -> OnboardingForm {
+        var f = OnboardingForm()
+        f.birthYear = 1994
+        f.healthConsent = true
+        f.disclaimerAck = true
+        f.goals = [.init(skill: "planche", targetLevel: "tuck", targetDate: nil),
+                   .init(skill: "handstand", targetLevel: "free-10s")]
+        guard screen != .onboarding else { return f }
+        f.sessionsPerWeek = 3
+        f.sessionMinutes = 60
+        f.equipment = ["pull_up_bar", "parallettes", "rings"]
+        f.bodyweightKg = 74
+        f.trainingLevel = "recreational"
+        f.trainingAge = "1_to_4_years"
+        f.lastRegular = "current_or_lt_3_weeks"
+        f.classes = ["push_up_class": "13_20", "pull_up_class": "4_7", "dip_class": "4_7", "hollow_hold_class": "15_30"]
+        f.stages = ["planche": .init(level: "tuck", answerClass: "4_9"), "handstand": .init(level: "wall")]
+        f.mobility = ["wrist": "yes"]
+        guard screen == .complaint else { return f }
+        f.stages["handstand"]?.answerClass = "10_19"
+        f.mobility["shoulder"] = "partly"
+        f.dataConfidence = "estimated"
+        f.exertion = false
+        f.screening = ["SCR-01": false, "SCR-02": false, "SCR-03": false, "SCR-04": false, "SCR-05": false,
+                       "SCR-06": false]
+        f.bodyMap = ["elbow_inner": .init(current: true)]
+        var complaint = OnboardingForm.Complaint()
+        complaint.painDaily = 2
+        complaint.painTraining = 4
+        complaint.onset = "gradual"
+        complaint.durationWeeks = 3
+        complaint.suspectedSerious = "no"
+        complaint.assessment = "no"
+        f.complaints = ["elbow_inner": complaint]
+        f.redFlags = ["elbow_inner": ["RF-01": false, "RF-02": false, "RF-03": false, "RF-04": true]]
+        return f
+    }
+}
+
+/// This week's plan for the demo: fixture data in the API's JSON, as the
+/// server would send it, with the knowledge base's names and texts
+/// (content/training). Today has a full session, two days ago the one the
+/// history shows as done, two days on a light one; the other days rest.
+struct DemoPlan {
+    let weekStart: String
+    let today: String
+    let days: [String]
+    let pastSessionId: String
+    let todayId = "demo-planned-today"
+
+    static let warmupItem = "demo-item-scapula"
+    static let holdItem = "demo-item-adv-tuck"
+    static let strengthItem = "demo-item-pull-up"
+    static let finishItem = "demo-item-rotation"
+
+    init(now: Date, calendar: Calendar, pastSessionId: String) {
+        var iso = Calendar(identifier: .iso8601)
+        iso.timeZone = calendar.timeZone
+        let start = iso.dateInterval(of: .weekOfYear, for: now)?.start ?? now
+        days = (0..<7).map { Self.day(iso.date(byAdding: .day, value: $0, to: start) ?? start, iso) }
+        weekStart = days[0]
+        today = Self.day(now, iso)
+        self.pastSessionId = pastSessionId
+    }
+
+    static func day(_ date: Date, _ calendar: Calendar) -> String {
+        let c = calendar.dateComponents([.year, .month, .day], from: date)
+        return String(format: "%04d-%02d-%02d", c.year ?? 0, c.month ?? 0, c.day ?? 0)
+    }
+
+    /// The plan, with today's session started as `logSessionId` if given.
+    func json(startedAs logSessionId: String?) -> String {
+        guard let t = days.firstIndex(of: today) else { return "" }
+        var sessions: [String] = [], rest: [String] = []
+        for (i, day) in days.enumerated() {
+            switch i - t {
+            case 0: sessions.append(todaySession(startedAs: logSessionId))
+            case -2: sessions.append(session(
+                "demo-planned-past", day, index: i, kind: "full", minutes: 50, status: "completed",
+                workout: pastSessionId, blocks: [block("strength", [item(
+                    "demo-item-past", "pull-up", "Klimmzug", sets: 3, reps: 6, hold: nil, reserve: 2, rest: 120)],
+                    why: Self.strengthWhy)]))
+            case 2: sessions.append(session(
+                "demo-planned-light", day, index: i, kind: "light", minutes: 30, status: "planned", workout: nil,
+                blocks: [
+                    block("balance", [item(
+                        "demo-item-wall", "wall-handstand-hold", "Handstand an der Wand", sets: 3, reps: nil, hold: 20,
+                        reserve: 5, rest: 90)], why: Self.balanceWhy),
+                    block("end", [item(
+                        "demo-item-rotation-light", "band-external-rotation", "Aussenrotation mit Band", sets: 2,
+                        reps: 15, hold: nil, reserve: 3, rest: 60, intensity: "light")], why: Self.finishWhy),
+                ], why: [Self.lightWhy]))
+            default: rest.append("\"\(day)\"")
+            }
+        }
+        return """
+        {"id":"demo-plan","week_start":"\(weekStart)","ruleset_version":"demo",
+         "input_hash":"sha256:0000000000000000000000000000000000000000000000000000000000000000",
+         "stopped":false,"deload":null,"sessions":[\(sessions.joined(separator: ","))],
+         "rest_days":[\(rest.joined(separator: ","))],"exclusions":[],"hints":[],"realism":[],"monitor":[],
+         "loads":[],"reasons":[],"disclaimer":"\(Self.disclaimer)"}
+        """
+    }
+
+    private func todaySession(startedAs logSessionId: String?) -> String {
+        session(
+            todayId, today, index: days.firstIndex(of: today) ?? 0, kind: "full", minutes: 45,
+            status: logSessionId == nil ? "planned" : "started", workout: logSessionId,
+            blocks: [
+                block("warmup", [item(
+                    Self.warmupItem, "scapular-pull-up", "Scapula-Pull-up", sets: 2, reps: 8, hold: nil, reserve: 3,
+                    rest: 60, kind: "warmup", intensity: "light")], minutes: 8, why: Self.warmupWhy),
+                block("skill_max", [
+                    item(Self.holdItem, "front-lever-advanced-tuck", "Advanced Tuck Front Lever", sets: 4, reps: nil,
+                         hold: 6, reserve: 2, rest: 150, calibration: true, intensity: "hard",
+                         why: Self.calibrationWhy),
+                    item("demo-item-straddle", "front-lever-straddle", "Straddle Front Lever", sets: 1, reps: nil,
+                         hold: 3, reserve: 1, rest: 180, offer: true, intensity: "hard"),
+                ], why: Self.holdWhy),
+                block("strength", [item(
+                    Self.strengthItem, "pull-up", "Klimmzug", sets: 3, reps: 6, hold: nil, reserve: 2, rest: 120)],
+                    why: Self.strengthWhy),
+                block("end", [item(
+                    Self.finishItem, "band-external-rotation", "Aussenrotation mit Band", sets: 2, reps: 15, hold: nil,
+                    reserve: 3, rest: 60, intensity: "light", monitor: true)], why: Self.finishWhy),
+            ],
+            why: [Self.orderWhy])
+    }
+
+    /// Today's session as the start writes it into the log (ADR 0016).
+    func startedSession(
+        warmup: Exercise, hold: Exercise, strength: Exercise, finish: Exercise, zone: TimeZone, now: Date, seq: Int64
+    ) -> (session: Session, blocks: [Block], sets: [SetWithElements]) {
+        let started = now.addingTimeInterval(-12 * 60)
+        let session = Session(
+            id: "demo-session-planned", startedAt: started, timezone: zone.identifier, localDate: today,
+            plannedSessionId: todayId, updatedAt: started, serverSeq: seq)
+        var blocks: [Block] = [], sets: [SetWithElements] = []
+        let plan: [(Exercise, String, Int, Int?, Double?, Int, Int, String)] = [
+            (warmup, Self.warmupItem, 2, 8, nil, 3, 60, "warmup"),
+            (hold, Self.holdItem, 4, nil, 6, 2, 150, "working"),
+            (strength, Self.strengthItem, 3, 6, nil, 2, 120, "working"),
+            (finish, Self.finishItem, 2, 15, nil, 3, 60, "working"),
+        ]
+        for (b, (exercise, itemId, count, reps, holdSeconds, reserve, rest, kind)) in plan.enumerated() {
+            let block = Block(id: "demo-planned-block-\(b)", sessionId: session.id, orderIndex: b, updatedAt: started,
+                              serverSeq: seq)
+            blocks.append(block)
+            for n in 0..<count {
+                let entry = SetEntry(
+                    id: "demo-planned-set-\(b)-\(n)", sessionId: session.id, blockId: block.id, orderIndex: n,
+                    kind: kind, isPlanned: true, restAfterPlannedS: rest,
+                    rir: holdSeconds == nil ? reserve : nil, sirS: holdSeconds == nil ? nil : reserve,
+                    plannedItemId: itemId, updatedAt: started, serverSeq: seq)
+                sets.append(SetWithElements(entry: entry, elements: [SetElement(
+                    setEntryId: entry.id, orderIndex: 0, exerciseId: exercise.id, measure: exercise.defaultMeasure,
+                    reps: reps, holdSeconds: holdSeconds)]))
+            }
+        }
+        return (session, blocks, sets)
+    }
+
+    // MARK: JSON pieces
+
+    private func session(
+        _ id: String, _ day: String, index: Int, kind: String, minutes: Int, status: String, workout: String?,
+        blocks: [String], why: [String] = []
+    ) -> String {
+        """
+        {"id":"\(id)","status":"\(status)","workout_session_id":\(workout.map { "\"\($0)\"" } ?? "null"),
+         "check_in_applied":false,"index":\(index),"date":"\(day)","kind":"\(kind)","est_minutes":\(minutes),
+         "blocks":[\(blocks.joined(separator: ","))],"reasons":[\(why.joined(separator: ","))]}
+        """
+    }
+
+    private func block(_ role: String, _ items: [String], minutes: Int? = nil, why: String) -> String {
+        """
+        {"role":"\(role)","minutes":\(minutes.map(String.init) ?? "null"),"paired":false,
+         "items":[\(items.joined(separator: ","))],"reasons":[\(why)]}
+        """
+    }
+
+    private func item(
+        _ id: String, _ slug: String, _ name: String, sets: Int, reps: Int?, hold: Int?, reserve: Int, rest: Int,
+        kind: String = "working", calibration: Bool = false, offer: Bool = false, intensity: String = "moderate",
+        monitor: Bool = false, why: String? = nil
+    ) -> String {
+        """
+        {"id":"\(id)","exercise":"\(slug)","exercise_name":"\(name)","skill":null,"stimulus":"strength",
+         "kind":"\(kind)","sets":\(sets),"reps":\(reps.map(String.init) ?? "null"),
+         "hold_s":\(hold.map(String.init) ?? "null"),"load_kg":null,"assist":"none","reserve":\(reserve),
+         "rest_s":\(rest),"calibration":\(calibration),"offer":\(offer),"stop_rules":[],"intensity":"\(intensity)",
+         "role":"goal","monitor":\(monitor),"reasons":[\(why ?? "")]}
+        """
+    }
+
+    private static func reason(_ rule: String, _ text: String) -> String {
+        """
+        {"rule_id":"\(rule)","params":[],"sources":[],"evidence":"H","text":"\(text)","args":{},"region":null}
+        """
+    }
+
+    // The knowledge base's texts (content/training/rules.yaml, body.yaml).
+    static let disclaimer = DemoCatalogue.disclaimer
+    static let orderWhy = reason("SESS-02", "Reihenfolge: Aufwärmen, Balance und Technik, dann die schwersten Halte, "
+        + "danach Volumen, Kraft und zuletzt belastende Prehab. Schweres kommt, solange du frisch bist.")
+    static let warmupWhy = reason("SESS-03", "Aufwärmen mit allgemeinem Teil, Prehab-Aktivierung und leichten "
+        + "Rampensätzen vor dem ersten schweren Block.")
+    static let balanceWhy = reason("SESS-04", "Balance übst du früh in der Einheit, weil Ermüdung die Kontrolle "
+        + "verschlechtert.")
+    static let holdWhy = reason("SESS-05", "Alle Sätze eines schweren Halts hintereinander, mit langen Pausen, damit "
+        + "jeder Satz in guter Qualität gelingt.")
+    static let strengthWhy = reason("SESS-07", "Kraftübungen für den Weg zum Ziel und zum Ausgleich; Gegenspieler "
+        + "können abwechselnd trainiert werden.")
+    static let finishWhy = reason("SESS-08", "Belastende Prehab und Rumpfarbeit kommen ans Ende, damit sie die schweren "
+        + "Übungen nicht vorermüden.")
+    static let lightWhy = reason("SESS-09", "Leichte Einheit: Balance, Technik und Prehab ohne harte Reize, damit du "
+        + "dich von den vollen Einheiten erholst.")
+    static let calibrationWhy = reason("SEL-08", "Die ersten Einheiten liegen eine Stufe unter deiner Angabe, bis Logs "
+        + "sie bestätigen.")
 }
 #endif

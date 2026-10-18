@@ -4,11 +4,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 
 	domain "github.com/jaelricco/hefesto/internal/domain/planning"
+	"github.com/jaelricco/hefesto/internal/planning"
 	"github.com/jaelricco/hefesto/internal/store/dbgen"
 )
 
@@ -124,4 +126,36 @@ func (t *plannerTx) PendingCompletions(ctx context.Context, userID uuid.UUID, li
 		return nil, fmt.Errorf("listing pending completions: %w", err)
 	}
 	return ids, nil
+}
+
+// PendingOfflineStarts lists log sessions started offline that no planned
+// session links yet (spec §10.5).
+func (t *plannerTx) PendingOfflineStarts(ctx context.Context, userID uuid.UUID, since time.Time, limit int) ([]planning.OfflineStart, error) {
+	if err := t.check(userID); err != nil {
+		return nil, err
+	}
+	rows, err := t.q.ListPendingOfflineStarts(ctx, dbgen.ListPendingOfflineStartsParams{
+		UserID: userID, Since: dateOf(since.UTC()), MaxRows: int32(min(limit, maxPage)), //nolint:gosec // bounded by maxPage
+	})
+	if err != nil {
+		return nil, fmt.Errorf("listing offline starts: %w", err)
+	}
+	out := make([]planning.OfflineStart, len(rows))
+	for i, r := range rows {
+		out[i] = planning.OfflineStart{SessionID: r.ID, PlannedSessionID: r.PlannedSessionID}
+	}
+	return out, nil
+}
+
+// LinkStart points a planned session at a log session started offline.
+func (t *plannerTx) LinkStart(ctx context.Context, userID, plannedSessionID, sessionID uuid.UUID) error {
+	if err := t.check(userID); err != nil {
+		return err
+	}
+	if err := t.q.LinkOfflineStart(ctx, dbgen.LinkOfflineStartParams{
+		ID: plannedSessionID, UserID: userID, WorkoutSessionID: sessionID,
+	}); err != nil {
+		return fmt.Errorf("linking planned session %s: %w", plannedSessionID, err)
+	}
+	return nil
 }

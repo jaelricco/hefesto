@@ -2,6 +2,7 @@ import Foundation
 import HefestoAPI
 import HefestoAuth
 import HefestoLogger
+import HefestoPlan
 import HefestoStore
 import HefestoSync
 import Network
@@ -16,6 +17,11 @@ final class AppModel {
     let db: AppDatabase
     let auth: AuthService
     let sync: SyncEngine
+    /// The training plan the screens show (ADR 0022).
+    let plan: PlanModel
+    /// The onboarding's answers, kept while the app runs, so closing it
+    /// loses nothing (ADR 0023).
+    let onboarding: OnboardingModel
 
     private(set) var isSignedIn = false
     private(set) var isSyncing = false
@@ -33,16 +39,22 @@ final class AppModel {
 
     init() throws {
         let baseURL = Self.apiBaseURL
+        // A local: an observed property cannot be read before every stored
+        // property is set.
+        let demo: DemoRun?
         #if DEBUG
         if let screen = DemoRun.requestedScreen {
             db = try AppDatabase.inMemory()
             demo = try DemoRun.seed(db, screen: screen)
         } else {
             db = try Self.openDatabase()
+            demo = nil
         }
         #else
         db = try Self.openDatabase()
+        demo = nil
         #endif
+        self.demo = demo
 
         auth = AuthService(
             client: HefestoAPIConfiguration.client(serverURL: baseURL),
@@ -50,6 +62,10 @@ final class AppModel {
             appVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String)
         let api = HefestoAPIConfiguration.client(serverURL: baseURL, middlewares: [AuthMiddleware(auth: auth)])
         sync = SyncEngine(client: api, db: db)
+        // A demo shows the plan it seeded and never reaches the network.
+        plan = PlanModel(db: db, sync: demo == nil ? sync : nil)
+        onboarding = OnboardingModel(sync: demo == nil ? sync : nil, catalogue: demo?.catalogue)
+        if let form = demo?.onboardingForm { onboarding.form = form }
     }
 
     private static func openDatabase() throws -> AppDatabase {
@@ -104,8 +120,12 @@ final class AppModel {
         do {
             let report = try await sync.sync()
             try? await sync.refreshExercises()
+            // Bands are not in the sync feed (ADR 0009).
+            try? await sync.refreshBands()
             // States change when a completion is evaluated; content rarely.
             try? await sync.refreshSkillMap()
+            // The plan changes with every event the sync carried.
+            await plan.refresh()
             isOffline = false
             if let done = report.completions.first {
                 celebration = Celebration(sessionId: done.key, result: done.value)
@@ -118,6 +138,24 @@ final class AppModel {
             isOffline = isSignedIn
             if wasSignedIn && !isSignedIn { await auth.useDevice(id: Self.newDeviceId()) }
         }
+    }
+
+    /// Adds a band to the athlete's collection, online. A demo keeps it here
+    /// only.
+    func createBand(brand: String, colourLabel: String, minKg: Double, maxKg: Double) async throws -> Band {
+        guard demo == nil else {
+            let band = Band(brand: brand, colourLabel: colourLabel, resistanceMinKg: minKg, resistanceMaxKg: maxKg)
+            try db.saveBand(band)
+            return band
+        }
+        return try await sync.createBand(
+            brand: brand, colourLabel: colourLabel, resistanceMinKg: minKg, resistanceMaxKg: maxKg)
+    }
+
+    /// Removes one of the athlete's bands; sets logged with it keep it.
+    func deleteBand(id: String) async throws {
+        guard demo == nil else { return try db.markBandRemoved(id: id) }
+        try await sync.deleteBand(id: id)
     }
 
     /// Fetches a skill's injury notes for offline reading; a demo has them already.

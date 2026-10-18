@@ -1387,6 +1387,11 @@ paths:
         started first, whatever its `id`. After the log session is deleted,
         the planned session can start again. Nothing starts while training
         is stopped (`training-stopped`).
+
+        Without a connection a client starts the session itself, by the same
+        scheme, and syncs it with `planned_session_id` and `planned_item_id`
+        (spec §10.5). The planner links such a start after the commit; a
+        start here then answers with that session.
       requestBody:
         required: true
         content:
@@ -2597,6 +2602,12 @@ components:
           type: [integer, "null"]
           minimum: 0
           maximum: 60
+        planned_item_id:
+          description: |
+            The plan item a set of a session started offline comes from
+            (spec §10.5). Taken when the set is created and kept after: the
+            planner relinks it when a new plan replaces the item.
+          $ref: "#/components/schemas/Id"
         completed_at:
           $ref: "#/components/schemas/NullableTimestamp"
         notes:
@@ -3465,6 +3476,14 @@ components:
           type: boolean
         template_id:
           $ref: "#/components/schemas/Id"
+        planned_session_id:
+          description: |
+            The planned session a client started this session from while
+            offline (spec §10.5). Taken when the session is created and kept
+            after; a planned session the server does not know is dropped.
+            After the commit the planner links the start to the plan and lets
+            the draft follow the current plan, as after a start online.
+          $ref: "#/components/schemas/Id"
         status:
           type: string
           enum: [draft, abandoned]
@@ -3883,9 +3902,11 @@ components:
           description: Chest pain, unusual shortness of breath, dizziness or fainting under exertion (RF-10).
           type: boolean
         screening:
-          description: The six further screening questions, in the order of onboarding.md §3.7.
+          description: |
+            The answers to the six further screening questions, in the order
+            of the catalogue's `screening`. Without health-data consent they
+            are not asked: send none.
           type: array
-          minItems: 6
           maxItems: 6
           items:
             type: boolean
@@ -4860,6 +4881,15 @@ components:
           description: More than `lo`, without an upper bound.
           type: boolean
 
+    ScreeningQuestion:
+      type: object
+      required: [id, question]
+      properties:
+        id:
+          type: string
+        question:
+          type: string
+
     ClassQuestion:
       type: object
       required: [key, exercise, classes]
@@ -4945,12 +4975,29 @@ components:
 
     PlannerCatalogue:
       type: object
-      required: [ruleset_version, disclaimer, skills, exercises, regions, class_questions]
+      required: [ruleset_version, disclaimer, skills, exercises, regions, class_questions, exertion, screening,
+                 minor_age_years]
       properties:
         ruleset_version:
           type: string
         disclaimer:
           type: string
+        exertion:
+          description: |
+            The onboarding's question on exertion symptoms (`exertion_symptoms`).
+            Every region asks it too, under its ID; the answer is the same.
+          $ref: "#/components/schemas/RedFlagQuestion"
+        screening:
+          description: The six further screening questions, in the order of their answers (`screening`).
+          type: array
+          items:
+            $ref: "#/components/schemas/ScreeningQuestion"
+        minor_age_years:
+          description: |
+            A user counts as a minor while the current year minus the birth
+            year is at most this (PAR-D-23). A minor is asked the
+            minor-only red flags.
+          type: integer
         skills:
           type: array
           items:

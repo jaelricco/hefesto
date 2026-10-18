@@ -46,6 +46,8 @@ targets:
         product: HefestoSync
       - package: HefestoKit
         product: HefestoLogger
+      - package: HefestoKit
+        product: HefestoPlan
     entitlements:
       path: Hefesto/Hefesto.entitlements
       properties:

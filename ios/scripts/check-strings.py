@@ -34,6 +34,7 @@ IGNORED = {
 # Files that are never shown to athletes.
 EXCLUDED_FILES = {
     "DemoMode.swift": "Debug-only fixture data for the demo mode and the UI tests",
+    "DemoCatalogue.swift": "Debug-only fixture: the planner's catalogue, verbatim from content/training, for the demo",
 }
 
 SPECIFIER = re.compile(r"%(?:\d+\$)?(?:lld|ld|d|lf|f|@|u|llu)")

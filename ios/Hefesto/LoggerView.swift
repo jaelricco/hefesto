@@ -1,4 +1,5 @@
 import HefestoLogger
+import HefestoPlan
 import HefestoStore
 import SwiftUI
 
@@ -10,6 +11,7 @@ struct LoggerView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var logger: LoggerModel?
     @State private var exercises: [String: Exercise] = [:]
+    @State private var bands: [String: Band] = [:]
     @State private var composing: Composing?
     @State private var finishing = false
     @State private var error: String?
@@ -71,16 +73,34 @@ struct LoggerView: View {
                     composing = Composing(
                         blockId: last.id, exercise: demo.screen == .reserve ? exercises[demo.exerciseId] : nil)
                 }
+                if let demo = model.demo, demo.screen == .band, let last = logger.tree.blocks.last {
+                    composing = Composing(
+                        blockId: last.id, exercise: exercises[demo.bandExerciseId], band: demo.bandId)
+                }
+                if model.demo?.screen == .target, let next = nextPlanned(logger) {
+                    composing = Composing(blockId: next.entry.blockId, planned: target(for: next, logger))
+                }
                 if model.demo?.screen == .finish { finishing = true }
             } catch {
                 self.error = error.localizedDescription
             }
         }
+        .task {
+            // Every band, also one just added in the composer, to name it.
+            do {
+                for try await _ in model.db.observeBands() { bands = (try? model.db.bandsById()) ?? [:] }
+            } catch {}
+        }
         .sheet(item: $composing) { c in
             SetComposer(
-                db: model.db, defaultRest: logger?.defaultRestSeconds ?? 120, exercise: c.exercise
+                db: model.db, defaultRest: logger?.defaultRestSeconds ?? 120, exercise: c.exercise, band: c.band,
+                planned: c.planned
             ) { drafts, rest, reserve in
-                log(drafts, rest: rest, reserve: reserve, in: c.blockId)
+                if let planned = c.planned {
+                    perform(planned, drafts, reserve: reserve)
+                } else {
+                    log(drafts, rest: rest, reserve: reserve, in: c.blockId)
+                }
             }
         }
         .sheet(isPresented: $finishing) {
@@ -114,8 +134,20 @@ struct LoggerView: View {
             ForEach(Array(logger.tree.blocks.enumerated()), id: \.element.id) { i, block in
                 Section {
                     ForEach(Array(block.sets.enumerated()), id: \.element.id) { n, set in
-                        SetRow(number: n + 1, set: set, exercises: exercises) {
-                            repeatSet(set, in: block.id, logger)
+                        Group {
+                            if isOpenPlanned(set) {
+                                PlannedSetRow(
+                                    number: n + 1, set: set, exercises: exercises,
+                                    reserveTarget: reserveTarget(set.entry), calibration: isCalibration(set, logger),
+                                    band: needsBand(set),
+                                    onPerform: isDraft
+                                        ? { composing = Composing(blockId: block.id, planned: target(for: set, logger)) }
+                                        : nil)
+                            } else {
+                                SetRow(number: n + 1, set: set, exercises: exercises, bands: bands) {
+                                    repeatSet(set, in: block.id, logger)
+                                }
+                            }
                         }
                         .id(set.id)
                         .themedRow()
@@ -153,27 +185,50 @@ struct LoggerView: View {
         .listStyle(.insetGrouped)
     }
 
+    /// While the plan has sets left, the next of them is the main action and
+    /// a set of the athlete's own is the small one beside it.
     private func bottomBar(_ logger: LoggerModel) -> some View {
         HStack(spacing: 10) {
-            Button {
-                attempt { try logger.addBlock() }
-            } label: {
-                Image(systemName: "square.stack.3d.up")
-                    .font(.system(size: 22, weight: .medium))
-                    .foregroundStyle(Palette.text)
-                    .frame(width: 64, height: 64)
-                    .background(Palette.surfaceRaised, in: .rect(cornerRadius: 16))
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel("Add a block")
+            if let next = nextPlanned(logger) {
+                Button {
+                    if let last = logger.tree.blocks.last { composing = Composing(blockId: last.id) }
+                } label: {
+                    Image(systemName: "plus")
+                        .font(.system(size: 22, weight: .medium))
+                        .foregroundStyle(Palette.text)
+                        .frame(width: 64, height: 64)
+                        .background(Palette.surfaceRaised, in: .rect(cornerRadius: 16))
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Log a set of your own")
 
-            Button {
-                if let last = logger.tree.blocks.last { composing = Composing(blockId: last.id) }
-            } label: {
-                Label("Log a set", systemImage: "plus")
+                Button {
+                    composing = Composing(blockId: next.entry.blockId, planned: target(for: next, logger))
+                } label: {
+                    Label("Next set", systemImage: "play.fill")
+                }
+                .buttonStyle(PrimaryButtonStyle())
+            } else {
+                Button {
+                    attempt { try logger.addBlock() }
+                } label: {
+                    Image(systemName: "square.stack.3d.up")
+                        .font(.system(size: 22, weight: .medium))
+                        .foregroundStyle(Palette.text)
+                        .frame(width: 64, height: 64)
+                        .background(Palette.surfaceRaised, in: .rect(cornerRadius: 16))
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Add a block")
+
+                Button {
+                    if let last = logger.tree.blocks.last { composing = Composing(blockId: last.id) }
+                } label: {
+                    Label("Log a set", systemImage: "plus")
+                }
+                .buttonStyle(PrimaryButtonStyle())
+                .disabled(logger.tree.blocks.isEmpty)
             }
-            .buttonStyle(PrimaryButtonStyle())
-            .disabled(logger.tree.blocks.isEmpty)
         }
         .padding(.horizontal, 16)
         .padding(.top, 12)
@@ -191,6 +246,67 @@ struct LoggerView: View {
             AccessibilityNotification.Announcement(String(localized: "Set logged")).post()
             if let end = logger.rest?.endsAt { RestNotifier.schedule(at: end) }
         }
+    }
+
+    /// Performs a planned set with what the athlete did (ADR 0022).
+    private func perform(_ planned: PlannedTarget, _ drafts: [ElementDraft], reserve: SetReserve) {
+        guard let logger else { return }
+        attempt {
+            try logger.perform(plannedSet: planned.setId, elements: drafts, rir: reserve.rir, sirS: reserve.sirS)
+            loggedCount += 1
+            if let end = logger.rest?.endsAt { RestNotifier.schedule(at: end) }
+        }
+    }
+
+    private func isOpenPlanned(_ set: SetWithElements) -> Bool {
+        set.entry.isPlanned && set.entry.completedAt == nil
+    }
+
+    /// The plan asks for a band; the log names the band itself (ADR 0016),
+    /// so the composer asks for it (ADR 0024).
+    private func needsBand(_ set: SetWithElements) -> Bool {
+        item(of: set)?.assist == "band"
+    }
+
+    /// The next planned set, in the order of the blocks.
+    private func nextPlanned(_ logger: LoggerModel) -> SetWithElements? {
+        logger.openPlannedSets.first
+    }
+
+    /// The plan's item for a planned set, if this week's plan holds it.
+    private func item(of set: SetWithElements) -> PlanItem? {
+        set.entry.plannedItemId.flatMap { model.plan.week?.item(id: $0) }
+    }
+
+    /// Only the first working set of a calibration item calibrates.
+    private func isCalibration(_ set: SetWithElements, _ logger: LoggerModel) -> Bool {
+        guard let itemId = set.entry.plannedItemId, set.entry.kind == "working",
+              item(of: set)?.calibration == true else { return false }
+        let first = logger.tree.blocks.flatMap(\.sets).first {
+            $0.entry.plannedItemId == itemId && $0.entry.kind == "working"
+        }
+        return first?.id == set.id
+    }
+
+    /// What the plan wants left at the end of the set.
+    private func reserveTarget(_ entry: SetEntry) -> String? {
+        if let seconds = entry.sirS { return String(localized: "\(seconds) s in reserve") }
+        if let reps = entry.rir { return String(localized: "\(reps) reps in reserve") }
+        return nil
+    }
+
+    private func target(for set: SetWithElements, _ logger: LoggerModel) -> PlannedTarget {
+        let band = needsBand(set)
+        return PlannedTarget(
+            setId: set.id,
+            drafts: set.elements.map { element -> Draft in
+                var draft = Draft(target: element, exercise: exercises[element.exerciseId])
+                // The plan's band is not in the draft: the athlete names it.
+                if band && draft.assistance == "none" { draft.assistance = "band" }
+                return draft
+            },
+            rest: set.entry.restAfterPlannedS, reserveTarget: reserveTarget(set.entry),
+            calibration: isCalibration(set, logger), band: band)
     }
 
     private func repeatSet(_ set: SetWithElements, in blockId: String, _ logger: LoggerModel) {
@@ -225,7 +341,8 @@ struct LoggerView: View {
     }
 
     private func title(_ s: Session) -> String {
-        s.title.isEmpty ? String(localized: "Session") : s.title
+        if !s.title.isEmpty { return s.title }
+        return s.plannedSessionId == nil ? String(localized: "Session") : String(localized: "Planned session")
     }
 }
 
@@ -233,7 +350,71 @@ struct Composing: Identifiable {
     let blockId: String
     /// The exercise the composer opens on, if any.
     var exercise: Exercise?
-    var id: String { blockId }
+    /// The planned set it performs, if any.
+    var planned: PlannedTarget?
+    /// The band the composer opens on, if any.
+    var band: String?
+    var id: String { planned?.setId ?? blockId }
+}
+
+/// A set the plan asked for and the athlete has not done yet: its target in
+/// the secondary colour, and the way to do it.
+struct PlannedSetRow: View {
+    let number: Int
+    let set: SetWithElements
+    let exercises: [String: Exercise]
+    let reserveTarget: String?
+    let calibration: Bool
+    /// Planned with a band.
+    let band: Bool
+    /// Nil where the set is only shown, as after the session.
+    let onPerform: (() -> Void)?
+
+    var body: some View {
+        HStack(alignment: .center, spacing: 12) {
+            HStack(alignment: .center, spacing: 12) {
+                Text("\(number)")
+                    .font(Typeface.condensed(16, .semibold, relativeTo: .subheadline))
+                    .monospacedDigit()
+                    .foregroundStyle(Palette.textTertiary)
+                    .frame(width: 28, height: 28)
+                    .overlay(Circle().strokeBorder(Palette.hairline, style: StrokeStyle(lineWidth: 1.5, dash: [3, 3])))
+                    .accessibilityLabel(Text("Set \(number)"))
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(verbatim: names).font(.rowTitle).foregroundStyle(Palette.textSecondary)
+                    Text(verbatim: line).font(.fine).foregroundStyle(Palette.textSecondary)
+                    if band || calibration {
+                        HStack(spacing: 6) {
+                            if band { Chip("Band") }
+                            if calibration { Chip("Calibration") }
+                        }
+                    }
+                }
+                Spacer(minLength: 4)
+                if let e = set.elements.first, let m = ElementFormat.metric(e) {
+                    HStack(alignment: .firstTextBaseline, spacing: 3) {
+                        Text(verbatim: m.value).font(.metric).monospacedDigit().foregroundStyle(Palette.textSecondary)
+                        Text(verbatim: m.unit).font(.meta).foregroundStyle(Palette.textTertiary)
+                    }
+                }
+            }
+            .accessibilityElement(children: .combine)
+            if let onPerform {
+                Button(action: onPerform) { Image(systemName: "play.fill") }
+                    .buttonStyle(RoundIconButtonStyle())
+                    .accessibilityLabel("Do this set")
+            }
+        }
+        .padding(.vertical, 6)
+    }
+
+    private var names: String {
+        self.set.elements.map { exercises[$0.exerciseId]?.name ?? String(localized: "Exercise") }.joined(separator: " + ")
+    }
+
+    private var line: String {
+        [String(localized: "Target"), reserveTarget].compactMap { $0 }.joined(separator: " · ")
+    }
 }
 
 /// One logged set: its number, its elements, the numbers large. A combo is
@@ -242,6 +423,8 @@ struct SetRow: View {
     let number: Int
     let set: SetWithElements
     let exercises: [String: Exercise]
+    /// Every band kept here, by id, to name a set's band.
+    var bands: [String: Band] = [:]
     /// Nil where the set is only shown, as in history.
     let onRepeat: (() -> Void)?
 
@@ -271,7 +454,7 @@ struct SetRow: View {
         HStack(alignment: .center, spacing: 8) {
             VStack(alignment: .leading, spacing: 2) {
                 Text(verbatim: name(e)).font(.rowTitle).foregroundStyle(Palette.text)
-                if let extra = ElementFormat.qualifiers(e) {
+                if let extra = ElementFormat.qualifiers(e, bands: bands) {
                     Text(verbatim: extra).font(.fine).foregroundStyle(Palette.textSecondary)
                 }
                 restLine
@@ -295,7 +478,7 @@ struct SetRow: View {
                         VStack(alignment: .leading, spacing: 0) {
                             Text(verbatim: name(e)).font(Typeface.text(16, .semibold, relativeTo: .headline))
                                 .foregroundStyle(Palette.text)
-                            if let extra = ElementFormat.qualifiers(e) {
+                            if let extra = ElementFormat.qualifiers(e, bands: bands) {
                                 Text(verbatim: extra).font(.fine).foregroundStyle(Palette.textSecondary)
                             }
                         }
@@ -348,11 +531,12 @@ enum ElementFormat {
         }
     }
 
-    /// Load, help and failure, when there are any: "+5 kg · Partner".
-    static func qualifiers(_ e: SetElement) -> String? {
+    /// Load, help and failure, when there are any: "+5 kg · Partner". A band
+    /// is named when it is kept here.
+    static func qualifiers(_ e: SetElement, bands: [String: Band] = [:]) -> String? {
         var parts: [String] = []
         if e.loadKg > 0 { parts.append(String(localized: "+\(e.loadKg.formatted(.number.precision(.fractionLength(0...2)))) kg")) }
-        if let a = e.assistance { parts.append(AssistanceKind.label(a.type)) }
+        if let a = e.assistance { parts.append(BandText.assistance(a, bands: bands) ?? AssistanceKind.label(a.type)) }
         if e.failed { parts.append(String(localized: "to failure")) }
         return parts.isEmpty ? nil : parts.joined(separator: " · ")
     }

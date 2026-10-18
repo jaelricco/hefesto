@@ -810,6 +810,30 @@ func (t *plannerTx) PlannedSession(ctx context.Context, userID, sessionID uuid.U
 	return p, int(row.OrderIndex), true, nil
 }
 
+// PlannedSessionAny reads a planned session of any of the user's plans, as
+// the core planned it.
+func (t *plannerTx) PlannedSessionAny(ctx context.Context, userID, sessionID uuid.UUID) (domain.PlannedSession, bool, error) {
+	if err := t.check(userID); err != nil {
+		return domain.PlannedSession{}, false, err
+	}
+	row, err := t.q.GetPlannedSessionAny(ctx, dbgen.GetPlannedSessionAnyParams{ID: sessionID, UserID: userID})
+	if errors.Is(err, pgx.ErrNoRows) {
+		return domain.PlannedSession{}, false, nil
+	}
+	if err != nil {
+		return domain.PlannedSession{}, false, fmt.Errorf("reading planned session: %w", err)
+	}
+	var p domain.Plan
+	if err := json.Unmarshal(row.Payload, &p); err != nil {
+		return domain.PlannedSession{}, false, fmt.Errorf("decoding plan of session %s: %w", sessionID, err)
+	}
+	i := int(row.OrderIndex)
+	if i >= len(p.Sessions) {
+		return domain.PlannedSession{}, false, fmt.Errorf("plan %s has no session %d", row.PlanID, i)
+	}
+	return p.Sessions[i], true, nil
+}
+
 // --------------------------------------------------------------- decisions
 
 // Recorded returns the recorded event of a trigger and source.

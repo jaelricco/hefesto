@@ -206,6 +206,9 @@ type sessionCreateIn struct {
 	IsRestDay    bool       `json:"is_rest_day"`
 	TemplateID   *uuid.UUID `json:"template_id"`
 	UpdatedAt    *time.Time `json:"updated_at"`
+	// PlannedSessionID comes with a session started offline (SessionPut);
+	// SessionCreate has no such field.
+	PlannedSessionID *uuid.UUID `json:"-"`
 }
 
 type sessionUpdateIn struct {
@@ -318,6 +321,7 @@ type setIn struct {
 	RPE               *float64    `json:"rpe"`
 	RIR               *int        `json:"rir"`
 	SIR               *int        `json:"sir_s"`
+	PlannedItemID     *uuid.UUID  `json:"planned_item_id"`
 	CompletedAt       *time.Time  `json:"completed_at"`
 	Notes             string      `json:"notes"`
 	UpdatedAt         *time.Time  `json:"updated_at"`
@@ -356,8 +360,8 @@ func (s setIn) toDomain(id, sessionID uuid.UUID) training.SetEntry {
 	out := training.SetEntry{
 		ID: id, SessionID: sessionID, BlockID: s.BlockID, OrderIndex: s.OrderIndex, RoundIndex: s.RoundIndex,
 		Kind: orDefault(s.Kind, "working"), IsPlanned: s.IsPlanned, RestAfterPlannedS: s.RestAfterPlannedS,
-		RestAfterActualS: s.RestAfterActualS, RPE: s.RPE, RIR: s.RIR, SIR: s.SIR, CompletedAt: s.CompletedAt, Notes: s.Notes,
-		Elements: make([]training.Element, len(s.Elements)),
+		RestAfterActualS: s.RestAfterActualS, RPE: s.RPE, RIR: s.RIR, SIR: s.SIR, PlannedItemID: s.PlannedItemID,
+		CompletedAt: s.CompletedAt, Notes: s.Notes, Elements: make([]training.Element, len(s.Elements)),
 	}
 	for i, e := range s.Elements {
 		el := training.Element{

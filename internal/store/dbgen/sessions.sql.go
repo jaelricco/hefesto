@@ -202,28 +202,31 @@ const insertSession = `-- name: InsertSession :one
 
 INSERT INTO workout_sessions (
     id, user_id, started_at, timezone, local_date, title, notes, bodyweight_kg,
-    is_rest_day, template_id, client_id, updated_at
+    is_rest_day, template_id, planned_session_id, client_id, updated_at
 ) VALUES (
     $1, $2, $3, $4, $5, $6, $7, $8,
-    $9, $10, $11, $12
+    $9, $10,
+    (SELECT ps.id FROM planned_sessions ps WHERE ps.id = $11::uuid AND ps.user_id = $2),
+    $12, $13
 )
 ON CONFLICT (id) DO NOTHING
 RETURNING id, user_id, started_at, ended_at, timezone, local_date, title, notes, perceived_fatigue, bodyweight_kg, status, is_rest_day, template_id, completed_at, client_id, updated_at, server_updated_at, server_seq, deleted_at, planned_session_id
 `
 
 type InsertSessionParams struct {
-	ID           uuid.UUID
-	UserID       uuid.UUID
-	StartedAt    time.Time
-	Timezone     string
-	LocalDate    pgtype.Date
-	Title        string
-	Notes        string
-	BodyweightKg pgtype.Numeric
-	IsRestDay    bool
-	TemplateID   *uuid.UUID
-	ClientID     *uuid.UUID
-	UpdatedAt    time.Time
+	ID               uuid.UUID
+	UserID           uuid.UUID
+	StartedAt        time.Time
+	Timezone         string
+	LocalDate        pgtype.Date
+	Title            string
+	Notes            string
+	BodyweightKg     pgtype.Numeric
+	IsRestDay        bool
+	TemplateID       *uuid.UUID
+	PlannedSessionID *uuid.UUID
+	ClientID         *uuid.UUID
+	UpdatedAt        time.Time
 }
 
 // Sessions -> blocks -> set entries -> set elements (+ assistance).
@@ -233,6 +236,8 @@ type InsertSessionParams struct {
 // sibling from taking its old position (the unique constraint cannot be
 // partial and deferrable at the same time).
 // ------------------------------------------------------------- sessions
+// A session started offline names its planned session (spec §10.5); one the
+// user has no row of is dropped, so the session stays a session of the log.
 func (q *Queries) InsertSession(ctx context.Context, arg InsertSessionParams) (WorkoutSession, error) {
 	row := q.db.QueryRow(ctx, insertSession,
 		arg.ID,
@@ -245,6 +250,7 @@ func (q *Queries) InsertSession(ctx context.Context, arg InsertSessionParams) (W
 		arg.BodyweightKg,
 		arg.IsRestDay,
 		arg.TemplateID,
+		arg.PlannedSessionID,
 		arg.ClientID,
 		arg.UpdatedAt,
 	)
@@ -1232,12 +1238,12 @@ func (q *Queries) UpsertSetElement(ctx context.Context, arg UpsertSetElementPara
 const upsertSetEntry = `-- name: UpsertSetEntry :one
 INSERT INTO set_entries AS s (
     id, user_id, session_id, block_id, order_index, round_index, kind, is_planned,
-    rest_after_planned_s, rest_after_actual_s, rpe, rir, sir_s, completed_at, notes,
+    rest_after_planned_s, rest_after_actual_s, rpe, rir, sir_s, planned_item_id, completed_at, notes,
     client_id, updated_at
 ) VALUES (
     $1, $2, $3, $4, $5, $6, $7, $8,
-    $9, $10, $11, $12, $13, $14, $15,
-    $16, $17
+    $9, $10, $11, $12, $13, $14, $15, $16,
+    $17, $18
 )
 ON CONFLICT (id) DO UPDATE SET
     block_id = EXCLUDED.block_id, order_index = EXCLUDED.order_index,
@@ -1264,6 +1270,7 @@ type UpsertSetEntryParams struct {
 	Rpe               pgtype.Numeric
 	Rir               *int16
 	SirS              *int16
+	PlannedItemID     *uuid.UUID
 	CompletedAt       *time.Time
 	Notes             string
 	ClientID          *uuid.UUID
@@ -1295,6 +1302,8 @@ type UpsertSetEntryRow struct {
 	Inserted          bool
 }
 
+// planned_item_id is taken when the set is created and kept after: the
+// planner relinks it when a new plan replaces the item (ADR 0017).
 func (q *Queries) UpsertSetEntry(ctx context.Context, arg UpsertSetEntryParams) (UpsertSetEntryRow, error) {
 	row := q.db.QueryRow(ctx, upsertSetEntry,
 		arg.ID,
@@ -1310,6 +1319,7 @@ func (q *Queries) UpsertSetEntry(ctx context.Context, arg UpsertSetEntryParams) 
 		arg.Rpe,
 		arg.Rir,
 		arg.SirS,
+		arg.PlannedItemID,
 		arg.CompletedAt,
 		arg.Notes,
 		arg.ClientID,

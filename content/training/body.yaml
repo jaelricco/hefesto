@@ -467,6 +467,31 @@ red_flags:
   advice: Lass das bei einer Fachperson anschauen. Bis dahin pausiert die App Übungen, bei denen sich
     der Rücken nach hinten biegt.
   sources: [D-82, D-84]
+# The six further screening questions of the onboarding (onboarding.md §3.7),
+# in the order the API takes their answers. Only the first is backed by the
+# research [F-41]; the others follow the PAR-Q+ concept [F-42, F-43] in own
+# words. Whether the wording counts as an adaptation of PAR-Q+ is a legal
+# question (OE-3). A yes recommends an assessment (SAFE-04); the exertion
+# question is RF-10.
+screening:
+- id: SCR-01
+  question: Hast du eine bekannte Herz-, Kreislauf-, Stoffwechsel- oder Nierenerkrankung?
+  sources: [F-41]
+- id: SCR-02
+  question: Hat dir eine Ärztin oder ein Arzt geraten, dein Training einzuschränken?
+  sources: [F-42, F-43]
+- id: SCR-03
+  question: Nimmst du Medikamente, die deine Belastbarkeit beeinflussen?
+  sources: [F-42, F-43]
+- id: SCR-04
+  question: Bist du schwanger?
+  sources: [F-42, F-43]
+- id: SCR-05
+  question: Hast du eine andere Erkrankung, die dein Training beeinflusst?
+  sources: [F-42, F-43]
+- id: SCR-06
+  question: Hast du ein Knochen- oder Gelenkproblem, das sich durch Training verschlechtern könnte?
+  sources: [F-42, F-43]
 prehab:
 - region: shoulder_front
   activation: [band-external-rotation, push-up-plus]

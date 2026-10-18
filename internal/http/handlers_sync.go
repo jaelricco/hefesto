@@ -66,6 +66,7 @@ func (h *handlers) pushChanges(w http.ResponseWriter, r *http.Request) error {
 			return 0, nil, err // nothing applied; the key is released and the request may be fixed
 		}
 		out := syncPushOut{Results: make([]syncOpResultOut, len(ops))}
+		applied := false
 		for i, op := range ops {
 			res, err := h.applySyncOp(r, op)
 			if err != nil {
@@ -73,6 +74,10 @@ func (h *handlers) pushChanges(w http.ResponseWriter, r *http.Request) error {
 			}
 			res.Index = i
 			out.Results[i] = res
+			applied = applied || res.Status == "applied"
+		}
+		if applied {
+			h.linkOfflineStarts(r.Context(), principalFrom(r.Context()).UserID)
 		}
 		body, err := json.Marshal(out)
 		if err != nil {
@@ -292,7 +297,7 @@ func (h *handlers) putSessionState(ctx context.Context, wr store.Writer, id uuid
 
 	create := sessionCreateIn{
 		ID: id, StartedAt: in.StartedAt, Timezone: in.Timezone, Title: in.Title.Value, Notes: in.Notes.Value,
-		IsRestDay: in.IsRestDay.Value, TemplateID: in.TemplateID,
+		IsRestDay: in.IsRestDay.Value, TemplateID: in.TemplateID, PlannedSessionID: in.PlannedSessionID,
 	}
 	if in.BodyweightKg.Set {
 		create.BodyweightKg = in.BodyweightKg.Ptr()
