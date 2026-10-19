@@ -194,6 +194,32 @@ documents are in German.
   - Logger and history name a set's band. The demo holds two bands of its
     own; a new screen (`band`) joins the screenshots.
   - Not built: bands offline, editing a band, the anchor.
+- **The plan's settings in the iOS app (this checkpoint, ADR 0029):**
+  - Goals, time, equipment and body weight change on the onboarding's own
+    pages, reached from the account menu once there is a plan.
+  - Only what changed is sent, goals and profile apart; the profile sends
+    back what the screen does not edit, since the server clears missing
+    optional fields. Each change plans the week anew.
+  - A new demo screen (`settings`) joins the screenshots.
+- **The body in the iOS app (this checkpoint, ADR 0028):**
+  - Symptoms during training, pain reports, a region's warning signs and a
+    professional's clearance go to the server at once, each with its own id;
+    a retry after a lost answer keeps it. The plan and the regions are
+    fetched again after each.
+  - A new screen, Body, shows every region with a complaint or a
+    constraint: its state as what the plan does, a rest until a date, a
+    recommended assessment, a professional's restrictions and the
+    disclaimer, verbatim. Today leads there; the logger reports pain or
+    symptoms from the session.
+  - A pain report asks what the planner reads at its moment (spec §8.6).
+    When the planner asks for warning signs, they open next.
+  - A stopped plan offers the clearance of training as a whole, except
+    for a minor (SAFE-07). Until now no stop could be lifted in the app.
+  - The demo holds two regions; three new screens (`body`, `pain`,
+    `symptoms`) join the screenshots.
+  - Not built: changing the consent, the questions before and after a
+    session on monitored regions, the list of one's pain reports, the sync
+    of pain reports.
 - **Starting a planned session offline (this checkpoint, ADR 0027):**
   - Sync now carries `planned_session_id` on a session and
     `planned_item_id` on a set. The server takes them when it creates the
@@ -272,7 +298,9 @@ documents are in German.
   plan's foundation in the iOS app in ADR 0021 (U-69 to U-71), the plan's
   screens in ADR 0022 (U-72 to U-75), the onboarding in the app in
   ADR 0023 (U-76 to U-79), the band choice in ADR 0024 (U-80), the
-  offline start in ADR 0027 (U-81 to U-85), and these findings in spec §15.4:
+  offline start in ADR 0027 (U-81 to U-85), the body in the app in
+  ADR 0028 (U-86 to U-89), the plan's settings in ADR 0029 (U-90), and
+  these findings in spec §15.4:
   - sets with partner or machine assistance reach neither the capacities
     nor the load history;
   - a set performed offline after the server replaced or removed it is
@@ -296,7 +324,10 @@ documents are in German.
   - the planner does not tell bands apart: a light and a strong band count
     as the same band capacity of an exercise (ADR 0024);
   - the offline start's limits: a start split over two pushes, two devices
-    starting the same session offline, no check-in offline (ADR 0027).
+    starting the same session offline, no check-in offline (ADR 0027);
+  - a professional's clearance is the athlete's word, and symptoms reported
+    without a connection pause the plan only once they reach the server
+    (ADR 0028).
 - **Not yet built:**
   - the sync of pain reports;
   - a record of the consent text agreed to;

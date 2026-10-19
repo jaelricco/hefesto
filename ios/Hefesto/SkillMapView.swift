@@ -484,13 +484,17 @@ struct ProgressBadge: View {
 
     @ViewBuilder
     private func item(_ title: Text, icon: String, iconTint: Color, textTint: Color) -> some View {
+        // In a bar, which caps its text: a long press shows it large.
         let label = HStack(spacing: 5) {
             Image(systemName: icon).font(.system(size: 12, weight: .semibold)).foregroundStyle(iconTint)
             title.foregroundStyle(textTint)
         }
+        .accessibilityShowsLargeContentViewer()
         switch style {
         case .chips:
+            // One line: "340 XP" wrapped to "340" over "XP" in German.
             label
+                .fixedSize()
                 .font(Typeface.condensed(16, .semibold, relativeTo: .subheadline))
                 .padding(.horizontal, 10)
                 .frame(minHeight: 32)

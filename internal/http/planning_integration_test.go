@@ -781,6 +781,46 @@ func TestOfflineStart(t *testing.T) {
 	if s := a.call("GET", "/v1/sessions/"+stray, u.access, nil).ok(200, "Session"); s["planned_session_id"] != nil {
 		t.Errorf("unknown planned session kept: %v", s["planned_session_id"])
 	}
+
+	// Completed offline, in the same push: the planned session is completed
+	// and the planner has the session.
+	w := onboarded(t, a, "offline-completed@example.com")
+	day := a.call("GET", "/v1/me/plan", w.access, nil).ok(200, "TrainingPlan")["sessions"].([]any)[0].(map[string]any)
+	logID, sets = offline(w, "offline-4", day["id"].(string), day)
+	ops := []map[string]any{}
+	for i, id := range sets {
+		set := a.call("GET", "/v1/sessions/"+logID, w.access, nil).ok(200, "Session")["blocks"].([]any)[0].(map[string]any)["sets"].([]any)[i].(map[string]any)
+		el := set["elements"].([]any)[0].(map[string]any)
+		ops = append(ops, map[string]any{"op": "put", "entity": "set", "id": id, "session_id": logID, "data": map[string]any{
+			"block_id": set["block_id"], "order_index": set["order_index"], "kind": set["kind"], "is_planned": false,
+			"completed_at": at(started.Add(time.Duration(i+1) * time.Minute)), "updated_at": at(started.Add(time.Hour)),
+			"elements": []any{map[string]any{"id": el["id"], "exercise_id": el["exercise_id"], "measure": el["measure"],
+				"reps": el["reps"], "hold_seconds": el["hold_seconds"]}}}})
+	}
+	ops = append(ops, map[string]any{"op": "complete", "entity": "session", "id": logID,
+		"data": map[string]any{"completed_at": at(started.Add(time.Hour))}})
+	for _, r := range results(t, a.push(w, "offline-5", ops...).ok(200, "SyncPushResult")) {
+		if r["status"] != "applied" {
+			t.Fatalf("completing offline: %v", r)
+		}
+	}
+	now = a.call("GET", "/v1/me/plan", w.access, nil).ok(200, "TrainingPlan")["sessions"].([]any)[0].(map[string]any)
+	if now["status"] != "completed" || now["workout_session_id"] != logID {
+		t.Errorf("planned session after an offline completion: %v %v", now["status"], now["workout_session_id"])
+	}
+
+	// After a stop the day has no session: the push leaves the draft its
+	// performed sets only.
+	x := onboarded(t, a, "offline-stopped@example.com")
+	day = a.call("GET", "/v1/me/plan", x.access, nil).ok(200, "TrainingPlan")["sessions"].([]any)[0].(map[string]any)
+	a.call("POST", "/v1/me/symptoms", x.access, map[string]any{"id": newID()}).ok(200, "PlanEventResult")
+	logID, _ = offline(x, "offline-6", day["id"].(string), day)
+	left := a.call("GET", "/v1/sessions/"+logID, x.access, nil).ok(200, "Session")
+	for _, b := range left["blocks"].([]any) {
+		if n := len(b.(map[string]any)["sets"].([]any)); n != 0 {
+			t.Errorf("a stopped plan left %d open sets in the offline draft", n)
+		}
+	}
 }
 
 // A tired check-in at the start makes the session lighter; the planned

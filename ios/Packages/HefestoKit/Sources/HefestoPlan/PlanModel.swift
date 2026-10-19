@@ -70,6 +70,13 @@ public final class PlanModel {
         show(try db.keptPlan(on: today))
     }
 
+    /// Forgets the week shown, on sign-out (REVIEW_DECISIONS D-16): the next
+    /// account's plan comes with its own refresh.
+    public func forget() {
+        week = nil
+        status = .ready
+    }
+
     /// Fetches this week's plan. What the planner says becomes the status;
     /// a network failure leaves the plan kept here as it is.
     public func refresh() async {

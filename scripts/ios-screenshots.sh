@@ -20,7 +20,7 @@ rm -f "$out"/*.png
 device_name="Hefesto Screenshots"
 bundle_id="fit.hefesto.ios"
 # DemoScreen's raw values, in the order a reviewer walks through the app.
-screens=(today plansession checkin offlinestart planned target onboarding standing complaint logger composer reserve band finish map peek detail history session stats celebration signin)
+screens=(today plansession checkin offlinestart planned target onboarding standing complaint body pain symptoms settings logger composer reserve band finish map peek detail history session stats celebration signin)
 
 # The newest installed iOS runtime, and the first of these iPhones it offers.
 runtime=$(xcrun simctl list runtimes available | grep -E '^iOS ' | tail -1 | sed -E 's/.* - ([^ ]+)$/\1/')

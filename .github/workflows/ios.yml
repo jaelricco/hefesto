@@ -115,14 +115,23 @@ jobs:
             -resultBundlePath ".derived/a11y-$GITHUB_RUN_ID.xcresult" 2>&1 | tee test.log | grep -E 'error:|Test Case|\*\* TEST' || true
           if ! grep -q '\*\* TEST SUCCEEDED \*\*' test.log; then
             # Each finding also becomes an annotation, readable from the API
-            # without the log. GitHub keeps ten error annotations per step,
-            # so there is one per test, listing its findings.
-            grep -E ': error: ' test.log | sed -E 's/^[^:]*:[0-9]+: error: //' | sort -u > findings.txt || true
+            # without the log, one line each: "de | band | Text clipped | …".
+            # GitHub keeps ten annotations per level per step and cuts each at
+            # about 4 KB, so the list is chunked: errors, then warnings, then
+            # notices.
+            grep -E ': error: ' test.log | sed -E 's/^[^:]*:[0-9]+: error: //' | sort -u \
+              | sed -E 's/^-\[[^ ]* testEveryScreenAtTheLargestTextSize\] : (failed - )?/xxl | /;
+                       s/^-\[[^ ]* testEveryScreenInGerman\] : (failed - )?/de | /;
+                       s/^-\[[^ ]* testEveryScreen\] : (failed - )?/en | /' > findings.txt || true
             echo "$(wc -l < findings.txt) findings"
-            for t in testEveryScreen testEveryScreenAtTheLargestTextSize testEveryScreenInGerman; do
-              body=$(grep -F " $t]" findings.txt | sed -E 's/^-\[[^]]*\] : //; s/%/%25/g' | head -80 \
-                | awk '{ printf "%s%%0A", $0 }')
-              if [ -n "$body" ]; then echo "::error title=Accessibility audit: $t::$body"; fi
-            done
+            awk '{ gsub(/%/, "%25"); if (length(c) + length($0) > 3600) { print c; c = "" } c = c $0 "%0A" }
+                 END { if (c != "") print c }' findings.txt > chunks.txt
+            total=$(wc -l < chunks.txt | tr -d ' ')
+            i=0
+            while IFS= read -r body; do
+              i=$((i + 1))
+              level=error; [ "$i" -gt 10 ] && level=warning; [ "$i" -gt 20 ] && level=notice
+              echo "::$level title=Accessibility audit $i/$total::$body"
+            done < chunks.txt
             exit 1
           fi

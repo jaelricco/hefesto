@@ -16,6 +16,10 @@ struct LoggerView: View {
     @State private var finishing = false
     @State private var error: String?
     @State private var loggedCount = 0
+    /// Pain or symptoms reported from the session (ADR 0028).
+    @State private var bodySheet: BodySheet?
+    @State private var bodyOutcome: BodyOutcome?
+    @State private var askingFlags: RegionRoute?
 
     private var isDraft: Bool { logger?.session.status == "draft" }
 
@@ -35,9 +39,20 @@ struct LoggerView: View {
                     Button("Close") { dismiss() }
                 }
                 ToolbarItem(placement: .principal) {
+                    // Bars cap their text; a long press shows it large.
                     Text(verbatim: logger.map { title($0.session) } ?? "").font(.navTitle)
+                        .accessibilityShowsLargeContentViewer()
                 }
                 if isDraft {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Menu {
+                            Button("Report pain", systemImage: "hand.raised") { bodySheet = .pain }
+                            Button("Symptoms during training", systemImage: "heart.text.square") { bodySheet = .symptoms }
+                        } label: {
+                            Image(systemName: "cross.case")
+                        }
+                        .accessibilityLabel("Pain and symptoms")
+                    }
                     ToolbarItem(placement: .confirmationAction) {
                         Button("Finish") { finishing = true }.fontWeight(.semibold)
                     }
@@ -107,10 +122,40 @@ struct LoggerView: View {
             FinishSheet { fatigue in finish(fatigue) }
                 .presentationDetents([.medium, .large])
         }
+        .sheet(item: $bodySheet) { sheet in
+            switch sheet {
+            case .pain: PainReportSheet(sessionId: sessionId, initialTimepoint: "during") { reported($0) }
+            case .symptoms: SymptomsSheet { reported($0) }
+            }
+        }
+        .sheet(item: $askingFlags) { route in
+            RedFlagSheet(regionId: route.id) { bodyOutcome = $0 }
+        }
+        .alert(
+            "Sent", isPresented: Binding(get: { bodyOutcome != nil }, set: { if !$0 { bodyOutcome = nil } }),
+            presenting: bodyOutcome
+        ) { _ in
+            Button("OK") { bodyOutcome = nil }
+        } message: { outcome in
+            Text(verbatim: BodyText.summary(outcome))
+        }
         .alert("Something went wrong", isPresented: .constant(error != nil)) {
             Button("OK") { error = nil }
         } message: {
             Text(verbatim: error ?? "")
+        }
+    }
+
+    /// What a report changed. The planner may ask a region's warning signs;
+    /// the next sheet opens once this one is gone.
+    private func reported(_ outcome: BodyOutcome) {
+        guard let region = outcome.askRedFlags.first else {
+            bodyOutcome = outcome
+            return
+        }
+        Task {
+            try? await Task.sleep(for: .milliseconds(600))
+            askingFlags = RegionRoute(id: region)
         }
     }
 
@@ -254,6 +299,7 @@ struct LoggerView: View {
         attempt {
             try logger.perform(plannedSet: planned.setId, elements: drafts, rir: reserve.rir, sirS: reserve.sirS)
             loggedCount += 1
+            AccessibilityNotification.Announcement(String(localized: "Set logged")).post()
             if let end = logger.rest?.endsAt { RestNotifier.schedule(at: end) }
         }
     }
@@ -633,6 +679,7 @@ struct FinishSheet: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     Text("How hard did it feel?").font(.displayTitle).foregroundStyle(Palette.text)
+                        .fixedSize(horizontal: false, vertical: true)
                     // Fewer columns at the largest text sizes, so numbers are not clipped.
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8),
                                              count: typeSize.isAccessibilitySize ? 3 : 5), spacing: 8) {

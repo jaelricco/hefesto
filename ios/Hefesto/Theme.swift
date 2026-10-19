@@ -66,10 +66,13 @@ enum Typeface {
         return .custom(name, size: size, relativeTo: style)
     }
 
-    static func uiCondensed(_ size: CGFloat, bold: Bool, relativeTo style: UIFont.TextStyle) -> UIFont {
+    /// For bar titles: it scales with Dynamic Type up to `maximum`, beyond
+    /// which a bar would clip it (bars show the Large Content Viewer instead).
+    static func uiCondensed(_ size: CGFloat, bold: Bool, relativeTo style: UIFont.TextStyle,
+                            maximum: CGFloat) -> UIFont {
         let base = UIFont(name: bold ? "BarlowCondensed-Bold" : "BarlowCondensed-SemiBold", size: size)
             ?? .systemFont(ofSize: size, weight: bold ? .bold : .semibold)
-        return UIFontMetrics(forTextStyle: style).scaledFont(for: base)
+        return UIFontMetrics(forTextStyle: style).scaledFont(for: base, maximumPointSize: maximum)
     }
 }
 
@@ -225,10 +228,10 @@ enum Appearance {
         let title = UIColor(Palette.text)
         let nav = UINavigationBar.appearance()
         nav.titleTextAttributes = [
-            .font: Typeface.uiCondensed(20, bold: false, relativeTo: .headline), .foregroundColor: title,
+            .font: Typeface.uiCondensed(20, bold: false, relativeTo: .headline, maximum: 24), .foregroundColor: title,
         ]
         nav.largeTitleTextAttributes = [
-            .font: Typeface.uiCondensed(40, bold: true, relativeTo: .largeTitle), .foregroundColor: title,
+            .font: Typeface.uiCondensed(40, bold: true, relativeTo: .largeTitle, maximum: 52), .foregroundColor: title,
         ]
 
         if #unavailable(iOS 26) {

@@ -19,6 +19,12 @@ struct TodayView: View {
     /// The log session a start returned, opened once the check-in is gone.
     @State private var started: String?
     @State private var onboarding = false
+    /// The body screen, and the sheet it opens on in a demo.
+    @State private var showingBody = false
+    @State private var showingSettings = false
+    @State private var bodyOpening: BodySheet?
+    @State private var confirmingClearance = false
+    @State private var clearanceFailure: String?
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -33,6 +39,7 @@ struct TodayView: View {
                     if let progress { ProgressTiles(progress: progress).padding(.horizontal, 16).padding(.top, 14) }
                     plan.padding(.horizontal, 16).padding(.top, 16)
                     actions.padding(.horizontal, 16).padding(.top, 16)
+                    bodyRow.padding(.horizontal, 16).padding(.top, 12)
                     if let week = model.plan.week, !week.stopped {
                         CapsLabel("This week").padding(.horizontal, 20).padding(.top, 28).padding(.bottom, 10)
                         PlanWeekList(week: week, today: model.plan.today) { path.append(PlanRoute(sessionId: $0.id)) }
@@ -47,6 +54,16 @@ struct TodayView: View {
             .refreshable { await model.syncNow() }
             .navigationDestination(for: PlanRoute.self) { route in
                 PlanSessionView(route: route, onStart: { checkingIn = $0 }, onContinue: resume)
+            }
+            .navigationDestination(isPresented: $showingBody) { BodyView(opening: bodyOpening) }
+            .navigationDestination(isPresented: $showingSettings) { PlanSettingsView() }
+            .confirmationDialog(
+                "Did a professional clear you to train?", isPresented: $confirmingClearance, titleVisibility: .visible
+            ) {
+                Button("Yes, I was cleared") { Task { await clearTraining() } }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("Confirm only what a doctor told you. Training then starts again, carefully.")
             }
             .fullScreenCover(item: $open) { LoggerView(sessionId: $0.id) }
             .fullScreenCover(isPresented: $onboarding) { OnboardingView() }
@@ -67,6 +84,13 @@ struct TodayView: View {
                 guard let demo = model.demo else { return }
                 try? model.plan.reload()
                 if demo.onboardingPage != nil { onboarding = true }
+                switch demo.screen {
+                case .body: showingBody = true
+                case .pain: bodyOpening = .pain; showingBody = true
+                case .symptoms: bodyOpening = .symptoms; showingBody = true
+                case .settings: showingSettings = true
+                default: break
+                }
                 if let id = demo.opensSessionId { open = OpenSession(id: id) }
                 if let today = model.plan.todaySession {
                     if demo.screen == .checkin || demo.screen == .offlinestart { checkingIn = today }
@@ -95,6 +119,9 @@ struct TodayView: View {
             Spacer()
             SyncBadge(pending: pending)
             Menu {
+                if model.plan.week != nil {
+                    Button("Plan settings", systemImage: "slider.horizontal.3") { showingSettings = true }
+                }
                 Button("Sync now", systemImage: "arrow.triangle.2.circlepath") {
                     Task { await model.syncNow() }
                 }
@@ -131,12 +158,53 @@ struct TodayView: View {
             OnboardingCard { onboarding = true }
         } else if let week = model.plan.week {
             if week.stopped {
-                PlanStoppedCard(week: week)
+                PlanStoppedCard(week: week, onClearance: clearance(week))
+                if let clearanceFailure {
+                    Text(verbatim: clearanceFailure).font(.detailText).foregroundStyle(Palette.text)
+                }
             } else {
                 TodayPlanCard(
                     session: model.plan.todaySession, onStart: { checkingIn = $0 }, onContinue: resume,
                     onOpen: { path.append(PlanRoute(sessionId: $0.id)) })
             }
+        }
+    }
+
+    /// The body: report pain or symptoms, and how each region stands.
+    private var bodyRow: some View {
+        Button {
+            bodyOpening = nil
+            showingBody = true
+        } label: {
+            HStack {
+                Label("Body: pain and symptoms", systemImage: "figure.arms.open")
+                    .font(.bodyMedium)
+                    .foregroundStyle(Palette.text)
+                Spacer()
+                Image(systemName: "chevron.right").foregroundStyle(Palette.textSecondary)
+            }
+            .frame(minHeight: 44)
+            .contentShape(.rect)
+        }
+        .buttonStyle(.plain)
+        .padding(.horizontal, 16)
+        .background(Palette.surface, in: .rect(cornerRadius: 16))
+    }
+
+    /// The clearance a stop offers; a minor's stop (SAFE-07) is not lifted
+    /// by one.
+    private func clearance(_ week: PlanWeek) -> (() -> Void)? {
+        if week.reasons.contains(where: { $0.ruleId == "SAFE-07" }) { return nil }
+        return { confirmingClearance = true }
+    }
+
+    /// A professional cleared the athlete: the stop ends (spec §8.3).
+    private func clearTraining() async {
+        clearanceFailure = nil
+        do {
+            _ = try await model.body.confirmClearance(region: nil)
+        } catch {
+            clearanceFailure = BodyText.failure(error)
         }
     }
 

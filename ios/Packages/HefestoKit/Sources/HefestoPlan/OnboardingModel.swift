@@ -51,6 +51,14 @@ public final class OnboardingModel {
         return String(format: "%04d-%02d-%02d", c.year ?? 0, c.month ?? 0, c.day ?? 0)
     }
 
+    /// Forgets the answers and the result, on sign-out: the next account
+    /// starts empty. The catalogue is content, not the athlete's, and stays.
+    public func forget() {
+        form = OnboardingForm()
+        outcome = nil
+        sent = nil
+    }
+
     /// Fetches the catalogue once.
     public func load() async throws {
         guard catalogue == nil else { return }
