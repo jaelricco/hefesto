@@ -13,7 +13,7 @@ final class AccessibilityAuditTests: XCTestCase {
     private static let screens = [
         "today", "plansession", "checkin", "offlinestart", "planned", "target",
         "onboarding", "standing", "complaint", "body", "pain", "symptoms", "settings",
-        "logger", "composer", "reserve", "band", "finish", "map", "peek", "detail",
+        "logger", "composer", "reserve", "band", "finish", "painafter", "morning", "map", "peek", "detail",
         "history", "session", "stats", "celebration", "signin",
     ]
 

@@ -84,9 +84,8 @@ func bodyModel(_ server: ScriptedServer) throws -> (BodyModel, AppDatabase) {
         let (model, _) = try bodyModel(server)
         let at = Date(timeIntervalSince1970: 1_790_676_000)
 
-        let reported = try await model.reportPain([PainReport(
+        let outcome = try await model.reportPain([PainReport(
             region: "elbow_inner", timepoint: "during", nrs: 6, at: at, suddenSharp: true, sessionId: "s-1")])
-        let outcome = reported.outcome
 
         let sent = try #require(server.requests("reportPain").first?.json)
         #expect(sent["region"] as? String == "elbow_inner")
@@ -99,7 +98,7 @@ func bodyModel(_ server: ScriptedServer) throws -> (BodyModel, AppDatabase) {
         #expect(outcome.notes.map(\.text) == ["Answer them."])
         #expect(!outcome.trainingStopped)
         #expect(server.requests("listMyRegions").count == 1, "the regions are fetched again")
-        #expect(!reported.waiting)
+        #expect(!outcome.waiting)
     }
 
     @Test func painWithoutAConnectionWaitsForTheNextSync() async throws {

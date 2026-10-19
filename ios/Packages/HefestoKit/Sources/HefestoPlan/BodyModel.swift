@@ -57,6 +57,9 @@ public struct BodyOutcome: Sendable, Hashable {
     public var trainingStopped: Bool
     /// The reasons of the changes, verbatim.
     public var notes: [PlanNote]
+    /// Some pain reports wait here for a connection; the next sync sends
+    /// them (ADR 0030).
+    public var waiting = false
 
     init(_ r: Components.Schemas.PlanEventResult) {
         self.init([r])
@@ -73,13 +76,6 @@ public struct BodyOutcome: Sendable, Hashable {
     }
 }
 
-/// What reporting pain came to (ADR 0030).
-public struct PainOutcome: Sendable, Hashable {
-    /// What the reports the server took now changed.
-    public var outcome: BodyOutcome
-    /// Some reports wait here for a connection; the next sync sends them.
-    public var waiting: Bool
-}
 
 public enum BodyModelError: Error, Equatable {
     /// The model has no server, as in a demo.
@@ -164,7 +160,7 @@ public final class BodyModel {
     /// Reports pain. The reports are kept here first and go at once; those
     /// that cannot go yet wait for the next sync (ADR 0030). A report the
     /// server refuses for good, as without consent, throws its reason.
-    public func reportPain(_ reports: [PainReport]) async throws -> PainOutcome {
+    public func reportPain(_ reports: [PainReport]) async throws -> BodyOutcome {
         guard let sync else { throw BodyModelError.noServer }
         let sent = try await sync.sendPain(reports)
         if !sent.results.isEmpty {
@@ -174,7 +170,9 @@ public final class BodyModel {
         if let refused = sent.kept.lazy.compactMap({ sent.refused[$0] }).first {
             throw refused
         }
-        return PainOutcome(outcome: BodyOutcome(sent.results), waiting: sent.waiting > 0)
+        var outcome = BodyOutcome(sent.results)
+        outcome.waiting = sent.waiting > 0
+        return outcome
     }
 
     /// Answers the region's warning-sign questions, follow-ups included.

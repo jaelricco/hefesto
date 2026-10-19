@@ -26,6 +26,19 @@ struct TodayView: View {
     @State private var bodyOpening: BodySheet?
     @State private var confirmingClearance = false
     @State private var clearanceFailure: String?
+    /// Warning signs the planner asked for after the pain before a session
+    /// (ADR 0030): asked before the log opens.
+    @State private var flagsBeforeStart: RegionRoute?
+    /// Why the pain before a session was refused; said before the log opens.
+    @State private var failureBeforeStart: String?
+    @State private var askingFlags: RegionRoute?
+    /// What answering pain questions changed.
+    @State private var painOutcome: BodyOutcome?
+    /// The morning question about yesterday's session, and the sheet for it.
+    @State private var morning: PainQuestion?
+    @State private var answeringMorning: PainQuestion?
+    /// The log session whose morning question was put aside for the day.
+    @AppStorage("fit.hefesto.morningPainLater") private var morningLater = ""
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -38,6 +51,11 @@ struct TodayView: View {
                         .padding(.horizontal, 20)
                         .accessibilityAddTraits(.isHeader)
                     if let progress { ProgressTiles(progress: progress).padding(.horizontal, 16).padding(.top, 14) }
+                    if let morning, morning.sessionId != morningLater {
+                        MorningPainCard(question: morning, onAnswer: { answeringMorning = morning },
+                                        onLater: { morningLater = morning.sessionId })
+                            .padding(.horizontal, 16).padding(.top, 16)
+                    }
                     plan.padding(.horizontal, 16).padding(.top, 16)
                     actions.padding(.horizontal, 16).padding(.top, 16)
                     bodyRow.padding(.horizontal, 16).padding(.top, 12)
@@ -71,9 +89,26 @@ struct TodayView: View {
             .sheet(item: $checkingIn, onDismiss: openStarted) { session in
                 CheckInSheet(
                     session: session,
-                    onStart: { sleep, fatigue in await start(session, sleepHours: sleep, fatigue: fatigue) },
-                    onStartOffline: { startOffline(session) },
+                    painRegions: model.plan.painRegions(for: session),
+                    onStart: { sleep, fatigue, pain in
+                        await start(session, sleepHours: sleep, fatigue: fatigue, pain: pain)
+                    },
+                    onStartOffline: { pain in startOffline(session, pain: pain) },
                     initiallyOffline: model.demo?.screen == .offlinestart)
+            }
+            .sheet(item: $askingFlags, onDismiss: openStarted) { route in
+                RedFlagSheet(regionId: route.id) { painOutcome = $0 }
+            }
+            .sheet(item: $answeringMorning, onDismiss: findMorning) { question in
+                MorningPainSheet(question: question) { reported($0) }
+            }
+            .alert(
+                painOutcome?.waiting == true ? "Kept" : "Sent", isPresented: Binding(get: { painOutcome != nil && askingFlags == nil }, set: { if !$0 { painOutcome = nil } }),
+                presenting: painOutcome
+            ) { _ in
+                Button("OK") { painOutcome = nil }
+            } message: { outcome in
+                Text(verbatim: BodyText.summary(outcome))
             }
             .alert("Something went wrong", isPresented: .constant(error != nil)) {
                 Button("OK") { error = nil }
@@ -99,7 +134,12 @@ struct TodayView: View {
                 }
             }
             .task {
-                do { for try await s in model.db.observeRecentSessions() { sessions = s } } catch {}
+                do {
+                    for try await s in model.db.observeRecentSessions() {
+                        sessions = s
+                        findMorning()
+                    }
+                } catch {}
             }
             .task {
                 do { for try await n in model.db.observePendingOpCount() { pending = n } } catch {}
@@ -318,10 +358,19 @@ struct TodayView: View {
     /// goes first, so the plan adapts to the latest log. Says why when the
     /// start did not happen; without a connection the athlete may start
     /// without the server. A demo never has one.
-    private func start(_ session: PlanSession, sleepHours: Double?, fatigue: Int?) async -> StartFailure? {
+    private func start(
+        _ session: PlanSession, sleepHours: Double?, fatigue: Int?, pain: [String: PainAnswer] = [:]
+    ) async -> StartFailure? {
+        failureBeforeStart = nil
         await model.syncNow()
         do {
-            started = try await model.plan.start(session, sleepHours: sleepHours, fatigue: fatigue)
+            let id = try await model.plan.start(session, sleepHours: sleepHours, fatigue: fatigue)
+            started = id
+            // The pain before the session goes with it (ADR 0030); warning
+            // signs the planner asks for come before the log.
+            if let outcome = await reportBefore(session, logSessionId: id, pain: pain) {
+                flagsBeforeStart = outcome.askRedFlags.first.map(RegionRoute.init)
+            }
             checkingIn = nil
             return nil
         } catch PlanStartError.offline, PlanStartError.noServer {
@@ -332,14 +381,50 @@ struct TodayView: View {
     }
 
     /// Starts a planned session here, as planned and without the check-in
-    /// (ADR 0027). The next sync takes it to the server.
-    private func startOffline(_ session: PlanSession) -> String? {
+    /// (ADR 0027). The next sync takes it to the server, and the pain
+    /// answers with it.
+    private func startOffline(_ session: PlanSession, pain: [String: PainAnswer] = [:]) -> String? {
         do {
-            started = try model.plan.startOffline(session)
+            let id = try model.plan.startOffline(session)
+            started = id
+            Task { await reportBefore(session, logSessionId: id, pain: pain) }
             checkingIn = nil
             return nil
         } catch {
             return PlanStartMessage.text(error)
+        }
+    }
+
+    /// Sends the pain before a session; reports that cannot go yet wait for
+    /// the next sync. A refusal is said before the log opens.
+    @discardableResult
+    private func reportBefore(_ session: PlanSession, logSessionId: String, pain: [String: PainAnswer]) async -> BodyOutcome? {
+        guard let question = model.plan.beforeQuestion(for: session, logSessionId: logSessionId) else { return nil }
+        let reports = question.reports(pain, at: Date())
+        guard !reports.isEmpty else { return nil }
+        do {
+            return try await model.body.reportPain(reports)
+        } catch {
+            failureBeforeStart = BodyText.failure(error)
+            return nil
+        }
+    }
+
+    /// The morning question, unless answered or yesterday had none.
+    private func findMorning() {
+        morning = model.demo == nil || model.demo?.screen == .morning ? model.plan.morningQuestion() : nil
+    }
+
+    /// What the morning answers changed. The planner may ask a region's
+    /// warning signs; their sheet opens once this one is gone.
+    private func reported(_ outcome: BodyOutcome) {
+        guard let region = outcome.askRedFlags.first else {
+            painOutcome = outcome
+            return
+        }
+        Task {
+            try? await Task.sleep(for: .milliseconds(600))
+            askingFlags = RegionRoute(id: region)
         }
     }
 
@@ -359,9 +444,25 @@ struct TodayView: View {
         }
     }
 
+    /// Opens the log of a session just started, once the warning signs
+    /// asked before it are answered; not if they stopped training.
     private func openStarted() {
+        if let flags = flagsBeforeStart {
+            flagsBeforeStart = nil
+            askingFlags = flags
+            return
+        }
         guard let id = started else { return }
         started = nil
+        // The session is started; Today resumes it once the refusal is read.
+        if let failure = failureBeforeStart {
+            failureBeforeStart = nil
+            error = failure
+            return
+        }
+        // A stop says why in the alert; the advice of a yes is in the sheet.
+        if painOutcome?.trainingStopped == true { return }
+        painOutcome = nil
         open = OpenSession(id: id)
     }
 

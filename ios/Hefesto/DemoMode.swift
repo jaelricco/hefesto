@@ -27,6 +27,9 @@ enum DemoScreen: String, CaseIterable {
     case body, pain, symptoms
     // The plan's settings (ADR 0029).
     case settings
+    // The pain questions (ADR 0030): once a planned session is done, and the
+    // morning after on Today. The check-in asks the pain before.
+    case painafter, morning
 
     var tab: AppTab {
         switch self {
@@ -37,7 +40,7 @@ enum DemoScreen: String, CaseIterable {
     }
 
     var opensLogger: Bool { [.logger, .composer, .reserve, .finish, .band].contains(self) }
-    var opensPlanned: Bool { [.planned, .target].contains(self) }
+    var opensPlanned: Bool { [.planned, .target, .painafter].contains(self) }
 
     /// The onboarding page the screen opens on, if it opens the onboarding.
     var onboardingPage: OnboardingPage? {
@@ -227,13 +230,14 @@ extension DemoRun {
         var seq: Int64 = 0
         var sessions: [Session] = [], blocks: [Block] = [], sets: [SetWithElements] = []
         func session(_ start: Date, minutes: Int, title: String = "", restDay: Bool = false,
-                     draft: Bool = false, fatigue: Int? = nil, _ blockSets: [[(Exercise, Double, Int?)]]) -> String {
+                     draft: Bool = false, fatigue: Int? = nil, planned: String? = nil,
+                     _ blockSets: [[(Exercise, Double, Int?)]]) -> String {
             seq += 1
             let end = start.addingTimeInterval(TimeInterval(minutes * 60))
             let s = Session(
                 startedAt: start, endedAt: draft ? nil : end, timezone: zone.identifier, localDate: localDate(start),
                 title: title, perceivedFatigue: fatigue, status: draft ? "draft" : "completed", isRestDay: restDay,
-                completedAt: draft ? nil : end, updatedAt: end, serverSeq: seq)
+                plannedSessionId: planned, completedAt: draft ? nil : end, updatedAt: end, serverSeq: seq)
             sessions.append(s)
             var at = start
             for (b, entries) in blockSets.enumerated() {
@@ -265,6 +269,11 @@ extension DemoRun {
         let past = session(day(2, 17, 40), minutes: 55, title: "Zug + Handstand", fatigue: 7,
                            [[(pullUp, 8, 120), (pullUp, 7, 125), (pullUp, 6, 130)],
                             [(wallHold, 25, 90), (wallHold, 30, nil)]])
+        // The morning screen: yesterday's session from the plan, done.
+        let yesterday = screen == .morning
+            ? session(day(1, 18, 0), minutes: 50, title: "Zug + Front Lever", fatigue: 6, planned: DemoPlan.yesterdayId,
+                      [[(pullUp, 7, 120), (pullUp, 6, 125), (pullUp, 6, 130)], [(scapular, 10, 90), (scapular, 10, nil)]])
+            : nil
         let draftStart = now.addingTimeInterval(-20 * 60)
         let draft = session(draftStart, minutes: 0, draft: true, [[(pullUp, 8, 120), (pullUp, 7, 125)], []])
         try db.apply(ServerPage(cursor: seq, sessions: sessions, blocks: blocks, sets: sets))
@@ -280,8 +289,13 @@ extension DemoRun {
         }
         try db.savePlan(CachedPlan(
             weekStart: plan.weekStart, etag: nil,
-            payload: Data(plan.json(startedAs: screen.opensPlanned ? planned.session.id : nil).utf8),
+            payload: Data(plan.json(startedAs: screen.opensPlanned ? planned.session.id : nil, yesterday: yesterday).utf8),
             fetchedAt: now))
+        // On a Monday, yesterday was last week: its plan holds the session.
+        if let yesterday, let previous = plan.previousWeek(yesterday: yesterday) {
+            try db.savePlan(CachedPlan(weekStart: previous.weekStart, etag: nil, payload: Data(previous.json.utf8),
+                                       fetchedAt: now))
+        }
 
         // The logger screens open on the draft with a combo logged 48 s ago:
         // the rest runs, 1:42 of 2:30 left.
@@ -423,6 +437,7 @@ struct DemoPlan {
     let days: [String]
     let pastSessionId: String
     let todayId = "demo-planned-today"
+    static let yesterdayId = "demo-planned-yesterday"
 
     static let warmupItem = "demo-item-scapula"
     static let holdItem = "demo-item-adv-tuck"
@@ -444,13 +459,15 @@ struct DemoPlan {
         return String(format: "%04d-%02d-%02d", c.year ?? 0, c.month ?? 0, c.day ?? 0)
     }
 
-    /// The plan, with today's session started as `logSessionId` if given.
-    func json(startedAs logSessionId: String?) -> String {
+    /// The plan, with today's session started as `logSessionId` if given,
+    /// and yesterday's done as `yesterday`.
+    func json(startedAs logSessionId: String?, yesterday: String? = nil) -> String {
         guard let t = days.firstIndex(of: today) else { return "" }
         var sessions: [String] = [], rest: [String] = []
         for (i, day) in days.enumerated() {
             switch i - t {
             case 0: sessions.append(todaySession(startedAs: logSessionId))
+            case -1 where yesterday != nil: sessions.append(yesterdaySession(day, index: i, workout: yesterday))
             case -2: sessions.append(session(
                 "demo-planned-past", day, index: i, kind: "full", minutes: 50, status: "completed",
                 workout: pastSessionId, blocks: [block("strength", [item(
@@ -469,13 +486,49 @@ struct DemoPlan {
             default: rest.append("\"\(day)\"")
             }
         }
-        return """
-        {"id":"demo-plan","week_start":"\(weekStart)","ruleset_version":"demo",
+        return Self.envelope("demo-plan", weekStart: weekStart, sessions: sessions, rest: rest)
+    }
+
+    /// Last week's plan with yesterday's session, when yesterday was last
+    /// week.
+    func previousWeek(yesterday: String) -> (weekStart: String, json: String)? {
+        guard days.firstIndex(of: today) == 0, let monday = DemoPlan.shifted(weekStart, by: -7),
+              let sunday = DemoPlan.shifted(weekStart, by: -1) else { return nil }
+        return (monday, Self.envelope("demo-plan-previous", weekStart: monday,
+                                      sessions: [yesterdaySession(sunday, index: 6, workout: yesterday)], rest: []))
+    }
+
+    /// The region in its return ramp (DemoBody), as the plan names it.
+    static let monitor = #"[{"region":"elbow_inner","name":"innen am Ellbogen","questions":[]}]"#
+
+    private static func envelope(_ id: String, weekStart: String, sessions: [String], rest: [String]) -> String {
+        """
+        {"id":"\(id)","week_start":"\(weekStart)","ruleset_version":"demo",
          "input_hash":"sha256:0000000000000000000000000000000000000000000000000000000000000000",
          "stopped":false,"deload":null,"sessions":[\(sessions.joined(separator: ","))],
-         "rest_days":[\(rest.joined(separator: ","))],"exclusions":[],"hints":[],"realism":[],"monitor":[],
+         "rest_days":[\(rest.joined(separator: ","))],"exclusions":[],"hints":[],"realism":[],"monitor":\(monitor),
          "loads":[],"reasons":[],"disclaimer":"\(Self.disclaimer)"}
         """
+    }
+
+    /// A calendar day moved by `days`.
+    static func shifted(_ day: String, by days: Int) -> String? {
+        var utc = Calendar(identifier: .gregorian)
+        utc.timeZone = TimeZone(identifier: "UTC") ?? .gmt
+        let p = day.split(separator: "-").compactMap { Int($0) }
+        guard p.count == 3, let date = utc.date(from: DateComponents(year: p[0], month: p[1], day: p[2])),
+              let moved = utc.date(byAdding: .day, value: days, to: date) else { return nil }
+        return Self.day(moved, utc)
+    }
+
+    /// Yesterday's session, done as the log session `workout`.
+    private func yesterdaySession(_ day: String, index: Int, workout: String?) -> String {
+        session(
+            Self.yesterdayId, day, index: index, kind: "full", minutes: 50, status: "completed", workout: workout,
+            blocks: [block("strength", [item(
+                "demo-item-yesterday", "pull-up", "Klimmzug", sets: 3, reps: 6, hold: nil, reserve: 2, rest: 120)],
+                why: Self.strengthWhy)],
+            monitor: ["elbow_inner"])
     }
 
     private func todaySession(startedAs logSessionId: String?) -> String {
@@ -500,7 +553,7 @@ struct DemoPlan {
                     Self.finishItem, "band-external-rotation", "Aussenrotation mit Band", sets: 2, reps: 15, hold: nil,
                     reserve: 3, rest: 60, intensity: "light", monitor: true)], why: Self.finishWhy),
             ],
-            why: [Self.orderWhy])
+            why: [Self.orderWhy], monitor: ["elbow_inner"])
     }
 
     /// Today's session as the start writes it into the log (ADR 0016).
@@ -540,12 +593,13 @@ struct DemoPlan {
 
     private func session(
         _ id: String, _ day: String, index: Int, kind: String, minutes: Int, status: String, workout: String?,
-        blocks: [String], why: [String] = []
+        blocks: [String], why: [String] = [], monitor: [String] = []
     ) -> String {
         """
         {"id":"\(id)","status":"\(status)","workout_session_id":\(workout.map { "\"\($0)\"" } ?? "null"),
          "check_in_applied":false,"index":\(index),"date":"\(day)","kind":"\(kind)","est_minutes":\(minutes),
-         "blocks":[\(blocks.joined(separator: ","))],"reasons":[\(why.joined(separator: ","))]}
+         "blocks":[\(blocks.joined(separator: ","))],"reasons":[\(why.joined(separator: ","))],
+         "monitor":[\(monitor.map { "\"\($0)\"" }.joined(separator: ","))]}
         """
     }
 

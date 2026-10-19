@@ -771,6 +771,16 @@
         }
       }
     },
+    "0 is no pain, 10 the worst imaginable. Optional: your plan adapts the load of the region to it.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "0 ist kein Schmerz, 10 der schlimmste vorstellbare. Freiwillig: Dein Plan passt die Belastung der Region daran an."
+          }
+        }
+      }
+    },
     "0 is no pain, 10 the worst you can imagine.": {
       "localizations": {
         "de": {
@@ -921,6 +931,16 @@
         }
       }
     },
+    "A few quick questions. All are optional.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ein paar kurze Fragen. Alle sind freiwillig."
+          }
+        }
+      }
+    },
     "A professional cleared me": {
       "localizations": {
         "de": {
@@ -947,6 +967,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Abgebrochen"
+          }
+        }
+      }
+    },
+    "About yesterday's session. Every answer is optional.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zur Einheit von gestern. Jede Antwort ist freiwillig."
           }
         }
       }
@@ -1041,6 +1071,16 @@
         }
       }
     },
+    "After yesterday's session: how does it feel %@? Your plan uses the answer to decide whether the load there can grow.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach der Einheit von gestern: Wie fühlt es sich %@ an? Mit der Antwort entscheidet dein Plan, ob die Belastung dort steigen kann."
+          }
+        }
+      }
+    },
     "After your check-in, the hardest block is technique work today.": {
       "localizations": {
         "de": {
@@ -1097,6 +1137,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Eine Übung dieser Einheit ist noch nicht auf diesem Gerät. Der Start braucht eine Verbindung."
+          }
+        }
+      }
+    },
+    "Answer": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Antworten"
           }
         }
       }
@@ -1721,6 +1771,16 @@
         }
       }
     },
+    "Did the pain after the session last longer than an hour?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hielt der Schmerz nach der Einheit länger als eine Stunde an?"
+          }
+        }
+      }
+    },
     "Difficulty": {
       "localizations": {
         "de": {
@@ -2301,6 +2361,16 @@
         }
       }
     },
+    "How is it this morning?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wie geht es heute früh?"
+          }
+        }
+      }
+    },
     "How long can you hang from the bar?": {
       "localizations": {
         "de": {
@@ -2697,6 +2767,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ihre Warnzeichen pausieren das ganze Training."
+          }
+        }
+      }
+    },
+    "Kept": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gespeichert"
+          }
+        }
+      }
+    },
+    "Kept on your phone. It goes to your plan at the next sync.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auf deinem Telefon gespeichert. Es geht beim nächsten Sync an deinen Plan."
           }
         }
       }
@@ -3291,6 +3381,16 @@
         }
       }
     },
+    "Not today": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Heute nicht"
+          }
+        }
+      }
+    },
     "Not tracked": {
       "localizations": {
         "de": {
@@ -3431,12 +3531,42 @@
         }
       }
     },
+    "Pain during the session": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schmerz während der Einheit"
+          }
+        }
+      }
+    },
     "Pain reports are health data. Without your consent to keep health data, Hefesto does not take them.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Schmerzberichte sind Gesundheitsdaten. Ohne deine Einwilligung, Gesundheitsdaten zu behalten, nimmt Hefesto sie nicht an."
+          }
+        }
+      }
+    },
+    "Pain right now": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schmerz gerade"
+          }
+        }
+      }
+    },
+    "Pain this morning": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schmerz heute früh"
           }
         }
       }
@@ -3967,6 +4097,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Selbst bestätigt: Das Log kann diese Stufe nicht zeigen."
+          }
+        }
+      }
+    },
+    "Send": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Senden"
           }
         }
       }

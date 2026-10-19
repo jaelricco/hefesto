@@ -175,6 +175,9 @@ final class AppModel {
         defer { isSyncing = false }
         do {
             let report = try await sync.sync()
+            // Pain reports kept without a connection (ADR 0030), after the
+            // sessions they belong to.
+            _ = try? await sync.flushPainReports()
             try? await sync.refreshExercises()
             // Bands are not in the sync feed (ADR 0009).
             try? await sync.refreshBands()

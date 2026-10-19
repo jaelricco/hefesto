@@ -443,13 +443,19 @@ struct PlanItemRow: View {
 ///
 /// Without a connection the sheet says so and offers the start without the
 /// server (ADR 0027): the session starts as planned, without the check-in.
+///
+/// For a region in the ramp it also asks the pain right now (ADR 0030): that
+/// answer goes to the plan with the session, also without a connection.
 struct CheckInSheet: View {
     let session: PlanSession
-    /// Starts the session; says why when it could not.
-    let onStart: (Double?, Int?) async -> StartFailure?
-    /// Starts the session without the server; returns a message when it
-    /// could not.
-    let onStartOffline: () -> String?
+    /// The regions to ask the pain of.
+    var painRegions: [PlanRegion] = []
+    /// Starts the session with the check-in and the pain answers; says why
+    /// when it could not.
+    let onStart: (Double?, Int?, [String: PainAnswer]) async -> StartFailure?
+    /// Starts the session without the server, with the pain answers;
+    /// returns a message when it could not.
+    let onStartOffline: ([String: PainAnswer]) -> String?
     /// Opens on the offline choice, as a demo screen does.
     var initiallyOffline = false
 
@@ -460,6 +466,7 @@ struct CheckInSheet: View {
     @State private var starting = false
     @State private var failure: String?
     @State private var offline = false
+    @State private var pain: [String: PainAnswer] = [:]
 
     /// Hours of sleep to choose from; the ends stand for less and more.
     static let sleepChoices = [4, 5, 6, 7, 8, 9]
@@ -470,7 +477,7 @@ struct CheckInSheet: View {
                 VStack(alignment: .leading, spacing: 20) {
                     VStack(alignment: .leading, spacing: 6) {
                         Text("Before you start").font(.displayTitle).foregroundStyle(Palette.text)
-                        Text("Two quick questions. Both are optional.")
+                        Text(painRegions.isEmpty ? "Two quick questions. Both are optional." : "A few quick questions. All are optional.")
                             .font(.detailText)
                             .foregroundStyle(Palette.textSecondary)
                     }
@@ -505,6 +512,10 @@ struct CheckInSheet: View {
                     Text("After 6 hours of sleep or less, or a tiredness of 8 or more, the hardest block becomes technique work today. Your answers are not stored.")
                         .font(.detailText)
                         .foregroundStyle(Palette.textSecondary)
+
+                    if !painRegions.isEmpty {
+                        PainQuestionView(moment: .beforeSession, regions: painRegions, answers: $pain)
+                    }
 
                     if let failure {
                         Label {
@@ -554,7 +565,7 @@ struct CheckInSheet: View {
             .font(.detailText)
             .foregroundStyle(Palette.text)
             Button {
-                failure = onStartOffline()
+                failure = onStartOffline(pain)
             } label: {
                 Label("Start without connection", systemImage: "play.fill")
             }
@@ -578,7 +589,7 @@ struct CheckInSheet: View {
     private func start() async {
         starting = true
         failure = nil
-        switch await onStart(sleep.map { Double($0) }, fatigue) {
+        switch await onStart(sleep.map { Double($0) }, fatigue, pain) {
         case nil: offline = false
         case .offline?: offline = true
         case let .message(text)?:
