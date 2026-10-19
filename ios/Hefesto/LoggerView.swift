@@ -35,7 +35,9 @@ struct LoggerView: View {
                     Button("Close") { dismiss() }
                 }
                 ToolbarItem(placement: .principal) {
+                    // Bars cap their text; a long press shows it large.
                     Text(verbatim: logger.map { title($0.session) } ?? "").font(.navTitle)
+                        .accessibilityShowsLargeContentViewer()
                 }
                 if isDraft {
                     ToolbarItem(placement: .confirmationAction) {
@@ -633,6 +635,7 @@ struct FinishSheet: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     Text("How hard did it feel?").font(.displayTitle).foregroundStyle(Palette.text)
+                        .fixedSize(horizontal: false, vertical: true)
                     // Fewer columns at the largest text sizes, so numbers are not clipped.
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8),
                                              count: typeSize.isAccessibilitySize ? 3 : 5), spacing: 8) {
