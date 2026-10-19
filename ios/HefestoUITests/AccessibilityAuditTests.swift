@@ -35,15 +35,21 @@ final class AccessibilityAuditTests: XCTestCase {
         try auditAll(run: "de-xxl", ["-AppleLanguages", "(de)", "-AppleLocale", "de_CH"] + Self.largest, judgesSize: true)
     }
 
-    /// "xxl | map | Contrast failed | text 'Fit' @20,72", on one line: short,
-    /// so CI can list every finding in its annotations.
+    /// "xxl | map | Contrast failed | text 'Fit' @20,72 362x24", on one line:
+    /// short, so CI can list every finding in its annotations. Clipped text
+    /// also gets the audit's own detail, which says what is cut.
     private static func describe(_ issue: XCUIAccessibilityAuditIssue, run: String, on screen: String) -> String {
         var element = "no element"
         if let e = issue.element {
             let label = e.label.isEmpty ? (e.identifier.isEmpty ? "" : " #\(e.identifier)") : " '\(e.label)'"
-            element = "\(kind(e.elementType))\(label) @\(Int(e.frame.minX)),\(Int(e.frame.minY))"
+            let f = e.frame
+            element = "\(kind(e.elementType))\(label) @\(Int(f.minX)),\(Int(f.minY)) \(Int(f.width))x\(Int(f.height))"
         }
-        return "\(run) | \(screen) | \(issue.compactDescription) | \(element)"
+        var line = "\(run) | \(screen) | \(issue.compactDescription) | \(element)"
+        if issue.auditType == .textClipped {
+            line += " | " + issue.detailedDescription.replacingOccurrences(of: "\n", with: " ")
+        }
+        return line
     }
 
     private static func kind(_ type: XCUIElement.ElementType) -> String {
