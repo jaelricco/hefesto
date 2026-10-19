@@ -492,7 +492,9 @@ struct ProgressBadge: View {
         .accessibilityShowsLargeContentViewer()
         switch style {
         case .chips:
+            // One line: "340 XP" wrapped to "340" over "XP" in German.
             label
+                .fixedSize()
                 .font(Typeface.condensed(16, .semibold, relativeTo: .subheadline))
                 .padding(.horizontal, 10)
                 .frame(minHeight: 32)

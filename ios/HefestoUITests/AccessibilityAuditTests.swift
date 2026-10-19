@@ -62,7 +62,9 @@ final class AccessibilityAuditTests: XCTestCase {
     /// Findings the app cannot act on, skipped for a stated reason (the
     /// pattern of WWDC23's "Perform accessibility audits for your app"):
     /// - Dynamic Type inside a navigation bar: bars cap their text by design
-    ///   and show it in the Large Content Viewer instead.
+    ///   and show it in the Large Content Viewer instead. That holds for
+    ///   system items only: a custom view put in a bar must add
+    ///   `.accessibilityShowsLargeContentViewer()`, or this skips a real gap.
     /// - The contrast of a disabled control: WCAG 1.4.3 exempts inactive
     ///   components, and a disabled Save must look disabled.
     /// - The contrast of an element that is not hittable: scrolled under a
