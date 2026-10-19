@@ -84,8 +84,9 @@ func bodyModel(_ server: ScriptedServer) throws -> (BodyModel, AppDatabase) {
         let (model, _) = try bodyModel(server)
         let at = Date(timeIntervalSince1970: 1_790_676_000)
 
-        let outcome = try await model.reportPain(PainReport(
-            region: "elbow_inner", timepoint: "during", nrs: 6, at: at, suddenSharp: true, sessionId: "s-1"))
+        let reported = try await model.reportPain([PainReport(
+            region: "elbow_inner", timepoint: "during", nrs: 6, at: at, suddenSharp: true, sessionId: "s-1")])
+        let outcome = reported.outcome
 
         let sent = try #require(server.requests("reportPain").first?.json)
         #expect(sent["region"] as? String == "elbow_inner")
@@ -98,6 +99,31 @@ func bodyModel(_ server: ScriptedServer) throws -> (BodyModel, AppDatabase) {
         #expect(outcome.notes.map(\.text) == ["Answer them."])
         #expect(!outcome.trainingStopped)
         #expect(server.requests("listMyRegions").count == 1, "the regions are fetched again")
+        #expect(!reported.waiting)
+    }
+
+    @Test func painWithoutAConnectionWaitsForTheNextSync() async throws {
+        let calls = Counter()
+        let server = ScriptedServer { r in
+            if r.operation == "reportPain" && calls.next() == 1 { throw LostConnection() }
+            return r.operation == "reportPain" ? (200, eventJSON()) : (200, regionsJSON())
+        }
+        let (model, db) = try bodyModel(server)
+        let sync = SyncEngine(client: server.client, db: db)
+
+        let reported = try await model.reportPain([
+            PainReport(region: "elbow_inner", timepoint: "after", nrs: 3, at: Date(), sessionId: "s-1"),
+        ])
+
+        #expect(reported.waiting, "kept here, not lost")
+        #expect(try db.unsentPainReports().count == 1)
+        #expect(try db.pendingOpCount() == 1, "a sign-out would lose it, so it counts as not synced")
+        let flushed = try await sync.flushPainReports()
+        #expect(flushed.results.count == 1 && flushed.waiting == 0)
+        let ids = server.requests("reportPain").compactMap { $0.json["id"] as? String }
+        #expect(ids.count == 2 && ids[0] == ids[1], "the retry is the same report")
+        #expect(try db.unsentPainReports().isEmpty && db.pendingOpCount() == 0)
+        #expect(try db.painReports(sessionId: "s-1").map(\.sent) == [true], "kept to know what is answered")
     }
 
     @Test func aRetryAfterALostAnswerKeepsItsId() async throws {
@@ -123,11 +149,12 @@ func bodyModel(_ server: ScriptedServer) throws -> (BodyModel, AppDatabase) {
 
     @Test func painNeedsTheConsent() async throws {
         let server = ScriptedServer { _ in (409, problemJSON("consent-required", status: 409)) }
-        let (model, _) = try bodyModel(server)
+        let (model, db) = try bodyModel(server)
 
         await #expect(throws: BodyError.consentRequired) {
-            _ = try await model.reportPain(PainReport(region: "elbow_inner", timepoint: "daily", nrs: 3, at: Date()))
+            _ = try await model.reportPain([PainReport(region: "elbow_inner", timepoint: "daily", nrs: 3, at: Date())])
         }
+        #expect(try db.unsentPainReports().isEmpty, "a refused report is not sent again")
     }
 
     @Test func redFlagsAndClearancesGoToTheirRegion() async throws {

@@ -25,7 +25,7 @@ public final class PlanModel {
     public private(set) var week: PlanWeek?
     public private(set) var status: Status = .ready
 
-    private let db: AppDatabase
+    let db: AppDatabase
     /// Nil where the model must never reach the network, as in a demo.
     private let sync: SyncEngine?
     private let timeZone: TimeZone

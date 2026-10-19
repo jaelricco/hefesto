@@ -199,6 +199,9 @@ public final class AppDatabase: Sendable {
 
         // Resistance bands (ADR 0024), as the server lists them.
         m.registerMigration("v5-bands") { db in try migrateBands(db) }
+
+        // Pain reports kept until the server has them (ADR 0030).
+        m.registerMigration("v6-pain-log") { db in try migratePainLog(db) }
         return m
     }
 }

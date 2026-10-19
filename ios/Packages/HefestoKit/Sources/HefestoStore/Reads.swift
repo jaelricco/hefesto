@@ -56,8 +56,10 @@ extension AppDatabase {
     }
 
     /// Ops waiting to be sent, for the sync indicator.
+    /// What waits to go to the server: queued ops, and pain reports kept
+    /// until a connection (ADR 0030).
     public static func pendingOpCount(_ db: Database) throws -> Int {
-        try OutboxOp.fetchCount(db)
+        try OutboxOp.fetchCount(db) + KeptPainReport.filter(Column("sent") == false).fetchCount(db)
     }
 }
 
