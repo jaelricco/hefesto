@@ -335,6 +335,11 @@ func TestPersonaExpectations(t *testing.T) {
 		if !slices.ContainsFunc(p.Monitor, func(m planning.RegionMonitor) bool { return m.Region == "elbow_inner" }) {
 			t.Error("no pain monitoring for elbow_inner")
 		}
+		for _, ps := range p.Sessions {
+			if !slices.Equal(ps.Monitor, []string{"elbow_inner"}) {
+				t.Errorf("session %d asks about %v, want the region in the ramp (spec §8.6)", ps.Index+1, ps.Monitor)
+			}
+		}
 	})
 
 	t.Run("4 returner after six months", func(t *testing.T) {

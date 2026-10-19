@@ -460,6 +460,41 @@ func TestRestingRegionIsNotPlanned(t *testing.T) {
 	}
 }
 
+// Spec §8.6: every session asks about the regions in the ramp, stages 1 to
+// 5; a region at rest (stage 0), locked or back to normal is not asked.
+func TestSessionsAskAboutTheRamp(t *testing.T) {
+	k := kb(t)
+	for _, tc := range []struct {
+		state string
+		asked bool
+	}{
+		{planning.StateRTT1, true},
+		{planning.StateRTT5, true},
+		{planning.StateRTT0, false},
+		{planning.StateLocked, false},
+		{planning.StateNormal, false},
+	} {
+		t.Run(tc.state, func(t *testing.T) {
+			s, _ := start(t, k, persona3())
+			rs := s.Regions["elbow_inner"]
+			rs.State = tc.state
+			s.Regions["elbow_inner"] = rs
+			p, err := planning.Generate(k, s, now, monday)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if tc.asked && len(p.Sessions) == 0 {
+				t.Fatal("no sessions")
+			}
+			for _, ps := range p.Sessions {
+				if got := slices.Contains(ps.Monitor, "elbow_inner"); got != tc.asked {
+					t.Errorf("session %d asks about elbow_inner: %v, want %v", ps.Index+1, got, tc.asked)
+				}
+			}
+		})
+	}
+}
+
 // Spec §8.3: stage 0 ends with daily pain within the green limit and
 // negative red-flag answers; after a referral only a confirmed clearance
 // ends it.

@@ -374,6 +374,7 @@ type plannedSessionOut struct {
 	EstMinutes       float64        `json:"est_minutes"`
 	Blocks           []planBlockOut `json:"blocks"`
 	Reasons          []reasonOut    `json:"reasons"`
+	Monitor          []string       `json:"monitor"`
 }
 
 type exclusionOut struct {
@@ -449,7 +450,7 @@ func plannedSessionFrom(k *core.Knowledge, s core.PlannedSession) plannedSession
 	out := plannedSessionOut{ID: s.ID, Status: cmp.Or(s.Status, planning.SessionPlanned), WorkoutSessionID: strOrNil(s.WorkoutSessionID),
 		CheckInApplied: s.CheckIn,
 		Index:          s.Index, Date: dateOut(s.Date), Kind: s.Kind, EstMinutes: s.EstMinutes,
-		Blocks: make([]planBlockOut, len(s.Blocks)), Reasons: reasonsFrom(s.Reasons)}
+		Blocks: make([]planBlockOut, len(s.Blocks)), Reasons: reasonsFrom(s.Reasons), Monitor: nonNil(s.Monitor)}
 	for i, b := range s.Blocks {
 		bo := planBlockOut{Role: b.Role, Paired: b.Paired, Items: make([]planItemOut, len(b.Items)), Reasons: reasonsFrom(b.Reasons)}
 		if b.Minutes > 0 {
