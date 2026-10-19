@@ -118,7 +118,7 @@ jobs:
           rsync -az \
             -e "ssh -p ${DEPLOY_PORT:-22} -i ~/.ssh/id_ed25519" \
             --include='docker-compose.prod.yml' --include='docker-compose.staging.yml' \
-            --include='docker/' --include='docker/Caddyfile' \
+            --include='docker/' --include='docker/Caddyfile' --include='docker/Dockerfile.postgres' \
             --include='scripts/' --include='scripts/*.sh' \
             --exclude='*' \
             ./ "${DEPLOY_USER}@${DEPLOY_HOST}:/srv/hefesto/"

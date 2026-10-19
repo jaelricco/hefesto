@@ -27,7 +27,7 @@ The planner track's own review items (spec §15) are not repeated here.
 | D-13 | A photo stays when its set element is deleted | **Change**: delete it after 7 days | reaper |
 | D-14 | "Log a rest day" | Keep | none |
 | D-15 | Bodyweight entries have no time zone in the feed | **Change**: add `timezone` | additive API field |
-| D-16 | Signing out keeps the local data | **Change**: wipe on sign-out | app |
+| D-16 | Signing out keeps the local data | **Change**: wipe on sign-out | done in Phase 8, as a bug fix |
 | D-17 | `stale_since` is not shown | Keep hidden | none |
 | D-18 | Any open level can be self-attested | Keep | none |
 | D-19 | Stats are computed on the device | Keep for v1 | none |
@@ -43,6 +43,12 @@ server binds a device id to one account (Phase 2), but the app keeps one
 device id per install. A second account signing in on the same phone is
 refused with "Please check your details". The app now starts a new device id
 on sign-out.
+
+Fixing that turned D-16 from a question into a bug too. Once a second account
+could sign in, it would have seen the first account's log, and the first
+account's unsynced changes would have been uploaded as the second account's
+own. Phase 8 therefore wipes the local database on sign-out, as recommended
+below.
 
 ## Content (Phase 1)
 
@@ -141,6 +147,12 @@ device would see it.
 *Recommendation: change*: sign-out wipes the local database. When changes are
 still unsynced, it first says how many and offers to sync. This goes with the
 device-id fix above.
+*Done in Phase 8* (ADR 0026):
+- **Signing out** erases the database. With unsynced changes, Today first
+  offers "Sync and sign out", which signs out only if everything was sent.
+- **When the server ends a session**, the data stays, so the same athlete
+  loses nothing on signing back in. A different account signing in erases it
+  first.
 
 ## The map and stats (Phase 6)
 

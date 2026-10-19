@@ -111,7 +111,7 @@ struct SignInView: View {
                 try await model.auth.login(email: email, password: password)
             }
             password = ""
-            await model.signedIn()
+            try await model.signedIn()
         } catch {
             show(error)
         }
@@ -133,7 +133,7 @@ struct SignInView: View {
         do {
             try await model.auth.signInWithApple(
                 identityToken: token, rawNonce: nonce, displayName: name?.isEmpty == false ? name : nil)
-            await model.signedIn()
+            try await model.signedIn()
         } catch {
             show(error)
         }

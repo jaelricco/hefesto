@@ -25,6 +25,27 @@ public final class AppDatabase: Sendable {
 
     public var reader: any DatabaseReader { writer }
 
+    /// Removes everything this device stored: the log, the outbox and every
+    /// cache. On sign-out, and before a different account syncs, so no
+    /// athlete ever sees, or uploads, another's data (REVIEW_DECISIONS D-16).
+    /// The schema stays; observers simply see empty tables. Every table goes,
+    /// the content caches too, so one added later cannot be forgotten here;
+    /// the next sync fetches the content again.
+    public func eraseAll() throws {
+        try writer.write { db in
+            try db.execute(sql: "PRAGMA defer_foreign_keys = ON")
+            let tables = try String.fetchAll(db, sql: """
+                SELECT name FROM sqlite_master
+                WHERE type = 'table' AND name NOT LIKE 'sqlite_%' AND name != 'grdb_migrations'
+                """)
+            for table in tables {
+                try db.execute(sql: "DELETE FROM \(table.quotedDatabaseIdentifier)")
+            }
+            // The one row the migrations seed: the pull starts from the beginning.
+            try db.execute(sql: "INSERT INTO syncState (id, cursor) VALUES (1, 0)")
+        }
+    }
+
     static var migrator: DatabaseMigrator {
         var m = DatabaseMigrator()
         #if DEBUG

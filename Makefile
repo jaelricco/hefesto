@@ -178,16 +178,24 @@ deploy-check: ## Validate everything the deploy depends on, without deploying
 	@# .env.prod.example leaves every secret blank on purpose, and the prod
 	@# compose file uses ${VAR:?} so a missing one fails loudly. Fill the blanks
 	@# with placeholders just to type-check the file.
-	@sed -E 's/^([A-Z_]+)=$$/\1=placeholder/' .env.prod.example > /tmp/hefesto-check.env
+	@sed -E 's/^([A-Z0-9_]+)=$$/\1=placeholder/' .env.prod.example > /tmp/hefesto-check.env
 	@echo 'HEFESTO_TAG=v0.0.0-check' >> /tmp/hefesto-check.env
 	docker compose -f docker-compose.prod.yml --env-file /tmp/hefesto-check.env config --quiet
-	@sed -E 's/^([A-Z_]+)=$$/\1=placeholder/' .env.staging.example > /tmp/hefesto-check.env
+	@sed -E 's/^([A-Z0-9_]+)=$$/\1=placeholder/' .env.staging.example > /tmp/hefesto-check.env
 	@echo 'HEFESTO_TAG=sha-check' >> /tmp/hefesto-check.env
 	docker compose -f docker-compose.staging.yml --env-file /tmp/hefesto-check.env config --quiet
 	@rm -f /tmp/hefesto-check.env
 	@command -v shellcheck >/dev/null && shellcheck -e SC1091 scripts/*.sh || echo "shellcheck not installed — skipped"
 	@command -v actionlint >/dev/null && actionlint || echo "actionlint not installed — skipped"
 	@echo "deploy configuration is valid"
+
+.PHONY: preflight
+preflight: ## Check the production host before the first deploy: env files, DNS, ports, buckets
+	@test -n "$(PROD_HOST)" || (echo "set the host first: git config hefesto.prodhost <ip>"; exit 1)
+	ssh $(PROD_USER)@$(PROD_HOST) "DEPLOY_DIR=$(PROD_DIR) \
+		PROD_KEYS='$$(grep -oE '^[A-Z0-9_]+' .env.prod.example | tr '\n' ' ')' \
+		STAGING_KEYS='$$(grep -oE '^[A-Z0-9_]+' .env.staging.example | tr '\n' ' ')' \
+		bash -s" < scripts/preflight.sh
 
 .PHONY: server-bootstrap
 server-bootstrap: ## One-time provisioning of a fresh host: make server-bootstrap host=1.2.3.4

@@ -192,6 +192,27 @@ func pullUps(_ set: SetEntry, reps: Int) -> SetElement {
     }
 }
 
+@Suite struct EraseTests {
+    @Test func eraseAllLeavesNothingAndThePullStartsOver() throws {
+        let (db, session, block) = try seeded()
+        let entry = SetEntry(sessionId: session.id, blockId: block.id, orderIndex: 0)
+        try db.saveSet(SetWithElements(entry: entry, elements: [pullUps(entry, reps: 8)]))
+        let theirs = Session(startedAt: Date(), timezone: "UTC", localDate: "2026-09-24", serverSeq: 4)
+        try db.apply(ServerPage(cursor: 4, sessions: [theirs]))
+        #expect(try db.pendingOpCount() == 3)
+
+        try db.eraseAll()
+
+        #expect(try db.queuedOps().isEmpty)
+        #expect(try db.reader.read { try AppDatabase.recentSessions($0) }.isEmpty)
+        #expect(try db.pendingOpCount() == 0)
+        #expect(try db.cursor() == 0)
+        // The cursor row is back, so the next pull still moves it.
+        try db.apply(ServerPage(cursor: 2))
+        #expect(try db.cursor() == 2)
+    }
+}
+
 @Suite struct UUIDv7Tests {
     @Test func idsAreVersion7AndSortByTime() {
         let a = UUIDv7.make(now: Date(timeIntervalSince1970: 1_000))

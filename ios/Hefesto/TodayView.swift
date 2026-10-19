@@ -12,6 +12,7 @@ struct TodayView: View {
     @State private var progress: AthleteProgress?
     @State private var open: OpenSession?
     @State private var error: String?
+    @State private var confirmingSignOut = false
     @State private var path: [PlanRoute] = []
     /// The planned session whose check-in is open.
     @State private var checkingIn: PlanSession?
@@ -125,7 +126,7 @@ struct TodayView: View {
                     Task { await model.syncNow() }
                 }
                 Button("Sign out", systemImage: "rectangle.portrait.and.arrow.right", role: .destructive) {
-                    Task { await model.signOut() }
+                    if pending > 0 { confirmingSignOut = true } else { signOut(syncFirst: false) }
                 }
             } label: {
                 Image(systemName: "person.crop.circle")
@@ -134,6 +135,15 @@ struct TodayView: View {
                     .frame(width: 44, height: 44)
             }
             .accessibilityLabel("Account")
+            // Signing out erases the phone's copy (REVIEW_DECISIONS D-16), so
+            // changes not yet sent would be lost.
+            .confirmationDialog("Sign out?", isPresented: $confirmingSignOut, titleVisibility: .visible) {
+                Button("Sync and sign out") { signOut(syncFirst: true) }
+                Button("Sign out and discard", role: .destructive) { signOut(syncFirst: false) }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("\(pending) changes on this phone are not synced yet. Signing out erases everything stored on this phone.")
+            }
         }
         .padding(.leading, 20)
         .padding(.trailing, 12)
@@ -261,6 +271,23 @@ struct TodayView: View {
                 }
             }
             .background(Palette.surface, in: .rect(cornerRadius: 16))
+        }
+    }
+
+    private func signOut(syncFirst: Bool) {
+        Task {
+            do {
+                if syncFirst {
+                    guard try await model.syncAndSignOut() else {
+                        error = String(localized: "Some changes could not be synced, so you are still signed in. Try again when you are online.")
+                        return
+                    }
+                } else {
+                    try await model.signOut()
+                }
+            } catch {
+                self.error = error.localizedDescription
+            }
         }
     }
 

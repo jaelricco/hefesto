@@ -14,16 +14,19 @@
 #   1. deploys production with scripts/deploy.sh, and checks it through Caddy;
 #   2. deploys staging beside it, and checks that its database is its own;
 #   3. deploys production again (a redeploy must be a no-op);
-#   4. waits for the backup sidecar's first dump in object storage;
+#   4. has the backup sidecar dump again, and waits for it in object storage;
 #   5. restores it into a scratch database and compares the rows;
-#   6. restores it over the live database and checks the API comes back.
+#   6. restores it over the live database and checks the API comes back;
+#   7. recovers the database to a point in time from the pgBackRest archive
+#      (a second MinIO, with TLS, as pgBackRest requires) and checks that
+#      what was written after that point is gone.
 # Domains are *.localhost, which Caddy serves from its own CA, so nothing
 # asks Let's Encrypt for anything. Everything is removed at the end.
 
 set -Eeuo pipefail
 
 : "${HEFESTO_TEST_S3_ENDPOINT:?run this under scripts/with-minio.sh}"
-: "${HEFESTO_TEST_S3_ACCESS_KEY:?}" "${HEFESTO_TEST_S3_SECRET_KEY:?}"
+: "${HEFESTO_TEST_S3_ACCESS_KEY:?}" "${HEFESTO_TEST_S3_SECRET_KEY:?}" "${HEFESTO_TEST_MINIO_BIN:?}"
 
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 work="$(mktemp -d)"
@@ -64,19 +67,22 @@ cleanup() {
     status=$?
     if [[ $status -ne 0 ]]; then
         echo "failed during: $(grep '^## ' "$diag" | tail -1) (exit $status)" >> "$fail"
+        # The tag is given: a deploy that failed recorded none.
+        export HEFESTO_TAG="$tag"
         { prod ps -a --format '{{.Service}} {{.State}} {{.Status}}'
           staging ps -a --format 'staging {{.Service}} {{.State}} {{.Status}}'
-          for svc in api caddy backup; do prod logs --no-color --tail 6 "$svc"; done
+          for svc in api caddy backup pitr postgres; do prod logs --no-color --tail 6 "$svc"; done
           staging logs --no-color --tail 6 api; } >> "$fail" 2>&1 || true
         cat "$diag" "$fail" >&2
         annotate
     fi
-    # The tag is given: a deploy that failed recorded none.
-    HEFESTO_TAG="$tag" staging down -v --remove-orphans >/dev/null 2>&1 || true
-    HEFESTO_TAG="$tag" prod down -v --remove-orphans >/dev/null 2>&1 || true
+    export HEFESTO_TAG="$tag"
+    staging down -v --remove-orphans >/dev/null 2>&1 || true
+    prod down -v --remove-orphans >/dev/null 2>&1 || true
     docker network rm hefesto-edge >/dev/null 2>&1 || true
     docker rm -f "$registry" >/dev/null 2>&1 || true
-    rm -rf "$work" "$diag" "$fail"
+    if [[ -n "${tls_pid:-}" ]]; then kill "$tls_pid" 2>/dev/null || true; fi
+    rm -rf "$work" "$diag" "$fail" "${tls:-}"
     exit $status
 }
 trap cleanup EXIT
@@ -110,12 +116,31 @@ log "image $image:$tag"
 # The deploy directory, as the deploy workflows rsync it to /srv/hefesto.
 mkdir -p "$work/docker"
 cp "$root"/docker-compose.prod.yml "$root"/docker-compose.staging.yml "$work/"
-cp "$root/docker/Caddyfile" "$work/docker/"
+cp "$root/docker/Caddyfile" "$root/docker/Dockerfile.postgres" "$work/docker/"
 cp -r "$root/scripts" "$work/"
 
 # Containers reach MinIO through the bridge's gateway, which is the host.
 gateway=$(docker network inspect bridge -f '{{(index .IPAM.Config 0).Gateway}}')
 s3="http://$gateway:${HEFESTO_TEST_S3_ENDPOINT##*:}"
+
+# pgBackRest only talks to object storage over TLS: a second MinIO with a
+# throwaway certificate, and a bucket for the archive.
+tls="$(mktemp -d)"
+mkdir -p "$tls/certs" "$tls/data"
+openssl req -x509 -newkey rsa:2048 -nodes -days 1 -subj "/CN=hefesto-rehearsal" \
+    -addext "subjectAltName=IP:$gateway,IP:127.0.0.1" \
+    -keyout "$tls/certs/private.key" -out "$tls/certs/public.crt" >> "$diag" 2>&1
+MINIO_ROOT_USER="$HEFESTO_TEST_S3_ACCESS_KEY" MINIO_ROOT_PASSWORD="$HEFESTO_TEST_S3_SECRET_KEY" MINIO_BROWSER=off \
+    "$HEFESTO_TEST_MINIO_BIN" server "$tls/data" --address 0.0.0.0:9124 --certs-dir "$tls/certs" --quiet \
+    >> "$diag" 2>&1 &
+tls_pid=$!
+for _ in $(seq 1 60); do
+    curl -fsSk https://127.0.0.1:9124/minio/health/live >/dev/null 2>&1 && break
+    sleep 0.5
+done
+docker run --rm --network host alpine:3.22 sh -c "apk add -q --no-cache minio-client >/dev/null \
+    && mcli --insecure alias set p https://127.0.0.1:9124 '$HEFESTO_TEST_S3_ACCESS_KEY' '$HEFESTO_TEST_S3_SECRET_KEY' >/dev/null \
+    && mcli --insecure mb p/hefesto-pitr" >> "$diag" 2>&1 || die "could not create the pitr bucket"
 
 envfile() { # envfile <template> <out> KEY=value...
     local tpl="$1" out="$2"; shift 2
@@ -141,7 +166,11 @@ envfile "$root/.env.prod.example" "$work/.env.prod" \
     HEFESTO_S3_ACCESS_KEY="$HEFESTO_TEST_S3_ACCESS_KEY" HEFESTO_S3_SECRET_KEY="$HEFESTO_TEST_S3_SECRET_KEY" \
     HEFESTO_BACKUP_ENDPOINT="$s3" HEFESTO_BACKUP_BUCKET=hefesto-backups \
     HEFESTO_BACKUP_ACCESS_KEY="$HEFESTO_TEST_S3_ACCESS_KEY" HEFESTO_BACKUP_SECRET_KEY="$HEFESTO_TEST_S3_SECRET_KEY" \
-    HEFESTO_BACKUP_INTERVAL_S=3600
+    HEFESTO_BACKUP_INTERVAL_S=3600 \
+    HEFESTO_PITR_S3_ENDPOINT="$gateway" HEFESTO_PITR_S3_PORT=9124 HEFESTO_PITR_VERIFY_TLS=n \
+    HEFESTO_PITR_S3_URI_STYLE=path HEFESTO_PITR_S3_REGION=us-east-1 HEFESTO_PITR_S3_BUCKET=hefesto-pitr \
+    HEFESTO_PITR_S3_KEY="$HEFESTO_TEST_S3_ACCESS_KEY" HEFESTO_PITR_S3_KEY_SECRET="$HEFESTO_TEST_S3_SECRET_KEY" \
+    HEFESTO_PITR_CIPHER_PASS="$(hex 32)" HEFESTO_PITR_INTERVAL_S=3600
 envfile "$root/.env.staging.example" "$work/.env.staging" \
     HEFESTO_IMAGE="$image" \
     POSTGRES_PASSWORD="$pg_staging" \
@@ -150,7 +179,7 @@ envfile "$root/.env.staging.example" "$work/.env.staging" \
     HEFESTO_S3_ENDPOINT="$s3" HEFESTO_S3_REGION=us-east-1 HEFESTO_S3_USE_PATH_STYLE=true \
     HEFESTO_S3_ACCESS_KEY="$HEFESTO_TEST_S3_ACCESS_KEY" HEFESTO_S3_SECRET_KEY="$HEFESTO_TEST_S3_SECRET_KEY"
 # Both env files must leave no blank: the real ones may not either.
-! grep -E '^[A-Z_]+=$' "$work/.env.prod" "$work/.env.staging" || die "a key is left blank above"
+! grep -E '^[A-Z0-9_]+=$' "$work/.env.prod" "$work/.env.staging" || die "a key is left blank above"
 
 log "1. deploy production"
 DEPLOY_DIR="$work" "$work/scripts/deploy.sh" "$tag" 2>&1 | tee -a "$diag"
@@ -177,12 +206,18 @@ log "3. redeploy production"
 DEPLOY_DIR="$work" "$work/scripts/deploy.sh" "$tag" 2>&1 | tee -a "$diag"
 wait_ready api.localhost
 
-log "4. the first backup"
+log "4. a backup after the writes"
+# The sidecar dumps as it starts, which can be before step 1's account and
+# session exist. A restart, as make prod-backup-now does, dumps again; only an
+# upload after it counts.
+since=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+prod restart backup 2>&1 | tee -a "$diag"
 for _ in $(seq 1 90); do
-    prod logs backup 2>/dev/null | grep -q "uploaded hefesto-" && break
+    prod logs --since "$since" backup 2>/dev/null | grep -q "uploaded hefesto-" && break
     sleep 2
 done
-prod logs backup | grep "uploaded hefesto-" || die "the backup sidecar never uploaded a dump"
+prod logs --since "$since" backup | grep "uploaded hefesto-" \
+    || die "the backup sidecar uploaded no dump after its restart"
 
 log "5. restore into a scratch database"
 (cd "$work" && DEPLOY_DIR="$work" ./scripts/restore.sh latest hefesto_rehearsal) 2>&1 | tee -a "$diag"
@@ -200,4 +235,22 @@ login='{"email":"rehearsal@example.test","password":"rehearsal correct horse"}'
 [[ "$(https api.localhost POST /v1/auth/login "$login")" == 200 ]] \
     || die "the account is gone after restoring over the live database"
 
-log "rehearsal passed: deploy, staging, redeploy, backup, two restores"
+log "7. point-in-time recovery"
+for _ in $(seq 1 120); do
+    prod logs pitr 2>/dev/null | grep -q "full backup done" && break
+    sleep 2
+done
+prod logs pitr | grep "full backup done" || die "the pitr sidecar never finished a full backup"
+psql_prod hefesto "CREATE TABLE rehearsal_marker (n int); INSERT INTO rehearsal_marker VALUES (1)" >/dev/null
+target=$(psql_prod hefesto "SELECT now()")
+sleep 2
+psql_prod hefesto "INSERT INTO rehearsal_marker VALUES (2)" >/dev/null
+# Forces a WAL switch and waits until the segment is in the archive.
+prod exec -T pitr pgbackrest check 2>&1 | tee -a "$diag"
+(cd "$work" && DEPLOY_DIR="$work" ./scripts/pitr-restore.sh "$target" --yes) 2>&1 | tee -a "$diag"
+rows=$(psql_prod hefesto "SELECT string_agg(n::text, ',' ORDER BY n) FROM rehearsal_marker")
+[[ "$rows" == 1 ]] || die "recovered to $target, but rehearsal_marker holds '$rows' (want 1)"
+wait_ready api.localhost
+echo "recovered to $target: the row written before it is there, the one after it is not"
+
+log "rehearsal passed: deploy, staging, redeploy, backups, two restores, point-in-time recovery"
