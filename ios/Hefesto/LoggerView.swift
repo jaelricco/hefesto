@@ -677,44 +677,48 @@ struct FinishSheet: View {
     @State private var fatigue: Int?
     @Environment(\.dynamicTypeSize) private var typeSize
 
-    // No NavigationStack: it had no title or items, and its empty bar
-    // covered the top of the title in the half-height sheet.
+    // The question is the bar's large title: at the largest sizes the bar
+    // shortens it and shows it in the Large Content Viewer, where a title in
+    // the content was cut.
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                Text("How hard did it feel?").font(.displayTitle).foregroundStyle(Palette.text)
-                    .fixedSize(horizontal: false, vertical: true)
-                // Fewer columns at the largest text sizes, so numbers are not clipped.
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8),
-                                         count: typeSize.isAccessibilitySize ? 3 : 5), spacing: 8) {
-                    ForEach(1...10, id: \.self) { n in
-                        Button {
-                            fatigue = fatigue == n ? nil : n
-                        } label: {
-                            Text("\(n)")
-                                .font(.metricSmall)
-                                .monospacedDigit()
-                                .foregroundStyle(fatigue == n ? Palette.emberInk : Palette.text)
-                                .frame(maxWidth: .infinity, minHeight: 52)
-                                .background(fatigue == n ? Palette.ember : Palette.surface, in: .rect(cornerRadius: 12))
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    // Fewer columns at the largest text sizes, so numbers are not clipped.
+                    LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8),
+                                             count: typeSize.isAccessibilitySize ? 3 : 5), spacing: 8) {
+                        ForEach(1...10, id: \.self) { n in
+                            Button {
+                                fatigue = fatigue == n ? nil : n
+                            } label: {
+                                Text("\(n)")
+                                    .font(.metricSmall)
+                                    .monospacedDigit()
+                                    .foregroundStyle(fatigue == n ? Palette.emberInk : Palette.text)
+                                    .frame(maxWidth: .infinity, minHeight: 52)
+                                    .background(fatigue == n ? Palette.ember : Palette.surface, in: .rect(cornerRadius: 12))
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel(Text("\(n) of 10"))
+                            .accessibilityAddTraits(fatigue == n ? .isSelected : [])
                         }
-                        .buttonStyle(.plain)
-                        .accessibilityLabel(Text("\(n) of 10"))
-                        .accessibilityAddTraits(fatigue == n ? .isSelected : [])
                     }
+                    Text("Optional. 1 is easy, 10 is everything you had.")
+                        .font(.detailText)
+                        .foregroundStyle(Palette.textSecondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Button {
+                        onFinish(fatigue)
+                    } label: {
+                        Label("Finish session", systemImage: "checkmark")
+                    }
+                    .buttonStyle(PrimaryButtonStyle())
                 }
-                Text("Optional. 1 is easy, 10 is everything you had.")
-                    .font(.detailText)
-                    .foregroundStyle(Palette.textSecondary)
-                Button {
-                    onFinish(fatigue)
-                } label: {
-                    Label("Finish session", systemImage: "checkmark")
-                }
-                .buttonStyle(PrimaryButtonStyle())
+                .padding(20)
             }
-            .padding(20)
+            .themedScreen()
+            .navigationTitle("How hard did it feel?")
+            .navigationBarTitleDisplayMode(.large)
         }
-        .themedScreen()
     }
 }

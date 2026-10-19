@@ -9,6 +9,7 @@ import SwiftUI
 struct SkillMapView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var typeSize
     /// The same skills as a list: easier with VoiceOver or large text.
     @AppStorage("skills.showList") private var showList = false
     @State private var map: SkillMapData?
@@ -89,29 +90,51 @@ struct SkillMapView: View {
         }
     }
 
+    /// The title, then XP and the map's buttons. At the accessibility sizes
+    /// the title takes a row of its own, so nothing crowds it.
+    @ViewBuilder
     private var header: some View {
-        HStack(spacing: 8) {
-            Text("Skills")
-                .font(.displayTitle)
-                .foregroundStyle(Palette.text)
-                .accessibilityAddTraits(.isHeader)
-            Spacer()
-            ProgressBadge(style: .chips)
-            if !showList {
-                headerButton("arrow.up.left.and.down.right.magnifyingglass") {
-                    withAnimation(reduceMotion ? nil : .snappy) { zoom = 1; offset = .zero }
-                }
-                .accessibilityLabel("Fit")
+        if typeSize.isAccessibilitySize {
+            VStack(alignment: .leading, spacing: 4) {
+                headerTitle
+                HStack(spacing: 8) { Spacer(); headerControls }
             }
-            headerButton(showList ? "sparkles" : "list.bullet") {
-                peek = nil
-                showList.toggle()
+            .padding(.leading, 20)
+            .padding(.trailing, 12)
+            .padding(.vertical, 4)
+        } else {
+            HStack(spacing: 8) {
+                headerTitle
+                Spacer()
+                headerControls
             }
-            .accessibilityLabel(showList ? Text("Show as map") : Text("Show as list"))
+            .padding(.leading, 20)
+            .padding(.trailing, 12)
+            .padding(.vertical, 4)
         }
-        .padding(.leading, 20)
-        .padding(.trailing, 12)
-        .padding(.vertical, 4)
+    }
+
+    private var headerTitle: some View {
+        Text("Skills")
+            .font(.displayTitle)
+            .foregroundStyle(Palette.text)
+            .accessibilityAddTraits(.isHeader)
+    }
+
+    @ViewBuilder
+    private var headerControls: some View {
+        ProgressBadge(style: .chips)
+        if !showList {
+            headerButton("arrow.up.left.and.down.right.magnifyingglass") {
+                withAnimation(reduceMotion ? nil : .snappy) { zoom = 1; offset = .zero }
+            }
+            .accessibilityLabel("Fit")
+        }
+        headerButton(showList ? "sparkles" : "list.bullet") {
+            peek = nil
+            showList.toggle()
+        }
+        .accessibilityLabel(showList ? Text("Show as map") : Text("Show as list"))
     }
 
     private func headerButton(_ icon: String, action: @escaping () -> Void) -> some View {
