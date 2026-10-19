@@ -17,6 +17,40 @@ extension AppDatabase {
         }
     }
 
+    /// Writes a new session whole: the session, then each block with its
+    /// sets, queued in that order in one transaction, so the server gets
+    /// every row after the one it belongs to. A planned session started
+    /// without the server arrives this way (spec §10.5).
+    public func saveNewSession(_ tree: SessionTree, now: Date = Date()) throws {
+        guard tree.blocks.allSatisfy({ $0.sets.allSatisfy { !$0.elements.isEmpty } }) else {
+            throw StoreError.emptySet
+        }
+        try writer.write { db in
+            var s = tree.session
+            s.updatedAt = now
+            try s.insert(db)
+            try Self.enqueue(db, .session, .put, rowId: s.id, sessionId: nil)
+            for b in tree.blocks {
+                var block = b.block
+                block.updatedAt = now
+                try block.insert(db)
+                try Self.enqueue(db, .block, .put, rowId: block.id, sessionId: s.id)
+                for set in b.sets {
+                    var entry = set.entry
+                    entry.updatedAt = now
+                    try entry.insert(db)
+                    for (i, el) in set.elements.enumerated() {
+                        var e = el
+                        e.setEntryId = entry.id
+                        e.orderIndex = i
+                        try e.insert(db)
+                    }
+                    try Self.enqueue(db, .set, .put, rowId: entry.id, sessionId: s.id)
+                }
+            }
+        }
+    }
+
     /// Completes a draft session. The server evaluates unlocks when the op
     /// arrives; the sync engine reports them back.
     public func completeSession(

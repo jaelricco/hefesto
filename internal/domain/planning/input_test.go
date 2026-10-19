@@ -55,6 +55,10 @@ func TestAnswerValidation(t *testing.T) {
 		{"mobility check", func(a *planning.Answers) { a.Mobility = map[string]string{"hip": "yes"} }, "/mobility_checks/hip"},
 		{"mobility answer", func(a *planning.Answers) { a.Mobility = map[string]string{"wrist": "maybe"} }, "/mobility_checks/wrist"},
 		{"screening", func(a *planning.Answers) { a.Screening = a.Screening[:5] }, "/screening"},
+		{"screening skipped", func(a *planning.Answers) { a.Screening = nil }, "/screening"},
+		{"screening in part without consent", func(a *planning.Answers) {
+			a.HealthConsent, a.Screening = false, a.Screening[:5]
+		}, "/screening"},
 		{"unknown region", func(a *planning.Answers) { a.BodyMap["toe"] = planning.BodyMapEntry{Current: true} }, "/body_map/toe"},
 		{"complaint missing", func(a *planning.Answers) { delete(a.Complaints, "elbow_inner") }, "/complaints/elbow_inner"},
 		{"complaint not current", func(a *planning.Answers) {
@@ -95,6 +99,12 @@ func TestAnswerValidation(t *testing.T) {
 	}
 	if _, _, err := planning.Start(k, persona3(), now); err != nil {
 		t.Fatalf("the unchanged persona fails: %v", err)
+	}
+	// Without consent the screening is not asked.
+	a := persona3()
+	a.HealthConsent, a.Screening = false, nil
+	if _, _, err := planning.Start(k, a, now); err != nil {
+		t.Fatalf("no screening without consent fails: %v", err)
 	}
 }
 

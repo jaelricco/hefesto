@@ -12,6 +12,7 @@
     "complaint_families",
     "matrix",
     "red_flags",
+    "screening",
     "prehab",
     "disclaimer",
     "forbidden_phrases"
@@ -267,6 +268,33 @@
         }
       },
       "minItems": 1
+    },
+    "screening": {
+      "description": "The six further screening questions of the onboarding, in the order of their answers (onboarding.md §3.7).",
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "question"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^SCR-[0-9]{2}$"
+          },
+          "question": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sources": {
+            "$ref": "common.schema.json#/$defs/sources"
+          }
+        }
+      }
     },
     "prehab": {
       "type": "array",

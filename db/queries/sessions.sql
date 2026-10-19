@@ -7,13 +7,17 @@
 
 -- ------------------------------------------------------------- sessions
 
+-- A session started offline names its planned session (spec §10.5); one the
+-- user has no row of is dropped, so the session stays a session of the log.
 -- name: InsertSession :one
 INSERT INTO workout_sessions (
     id, user_id, started_at, timezone, local_date, title, notes, bodyweight_kg,
-    is_rest_day, template_id, client_id, updated_at
+    is_rest_day, template_id, planned_session_id, client_id, updated_at
 ) VALUES (
     @id, @user_id, @started_at, @timezone, @local_date, @title, @notes, @bodyweight_kg,
-    @is_rest_day, @template_id, @client_id, @updated_at
+    @is_rest_day, @template_id,
+    (SELECT ps.id FROM planned_sessions ps WHERE ps.id = sqlc.narg('planned_session_id')::uuid AND ps.user_id = @user_id),
+    @client_id, @updated_at
 )
 ON CONFLICT (id) DO NOTHING
 RETURNING *;
@@ -122,14 +126,16 @@ ORDER BY block_id, order_index;
 -- name: GetSetEntry :one
 SELECT * FROM set_entries WHERE id = @id AND user_id = @user_id;
 
+-- planned_item_id is taken when the set is created and kept after: the
+-- planner relinks it when a new plan replaces the item (ADR 0017).
 -- name: UpsertSetEntry :one
 INSERT INTO set_entries AS s (
     id, user_id, session_id, block_id, order_index, round_index, kind, is_planned,
-    rest_after_planned_s, rest_after_actual_s, rpe, rir, sir_s, completed_at, notes,
+    rest_after_planned_s, rest_after_actual_s, rpe, rir, sir_s, planned_item_id, completed_at, notes,
     client_id, updated_at
 ) VALUES (
     @id, @user_id, @session_id, @block_id, @order_index, @round_index, @kind, @is_planned,
-    @rest_after_planned_s, @rest_after_actual_s, @rpe, @rir, @sir_s, @completed_at, @notes,
+    @rest_after_planned_s, @rest_after_actual_s, @rpe, @rir, @sir_s, @planned_item_id, @completed_at, @notes,
     @client_id, @updated_at
 )
 ON CONFLICT (id) DO UPDATE SET

@@ -75,17 +75,18 @@ type Source struct {
 }
 
 // Body holds structures, regions, load profiles, the complaint matrix, red
-// flags and prehab (spec §4.5, §4.6, §8).
+// flags, the screening questions and prehab (spec §4.5, §4.6, §8).
 type Body struct {
-	Structures        []Structure   `yaml:"structures"`
-	Regions           []Region      `yaml:"regions"`
-	LoadFamilies      []LoadFamily  `yaml:"load_families"`
-	ComplaintFamilies []string      `yaml:"complaint_families"`
-	Matrix            []MatrixRow   `yaml:"matrix"`
-	RedFlags          []RedFlag     `yaml:"red_flags"`
-	Prehab            []PrehabEntry `yaml:"prehab"`
-	Disclaimer        string        `yaml:"disclaimer"`
-	ForbiddenPhrases  []string      `yaml:"forbidden_phrases"`
+	Structures        []Structure         `yaml:"structures"`
+	Regions           []Region            `yaml:"regions"`
+	LoadFamilies      []LoadFamily        `yaml:"load_families"`
+	ComplaintFamilies []string            `yaml:"complaint_families"`
+	Matrix            []MatrixRow         `yaml:"matrix"`
+	RedFlags          []RedFlag           `yaml:"red_flags"`
+	Screening         []ScreeningQuestion `yaml:"screening"`
+	Prehab            []PrehabEntry       `yaml:"prehab"`
+	Disclaimer        string              `yaml:"disclaimer"`
+	ForbiddenPhrases  []string            `yaml:"forbidden_phrases"`
 }
 
 // Structure is a joint or tendon group with its own load accounts.
@@ -149,6 +150,14 @@ type RedFlag struct {
 	// Followup is asked after a yes and raises the urgency when answered
 	// yes too (RF-05: a joint that looks displaced is N).
 	Followup *FlagFollowup `yaml:"followup,omitempty" json:"followup,omitempty"`
+}
+
+// ScreeningQuestion is one of the further screening questions of the
+// onboarding (onboarding.md §3.7); the answers come in their order.
+type ScreeningQuestion struct {
+	ID       string   `yaml:"id"`
+	Question string   `yaml:"question"`
+	Sources  []string `yaml:"sources,omitempty"`
 }
 
 // FlagFollowup is the follow-up question of a red flag.
@@ -344,6 +353,7 @@ type Knowledge struct {
 	matrix     map[string]map[string]string
 	matrixSrc  map[string]map[string][]string
 	redFlags   []RedFlag
+	screening  []ScreeningQuestion
 	prehab     map[string]PrehabEntry
 	exercises  map[string]*Exercise
 	skills     map[string]*Skill
@@ -559,11 +569,27 @@ func (b *builder) body(body Body) {
 		}
 		b.kb.redFlags = append(b.kb.redFlags, rf)
 	}
-	for _, id := range []string{"RF-01", "RF-02", "RF-03", "RF-04", "RF-05", "RF-06", "RF-07", "RF-10"} {
+	for _, id := range []string{"RF-01", "RF-02", "RF-03", "RF-04", "RF-05", "RF-06", "RF-07", ExertionFlag} {
 		if !has["*"][id] {
 			b.errf("KB-10", "red_flags", "%s must be asked for every region", id)
 		}
 	}
+	if len(body.Screening) != screeningAnswers {
+		b.errf("KB-10", "screening", "%d questions expected, found %d", screeningAnswers, len(body.Screening))
+	}
+	seen := map[string]bool{}
+	for _, q := range body.Screening {
+		if seen[q.ID] {
+			b.errf("KB-02", q.ID, "duplicate screening question")
+		}
+		seen[q.ID] = true
+		for _, src := range q.Sources {
+			if _, ok := b.kb.sources[src]; !ok {
+				b.errf("KB-02", q.ID, "unknown source %s", src)
+			}
+		}
+	}
+	b.kb.screening = slices.Clone(body.Screening)
 	for _, p := range body.Prehab {
 		b.kb.prehab[p.Region] = p
 	}
@@ -799,6 +825,9 @@ func (b *builder) language() {
 			check(f.ID, f.Question+" "+f.Advice)
 		}
 	}
+	for _, q := range b.kb.screening {
+		check(q.ID, q.Question)
+	}
 }
 
 func forbiddenIn(phrases []string, text string) string {
@@ -885,6 +914,23 @@ func (k *Knowledge) Source(id string) (Source, bool) {
 
 // Disclaimer is the text every plan and injury payload carries (spec §8.1).
 func (k *Knowledge) Disclaimer() string { return k.disclaimer }
+
+// ExertionFlag is the red flag the onboarding asks once as its exertion
+// question (onboarding.md §3.7); every region asks it too.
+const ExertionFlag = "RF-10"
+
+// RedFlag returns one red flag by its ID.
+func (k *Knowledge) RedFlag(id string) (RedFlag, bool) {
+	i := slices.IndexFunc(k.redFlags, func(rf RedFlag) bool { return rf.ID == id })
+	if i < 0 {
+		return RedFlag{}, false
+	}
+	return k.redFlags[i], true
+}
+
+// ScreeningQuestions returns the further screening questions in the order
+// of their answers.
+func (k *Knowledge) ScreeningQuestions() []ScreeningQuestion { return slices.Clone(k.screening) }
 
 // RedFlags returns the questions to ask for a region (spec §8.2).
 func (k *Knowledge) RedFlags(region string, minor bool) []RedFlag {

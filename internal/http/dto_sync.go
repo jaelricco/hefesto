@@ -128,6 +128,7 @@ type sessionPutIn struct {
 	BodyweightKg     Optional[float64]   `json:"bodyweight_kg"`
 	IsRestDay        Optional[bool]      `json:"is_rest_day"`
 	TemplateID       *uuid.UUID          `json:"template_id"`
+	PlannedSessionID *uuid.UUID          `json:"planned_session_id"`
 	Status           Optional[string]    `json:"status"`
 	UpdatedAt        *time.Time          `json:"updated_at"`
 }

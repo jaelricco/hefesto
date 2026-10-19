@@ -7,6 +7,8 @@ import SwiftUI
 struct SetComposer: View {
     let db: AppDatabase
     let defaultRest: Int
+    /// The planned set it performs, if any: its targets fill the fields.
+    let planned: PlannedTarget?
     /// The elements, the planned rest and what the athlete had left.
     let onSave: ([ElementDraft], Int, SetReserve) -> Void
 
@@ -16,27 +18,44 @@ struct SetComposer: View {
     @State private var rir: Int?
     @State private var sirS: Int?
     @State private var picking: Int?
+    /// The part whose band is being chosen.
+    @State private var choosingBand: Int?
+    /// Every band kept here, by id, to name the chosen ones.
+    @State private var bands: [String: Band] = [:]
 
     /// The choices for reps in reserve, the log's 0–10.
     static let rirChoices = Array(0...10)
     /// The choices for a hold's reserve, within the log's 0–60 s.
     static let sirChoices = [0, 1, 2, 3, 4, 5, 6, 8, 10, 15, 20, 30, 45, 60]
 
-    /// `exercise`, if given, is chosen for the first element already.
-    init(db: AppDatabase, defaultRest: Int, exercise: Exercise? = nil,
-         onSave: @escaping ([ElementDraft], Int, SetReserve) -> Void) {
+    /// `exercise`, if given, is chosen for the first element already, and
+    /// `band` as its assistance. A `planned` set opens on its targets and its
+    /// planned rest.
+    init(db: AppDatabase, defaultRest: Int, exercise: Exercise? = nil, band: String? = nil,
+         planned: PlannedTarget? = nil, onSave: @escaping ([ElementDraft], Int, SetReserve) -> Void) {
         self.db = db
         self.defaultRest = defaultRest
+        self.planned = planned
         self.onSave = onSave
-        var first = Draft()
-        if let exercise { first.choose(exercise) }
-        _elements = State(initialValue: [first])
-        _rest = State(initialValue: defaultRest)
+        if let planned, !planned.drafts.isEmpty {
+            _elements = State(initialValue: planned.drafts)
+            _rest = State(initialValue: planned.rest ?? defaultRest)
+        } else {
+            var first = Draft()
+            if let exercise { first.choose(exercise) }
+            if let band {
+                first.assistance = "band"
+                first.bandId = band
+            }
+            _elements = State(initialValue: [first])
+            _rest = State(initialValue: defaultRest)
+        }
     }
 
     var body: some View {
         NavigationStack {
             Form {
+                if let planned { targetSection(planned) }
                 ForEach($elements) { $draft in
                     let index = elements.firstIndex { $0.id == draft.id } ?? 0
                     Section {
@@ -53,7 +72,9 @@ struct SetComposer: View {
                             .frame(minHeight: 44)
                         }
                         .themedRow()
-                        if draft.exercise != nil { ElementFields(draft: $draft) }
+                        if draft.exercise != nil {
+                            ElementFields(draft: $draft, bands: bands) { choosingBand = index }
+                        }
                     } header: {
                         CapsLabel(elements.count > 1 ? LocalizedStringKey("Combo, part \(index + 1)") : "Set")
                     } footer: {
@@ -66,14 +87,17 @@ struct SetComposer: View {
                     }
                 }
 
-                Section {
-                    Button("Add an exercise to make a combo", systemImage: "plus.square.on.square") {
-                        elements.append(Draft())
+                // A planned set is done as planned: one item of the plan.
+                if planned == nil {
+                    Section {
+                        Button("Add an exercise to make a combo", systemImage: "plus.square.on.square") {
+                            elements.append(Draft())
+                        }
+                        .font(.bodyMedium)
+                        .foregroundStyle(Palette.ember)
+                        .frame(minHeight: 44)
+                        .themedRow()
                     }
-                    .font(.bodyMedium)
-                    .foregroundStyle(Palette.ember)
-                    .frame(minHeight: 44)
-                    .themedRow()
                 }
 
                 if asksRIR || asksSIR {
@@ -99,7 +123,11 @@ struct SetComposer: View {
                     } header: {
                         CapsLabel("Reserve")
                     } footer: {
-                        VStack(alignment: .leading) {
+                        VStack(alignment: .leading, spacing: 6) {
+                            if planned?.calibration == true {
+                                Text("This set calibrates your plan: what you had left shows it where you stand.")
+                                    .foregroundStyle(Palette.text)
+                            }
                             if asksRIR { Text("How many more clean reps you could have done.") }
                             if asksSIR { Text("How much longer you could have held with clean form.") }
                         }
@@ -121,7 +149,7 @@ struct SetComposer: View {
                 }
             }
             .themedScreen()
-            .navigationTitle("Log a set")
+            .navigationTitle(planned == nil ? Text("Log a set") : Text("Planned set"))
             .navigationBarTitleDisplayMode(.inline)
             .font(.bodyText)
             .toolbar {
@@ -143,6 +171,39 @@ struct SetComposer: View {
                     picking = nil
                 }
             }
+            .sheet(item: Binding(get: { choosingBand.map(Picking.init) }, set: { choosingBand = $0?.index })) { p in
+                BandPicker(db: db, selected: elements.indices.contains(p.index) ? elements[p.index].bandId : nil) { band in
+                    bands[band.id] = band
+                    if elements.indices.contains(p.index) { elements[p.index].bandId = band.id }
+                }
+            }
+            .task { bands = (try? db.bandsById()) ?? [:] }
+        }
+    }
+
+    /// What the plan asked for, above the fields that start on it.
+    private func targetSection(_ planned: PlannedTarget) -> some View {
+        Section {
+            VStack(alignment: .leading, spacing: 6) {
+                if let reserve = planned.reserveTarget {
+                    Text(verbatim: reserve).font(.bodyMedium).foregroundStyle(Palette.text)
+                }
+                if planned.calibration {
+                    Chip("Calibration")
+                }
+                if planned.band {
+                    Text("Planned with a band. Choose the one you use, or None if you went without.")
+                        .font(.detailText)
+                        .foregroundStyle(Palette.textSecondary)
+                }
+                Text("Enter what you did; the target is filled in.")
+                    .font(.detailText)
+                    .foregroundStyle(Palette.textSecondary)
+            }
+            .padding(.vertical, 4)
+            .themedRow()
+        } header: {
+            CapsLabel("Target")
         }
     }
 
@@ -156,6 +217,20 @@ struct SetComposer: View {
         let matching = elements.filter { $0.exercise != nil && $0.measure == measure }
         return matching.count == 1 && !matching[0].failed
     }
+}
+
+/// A planned set to perform (ADR 0022): what the plan asked for.
+struct PlannedTarget {
+    let setId: String
+    /// The planned elements as drafts, their targets entered.
+    let drafts: [Draft]
+    let rest: Int?
+    /// What should be left: "2 reps in reserve".
+    let reserveTarget: String?
+    /// The set calibrates the plan's estimate, so its reserve matters.
+    let calibration: Bool
+    /// The plan asks for a band; the log names the band itself (ADR 0016).
+    let band: Bool
 }
 
 /// What the athlete had left after a set: reps for a rep element, seconds
@@ -181,6 +256,9 @@ struct Draft: Identifiable {
     var loadKg: Double = 0
     var assistance = "none"
     var assistKg: Double = 0
+    /// The band of a band-assisted element, and how many of it.
+    var bandId: String?
+    var bandCount = 1
     var formQuality: Int?
     var failed = false
 
@@ -189,22 +267,56 @@ struct Draft: Identifiable {
         measure = e.defaultMeasure
     }
 
-    /// The draft for the logger, once an exercise is chosen.
+    /// The draft for the logger, once an exercise is chosen and, for a
+    /// band, the band.
     var element: ElementDraft? {
         guard let exercise else { return nil }
+        let help: Assistance?
+        let estimate = assistKg > 0 ? assistKg : nil
+        switch assistance {
+        case "none":
+            help = nil
+        case "band":
+            guard let bandId else { return nil }
+            help = Assistance(type: assistance, bandId: bandId, bandCount: bandCount, estimatedAssistKg: estimate)
+        default:
+            help = Assistance(type: assistance, estimatedAssistKg: estimate)
+        }
         return ElementDraft(
             exerciseId: exercise.id, measure: measure,
             reps: measure == "reps" ? reps : nil,
             holdSeconds: measure == "hold_seconds" ? Double(holdSeconds) : nil,
             distanceM: measure == "distance_m" ? Double(distanceM) : nil,
             loadKg: loadKg,
-            assistance: assistance == "none" ? nil : Assistance(type: assistance, estimatedAssistKg: assistKg > 0 ? assistKg : nil),
+            assistance: help,
             formQuality: formQuality, failed: failed)
+    }
+}
+
+extension Draft {
+    /// A planned element's targets, ready to change into what was done.
+    init(target e: SetElement, exercise: Exercise?) {
+        self.init()
+        self.exercise = exercise
+        measure = e.measure
+        if let r = e.reps { reps = r }
+        if let h = e.holdSeconds { holdSeconds = Int(h.rounded()) }
+        if let d = e.distanceM { distanceM = Int(d.rounded()) }
+        loadKg = e.loadKg
+        if let a = e.assistance, AssistanceKind.all.contains(a.type) {
+            assistance = a.type
+            assistKg = a.estimatedAssistKg ?? 0
+            bandId = a.bandId
+            bandCount = max(1, a.bandCount)
+        }
     }
 }
 
 struct ElementFields: View {
     @Binding var draft: Draft
+    /// Every band kept here, by id, to name the chosen one.
+    let bands: [String: Band]
+    let onChooseBand: () -> Void
 
     var body: some View {
         // A group so the theme reaches every row it makes.
@@ -245,6 +357,23 @@ struct ElementFields: View {
             ForEach(AssistanceKind.all, id: \.self) { Text(AssistanceKind.label($0)).tag($0) }
         }
         .themedPicker()
+        if draft.assistance == "band" {
+            Button(action: onChooseBand) {
+                LabeledContent("Band") {
+                    if let band = draft.bandId.flatMap({ bands[$0] }) {
+                        Text(verbatim: BandText.name(band)).foregroundStyle(Palette.textSecondary)
+                    } else {
+                        Text("Choose a band").foregroundStyle(Palette.ember)
+                    }
+                }
+                .foregroundStyle(Palette.text)
+            }
+            Stepper(value: $draft.bandCount, in: 1...4) {
+                LabeledContent("Bands at once") {
+                    Text("\(draft.bandCount)").monospacedDigit().foregroundStyle(Palette.textSecondary)
+                }
+            }
+        }
         if draft.assistance != "none" {
             LabeledContent("Estimated assist") {
                 TextField("kg", value: $draft.assistKg, format: .number)
@@ -264,9 +393,9 @@ struct ElementFields: View {
 }
 
 enum AssistanceKind {
-    /// Band assistance names one of the athlete's bands; it arrives with the
-    /// bands screen. The other kinds need nothing more.
-    static let all = ["none", "partner", "machine", "incline", "counterweight", "foot_support"]
+    /// Band assistance names one of the athlete's bands (ADR 0024); the
+    /// other kinds need nothing more.
+    static let all = ["none", "band", "partner", "machine", "incline", "counterweight", "foot_support"]
 
     static func label(_ kind: String) -> String {
         switch kind {

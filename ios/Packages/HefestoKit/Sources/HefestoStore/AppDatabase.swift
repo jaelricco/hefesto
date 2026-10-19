@@ -196,6 +196,9 @@ public final class AppDatabase: Sendable {
             try db.alter(table: "setEntry") { t in t.add(column: "plannedItemId", .text) }
             try migratePlanCache(db)
         }
+
+        // Resistance bands (ADR 0024), as the server lists them.
+        m.registerMigration("v5-bands") { db in try migrateBands(db) }
         return m
     }
 }

@@ -16,6 +16,7 @@ let package = Package(
         .library(name: "HefestoAuth", targets: ["HefestoAuth"]),
         .library(name: "HefestoSync", targets: ["HefestoSync"]),
         .library(name: "HefestoLogger", targets: ["HefestoLogger"]),
+        .library(name: "HefestoPlan", targets: ["HefestoPlan"]),
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-openapi-generator", from: "1.13.0"),
@@ -55,6 +56,11 @@ let package = Package(
             name: "HefestoLogger",
             dependencies: ["HefestoStore"]
         ),
+        // The training plan as the screens read it (ADR 0022).
+        .target(
+            name: "HefestoPlan",
+            dependencies: ["HefestoAPI", "HefestoStore", "HefestoSync"]
+        ),
         .testTarget(
             name: "HefestoStoreTests",
             dependencies: ["HefestoStore", .product(name: "GRDB", package: "GRDB.swift")]
@@ -70,7 +76,7 @@ let package = Package(
         .testTarget(
             name: "HefestoSyncTests",
             dependencies: [
-                "HefestoSync", "HefestoStore", "HefestoAPI",
+                "HefestoSync", "HefestoStore", "HefestoAPI", "HefestoPlan",
                 .product(name: "GRDB", package: "GRDB.swift"),
                 .product(name: "OpenAPIRuntime", package: "swift-openapi-runtime"),
                 .product(name: "HTTPTypes", package: "swift-http-types"),

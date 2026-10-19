@@ -109,6 +109,7 @@ struct SessionDetailView: View {
     @Environment(AppModel.self) private var model
     @State private var tree: SessionTree?
     @State private var exercises: [String: Exercise] = [:]
+    @State private var bands: [String: Band] = [:]
     @State private var logging = false
 
     var body: some View {
@@ -146,8 +147,9 @@ struct SessionDetailView: View {
                 }
                 ForEach(Array(tree.blocks.enumerated()), id: \.element.id) { i, block in
                     Section {
-                        ForEach(Array(block.sets.enumerated()), id: \.element.id) { n, set in
-                            SetRow(number: n + 1, set: set, exercises: exercises, onRepeat: nil).themedRow()
+                        // What was done: planned sets left open were not.
+                        ForEach(Array(block.sets.filter { !$0.entry.isPlanned }.enumerated()), id: \.element.id) { n, set in
+                            SetRow(number: n + 1, set: set, exercises: exercises, bands: bands, onRepeat: nil).themedRow()
                         }
                     } header: {
                         CapsLabel("Block \(i + 1)")
@@ -165,6 +167,7 @@ struct SessionDetailView: View {
         .fullScreenCover(isPresented: $logging) { LoggerView(sessionId: sessionId) }
         .task {
             exercises = (try? model.db.exercisesById()) ?? [:]
+            bands = (try? model.db.bandsById()) ?? [:]
             do { for try await t in model.db.observeSessionTree(id: sessionId) { tree = t } } catch {}
         }
     }

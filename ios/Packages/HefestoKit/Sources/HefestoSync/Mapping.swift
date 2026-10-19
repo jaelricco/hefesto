@@ -46,7 +46,7 @@ enum OpPayload {
             return make(data(session: .init(
                 startedAt: s.startedAt, endedAt: s.endedAt, timezone: s.timezone, title: s.title, notes: s.notes,
                 perceivedFatigue: s.perceivedFatigue, bodyweightKg: s.bodyweightKg, isRestDay: s.isRestDay,
-                templateId: s.templateId,
+                templateId: s.templateId, plannedSessionId: s.plannedSessionId,
                 // Completion is its own op; a completed session's put leaves status alone.
                 status: try opt(s.status == "completed" ? nil : s.status),
                 updatedAt: s.updatedAt)))
@@ -61,7 +61,8 @@ enum OpPayload {
             return make(data(set: .init(
                 blockId: e.blockId, orderIndex: e.orderIndex, roundIndex: e.roundIndex, kind: try req(e.kind),
                 isPlanned: e.isPlanned, restAfterPlannedS: e.restAfterPlannedS, restAfterActualS: e.restAfterActualS,
-                rpe: e.rpe, rir: e.rir, sirS: e.sirS, completedAt: e.completedAt, notes: e.notes,
+                rpe: e.rpe, rir: e.rir, sirS: e.sirS, plannedItemId: e.plannedItemId, completedAt: e.completedAt,
+                notes: e.notes,
                 updatedAt: e.updatedAt, elements: try elements.map(element))))
         case .bodyweight:
             guard let b = try Bodyweight.fetchOne(db, key: op.rowId) else { return nil }

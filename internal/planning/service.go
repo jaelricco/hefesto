@@ -80,9 +80,10 @@ func (s *Service) Onboard(ctx context.Context, userID uuid.UUID, a planning.Answ
 }
 
 // Plan returns the plan of the current week, generating it on first use.
-// Plans change only on events (spec §11.3). Completions the planner missed
-// are applied first.
+// Plans change only on events (spec §11.3). Sessions started offline are
+// linked and completions the planner missed are applied first.
 func (s *Service) Plan(ctx context.Context, userID uuid.UUID) (planning.Plan, error) {
+	s.LinkOfflineStarts(ctx, userID)
 	s.catchUp(ctx, userID)
 	var p planning.Plan
 	err := s.Store.InTx(ctx, userID, func(st Stores) error {
@@ -323,8 +324,15 @@ const maxCatchUp = 20
 // §10.2, ADR 0018): the planner reads its performed sets, marks the planned
 // session it was started from completed and adapts. applied is false when
 // the session is nothing for the planner: not completed, or a rest day. It
-// is idempotent per session; a repeat answers with the recorded changes.
-func (s *Service) CompleteLoggedSession(ctx context.Context, userID, sessionID uuid.UUID) (out Outcome, applied bool, err error) {
+// is idempotent per session; a repeat answers with the recorded changes. A
+// session started offline is linked first, so its planned session is
+// completed too.
+func (s *Service) CompleteLoggedSession(ctx context.Context, userID, sessionID uuid.UUID) (Outcome, bool, error) {
+	s.LinkOfflineStarts(ctx, userID)
+	return s.complete(ctx, userID, sessionID)
+}
+
+func (s *Service) complete(ctx context.Context, userID, sessionID uuid.UUID) (out Outcome, applied bool, err error) {
 	err = s.Store.InTx(ctx, userID, func(st Stores) error {
 		sess, ok, err := st.Sessions.CompletedSession(ctx, userID, sessionID)
 		if err != nil {
@@ -359,10 +367,101 @@ func (s *Service) catchUp(ctx context.Context, userID uuid.UUID) {
 		return
 	}
 	for _, id := range ids {
-		if _, _, err := s.CompleteLoggedSession(ctx, userID, id); err != nil {
+		if _, _, err := s.complete(ctx, userID, id); err != nil {
 			s.warn(ctx, "applying a missed completion", userID, err, "session_id", id)
 		}
 	}
+}
+
+// LinkOfflineStarts links the sessions clients started offline and synced
+// (spec §10.5), as a start online would have: the planned session of their
+// day in the current plan of their week points at the log session. A draft
+// started from a plan a newer one replaced follows the newer one, as every
+// started draft does (ADR 0017); without a session on its day, as after a
+// stop, its open sets go. A day started first elsewhere keeps that session,
+// and the offline one stays a session of the log. Each start is linked in
+// its own transaction; a failure is logged and left for the next request.
+func (s *Service) LinkOfflineStarts(ctx context.Context, userID uuid.UUID) {
+	var starts []OfflineStart
+	if err := s.Store.InTx(ctx, userID, func(st Stores) error {
+		var err error
+		starts, err = st.Sessions.PendingOfflineStarts(ctx, userID, WeekStart(s.Clock.Now()).AddDate(0, 0, -7), maxCatchUp)
+		return err
+	}); err != nil {
+		s.warn(ctx, "listing offline starts", userID, err)
+		return
+	}
+	for _, o := range starts {
+		if err := s.Store.InTx(ctx, userID, func(st Stores) error { return s.linkOfflineStart(ctx, st, userID, o) }); err != nil {
+			s.warn(ctx, "linking an offline start", userID, err, "session_id", o.SessionID)
+		}
+	}
+}
+
+func (s *Service) linkOfflineStart(ctx context.Context, st Stores, userID uuid.UUID, o OfflineStart) error {
+	old, ok, err := st.Plans.PlannedSessionAny(ctx, userID, o.PlannedSessionID)
+	if err != nil {
+		return fmt.Errorf("reading planned session %s: %w", o.PlannedSessionID, err)
+	}
+	if !ok {
+		return nil
+	}
+	p, ok, err := st.Plans.ActivePlan(ctx, userID, WeekStart(old.Date))
+	if err != nil {
+		return fmt.Errorf("loading plan: %w", err)
+	}
+	if !ok {
+		return nil
+	}
+	var next *planning.PlannedSession
+	for i := range p.Sessions {
+		if p.Sessions[i].Date.Equal(old.Date) {
+			next = &p.Sessions[i]
+			break
+		}
+	}
+	if next != nil {
+		if next.WorkoutSessionID != "" {
+			return nil
+		}
+		id, err := uuid.Parse(next.ID)
+		if err != nil {
+			return fmt.Errorf("planned session id %q: %w", next.ID, err)
+		}
+		if err := st.Sessions.LinkStart(ctx, userID, id, o.SessionID); err != nil {
+			return fmt.Errorf("linking session %s: %w", o.SessionID, err)
+		}
+		if s.Log != nil {
+			s.Log.InfoContext(ctx, "offline start linked", "user_id", userID, "planned_session_id", id,
+				"session_id", o.SessionID)
+		}
+		if next.ID == old.ID {
+			return nil
+		}
+	}
+	sets, ok, err := st.Sessions.DraftSets(ctx, userID, o.SessionID)
+	if err != nil {
+		return fmt.Errorf("reading the draft of %s: %w", o.SessionID, err)
+	}
+	if !ok {
+		return nil
+	}
+	kb, err := s.Knowledge.Current(ctx)
+	if err != nil {
+		return fmt.Errorf("planning: %w", err)
+	}
+	a := planning.Reconcile(kb, old, next, sets, func() string { return s.newID().String() })
+	if a.Empty() {
+		return nil
+	}
+	if err := st.Sessions.AdjustSession(ctx, userID, o.SessionID, a, s.Clock.Now()); err != nil {
+		return fmt.Errorf("adjusting the draft of %s: %w", o.SessionID, err)
+	}
+	if s.Log != nil {
+		s.Log.InfoContext(ctx, "offline start adjusted", "user_id", userID, "session_id", o.SessionID,
+			"removed", len(a.Remove), "replaced", len(a.Replace), "added", len(a.Append)+countSets(a.Blocks))
+	}
+	return nil
 }
 
 func (s *Service) warn(ctx context.Context, msg string, userID uuid.UUID, err error, kv ...any) {
@@ -653,6 +752,8 @@ func (s *Service) StartPlannedSession(ctx context.Context, userID, plannedID uui
 			return uuid.Nil, false, fmt.Errorf("check-in: %w", err)
 		}
 	}
+	// A session another device started offline answers this start too.
+	s.LinkOfflineStarts(ctx, userID)
 	err := s.Store.InTx(ctx, userID, func(st Stores) error {
 		kb, snap, err := s.load(ctx, st, userID)
 		if err != nil {

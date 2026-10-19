@@ -1,8 +1,10 @@
 import HefestoLogger
+import HefestoPlan
 import HefestoStore
 import SwiftUI
 
-/// Today: start a session or plan rest, what was kept, and the sessions logged so far.
+/// Today: the plan's session for today, start a session or plan rest, what
+/// was kept, the week of the plan, and the sessions logged so far.
 struct TodayView: View {
     @Environment(AppModel.self) private var model
     @State private var sessions: [Session] = []
@@ -11,9 +13,15 @@ struct TodayView: View {
     @State private var open: OpenSession?
     @State private var error: String?
     @State private var confirmingSignOut = false
+    @State private var path: [PlanRoute] = []
+    /// The planned session whose check-in is open.
+    @State private var checkingIn: PlanSession?
+    /// The log session a start returned, opened once the check-in is gone.
+    @State private var started: String?
+    @State private var onboarding = false
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     header
@@ -23,7 +31,13 @@ struct TodayView: View {
                         .padding(.horizontal, 20)
                         .accessibilityAddTraits(.isHeader)
                     if let progress { ProgressTiles(progress: progress).padding(.horizontal, 16).padding(.top, 14) }
+                    plan.padding(.horizontal, 16).padding(.top, 16)
                     actions.padding(.horizontal, 16).padding(.top, 16)
+                    if let week = model.plan.week, !week.stopped {
+                        CapsLabel("This week").padding(.horizontal, 20).padding(.top, 28).padding(.bottom, 10)
+                        PlanWeekList(week: week, today: model.plan.today) { path.append(PlanRoute(sessionId: $0.id)) }
+                            .padding(.horizontal, 16)
+                    }
                     CapsLabel("Sessions").padding(.horizontal, 20).padding(.top, 28).padding(.bottom, 10)
                     sessionList.padding(.horizontal, 16).padding(.bottom, 24)
                 }
@@ -31,14 +45,33 @@ struct TodayView: View {
             .themedScreen()
             .toolbar(.hidden, for: .navigationBar)
             .refreshable { await model.syncNow() }
+            .navigationDestination(for: PlanRoute.self) { route in
+                PlanSessionView(route: route, onStart: { checkingIn = $0 }, onContinue: resume)
+            }
             .fullScreenCover(item: $open) { LoggerView(sessionId: $0.id) }
+            .fullScreenCover(isPresented: $onboarding) { OnboardingView() }
+            .sheet(item: $checkingIn, onDismiss: openStarted) { session in
+                CheckInSheet(
+                    session: session,
+                    onStart: { sleep, fatigue in await start(session, sleepHours: sleep, fatigue: fatigue) },
+                    onStartOffline: { startOffline(session) },
+                    initiallyOffline: model.demo?.screen == .offlinestart)
+            }
             .alert("Something went wrong", isPresented: .constant(error != nil)) {
                 Button("OK") { error = nil }
             } message: {
                 Text(verbatim: error ?? "")
             }
+            .task { await model.plan.observe() }
             .task {
-                if let demo = model.demo, demo.opensLogger { open = OpenSession(id: demo.draftSessionId) }
+                guard let demo = model.demo else { return }
+                try? model.plan.reload()
+                if demo.onboardingPage != nil { onboarding = true }
+                if let id = demo.opensSessionId { open = OpenSession(id: id) }
+                if let today = model.plan.todaySession {
+                    if demo.screen == .checkin || demo.screen == .offlinestart { checkingIn = today }
+                    if demo.screen == .plansession { path = [PlanRoute(sessionId: today.id)] }
+                }
             }
             .task {
                 do { for try await s in model.db.observeRecentSessions() { sessions = s } } catch {}
@@ -90,14 +123,53 @@ struct TodayView: View {
         .frame(minHeight: 44)
     }
 
+    /// Today's planned session, a rest day of the plan, or a stop. Without a
+    /// plan, the onboarding that brings one.
+    @ViewBuilder
+    private var plan: some View {
+        if model.plan.status == .needsOnboarding {
+            OnboardingCard { onboarding = true }
+        } else if let week = model.plan.week {
+            if week.stopped {
+                PlanStoppedCard(week: week)
+            } else {
+                TodayPlanCard(
+                    session: model.plan.todaySession, onStart: { checkingIn = $0 }, onContinue: resume,
+                    onOpen: { path.append(PlanRoute(sessionId: $0.id)) })
+            }
+        }
+    }
+
+    /// The plan's session leads while it is open; a free session is then a
+    /// second choice, never a second primary action.
+    private var planLeads: Bool {
+        if model.plan.status == .needsOnboarding { return true }
+        guard let week = model.plan.week else { return false }
+        if week.stopped { return true }
+        return model.plan.todaySession.map { $0.status != .completed } ?? false
+    }
+
     private var actions: some View {
         VStack(spacing: 10) {
-            Button {
-                start(restDay: false)
-            } label: {
-                Label("Start a session", systemImage: "play.fill")
+            if planLeads {
+                Button {
+                    start(restDay: false)
+                } label: {
+                    Label {
+                        Text("Free session")
+                    } icon: {
+                        Image(systemName: "plus").foregroundStyle(Palette.textSecondary)
+                    }
+                }
+                .buttonStyle(SecondaryButtonStyle())
+            } else {
+                Button {
+                    start(restDay: false)
+                } label: {
+                    Label("Start a session", systemImage: "play.fill")
+                }
+                .buttonStyle(PrimaryButtonStyle())
             }
-            .buttonStyle(PrimaryButtonStyle())
 
             // Planned rest counts as training kept (ADR 0003).
             Button {
@@ -149,6 +221,57 @@ struct TodayView: View {
                 self.error = error.localizedDescription
             }
         }
+    }
+
+    /// Starts a planned session after its check-in. What is waiting to sync
+    /// goes first, so the plan adapts to the latest log. Says why when the
+    /// start did not happen; without a connection the athlete may start
+    /// without the server. A demo never has one.
+    private func start(_ session: PlanSession, sleepHours: Double?, fatigue: Int?) async -> StartFailure? {
+        await model.syncNow()
+        do {
+            started = try await model.plan.start(session, sleepHours: sleepHours, fatigue: fatigue)
+            checkingIn = nil
+            return nil
+        } catch PlanStartError.offline, PlanStartError.noServer {
+            return .offline
+        } catch {
+            return .message(PlanStartMessage.text(error))
+        }
+    }
+
+    /// Starts a planned session here, as planned and without the check-in
+    /// (ADR 0027). The next sync takes it to the server.
+    private func startOffline(_ session: PlanSession) -> String? {
+        do {
+            started = try model.plan.startOffline(session)
+            checkingIn = nil
+            return nil
+        } catch {
+            return PlanStartMessage.text(error)
+        }
+    }
+
+    /// Opens a started session's log, starting it again on the server if
+    /// it is not here yet: the server answers with the same session.
+    private func resume(_ session: PlanSession) {
+        if let id = model.plan.logSession(for: session) {
+            open = OpenSession(id: id)
+            return
+        }
+        Task {
+            switch await start(session, sleepHours: nil, fatigue: nil) {
+            case nil: openStarted()
+            case .offline?: error = PlanStartMessage.text(PlanStartError.offline)
+            case let .message(text)?: error = text
+            }
+        }
+    }
+
+    private func openStarted() {
+        guard let id = started else { return }
+        started = nil
+        open = OpenSession(id: id)
     }
 
     private func start(restDay: Bool) {

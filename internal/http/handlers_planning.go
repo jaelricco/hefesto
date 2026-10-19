@@ -257,6 +257,16 @@ func (h *handlers) planChangesFor(ctx context.Context, userID, sessionID uuid.UU
 	return &cs
 }
 
+// linkOfflineStarts lets the planner link the sessions a client started
+// offline (spec §10.5) once a push has written them, so the pull that
+// follows brings the adjusted drafts. Without a planner nothing happens; the
+// planner logs its failures, and the next plan request tries again.
+func (h *handlers) linkOfflineStarts(ctx context.Context, userID uuid.UUID) {
+	if svc, err := h.planner(); err == nil {
+		svc.LinkOfflineStarts(ctx, userID)
+	}
+}
+
 // startPlannedSession writes a planned session into the log as a draft
 // session (spec §10.2). A second start answers with the first session.
 func (h *handlers) startPlannedSession(w http.ResponseWriter, r *http.Request) error {

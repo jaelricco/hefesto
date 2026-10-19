@@ -874,12 +874,20 @@ type plannerRegionOut struct {
 }
 
 type plannerCatalogueOut struct {
-	RulesetVersion string               `json:"ruleset_version"`
-	Disclaimer     string               `json:"disclaimer"`
-	Skills         []plannerSkillOut    `json:"skills"`
-	Exercises      []plannerExerciseOut `json:"exercises"`
-	Regions        []plannerRegionOut   `json:"regions"`
-	ClassQuestions []classQuestionOut   `json:"class_questions"`
+	RulesetVersion string                 `json:"ruleset_version"`
+	Disclaimer     string                 `json:"disclaimer"`
+	Skills         []plannerSkillOut      `json:"skills"`
+	Exercises      []plannerExerciseOut   `json:"exercises"`
+	Regions        []plannerRegionOut     `json:"regions"`
+	ClassQuestions []classQuestionOut     `json:"class_questions"`
+	Exertion       redFlagOut             `json:"exertion"`
+	Screening      []screeningQuestionOut `json:"screening"`
+	MinorAgeYears  int                    `json:"minor_age_years"`
+}
+
+type screeningQuestionOut struct {
+	ID       string `json:"id"`
+	Question string `json:"question"`
 }
 
 // catalogueFrom lists every red-flag question of a region, the ones for
@@ -890,7 +898,13 @@ func catalogueFrom(k *core.Knowledge) plannerCatalogueOut {
 	for _, s := range ob.Stages {
 		stages[s.Skill] = s.Classes
 	}
-	out := plannerCatalogueOut{RulesetVersion: k.Version, Disclaimer: k.Disclaimer()}
+	out := plannerCatalogueOut{RulesetVersion: k.Version, Disclaimer: k.Disclaimer(), MinorAgeYears: int(k.T.MinorAge)}
+	if rf, ok := k.RedFlag(core.ExertionFlag); ok {
+		out.Exertion = redFlagsFrom([]core.RedFlag{rf})[0]
+	}
+	for _, q := range k.ScreeningQuestions() {
+		out.Screening = append(out.Screening, screeningQuestionOut{ID: q.ID, Question: q.Question})
+	}
 	for _, s := range k.Skills() {
 		so := plannerSkillOut{Slug: s.Slug, Name: s.Name, Foundation: s.Foundation, Levels: make([]plannerLevelOut, len(s.Levels)),
 			StageClasses: classesFrom(stages[s.Slug])}
@@ -911,5 +925,6 @@ func catalogueFrom(k *core.Knowledge) plannerCatalogueOut {
 	}
 	out.Skills, out.Exercises, out.Regions, out.ClassQuestions = nonNil(out.Skills), nonNil(out.Exercises), nonNil(out.Regions),
 		nonNil(out.ClassQuestions)
+	out.Screening = nonNil(out.Screening)
 	return out
 }

@@ -122,7 +122,9 @@ func validateAnswers(k *Knowledge, a Answers, now time.Time) error {
 		}
 	}
 	checkMobility(f, a.Mobility)
-	if len(a.Screening) != screeningAnswers {
+	// Without consent the screening is not asked (onboarding.md §3.1): no
+	// answers then, or all of them from a client that asks anyway.
+	if n := len(a.Screening); n != screeningAnswers && (a.HealthConsent || n != 0) {
 		f.add("/screening", fmt.Sprintf("all %d questions must be answered", screeningAnswers))
 	}
 	k.checkBody(f, a, isMinor(k, a.BirthYear, now))

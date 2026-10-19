@@ -280,6 +280,33 @@ func (q *Queries) GetDecision(ctx context.Context, arg GetDecisionParams) (PlanD
 	return i, err
 }
 
+const getPlannedSessionAny = `-- name: GetPlannedSessionAny :one
+SELECT p.id AS plan_id, p.payload, s.order_index
+FROM planned_sessions s
+JOIN training_plans p ON p.id = s.plan_id AND p.user_id = s.user_id
+WHERE s.id = $1 AND s.user_id = $2
+`
+
+type GetPlannedSessionAnyParams struct {
+	ID     uuid.UUID
+	UserID uuid.UUID
+}
+
+type GetPlannedSessionAnyRow struct {
+	PlanID     uuid.UUID
+	Payload    []byte
+	OrderIndex int32
+}
+
+// A planned session of any plan, a replaced one too: what a client started
+// offline from the plan it held (spec §10.5).
+func (q *Queries) GetPlannedSessionAny(ctx context.Context, arg GetPlannedSessionAnyParams) (GetPlannedSessionAnyRow, error) {
+	row := q.db.QueryRow(ctx, getPlannedSessionAny, arg.ID, arg.UserID)
+	var i GetPlannedSessionAnyRow
+	err := row.Scan(&i.PlanID, &i.Payload, &i.OrderIndex)
+	return i, err
+}
+
 const getPlannerState = `-- name: GetPlannerState :one
 
 SELECT user_id, meso_start, last_deload, deload_week, deload_kind, deload_next, calibrate, headroom, entry, unlocked, updated_at FROM user_planner_states WHERE user_id = $1
@@ -698,6 +725,27 @@ func (q *Queries) InsertPlannerSession(ctx context.Context, arg InsertPlannerSes
 	return err
 }
 
+const linkOfflineStart = `-- name: LinkOfflineStart :exec
+UPDATE planned_sessions s
+SET workout_session_id = ws.id, check_in_applied = false,
+    status = CASE WHEN ws.status = 'completed' THEN 'completed' ELSE 'started' END
+FROM workout_sessions ws
+WHERE s.id = $1 AND s.user_id = $2 AND ws.id = $3 AND ws.user_id = s.user_id
+`
+
+type LinkOfflineStartParams struct {
+	ID               uuid.UUID
+	UserID           uuid.UUID
+	WorkoutSessionID uuid.UUID
+}
+
+// Points a planned session at a log session started offline: started, or
+// completed when the log session is. A start offline has no check-in.
+func (q *Queries) LinkOfflineStart(ctx context.Context, arg LinkOfflineStartParams) error {
+	_, err := q.db.Exec(ctx, linkOfflineStart, arg.ID, arg.UserID, arg.WorkoutSessionID)
+	return err
+}
+
 const listActiveConstraints = `-- name: ListActiveConstraints :many
 
 SELECT id, user_id, kind, region, created_at, position, cleared_at FROM planning_constraints WHERE user_id = $1 AND cleared_at IS NULL ORDER BY position
@@ -1017,6 +1065,54 @@ func (q *Queries) ListPendingCompletions(ctx context.Context, arg ListPendingCom
 			return nil, err
 		}
 		items = append(items, id)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listPendingOfflineStarts = `-- name: ListPendingOfflineStarts :many
+SELECT ws.id, s.id AS planned_session_id, (ws.status = 'completed')::boolean AS completed
+FROM workout_sessions ws
+JOIN planned_sessions s ON s.id = ws.planned_session_id AND s.user_id = ws.user_id
+WHERE ws.user_id = $1 AND ws.deleted_at IS NULL AND NOT ws.is_rest_day
+  AND ws.status IN ('draft', 'completed')
+  AND s.scheduled_date >= $2
+  AND NOT EXISTS (SELECT 1 FROM planned_sessions x
+                  WHERE x.user_id = ws.user_id AND x.workout_session_id = ws.id)
+ORDER BY ws.started_at, ws.id
+LIMIT $3
+`
+
+type ListPendingOfflineStartsParams struct {
+	UserID  uuid.UUID
+	Since   pgtype.Date
+	MaxRows int32
+}
+
+type ListPendingOfflineStartsRow struct {
+	ID               uuid.UUID
+	PlannedSessionID uuid.UUID
+	Completed        bool
+}
+
+// Log sessions a client started offline from a planned session that no
+// planned session links yet (spec §10.5), oldest first. Only starts planned
+// from @since on; an older one stays a session of the log.
+func (q *Queries) ListPendingOfflineStarts(ctx context.Context, arg ListPendingOfflineStartsParams) ([]ListPendingOfflineStartsRow, error) {
+	rows, err := q.db.Query(ctx, listPendingOfflineStarts, arg.UserID, arg.Since, arg.MaxRows)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []ListPendingOfflineStartsRow{}
+	for rows.Next() {
+		var i ListPendingOfflineStartsRow
+		if err := rows.Scan(&i.ID, &i.PlannedSessionID, &i.Completed); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
 	}
 	if err := rows.Err(); err != nil {
 		return nil, err

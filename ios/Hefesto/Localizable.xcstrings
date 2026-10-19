@@ -141,6 +141,16 @@
         }
       }
     },
+    "%@–%@ kg": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@–%2$@ kg"
+          }
+        }
+      }
+    },
     "%lld XP": {
       "localizations": {
         "de": {
@@ -191,12 +201,82 @@
         }
       }
     },
+    "%lld h": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld h"
+          }
+        }
+      }
+    },
+    "%lld h or less": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld h oder weniger"
+          }
+        }
+      }
+    },
+    "%lld h or more": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld h oder mehr"
+          }
+        }
+      }
+    },
     "%lld m": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "%lld m"
+          }
+        }
+      }
+    },
+    "%lld min": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld min"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld min"
+                }
+              }
+            }
+          }
+        },
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld min"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld min"
+                }
+              }
+            }
           }
         }
       }
@@ -351,6 +431,46 @@
         }
       }
     },
+    "%lld reps in reserve": {
+      "localizations": {
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld Wdh. Reserve"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld Wdh. Reserve"
+                }
+              }
+            }
+          }
+        },
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld rep in reserve"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld reps in reserve"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "%lld s": {
       "localizations": {
         "de": {
@@ -367,6 +487,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld s halten"
+          }
+        }
+      }
+    },
+    "%lld s in reserve": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld s Reserve"
           }
         }
       }
@@ -481,6 +611,86 @@
         }
       }
     },
+    "%lld × %lld reps": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld × %#@reps@"
+          },
+          "substitutions": {
+            "reps": {
+              "argNum": 2,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg rep"
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg reps"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld × %#@reps@"
+          },
+          "substitutions": {
+            "reps": {
+              "argNum": 2,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg Wdh."
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg Wdh."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld × %lld s": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld × %2$lld s"
+          }
+        }
+      }
+    },
+    "%lld+ min": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld+ min"
+          }
+        }
+      }
+    },
     "%lld-day streak": {
       "localizations": {
         "en": {
@@ -521,6 +731,26 @@
         }
       }
     },
+    "%lld–%lld": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld–%2$lld"
+          }
+        }
+      }
+    },
+    "%lld–%lld s": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld–%2$lld s"
+          }
+        }
+      }
+    },
     "+%@ kg": {
       "localizations": {
         "de": {
@@ -541,12 +771,62 @@
         }
       }
     },
+    "0 is no pain, 10 the worst you can imagine.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "0 ist kein Schmerz, 10 der stärkste vorstellbare."
+          }
+        }
+      }
+    },
+    "1 is fresh, 10 is exhausted.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 ist frisch, 10 ist erschöpft."
+          }
+        }
+      }
+    },
+    "1 to 4 years": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 bis 4 Jahre"
+          }
+        }
+      }
+    },
     "1 · Poor": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "1 · Schwach"
+          }
+        }
+      }
+    },
+    "17 to 26 weeks ago": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vor 17 bis 26 Wochen"
+          }
+        }
+      }
+    },
+    "2 to 4 weeks": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "2 bis 4 Wochen"
           }
         }
       }
@@ -561,12 +841,32 @@
         }
       }
     },
+    "3 to 6 weeks ago": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vor 3 bis 6 Wochen"
+          }
+        }
+      }
+    },
     "3 · Solid": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "3 · Solide"
+          }
+        }
+      }
+    },
+    "4 to 12 weeks": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "4 bis 12 Wochen"
           }
         }
       }
@@ -591,6 +891,46 @@
         }
       }
     },
+    "6 to 12 months": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "6 bis 12 Monate"
+          }
+        }
+      }
+    },
+    "7 to 16 weeks ago": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vor 7 bis 16 Wochen"
+          }
+        }
+      }
+    },
+    "A few questions, about five minutes. Hefesto then plans your week around your goals, your time and your equipment.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ein paar Fragen, etwa fünf Minuten. Danach plant Hefesto deine Woche nach deinen Zielen, deiner Zeit und deiner Ausrüstung."
+          }
+        }
+      }
+    },
+    "A question is still open.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eine Frage ist noch offen."
+          }
+        }
+      }
+    },
     "Abandoned": {
       "localizations": {
         "de": {
@@ -607,6 +947,36 @@
           "stringUnit": {
             "state": "translated",
             "value": "Konto"
+          }
+        }
+      }
+    },
+    "Active now and then": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ab und zu aktiv"
+          }
+        }
+      }
+    },
+    "Add": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hinzufügen"
+          }
+        }
+      }
+    },
+    "Add a band": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Band hinzufügen"
           }
         }
       }
@@ -641,12 +1011,82 @@
         }
       }
     },
+    "After 6 hours of sleep or less, or a tiredness of 8 or more, the hardest block becomes technique work today. Your answers are not stored.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach 6 Stunden Schlaf oder weniger oder bei einer Müdigkeit ab 8 wird der schwerste Block heute zur Technikarbeit. Deine Antworten werden nicht gespeichert."
+          }
+        }
+      }
+    },
+    "After your check-in, the hardest block is technique work today.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach deinem Check-in ist der schwerste Block heute Technikarbeit."
+          }
+        }
+      }
+    },
+    "Alternate": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abwechselnd"
+          }
+        }
+      }
+    },
     "An account with this email exists. Sign in instead.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Mit dieser E-Mail gibt es schon ein Konto. Melde dich stattdessen an."
+          }
+        }
+      }
+    },
+    "An exercise of this session is not on this device yet. Starting it needs a connection.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eine Übung dieser Einheit ist noch nicht auf diesem Gerät. Der Start braucht eine Verbindung."
+          }
+        }
+      }
+    },
+    "Answer the questions": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fragen beantworten"
+          }
+        }
+      }
+    },
+    "Arching the back": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rücken nach hinten biegen"
+          }
+        }
+      }
+    },
+    "Arms overhead": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arme über Kopf"
           }
         }
       }
@@ -671,12 +1111,82 @@
         }
       }
     },
+    "Back": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zurück"
+          }
+        }
+      }
+    },
+    "Balance": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Balance"
+          }
+        }
+      }
+    },
     "Band": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Band"
+          }
+        }
+      }
+    },
+    "Band: %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Band: %@"
+          }
+        }
+      }
+    },
+    "Band: %@ ×%lld": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Band: %1$@ ×%2$lld"
+          }
+        }
+      }
+    },
+    "Bands are saved online. Try again when you have a connection.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bänder werden online gespeichert. Versuch es nochmals, wenn du eine Verbindung hast."
+          }
+        }
+      }
+    },
+    "Bands at once": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bänder gleichzeitig"
+          }
+        }
+      }
+    },
+    "Before you start": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bevor du startest"
           }
         }
       }
@@ -721,12 +1231,102 @@
         }
       }
     },
+    "Body weight": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Körpergewicht"
+          }
+        }
+      }
+    },
+    "Box or bench": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Box oder Bank"
+          }
+        }
+      }
+    },
+    "Brand": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Marke"
+          }
+        }
+      }
+    },
+    "By a date": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bis zu einem Datum"
+          }
+        }
+      }
+    },
+    "Calibration": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalibrierung"
+          }
+        }
+      }
+    },
+    "Can you put your palms flat on the floor and, with straight arms, shift your weight forward without pain?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kannst du die Handflächen flach aufsetzen und mit gestreckten Armen schmerzfrei Gewicht nach vorn verlagern?"
+          }
+        }
+      }
+    },
     "Cancel": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Abbrechen"
+          }
+        }
+      }
+    },
+    "Catalogue": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Katalog"
+          }
+        }
+      }
+    },
+    "Check the figures: the first must not be above the second.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prüf die Zahlen: Die erste darf nicht über der zweiten liegen."
+          }
+        }
+      }
+    },
+    "Choose a band": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Band wählen"
           }
         }
       }
@@ -741,12 +1341,42 @@
         }
       }
     },
+    "Choose everything you can use. A floor and a wall are always there.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wähle alles, was du nutzen kannst. Boden und Wand sind immer da."
+          }
+        }
+      }
+    },
+    "Choose up to three skills. The first one gets the most time.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wähle bis zu drei Skills. Der erste bekommt am meisten Zeit."
+          }
+        }
+      }
+    },
     "Close": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Schliessen"
+          }
+        }
+      }
+    },
+    "Colour or name": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Farbe oder Name"
           }
         }
       }
@@ -781,12 +1411,32 @@
         }
       }
     },
+    "Complaints and health answers let the planner work around them. Without your consent the safety questions are still asked, but only used for this plan and not kept, and the planner plans conservatively.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mit Beschwerden und Gesundheitsangaben kann der Planer Rücksicht nehmen. Ohne deine Einwilligung werden die Sicherheitsfragen trotzdem gestellt, aber nur für diesen Plan verwendet und nicht gespeichert, und der Planer plant vorsichtig."
+          }
+        }
+      }
+    },
     "Completed": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Abgeschlossen"
+          }
+        }
+      }
+    },
+    "Continue": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weiter"
           }
         }
       }
@@ -817,6 +1467,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hefesto ist nicht erreichbar. Prüfe deine Verbindung."
+          }
+        }
+      }
+    },
+    "Count only clean repetitions and seconds: the full range, no swing, no band. When you are not sure, say so.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zähl nur saubere Wiederholungen und Sekunden: voller Bewegungsweg, ohne Schwung, ohne Band. Wenn du unsicher bist, sag es."
+          }
+        }
+      }
+    },
+    "Counted in the last 4 weeks": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In den letzten 4 Wochen gezählt"
           }
         }
       }
@@ -861,6 +1531,16 @@
         }
       }
     },
+    "Create my plan": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Meinen Plan erstellen"
+          }
+        }
+      }
+    },
     "Date": {
       "localizations": {
         "de": {
@@ -891,12 +1571,42 @@
         }
       }
     },
+    "Deload session": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Entlastungstraining"
+          }
+        }
+      }
+    },
+    "Did a professional restrict any movements? Optional.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hat dir eine Fachperson Bewegungen eingeschränkt? Freiwillig."
+          }
+        }
+      }
+    },
     "Difficulty": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Schwierigkeit"
+          }
+        }
+      }
+    },
+    "Dip belt": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dipgürtel"
           }
         }
       }
@@ -911,12 +1621,92 @@
         }
       }
     },
+    "Do this set": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diesen Satz machen"
+          }
+        }
+      }
+    },
+    "Do you have complaints that affect your training?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hast du Beschwerden, die dein Training beeinflussen?"
+          }
+        }
+      }
+    },
+    "Do you have complaints that affect your training? Did an injury stop your training in the last 12 months?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hast du Beschwerden, die dein Training beeinflussen? Hat dich in den letzten 12 Monaten eine Verletzung am Training gehindert?"
+          }
+        }
+      }
+    },
+    "Do you suspect a tear or another serious injury yourself?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vermutest du selbst einen Riss oder eine andere ernsthafte Verletzung?"
+          }
+        }
+      }
+    },
+    "Do your straight arms reach up beside your ears without arching your lower back?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kommen deine gestreckten Arme über Kopf neben die Ohren, ohne Hohlkreuz?"
+          }
+        }
+      }
+    },
+    "Don't know": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weiss nicht"
+          }
+        }
+      }
+    },
     "Done": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Fertig"
+          }
+        }
+      }
+    },
+    "Done for today": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Für heute erledigt"
+          }
+        }
+      }
+    },
+    "Dumbbells or plates": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kurzhanteln oder Gewichtsscheiben"
           }
         }
       }
@@ -991,6 +1781,26 @@
         }
       }
     },
+    "Enter what you did; the target is filled in.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trag ein, was du gemacht hast; das Ziel ist schon eingetragen."
+          }
+        }
+      }
+    },
+    "Estimated": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geschätzt"
+          }
+        }
+      }
+    },
     "Estimated assist": {
       "localizations": {
         "de": {
@@ -1051,6 +1861,16 @@
         }
       }
     },
+    "Filmed": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gefilmt"
+          }
+        }
+      }
+    },
     "Finish": {
       "localizations": {
         "de": {
@@ -1081,12 +1901,32 @@
         }
       }
     },
+    "Floor": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Boden"
+          }
+        }
+      }
+    },
     "Foot support": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Fussstütze"
+          }
+        }
+      }
+    },
+    "For how long?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wie lange?"
           }
         }
       }
@@ -1111,12 +1951,102 @@
         }
       }
     },
+    "Free session": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Freies Training"
+          }
+        }
+      }
+    },
+    "From": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Von"
+          }
+        }
+      }
+    },
+    "Full session": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Volles Training"
+          }
+        }
+      }
+    },
+    "Get your training plan": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hol dir deinen Trainingsplan"
+          }
+        }
+      }
+    },
+    "Gradually": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Allmählich"
+          }
+        }
+      }
+    },
+    "Gym": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fitnessstudio"
+          }
+        }
+      }
+    },
     "Handstand": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Handstand"
+          }
+        }
+      }
+    },
+    "Hanging and pulling": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hängen und Ziehen"
+          }
+        }
+      }
+    },
+    "Hardly active": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kaum aktiv"
+          }
+        }
+      }
+    },
+    "Has a professional looked at it?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hat eine Fachperson sie angeschaut?"
           }
         }
       }
@@ -1137,6 +2067,36 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hefesto konnte seine Daten nicht öffnen"
+          }
+        }
+      }
+    },
+    "Hefesto could not reach the server. Your answers are kept; try again.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hefesto hat den Server nicht erreicht. Deine Antworten bleiben erhalten; versuch es nochmals."
+          }
+        }
+      }
+    },
+    "Hefesto now plans your first week. The first sessions check your answers: the plan starts a little lower and learns from your log.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hefesto plant jetzt deine erste Woche. Die ersten Trainings prüfen deine Antworten: Der Plan beginnt etwas tiefer und lernt aus deinem Log."
+          }
+        }
+      }
+    },
+    "Hefesto plans your training from your answers. It takes about five minutes; after that, the planner learns from your log.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hefesto plant dein Training aus deinen Antworten. Das dauert etwa fünf Minuten; danach lernt der Planer aus deinem Log."
           }
         }
       }
@@ -1171,12 +2131,112 @@
         }
       }
     },
+    "How did it begin?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wie hat sie begonnen?"
+          }
+        }
+      }
+    },
     "How hard did it feel?": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Wie anstrengend war es?"
+          }
+        }
+      }
+    },
+    "How long can you hang from the bar?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wie lange kannst du frei hängen?"
+          }
+        }
+      }
+    },
+    "How long do you hold it: %@?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wie lange hältst du: %@?"
+          }
+        }
+      }
+    },
+    "How long do you hold the hollow body?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wie lange hältst du den Hollow Body?"
+          }
+        }
+      }
+    },
+    "How long do you hold yourself up on straight arms?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wie lange hältst du den Stütz mit gestreckten Armen?"
+          }
+        }
+      }
+    },
+    "How long have you trained with your body weight regularly?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wie lange trainierst du schon regelmässig mit dem Körpergewicht?"
+          }
+        }
+      }
+    },
+    "How many clean dips? Upper arms at least parallel to the floor.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wie viele saubere Dips? Oberarm mindestens parallel zum Boden."
+          }
+        }
+      }
+    },
+    "How many clean pull-ups? Chin over the bar, arms straight at the bottom.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wie viele saubere Klimmzüge? Kinn über die Stange, unten gestreckt."
+          }
+        }
+      }
+    },
+    "How many clean push-ups can you do in one go?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wie viele saubere Liegestütze schaffst du am Stück?"
+          }
+        }
+      }
+    },
+    "How many clean repetitions: %@?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wie viele saubere Wiederholungen: %@?"
           }
         }
       }
@@ -1191,12 +2251,112 @@
         }
       }
     },
+    "How many rows on a low bar, body inclined?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wie viele Rudern am niedrigen Holm, Körper schräg?"
+          }
+        }
+      }
+    },
+    "How many times a week can you train?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wie oft pro Woche kannst du trainieren?"
+          }
+        }
+      }
+    },
+    "How many?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wie viele?"
+          }
+        }
+      }
+    },
+    "How much do you weigh?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wie schwer bist du?"
+          }
+        }
+      }
+    },
     "How much longer you could have held with clean form.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Wie viel länger du den Halt sauber hättest halten können."
+          }
+        }
+      }
+    },
+    "How much time do you have per session?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wie viel Zeit hast du pro Training?"
+          }
+        }
+      }
+    },
+    "How strong is it during or right after training?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wie stark ist sie beim oder direkt nach dem Training?"
+          }
+        }
+      }
+    },
+    "How strong is it in daily life?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wie stark ist sie im Alltag?"
+          }
+        }
+      }
+    },
+    "How sure are these numbers?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wie sicher sind diese Zahlen?"
+          }
+        }
+      }
+    },
+    "How tired are you?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wie müde bist du?"
+          }
+        }
+      }
+    },
+    "How would you describe your training?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wie würdest du dein Training beschreiben?"
           }
         }
       }
@@ -1231,12 +2391,72 @@
         }
       }
     },
+    "I have read this.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ich habe das gelesen."
+          }
+        }
+      }
+    },
+    "I train now, or did less than 3 weeks ago": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ich trainiere jetzt oder bis vor weniger als 3 Wochen"
+          }
+        }
+      }
+    },
+    "In a lunge with your toes a hand's width from a wall, does your knee touch the wall without the heel lifting?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Berührt dein Knie im Ausfallschritt die Wand, wenn die Zehen eine Handbreite entfernt sind, ohne dass die Ferse abhebt?"
+          }
+        }
+      }
+    },
     "In progress": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Läuft"
+          }
+        }
+      }
+    },
+    "In the last 12 months": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In den letzten 12 Monaten"
+          }
+        }
+      }
+    },
+    "In this order": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In dieser Reihenfolge"
+          }
+        }
+      }
+    },
+    "In which year were you born?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In welchem Jahr bist du geboren?"
           }
         }
       }
@@ -1261,6 +2481,16 @@
         }
       }
     },
+    "It is being looked into": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wird gerade abgeklärt"
+          }
+        }
+      }
+    },
     "Knee": {
       "localizations": {
         "de": {
@@ -1281,12 +2511,52 @@
         }
       }
     },
+    "Less than 2 weeks": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weniger als 2 Wochen"
+          }
+        }
+      }
+    },
+    "Less than 6 months": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weniger als 6 Monate"
+          }
+        }
+      }
+    },
     "Levels": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Stufen"
+          }
+        }
+      }
+    },
+    "Light session": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leichtes Training"
+          }
+        }
+      }
+    },
+    "Lighter today": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Heute leichter"
           }
         }
       }
@@ -1327,6 +2597,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Satz in diesem Block eintragen"
+          }
+        }
+      }
+    },
+    "Log a set of your own": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eigenen Satz eintragen"
           }
         }
       }
@@ -1381,6 +2661,16 @@
         }
       }
     },
+    "Low bar": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiefe Stange"
+          }
+        }
+      }
+    },
     "Lower back": {
       "localizations": {
         "de": {
@@ -1401,12 +2691,42 @@
         }
       }
     },
+    "Makers often state more than a band gives, and bands of one colour differ.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hersteller geben oft mehr an, als ein Band hergibt, und Bänder derselben Farbe unterscheiden sich."
+          }
+        }
+      }
+    },
     "Mark as achieved?": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Als erreicht markieren?"
+          }
+        }
+      }
+    },
+    "Max effort": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Maximal"
+          }
+        }
+      }
+    },
+    "May Hefesto keep your health answers?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Darf Hefesto deine Gesundheitsangaben speichern?"
           }
         }
       }
@@ -1441,6 +2761,36 @@
         }
       }
     },
+    "More than 12 weeks": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mehr als 12 Wochen"
+          }
+        }
+      }
+    },
+    "More than 26 weeks ago": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vor mehr als 26 Wochen"
+          }
+        }
+      }
+    },
+    "More than 4 years": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mehr als 4 Jahre"
+          }
+        }
+      }
+    },
     "Most added load": {
       "localizations": {
         "de": {
@@ -1457,6 +2807,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Meiste Wiederholungen"
+          }
+        }
+      }
+    },
+    "Move up": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach oben"
+          }
+        }
+      }
+    },
+    "My bands": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Meine Bänder"
           }
         }
       }
@@ -1481,6 +2851,26 @@
         }
       }
     },
+    "Never": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noch nie"
+          }
+        }
+      }
+    },
+    "New band": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neues Band"
+          }
+        }
+      }
+    },
     "New skill unlocked": {
       "localizations": {
         "de": {
@@ -1491,12 +2881,72 @@
         }
       }
     },
+    "Next": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weiter"
+          }
+        }
+      }
+    },
+    "Next set": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nächster Satz"
+          }
+        }
+      }
+    },
     "Next: %@": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Nächste: %@"
+          }
+        }
+      }
+    },
+    "No": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nein"
+          }
+        }
+      }
+    },
+    "No bands yet. Add the ones you train with.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noch keine Bänder. Füg die hinzu, mit denen du trainierst."
+          }
+        }
+      }
+    },
+    "No connection. Continuing this session here needs one.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Verbindung. Um hier weiterzumachen, braucht es eine."
+          }
+        }
+      }
+    },
+    "No connection. Without one, the session starts as planned: making it lighter after short sleep or high tiredness needs the server. Your plan takes the session up at the next sync.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Verbindung. Ohne sie startet die Einheit wie geplant: Leichter wird sie nach kurzem Schlaf oder grosser Müdigkeit nur mit dem Server. Dein Plan übernimmt die Einheit beim nächsten Sync."
           }
         }
       }
@@ -1541,6 +2991,16 @@
         }
       }
     },
+    "No, don't keep them": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nein, nicht speichern"
+          }
+        }
+      }
+    },
     "None": {
       "localizations": {
         "de": {
@@ -1561,6 +3021,36 @@
         }
       }
     },
+    "Not sure": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unsicher"
+          }
+        }
+      }
+    },
+    "Not yet": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noch nicht"
+          }
+        }
+      }
+    },
+    "Now": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jetzt"
+          }
+        }
+      }
+    },
     "OK": {
       "localizations": {
         "de": {
@@ -1571,12 +3061,32 @@
         }
       }
     },
+    "One more thing": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noch etwas"
+          }
+        }
+      }
+    },
     "One of:": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Eines davon:"
+          }
+        }
+      }
+    },
+    "Only to show how long the way usually takes. The plan follows where you stand, not the date.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nur um zu zeigen, wie lange der Weg meist dauert. Der Plan richtet sich danach, wo du stehst, nicht nach dem Datum."
           }
         }
       }
@@ -1611,12 +3121,72 @@
         }
       }
     },
+    "Optional": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Optional"
+          }
+        }
+      }
+    },
     "Optional. 1 is easy, 10 is everything you had.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Optional. 1 ist leicht, 10 ist alles, was du hattest."
+          }
+        }
+      }
+    },
+    "Outdoor park": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Outdoor-Park"
+          }
+        }
+      }
+    },
+    "Palms up under load": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Handflächen nach oben unter Last"
+          }
+        }
+      }
+    },
+    "Parallel bars": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Barren"
+          }
+        }
+      }
+    },
+    "Parallettes": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Parallettes"
+          }
+        }
+      }
+    },
+    "Partly": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teilweise"
           }
         }
       }
@@ -1637,6 +3207,46 @@
           "stringUnit": {
             "state": "translated",
             "value": "Passwort"
+          }
+        }
+      }
+    },
+    "Planned": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geplant"
+          }
+        }
+      }
+    },
+    "Planned session": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geplantes Training"
+          }
+        }
+      }
+    },
+    "Planned set": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geplanter Satz"
+          }
+        }
+      }
+    },
+    "Planned with a band. Choose the one you use, or None if you went without.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mit Band geplant. Wähl das Band, das du nutzt, oder «Keine», wenn du ohne trainiert hast."
           }
         }
       }
@@ -1671,6 +3281,36 @@
         }
       }
     },
+    "Pull-up bar": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Klimmzugstange"
+          }
+        }
+      }
+    },
+    "Pull-up bar, dip station, weights and a bench": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Klimmzugstange, Dipstation, Gewichte und Bank"
+          }
+        }
+      }
+    },
+    "Pull-up bar, low bar and parallel bars": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Klimmzugstange, tiefe Stange und Barren"
+          }
+        }
+      }
+    },
     "Push": {
       "localizations": {
         "de": {
@@ -1681,12 +3321,32 @@
         }
       }
     },
+    "Ready": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bereit"
+          }
+        }
+      }
+    },
     "Ready for the next set when you are.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Bereit für den nächsten Satz, wann immer du es bist."
+          }
+        }
+      }
+    },
+    "Remove": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Entfernen"
           }
         }
       }
@@ -1751,12 +3411,42 @@
         }
       }
     },
+    "Resistance as the maker states it": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Widerstand laut Hersteller"
+          }
+        }
+      }
+    },
+    "Resistance bands": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Widerstandsbänder"
+          }
+        }
+      }
+    },
     "Rest": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Pause"
+          }
+        }
+      }
+    },
+    "Rest %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pause %@"
           }
         }
       }
@@ -1811,12 +3501,32 @@
         }
       }
     },
+    "Rings": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ringe"
+          }
+        }
+      }
+    },
     "Risk factors": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Risikofaktoren"
+          }
+        }
+      }
+    },
+    "Safety comes before the plan. Hefesto does not diagnose; where an answer calls for it, it recommends seeing a professional.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sicherheit geht vor dem Plan. Hefesto stellt keine Diagnosen; wo eine Antwort es verlangt, empfiehlt die App eine Fachperson."
           }
         }
       }
@@ -1851,6 +3561,26 @@
         }
       }
     },
+    "See my plan": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zu meinem Plan"
+          }
+        }
+      }
+    },
+    "See the whole session": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ganzes Training ansehen"
+          }
+        }
+      }
+    },
     "Self-attested on": {
       "localizations": {
         "de": {
@@ -1867,6 +3597,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Selbst bestätigt: Das Log kann diese Stufe nicht zeigen."
+          }
+        }
+      }
+    },
+    "Send answers": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Antworten senden"
           }
         }
       }
@@ -2021,6 +3761,26 @@
         }
       }
     },
+    "Since when?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seit wann?"
+          }
+        }
+      }
+    },
+    "Sitting with straight legs, can you reach your toes?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erreichst du im Langsitz mit gestreckten Beinen deine Zehen?"
+          }
+        }
+      }
+    },
     "Skills": {
       "localizations": {
         "de": {
@@ -2051,6 +3811,36 @@
         }
       }
     },
+    "Sleep last night": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schlaf letzte Nacht"
+          }
+        }
+      }
+    },
+    "Some answers could not be taken. Check them and try again.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einige Antworten konnten nicht übernommen werden. Prüf sie und versuch es nochmals."
+          }
+        }
+      }
+    },
+    "Some answers do not quite fit together. Without an answer here, the planner starts lower to be safe.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einige Antworten passen nicht ganz zusammen. Ohne Antwort hier beginnt der Planer sicherheitshalber tiefer."
+          }
+        }
+      }
+    },
     "Some changes could not be synced, so you are still signed in. Try again when you are online.": {
       "localizations": {
         "de": {
@@ -2071,12 +3861,92 @@
         }
       }
     },
+    "Start": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Starten"
+          }
+        }
+      }
+    },
     "Start a session": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Training starten"
+          }
+        }
+      }
+    },
+    "Start session": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Training starten"
+          }
+        }
+      }
+    },
+    "Start without connection": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ohne Verbindung starten"
+          }
+        }
+      }
+    },
+    "Started": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Begonnen"
+          }
+        }
+      }
+    },
+    "Step %lld of %lld": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schritt %1$lld von %2$lld"
+          }
+        }
+      }
+    },
+    "Strength": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kraft"
+          }
+        }
+      }
+    },
+    "Suddenly": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plötzlich"
+          }
+        }
+      }
+    },
+    "Supporting on straight arms": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stütz mit gestreckten Armen"
           }
         }
       }
@@ -2111,12 +3981,52 @@
         }
       }
     },
+    "Target": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ziel"
+          }
+        }
+      }
+    },
+    "The answers could not be sent. Try again later.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Antworten konnten nicht gesendet werden. Versuch es später nochmals."
+          }
+        }
+      }
+    },
+    "The band could not be saved. Try again later.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das Band konnte nicht gespeichert werden. Versuch es später nochmals."
+          }
+        }
+      }
+    },
     "The catalogue loads with the first sync.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Der Katalog lädt mit der ersten Synchronisierung."
+          }
+        }
+      }
+    },
+    "The demo sends no answers.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Demo sendet keine Antworten."
           }
         }
       }
@@ -2131,12 +4041,82 @@
         }
       }
     },
+    "The plan fits into what you have. Rest days count towards the streak.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Plan passt in die Zeit, die du hast. Ruhetage zählen zur Serie."
+          }
+        }
+      }
+    },
+    "The planner is not available right now. Try again later.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Planer ist gerade nicht verfügbar. Versuche es später wieder."
+          }
+        }
+      }
+    },
+    "The questions could not be loaded. Starting your plan needs a connection.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Fragen konnten nicht geladen werden. Für deinen Plan braucht es eine Verbindung."
+          }
+        }
+      }
+    },
+    "The session could not start. Try again later.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Einheit konnte nicht starten. Versuch es später nochmals."
+          }
+        }
+      }
+    },
+    "These questions look for signs that need a professional. They are not a diagnosis.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diese Fragen suchen nach Zeichen, die eine Fachperson brauchen. Sie sind keine Diagnose."
+          }
+        }
+      }
+    },
     "This account cannot sign in.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Dieses Konto kann sich nicht anmelden."
+          }
+        }
+      }
+    },
+    "This device keeps no plan for the day. Starting needs a connection.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dieses Gerät hält keinen Plan für den Tag. Der Start braucht eine Verbindung."
+          }
+        }
+      }
+    },
+    "This session is no longer in your plan": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dieses Training ist nicht mehr in deinem Plan"
           }
         }
       }
@@ -2151,12 +4131,62 @@
         }
       }
     },
+    "This session was started on another device. Continuing it here needs a connection.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diese Einheit wurde auf einem anderen Gerät gestartet. Hier weiterzumachen braucht eine Verbindung."
+          }
+        }
+      }
+    },
+    "This set calibrates your plan: what you had left shows it where you stand.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dieser Satz kalibriert deinen Plan: Was du noch übrig hattest, zeigt ihm, wo du stehst."
+          }
+        }
+      }
+    },
+    "This sets where the plan starts and how fast it climbs.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das bestimmt, wo der Plan beginnt und wie schnell er steigert."
+          }
+        }
+      }
+    },
     "This skill's content is still being researched.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Die Inhalte dieses Skills werden noch recherchiert."
+          }
+        }
+      }
+    },
+    "This week": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diese Woche"
+          }
+        }
+      }
+    },
+    "To": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bis"
           }
         }
       }
@@ -2171,12 +4201,42 @@
         }
       }
     },
+    "To finish": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zum Schluss"
+          }
+        }
+      }
+    },
     "Today": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Heute"
+          }
+        }
+      }
+    },
+    "Today shows your week. Rest days count towards the streak.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "«Heute» zeigt deine Woche. Ruhetage zählen zur Serie."
+          }
+        }
+      }
+    },
+    "Today's plan": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plan für heute"
           }
         }
       }
@@ -2201,12 +4261,72 @@
         }
       }
     },
+    "Training hard, at a high level": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intensiv, auf hohem Niveau"
+          }
+        }
+      }
+    },
+    "Training is paused": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das Training pausiert"
+          }
+        }
+      }
+    },
+    "Training is paused. Your plan says why.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das Training pausiert. Dein Plan sagt, warum."
+          }
+        }
+      }
+    },
+    "Training regularly": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Regelmässig im Training"
+          }
+        }
+      }
+    },
+    "Try again": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nochmals versuchen"
+          }
+        }
+      }
+    },
     "Try another name.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Versuche einen anderen Namen."
+          }
+        }
+      }
+    },
+    "Two quick questions. Both are optional.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zwei kurze Fragen. Beide sind freiwillig."
           }
         }
       }
@@ -2241,12 +4361,162 @@
         }
       }
     },
+    "Up to": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bis"
+          }
+        }
+      }
+    },
+    "Volume": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Volumen"
+          }
+        }
+      }
+    },
+    "Wall": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wand"
+          }
+        }
+      }
+    },
+    "Warm-up": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufwärmen"
+          }
+        }
+      }
+    },
+    "Warm-up set": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufwärmsatz"
+          }
+        }
+      }
+    },
+    "Warning signs": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warnzeichen"
+          }
+        }
+      }
+    },
+    "Watch for pain": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auf Schmerz achten"
+          }
+        }
+      }
+    },
     "Week %lld": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Woche %lld"
+          }
+        }
+      }
+    },
+    "Weight on a bent-back wrist": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last auf dem gestreckten Handgelenk"
+          }
+        }
+      }
+    },
+    "Weight vest": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gewichtsweste"
+          }
+        }
+      }
+    },
+    "What could you do before the break: %@?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Was konntest du vor der Pause: %@?"
+          }
+        }
+      }
+    },
+    "When did you last train regularly, at least once a week?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wann hast du zuletzt regelmässig trainiert, mindestens einmal pro Woche?"
+          }
+        }
+      }
+    },
+    "Where you stand": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wo du stehst"
+          }
+        }
+      }
+    },
+    "Which stage of %@ can you do cleanly?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Welche Stufe von %@ schaffst du sauber?"
+          }
+        }
+      }
+    },
+    "Which stage of %@ can you hold cleanly?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Welche Stufe von %@ hältst du sauber?"
+          }
+        }
+      }
+    },
+    "Why this session": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warum dieses Training"
           }
         }
       }
@@ -2271,12 +4541,292 @@
         }
       }
     },
+    "Year": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jahr"
+          }
+        }
+      }
+    },
+    "Yes": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ja"
+          }
+        }
+      }
+    },
+    "Yes, keep them": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ja, speichern"
+          }
+        }
+      }
+    },
+    "Yes: a tear, or the suspicion of one": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ja: ein Riss oder der Verdacht darauf"
+          }
+        }
+      }
+    },
+    "Yes: overuse or a tendon": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ja: Überlastung oder Sehne"
+          }
+        }
+      }
+    },
+    "Yes: something else": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ja: etwas anderes"
+          }
+        }
+      }
+    },
+    "You have a band of this brand and colour already.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Du hast schon ein Band dieser Marke und Farbe."
+          }
+        }
+      }
+    },
+    "You have answered these questions before. Your plan is on its way.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Du hast diese Fragen schon beantwortet. Dein Plan ist unterwegs."
+          }
+        }
+      }
+    },
+    "Your background": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dein Hintergrund"
+          }
+        }
+      }
+    },
+    "Your complaint": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deine Beschwerde"
+          }
+        }
+      }
+    },
+    "Your equipment": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deine Ausrüstung"
+          }
+        }
+      }
+    },
+    "Your goals": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deine Ziele"
+          }
+        }
+      }
+    },
+    "Your health": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deine Gesundheit"
+          }
+        }
+      }
+    },
+    "Your plan": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dein Plan"
+          }
+        }
+      }
+    },
+    "Your plan changed. Today shows the new one.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dein Plan hat sich geändert. «Heute» zeigt den neuen."
+          }
+        }
+      }
+    },
+    "Your plan has changed. Have a look at today's session again.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dein Plan hat sich geändert. Schau dir das heutige Training noch einmal an."
+          }
+        }
+      }
+    },
+    "Your plan is ready": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dein Plan ist bereit"
+          }
+        }
+      }
+    },
+    "Your plan needs the onboarding first.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dein Plan braucht zuerst das Onboarding."
+          }
+        }
+      }
+    },
+    "Your plan rests today. Rest days count towards the streak.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dein Plan ruht heute. Ruhetage zählen zur Serie."
+          }
+        }
+      }
+    },
     "Your sessions appear here.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Deine Trainings erscheinen hier."
+          }
+        }
+      }
+    },
+    "Your time": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deine Zeit"
+          }
+        }
+      }
+    },
+    "about %lld min": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "about %lld min"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "about %lld min"
+                }
+              }
+            }
+          }
+        },
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "etwa %lld min"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "etwa %lld min"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "and %lld more": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "and %lld more"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "and %lld more"
+                }
+              }
+            }
+          }
+        },
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "und %lld weitere"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "und %lld weitere"
+                }
+              }
+            }
           }
         }
       }
@@ -2341,6 +4891,26 @@
         }
       }
     },
+    "more than %lld": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "mehr als %lld"
+          }
+        }
+      }
+    },
+    "more than %lld s": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "mehr als %lld s"
+          }
+        }
+      }
+    },
     "of %@": {
       "localizations": {
         "de": {
@@ -2377,6 +4947,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "ohne Unterstützung"
+          }
+        }
+      }
+    },
+    "under %lld s": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "unter %lld s"
           }
         }
       }

@@ -49,6 +49,10 @@ type PlanStore interface {
 	// PlannedSession returns the active plan that holds a planned session,
 	// and the session's index in it.
 	PlannedSession(ctx context.Context, userID, sessionID uuid.UUID) (planning.Plan, int, bool, error)
+	// PlannedSessionAny returns a planned session of any plan, a replaced
+	// one too, as the core planned it: what a client started offline from
+	// (spec §10.5).
+	PlannedSessionAny(ctx context.Context, userID, sessionID uuid.UUID) (planning.PlannedSession, bool, error)
 }
 
 // SessionLog writes planned sessions into the training log (spec §10.2).
@@ -78,6 +82,22 @@ type SessionLog interface {
 	// day of the onboarding that the planner has not applied yet, oldest
 	// first.
 	PendingCompletions(ctx context.Context, userID uuid.UUID, limit int) ([]uuid.UUID, error)
+	// PendingOfflineStarts returns up to limit live log sessions, drafts or
+	// completed, that a client started offline from a planned session
+	// scheduled from since on, and that no planned session links yet;
+	// oldest first (spec §10.5).
+	PendingOfflineStarts(ctx context.Context, userID uuid.UUID, since time.Time, limit int) ([]OfflineStart, error)
+	// LinkStart points a planned session at a log session started offline:
+	// started, or completed when the log session is.
+	LinkStart(ctx context.Context, userID, plannedSessionID, sessionID uuid.UUID) error
+}
+
+// OfflineStart is a log session a client started from a planned session
+// without the server: it carries the planned session's ID, and its sets
+// carry their items (spec §10.5).
+type OfflineStart struct {
+	SessionID        uuid.UUID
+	PlannedSessionID uuid.UUID
 }
 
 // SessionStart is a planned session started in the log.

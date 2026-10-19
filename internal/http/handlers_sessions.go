@@ -38,7 +38,7 @@ func (h *handlers) applyCreateSession(ctx context.Context, wr store.Writer, in s
 	s := training.Session{
 		ID: in.ID, StartedAt: in.StartedAt, Timezone: in.Timezone, LocalDate: training.LocalDate(in.StartedAt, loc),
 		Title: in.Title, Notes: in.Notes, BodyweightKg: in.BodyweightKg, IsRestDay: in.IsRestDay,
-		TemplateID: in.TemplateID, Status: training.StatusDraft,
+		TemplateID: in.TemplateID, PlannedSessionID: in.PlannedSessionID, Status: training.StatusDraft,
 	}
 	if err := training.ValidateSession(s); err != nil {
 		return training.Session{}, err
