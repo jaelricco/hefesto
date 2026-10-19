@@ -8,6 +8,7 @@ import SwiftUI
 struct LoggerView: View {
     let sessionId: String
     @Environment(AppModel.self) private var model
+    @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.dismiss) private var dismiss
     @State private var logger: LoggerModel?
     @State private var exercises: [String: Exercise] = [:]
@@ -69,10 +70,11 @@ struct LoggerView: View {
                         .padding(.horizontal, 16)
                         .padding(.vertical, 8)
                         .background(Palette.background)
+                        .pinnedBar()
                 }
             }
             .safeAreaInset(edge: .bottom) {
-                if let logger, isDraft, !logger.session.isRestDay { bottomBar(logger) }
+                if let logger, isDraft, !logger.session.isRestDay { bottomBar(logger).pinnedBar() }
             }
         }
         .preferredColorScheme(.dark)
@@ -119,8 +121,9 @@ struct LoggerView: View {
             }
         }
         .sheet(isPresented: $finishing) {
+            // Half a screen cannot hold it at the accessibility sizes.
             FinishSheet { fatigue in finish(fatigue) }
-                .presentationDetents([.medium, .large])
+                .presentationDetents(typeSize.isAccessibilitySize ? [.large] : [.medium, .large])
         }
         .sheet(item: $bodySheet) { sheet in
             switch sheet {
@@ -674,12 +677,13 @@ struct FinishSheet: View {
     @State private var fatigue: Int?
     @Environment(\.dynamicTypeSize) private var typeSize
 
+    // The question is the bar's large title: at the largest sizes the bar
+    // shortens it and shows it in the Large Content Viewer, where a title in
+    // the content was cut.
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-                    Text("How hard did it feel?").font(.displayTitle).foregroundStyle(Palette.text)
-                        .fixedSize(horizontal: false, vertical: true)
                     // Fewer columns at the largest text sizes, so numbers are not clipped.
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8),
                                              count: typeSize.isAccessibilitySize ? 3 : 5), spacing: 8) {
@@ -702,6 +706,7 @@ struct FinishSheet: View {
                     Text("Optional. 1 is easy, 10 is everything you had.")
                         .font(.detailText)
                         .foregroundStyle(Palette.textSecondary)
+                        .fixedSize(horizontal: false, vertical: true)
                     Button {
                         onFinish(fatigue)
                     } label: {
@@ -712,6 +717,8 @@ struct FinishSheet: View {
                 .padding(20)
             }
             .themedScreen()
+            .navigationTitle("How hard did it feel?")
+            .navigationBarTitleDisplayMode(.large)
         }
     }
 }

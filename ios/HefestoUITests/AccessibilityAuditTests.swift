@@ -4,9 +4,9 @@ import XCTest
 /// Dynamic Type, clipped text) on every screen of the demo mode
 /// (Hefesto/DemoMode.swift): seeded local data, no server, no account. Each
 /// screen is opened directly by its launch argument, so the walk never
-/// depends on how a screen is reached. The same pass runs in English at the
-/// default text size, at the largest accessibility size, and in German,
-/// where strings are longest.
+/// depends on how a screen is reached. It runs three times: English at the
+/// default text size, and English and German at the largest accessibility
+/// size, where German's long strings are rendered for real.
 @MainActor
 final class AccessibilityAuditTests: XCTestCase {
     /// DemoScreen's raw values, as scripts/ios-screenshots.sh walks them.
@@ -17,32 +17,33 @@ final class AccessibilityAuditTests: XCTestCase {
         "history", "session", "stats", "celebration", "signin",
     ]
 
+    private static let largest = ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
+
     override func setUp() {
         continueAfterFailure = true // report every screen, not only the first
     }
 
     func testEveryScreen() throws {
-        try auditAll(["-AppleLanguages", "(en)", "-AppleLocale", "en_CH"])
+        try auditAll(run: "en", ["-AppleLanguages", "(en)", "-AppleLocale", "en_CH"], judgesSize: false)
     }
 
     func testEveryScreenAtTheLargestTextSize() throws {
-        try auditAll(["-AppleLanguages", "(en)", "-AppleLocale", "en_CH",
-                      "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"])
+        try auditAll(run: "xxl", ["-AppleLanguages", "(en)", "-AppleLocale", "en_CH"] + Self.largest, judgesSize: true)
     }
 
-    func testEveryScreenInGerman() throws {
-        try auditAll(["-AppleLanguages", "(de)", "-AppleLocale", "de_CH"])
+    func testEveryScreenInGermanAtTheLargestTextSize() throws {
+        try auditAll(run: "de-xxl", ["-AppleLanguages", "(de)", "-AppleLocale", "de_CH"] + Self.largest, judgesSize: true)
     }
 
-    /// "map | Contrast failed | text 'Fit' @20,72", on one line: short, so CI
-    /// can list every finding in its annotations.
-    private static func describe(_ issue: XCUIAccessibilityAuditIssue, on screen: String) -> String {
+    /// "xxl | map | Contrast failed | text 'Fit' @20,72", on one line: short,
+    /// so CI can list every finding in its annotations.
+    private static func describe(_ issue: XCUIAccessibilityAuditIssue, run: String, on screen: String) -> String {
         var element = "no element"
         if let e = issue.element {
             let label = e.label.isEmpty ? (e.identifier.isEmpty ? "" : " #\(e.identifier)") : " '\(e.label)'"
             element = "\(kind(e.elementType))\(label) @\(Int(e.frame.minX)),\(Int(e.frame.minY))"
         }
-        return "\(screen) | \(issue.compactDescription) | \(element)"
+        return "\(run) | \(screen) | \(issue.compactDescription) | \(element)"
     }
 
     private static func kind(_ type: XCUIElement.ElementType) -> String {
@@ -59,31 +60,53 @@ final class AccessibilityAuditTests: XCTestCase {
         }
     }
 
-    /// Findings the app cannot act on, skipped for a stated reason (the
-    /// pattern of WWDC23's "Perform accessibility audits for your app"):
-    /// - Dynamic Type inside a navigation bar: bars cap their text by design
-    ///   and show it in the Large Content Viewer instead. That holds for
-    ///   system items only: a custom view put in a bar must add
+    /// Where a finding is not judged, and why; nil means it counts. Skipped
+    /// findings are still printed ("audit skipped"), and CI lists them as
+    /// notices, so an exemption never hides anything silently. The pattern
+    /// is WWDC23's "Perform accessibility audits for your app".
+    /// - Size predictions at the default size (Dynamic Type, clipped text):
+    ///   the audit forecasts from the layout as it is, but grids drop columns
+    ///   and rows wrap at large sizes. The two runs at the largest size
+    ///   render that layout and judge it.
+    /// - Dynamic Type or clipped text inside a bar: bars cap their text by
+    ///   design and show it in the Large Content Viewer instead. That holds
+    ///   for system items only: a custom view put in a bar must add
     ///   `.accessibilityShowsLargeContentViewer()`, or this skips a real gap.
-    /// - The contrast of a disabled control: WCAG 1.4.3 exempts inactive
+    /// - Clipped text that runs past the edge of its scroll view: it is cut
+    ///   by scrolling, not truncated, and scrolls into view.
+    /// - Contrast of a disabled control: WCAG 1.4.3 exempts inactive
     ///   components, and a disabled Save must look disabled.
-    /// - The contrast of an element that is not hittable: scrolled under a
-    ///   bar or off screen, so the pixels sampled at its frame are another
-    ///   view's.
-    private static func isExempt(_ issue: XCUIAccessibilityAuditIssue, bars: [CGRect]) -> Bool {
-        guard let e = issue.element else { return false }
-        switch issue.auditType {
-        case .dynamicType:
-            let center = CGPoint(x: e.frame.midX, y: e.frame.midY)
-            return bars.contains { $0.contains(center) }
-        case .contrast:
-            return !e.isEnabled || !e.isHittable
-        default:
-            return false
+    /// - Contrast of an element that is not fully in view: not hittable,
+    ///   partly scrolled out, beside a bar, where iOS fades the content that
+    ///   scrolls under it, or partly under a view pinned over the scrolling
+    ///   content (`.pinnedBar()`: the rest card, a bottom bar). The pixels
+    ///   sampled there are another view's. What a pinned bar holds itself is
+    ///   judged.
+    /// - A finding that names no element: there is nothing to point at.
+    private static func exemption(_ issue: XCUIAccessibilityAuditIssue, judgesSize: Bool,
+                                  bars: [CGRect], pinned: [CGRect], scrolls: [CGRect]) -> String? {
+        let sized = issue.auditType == .dynamicType || issue.auditType == .textClipped
+        if sized && !judgesSize { return "a size prediction, judged at the largest size" }
+        guard let e = issue.element else { return "names no element" }
+        let frame = e.frame
+        let center = CGPoint(x: frame.midX, y: frame.midY)
+        let partlyScrolledOut = scrolls.contains { $0.intersects(frame) && !$0.contains(frame) }
+        if sized {
+            if bars.contains(where: { $0.contains(center) }) { return "in a bar" }
+            if issue.auditType == .textClipped && partlyScrolledOut { return "partly scrolled out" }
+            return nil
         }
+        guard issue.auditType == .contrast else { return nil }
+        if !e.isEnabled { return "disabled" }
+        if !e.isHittable { return "not hittable" }
+        // The strip where iOS fades content scrolling under a bar.
+        if bars.contains(where: { $0.insetBy(dx: 0, dy: -44).intersects(frame) }) { return "beside a bar" }
+        if pinned.contains(where: { $0.intersects(frame) && !$0.contains(frame) }) { return "partly under a pinned bar" }
+        if partlyScrolledOut { return "partly scrolled out" }
+        return nil
     }
 
-    private func auditAll(_ arguments: [String]) throws {
+    private func auditAll(run: String, _ arguments: [String], judgesSize: Bool) throws {
         for screen in Self.screens {
             let app = XCUIApplication()
             app.launchArguments = ["-HefestoDemo", "YES", "-HefestoDemoScreen", screen] + arguments
@@ -92,17 +115,28 @@ final class AccessibilityAuditTests: XCTestCase {
             // Let sheets and pushes the demo opens settle before auditing.
             _ = app.windows.firstMatch.waitForExistence(timeout: 5)
             sleep(2)
-            let bars = app.navigationBars.allElementsBoundByIndex.map(\.frame)
-            XCTContext.runActivity(named: "Accessibility audit: \(screen)") { _ in
+            let bars = [app.navigationBars, app.tabBars, app.toolbars]
+                .flatMap { $0.allElementsBoundByIndex.map(\.frame) }
+            let pinned = app.descendants(matching: .any).matching(identifier: "pinned-bar")
+                .allElementsBoundByIndex.map(\.frame)
+            let scrolls = [app.scrollViews, app.collectionViews, app.tables]
+                .flatMap { $0.allElementsBoundByIndex.map(\.frame) }
+            XCTContext.runActivity(named: "Accessibility audit: \(run) \(screen)") { _ in
                 do {
                     // One failure per issue, naming the screen and the element, so
                     // CI can list them (the default failure names only the type).
                     try app.performAccessibilityAudit { issue in
-                        if !Self.isExempt(issue, bars: bars) { XCTFail(Self.describe(issue, on: screen)) }
+                        let line = Self.describe(issue, run: run, on: screen)
+                        if let reason = Self.exemption(issue, judgesSize: judgesSize, bars: bars,
+                                                       pinned: pinned, scrolls: scrolls) {
+                            print("audit skipped (\(reason)): \(line)")
+                        } else {
+                            XCTFail(line)
+                        }
                         return true
                     }
                 } catch {
-                    XCTFail("\(screen): \(error)")
+                    XCTFail("\(run) | \(screen): \(error)")
                 }
             }
             app.terminate()

@@ -146,10 +146,19 @@ struct RegionCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            HStack(alignment: .firstTextBaseline) {
-                Text(verbatim: BodyText.title(region.name)).font(.rowTitle).foregroundStyle(Palette.text)
-                Spacer(minLength: 8)
-                Chip(verbatim: BodyText.state(region))
+            // Side by side when both fit; stacked at large sizes, so the
+            // state is never cut.
+            ViewThatFits(in: .horizontal) {
+                HStack(alignment: .firstTextBaseline) {
+                    Text(verbatim: BodyText.title(region.name)).font(.rowTitle).foregroundStyle(Palette.text)
+                    Spacer(minLength: 8)
+                    Chip(verbatim: BodyText.state(region)).fixedSize()
+                }
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(verbatim: BodyText.title(region.name)).font(.rowTitle).foregroundStyle(Palette.text)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Chip(verbatim: BodyText.state(region))
+                }
             }
             if !region.tracked {
                 Text("Without your consent Hefesto keeps no state for this region. Locks and exclusions still hold.")

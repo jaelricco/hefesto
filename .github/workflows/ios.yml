@@ -76,6 +76,9 @@ jobs:
           if ! grep -q 'BUILD SUCCEEDED \*\*' build.log; then
             # Linker errors name their symbols on the lines around "error:".
             grep -B2 -A12 -E 'error:|Undefined symbols' build.log | tail -150
+            # The errors as annotations too, readable from the API without the log.
+            grep -E ': error: |Undefined symbols' build.log | sort -u | head -10 \
+              | sed -E 's/%/%25/g; s/^/::error title=build::/' || true
             exit 1
           fi
 
@@ -93,6 +96,8 @@ jobs:
             CODE_SIGNING_ALLOWED=NO 2>&1 | tee staging-build.log | grep -E 'error:|BUILD SUCCEEDED|BUILD FAILED' || true
           if ! grep -q 'BUILD SUCCEEDED \*\*' staging-build.log; then
             grep -B2 -A12 -E 'error:|Undefined symbols' staging-build.log | tail -150
+            grep -E ': error: |Undefined symbols' staging-build.log | sort -u | head -10 \
+              | sed -E 's/%/%25/g; s/^/::error title=Staging build::/' || true
             exit 1
           fi
 
@@ -113,25 +118,31 @@ jobs:
             -destination "id=$device" \
             -derivedDataPath .derived \
             -resultBundlePath ".derived/a11y-$GITHUB_RUN_ID.xcresult" 2>&1 | tee test.log | grep -E 'error:|Test Case|\*\* TEST' || true
-          if ! grep -q '\*\* TEST SUCCEEDED \*\*' test.log; then
-            # Each finding also becomes an annotation, readable from the API
-            # without the log, one line each: "de | band | Text clipped | …".
-            # GitHub keeps ten annotations per level per step and cuts each at
-            # about 4 KB, so the list is chunked: errors, then warnings, then
-            # notices.
-            grep -E ': error: ' test.log | sed -E 's/^[^:]*:[0-9]+: error: //' | sort -u \
-              | sed -E 's/^-\[[^ ]* testEveryScreenAtTheLargestTextSize\] : (failed - )?/xxl | /;
-                       s/^-\[[^ ]* testEveryScreenInGerman\] : (failed - )?/de | /;
-                       s/^-\[[^ ]* testEveryScreen\] : (failed - )?/en | /' > findings.txt || true
-            echo "$(wc -l < findings.txt) findings"
+          # Findings become annotations, readable from the API without the
+          # log, one line each: "de-xxl | band | Text clipped | …". GitHub
+          # keeps ten annotations per level per step and cuts each at about
+          # 4 KB, so lists are chunked.
+          annotate() { # annotate <file> <title> <level>...
+            file=$1 title=$2; shift 2
             awk '{ gsub(/%/, "%25"); if (length(c) + length($0) > 3600) { print c; c = "" } c = c $0 "%0A" }
-                 END { if (c != "") print c }' findings.txt > chunks.txt
+                 END { if (c != "") print c }' "$file" > chunks.txt
             total=$(wc -l < chunks.txt | tr -d ' ')
             i=0
             while IFS= read -r body; do
               i=$((i + 1))
-              level=error; [ "$i" -gt 10 ] && level=warning; [ "$i" -gt 20 ] && level=notice
-              echo "::$level title=Accessibility audit $i/$total::$body"
+              level=$1; [ "$i" -gt 10 ] && [ -n "${2:-}" ] && level=$2
+              echo "::$level title=$title $i/$total::$body"
             done < chunks.txt
+          }
+          # What the test skipped, and why (AccessibilityAuditTests.exemption):
+          # listed every time, so an exemption never hides a finding silently.
+          sed -nE 's/^audit skipped (.*)$/\1/p' test.log | sort -u > skipped.txt || true
+          echo "$(wc -l < skipped.txt) findings skipped"
+          [ -s skipped.txt ] && annotate skipped.txt "Accessibility audit skipped" notice
+          if ! grep -q '\*\* TEST SUCCEEDED \*\*' test.log; then
+            grep -E ': error: ' test.log | sed -E 's/^[^:]*:[0-9]+: error: //; s/^-\[[^]]*\] : (failed - )?//' \
+              | sort -u > findings.txt || true
+            echo "$(wc -l < findings.txt) findings"
+            annotate findings.txt "Accessibility audit" error warning
             exit 1
           fi

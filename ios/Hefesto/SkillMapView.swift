@@ -9,6 +9,7 @@ import SwiftUI
 struct SkillMapView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var typeSize
     /// The same skills as a list: easier with VoiceOver or large text.
     @AppStorage("skills.showList") private var showList = false
     @State private var map: SkillMapData?
@@ -42,7 +43,15 @@ struct SkillMapView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Palette.sky.ignoresSafeArea())
-            .safeAreaInset(edge: .top, spacing: 0) { header }
+            .safeAreaInset(edge: .top, spacing: 0) {
+                // The title on solid sky, never on stars or lines.
+                header.background {
+                    LinearGradient(stops: [.init(color: Palette.sky, location: 0.75),
+                                           .init(color: Palette.sky.opacity(0), location: 1)],
+                                   startPoint: .top, endPoint: .bottom)
+                        .ignoresSafeArea(edges: .top)
+                }
+            }
             .overlay(alignment: .bottom) {
                 if !showList, let map, let id = peek, let skill = map.skills.first(where: { $0.id == id }) {
                     PeekCard(skill: skill, map: map) { opened = id }
@@ -81,29 +90,51 @@ struct SkillMapView: View {
         }
     }
 
+    /// The title, then XP and the map's buttons. At the accessibility sizes
+    /// the title takes a row of its own, so nothing crowds it.
+    @ViewBuilder
     private var header: some View {
-        HStack(spacing: 8) {
-            Text("Skills")
-                .font(.displayTitle)
-                .foregroundStyle(Palette.text)
-                .accessibilityAddTraits(.isHeader)
-            Spacer()
-            ProgressBadge(style: .chips)
-            if !showList {
-                headerButton("arrow.up.left.and.down.right.magnifyingglass") {
-                    withAnimation(reduceMotion ? nil : .snappy) { zoom = 1; offset = .zero }
-                }
-                .accessibilityLabel("Fit")
+        if typeSize.isAccessibilitySize {
+            VStack(alignment: .leading, spacing: 4) {
+                headerTitle
+                HStack(spacing: 8) { Spacer(); headerControls }
             }
-            headerButton(showList ? "sparkles" : "list.bullet") {
-                peek = nil
-                showList.toggle()
+            .padding(.leading, 20)
+            .padding(.trailing, 12)
+            .padding(.vertical, 4)
+        } else {
+            HStack(spacing: 8) {
+                headerTitle
+                Spacer()
+                headerControls
             }
-            .accessibilityLabel(showList ? Text("Show as map") : Text("Show as list"))
+            .padding(.leading, 20)
+            .padding(.trailing, 12)
+            .padding(.vertical, 4)
         }
-        .padding(.leading, 20)
-        .padding(.trailing, 12)
-        .padding(.vertical, 4)
+    }
+
+    private var headerTitle: some View {
+        Text("Skills")
+            .font(.displayTitle)
+            .foregroundStyle(Palette.text)
+            .accessibilityAddTraits(.isHeader)
+    }
+
+    @ViewBuilder
+    private var headerControls: some View {
+        ProgressBadge(style: .chips)
+        if !showList {
+            headerButton("arrow.up.left.and.down.right.magnifyingglass") {
+                withAnimation(reduceMotion ? nil : .snappy) { zoom = 1; offset = .zero }
+            }
+            .accessibilityLabel("Fit")
+        }
+        headerButton(showList ? "sparkles" : "list.bullet") {
+            peek = nil
+            showList.toggle()
+        }
+        .accessibilityLabel(showList ? Text("Show as map") : Text("Show as list"))
     }
 
     private func headerButton(_ icon: String, action: @escaping () -> Void) -> some View {
@@ -355,7 +386,7 @@ struct PeekCard: View {
                         Text("Next: \(next.name)")
                             .font(.meta)
                             .foregroundStyle(Palette.text)
-                            .lineLimit(1)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                 }
                 Spacer(minLength: 4)
@@ -472,11 +503,14 @@ struct ProgressBadge: View {
                     if progress.currentDays > 0 {
                         item(Text("\(progress.currentDays)"), icon: "flame.fill", iconTint: Palette.ember,
                              textTint: style == .chips ? Palette.text : Palette.ember)
-                        .accessibilityElement(children: .ignore)
                         .accessibilityLabel(Text("\(progress.currentDays)-day streak"))
                 }
             }
         }
+        // One element for XP and streak, 44 pt tall in a bar.
+        .frame(minHeight: style == .plain ? 44 : nil)
+        .contentShape(.rect)
+        .accessibilityElement(children: .combine)
         .task {
             do { for try await p in model.db.observeProgress() { progress = p } } catch {}
         }
@@ -487,9 +521,11 @@ struct ProgressBadge: View {
         // In a bar, which caps its text: a long press shows it large.
         let label = HStack(spacing: 5) {
             Image(systemName: icon).font(.system(size: 12, weight: .semibold)).foregroundStyle(iconTint)
+                .accessibilityHidden(true)
             title.foregroundStyle(textTint)
         }
         .accessibilityShowsLargeContentViewer()
+        .accessibilityAddTraits(.isStaticText)
         switch style {
         case .chips:
             // One line: "340 XP" wrapped to "340" over "XP" in German.
