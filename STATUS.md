@@ -194,6 +194,30 @@ documents are in German.
   - Logger and history name a set's band. The demo holds two bands of its
     own; a new screen (`band`) joins the screenshots.
   - Not built: bands offline, editing a band, the anchor.
+- **Pain questions around a planned session (this checkpoint, ADR 0030):**
+  - Each planned session names the regions in the ramp (`rtt_1` to `rtt_5`)
+    to ask about; the plan names each monitored region, so the questions
+    work offline. Both fields are optional in the schema, so a plan the app
+    kept from before still reads.
+  - The check-in asks the pain now (`before_session`), the finish sheet the
+    pain during the session and now (`during`, `after`), and Today the
+    morning after (`next_morning`), for the last planned session done
+    yesterday. Every answer is optional; the morning card has "Not today"
+    and lapses with its day (ADR 0003).
+  - "Lasted longer than an hour" is asked the morning after and sent with
+    that report, not with `after` as spec §8.6 has it: right after the
+    session the hour has not passed. The planner reads the flag for the
+    session on any of its reports.
+  - Warning signs asked after the pain before a session come before the log
+    opens; if they stop training, the log does not open.
+  - Every pain report is kept on the phone and sent at once; one that cannot
+    go yet is sent with the next sync, with the same id. A final refusal
+    drops it and, when sent directly, says why. Unsent reports count as
+    pending, so sign-out warns. This changes U-86.
+  - Two new demo screens (`painafter`, `morning`) join the screenshots and
+    the accessibility audit.
+  - Not built: the warm-up question (it stays in the logger's pain report),
+    a daily pain question, fetching reports answered on another device.
 - **The plan's settings in the iOS app (this checkpoint, ADR 0029):**
   - Goals, time, equipment and body weight change on the onboarding's own
     pages, reached from the account menu once there is a plan.
@@ -217,9 +241,9 @@ documents are in German.
     for a minor (SAFE-07). Until now no stop could be lifted in the app.
   - The demo holds two regions; three new screens (`body`, `pain`,
     `symptoms`) join the screenshots.
-  - Not built: changing the consent, the questions before and after a
-    session on monitored regions, the list of one's pain reports, the sync
-    of pain reports.
+  - Not built: changing the consent, the list of one's pain reports. The
+    questions before and after a session and keeping unsent reports came
+    with ADR 0030.
 - **Starting a planned session offline (this checkpoint, ADR 0027):**
   - Sync now carries `planned_session_id` on a session and
     `planned_item_id` on a set. The server takes them when it creates the
@@ -299,8 +323,9 @@ documents are in German.
   screens in ADR 0022 (U-72 to U-75), the onboarding in the app in
   ADR 0023 (U-76 to U-79), the band choice in ADR 0024 (U-80), the
   offline start in ADR 0027 (U-81 to U-85), the body in the app in
-  ADR 0028 (U-86 to U-89), the plan's settings in ADR 0029 (U-90), and
-  these findings in spec §15.4:
+  ADR 0028 (U-86 to U-89), the plan's settings in ADR 0029 (U-90), the
+  pain questions in ADR 0030 (U-91 to U-95), and these findings in spec
+  §15.4:
   - sets with partner or machine assistance reach neither the capacities
     nor the load history;
   - a set performed offline after the server replaced or removed it is
@@ -327,9 +352,14 @@ documents are in German.
     starting the same session offline, no check-in offline (ADR 0027);
   - a professional's clearance is the athlete's word, and symptoms reported
     without a connection pause the plan only once they reach the server
-    (ADR 0028).
+    (ADR 0028);
+  - the pain questions ask "longer than an hour" only the morning after,
+    the morning question covers only yesterday's last session, a device
+    asks again what another device answered, and a waiting report refused
+    for good at a later sync is dropped without a notice (ADR 0030).
 - **Not yet built:**
-  - the sync of pain reports;
+  - fetching pain reports from the server (the app keeps and sends its
+    own, ADR 0030);
   - a record of the consent text agreed to;
   - `?explain=trace`.
 - **Still blocking production:**

@@ -2175,7 +2175,9 @@ der iOS-App (U-67, U-68), und der Unterbau des Plans in der iOS-App
 U-76 bis U-79), und die Wahl des Bands in der iOS-App (ADR 0024, U-80),
 und der Start einer geplanten Einheit ohne Verbindung (ADR 0027, U-81 bis
 U-85), und Körper und Sicherheit in der iOS-App (ADR 0028, U-86 bis U-89),
-und die Einstellungen des Plans in der iOS-App (ADR 0029, U-90).
+und die Einstellungen des Plans in der iOS-App (ADR 0029, U-90), und die
+Fragen zum Schmerz vor und nach einer geplanten Einheit (ADR 0030, U-91 bis
+U-95).
 
 Tests: sechs Personas als Golden Files (`internal/domain/planning/testdata/`),
 die Eigenschaften I-1 bis I-11 für jeden erzeugten Plan, zwölf simulierte
@@ -2279,11 +2281,16 @@ U-35 setzen die Entscheidungen ENT-R-1, ENT-R-2 und ENT-R-5 um (§15.5).
 | U-83 | §10.5 | Nach jedem Push mit angewandter Operation, vor jedem Lesen des Plans, vor jedem Start und vor jeder Abschluss-Auswertung verknüpft der Planer unverknüpfte Offline-Starts ab dem Montag der Vorwoche mit der Einheit desselben Tages im aktuellen Plan (`started` oder `completed`); ein Entwurf aus einem ersetzten Plan folgt dem aktuellen, ohne Einheit am Tag gehen die offenen Sätze; ein anderswo zuerst gestarteter Tag behält seine Session | Wie der Übertrag auf einen neuen Plan (ADR 0017); der Pull nach dem Push bringt den angepassten Entwurf; jede Verknüpfung in eigener Transaktion blockiert weder Push noch Plan |
 | U-84 | §10.5 | Die App zeigt einen eigenen Start oder Abschluss auf «Heute», bevor der gehaltene Plan ihn kennt; nennt der Plan eine andere Session, gilt der Plan | Ein Offline-Start soll «Weiter» zeigen, nicht ein zweites «Starten» |
 | U-85 | §10.5 | Erreicht der Start den Server nicht, bietet das Check-in-Blatt «Ohne Verbindung starten» an und sagt, dass die Einheit wie geplant startet und das Leichter-Machen den Server braucht | Die Wahl bleibt beim Athleten; offline gibt es keinen Check-in (§15.4) |
-| U-86 | §8.2, §8.6, §10.3 | Symptome, Schmerzberichte, Warnzeichen und Freigaben sendet die App sofort als einzelne Anfragen mit eigener ID, nicht über den Ausgang; eine Wiederholung nach verlorener Antwort trägt dieselbe ID; danach holt sie Plan und Regionen neu | Sicherheit und Gesundheitsdaten wirken sofort (SAFE-02); idempotent wie jedes Ereignis (U-40). Der Sync der Schmerzberichte bleibt offen (§15.3) |
+| U-86 | §8.2, §8.6, §10.3 | (für Schmerzberichte geändert durch U-95) Symptome, Schmerzberichte, Warnzeichen und Freigaben sendet die App sofort als einzelne Anfragen mit eigener ID, nicht über den Ausgang; eine Wiederholung nach verlorener Antwort trägt dieselbe ID; danach holt sie Plan und Regionen neu | Sicherheit und Gesundheitsdaten wirken sofort (SAFE-02); idempotent wie jedes Ereignis (U-40). Der Sync der Schmerzberichte bleibt offen (§15.3) |
 | U-87 | §8.6 | Der Schmerzbericht der App fragt Region, Zeitpunkt und 0–10, dazu im Aufwärmen «länger als 15 min», danach «länger als 1 h» und während «plötzlich und stechend»; fragt der Planer `ask_red_flags`, öffnen sich die Warnzeichen der Region gleich danach | Was der Planer zum Zeitpunkt auswertet (PAR-D-16, DOSE-23); freiwillig und ohne Streak-Folgen (ADR 0003) |
 | U-88 | §8.2, §8.3 | Ein Screen «Körper» zeigt jede Region mit Beschwerde oder Einschränkung, ihren Zustand als Wirkung auf den Plan («Ohne Einschränkung», «Rückkehr, Stufe n von 5», «Pausiert»), Pause, empfohlene Abklärung, Einschränkungen und den Disclaimer wörtlich; «Ich wurde freigegeben» erscheint nur, wo die Freigabe etwas ändert | Keine Diagnose, kein eigener Rat; Namen, Fragen und Rat aus der Wissensbasis |
 | U-89 | §8.3, SAFE-02 | Die Karte eines Stopps bietet die Freigabe des ganzen Trainings an (`/v1/me/screening/clearance`), ausser bei SAFE-07 | Ohne sie liess sich ein Stopp in der App nie aufheben; ein Minderjähriger wird nicht durch eine Freigabe frei |
 | U-90 | §10.3, WEEK-08 | Ziele, Zeit, Ausrüstung und Körpergewicht ändert die App auf den Seiten des Onboardings; sie sendet Ziele und Profil nur, wenn sie sich geändert haben, und das Profil mit den Feldern, die sie nicht bearbeitet (bevorzugte Tage, Mobilität, Zusatzlast, kleinste Scheibe), unverändert zurück | Dieselben Fragen wie im Onboarding; das Profil-`PUT` löscht fehlende optionale Felder; jedes `PUT` plant die Woche neu |
+| U-91 | §8.6, §10.3 | Jede geplante Einheit nennt in `monitor` die Regionen in `rtt_1`–`rtt_5`; der Plan nennt zu jeder beobachteten Region ihren Namen (`RegionMonitor.name`); beide Felder sendet der Server immer, im Schema sind sie optional | S-Zellen gibt es nur in der Rampe (§8.4); Namen für Fragen ohne Verbindung; ein gehaltener Plan von vorher bleibt lesbar |
+| U-92 | §8.6 | Die App fragt im Check-in «Schmerz gerade» (`before_session`), im Abschluss «während» und «gerade» (`during`, `after`) und am Morgen danach «heute früh» (`next_morning`) zur letzten abgeschlossenen geplanten Einheit von gestern, je Region und mit der Log-Session als `session_id`; Beantwortetes fragt sie nicht noch einmal; die Morgenkarte hat «Nicht heute» und verfällt mit ihrem Tag | Die Zeitpunkte von §8.6; neutral, freiwillig, ohne Erinnerung und ohne Streak-Folgen (ADR 0003); ohne Bericht keine Progression der Rampe (`PAR-S-34`) |
+| U-93 | §8.6, §4.9 | «Hielt länger als 1 h an» fragt die App am Morgen danach und sendet es mit dem Bericht `next_morning`, nicht mit `after` (Abweichung von §8.6 und dem Datenmodell) | Direkt nach der Einheit ist die Stunde nicht vorbei; der Planer wertet das Flag für die Einheit an jedem ihrer Berichte |
+| U-94 | §8.6, SAFE-02 | Fragt der Planer nach dem Schmerz vor der Einheit Warnzeichen (`ask_red_flags`), kommen sie vor dem Log; stoppen sie das Training, öffnet es sich nicht. Den Abschluss synchronisiert die App, bevor die Berichte danach gehen | Warnzeichen wirken sofort; der Planer kennt die Sätze der Einheit, wenn er die Berichte auswertet |
+| U-95 | §8.6, §10.5 | Die App hält jeden Schmerzbericht lokal und sendet ihn sofort; was nicht gleich gehen kann, sendet sie beim nächsten Sync nach dem Push, ältester zuerst und mit derselben ID; eine endgültige Ablehnung (Einwilligung, Onboarding, Region, Eingabe, sonst 4xx ausser 401, 408, 429) verwirft ihn, beim direkten Senden mit Grund; ungesendete Berichte zählen als ausstehend | Kein Bericht geht ohne Verbindung verloren; idempotent (U-40); das Abmelden warnt wie bei Sätzen |
 
 ### 15.3 Nicht umgesetzt
 
@@ -2300,7 +2307,8 @@ Kapazität), ADAPT-09, ADAPT-11, ADAPT-17, der Mobilitätsblock und Texte in
 weiteren Sprachen (KB-11). Für die Ellbogen-Regionen gibt es kein Prehab: Die
 Recherche nennt Programme, aber keine übertragbare Übung (`05` §10).
 Minderjährige bekommen keinen Plan (SAFE-07); INJ-09 ist deshalb nicht aktiv.
-Aus §10 fehlen der Sync der Schmerzberichte und `?explain=trace`
+Aus §10 fehlen das Holen der Schmerzberichte vom Server (die App hält und
+sendet nur ihre eigenen, U-95) und `?explain=trace`
 (ADR 0014, ADR 0016), sowie ein Nachweis der Einwilligung mit Zeitpunkt und
 Textversion (ADR 0015).
 PAR-D-28 enthält zwei der vier Soreness Rules aus `05` §6.1; Schmerz im
@@ -2368,6 +2376,12 @@ weil die Adaption die Kürzung nicht vorhersieht.
   ohne Verbindung pausieren den Plan erst, wenn die Meldung den Server
   erreicht; die App zeigt den Rat aber sofort und sagt, dass man aufhören
   soll.
+- **Die Fragen zum Schmerz haben Lücken (ADR 0030).** «Länger als 1 h»
+  fragt die App erst am Morgen danach (U-93). Die Morgenfrage gilt nur der
+  letzten Einheit von gestern. Ein Gerät kennt nur seine eigenen Berichte:
+  Auf einem anderen Gerät Beantwortetes fragt es noch einmal. Lehnt der
+  Server einen wartenden Bericht beim Sync endgültig ab, etwa nach einem
+  Widerruf, verwirft ihn die App ohne Hinweis.
 - **Assistierte Sätze ohne Band fehlen dem Planer.** Sätze mit Partner,
   Maschine, Schräge, Gegengewicht oder Fussstütze erreichen weder die
   Kapazitäten noch die Belastungshistorie (U-59). Wer vor allem so trainiert,
