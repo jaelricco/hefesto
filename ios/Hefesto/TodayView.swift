@@ -116,6 +116,9 @@ struct TodayView: View {
                 .tracking(1.2)
                 .textCase(.uppercase)
                 .foregroundStyle(Palette.textSecondary)
+                // Wraps at the largest sizes rather than being cut.
+                .fixedSize(horizontal: false, vertical: true)
+                .layoutPriority(1)
             Spacer()
             SyncBadge(pending: pending)
             Menu {

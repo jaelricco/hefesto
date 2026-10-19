@@ -355,7 +355,7 @@ struct PeekCard: View {
                         Text("Next: \(next.name)")
                             .font(.meta)
                             .foregroundStyle(Palette.text)
-                            .lineLimit(1)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                 }
                 Spacer(minLength: 4)
@@ -490,6 +490,7 @@ struct ProgressBadge: View {
             title.foregroundStyle(textTint)
         }
         .accessibilityShowsLargeContentViewer()
+        .accessibilityAddTraits(.isStaticText)
         switch style {
         case .chips:
             // One line: "340 XP" wrapped to "340" over "XP" in German.

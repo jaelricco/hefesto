@@ -93,8 +93,11 @@ struct SetComposer: View {
                         Button {
                             elements.append(Draft())
                         } label: {
-                            Label("Add an exercise to make a combo", systemImage: "plus.square.on.square")
-                                .fixedSize(horizontal: false, vertical: true)
+                            HStack(alignment: .firstTextBaseline, spacing: 12) {
+                                Image(systemName: "plus.square.on.square").accessibilityHidden(true)
+                                Text("Add an exercise to make a combo")
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
                         }
                         .font(.bodyMedium)
                         .foregroundStyle(Palette.ember)
