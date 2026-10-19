@@ -139,10 +139,18 @@ jobs:
           sed -nE 's/^audit skipped (.*)$/\1/p' test.log | sort -u > skipped.txt || true
           echo "$(wc -l < skipped.txt) findings skipped"
           [ -s skipped.txt ] && annotate skipped.txt "Accessibility audit skipped" notice
-          if ! grep -q '\*\* TEST SUCCEEDED \*\*' test.log; then
+          # test-without-building ends in "** TEST EXECUTE SUCCEEDED **".
+          if ! grep -qE '\*\* TEST (EXECUTE )?SUCCEEDED \*\*' test.log; then
             grep -E ': error: ' test.log | sed -E 's/^[^:]*:[0-9]+: error: //; s/^-\[[^]]*\] : (failed - )?//' \
               | sort -u > findings.txt || true
             echo "$(wc -l < findings.txt) findings"
-            annotate findings.txt "Accessibility audit" error warning
+            if [ -s findings.txt ]; then
+              annotate findings.txt "Accessibility audit" error warning
+            else
+              # A failure that names no finding (a crash, a launch timeout):
+              # the end of the log is all there is to go on.
+              grep -vE '^[[:space:]]*$' test.log | tail -40 > log-tail.txt || true
+              annotate log-tail.txt "Accessibility audit failed without a finding" error
+            fi
             exit 1
           fi
