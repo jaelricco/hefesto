@@ -72,6 +72,8 @@ final class AccessibilityAuditTests: XCTestCase {
     ///   design and show it in the Large Content Viewer instead. That holds
     ///   for system items only: a custom view put in a bar must add
     ///   `.accessibilityShowsLargeContentViewer()`, or this skips a real gap.
+    /// - Clipped text that runs past the edge of its scroll view: it is cut
+    ///   by scrolling, not truncated, and scrolls into view.
     /// - Contrast of a disabled control: WCAG 1.4.3 exempts inactive
     ///   components, and a disabled Save must look disabled.
     /// - Contrast of an element that is not fully in view: not hittable,
@@ -88,14 +90,19 @@ final class AccessibilityAuditTests: XCTestCase {
         guard let e = issue.element else { return "names no element" }
         let frame = e.frame
         let center = CGPoint(x: frame.midX, y: frame.midY)
-        if sized { return bars.contains { $0.contains(center) } ? "in a bar" : nil }
+        let partlyScrolledOut = scrolls.contains { $0.intersects(frame) && !$0.contains(frame) }
+        if sized {
+            if bars.contains(where: { $0.contains(center) }) { return "in a bar" }
+            if issue.auditType == .textClipped && partlyScrolledOut { return "partly scrolled out" }
+            return nil
+        }
         guard issue.auditType == .contrast else { return nil }
         if !e.isEnabled { return "disabled" }
         if !e.isHittable { return "not hittable" }
         // The strip where iOS fades content scrolling under a bar.
         if bars.contains(where: { $0.insetBy(dx: 0, dy: -44).intersects(frame) }) { return "beside a bar" }
         if pinned.contains(where: { $0.intersects(frame) && !$0.contains(frame) }) { return "partly under a pinned bar" }
-        if scrolls.contains(where: { $0.intersects(frame) && !$0.contains(frame) }) { return "partly scrolled out" }
+        if partlyScrolledOut { return "partly scrolled out" }
         return nil
     }
 
