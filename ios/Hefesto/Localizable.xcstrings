@@ -161,6 +161,46 @@
         }
       }
     },
+    "%lld changes on this phone are not synced yet. Signing out erases everything stored on this phone.": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld change on this phone is not synced yet. Signing out erases everything stored on this phone."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld changes on this phone are not synced yet. Signing out erases everything stored on this phone."
+                }
+              }
+            }
+          }
+        },
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld Änderung auf diesem Gerät ist noch nicht synchronisiert. Beim Abmelden wird alles gelöscht, was auf diesem Gerät gespeichert ist."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld Änderungen auf diesem Gerät sind noch nicht synchronisiert. Beim Abmelden wird alles gelöscht, was auf diesem Gerät gespeichert ist."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "%lld h": {
       "localizations": {
         "de": {
@@ -3701,6 +3741,26 @@
         }
       }
     },
+    "Sign out and discard": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abmelden und verwerfen"
+          }
+        }
+      }
+    },
+    "Sign out?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abmelden?"
+          }
+        }
+      }
+    },
     "Since when?": {
       "localizations": {
         "de": {
@@ -3777,6 +3837,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Einige Antworten passen nicht ganz zusammen. Ohne Antwort hier beginnt der Planer sicherheitshalber tiefer."
+          }
+        }
+      }
+    },
+    "Some changes could not be synced, so you are still signed in. Try again when you are online.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einige Änderungen liessen sich nicht synchronisieren, darum bist du noch angemeldet. Versuche es wieder, wenn du online bist."
           }
         }
       }
@@ -3877,6 +3947,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Stütz mit gestreckten Armen"
+          }
+        }
+      }
+    },
+    "Sync and sign out": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Synchronisieren und abmelden"
           }
         }
       }

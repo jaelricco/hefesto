@@ -436,6 +436,7 @@ At the end of each phase, summarise what was built, list open questions, and
 | **5** | iOS: project setup, generated client, GRDB store, sync engine, auth, and the session logger including combos and the rest timer. |
 | **6** | iOS: skill map constellation, skill detail, unlock celebration, history/stats. |
 | **7** | Polish: localization, accessibility pass, TestFlight build, seed-content import of the research, load smoke test. |
+| **8** | Release prep (added by the owner after Phase 7): staging, rehearsed deploys and restores, point-in-time recovery, a first-deploy preflight, recommendations for the open review questions. |
 
 ---
 

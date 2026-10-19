@@ -72,4 +72,5 @@ done
 export HEFESTO_TEST_S3_ENDPOINT="http://127.0.0.1:$PORT"
 export HEFESTO_TEST_S3_ACCESS_KEY="$access"
 export HEFESTO_TEST_S3_SECRET_KEY="$secret"
+export HEFESTO_TEST_MINIO_BIN="$bin"
 "$@"

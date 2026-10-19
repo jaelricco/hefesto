@@ -125,6 +125,11 @@ extension AppDatabase {
         }
     }
 
+    /// Ops waiting to be sent: what a sign-out now would lose.
+    public func pendingOpCount() throws -> Int {
+        try reader.read { try Self.pendingOpCount($0) }
+    }
+
     /// The pull cursor: everything up to it has been applied.
     public func cursor() throws -> Int64 {
         try reader.read { db in

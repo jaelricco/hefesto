@@ -35,13 +35,15 @@ case "$DEPLOY_ENV" in
         ENV_FILE="${ENV_FILE:-.env.prod}"
         STATE_FILE="${STATE_FILE:-.deployed-tag}"
         PULL_SERVICES=(api migrate seed backup)
-        UP_SERVICES=(api caddy backup)
+        BUILD_SERVICES=(postgres pitr)
+        UP_SERVICES=(api caddy backup pitr)
         ;;
     staging)
         COMPOSE_FILE="${COMPOSE_FILE:-docker-compose.staging.yml}"
         ENV_FILE="${ENV_FILE:-.env.staging}"
         STATE_FILE="${STATE_FILE:-.deployed-tag-staging}"
         PULL_SERVICES=(api migrate seed)
+        BUILD_SERVICES=()
         UP_SERVICES=(api)
         ;;
     *)
@@ -87,6 +89,15 @@ compose pull --quiet "${PULL_SERVICES[@]}" \
 if ! docker network inspect "$EDGE_NETWORK" >/dev/null 2>&1; then
     log "creating network $EDGE_NETWORK"
     docker network create "$EDGE_NETWORK" >/dev/null
+fi
+
+# --------------------------------------------------------------- build
+# Production's Postgres image is postgres:16-alpine plus pgBackRest, built
+# here (docker/Dockerfile.postgres). Unchanged, the build is cached and the
+# image id stays the same, so the database is not restarted.
+if (( ${#BUILD_SERVICES[@]} )); then
+    log "building ${BUILD_SERVICES[*]}"
+    compose build --quiet "${BUILD_SERVICES[@]}"
 fi
 
 # ---------------------------------------------------------- database up

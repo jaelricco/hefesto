@@ -13,14 +13,18 @@ The logger feeds the map. That coupling is the product.
 
 ## Status
 
-**Phase 7 — polish**, awaiting review. It adds:
-- an accessibility pass and checked localization (English and German);
-- a TestFlight pipeline;
-- a release gate for placeholder content;
-- a load smoke test in CI.
+**Phase 8 — release prep**, awaiting review. It adds:
+- a staging environment on the production host, and a Staging build for
+  internal TestFlight testers;
+- a deploy, backup and restore rehearsed in CI on every pull request;
+- point-in-time recovery with pgBackRest;
+- a server preflight, and the first deploy as ordered steps;
+- recommendations for the open review questions
+  ([`docs/REVIEW_DECISIONS.md`](docs/REVIEW_DECISIONS.md)).
 
-This builds on the iOS logger, sync and skill map from Phases 5–6, and on the
-API's logging, unlock engine, sync and media.
+This builds on Phase 7's polish (accessibility, localization, the TestFlight
+pipeline), the app from Phases 5–6, and the API's logging, unlock engine, sync
+and media.
 Current state and open questions: [`STATUS.md`](STATUS.md).
 
 See [`docs/PROJECT_BRIEF.md`](docs/PROJECT_BRIEF.md) for the full plan,
@@ -84,6 +88,7 @@ Production is a single Hetzner instance behind Caddy, deployed from a version
 tag through GitHub Actions. Full runbook in [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
 
 ```sh
+make preflight                # before the first deploy: check the server
 make release version=v0.2.0   # tag, push, build, migrate, deploy, verify
 make deploy tag=v0.1.9        # redeploy an existing tag — this is also rollback
 make prod-version             # what is live
@@ -91,7 +96,8 @@ make prod-logs
 ```
 
 The deploy runs migrations before the new API starts and rolls the API back if
-readiness never arrives. Secrets live only in `/srv/hefesto/.env.prod` on the
+readiness never arrives. Every green commit on `main` also deploys to staging.
+Secrets live only in `/srv/hefesto/.env.prod` and `.env.staging` on the
 server — never in the repo, never in CI.
 
 ## Layout
@@ -109,7 +115,8 @@ api/          openapi.yaml — the source of truth for the generated Swift clien
 ios/          the app: SwiftUI views over the HefestoKit package (XcodeGen, ADR 0010)
 docs/adr/     one ADR per significant decision
 docker/       Dockerfiles and the production Caddyfile
-scripts/      server bootstrap, deploy with rollback, backup sidecar
+scripts/      server bootstrap and preflight, deploy with rollback, backups,
+              restores, point-in-time recovery, the deploy rehearsal
 ```
 
 ## Stack
