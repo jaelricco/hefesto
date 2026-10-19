@@ -66,10 +66,14 @@ struct OnboardingView: View {
         let i = min(index, pages.count - 1)
         let page = pages[i]
         return VStack(spacing: 0) {
+            // The bar is 4 pt; VoiceOver gets the whole band around it, so the
+            // element is large enough to find and touch.
             ProgressView(value: Double(i + 1), total: Double(pages.count))
                 .tint(Palette.ember)
                 .padding(.horizontal, 20)
-                .padding(.vertical, 8)
+                .frame(minHeight: 44)
+                .contentShape(.rect)
+                .accessibilityElement(children: .ignore)
                 .accessibilityLabel(Text("Step \(i + 1) of \(pages.count)"))
             ScrollView {
                 OnboardingPageView(page: page, catalogue: c, model: app.onboarding)
@@ -894,11 +898,19 @@ struct ChoiceQuestion: View {
     let choices: [Choice]
     @Binding var selection: String?
     var columns = 1
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    /// At the largest text sizes, numbers keep three columns and words get a
+    /// row each, so every label grows instead of being squeezed.
+    private var shownColumns: Int {
+        guard typeSize.isAccessibilitySize else { return columns }
+        return columns >= 4 ? 3 : 1
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             QuestionText(verbatim: question)
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: columns), spacing: 8) {
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: shownColumns), spacing: 8) {
                 ForEach(choices) { c in
                     ChoiceButton(label: c.label, selected: selection == c.id) {
                         selection = selection == c.id ? nil : c.id

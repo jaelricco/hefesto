@@ -90,8 +90,11 @@ struct SetComposer: View {
                 // A planned set is done as planned: one item of the plan.
                 if planned == nil {
                     Section {
-                        Button("Add an exercise to make a combo", systemImage: "plus.square.on.square") {
+                        Button {
                             elements.append(Draft())
+                        } label: {
+                            Label("Add an exercise to make a combo", systemImage: "plus.square.on.square")
+                                .fixedSize(horizontal: false, vertical: true)
                         }
                         .font(.bodyMedium)
                         .foregroundStyle(Palette.ember)
@@ -375,11 +378,15 @@ struct ElementFields: View {
             }
         }
         if draft.assistance != "none" {
-            LabeledContent("Estimated assist") {
+            // The field stays narrow, so a long label wraps instead of being cut.
+            LabeledContent {
                 TextField("kg", value: $draft.assistKg, format: .number)
                     .keyboardType(.decimalPad)
                     .multilineTextAlignment(.trailing)
+                    .frame(maxWidth: 96)
                     .accessibilityLabel(Text("Estimated assist in kilograms"))
+            } label: {
+                Text("Estimated assist").fixedSize(horizontal: false, vertical: true)
             }
         }
 

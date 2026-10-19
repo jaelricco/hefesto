@@ -445,6 +445,7 @@ struct CheckInSheet: View {
     var initiallyOffline = false
 
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.dynamicTypeSize) private var typeSize
     @State private var sleep: Int?
     @State private var fatigue: Int?
     @State private var starting = false
@@ -467,7 +468,9 @@ struct CheckInSheet: View {
 
                     VStack(alignment: .leading, spacing: 10) {
                         CapsLabel("Sleep last night")
-                        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 3), spacing: 8) {
+                        // Fewer columns at the largest text sizes, so the
+                        // labels grow and wrap instead of shrinking.
+                        LazyVGrid(columns: grid(typeSize.isAccessibilitySize ? 2 : 3), spacing: 8) {
                             ForEach(Self.sleepChoices, id: \.self) { hours in
                                 choice(label: sleepLabel(hours), selected: sleep == hours) {
                                     sleep = sleep == hours ? nil : hours
@@ -478,7 +481,7 @@ struct CheckInSheet: View {
 
                     VStack(alignment: .leading, spacing: 10) {
                         CapsLabel("How tired are you?")
-                        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 5), spacing: 8) {
+                        LazyVGrid(columns: grid(typeSize.isAccessibilitySize ? 3 : 5), spacing: 8) {
                             ForEach(1...10, id: \.self) { n in
                                 choice(label: "\(n)", selected: fatigue == n) {
                                     fatigue = fatigue == n ? nil : n
@@ -582,14 +585,19 @@ struct CheckInSheet: View {
         return String(localized: "\(hours) h")
     }
 
+    private func grid(_ columns: Int) -> [GridItem] {
+        Array(repeating: GridItem(.flexible(), spacing: 8), count: columns)
+    }
+
     private func choice(label: String, selected: Bool, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Text(verbatim: label)
                 .font(.metricSmall)
                 .monospacedDigit()
-                .lineLimit(1)
-                .minimumScaleFactor(0.6)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
                 .foregroundStyle(selected ? Palette.emberInk : Palette.text)
+                .padding(.vertical, 6)
                 .frame(maxWidth: .infinity, minHeight: 52)
                 .padding(.horizontal, 4)
                 .background(selected ? Palette.ember : Palette.surface, in: .rect(cornerRadius: 12))
