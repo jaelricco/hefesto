@@ -710,6 +710,11 @@ struct FinishSheet: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
+                    // The scale first, at the top, where it has room to grow.
+                    Text("Optional. 1 is easy, 10 is everything you had.")
+                        .font(.detailText)
+                        .foregroundStyle(Palette.textSecondary)
+                        .fixedSize(horizontal: false, vertical: true)
                     // Fewer columns at the largest text sizes, so numbers are not clipped.
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8),
                                              count: typeSize.isAccessibilitySize ? 3 : 5), spacing: 8) {
@@ -729,10 +734,6 @@ struct FinishSheet: View {
                             .accessibilityAddTraits(fatigue == n ? .isSelected : [])
                         }
                     }
-                    Text("Optional. 1 is easy, 10 is everything you had.")
-                        .font(.detailText)
-                        .foregroundStyle(Palette.textSecondary)
-                        .fixedSize(horizontal: false, vertical: true)
                     if let question {
                         PainQuestionView(moment: .afterSession, regions: question.regions, answers: $pain)
                             .padding(.top, 8)

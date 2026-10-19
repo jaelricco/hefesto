@@ -35,15 +35,21 @@ final class AccessibilityAuditTests: XCTestCase {
         try auditAll(run: "de-xxl", ["-AppleLanguages", "(de)", "-AppleLocale", "de_CH"] + Self.largest, judgesSize: true)
     }
 
-    /// "xxl | map | Contrast failed | text 'Fit' @20,72", on one line: short,
-    /// so CI can list every finding in its annotations.
+    /// "xxl | map | Contrast failed | text 'Fit' @20,72 362x24", on one line:
+    /// short, so CI can list every finding in its annotations. Clipped text
+    /// also gets the audit's own detail, which says what is cut.
     private static func describe(_ issue: XCUIAccessibilityAuditIssue, run: String, on screen: String) -> String {
         var element = "no element"
         if let e = issue.element {
             let label = e.label.isEmpty ? (e.identifier.isEmpty ? "" : " #\(e.identifier)") : " '\(e.label)'"
-            element = "\(kind(e.elementType))\(label) @\(Int(e.frame.minX)),\(Int(e.frame.minY))"
+            let f = e.frame
+            element = "\(kind(e.elementType))\(label) @\(Int(f.minX)),\(Int(f.minY)) \(Int(f.width))x\(Int(f.height))"
         }
-        return "\(run) | \(screen) | \(issue.compactDescription) | \(element)"
+        var line = "\(run) | \(screen) | \(issue.compactDescription) | \(element)"
+        if issue.auditType == .textClipped {
+            line += " | " + issue.detailedDescription.replacingOccurrences(of: "\n", with: " ")
+        }
+        return line
     }
 
     private static func kind(_ type: XCUIElement.ElementType) -> String {
@@ -83,11 +89,17 @@ final class AccessibilityAuditTests: XCTestCase {
     ///   sampled there are another view's. What a pinned bar holds itself is
     ///   judged.
     /// - A finding that names no element: there is nothing to point at.
-    private static func exemption(_ issue: XCUIAccessibilityAuditIssue, judgesSize: Bool,
+    /// - A known false positive, listed below with its evidence.
+    private static func exemption(_ issue: XCUIAccessibilityAuditIssue, on screen: String, judgesSize: Bool,
                                   bars: [CGRect], pinned: [CGRect], scrolls: [CGRect]) -> String? {
         let sized = issue.auditType == .dynamicType || issue.auditType == .textClipped
         if sized && !judgesSize { return "a size prediction, judged at the largest size" }
         guard let e = issue.element else { return "names no element" }
+        if knownFalsePositives.contains(where: {
+            $0.screen == screen && issue.auditType == $0.type && e.label.hasPrefix($0.labelPrefix)
+        }) {
+            return "a known false positive"
+        }
         let frame = e.frame
         let center = CGPoint(x: frame.midX, y: frame.midY)
         let partlyScrolledOut = scrolls.contains { $0.intersects(frame) && !$0.contains(frame) }
@@ -105,6 +117,18 @@ final class AccessibilityAuditTests: XCTestCase {
         if partlyScrolledOut { return "partly scrolled out" }
         return nil
     }
+
+    /// Findings checked by hand and found not to be real, each matched by
+    /// screen, kind and the start of the element's label, so nothing else
+    /// slips through. Remove an entry when its screen changes.
+    /// - The finish sheet's scale hint, clipped text at the largest size:
+    ///   "may be clipped at larger Dynamic Type sizes", though there is no
+    ///   larger size. It is whole (362x155 pt), wraps freely in a scroll
+    ///   view, and moving it from y 601 to y 230 changed nothing; the same
+    ///   font elsewhere passes.
+    private static let knownFalsePositives: [(screen: String, type: XCUIAccessibilityAuditType, labelPrefix: String)] = [
+        ("finish", .textClipped, "Optional. 1 "),
+    ]
 
     private func auditAll(run: String, _ arguments: [String], judgesSize: Bool) throws {
         for screen in Self.screens {
@@ -127,7 +151,7 @@ final class AccessibilityAuditTests: XCTestCase {
                     // CI can list them (the default failure names only the type).
                     try app.performAccessibilityAudit { issue in
                         let line = Self.describe(issue, run: run, on: screen)
-                        if let reason = Self.exemption(issue, judgesSize: judgesSize, bars: bars,
+                        if let reason = Self.exemption(issue, on: screen, judgesSize: judgesSize, bars: bars,
                                                        pinned: pinned, scrolls: scrolls) {
                             print("audit skipped (\(reason)): \(line)")
                         } else {
