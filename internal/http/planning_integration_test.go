@@ -207,6 +207,17 @@ func TestTrainingPlanEndpoints(t *testing.T) {
 	if len(sessions) == 0 {
 		t.Fatal("no sessions planned")
 	}
+	// The complaint at the inner elbow puts it in the ramp: every session
+	// asks about it, and the plan names it for the question (spec §8.6).
+	for _, s := range sessions {
+		if m := s.(map[string]any)["monitor"].([]any); len(m) != 1 || m[0] != "elbow_inner" {
+			t.Errorf("session asks about %v, want elbow_inner", m)
+		}
+	}
+	monitor := plan["monitor"].([]any)
+	if len(monitor) != 1 || monitor[0].(map[string]any)["name"] != "innen am Ellbogen" {
+		t.Errorf("monitor %v, want the inner elbow by name", monitor)
+	}
 	sid := sessions[0].(map[string]any)["id"].(string)
 	detail := a.call("GET", "/v1/me/plan/sessions/"+sid, u.access, nil).ok(200, "PlannedSessionDetail")
 	if detail["plan_id"] != plan["id"] {

@@ -4370,10 +4370,13 @@ components:
 
     RegionMonitor:
       type: object
-      required: [region, questions]
+      required: [region, name, questions]
       properties:
         region:
           $ref: "#/components/schemas/RegionId"
+        name:
+          description: The region's name on the body map, so a question can name it offline.
+          type: string
         questions:
           type: array
           items:
