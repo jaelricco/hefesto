@@ -1,3 +1,5 @@
+import XCTest
+
 /// Runs Apple's accessibility audit (VoiceOver labels, contrast, hit regions,
 /// Dynamic Type, clipped text) on every screen of the demo mode
 /// (Hefesto/DemoMode.swift): seeded local data, no server, no account. Each
