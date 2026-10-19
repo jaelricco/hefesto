@@ -20,8 +20,8 @@ final class AppModel {
     /// The training plan the screens show (ADR 0022).
     let plan: PlanModel
     /// The onboarding's answers, kept while the app runs, so closing it
-    /// loses nothing (ADR 0023).
-    let onboarding: OnboardingModel
+    /// loses nothing (ADR 0023). A sign-out starts a new one.
+    private(set) var onboarding: OnboardingModel
 
     private(set) var isSignedIn = false
     private(set) var isSyncing = false
@@ -105,7 +105,7 @@ final class AppModel {
         let user = await auth.userId
         if user != Self.databaseOwner {
             do {
-                try db.eraseAll()
+                try eraseLocalData()
             } catch {
                 await auth.logout()
                 throw error
@@ -125,7 +125,15 @@ final class AppModel {
         await auth.logout()
         await auth.useDevice(id: Self.newDeviceId())
         Self.databaseOwner = nil
+        try eraseLocalData()
+    }
+
+    /// The database, and the onboarding answers held in memory: they are
+    /// health data, and the next account must not find them filled in.
+    private func eraseLocalData() throws {
         try db.eraseAll()
+        onboarding = OnboardingModel(sync: sync)
+        try plan.reload()
     }
 
     /// Syncs, and signs out only when nothing is left to send. Returns false,
