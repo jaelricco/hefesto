@@ -22,6 +22,11 @@ enum DemoScreen: String, CaseIterable {
     case onboarding, standing, complaint
     // A band-assisted pull-up in the composer (ADR 0024).
     case band
+    // The body (ADR 0028): the regions, a pain report and the symptoms
+    // report.
+    case body, pain, symptoms
+    // The plan's settings (ADR 0029).
+    case settings
 
     var tab: AppTab {
         switch self {
@@ -64,6 +69,10 @@ struct DemoRun {
     /// The planner's catalogue and the answers so far, for the onboarding.
     let catalogue: OnboardingCatalogue?
     let onboardingForm: OnboardingForm?
+    /// The body's regions in the API's JSON.
+    var bodyOverview: String?
+    /// The plan's settings as the demo athlete set them.
+    var settingsForm: OnboardingForm?
 
     var opensLogger: Bool { screen.opensLogger }
     var onboardingPage: OnboardingPage? { screen.onboardingPage }
@@ -310,7 +319,33 @@ extension DemoRun {
                               xp: 45, newlyAvailable: 1, streakDays: 12)
                 : nil,
             catalogue: try OnboardingCatalogue(json: Data(DemoCatalogue.json.utf8)),
-            onboardingForm: screen.onboardingPage == nil ? nil : DemoOnboarding.form(for: screen))
+            onboardingForm: screen.onboardingPage == nil ? nil : DemoOnboarding.form(for: screen),
+            bodyOverview: DemoBody.overview,
+            settingsForm: DemoOnboarding.settings)
+    }
+}
+
+/// The body in the demo: a complaint in its return ramp and a locked region,
+/// as a test's fixture. Names, questions and advice are the knowledge base's
+/// (DemoCatalogue); the states are made up for the screens.
+enum DemoBody {
+    static var overview: String {
+        func flags(_ ids: [String]) -> String {
+            ids.compactMap { DemoCatalogue.flags[$0] }.joined(separator: ",")
+        }
+        let arm = ["RF-01", "RF-02", "RF-03", "RF-04", "RF-05", "RF-06", "RF-07", "RF-10"]
+        return #"""
+        {"regions":[
+          {"region":"elbow_inner","name":"innen am Ellbogen","tracked":true,"state":"rtt_2","entered_via":"onboarding",
+           "since":"2026-10-05","start_fraction":0.25,"complaint":true,"prior_injury":false,"restrictions":[],
+           "referral":null,"rest_until":null,"constraints":[],"red_flags":[\#(flags(arm))]},
+          {"region":"wrist_back_extension","name":"am Handrücken oder beim Strecken des Handgelenks","tracked":true,
+           "state":"locked","entered_via":"red_flag","since":"2026-10-14","start_fraction":null,"complaint":true,
+           "prior_injury":true,"restrictions":["wrist_extension_loaded"],"referral":"advise","rest_until":null,
+           "constraints":["region_locked"],"red_flags":[\#(flags(arm + ["RF-12"]))]}
+        ],
+        "disclaimer":"\#(DemoCatalogue.disclaimer)"}
+        """#
     }
 }
 
@@ -327,6 +362,18 @@ enum DemoBands {
 /// The onboarding's answers so far, as far as each demo screen has come.
 /// Names follow the knowledge base (content/training).
 enum DemoOnboarding {
+    /// The demo athlete's settings after the onboarding: goals, time,
+    /// equipment and body weight.
+    static var settings: OnboardingForm {
+        var f = OnboardingForm()
+        f.goals = [.init(skill: "planche", targetLevel: "tuck"), .init(skill: "handstand", targetLevel: "free-10s")]
+        f.sessionsPerWeek = 3
+        f.sessionMinutes = 60
+        f.equipment = ["floor", "wall", "pull_up_bar", "parallettes", "rings"]
+        f.bodyweightKg = 74
+        return f
+    }
+
     static func form(for screen: DemoScreen) -> OnboardingForm {
         var f = OnboardingForm()
         f.birthYear = 1994

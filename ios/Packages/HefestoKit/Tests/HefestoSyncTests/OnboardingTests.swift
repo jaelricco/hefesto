@@ -216,6 +216,23 @@ func filledForm() -> OnboardingForm {
         #expect(requests[0].headers[key] != nil && requests[0].headers[key] == requests[1].headers[key])
     }
 
+    @Test func signingOutForgetsTheAnswersAndTheirKey() async throws {
+        let server = ScriptedServer { _ in (200, onboardingResultJSON(status: "complete", plan: true)) }
+        let model = try onboardingModel(server: server)
+        model.form = filledForm()
+        try await model.submit()
+
+        model.forget()
+
+        #expect(model.form == OnboardingForm() && model.outcome == nil, "the next account starts empty")
+        #expect(model.catalogue != nil, "the catalogue is content, not the athlete's")
+        model.form = filledForm()
+        try await model.submit()
+        let requests = server.requests("submitOnboarding")
+        let key = HTTPField.Name("Idempotency-Key")!
+        #expect(requests.count == 2 && requests[0].headers[key] != requests[1].headers[key])
+    }
+
     @Test func theServerSaysWhyItRefused() async throws {
         let model = try onboardingModel(server: ScriptedServer { _ in (409, problemJSON("already-onboarded", status: 409)) })
         model.form = filledForm()

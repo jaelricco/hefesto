@@ -20,8 +20,12 @@ final class AppModel {
     /// The training plan the screens show (ADR 0022).
     let plan: PlanModel
     /// The onboarding's answers, kept while the app runs, so closing it
-    /// loses nothing (ADR 0023). A sign-out starts a new one.
-    private(set) var onboarding: OnboardingModel
+    /// loses nothing (ADR 0023). A sign-out forgets them.
+    let onboarding: OnboardingModel
+    /// The body's regions and the events about them (ADR 0028).
+    let body: BodyModel
+    /// The plan's settings after the onboarding (ADR 0029).
+    let settings: PlanSettingsModel
 
     private(set) var isSignedIn = false
     private(set) var isSyncing = false
@@ -63,8 +67,14 @@ final class AppModel {
         let api = HefestoAPIConfiguration.client(serverURL: baseURL, middlewares: [AuthMiddleware(auth: auth)])
         sync = SyncEngine(client: api, db: db)
         // A demo shows the plan it seeded and never reaches the network.
-        plan = PlanModel(db: db, sync: demo == nil ? sync : nil)
+        let plan = PlanModel(db: db, sync: demo == nil ? sync : nil)
+        self.plan = plan
         onboarding = OnboardingModel(sync: demo == nil ? sync : nil, catalogue: demo?.catalogue)
+        body = BodyModel(
+            sync: demo == nil ? sync : nil, plan: plan, catalogue: demo?.catalogue,
+            overview: demo?.bodyOverview.map { Data($0.utf8) })
+        settings = PlanSettingsModel(
+            sync: demo == nil ? sync : nil, plan: plan, catalogue: demo?.catalogue, form: demo?.settingsForm)
         if let form = demo?.onboardingForm { onboarding.form = form }
     }
 
@@ -128,12 +138,12 @@ final class AppModel {
         try eraseLocalData()
     }
 
-    /// The database, and the onboarding answers held in memory: they are
-    /// health data, and the next account must not find them filled in.
+    /// The database, and what the screens hold of the athlete in memory: the
+    /// onboarding's answers and the body's regions are health data, and the
+    /// next account must not find them filled in.
     private func eraseLocalData() throws {
         try db.eraseAll()
-        onboarding = OnboardingModel(sync: sync)
-        try plan.reload()
+        forgetAthlete()
     }
 
     /// Syncs, and signs out only when nothing is left to send. Returns false,
@@ -143,6 +153,16 @@ final class AppModel {
         guard try db.pendingOpCount() == 0 else { return false }
         try await signOut()
         return true
+    }
+
+    /// Forgets what the screens hold of the athlete in memory: answers, body
+    /// regions, settings and the week shown. Only `eraseLocalData()` calls
+    /// it, so the database and the memory are never cleared apart.
+    private func forgetAthlete() {
+        plan.forget()
+        onboarding.forget()
+        body.forget()
+        settings.forget()
     }
 
     // MARK: sync
