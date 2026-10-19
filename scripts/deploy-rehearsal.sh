@@ -14,7 +14,7 @@
 #   1. deploys production with scripts/deploy.sh, and checks it through Caddy;
 #   2. deploys staging beside it, and checks that its database is its own;
 #   3. deploys production again (a redeploy must be a no-op);
-#   4. waits for the backup sidecar's first dump in object storage;
+#   4. has the backup sidecar dump again, and waits for it in object storage;
 #   5. restores it into a scratch database and compares the rows;
 #   6. restores it over the live database and checks the API comes back;
 #   7. recovers the database to a point in time from the pgBackRest archive
@@ -206,12 +206,18 @@ log "3. redeploy production"
 DEPLOY_DIR="$work" "$work/scripts/deploy.sh" "$tag" 2>&1 | tee -a "$diag"
 wait_ready api.localhost
 
-log "4. the first backup"
+log "4. a backup after the writes"
+# The sidecar dumps as it starts, which can be before step 1's account and
+# session exist. A restart, as make prod-backup-now does, dumps again; only an
+# upload after it counts.
+since=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+prod restart backup 2>&1 | tee -a "$diag"
 for _ in $(seq 1 90); do
-    prod logs backup 2>/dev/null | grep -q "uploaded hefesto-" && break
+    prod logs --since "$since" backup 2>/dev/null | grep -q "uploaded hefesto-" && break
     sleep 2
 done
-prod logs backup | grep "uploaded hefesto-" || die "the backup sidecar never uploaded a dump"
+prod logs --since "$since" backup | grep "uploaded hefesto-" \
+    || die "the backup sidecar uploaded no dump after its restart"
 
 log "5. restore into a scratch database"
 (cd "$work" && DEPLOY_DIR="$work" ./scripts/restore.sh latest hefesto_rehearsal) 2>&1 | tee -a "$diag"
