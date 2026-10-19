@@ -27,6 +27,8 @@ public struct PlanWeek: Sendable, Hashable {
     public var exclusions: [PlanExclusion]
     /// The educational disclaimer the API sends with every plan.
     public var disclaimer: String
+    /// The regions under pain monitoring, by name (spec §8.6).
+    public var monitor: [PlanRegion] = []
 
     /// A planned session by its id.
     public func session(id: String) -> PlanSession? {
@@ -36,6 +38,12 @@ public struct PlanWeek: Sendable, Hashable {
     /// The planned session a log session was started as.
     public func session(startedAs logSessionId: String) -> PlanSession? {
         sessions.first { $0.workoutSessionId == logSessionId }
+    }
+
+    /// The regions to ask about before and after a session (ADR 0030), by
+    /// name; a region the plan does not name goes by its id.
+    public func painRegions(for session: PlanSession) -> [PlanRegion] {
+        session.monitor.map { id in monitor.first { $0.id == id } ?? PlanRegion(id: id, name: id) }
     }
 
     /// A plan item by its id, the one a planned set names.
@@ -75,6 +83,8 @@ public struct PlanSession: Sendable, Hashable, Identifiable {
     public var checkInApplied: Bool
     public var blocks: [PlanBlock]
     public var reasons: [PlanNote]
+    /// The regions to ask about before and after it (spec §8.6).
+    public var monitor: [String] = []
 
     /// The items the plan asks for, without offers.
     public var plannedItems: [PlanItem] { blocks.flatMap(\.items).filter { !$0.offer } }
@@ -123,6 +133,17 @@ public struct PlanItem: Sendable, Hashable, Identifiable {
     public var isHold: Bool { holdSeconds != nil }
 }
 
+/// A body-map region, by its name.
+public struct PlanRegion: Sendable, Hashable, Identifiable {
+    public var id: String
+    public var name: String
+
+    public init(id: String, name: String) {
+        self.id = id
+        self.name = name
+    }
+}
+
 /// A reason or hint, as the knowledge base words it.
 public struct PlanNote: Sendable, Hashable {
     public var ruleId: String
@@ -155,6 +176,7 @@ extension PlanWeek {
         hints = p.hints.map(PlanNote.init)
         exclusions = p.exclusions.map { PlanExclusion(exerciseName: $0.exerciseName, reason: PlanNote($0.reason)) }
         disclaimer = p.disclaimer
+        monitor = p.monitor.map { PlanRegion(id: $0.region, name: $0.name ?? $0.region) }
     }
 
     /// The week as it stands here: a start or a completion kept here that
@@ -206,6 +228,7 @@ extension PlanSession {
         checkInApplied = s.checkInApplied
         blocks = s.blocks.map(PlanBlock.init)
         reasons = s.reasons.map(PlanNote.init)
+        monitor = s.monitor ?? []
     }
 }
 

@@ -374,6 +374,7 @@ type plannedSessionOut struct {
 	EstMinutes       float64        `json:"est_minutes"`
 	Blocks           []planBlockOut `json:"blocks"`
 	Reasons          []reasonOut    `json:"reasons"`
+	Monitor          []string       `json:"monitor"`
 }
 
 type exclusionOut struct {
@@ -384,6 +385,7 @@ type exclusionOut struct {
 
 type monitorOut struct {
 	Region    string       `json:"region"`
+	Name      string       `json:"name"`
 	Questions []redFlagOut `json:"questions"`
 }
 
@@ -445,11 +447,20 @@ func itemFrom(k *core.Knowledge, it core.Item) planItemOut {
 	return out
 }
 
+// regionName is a region's name on the body map, or its id if the
+// knowledge base no longer has it.
+func regionName(k *core.Knowledge, id string) string {
+	if r, ok := k.Region(id); ok {
+		return r.Name
+	}
+	return id
+}
+
 func plannedSessionFrom(k *core.Knowledge, s core.PlannedSession) plannedSessionOut {
 	out := plannedSessionOut{ID: s.ID, Status: cmp.Or(s.Status, planning.SessionPlanned), WorkoutSessionID: strOrNil(s.WorkoutSessionID),
 		CheckInApplied: s.CheckIn,
 		Index:          s.Index, Date: dateOut(s.Date), Kind: s.Kind, EstMinutes: s.EstMinutes,
-		Blocks: make([]planBlockOut, len(s.Blocks)), Reasons: reasonsFrom(s.Reasons)}
+		Blocks: make([]planBlockOut, len(s.Blocks)), Reasons: reasonsFrom(s.Reasons), Monitor: nonNil(s.Monitor)}
 	for i, b := range s.Blocks {
 		bo := planBlockOut{Role: b.Role, Paired: b.Paired, Items: make([]planItemOut, len(b.Items)), Reasons: reasonsFrom(b.Reasons)}
 		if b.Minutes > 0 {
@@ -480,7 +491,7 @@ func planFrom(k *core.Knowledge, p core.Plan) planOut {
 		out.Exclusions[i] = exclusionOut{Exercise: e.Exercise, ExerciseName: exerciseName(k, e.Exercise), Reason: reasonFrom(e.Reason)}
 	}
 	for i, m := range p.Monitor {
-		out.Monitor[i] = monitorOut{Region: m.Region, Questions: redFlagsFrom(m.Questions)}
+		out.Monitor[i] = monitorOut{Region: m.Region, Name: regionName(k, m.Region), Questions: redFlagsFrom(m.Questions)}
 	}
 	for i, l := range p.Loads {
 		out.Loads[i] = accountLoadOut{Account: l.Account, Target: l.Target, Planned: l.Planned, Cap: l.Cap, Rule: l.Rule}

@@ -13,7 +13,7 @@ final class AccessibilityAuditTests: XCTestCase {
     private static let screens = [
         "today", "plansession", "checkin", "offlinestart", "planned", "target",
         "onboarding", "standing", "complaint", "body", "pain", "symptoms", "settings",
-        "logger", "composer", "reserve", "band", "finish", "map", "peek", "detail",
+        "logger", "composer", "reserve", "band", "finish", "painafter", "morning", "map", "peek", "detail",
         "history", "session", "stats", "celebration", "signin",
     ]
 
@@ -125,9 +125,11 @@ final class AccessibilityAuditTests: XCTestCase {
     ///   "may be clipped at larger Dynamic Type sizes", though there is no
     ///   larger size. It is whole (362x155 pt), wraps freely in a scroll
     ///   view, and moving it from y 601 to y 230 changed nothing; the same
-    ///   font elsewhere passes.
+    ///   font elsewhere passes. The sheet after a planned session
+    ///   (`painafter`) holds the same hint.
     private static let knownFalsePositives: [(screen: String, type: XCUIAccessibilityAuditType, labelPrefix: String)] = [
         ("finish", .textClipped, "Optional. 1 "),
+        ("painafter", .textClipped, "Optional. 1 "),
     ]
 
     private func auditAll(run: String, _ arguments: [String], judgesSize: Bool) throws {

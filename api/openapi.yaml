@@ -4260,6 +4260,17 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/PlanReason"
+        monitor:
+          description: |
+            The regions to ask about before and after the session (spec §8.6):
+            those in the ramp. Reports go to `POST /v1/me/pain-reports` with
+            this session's log session as `session_id`: `before_session`
+            before it, `during` and `after` once it is done, `next_morning`
+            the morning after. Always sent; optional so that a plan a client
+            kept from before still reads.
+          type: array
+          items:
+            $ref: "#/components/schemas/RegionId"
 
     PlanBlock:
       type: object
@@ -4363,6 +4374,12 @@ components:
       properties:
         region:
           $ref: "#/components/schemas/RegionId"
+        name:
+          description: |
+            The region's name on the body map, so a question can name it
+            offline. Always sent; optional so that a plan a client kept from
+            before still reads.
+          type: string
         questions:
           type: array
           items:

@@ -60,6 +60,9 @@ func render(k *planning.Knowledge, p planning.Plan) string {
 	}
 	for _, s := range p.Sessions {
 		fmt.Fprintf(&b, "session %d %s %s ~%.0f min\n", s.Index+1, s.Date.Format("Mon 02.01."), s.Kind, s.EstMinutes)
+		if len(s.Monitor) > 0 {
+			fmt.Fprintf(&b, "  ask pain: %s\n", strings.Join(s.Monitor, " "))
+		}
 		for _, bl := range s.Blocks {
 			fmt.Fprintf(&b, "  %s", bl.Role)
 			if bl.Minutes > 0 {

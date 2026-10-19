@@ -44,6 +44,9 @@ type PlannedSession struct {
 	EstMinutes float64   `json:"est_minutes"`
 	Blocks     []Block   `json:"blocks"`
 	Reasons    []Reason  `json:"reasons,omitempty"`
+	// Monitor names the regions whose pain the athlete is asked about
+	// before and after the session (spec §8.6).
+	Monitor []string `json:"monitor,omitempty"`
 }
 
 // Session kinds.
@@ -310,6 +313,18 @@ func (g *gen) finish() {
 			continue
 		}
 		g.plan.Monitor = append(g.plan.Monitor, RegionMonitor{Region: id, Questions: k.RedFlags(id, g.minor)})
+	}
+	// Every session asks about the regions in the ramp (spec §8.6). The
+	// regions whose pain cells a session holds are among them: an item is
+	// monitored only for a region in the ramp (judge).
+	var ramp []string
+	for _, id := range sortedKeys(g.s.Regions) {
+		if st := rttStage(g.s.Regions[id].State); st >= 1 && st <= 5 {
+			ramp = append(ramp, id)
+		}
+	}
+	for i := range g.plan.Sessions {
+		g.plan.Sessions[i].Monitor = slices.Clone(ramp)
 	}
 	for _, goal := range g.s.Goals {
 		if goal.TargetDate != nil {

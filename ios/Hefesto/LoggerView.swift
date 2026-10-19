@@ -97,7 +97,7 @@ struct LoggerView: View {
                 if model.demo?.screen == .target, let next = nextPlanned(logger) {
                     composing = Composing(blockId: next.entry.blockId, planned: target(for: next, logger))
                 }
-                if model.demo?.screen == .finish { finishing = true }
+                if model.demo?.screen == .finish || model.demo?.screen == .painafter { finishing = true }
             } catch {
                 self.error = error.localizedDescription
             }
@@ -121,9 +121,11 @@ struct LoggerView: View {
             }
         }
         .sheet(isPresented: $finishing) {
-            // Half a screen cannot hold it at the accessibility sizes.
-            FinishSheet { fatigue in finish(fatigue) }
-                .presentationDetents(typeSize.isAccessibilitySize ? [.large] : [.medium, .large])
+            // The pain questions of a planned session (ADR 0030) need the
+            // whole screen, as does any sheet at the accessibility sizes.
+            let question = model.plan.afterQuestion(logSessionId: sessionId)
+            FinishSheet(question: question) { fatigue, pain in finish(fatigue, pain: pain, question: question) }
+                .presentationDetents(typeSize.isAccessibilitySize || question != nil ? [.large] : [.medium, .large])
         }
         .sheet(item: $bodySheet) { sheet in
             switch sheet {
@@ -135,7 +137,7 @@ struct LoggerView: View {
             RedFlagSheet(regionId: route.id) { bodyOutcome = $0 }
         }
         .alert(
-            "Sent", isPresented: Binding(get: { bodyOutcome != nil }, set: { if !$0 { bodyOutcome = nil } }),
+            bodyOutcome?.waiting == true ? "Kept" : "Sent", isPresented: Binding(get: { bodyOutcome != nil }, set: { if !$0 { bodyOutcome = nil } }),
             presenting: bodyOutcome
         ) { _ in
             Button("OK") { bodyOutcome = nil }
@@ -374,14 +376,35 @@ struct LoggerView: View {
         RestNotifier.cancel()
     }
 
-    private func finish(_ fatigue: Int?) {
+    /// Completes the session. The pain answers go once the completion is
+    /// synced; warning signs the planner asks for keep the log open.
+    private func finish(_ fatigue: Int?, pain: [String: PainAnswer] = [:], question: PainQuestion? = nil) {
         guard let logger else { return }
         attempt {
             try logger.complete(perceivedFatigue: fatigue)
             RestNotifier.cancel()
             finishing = false
-            dismiss()
-            Task { await model.syncNow() }
+            let reports = question?.reports(pain, at: Date()) ?? []
+            guard !reports.isEmpty else {
+                dismiss()
+                Task { await model.syncNow() }
+                return
+            }
+            Task {
+                await model.syncNow()
+                do {
+                    let outcome = try await model.body.reportPain(reports)
+                    if !outcome.askRedFlags.isEmpty || outcome.trainingStopped {
+                        reported(outcome)
+                    } else {
+                        dismiss()
+                    }
+                } catch {
+                    // The session is done; the log stays open to say why the
+                    // answers were refused.
+                    self.error = BodyText.failure(error)
+                }
+            }
         }
     }
 
@@ -673,8 +696,11 @@ struct RestCard: View {
 
 /// Ends a session, with how hard it felt if the athlete wants to say.
 struct FinishSheet: View {
-    let onFinish: (Int?) -> Void
+    /// The pain questions once a planned session is done (ADR 0030).
+    var question: PainQuestion?
+    let onFinish: (Int?, [String: PainAnswer]) -> Void
     @State private var fatigue: Int?
+    @State private var pain: [String: PainAnswer] = [:]
     @Environment(\.dynamicTypeSize) private var typeSize
 
     // The question is the bar's large title: at the largest sizes the bar
@@ -708,8 +734,12 @@ struct FinishSheet: View {
                             .accessibilityAddTraits(fatigue == n ? .isSelected : [])
                         }
                     }
+                    if let question {
+                        PainQuestionView(moment: .afterSession, regions: question.regions, answers: $pain)
+                            .padding(.top, 8)
+                    }
                     Button {
-                        onFinish(fatigue)
+                        onFinish(fatigue, pain)
                     } label: {
                         Label("Finish session", systemImage: "checkmark")
                     }

@@ -57,14 +57,25 @@ public struct BodyOutcome: Sendable, Hashable {
     public var trainingStopped: Bool
     /// The reasons of the changes, verbatim.
     public var notes: [PlanNote]
+    /// Some pain reports wait here for a connection; the next sync sends
+    /// them (ADR 0030).
+    public var waiting = false
 
     init(_ r: Components.Schemas.PlanEventResult) {
-        askRedFlags = r.changes.filter { $0.kind == "ask_red_flags" }.compactMap(\.region)
-        trainingStopped = r.changes.contains { $0.kind == "training_stopped" }
+        self.init([r])
+    }
+
+    /// What several events changed together.
+    init(_ results: [Components.Schemas.PlanEventResult]) {
+        let changes = results.flatMap(\.changes)
+        var regions = Set<String>()
+        askRedFlags = changes.filter { $0.kind == "ask_red_flags" }.compactMap(\.region).filter { regions.insert($0).inserted }
+        trainingStopped = changes.contains { $0.kind == "training_stopped" }
         var seen = Set<String>()
-        notes = r.changes.flatMap { $0.reasons.map(PlanNote.init) }.filter { seen.insert($0.text).inserted }
+        notes = changes.flatMap { $0.reasons.map(PlanNote.init) }.filter { seen.insert($0.text).inserted }
     }
 }
+
 
 public enum BodyModelError: Error, Equatable {
     /// The model has no server, as in a demo.
@@ -146,9 +157,22 @@ public final class BodyModel {
         try await send("symptoms") { sync, id in try await sync.reportSymptoms(id: id) }
     }
 
-    public func reportPain(_ report: PainReport) async throws -> BodyOutcome {
-        let key = "pain|\(report.region)|\(report.timepoint)|\(report.nrs)|\(report.at.timeIntervalSince1970)"
-        return try await send(key) { sync, id in try await sync.reportPain(report, id: id) }
+    /// Reports pain. The reports are kept here first and go at once; those
+    /// that cannot go yet wait for the next sync (ADR 0030). A report the
+    /// server refuses for good, as without consent, throws its reason.
+    public func reportPain(_ reports: [PainReport]) async throws -> BodyOutcome {
+        guard let sync else { throw BodyModelError.noServer }
+        let sent = try await sync.sendPain(reports)
+        if !sent.results.isEmpty {
+            await plan?.refresh()
+            await load()
+        }
+        if let refused = sent.kept.lazy.compactMap({ sent.refused[$0] }).first {
+            throw refused
+        }
+        var outcome = BodyOutcome(sent.results)
+        outcome.waiting = sent.waiting > 0
+        return outcome
     }
 
     /// Answers the region's warning-sign questions, follow-ups included.

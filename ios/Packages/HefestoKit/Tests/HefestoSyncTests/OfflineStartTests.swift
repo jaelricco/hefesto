@@ -30,20 +30,25 @@ func blockJSON(role: String = "strength", paired: Bool = false, items: [String])
 }
 
 /// A plan of the week of 2026-09-28 with one session on Tuesday.
+/// A week with one session on Tuesday. `monitor` names the regions in the
+/// ramp, by id and name; without it the session has no `monitor`, as a plan
+/// kept from before.
 func weekJSON(
     plannedSessionId: String, blocks: [String], stopped: Bool = false, status: String = "planned",
-    workoutSessionId: String? = nil
+    workoutSessionId: String? = nil, monitor: [(String, String)]? = nil
 ) -> String {
     let workout = workoutSessionId.map { #""\#($0)""# } ?? "null"
+    let sessionMonitor = monitor.map { m in #","monitor":[\#(m.map { #""\#($0.0)""# }.joined(separator: ","))]"# } ?? ""
+    let planMonitor = (monitor ?? []).map { #"{"region":"\#($0.0)","name":"\#($0.1)","questions":[]}"# }
     return #"""
     {"id":"\#(UUIDv7.make())","week_start":"2026-09-28","ruleset_version":"test",
      "input_hash":"sha256:0000000000000000000000000000000000000000000000000000000000000000",
      "stopped":\#(stopped),"deload":null,
      "sessions":[{"id":"\#(plannedSessionId)","status":"\#(status)","workout_session_id":\#(workout),
        "check_in_applied":false,"index":0,"date":"2026-09-29","kind":"full","est_minutes":45,
-       "blocks":[\#(blocks.joined(separator: ","))],"reasons":[]}],
-     "rest_days":[],"exclusions":[],"hints":[],"realism":[],"monitor":[],"loads":[],"reasons":[],
-     "disclaimer":"Educational, not medical advice."}
+       "blocks":[\#(blocks.joined(separator: ","))],"reasons":[]\#(sessionMonitor)}],
+     "rest_days":[],"exclusions":[],"hints":[],"realism":[],"monitor":[\#(planMonitor.joined(separator: ","))],
+     "loads":[],"reasons":[],"disclaimer":"Educational, not medical advice."}
     """#
 }
 

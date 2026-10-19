@@ -210,7 +210,10 @@ struct OutcomeNotes: View {
             ForEach(Array(outcome.notes.enumerated()), id: \.offset) { _, note in
                 Text(verbatim: note.text).font(.detailText).foregroundStyle(Palette.text)
             }
-            if !outcome.trainingStopped && outcome.notes.isEmpty {
+            if outcome.waiting {
+                Text("Kept on your phone. It goes to your plan at the next sync.")
+                    .font(.detailText).foregroundStyle(Palette.textSecondary)
+            } else if !outcome.trainingStopped && outcome.notes.isEmpty {
                 Text("Sent. Your plan takes it into account.").font(.detailText).foregroundStyle(Palette.textSecondary)
             }
         }
@@ -296,7 +299,7 @@ struct PainReportSheet: View {
         default: break
         }
         do {
-            let outcome = try await model.body.reportPain(report)
+            let outcome = try await model.body.reportPain([report])
             sending = false
             dismiss()
             onSent(outcome)
@@ -540,6 +543,7 @@ enum BodyText {
     static func summary(_ outcome: BodyOutcome) -> String {
         var lines = outcome.notes.map(\.text)
         if outcome.trainingStopped { lines.insert(String(localized: "Training is paused. Your plan says why."), at: 0) }
+        if outcome.waiting { lines.append(String(localized: "Kept on your phone. It goes to your plan at the next sync.")) }
         return lines.isEmpty ? String(localized: "Sent. Your plan takes it into account.") : lines.joined(separator: "\n\n")
     }
 
