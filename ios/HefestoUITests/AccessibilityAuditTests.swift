@@ -75,11 +75,14 @@ final class AccessibilityAuditTests: XCTestCase {
     /// - Contrast of a disabled control: WCAG 1.4.3 exempts inactive
     ///   components, and a disabled Save must look disabled.
     /// - Contrast of an element that is not fully in view: not hittable,
-    ///   partly scrolled out, or beside a bar, where iOS fades the content
-    ///   that scrolls under it. The pixels sampled there are another view's.
+    ///   partly scrolled out, beside a bar, where iOS fades the content that
+    ///   scrolls under it, or partly under a view pinned over the scrolling
+    ///   content (`.pinnedBar()`: the rest card, a bottom bar). The pixels
+    ///   sampled there are another view's. What a pinned bar holds itself is
+    ///   judged.
     /// - A finding that names no element: there is nothing to point at.
     private static func exemption(_ issue: XCUIAccessibilityAuditIssue, judgesSize: Bool,
-                                  bars: [CGRect], scrolls: [CGRect]) -> String? {
+                                  bars: [CGRect], pinned: [CGRect], scrolls: [CGRect]) -> String? {
         let sized = issue.auditType == .dynamicType || issue.auditType == .textClipped
         if sized && !judgesSize { return "a size prediction, judged at the largest size" }
         guard let e = issue.element else { return "names no element" }
@@ -91,6 +94,7 @@ final class AccessibilityAuditTests: XCTestCase {
         if !e.isHittable { return "not hittable" }
         // The strip where iOS fades content scrolling under a bar.
         if bars.contains(where: { $0.insetBy(dx: 0, dy: -44).intersects(frame) }) { return "beside a bar" }
+        if pinned.contains(where: { $0.intersects(frame) && !$0.contains(frame) }) { return "partly under a pinned bar" }
         if scrolls.contains(where: { $0.intersects(frame) && !$0.contains(frame) }) { return "partly scrolled out" }
         return nil
     }
@@ -106,6 +110,8 @@ final class AccessibilityAuditTests: XCTestCase {
             sleep(2)
             let bars = [app.navigationBars, app.tabBars, app.toolbars]
                 .flatMap { $0.allElementsBoundByIndex.map(\.frame) }
+            let pinned = app.descendants(matching: .any).matching(identifier: "pinned-bar")
+                .allElementsBoundByIndex.map(\.frame)
             let scrolls = [app.scrollViews, app.collectionViews, app.tables]
                 .flatMap { $0.allElementsBoundByIndex.map(\.frame) }
             XCTContext.runActivity(named: "Accessibility audit: \(run) \(screen)") { _ in
@@ -114,7 +120,8 @@ final class AccessibilityAuditTests: XCTestCase {
                     // CI can list them (the default failure names only the type).
                     try app.performAccessibilityAudit { issue in
                         let line = Self.describe(issue, run: run, on: screen)
-                        if let reason = Self.exemption(issue, judgesSize: judgesSize, bars: bars, scrolls: scrolls) {
+                        if let reason = Self.exemption(issue, judgesSize: judgesSize, bars: bars,
+                                                       pinned: pinned, scrolls: scrolls) {
                             print("audit skipped (\(reason)): \(line)")
                         } else {
                             XCTFail(line)

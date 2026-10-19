@@ -90,7 +90,7 @@ struct OnboardingView: View {
                     .padding(.horizontal, 20)
                     .padding(.top, 8)
             }
-            bottomBar(page, at: i, of: pages.count)
+            bottomBar(page, at: i, of: pages.count).pinnedBar()
         }
     }
 

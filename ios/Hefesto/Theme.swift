@@ -161,6 +161,14 @@ extension View {
             .listRowSeparatorTint(Palette.hairline)
     }
 
+    /// A view pinned over scrolling content, as a bar is: the rest card, a
+    /// bottom bar. The accessibility audit treats it like a bar, since what
+    /// scrolls under it is covered (AccessibilityAuditTests).
+    func pinnedBar() -> some View {
+        self.accessibilityElement(children: .contain)
+            .accessibilityIdentifier("pinned-bar")
+    }
+
     /// A picker shows its choice like any other value, in the secondary text
     /// colour. iOS would tint it with the accent, but ember is for actions.
     func themedPicker() -> some View {

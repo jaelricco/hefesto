@@ -42,7 +42,15 @@ struct SkillMapView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Palette.sky.ignoresSafeArea())
-            .safeAreaInset(edge: .top, spacing: 0) { header }
+            .safeAreaInset(edge: .top, spacing: 0) {
+                // The title on solid sky, never on stars or lines.
+                header.background {
+                    LinearGradient(stops: [.init(color: Palette.sky, location: 0.75),
+                                           .init(color: Palette.sky.opacity(0), location: 1)],
+                                   startPoint: .top, endPoint: .bottom)
+                        .ignoresSafeArea(edges: .top)
+                }
+            }
             .overlay(alignment: .bottom) {
                 if !showList, let map, let id = peek, let skill = map.skills.first(where: { $0.id == id }) {
                     PeekCard(skill: skill, map: map) { opened = id }
@@ -472,11 +480,14 @@ struct ProgressBadge: View {
                     if progress.currentDays > 0 {
                         item(Text("\(progress.currentDays)"), icon: "flame.fill", iconTint: Palette.ember,
                              textTint: style == .chips ? Palette.text : Palette.ember)
-                        .accessibilityElement(children: .ignore)
                         .accessibilityLabel(Text("\(progress.currentDays)-day streak"))
                 }
             }
         }
+        // One element for XP and streak, 44 pt tall in a bar.
+        .frame(minHeight: style == .plain ? 44 : nil)
+        .contentShape(.rect)
+        .accessibilityElement(children: .combine)
         .task {
             do { for try await p in model.db.observeProgress() { progress = p } } catch {}
         }
@@ -487,6 +498,7 @@ struct ProgressBadge: View {
         // In a bar, which caps its text: a long press shows it large.
         let label = HStack(spacing: 5) {
             Image(systemName: icon).font(.system(size: 12, weight: .semibold)).foregroundStyle(iconTint)
+                .accessibilityHidden(true)
             title.foregroundStyle(textTint)
         }
         .accessibilityShowsLargeContentViewer()

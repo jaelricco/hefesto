@@ -13,6 +13,7 @@ struct TodayView: View {
     @State private var open: OpenSession?
     @State private var error: String?
     @State private var confirmingSignOut = false
+    @Environment(\.dynamicTypeSize) private var typeSize
     @State private var path: [PlanRoute] = []
     /// The planned session whose check-in is open.
     @State private var checkingIn: PlanSession?
@@ -109,17 +110,48 @@ struct TodayView: View {
         }
     }
 
+    /// The date, and beside it sync and the account. At the accessibility
+    /// sizes the date takes a row of its own, so it is never cut.
     private var header: some View {
+        Group {
+            if typeSize.isAccessibilitySize {
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack(spacing: 8) { Spacer(); headerControls }
+                    dateLabel
+                }
+            } else {
+                HStack(spacing: 8) {
+                    dateLabel
+                    Spacer()
+                    headerControls
+                }
+            }
+        }
+        .padding(.leading, 20)
+        .padding(.trailing, 12)
+        .frame(minHeight: 44)
+        // Signing out erases the phone's copy (REVIEW_DECISIONS D-16), so
+        // changes not yet sent would be lost.
+        .confirmationDialog("Sign out?", isPresented: $confirmingSignOut, titleVisibility: .visible) {
+            Button("Sync and sign out") { signOut(syncFirst: true) }
+            Button("Sign out and discard", role: .destructive) { signOut(syncFirst: false) }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("\(pending) changes on this phone are not synced yet. Signing out erases everything stored on this phone.")
+        }
+    }
+
+    private var dateLabel: some View {
+        Text(Date.now, format: .dateTime.weekday(.wide).day().month(.wide))
+            .font(.capsLabel)
+            .tracking(1.2)
+            .textCase(.uppercase)
+            .foregroundStyle(Palette.textSecondary)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+
+    private var headerControls: some View {
         HStack(spacing: 8) {
-            Text(Date.now, format: .dateTime.weekday(.wide).day().month(.wide))
-                .font(.capsLabel)
-                .tracking(1.2)
-                .textCase(.uppercase)
-                .foregroundStyle(Palette.textSecondary)
-                // Wraps at the largest sizes rather than being cut.
-                .fixedSize(horizontal: false, vertical: true)
-                .layoutPriority(1)
-            Spacer()
             SyncBadge(pending: pending)
             Menu {
                 if model.plan.week != nil {
@@ -138,19 +170,7 @@ struct TodayView: View {
                     .frame(width: 44, height: 44)
             }
             .accessibilityLabel("Account")
-            // Signing out erases the phone's copy (REVIEW_DECISIONS D-16), so
-            // changes not yet sent would be lost.
-            .confirmationDialog("Sign out?", isPresented: $confirmingSignOut, titleVisibility: .visible) {
-                Button("Sync and sign out") { signOut(syncFirst: true) }
-                Button("Sign out and discard", role: .destructive) { signOut(syncFirst: false) }
-                Button("Cancel", role: .cancel) {}
-            } message: {
-                Text("\(pending) changes on this phone are not synced yet. Signing out erases everything stored on this phone.")
-            }
         }
-        .padding(.leading, 20)
-        .padding(.trailing, 12)
-        .frame(minHeight: 44)
     }
 
     /// Today's planned session, a rest day of the plan, or a stop. Without a

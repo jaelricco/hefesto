@@ -8,6 +8,7 @@ import SwiftUI
 struct LoggerView: View {
     let sessionId: String
     @Environment(AppModel.self) private var model
+    @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.dismiss) private var dismiss
     @State private var logger: LoggerModel?
     @State private var exercises: [String: Exercise] = [:]
@@ -69,10 +70,11 @@ struct LoggerView: View {
                         .padding(.horizontal, 16)
                         .padding(.vertical, 8)
                         .background(Palette.background)
+                        .pinnedBar()
                 }
             }
             .safeAreaInset(edge: .bottom) {
-                if let logger, isDraft, !logger.session.isRestDay { bottomBar(logger) }
+                if let logger, isDraft, !logger.session.isRestDay { bottomBar(logger).pinnedBar() }
             }
         }
         .preferredColorScheme(.dark)
@@ -119,8 +121,9 @@ struct LoggerView: View {
             }
         }
         .sheet(isPresented: $finishing) {
+            // Half a screen cannot hold it at the accessibility sizes.
             FinishSheet { fatigue in finish(fatigue) }
-                .presentationDetents([.medium, .large])
+                .presentationDetents(typeSize.isAccessibilitySize ? [.large] : [.medium, .large])
         }
         .sheet(item: $bodySheet) { sheet in
             switch sheet {

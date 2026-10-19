@@ -138,7 +138,7 @@ jobs:
           # listed every time, so an exemption never hides a finding silently.
           sed -nE 's/^audit skipped (.*)$/\1/p' test.log | sort -u > skipped.txt || true
           echo "$(wc -l < skipped.txt) findings skipped"
-          [ -s skipped.txt ] && annotate skipped.txt "Accessibility audit, skipped" notice
+          [ -s skipped.txt ] && annotate skipped.txt "Accessibility audit skipped" notice
           if ! grep -q '\*\* TEST SUCCEEDED \*\*' test.log; then
             grep -E ': error: ' test.log | sed -E 's/^[^:]*:[0-9]+: error: //; s/^-\[[^]]*\] : (failed - )?//' \
               | sort -u > findings.txt || true
