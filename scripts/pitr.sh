@@ -41,6 +41,11 @@ while :; do
     if [ $((now - full)) -ge "$FULL_EVERY_S" ]; then
         kind="full"
     fi
+    # A broken archive (a rotated key, a missing bucket) shows here daily,
+    # not only when a recovery needs the WAL.
+    if ! pgbackrest check; then
+        log "ERROR archiving is failing: WAL is not reaching the repository"
+    fi
     log "taking a $kind backup"
     if pgbackrest backup --type="$kind"; then
         log "$kind backup done"

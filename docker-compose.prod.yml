@@ -48,6 +48,10 @@ x-pgbackrest: &pgbackrest
   PGBACKREST_LOG_LEVEL_CONSOLE: info
   PGBACKREST_LOG_LEVEL_FILE: "off"
   PGBACKREST_LOCK_PATH: /tmp/pgbackrest
+  # Never let a failing archive fill the disk and stop Postgres: past this,
+  # pgBackRest reports segments as archived and drops them. Recovery then has
+  # a gap until the next backup, but the database stays up.
+  PGBACKREST_ARCHIVE_PUSH_QUEUE_MAX: 4GiB
 
 services:
   postgres:

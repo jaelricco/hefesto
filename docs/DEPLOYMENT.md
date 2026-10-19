@@ -265,6 +265,18 @@ promotes, then starts everything again. **Everything written after the target
 is gone.** If you are unsure of the moment, restore a logical dump into a
 scratch database first (`restore.sh`) and look.
 
+If archiving fails (a rotated key, a missing bucket), the `pitr` log says
+`ERROR archiving is failing` on its next cycle. Postgres keeps the WAL it
+could not send, up to 4 GiB. Past that, pgBackRest drops it so the disk never
+fills. Recovery then has a gap until the next backup, but the database stays
+up.
+
+Deploys reuse the built Postgres image, so they never restart the database,
+but they also don't pick up security updates to `postgres:16-alpine`. Take
+those deliberately, about monthly:
+`./scripts/compose.sh build --pull postgres pitr && ./scripts/compose.sh up -d postgres pitr`.
+That restarts Postgres for a few seconds.
+
 ## Operating
 
 ```sh

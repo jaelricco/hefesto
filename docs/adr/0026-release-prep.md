@@ -111,6 +111,11 @@ do not restart the database.
   server: without it the backups cannot be read.
 - **Restore.** `scripts/pitr-restore.sh` recovers to a timestamp, or to the
   end of the archive.
+- **A failing archive never stops the database.** Postgres keeps WAL it
+  cannot archive, which would fill the disk. `archive-push-queue-max` (4 GiB)
+  makes pgBackRest drop it past that, leaving a gap in recovery instead of a
+  stopped database. The sidecar runs `pgbackrest check` every cycle, so the
+  failure shows in its log.
 - **Why pgBackRest.** WAL-G's current releases cannot be pinned through the
   Go module proxy, because its module path never took the `/v3` suffix.
   pgBackRest is packaged by Alpine, and it is what ADR 0004 named.
