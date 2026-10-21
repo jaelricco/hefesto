@@ -1,0 +1,14 @@
+{
+  "version": "1",
+  "shown_by": "ios/Hefesto/ConsentViews.swift (ConsentTextView)",
+  "texts": [
+    {
+      "en": "May Hefesto keep your health answers?",
+      "de": "Darf Hefesto deine Gesundheitsangaben speichern?"
+    },
+    {
+      "en": "Complaints and health answers let the planner work around them. Without your consent the safety questions are still asked, but only used for this plan and not kept, and the planner plans conservatively.",
+      "de": "Mit Beschwerden und Gesundheitsangaben kann der Planer Rücksicht nehmen. Ohne deine Einwilligung werden die Sicherheitsfragen trotzdem gestellt, aber nur für diesen Plan verwendet und nicht gespeichert, und der Planer plant vorsichtig."
+    }
+  ]
+}

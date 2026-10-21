@@ -77,11 +77,13 @@ public final class OnboardingModel {
 
     /// Sends the answers and returns what the server made of them. Questions
     /// in the result are answered in `form.clarifications`, then sent again.
+    /// `consentText` is the text the consent was decided with (ADR 0031).
     @discardableResult
-    public func submit() async throws -> OnboardingOutcome {
-        guard let catalogue, let answers = form.request(catalogue, currentYear: currentYear) else {
+    public func submit(consentText: ConsentText? = nil) async throws -> OnboardingOutcome {
+        guard let catalogue, var answers = form.request(catalogue, currentYear: currentYear) else {
             throw OnboardingSubmitError.incomplete
         }
+        answers.healthDataConsentText = consentText.map(Components.Schemas.ConsentText.init)
         guard let sync else { throw OnboardingSubmitError.noServer }
         // The same answers again are a retry and keep their key.
         let key = sent.flatMap { $0.answers == answers ? $0.key : nil } ?? UUIDv7.make()

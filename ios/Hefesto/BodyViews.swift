@@ -55,6 +55,11 @@ struct BodyView: View {
                         onClearance: { clearing = region })
                 }
 
+                NavigationLink { HealthDataView() } label: {
+                    Label("Health data and consent", systemImage: "lock.shield")
+                }
+                .buttonStyle(SecondaryButtonStyle())
+
                 if !state.disclaimer.isEmpty {
                     Text(verbatim: state.disclaimer).font(.fine).foregroundStyle(Palette.textSecondary)
                 }

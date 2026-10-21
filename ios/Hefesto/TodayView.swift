@@ -23,6 +23,7 @@ struct TodayView: View {
     /// The body screen, and the sheet it opens on in a demo.
     @State private var showingBody = false
     @State private var showingSettings = false
+    @State private var showingHealthData = false
     @State private var bodyOpening: BodySheet?
     @State private var confirmingClearance = false
     @State private var clearanceFailure: String?
@@ -76,6 +77,7 @@ struct TodayView: View {
             }
             .navigationDestination(isPresented: $showingBody) { BodyView(opening: bodyOpening) }
             .navigationDestination(isPresented: $showingSettings) { PlanSettingsView() }
+            .navigationDestination(isPresented: $showingHealthData) { HealthDataView() }
             .confirmationDialog(
                 "Did a professional clear you to train?", isPresented: $confirmingClearance, titleVisibility: .visible
             ) {
@@ -125,6 +127,7 @@ struct TodayView: View {
                 case .pain: bodyOpening = .pain; showingBody = true
                 case .symptoms: bodyOpening = .symptoms; showingBody = true
                 case .settings: showingSettings = true
+                case .consent: showingHealthData = true
                 default: break
                 }
                 if let id = demo.opensSessionId { open = OpenSession(id: id) }
@@ -196,6 +199,7 @@ struct TodayView: View {
             Menu {
                 if model.plan.week != nil {
                     Button("Plan settings", systemImage: "slider.horizontal.3") { showingSettings = true }
+                    Button("Health data", systemImage: "lock.shield") { showingHealthData = true }
                 }
                 Button("Sync now", systemImage: "arrow.triangle.2.circlepath") {
                     Task { await model.syncNow() }

@@ -7,6 +7,8 @@
      with the same placeholders as the key.
   3. Every key is still used, so the catalog does not rot.
   4. A count in front of a noun has plural variations in both languages.
+  5. The consent text the app shows is the one archived for its version in
+     docs/consent/, in both languages (ADR 0031).
 
 Swift turns each interpolation into a format specifier (%lld, %@, %lf...)
 whose type the source does not show, so both sides are compared with every
@@ -25,6 +27,8 @@ from pathlib import Path
 
 APP = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).resolve().parent.parent / "Hefesto"
 CATALOG = APP / "Localizable.xcstrings"
+CONSENT_VIEW = APP / "ConsentViews.swift"
+CONSENT_ARCHIVE = APP.parent.parent / "docs" / "consent"
 
 # Literals that look like prose but are not shown as UI text.
 IGNORED = {
@@ -173,10 +177,43 @@ def main() -> int:
                 if "variations" not in loc and "substitutions" not in loc:
                     errors.append(f"{CATALOG.name}: {key!r} needs plural variations in {lang!r}")
 
+    check_consent_text(strings, errors)
+
     for e in errors:
         print(e)
     print(f"check-strings: {len(strings)} keys, {len(errors)} problems")
     return 1 if errors else 0
+
+
+def check_consent_text(strings: dict, errors: list[str]) -> None:
+    """The words of ConsentTextView are those archived for the version the
+    app sends with each decision, and so is their German: a changed word is a
+    new version, and the old one stays archived."""
+    if not CONSENT_VIEW.exists():
+        return
+    src = CONSENT_VIEW.read_text(encoding="utf-8")
+    m = re.search(r'static let version = "([^"]+)"', src)
+    view = re.search(r"struct ConsentTextView: View \{(.*?)\n\}", src, re.S)
+    if not m or not view:
+        errors.append(f"{CONSENT_VIEW.name}: no consent text version or no ConsentTextView")
+        return
+    version = m.group(1)
+    archive = CONSENT_ARCHIVE / f"health-data-{version}.json"
+    if not archive.exists():
+        errors.append(f"{CONSENT_VIEW.name}: consent text version {version} is not archived in {archive}")
+        return
+    texts = json.loads(archive.read_text(encoding="utf-8"))["texts"]
+    shown = {text for _, text, verbatim in literals(view.group(1)) if not verbatim and user_facing(text)}
+    archived = {t["en"] for t in texts}
+    for text in sorted(shown - archived):
+        errors.append(f"{CONSENT_VIEW.name}: {text!r} is not in {archive.name}; a changed text is a new version")
+    for text in sorted(archived - shown):
+        errors.append(f"{archive.name}: {text!r} is not shown any more; a changed text is a new version")
+    for t in texts:
+        de = strings.get(t["en"], {}).get("localizations", {}).get("de", {}).get("stringUnit", {}).get("value")
+        if de != t["de"]:
+            errors.append(f"{archive.name}: the German of {t['en']!r} is {de!r} in {CATALOG.name}, "
+                          f"not the archived {t['de']!r}")
 
 
 # Counted strings whose count is never one, so they need no plural forms.

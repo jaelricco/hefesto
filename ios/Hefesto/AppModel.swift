@@ -26,6 +26,8 @@ final class AppModel {
     let body: BodyModel
     /// The plan's settings after the onboarding (ADR 0029).
     let settings: PlanSettingsModel
+    /// The consent to keep health data and its record (ADR 0031).
+    let consent: ConsentModel
 
     private(set) var isSignedIn = false
     private(set) var isSyncing = false
@@ -75,6 +77,9 @@ final class AppModel {
             overview: demo?.bodyOverview.map { Data($0.utf8) })
         settings = PlanSettingsModel(
             sync: demo == nil ? sync : nil, plan: plan, catalogue: demo?.catalogue, form: demo?.settingsForm)
+        consent = ConsentModel(
+            sync: demo == nil ? sync : nil, plan: plan, body: body, catalogue: demo?.catalogue,
+            record: demo?.consentRecord.map { Data($0.utf8) })
         if let form = demo?.onboardingForm { onboarding.form = form }
     }
 
@@ -156,13 +161,14 @@ final class AppModel {
     }
 
     /// Forgets what the screens hold of the athlete in memory: answers, body
-    /// regions, settings and the week shown. Only `eraseLocalData()` calls
+    /// regions, settings, the consent and the week shown. Only `eraseLocalData()` calls
     /// it, so the database and the memory are never cleared apart.
     private func forgetAthlete() {
         plan.forget()
         onboarding.forget()
         body.forget()
         settings.forget()
+        consent.forget()
     }
 
     // MARK: sync
