@@ -684,6 +684,7 @@ Client offline schreibt. Die DDL entsteht als eigene, additive Migration
 | `user_pain_reports` | `region`, `timepoint` (`before_session`, `warmup`, `during`, `after`, `next_morning`, `daily`), `nrs` (0–10), `lasted_over_1h` (bei `after`), `persisted_over_15min` (bei `warmup`), `sudden_sharp` (Bool), `session_id` (optional), `reported_at`, `local_date` | Client | ja | ja |
 | `user_red_flag_answers` | `region`, `flag_id` (`RF-01` … `RF-13`), `answer`, `answered_at` | Client/API | ja | ja (ohne Einwilligung nicht gespeichert, `onboarding.md` §3.1) |
 | `planning_constraints` | `kind` (`plan_stopped`, `region_locked`, `region_excluded`), `region`, `created_at`, `cleared_at`; keine Antworten, keine Werte | Server | nur lesen | nein (Auflage, ENT-S-7) |
+| `health_consent_records` | `granted`, `source` (`onboarding`, `change`), `change_id`, `text_version`, `locale`, `recorded_at`; nur anhängbar (ADR 0031) | API | nein | nein (Nachweis; bleibt beim Widerruf) |
 | `user_screening` | Frage, Antwort, Zeitpunkt, `clearance_confirmed_at` | API | nein | ja |
 | `user_capacity_estimates` | (`user_id`, `exercise_id`, `measure`, `assistance_key`), `mu`, `sigma`, `origin`, `observed_at`, `n_obs`, `pending_contradiction` (jsonb) | Server | nur lesen | – |
 | `user_ladder_states` | (`user_id`, `ladder`), `rung_exercise_id`, `status`, `since`, `probe_exercise_id`, `exposures` | Server | nur lesen | – |
@@ -1946,7 +1947,7 @@ selbst anlegt, ihre ID.
 | `GET /v1/me/regions` | Zustand je Region mit Namen, Auflagen, Red-Flag-Fragen und Disclaimer | ohne Einwilligung nur die Auflagen (`tracked: false`) |
 | `POST /v1/me/regions/{region}/red-flags` | Antworten auf die Red-Flag-Fragen | jede gestellte Frage beantwortet (U-43); ohne Einwilligung nur flüchtig ausgewertet |
 | `POST /v1/me/regions/{region}/clearance`, `POST /v1/me/screening/clearance` | User bestätigt die Freigabe durch eine Fachperson | Zustandswechsel §8.3 |
-| `POST /v1/me/health-consent` | Einwilligung zu Gesundheitsdaten erteilen oder widerrufen | Widerruf löscht Gesundheitsangaben, Auflagen bleiben; Erteilung fragt Screening und Vorverletzungen neu (U-47, ADR 0015) |
+| `GET`, `POST /v1/me/health-consent` | Einwilligung zu Gesundheitsdaten lesen, erteilen oder widerrufen | Widerruf löscht Gesundheitsangaben, Auflagen bleiben; Erteilung fragt Screening und Vorverletzungen neu (U-47, ADR 0015); jede Entscheidung mit Text festgehalten (U-96, ADR 0031) |
 | `GET /v1/me/capacity` | Kapazitäten mit Konfidenzklasse | für «Profil verfeinern» |
 | `GET /v1/planner/rules`, `GET /v1/planner/sources`, `GET /v1/planner/parameters`, `GET /v1/planner/catalogue` | Katalog für die Erklärungen; `catalogue` mit Skills, Übungen, Regionen und Antwortklassen des Planers (U-46), dazu der Frage nach Belastungssymptomen, den sechs Screening-Fragen und der Altersgrenze für Minderjährige (U-76) | öffentlich lesbar, versioniert über `ETag` (`ruleset_version`) |
 
@@ -2177,7 +2178,8 @@ und der Start einer geplanten Einheit ohne Verbindung (ADR 0027, U-81 bis
 U-85), und Körper und Sicherheit in der iOS-App (ADR 0028, U-86 bis U-89),
 und die Einstellungen des Plans in der iOS-App (ADR 0029, U-90), und die
 Fragen zum Schmerz vor und nach einer geplanten Einheit (ADR 0030, U-91 bis
-U-95).
+U-95), und die Einwilligung in der iOS-App mit ihrem Nachweis (ADR 0031, U-96
+bis U-99).
 
 Tests: sechs Personas als Golden Files (`internal/domain/planning/testdata/`),
 die Eigenschaften I-1 bis I-11 für jeden erzeugten Plan, zwölf simulierte
@@ -2291,6 +2293,10 @@ U-35 setzen die Entscheidungen ENT-R-1, ENT-R-2 und ENT-R-5 um (§15.5).
 | U-93 | §8.6, §4.9 | «Hielt länger als 1 h an» fragt die App am Morgen danach und sendet es mit dem Bericht `next_morning`, nicht mit `after` (Abweichung von §8.6 und dem Datenmodell) | Direkt nach der Einheit ist die Stunde nicht vorbei; der Planer wertet das Flag für die Einheit an jedem ihrer Berichte |
 | U-94 | §8.6, SAFE-02 | Fragt der Planer nach dem Schmerz vor der Einheit Warnzeichen (`ask_red_flags`), kommen sie vor dem Log; stoppen sie das Training, öffnet es sich nicht. Den Abschluss synchronisiert die App, bevor die Berichte danach gehen | Warnzeichen wirken sofort; der Planer kennt die Sätze der Einheit, wenn er die Berichte auswertet |
 | U-95 | §8.6, §10.5 | Die App hält jeden Schmerzbericht lokal und sendet ihn sofort; was nicht gleich gehen kann, sendet sie beim nächsten Sync nach dem Push, ältester zuerst und mit derselben ID; eine endgültige Ablehnung (Einwilligung, Onboarding, Region, Eingabe, sonst 4xx ausser 401, 408, 429) verwirft ihn, beim direkten Senden mit Grund; ungesendete Berichte zählen als ausstehend | Kein Bericht geht ohne Verbindung verloren; idempotent (U-40); das Abmelden warnt wie bei Sätzen |
+| U-96 | §4.9, §13.4 | Jede Entscheidung über die Einwilligung wird festgehalten: erteilt oder nicht, Onboarding oder Änderung, Zeitpunkt, Version und Sprache des gezeigten Texts (`health_consent_records`, nur anhängbar). Ein Widerruf behält den Nachweis, das Konto nimmt ihn mit; eine Wiederholung oder eine abgelehnte Änderung hält nichts fest | Was nicht festgehalten wurde, lässt sich nicht nachholen; der Nachweis ist keine Gesundheitsangabe (ADR 0015 offen gelassen, ENT-4) |
+| U-97 | §10.3 | `GET /v1/me/health-consent` liefert die Einwilligung und die letzten 50 Entscheidungen; Onboarding (`health_data_consent_text`) und Änderung (`text`) nehmen den Text optional; ohne ihn steht die Entscheidung ohne Text im Nachweis | Rückwärtskompatibel mit der laufenden App; ohne Betrieb nichts nachzutragen |
+| U-98 | §13.4 | Der Einwilligungstext gehört der App und hat eine Version (`HealthConsentText.version`); jede Version liegt wörtlich englisch und deutsch in `docs/consent/`; `check-strings.py` prüft gezeigten Text, Übersetzung und Archiv | Die Wissensbasis ist nur deutsch (KB-11); ein geänderter Wortlaut darf nicht unter der alten Version laufen |
+| U-99 | §4.9, §13.4 | Der Screen «Gesundheitsdaten» zeigt Einwilligung, Text und Nachweis; der Widerruf geht nur nach Bestätigung und löscht auch die auf dem Telefon gehaltenen Schmerzberichte; eine neue Erteilung fragt die sechs Sicherheitsfragen und die Verletzungen der letzten 12 Monate und weist danach auf Regionen in Stufe 0 hin | ADR 0015 §3 und Folgen; Gesundheitsangaben auf dem Gerät gehen mit dem Widerruf |
 
 ### 15.3 Nicht umgesetzt
 
@@ -2309,8 +2315,7 @@ Recherche nennt Programme, aber keine übertragbare Übung (`05` §10).
 Minderjährige bekommen keinen Plan (SAFE-07); INJ-09 ist deshalb nicht aktiv.
 Aus §10 fehlen das Holen der Schmerzberichte vom Server (die App hält und
 sendet nur ihre eigenen, U-95) und `?explain=trace`
-(ADR 0014, ADR 0016), sowie ein Nachweis der Einwilligung mit Zeitpunkt und
-Textversion (ADR 0015).
+(ADR 0014, ADR 0016).
 PAR-D-28 enthält zwei der vier Soreness Rules aus `05` §6.1; Schmerz im
 Aufwärmen, der in 15 min verschwindet, hat keine eigene Regel. Ein
 angekündigtes Angebot (ADAPT-05) kann bei knappen Deckeln im Plan fehlen,
@@ -2376,6 +2381,11 @@ weil die Adaption die Kürzung nicht vorhersieht.
   ohne Verbindung pausieren den Plan erst, wenn die Meldung den Server
   erreicht; die App zeigt den Rat aber sofort und sagt, dass man aufhören
   soll.
+- **Der Nachweis der Einwilligung beginnt jetzt (ADR 0031).** Entscheidungen
+  vor dieser Version stehen nicht darin; ohne Betrieb gibt es keine. Der
+  Wortlaut (Version 1) ist der Vorschlag aus dem Onboarding und wartet auf
+  die rechtliche Prüfung, ebenso, ob der Nachweis nach einem Widerruf
+  bleiben darf. Eine neue Textversion fragt nicht von sich aus neu.
 - **Die Fragen zum Schmerz haben Lücken (ADR 0030).** «Länger als 1 h»
   fragt die App erst am Morgen danach (U-93). Die Morgenfrage gilt nur der
   letzten Einheit von gestern. Ein Gerät kennt nur seine eigenen Berichte:
