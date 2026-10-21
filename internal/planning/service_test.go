@@ -57,7 +57,7 @@ func TestServiceOnboardPlanAndComplete(t *testing.T) {
 	if _, err := svc.Plan(ctx, user); !errors.Is(err, planning.ErrNotOnboarded) {
 		t.Fatalf("plan before onboarding: %v", err)
 	}
-	res, p, err := svc.Onboard(ctx, user, answers())
+	res, p, err := svc.Onboard(ctx, user, answers(), nil)
 	if err != nil || res.Status != domain.OnboardingComplete || p == nil || len(p.Sessions) == 0 {
 		t.Fatalf("onboarding: %v %+v %v", err, res, p)
 	}
@@ -119,7 +119,7 @@ func TestServiceSymptomsStopAndClearance(t *testing.T) {
 	ctx := context.Background()
 	svc, _, _ := newService(t)
 	user := uuid.New()
-	if _, _, err := svc.Onboard(ctx, user, answers()); err != nil {
+	if _, _, err := svc.Onboard(ctx, user, answers(), nil); err != nil {
 		t.Fatal(err)
 	}
 	if _, err := svc.ReportSymptoms(ctx, user, "sym-1"); err != nil {
@@ -144,7 +144,7 @@ func TestServiceOnboardingQuestionsStoreNothing(t *testing.T) {
 	a := answers()
 	a.TrainingLevel = domain.LevelSedentary
 	a.Stages = map[string]domain.StageAnswer{"front-lever": {Level: "full", Class: "4_9"}}
-	res, p, err := svc.Onboard(ctx, user, a)
+	res, p, err := svc.Onboard(ctx, user, a, nil)
 	if err != nil || res.Status != domain.OnboardingNeedsAnswers || p != nil {
 		t.Fatalf("%v %+v %v", err, res, p)
 	}
@@ -158,7 +158,7 @@ func TestServiceUnavailableKnowledge(t *testing.T) {
 	kb := planning.LoadContentKnowledge(t.TempDir(), false, quiet)
 	store := memory.New()
 	svc := &planning.Service{Knowledge: kb, Store: store, Clock: planning.SystemClock{}}
-	if _, _, err := svc.Onboard(ctx, uuid.New(), answers()); !errors.Is(err, planning.ErrUnavailable) {
+	if _, _, err := svc.Onboard(ctx, uuid.New(), answers(), nil); !errors.Is(err, planning.ErrUnavailable) {
 		t.Fatalf("want ErrUnavailable, got %v", err)
 	}
 	// In production, draft content is not accepted either (KB-13, ENT-10).
@@ -172,17 +172,17 @@ func TestServiceOnboardsOnce(t *testing.T) {
 	ctx := context.Background()
 	svc, _, _ := newService(t)
 	user := uuid.New()
-	if _, _, err := svc.Onboard(ctx, user, answers()); err != nil {
+	if _, _, err := svc.Onboard(ctx, user, answers(), nil); err != nil {
 		t.Fatal(err)
 	}
-	if _, _, err := svc.Onboard(ctx, user, answers()); !errors.Is(err, planning.ErrAlreadyOnboarded) {
+	if _, _, err := svc.Onboard(ctx, user, answers(), nil); !errors.Is(err, planning.ErrAlreadyOnboarded) {
 		t.Fatalf("second onboarding: %v", err)
 	}
 	// Open questions do not hide that the user is onboarded.
 	a := answers()
 	a.TrainingLevel = domain.LevelSedentary
 	a.Stages = map[string]domain.StageAnswer{"front-lever": {Level: "full", Class: "4_9"}}
-	if _, _, err := svc.Onboard(ctx, user, a); !errors.Is(err, planning.ErrAlreadyOnboarded) {
+	if _, _, err := svc.Onboard(ctx, user, a, nil); !errors.Is(err, planning.ErrAlreadyOnboarded) {
 		t.Fatalf("second onboarding with questions: %v", err)
 	}
 }
@@ -191,7 +191,7 @@ func TestServiceWeeksSessionsAndRegeneration(t *testing.T) {
 	ctx := context.Background()
 	svc, _, clock := newService(t)
 	user := uuid.New()
-	_, first, err := svc.Onboard(ctx, user, answers())
+	_, first, err := svc.Onboard(ctx, user, answers(), nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -229,7 +229,7 @@ func TestServiceProfileAndGoals(t *testing.T) {
 	if _, err := svc.UpdateProfile(ctx, user, domain.ProfileUpdate{}); !errors.Is(err, planning.ErrNotOnboarded) {
 		t.Fatalf("before onboarding: %v", err)
 	}
-	if _, _, err := svc.Onboard(ctx, user, answers()); err != nil {
+	if _, _, err := svc.Onboard(ctx, user, answers(), nil); err != nil {
 		t.Fatal(err)
 	}
 	prof, err := svc.UpdateProfile(ctx, user, domain.ProfileUpdate{SessionsPerWeek: 2, SessionMinutes: 45,
@@ -267,10 +267,10 @@ func TestServicePainNeedsConsentAndValidInput(t *testing.T) {
 	without, with := uuid.New(), uuid.New()
 	a := answers()
 	a.HealthConsent = false
-	if _, _, err := svc.Onboard(ctx, without, a); err != nil {
+	if _, _, err := svc.Onboard(ctx, without, a, nil); err != nil {
 		t.Fatal(err)
 	}
-	if _, _, err := svc.Onboard(ctx, with, answers()); err != nil {
+	if _, _, err := svc.Onboard(ctx, with, answers(), nil); err != nil {
 		t.Fatal(err)
 	}
 	report := domain.PainReport{Region: "elbow_inner", Timepoint: domain.PainDuring, NRS: 2, At: clock.t}
@@ -307,11 +307,51 @@ func TestServicePainNeedsConsentAndValidInput(t *testing.T) {
 	}
 }
 
+// Each decision on the consent is recorded with its text; a repeat and a
+// refused change record nothing, and a withdrawal keeps the record
+// (ADR 0031).
+func TestServiceRecordsTheConsent(t *testing.T) {
+	ctx := context.Background()
+	svc, _, clock := newService(t)
+	user := uuid.New()
+	if _, _, err := svc.HealthConsent(ctx, user, 10); !errors.Is(err, planning.ErrNotOnboarded) {
+		t.Fatalf("before the onboarding: %v", err)
+	}
+	de := &planning.ConsentText{Version: "1", Locale: "de"}
+	if _, _, err := svc.Onboard(ctx, user, answers(), de); err != nil {
+		t.Fatal(err)
+	}
+	clock.t = clock.t.Add(time.Hour)
+	if _, err := svc.SetConsent(ctx, user, "c-1", domain.ConsentChange{}, de); err != nil {
+		t.Fatal(err)
+	}
+	if out, err := svc.SetConsent(ctx, user, "c-1", domain.ConsentChange{}, de); err != nil || !out.Replayed {
+		t.Fatalf("repeat: %+v %v", out, err)
+	}
+	if _, err := svc.SetConsent(ctx, user, "c-2", domain.ConsentChange{Granted: true}, nil); err == nil {
+		t.Fatal("a grant without the screening was taken")
+	}
+	granted, records, err := svc.HealthConsent(ctx, user, 10)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if granted || len(records) != 2 {
+		t.Fatalf("granted %v, %d records: %+v", granted, len(records), records)
+	}
+	want := []planning.ConsentRecord{
+		{ID: records[0].ID, Granted: false, Source: planning.ConsentFromChange, ChangeID: "c-1", Text: de, At: clock.t},
+		{ID: records[1].ID, Granted: true, Source: planning.ConsentFromOnboarding, Text: de, At: clock.t.Add(-time.Hour)},
+	}
+	if !reflect.DeepEqual(records, want) {
+		t.Errorf("records:\n got %+v\nwant %+v", records, want)
+	}
+}
+
 func TestServiceDecisionsNewestFirst(t *testing.T) {
 	ctx := context.Background()
 	svc, _, clock := newService(t)
 	user := uuid.New()
-	if _, _, err := svc.Onboard(ctx, user, answers()); err != nil {
+	if _, _, err := svc.Onboard(ctx, user, answers(), nil); err != nil {
 		t.Fatal(err)
 	}
 	for i, id := range []string{"sym-1", "sym-2", "sym-3"} {
@@ -335,7 +375,7 @@ func TestServiceStartPlannedSession(t *testing.T) {
 	ctx := context.Background()
 	svc, store, clock := newService(t)
 	user := uuid.New()
-	_, p, err := svc.Onboard(ctx, user, answers())
+	_, p, err := svc.Onboard(ctx, user, answers(), nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -457,7 +497,7 @@ func TestServiceStartedDraftFollowsThePlan(t *testing.T) {
 		t.Fatal(err)
 	}
 	user := uuid.New()
-	_, p, err := svc.Onboard(ctx, user, answers())
+	_, p, err := svc.Onboard(ctx, user, answers(), nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -558,7 +598,7 @@ func TestServiceCompletesALoggedSession(t *testing.T) {
 	ctx := context.Background()
 	svc, store, clock := newService(t)
 	user := uuid.New()
-	if _, _, err := svc.Onboard(ctx, user, answers()); err != nil {
+	if _, _, err := svc.Onboard(ctx, user, answers(), nil); err != nil {
 		t.Fatal(err)
 	}
 	plan, err := svc.Plan(ctx, user)
@@ -631,7 +671,7 @@ func TestServiceCheckIn(t *testing.T) {
 		t.Fatal(err)
 	}
 	user := uuid.New()
-	if _, _, err := svc.Onboard(ctx, user, answers()); err != nil {
+	if _, _, err := svc.Onboard(ctx, user, answers(), nil); err != nil {
 		t.Fatal(err)
 	}
 	plan, err := svc.Plan(ctx, user)
@@ -732,7 +772,7 @@ func TestServiceLinksOfflineStarts(t *testing.T) {
 	}
 	onboard := func() (uuid.UUID, domain.Plan) {
 		user := uuid.New()
-		_, p, err := svc.Onboard(ctx, user, answers())
+		_, p, err := svc.Onboard(ctx, user, answers(), nil)
 		if err != nil {
 			t.Fatal(err)
 		}

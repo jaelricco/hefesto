@@ -453,3 +453,13 @@ WHERE user_id = @user_id
        OR (occurred_at, id) < (sqlc.narg('cursor_at'), sqlc.narg('cursor_id')::uuid))
 ORDER BY occurred_at DESC, id DESC
 LIMIT @page_limit;
+
+-- name: InsertHealthConsentRecord :exec
+INSERT INTO health_consent_records (id, user_id, granted, source, change_id, text_version, locale, recorded_at)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8);
+
+-- name: ListHealthConsentRecords :many
+SELECT * FROM health_consent_records
+WHERE user_id = @user_id
+ORDER BY recorded_at DESC, id DESC
+LIMIT @page_limit;

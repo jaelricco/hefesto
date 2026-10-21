@@ -22,13 +22,14 @@ import (
 )
 
 // Store implements the Transactor and, through it, SnapshotStore,
-// PlanStore, DecisionLog and SessionLog. InTx serialises the calls of one
+// PlanStore, DecisionLog, SessionLog and ConsentLog. InTx serialises the calls of one
 // user like the Postgres adapter does; it does not roll back.
 type Store struct {
 	mu        sync.Mutex
 	snapshots map[uuid.UUID][]byte
 	plans     map[string][]byte
 	decisions map[uuid.UUID][]service.Decision
+	consents  map[uuid.UUID][]service.ConsentRecord
 	started   map[uuid.UUID]service.SessionStart
 	completed map[uuid.UUID]planning.LoggedSession
 	deload    map[uuid.UUID]bool
@@ -48,6 +49,7 @@ func New() *Store {
 		snapshots: map[uuid.UUID][]byte{},
 		plans:     map[string][]byte{},
 		decisions: map[uuid.UUID][]service.Decision{},
+		consents:  map[uuid.UUID][]service.ConsentRecord{},
 		started:   map[uuid.UUID]service.SessionStart{},
 		completed: map[uuid.UUID]planning.LoggedSession{},
 		deload:    map[uuid.UUID]bool{},
@@ -69,7 +71,7 @@ func (s *Store) InTx(_ context.Context, userID uuid.UUID, fn func(service.Stores
 	s.mu.Unlock()
 	l.Lock()
 	defer l.Unlock()
-	return fn(service.Stores{Snapshots: s, Plans: s, Decisions: s, Sessions: s})
+	return fn(service.Stores{Snapshots: s, Plans: s, Decisions: s, Sessions: s, Consents: s})
 }
 
 // Snapshot returns the stored snapshot of a user.
@@ -515,6 +517,42 @@ func (s *Store) ListDecisions(_ context.Context, userID uuid.UUID, after *servic
 			return nil, err
 		}
 		out = append(out, c)
+	}
+	return out, nil
+}
+
+// RecordConsent appends a decision on the consent.
+func (s *Store) RecordConsent(_ context.Context, userID uuid.UUID, r service.ConsentRecord) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	for _, prev := range s.consents[userID] {
+		if prev.Source == r.Source && prev.ChangeID == r.ChangeID {
+			return fmt.Errorf("consent %s %q recorded twice", r.Source, r.ChangeID)
+		}
+	}
+	if r.Text != nil {
+		t := *r.Text
+		r.Text = &t
+	}
+	s.consents[userID] = append(s.consents[userID], r)
+	return nil
+}
+
+// ConsentRecords returns up to limit decisions on the consent, newest
+// first.
+func (s *Store) ConsentRecords(_ context.Context, userID uuid.UUID, limit int) ([]service.ConsentRecord, error) {
+	s.mu.Lock()
+	all := slices.Clone(s.consents[userID])
+	s.mu.Unlock()
+	slices.SortFunc(all, func(a, b service.ConsentRecord) int {
+		return cmp.Or(b.At.Compare(a.At), bytes.Compare(b.ID[:], a.ID[:]))
+	})
+	out := all[:min(max(limit, 0), len(all))]
+	for i := range out {
+		if out[i].Text != nil {
+			t := *out[i].Text
+			out[i].Text = &t
+		}
 	}
 	return out, nil
 }

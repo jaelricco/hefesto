@@ -40,7 +40,7 @@ const (
 // Onboard turns the onboarding answers into the start state and the first
 // plan. While clarification questions are open nothing is stored; the
 // client asks them and sends the answers again (onboarding.md §5.5).
-func (s *Service) Onboard(ctx context.Context, userID uuid.UUID, a planning.Answers) (planning.OnboardingResult, *planning.Plan, error) {
+func (s *Service) Onboard(ctx context.Context, userID uuid.UUID, a planning.Answers, text *ConsentText) (planning.OnboardingResult, *planning.Plan, error) {
 	kb, err := s.Knowledge.Current(ctx)
 	if err != nil {
 		return planning.OnboardingResult{}, nil, fmt.Errorf("onboarding: %w", err)
@@ -68,6 +68,11 @@ func (s *Service) Onboard(ctx context.Context, userID uuid.UUID, a planning.Answ
 		}
 		if err := st.Snapshots.SaveSnapshot(ctx, userID, snap); err != nil {
 			return fmt.Errorf("onboarding: saving snapshot: %w", err)
+		}
+		if err := st.Consents.RecordConsent(ctx, userID, ConsentRecord{
+			ID: s.newID(), Granted: a.HealthConsent, Source: ConsentFromOnboarding, Text: text, At: s.Clock.Now(),
+		}); err != nil {
+			return fmt.Errorf("onboarding: recording the consent: %w", err)
 		}
 		plan, _, err := s.regenerate(ctx, st, kb, userID, snap)
 		p = &plan
@@ -508,10 +513,52 @@ func (s *Service) ConfirmClearance(ctx context.Context, userID uuid.UUID, cleara
 
 // SetConsent grants or withdraws the consent to keep health data. A
 // withdrawal deletes the health data and keeps the constraints (spec §4.9,
-// ENT-S-7); a grant takes the screening and past injuries again.
-func (s *Service) SetConsent(ctx context.Context, userID uuid.UUID, changeID string, c planning.ConsentChange) (Outcome, error) {
-	return s.apply(ctx, userID, TriggerConsent, changeID, planning.Event{Kind: planning.EventConsent, At: s.Clock.Now(), Consent: &c},
-		func(kb *planning.Knowledge, _ planning.Snapshot) error { return kb.ValidateConsent(c) })
+// ENT-S-7); a grant takes the screening and past injuries again. Each
+// decision is recorded with the text the athlete saw (ADR 0031); a repeat
+// records nothing.
+func (s *Service) SetConsent(ctx context.Context, userID uuid.UUID, changeID string, c planning.ConsentChange, text *ConsentText) (Outcome, error) {
+	var out Outcome
+	err := s.Store.InTx(ctx, userID, func(st Stores) error {
+		var err error
+		out, err = s.applyIn(ctx, st, userID, TriggerConsent, changeID,
+			planning.Event{Kind: planning.EventConsent, At: s.Clock.Now(), Consent: &c},
+			func(kb *planning.Knowledge, _ planning.Snapshot) error { return kb.ValidateConsent(c) })
+		if err != nil || out.Replayed {
+			return err
+		}
+		if err := st.Consents.RecordConsent(ctx, userID, ConsentRecord{
+			ID: s.newID(), Granted: c.Granted, Source: ConsentFromChange, ChangeID: changeID, Text: text, At: s.Clock.Now(),
+		}); err != nil {
+			return fmt.Errorf("%s: recording the consent: %w", TriggerConsent, err)
+		}
+		return nil
+	})
+	return out, err
+}
+
+// HealthConsent returns whether the athlete consents to keeping health
+// data, and up to limit records of their decisions, newest first.
+func (s *Service) HealthConsent(ctx context.Context, userID uuid.UUID, limit int) (bool, []ConsentRecord, error) {
+	var (
+		granted bool
+		records []ConsentRecord
+	)
+	err := s.Store.InTx(ctx, userID, func(st Stores) error {
+		snap, ok, err := st.Snapshots.Snapshot(ctx, userID)
+		if err != nil {
+			return fmt.Errorf("loading snapshot: %w", err)
+		}
+		if !ok {
+			return ErrNotOnboarded
+		}
+		granted = snap.Profile.HealthConsent
+		records, err = st.Consents.ConsentRecords(ctx, userID, limit)
+		if err != nil {
+			return fmt.Errorf("reading consent records: %w", err)
+		}
+		return nil
+	})
+	return granted, records, err
 }
 
 // ReportSymptoms stops training after exertion symptoms (RF-10, SAFE-02).

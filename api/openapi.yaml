@@ -1699,6 +1699,29 @@ paths:
           $ref: "#/components/responses/Problem"
 
   /v1/me/health-consent:
+    get:
+      tags: [planning]
+      operationId: getHealthConsent
+      summary: My consent to keep health data, and the record of my decisions
+      description: |
+        Whether the athlete consents now, and each decision on it, newest
+        first: when, from the onboarding or a change, and to which text
+        (ADR 0031). The record survives a withdrawal and goes with the
+        account. A decision from a client that did not name its text has
+        no `text`.
+      responses:
+        "200":
+          description: The consent and its record.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthConsent"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "503":
+          $ref: "#/components/responses/Problem"
     post:
       tags: [planning]
       operationId: changeHealthConsent
@@ -1715,7 +1738,8 @@ paths:
         and the regions injured in the last 12 months. Every excluded region
         then enters stage 0 of the return ramp, which green daily pain and
         negative red flags lead out of. Granting or withdrawing what is
-        already in place changes nothing. Idempotent by `id`.
+        already in place changes nothing, but is recorded. Idempotent by
+        `id`: a repeat records nothing.
       requestBody:
         required: true
         content:
@@ -3841,6 +3865,9 @@ components:
         health_data_consent:
           description: Consent to keep complaint and health answers. Without it the safety questions are still asked and applied, but not kept.
           type: boolean
+        health_data_consent_text:
+          description: The text the athlete decided on the consent with; it is recorded with the decision (ADR 0031).
+          $ref: "#/components/schemas/ConsentText"
         disclaimer_ack:
           description: The athlete read that the app adapts training and replaces no medical advice. Must be true.
           type: boolean
@@ -4518,6 +4545,54 @@ components:
           maxItems: 20
           items:
             $ref: "#/components/schemas/RegionId"
+        text:
+          description: The text the athlete decided with; it is recorded with the decision (ADR 0031).
+          $ref: "#/components/schemas/ConsentText"
+
+    ConsentText:
+      description: |
+        The consent text a client showed: its version, which the client
+        keeps with the text, and the language it was shown in.
+      type: object
+      additionalProperties: false
+      required: [version, locale]
+      properties:
+        version:
+          type: string
+          pattern: "^[A-Za-z0-9._-]{1,32}$"
+        locale:
+          description: A language tag, as `de` or `en`.
+          type: string
+          pattern: "^[a-z]{2,3}(-[A-Za-z0-9]{2,8})?$"
+
+    HealthConsent:
+      type: object
+      required: [granted, records]
+      properties:
+        granted:
+          description: The athlete consents to keeping health data now.
+          type: boolean
+        records:
+          description: The athlete's decisions on the consent, newest first, at most 50.
+          type: array
+          items:
+            $ref: "#/components/schemas/ConsentRecord"
+
+    ConsentRecord:
+      type: object
+      required: [granted, source, at]
+      properties:
+        granted:
+          type: boolean
+        source:
+          description: The onboarding, or a change through `POST /v1/me/health-consent`.
+          type: string
+          enum: [onboarding, change]
+        text:
+          description: The text decided with; absent when the client did not name it.
+          $ref: "#/components/schemas/ConsentText"
+        at:
+          $ref: "#/components/schemas/Timestamp"
 
     PlanEventResult:
       type: object

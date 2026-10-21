@@ -486,6 +486,36 @@ func (q *Queries) InsertGoal(ctx context.Context, arg InsertGoalParams) error {
 	return err
 }
 
+const insertHealthConsentRecord = `-- name: InsertHealthConsentRecord :exec
+INSERT INTO health_consent_records (id, user_id, granted, source, change_id, text_version, locale, recorded_at)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+`
+
+type InsertHealthConsentRecordParams struct {
+	ID          uuid.UUID
+	UserID      uuid.UUID
+	Granted     bool
+	Source      string
+	ChangeID    *string
+	TextVersion *string
+	Locale      *string
+	RecordedAt  time.Time
+}
+
+func (q *Queries) InsertHealthConsentRecord(ctx context.Context, arg InsertHealthConsentRecordParams) error {
+	_, err := q.db.Exec(ctx, insertHealthConsentRecord,
+		arg.ID,
+		arg.UserID,
+		arg.Granted,
+		arg.Source,
+		arg.ChangeID,
+		arg.TextVersion,
+		arg.Locale,
+		arg.RecordedAt,
+	)
+	return err
+}
+
 const insertPainReport = `-- name: InsertPainReport :execrows
 INSERT INTO user_pain_reports (
     id, user_id, region, timepoint, nrs, lasted_over_1h, persisted_over_15min, sudden_sharp,
@@ -940,6 +970,47 @@ func (q *Queries) ListDraftSets(ctx context.Context, arg ListDraftSetsParams) ([
 			&i.BlockID,
 			&i.PlannedItemID,
 			&i.Open,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listHealthConsentRecords = `-- name: ListHealthConsentRecords :many
+SELECT id, user_id, granted, source, change_id, text_version, locale, recorded_at FROM health_consent_records
+WHERE user_id = $1
+ORDER BY recorded_at DESC, id DESC
+LIMIT $2
+`
+
+type ListHealthConsentRecordsParams struct {
+	UserID    uuid.UUID
+	PageLimit int32
+}
+
+func (q *Queries) ListHealthConsentRecords(ctx context.Context, arg ListHealthConsentRecordsParams) ([]HealthConsentRecord, error) {
+	rows, err := q.db.Query(ctx, listHealthConsentRecords, arg.UserID, arg.PageLimit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []HealthConsentRecord{}
+	for rows.Next() {
+		var i HealthConsentRecord
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.Granted,
+			&i.Source,
+			&i.ChangeID,
+			&i.TextVersion,
+			&i.Locale,
+			&i.RecordedAt,
 		); err != nil {
 			return nil, err
 		}
