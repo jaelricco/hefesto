@@ -47,7 +47,7 @@ func (p *Planner) InTx(ctx context.Context, userID uuid.UUID, fn func(planning.S
 			return fmt.Errorf("locking the planner: %w", err)
 		}
 		t := &plannerTx{q: q, user: userID}
-		return fn(planning.Stores{Snapshots: t, Plans: t, Decisions: t, Sessions: t})
+		return fn(planning.Stores{Snapshots: t, Plans: t, Decisions: t, Sessions: t, Consents: t})
 	})
 	if err != nil {
 		return fmt.Errorf("planner transaction: %w", err)
@@ -898,6 +898,46 @@ func (t *plannerTx) ListDecisions(ctx context.Context, userID uuid.UUID, after *
 
 // maxPage bounds one page of a list.
 const maxPage = 1000
+
+// RecordConsent appends a decision on the consent (ADR 0031).
+func (t *plannerTx) RecordConsent(ctx context.Context, userID uuid.UUID, r planning.ConsentRecord) error {
+	if err := t.check(userID); err != nil {
+		return err
+	}
+	arg := dbgen.InsertHealthConsentRecordParams{ID: r.ID, UserID: userID, Granted: r.Granted, Source: r.Source,
+		ChangeID: strPtr(r.ChangeID), RecordedAt: r.At}
+	if r.Text != nil {
+		arg.TextVersion, arg.Locale = &r.Text.Version, &r.Text.Locale
+	}
+	if err := t.q.InsertHealthConsentRecord(ctx, arg); err != nil {
+		return fmt.Errorf("recording the consent: %w", err)
+	}
+	return nil
+}
+
+// ConsentRecords returns up to limit decisions on the consent, newest
+// first.
+func (t *plannerTx) ConsentRecords(ctx context.Context, userID uuid.UUID, limit int) ([]planning.ConsentRecord, error) {
+	if err := t.check(userID); err != nil {
+		return nil, err
+	}
+	rows, err := t.q.ListHealthConsentRecords(ctx, dbgen.ListHealthConsentRecordsParams{
+		UserID: userID, PageLimit: int32(min(max(limit, 0), maxPage)), //nolint:gosec // bounded above
+	})
+	if err != nil {
+		return nil, fmt.Errorf("listing consent records: %w", err)
+	}
+	out := make([]planning.ConsentRecord, 0, len(rows))
+	for _, row := range rows {
+		r := planning.ConsentRecord{ID: row.ID, Granted: row.Granted, Source: row.Source,
+			ChangeID: deref(row.ChangeID), At: row.RecordedAt}
+		if row.TextVersion != nil && row.Locale != nil {
+			r.Text = &planning.ConsentText{Version: *row.TextVersion, Locale: *row.Locale}
+		}
+		out = append(out, r)
+	}
+	return out, nil
+}
 
 func decisionFromRow(row dbgen.PlanDecision) (planning.Decision, error) {
 	var cs []domain.Change

@@ -66,7 +66,7 @@ func (h *handlers) submitOnboarding(w http.ResponseWriter, r *http.Request) erro
 		return err
 	}
 	run := func() (int, []byte, error) {
-		res, p, err := svc.Onboard(r.Context(), userOf(r), answers)
+		res, p, err := svc.Onboard(r.Context(), userOf(r), answers, in.ConsentText.toService())
 		if err != nil {
 			return 0, nil, err
 		}
@@ -519,11 +519,28 @@ func (h *handlers) changeHealthConsent(w http.ResponseWriter, r *http.Request) e
 		return err
 	}
 	out, err := svc.SetConsent(r.Context(), userOf(r), in.ID.String(),
-		core.ConsentChange{Granted: in.Granted, Screening: in.Screening, PastInjuries: in.PastInjuries})
+		core.ConsentChange{Granted: in.Granted, Screening: in.Screening, PastInjuries: in.PastInjuries},
+		in.Text.toService())
 	if err != nil {
 		return err
 	}
 	WriteJSON(w, r, http.StatusOK, eventResultFrom(out))
+	return nil
+}
+
+// maxConsentRecords is how many decisions GET /v1/me/health-consent lists.
+const maxConsentRecords = 50
+
+func (h *handlers) getHealthConsent(w http.ResponseWriter, r *http.Request) error {
+	svc, err := h.planner()
+	if err != nil {
+		return err
+	}
+	granted, records, err := svc.HealthConsent(r.Context(), userOf(r), maxConsentRecords)
+	if err != nil {
+		return err
+	}
+	WriteJSON(w, r, http.StatusOK, healthConsentFrom(granted, records))
 	return nil
 }
 

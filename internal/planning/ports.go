@@ -21,6 +21,7 @@ type Stores struct {
 	Plans     PlanStore
 	Decisions DecisionLog
 	Sessions  SessionLog
+	Consents  ConsentLog
 }
 
 // Transactor runs fn with stores bound to one transaction that holds the
@@ -152,6 +153,40 @@ type DecisionLog interface {
 	// ListDecisions returns up to limit events, newest first, after the
 	// cursor when there is one.
 	ListDecisions(ctx context.Context, userID uuid.UUID, after *Cursor, limit int) ([]Decision, error)
+}
+
+// Sources of a consent record.
+const (
+	ConsentFromOnboarding = "onboarding"
+	ConsentFromChange     = "change"
+)
+
+// ConsentText names the text an athlete saw when deciding on the consent:
+// its version and its language (ADR 0031).
+type ConsentText struct {
+	Version string
+	Locale  string
+}
+
+// ConsentRecord is one decision on the consent to keep health data.
+type ConsentRecord struct {
+	ID      uuid.UUID
+	Granted bool
+	// Source is ConsentFromOnboarding or ConsentFromChange.
+	Source string
+	// ChangeID is the client's id of a change; empty for the onboarding.
+	ChangeID string
+	// Text is nil when the client did not say which text it showed.
+	Text *ConsentText
+	At   time.Time
+}
+
+// ConsentLog keeps every decision on the consent to keep health data
+// (ADR 0031). It is append-only; a withdrawal keeps it.
+type ConsentLog interface {
+	RecordConsent(ctx context.Context, userID uuid.UUID, r ConsentRecord) error
+	// ConsentRecords returns up to limit records, newest first.
+	ConsentRecords(ctx context.Context, userID uuid.UUID, limit int) ([]ConsentRecord, error)
 }
 
 // KnowledgeSource returns the validated knowledge base, or

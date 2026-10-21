@@ -77,6 +77,12 @@ extension AppDatabase {
         try writer.write { db in _ = try KeptPainReport.deleteOne(db, key: id) }
     }
 
+    /// Forgets every report kept here, sent or not: after the consent to
+    /// keep health data is withdrawn (ADR 0031).
+    public func forgetPainReports() throws {
+        try writer.write { db in _ = try KeptPainReport.deleteAll(db) }
+    }
+
     /// The reports given about a log session, sent or not.
     public func painReports(sessionId: String) throws -> [KeptPainReport] {
         try reader.read { db in

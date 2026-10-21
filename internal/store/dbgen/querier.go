@@ -117,6 +117,7 @@ type Querier interface {
 	InsertContentVersion(ctx context.Context, arg InsertContentVersionParams) error
 	InsertDecision(ctx context.Context, arg InsertDecisionParams) error
 	InsertGoal(ctx context.Context, arg InsertGoalParams) error
+	InsertHealthConsentRecord(ctx context.Context, arg InsertHealthConsentRecordParams) error
 	InsertInjuryPrehab(ctx context.Context, arg InsertInjuryPrehabParams) error
 	// Media assets and their attachment to set elements.
 	InsertMediaAsset(ctx context.Context, arg InsertMediaAssetParams) (MediaAsset, error)
@@ -176,6 +177,7 @@ type Querier interface {
 	// The skill graph, user progress, XP and streaks.
 	// ----------------------------------------------------------------- graph
 	ListGraphSkills(ctx context.Context) ([]ListGraphSkillsRow, error)
+	ListHealthConsentRecords(ctx context.Context, arg ListHealthConsentRecordsParams) ([]HealthConsentRecord, error)
 	ListInjuryPrehab(ctx context.Context, skillID uuid.UUID) ([]ListInjuryPrehabRow, error)
 	// ----------------------------------------------------------------- ladders
 	ListLadderStates(ctx context.Context, userID uuid.UUID) ([]UserLadderState, error)

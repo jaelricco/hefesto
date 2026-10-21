@@ -110,6 +110,17 @@ type Family struct {
 	OrderIndex int16
 }
 
+type HealthConsentRecord struct {
+	ID          uuid.UUID
+	UserID      uuid.UUID
+	Granted     bool
+	Source      string
+	ChangeID    *string
+	TextVersion *string
+	Locale      *string
+	RecordedAt  time.Time
+}
+
 type IdempotencyKey struct {
 	UserID             uuid.UUID
 	Key                string

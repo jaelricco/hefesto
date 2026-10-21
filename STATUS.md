@@ -194,6 +194,25 @@ documents are in German.
   - Logger and history name a set's band. The demo holds two bands of its
     own; a new screen (`band`) joins the screenshots.
   - Not built: bands offline, editing a band, the anchor.
+- **The consent in the iOS app, and its record (this checkpoint, ADR 0031):**
+  - Every decision on the consent to keep health data is recorded: given
+    or not, in the onboarding or as a change, when, and the version and
+    language of the text the app showed (`health_consent_records`, append
+    only). A withdrawal keeps the record; the account takes it along.
+  - `GET /v1/me/health-consent` returns the consent and its record. The
+    onboarding and a change take the text optionally, so the running app
+    stays valid.
+  - The text belongs to the app and has a version. Each version is archived
+    verbatim, in English and German, in `docs/consent/`; `check-strings.py`
+    fails when the text shown and the archive part. Version 1 is the
+    onboarding's text, unchanged.
+  - A new screen, Health data, reached from the account menu and from
+    Body, shows the decision, the text, what counts as health data and the
+    record. A withdrawal asks first, and deletes the pain reports kept on
+    the phone too. A new grant asks the six safety questions and the
+    injuries of the last 12 months again, then points to regions at step 0.
+  - A new demo screen (`consent`) joins the screenshots and the audit.
+  - Not built: asking again when the text changes, an export of the record.
 - **Pain questions around a planned session (this checkpoint, ADR 0030):**
   - Each planned session names the regions in the ramp (`rtt_1` to `rtt_5`)
     to ask about; the plan names each monitored region, so the questions
@@ -241,9 +260,9 @@ documents are in German.
     for a minor (SAFE-07). Until now no stop could be lifted in the app.
   - The demo holds two regions; three new screens (`body`, `pain`,
     `symptoms`) join the screenshots.
-  - Not built: changing the consent, the list of one's pain reports. The
-    questions before and after a session and keeping unsent reports came
-    with ADR 0030.
+  - Not built: the list of one's pain reports. The questions before and
+    after a session and keeping unsent reports came with ADR 0030, changing
+    the consent with ADR 0031.
 - **Starting a planned session offline (this checkpoint, ADR 0027):**
   - Sync now carries `planned_session_id` on a session and
     `planned_item_id` on a set. The server takes them when it creates the
@@ -324,8 +343,8 @@ documents are in German.
   ADR 0023 (U-76 to U-79), the band choice in ADR 0024 (U-80), the
   offline start in ADR 0027 (U-81 to U-85), the body in the app in
   ADR 0028 (U-86 to U-89), the plan's settings in ADR 0029 (U-90), the
-  pain questions in ADR 0030 (U-91 to U-95), and these findings in spec
-  §15.4:
+  pain questions in ADR 0030 (U-91 to U-95), the consent in the app in
+  ADR 0031 (U-96 to U-99), and these findings in spec §15.4:
   - sets with partner or machine assistance reach neither the capacities
     nor the load history;
   - a set performed offline after the server replaced or removed it is
@@ -356,11 +375,12 @@ documents are in German.
   - the pain questions ask "longer than an hour" only the morning after,
     the morning question covers only yesterday's last session, a device
     asks again what another device answered, and a waiting report refused
-    for good at a later sync is dropped without a notice (ADR 0030).
+    for good at a later sync is dropped without a notice (ADR 0030);
+  - the consent's record starts now; its wording, and whether the record
+    may stay after a withdrawal, wait on the legal review (ADR 0031).
 - **Not yet built:**
   - fetching pain reports from the server (the app keeps and sends its
     own, ADR 0030);
-  - a record of the consent text agreed to;
   - `?explain=trace`.
 - **Still blocking production:**
   - The content review of the knowledge base (ENT-10). Until then it stays

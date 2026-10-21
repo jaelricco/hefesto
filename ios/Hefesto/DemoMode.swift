@@ -27,6 +27,8 @@ enum DemoScreen: String, CaseIterable {
     case body, pain, symptoms
     // The plan's settings (ADR 0029).
     case settings
+    // The consent to keep health data and its record (ADR 0031).
+    case consent
     // The pain questions (ADR 0030): once a planned session is done, and the
     // morning after on Today. The check-in asks the pain before.
     case painafter, morning
@@ -76,6 +78,8 @@ struct DemoRun {
     var bodyOverview: String?
     /// The plan's settings as the demo athlete set them.
     var settingsForm: OnboardingForm?
+    /// The consent and its record in the API's JSON.
+    var consentRecord: String?
 
     var opensLogger: Bool { screen.opensLogger }
     var onboardingPage: OnboardingPage? { screen.onboardingPage }
@@ -335,7 +339,25 @@ extension DemoRun {
             catalogue: try OnboardingCatalogue(json: Data(DemoCatalogue.json.utf8)),
             onboardingForm: screen.onboardingPage == nil ? nil : DemoOnboarding.form(for: screen),
             bodyOverview: DemoBody.overview,
-            settingsForm: DemoOnboarding.settings)
+            settingsForm: DemoOnboarding.settings,
+            consentRecord: DemoConsent.record(now: now))
+    }
+}
+
+/// The consent in the demo: given in the onboarding, withdrawn and given
+/// again, each with the text the app showed.
+enum DemoConsent {
+    static func record(now: Date) -> String {
+        func at(_ daysAgo: Int) -> String {
+            now.addingTimeInterval(TimeInterval(-daysAgo * 86_400)).formatted(.iso8601)
+        }
+        let text = #""text":{"version":"\#(HealthConsentText.version)","locale":"en"}"#
+        return #"""
+        {"granted":true,"records":[
+          {"granted":true,"source":"change","at":"\#(at(3))",\#(text)},
+          {"granted":false,"source":"change","at":"\#(at(9))",\#(text)},
+          {"granted":true,"source":"onboarding","at":"\#(at(23))",\#(text)}]}
+        """#
     }
 }
 

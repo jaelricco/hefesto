@@ -961,6 +961,16 @@
         }
       }
     },
+    "A region left out until now starts its return at step 0. To leave it, report its everyday pain under Body and answer its warning signs.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eine bisher ausgeschlossene Region beginnt ihre Rückkehr auf Stufe 0. Um sie zu verlassen, melde ihren Alltagsschmerz unter «Körper» und beantworte ihre Warnzeichen."
+          }
+        }
+      }
+    },
     "Abandoned": {
       "localizations": {
         "de": {
@@ -1541,6 +1551,16 @@
         }
       }
     },
+    "Complaints and the regions they concern, pain reports, the state of each region in its return, and your answers to the safety questions.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beschwerden und die Regionen, die sie betreffen, Schmerzberichte, der Zustand jeder Region in ihrer Rückkehr und deine Antworten auf die Sicherheitsfragen."
+          }
+        }
+      }
+    },
     "Completed": {
       "localizations": {
         "de": {
@@ -1747,6 +1767,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hat dir eine Fachperson Bewegungen eingeschränkt? Freiwillig."
+          }
+        }
+      }
+    },
+    "Did an injury stop your training in the last 12 months?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hat dich in den letzten 12 Monaten eine Verletzung am Training gehindert?"
           }
         }
       }
@@ -2191,6 +2221,36 @@
         }
       }
     },
+    "Give consent": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einwilligung geben"
+          }
+        }
+      }
+    },
+    "Given": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gegeben"
+          }
+        }
+      }
+    },
+    "Given on %@.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gegeben am %@."
+          }
+        }
+      }
+    },
     "Gradually": {
       "localizations": {
         "de": {
@@ -2261,6 +2321,26 @@
         }
       }
     },
+    "Health data": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gesundheitsdaten"
+          }
+        }
+      }
+    },
+    "Health data and consent": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gesundheitsdaten und Einwilligung"
+          }
+        }
+      }
+    },
     "Hefesto": {
       "localizations": {
         "de": {
@@ -2287,6 +2367,36 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hefesto hat den Server nicht erreicht. Deine Antworten bleiben erhalten; versuch es nochmals."
+          }
+        }
+      }
+    },
+    "Hefesto deletes your complaints, pain reports, the state of each region and your answers to the safety questions, on the server and on this phone. Locked or excluded regions and a stop of training stay: they protect you. Your plan then plans more cautiously.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hefesto löscht deine Beschwerden, Schmerzberichte, den Zustand jeder Region und deine Antworten auf die Sicherheitsfragen, auf dem Server und auf diesem Telefon. Gesperrte oder ausgeschlossene Regionen und ein Trainingsstopp bleiben: Sie schützen dich. Dein Plan plant danach vorsichtiger."
+          }
+        }
+      }
+    },
+    "Hefesto does not keep your health answers.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hefesto speichert deine Gesundheitsangaben nicht."
+          }
+        }
+      }
+    },
+    "Hefesto keeps your health answers.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hefesto speichert deine Gesundheitsangaben."
           }
         }
       }
@@ -3231,6 +3341,16 @@
         }
       }
     },
+    "No connection. Changing the consent needs one; try again when you are online.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Verbindung. Eine Änderung der Einwilligung braucht eine; versuch es nochmals, wenn du online bist."
+          }
+        }
+      }
+    },
     "No connection. Continuing this session here needs one.": {
       "localizations": {
         "de": {
@@ -3267,6 +3387,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Keine Verbindung. Ohne sie startet die Einheit wie geplant: Leichter wird sie nach kurzem Schlaf oder grosser Müdigkeit nur mit dem Server. Dein Plan übernimmt die Einheit beim nächsten Sync."
+          }
+        }
+      }
+    },
+    "No decision is recorded yet. The record starts with this version of the app.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noch ist keine Entscheidung festgehalten. Der Nachweis beginnt mit dieser Version der App."
           }
         }
       }
@@ -4541,12 +4671,32 @@
         }
       }
     },
+    "Text version %@.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Textversion %@."
+          }
+        }
+      }
+    },
     "The answers could not be sent. Try again later.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Die Antworten konnten nicht gesendet werden. Versuch es später nochmals."
+          }
+        }
+      }
+    },
+    "The answers could not be taken. Check them.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Antworten liessen sich nicht annehmen. Prüfe sie."
           }
         }
       }
@@ -5121,6 +5271,16 @@
         }
       }
     },
+    "What was not kept without it is asked again: the safety questions, and injuries in the last 12 months.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Was ohne sie nicht gespeichert wurde, wird noch einmal gefragt: die Sicherheitsfragen und Verletzungen der letzten 12 Monate."
+          }
+        }
+      }
+    },
     "When did you last train regularly, at least once a week?": {
       "localizations": {
         "de": {
@@ -5197,6 +5357,56 @@
           "stringUnit": {
             "state": "translated",
             "value": "Warum dieses Training"
+          }
+        }
+      }
+    },
+    "Withdraw and delete": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Widerrufen und löschen"
+          }
+        }
+      }
+    },
+    "Withdraw consent": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einwilligung widerrufen"
+          }
+        }
+      }
+    },
+    "Withdraw your consent?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einwilligung widerrufen?"
+          }
+        }
+      }
+    },
+    "Withdrawn": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Widerrufen"
+          }
+        }
+      }
+    },
+    "Withdrawn on %@.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Widerrufen am %@."
           }
         }
       }
@@ -5301,6 +5511,16 @@
         }
       }
     },
+    "You decide on the consent in the onboarding. Answer it first.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Über die Einwilligung entscheidest du im Onboarding. Beantworte es zuerst."
+          }
+        }
+      }
+    },
     "You have a band of this brand and colour already.": {
       "localizations": {
         "de": {
@@ -5337,6 +5557,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Deine Beschwerde"
+          }
+        }
+      }
+    },
+    "Your consent and its record need a connection. Changing it does too.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deine Einwilligung und ihr Nachweis brauchen eine Verbindung, ebenso eine Änderung."
+          }
+        }
+      }
+    },
+    "Your decisions": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deine Entscheidungen"
           }
         }
       }
@@ -5601,6 +5841,16 @@
         }
       }
     },
+    "in the onboarding": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "im Onboarding"
+          }
+        }
+      }
+    },
     "kg": {
       "localizations": {
         "de": {
@@ -5647,6 +5897,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Wdh."
+          }
+        }
+      }
+    },
+    "text version %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Textversion %@"
           }
         }
       }

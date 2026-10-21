@@ -87,6 +87,7 @@ type complaintIn struct {
 type onboardingIn struct {
 	BirthYear        int                        `json:"birth_year"`
 	HealthConsent    bool                       `json:"health_data_consent"`
+	ConsentText      *consentTextIO             `json:"health_data_consent_text"`
 	DisclaimerAck    bool                       `json:"disclaimer_ack"`
 	Goals            []goalIn                   `json:"goals"`
 	SessionsPerWeek  int                        `json:"sessions_per_week"`
@@ -174,10 +175,48 @@ type eventIn struct {
 }
 
 type consentIn struct {
-	ID           uuid.UUID `json:"id"`
-	Granted      bool      `json:"granted"`
-	Screening    []bool    `json:"screening"`
-	PastInjuries []string  `json:"past_injuries"`
+	ID           uuid.UUID      `json:"id"`
+	Granted      bool           `json:"granted"`
+	Screening    []bool         `json:"screening"`
+	PastInjuries []string       `json:"past_injuries"`
+	Text         *consentTextIO `json:"text"`
+}
+
+// consentTextIO is the ConsentText schema, both ways.
+type consentTextIO struct {
+	Version string `json:"version"`
+	Locale  string `json:"locale"`
+}
+
+func (t *consentTextIO) toService() *planning.ConsentText {
+	if t == nil {
+		return nil
+	}
+	return &planning.ConsentText{Version: t.Version, Locale: t.Locale}
+}
+
+type healthConsentOut struct {
+	Granted bool               `json:"granted"`
+	Records []consentRecordOut `json:"records"`
+}
+
+type consentRecordOut struct {
+	Granted bool           `json:"granted"`
+	Source  string         `json:"source"`
+	Text    *consentTextIO `json:"text,omitempty"`
+	At      time.Time      `json:"at"`
+}
+
+func healthConsentFrom(granted bool, records []planning.ConsentRecord) healthConsentOut {
+	out := healthConsentOut{Granted: granted, Records: make([]consentRecordOut, 0, len(records))}
+	for _, r := range records {
+		o := consentRecordOut{Granted: r.Granted, Source: r.Source, At: r.At}
+		if r.Text != nil {
+			o.Text = &consentTextIO{Version: r.Text.Version, Locale: r.Text.Locale}
+		}
+		out.Records = append(out.Records, o)
+	}
+	return out
 }
 
 type plannedSessionStartIn struct {

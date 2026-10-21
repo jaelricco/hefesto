@@ -160,7 +160,7 @@ struct OnboardingView: View {
         sending = true
         failure = nil
         do {
-            let outcome = try await app.onboarding.submit()
+            let outcome = try await app.onboarding.submit(consentText: HealthConsentText.current)
             if outcome.status != .needsAnswers {
                 result = outcome
                 await app.plan.refresh()
@@ -219,10 +219,9 @@ struct OnboardingFramePage: View {
             }
 
             VStack(alignment: .leading, spacing: 10) {
-                QuestionText("May Hefesto keep your health answers?")
-                Text("Complaints and health answers let the planner work around them. Without your consent the safety questions are still asked, but only used for this plan and not kept, and the planner plans conservatively.")
-                    .font(.detailText)
-                    .foregroundStyle(Palette.textSecondary)
+                // The consent text has a version that goes with the answer
+                // (ADR 0031).
+                ConsentTextView()
                 ChoiceButton(
                     label: String(localized: "Yes, keep them"), selected: model.form.healthConsent == true
                 ) { model.form.healthConsent = true }

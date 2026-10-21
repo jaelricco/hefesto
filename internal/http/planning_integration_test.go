@@ -467,6 +467,54 @@ func TestHealthConsentWithdrawAndGrant(t *testing.T) {
 	}
 }
 
+// Each decision on the consent is recorded with the text it was made with
+// (ADR 0031), newest first; a withdrawal keeps the record, a repeat adds
+// nothing.
+func TestHealthConsentRecord(t *testing.T) {
+	a := newAPI(t, withPlanner(&fixedClock{plannerMonday}))
+	u := a.register("consent-record@example.com")
+	a.call("GET", "/v1/me/health-consent", u.access, nil).problem(409, "onboarding-required")
+	body := onboarding()
+	body["health_data_consent_text"] = map[string]any{"version": "1", "locale": "de"}
+	a.call("POST", "/v1/me/onboarding", u.access, body).ok(200, "OnboardingResult")
+
+	c := a.call("GET", "/v1/me/health-consent", u.access, nil).ok(200, "HealthConsent")
+	records := c["records"].([]any)
+	if c["granted"] != true || len(records) != 1 {
+		t.Fatalf("after the onboarding: %v", c)
+	}
+	first := records[0].(map[string]any)
+	if first["granted"] != true || first["source"] != "onboarding" ||
+		!reflect.DeepEqual(first["text"], map[string]any{"version": "1", "locale": "de"}) {
+		t.Errorf("onboarding record: %v", first)
+	}
+
+	withdraw := map[string]any{"id": newID(), "granted": false, "text": map[string]any{"version": "1", "locale": "en"}}
+	a.call("POST", "/v1/me/health-consent", u.access, withdraw).ok(200, "PlanEventResult")
+	a.call("POST", "/v1/me/health-consent", u.access, withdraw).ok(200, "PlanEventResult")
+	a.call("POST", "/v1/me/health-consent", u.access, map[string]any{"id": newID(), "granted": false}).ok(200, "PlanEventResult")
+	a.call("POST", "/v1/me/health-consent", u.access, map[string]any{"id": newID(), "granted": true,
+		"screening": []any{false, false, false, false, false, false}, "text": map[string]any{"version": "1.x"}}).
+		problem(422, "validation")
+
+	c = a.call("GET", "/v1/me/health-consent", u.access, nil).ok(200, "HealthConsent")
+	records = c["records"].([]any)
+	if c["granted"] != false || len(records) != 3 {
+		t.Fatalf("after the withdrawal: %v", c)
+	}
+	newest, withdrawal := records[0].(map[string]any), records[1].(map[string]any)
+	if _, named := newest["text"]; newest["granted"] != false || newest["source"] != "change" || named {
+		t.Errorf("a change without its text: %v", newest)
+	}
+	if withdrawal["granted"] != false || withdrawal["source"] != "change" ||
+		!reflect.DeepEqual(withdrawal["text"], map[string]any{"version": "1", "locale": "en"}) {
+		t.Errorf("the withdrawal: %v", withdrawal)
+	}
+	if records[2].(map[string]any)["source"] != "onboarding" {
+		t.Errorf("oldest record: %v", records[2])
+	}
+}
+
 // A planned session starts as a draft in the log (spec §10.2); its sets are
 // performed through the log API as usual and keep their plan item.
 func TestStartPlannedSession(t *testing.T) {

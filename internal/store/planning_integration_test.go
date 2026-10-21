@@ -440,6 +440,53 @@ func TestPlannerDecisions(t *testing.T) {
 	}
 }
 
+// The consent record keeps each decision with its text, newest first; it
+// only grows, and goes with the account (ADR 0031).
+func TestPlannerConsentRecords(t *testing.T) {
+	db := pgtest.New(t)
+	p := store.NewPlanner(db)
+	user := plannerUser(t, db)
+	ctx := context.Background()
+	records := []planning.ConsentRecord{
+		{ID: id(), Granted: true, Source: planning.ConsentFromOnboarding, At: at(0, 9),
+			Text: &planning.ConsentText{Version: "1", Locale: "de"}},
+		{ID: id(), Granted: false, Source: planning.ConsentFromChange, ChangeID: "c-1", At: at(1, 9)},
+		{ID: id(), Granted: true, Source: planning.ConsentFromChange, ChangeID: "c-2", At: at(2, 9),
+			Text: &planning.ConsentText{Version: "2", Locale: "en-GB"}},
+	}
+	inTx(t, p, user, func(st planning.Stores) error {
+		for _, r := range records {
+			if err := st.Consents.RecordConsent(ctx, user, r); err != nil {
+				return err
+			}
+		}
+		got, err := st.Consents.ConsentRecords(ctx, user, 2)
+		if err != nil {
+			return err
+		}
+		sameJSON(t, "newest first", []planning.ConsentRecord{records[2], records[1]}, got)
+		return nil
+	})
+	for what, r := range map[string]planning.ConsentRecord{
+		"a second onboarding": {ID: id(), Granted: true, Source: planning.ConsentFromOnboarding, At: at(3, 9)},
+		"the same change":     {ID: id(), Granted: true, Source: planning.ConsentFromChange, ChangeID: "c-2", At: at(3, 9)},
+		"a bad version":       {ID: id(), Granted: true, Source: planning.ConsentFromChange, ChangeID: "c-3", At: at(3, 9), Text: &planning.ConsentText{Version: "1 2", Locale: "de"}},
+		"a change without id": {ID: id(), Granted: true, Source: planning.ConsentFromChange, At: at(3, 9)},
+	} {
+		if err := p.InTx(ctx, user, func(st planning.Stores) error { return st.Consents.RecordConsent(ctx, user, r) }); err == nil {
+			t.Errorf("recorded %s", what)
+		}
+	}
+	_, err := db.Exec(ctx, `UPDATE health_consent_records SET granted = NOT granted WHERE user_id = $1`, user)
+	violates(t, err, "health_consent_records_append_only")
+	_, err = db.Exec(ctx, `DELETE FROM health_consent_records WHERE user_id = $1`, user)
+	violates(t, err, "health_consent_records_append_only")
+	exec(t, db, `DELETE FROM users WHERE id = $1`, user)
+	if n := count(t, db, `SELECT count(*) FROM health_consent_records`); n != 0 {
+		t.Fatalf("%d consent records survived their user", n)
+	}
+}
+
 func TestPlannerGoalAndConstraintChecks(t *testing.T) {
 	db := pgtest.New(t)
 	user := plannerUser(t, db)
@@ -617,7 +664,7 @@ func TestPlannerServiceMatchesMemory(t *testing.T) {
 			}
 
 			both("onboarding", func(svc *planning.Service) (any, error) {
-				res, p, err := svc.Onboard(ctx, user, plannerAnswers(kind))
+				res, p, err := svc.Onboard(ctx, user, plannerAnswers(kind), nil)
 				return []any{res, p}, err
 			})
 			switch kind {
@@ -651,7 +698,15 @@ func TestPlannerServiceMatchesMemory(t *testing.T) {
 						Timepoint: domain.PainDaily, NRS: 2, At: clk.t})
 				})
 				both("withdrawal", func(svc *planning.Service) (any, error) {
-					return svc.SetConsent(ctx, user, "consent-1", domain.ConsentChange{})
+					return svc.SetConsent(ctx, user, "consent-1", domain.ConsentChange{},
+						&planning.ConsentText{Version: "1", Locale: "de"})
+				})
+				both("consent record", func(svc *planning.Service) (any, error) {
+					granted, records, err := svc.HealthConsent(ctx, user, 10)
+					for i := range records {
+						records[i].ID = uuid.Nil // each store's own
+					}
+					return []any{granted, records}, err
 				})
 				for table, want := range map[string]int{"user_pain_reports": 0, "user_region_status": 0, "user_screening": 0,
 					"planning_constraints": 1} {
@@ -691,7 +746,7 @@ func TestPlannerServiceMatchesMemory(t *testing.T) {
 			if kind == "consent" {
 				both("grant", func(svc *planning.Service) (any, error) {
 					return svc.SetConsent(ctx, user, "consent-2", domain.ConsentChange{Granted: true,
-						Screening: make([]bool, 6), PastInjuries: []string{"knee"}})
+						Screening: make([]bool, 6), PastInjuries: []string{"knee"}}, nil)
 				})
 			}
 			both("profile", func(svc *planning.Service) (any, error) {
@@ -753,7 +808,7 @@ func TestPlannerStartsAPlannedSession(t *testing.T) {
 	logs := store.New(db)
 	ctx := context.Background()
 	user := plannerUser(t, db)
-	_, plan, err := svc.Onboard(ctx, user, plannerAnswers("advanced"))
+	_, plan, err := svc.Onboard(ctx, user, plannerAnswers("advanced"), nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -839,7 +894,7 @@ func TestPlannerStartsAPlannedSession(t *testing.T) {
 		t.Errorf("a taken ID: %v", err)
 	}
 	other := plannerUser(t, db)
-	if _, _, err := svc.Onboard(ctx, other, plannerAnswers("advanced")); err != nil {
+	if _, _, err := svc.Onboard(ctx, other, plannerAnswers("advanced"), nil); err != nil {
 		t.Fatal(err)
 	}
 	if _, _, err := svc.StartPlannedSession(ctx, other, planned, start(id())); !errors.Is(err, planning.ErrNotFound) {
@@ -968,7 +1023,7 @@ func TestPlannerStartedDraftFollowsThePlan(t *testing.T) {
 	logs := store.New(db)
 	ctx := context.Background()
 	user := plannerUser(t, db)
-	if _, _, err := svc.Onboard(ctx, user, plannerAnswers("advanced")); err != nil {
+	if _, _, err := svc.Onboard(ctx, user, plannerAnswers("advanced"), nil); err != nil {
 		t.Fatal(err)
 	}
 	plan, err := svc.Plan(ctx, user)
@@ -1103,7 +1158,7 @@ func TestPlannerAppliesALoggedCompletion(t *testing.T) {
 	logs := store.New(db)
 	ctx := context.Background()
 	user := plannerUser(t, db)
-	if _, _, err := svc.Onboard(ctx, user, plannerAnswers("advanced")); err != nil {
+	if _, _, err := svc.Onboard(ctx, user, plannerAnswers("advanced"), nil); err != nil {
 		t.Fatal(err)
 	}
 	plan, err := svc.Plan(ctx, user)
