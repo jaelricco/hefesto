@@ -3,7 +3,7 @@
 # Compose (docker-compose.prod.yml); with this file unchanged the build is
 # fully cached, the image id stays the same, and a deploy does not restart
 # the database.
-FROM postgres:16-alpine
+FROM postgres:18-alpine
 
 # Alpine's community package (2.55 on Alpine 3.22). Not pinned: the base
 # image follows Alpine releases, and pgBackRest keeps its repository format
